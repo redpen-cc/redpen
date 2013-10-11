@@ -1,0 +1,72 @@
+package org.unigram.docvalidator.util;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Load file from input file name or stream.
+ */
+public class FileLoader {
+  /**
+   * constructor.
+   * @param ex ResoruceExtractor
+   */
+  public FileLoader(ResourceExtractor ex) {
+    this.resourceExtractor = ex;
+  }
+
+  public int loadFile(String fileName) {
+    InputStream inputStream = null;
+    try {
+      LOG.warn("input file: " + fileName);
+      inputStream = new FileInputStream(fileName);
+    } catch (IOException e) {
+      LOG.error("IO Error ", e);
+      IOUtils.closeQuietly(inputStream);
+      return 1;
+    }
+    if (loadFile(inputStream) != 0) {
+      LOG.error("Failed to load file: " + fileName);
+    }
+    IOUtils.closeQuietly(inputStream);
+    return 0;
+  }
+
+  public int loadFile(InputStream inputStream) {
+    if (inputStream == null) {
+      LOG.error("Input Stream is null");
+      return 1;
+    }
+    InputStreamReader inputStreamReader = null;
+    BufferedReader bufferedReader = null;
+    try {
+      inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+      BufferedReader br = new BufferedReader(inputStreamReader);
+      String line = null;
+      while ((line = br.readLine()) != null) {
+        if (this.resourceExtractor.load(line) != 0) {
+          LOG.error("Failed to load line:" + line);
+          return 1;
+        }
+      }
+    } catch (IOException e) {
+      LOG.error("IO Error ", e);
+      return 1;
+    } finally {
+      IOUtils.closeQuietly(bufferedReader);
+      IOUtils.closeQuietly(inputStreamReader);
+    }
+    return 0;
+  }
+
+  private static Logger LOG = LoggerFactory.getLogger(FileLoader.class);
+
+  private ResourceExtractor resourceExtractor;
+}

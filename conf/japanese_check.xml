@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<configuration name="Validator">
+
+  <property name="unit" value="character" />
+  <property name="punctuation" value="。" />
+  <property name="comma" value="、" />
+  <property name="comment" value="#" />
+
+  <component name="FileLength">
+    <property name="max_length" value="1000"/>
+  </component>
+
+  <component name="ParagraphLength">
+    <property name="max_length" value="200"/>
+  </component>
+
+  <component name="Sentence">
+    <component name="SentenceLength">
+      <property name="max_length" value="30"/>
+    </component>
+    <component name="SentencePunctuation" />
+    <component name="SentenceComma" />
+    <component name="UnsutablePhrase" />
+    <component name="UnsutableSuffix" />
+    <component name="DuplicateWord" />
+    <component name="TodoComment"/>
+    <component name="Capital"/>
+    <component name="WhiteSpaceAfter"/>
+  </component>
+
+</configuration>

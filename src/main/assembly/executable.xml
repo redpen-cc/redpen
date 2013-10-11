@@ -1,0 +1,30 @@
+<assembly>
+  <id>assembled</id>
+  <formats>
+    <format>tar.gz</format>
+  </formats>
+  <fileSets>
+    <fileSet>
+      <directory>target</directory>
+      <outputDirectory>/lib</outputDirectory>
+      <includes>
+        <include>document-validator-*.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory></directory>
+      <outputDirectory>/</outputDirectory>
+      <includes>
+        <include>bin/*</include>
+        <include>conf/*</include>
+      </includes>
+    </fileSet>
+  </fileSets>
+  <dependencySets>
+    <dependencySet>
+      <unpack>false</unpack>
+      <scope>runtime</scope>
+      <outputDirectory>/lib</outputDirectory>
+    </dependencySet>
+  </dependencySets>
+</assembly>
