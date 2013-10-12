@@ -2,7 +2,7 @@ package org.unigram.docvalidator.validator.section;
 
 import static org.junit.Assert.*;
 
-import java.util.Vector;
+import java.util.List;
 
 import org.junit.Test;
 import org.unigram.docvalidator.store.FileContent;
@@ -22,7 +22,7 @@ public class ParagraphStartWithValidatorTest {
     section.appendParagraph(paragraph);
     FileContent fileContent = new FileContent();
     fileContent.appendChild(section);
-    Vector<ValidationError> errors = validator.check(fileContent, new FakeResultDistributor());
+    List<ValidationError> errors = validator.check(fileContent, new FakeResultDistributor());
     assertEquals(1, errors.size());
   }
 
@@ -35,7 +35,7 @@ public class ParagraphStartWithValidatorTest {
     section.appendParagraph(paragraph);
     FileContent fileContent = new FileContent();
     fileContent.appendChild(section);
-    Vector<ValidationError> errors = validator.check(fileContent, new FakeResultDistributor());
+    List<ValidationError> errors = validator.check(fileContent, new FakeResultDistributor());
     assertEquals(0, errors.size());
   }
 
