@@ -12,7 +12,7 @@ import org.unigram.docvalidator.validator.SentenceValidator;
 
 public class WhiteSpaceBetweenAlphabetWordsValidator implements SentenceValidator {
 
-  public List<ValidationError> process(Sentence sentence) {
+  public List<ValidationError> check(Sentence sentence) {
     String content = sentence.content;
     return new ArrayList<ValidationError>();
   }

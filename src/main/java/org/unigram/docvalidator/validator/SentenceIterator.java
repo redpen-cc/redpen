@@ -95,7 +95,7 @@ public class SentenceIterator implements Validator {
       for (Iterator<Sentence> lineIterator =
           currentParagraph.getChilds(); lineIterator.hasNext();) {
         List<ValidationError> validationErrors =
-            validator.process(lineIterator.next());
+            validator.check(lineIterator.next());
         for (Iterator<ValidationError> errorIterator =
             validationErrors.iterator();
             errorIterator.hasNext();) {

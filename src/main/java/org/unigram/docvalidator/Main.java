@@ -96,7 +96,7 @@ public final class Main {
 
     // validate document
     DocumentValidator validator = new DocumentValidator(resource);
-    validator.process(document);
+    validator.check(document);
 
     return;
   }

@@ -32,7 +32,7 @@ public class CommaNumberValidator implements SentenceValidator {
     comma = DEFAULT_COMMA;
   }
 
-  public List<ValidationError> process(Sentence line) {
+  public List<ValidationError> check(Sentence line) {
     List<ValidationError> result = new ArrayList<ValidationError>();
     String content = line.content;
     int commaCount =  0;

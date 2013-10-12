@@ -71,7 +71,7 @@ public class SentenceLengthValidatorTest {
     } catch (DocumentValidatorException e) {
       fail();
     }
-    List<ValidationError> errors = validator.process(doc);
+    List<ValidationError> errors = validator.check(doc);
     assertEquals(1, errors.size());
   }
 }

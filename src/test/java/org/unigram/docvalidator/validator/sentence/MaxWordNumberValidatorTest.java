@@ -16,7 +16,7 @@ public class MaxWordNumberValidatorTest {
     MaxWordNumberValidator maxWordNumberValidator = new MaxWordNumberValidator();
     Sentence str = new Sentence(
         "this sentence is short.",0);
-    List<ValidationError> errors = maxWordNumberValidator.process(str);
+    List<ValidationError> errors = maxWordNumberValidator.check(str);
     assertNotNull(errors);
     assertEquals(0, errors.size());
   }
@@ -27,7 +27,7 @@ public class MaxWordNumberValidatorTest {
     Sentence str = new Sentence(
         "this sentence is very very very very very very very very very very" +
         " very very very very very very very very very very very very very very long",0);
-    List<ValidationError> errors = maxWordNumberValidator.process(str);
+    List<ValidationError> errors = maxWordNumberValidator.check(str);
     assertNotNull(errors);
     assertEquals(0, errors.size());
   }

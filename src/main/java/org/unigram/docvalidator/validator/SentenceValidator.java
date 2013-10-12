@@ -17,7 +17,7 @@ public interface SentenceValidator {
    * @param sentence input
    * @return list of invalid points
    */
-  List<ValidationError> process(Sentence sentence);
+  List<ValidationError> check(Sentence sentence);
 
   /**
    * initialize SentenceValidator.

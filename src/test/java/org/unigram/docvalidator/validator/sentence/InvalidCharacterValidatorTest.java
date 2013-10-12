@@ -31,7 +31,7 @@ public class InvalidCharacterValidatorTest {
     CharacterTable characterTable = new CharacterTable(stream);
     validator.loadCharacterTable(characterTable);
     Sentence str = new Sentence("わたしはカラオケが大好き！",0);
-    List<ValidationError> errors = validator.process(str);
+    List<ValidationError> errors = validator.check(str);
     assertEquals(1, errors.size());
   }
 
@@ -47,7 +47,7 @@ public class InvalidCharacterValidatorTest {
     CharacterTable characterTable = new CharacterTable(stream);
     validator.loadCharacterTable(characterTable);
     Sentence str = new Sentence("I like karaoke!",0);
-    List<ValidationError> errors = validator.process(str);
+    List<ValidationError> errors = validator.check(str);
     assertEquals(0, errors.size());
   }
 
@@ -64,7 +64,7 @@ public class InvalidCharacterValidatorTest {
     CharacterTable characterTable = new CharacterTable(stream);
     validator.loadCharacterTable(characterTable);
     Sentence str = new Sentence("わたしは、カラオケが好き！",0);
-    List<ValidationError> errors = validator.process(str);
+    List<ValidationError> errors = validator.check(str);
     assertEquals(2, errors.size());
   }
 

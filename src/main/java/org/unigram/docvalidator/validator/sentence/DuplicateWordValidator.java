@@ -14,7 +14,7 @@ import org.unigram.docvalidator.validator.SentenceValidator;
 // in one sentence.  
 public class DuplicateWordValidator implements SentenceValidator {
 
-  public List<ValidationError> process(Sentence sentence) {
+  public List<ValidationError> check(Sentence sentence) {
     return new ArrayList<ValidationError>();
   }
 

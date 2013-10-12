@@ -16,7 +16,7 @@ public class CommaNumberValidatorTest {
     CommaNumberValidator commaNumberValidator = new CommaNumberValidator();
     Sentence str = new Sentence(
         "is it true, not true, but it should be ture, right, or not right.",0);
-    List<ValidationError> error = commaNumberValidator.process(str);
+    List<ValidationError> error = commaNumberValidator.check(str);
     assertNotNull(error);
   }
 }
