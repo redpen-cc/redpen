@@ -16,7 +16,7 @@ public class SpaceBeginingOfStenceValidatorTest {
     SpaceBegginingOfSentenceValidator spaceValidator =
         new SpaceBegginingOfSentenceValidator();
     Sentence str = new Sentence("That is true.",0);
-    List<ValidationError> errors = spaceValidator.process(str);
+    List<ValidationError> errors = spaceValidator.check(str);
     assertNotNull(errors);
     assertEquals(1, errors.size());
   }
@@ -26,7 +26,7 @@ public class SpaceBeginingOfStenceValidatorTest {
     SpaceBegginingOfSentenceValidator spaceValidator =
         new SpaceBegginingOfSentenceValidator();
     Sentence str = new Sentence(" That is true.",0);
-    List<ValidationError> errors = spaceValidator.process(str);
+    List<ValidationError> errors = spaceValidator.check(str);
     assertNotNull(errors);
     assertEquals(0, errors.size());
   }
@@ -37,7 +37,7 @@ public class SpaceBeginingOfStenceValidatorTest {
         new SpaceBegginingOfSentenceValidator();
     Sentence str = new Sentence("That is true.",0);
     str.isStartaragraph = true;
-    List<ValidationError> errors = spaceValidator.process(str);
+    List<ValidationError> errors = spaceValidator.check(str);
     assertNotNull(errors);
     assertEquals(0, errors.size());
   }

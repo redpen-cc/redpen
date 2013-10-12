@@ -16,7 +16,7 @@ import org.unigram.docvalidator.validator.SentenceValidator;
  */
 public class SpaceBegginingOfSentenceValidator implements SentenceValidator {
 
-  public List<ValidationError> process(Sentence sentence) {
+  public List<ValidationError> check(Sentence sentence) {
     List<ValidationError> result = new ArrayList<ValidationError>();
     String content = sentence.content;
     if (!sentence.isStartaragraph

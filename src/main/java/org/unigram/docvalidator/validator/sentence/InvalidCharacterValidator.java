@@ -17,7 +17,7 @@ import org.unigram.docvalidator.validator.SentenceValidator;
  * Validate if there is invalid characters in sentences.
  */
 public class InvalidCharacterValidator implements SentenceValidator {
-  public List<ValidationError> process(Sentence sentence) {
+  public List<ValidationError> check(Sentence sentence) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     Set<String> names = characterTable.getNames();
     for (Iterator<String> nameIterator = names.iterator();

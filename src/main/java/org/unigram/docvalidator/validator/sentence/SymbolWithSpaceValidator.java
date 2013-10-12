@@ -18,7 +18,7 @@ import org.unigram.docvalidator.validator.SentenceValidator;
  * the symbol and defined in DVCharacterTable.
  */
 public class SymbolWithSpaceValidator  implements SentenceValidator {
-  public List<ValidationError> process(Sentence sentence) {
+  public List<ValidationError> check(Sentence sentence) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     Set<String> names = characterTable.getNames();
     for (Iterator<String> nameIterator = names.iterator();

@@ -24,7 +24,7 @@ public class SuggestExpressionValidatorTest {
     SuggestExpressionValidatorForTest synonymValidator = new SuggestExpressionValidatorForTest();
     synonymValidator.loadSynonyms();
     Sentence str = new Sentence("it like a piece of a cake.",0);
-    List<ValidationError> error = synonymValidator.process(str);
+    List<ValidationError> error = synonymValidator.check(str);
     assertNotNull(error);
   }
 }

@@ -26,7 +26,7 @@ public class InvalidExpressionValidator implements SentenceValidator {
     invalidExpressions = new HashSet<String>();
   }
 
-  public List<ValidationError> process(Sentence line) {
+  public List<ValidationError> check(Sentence line) {
     List<ValidationError> result = new ArrayList<ValidationError>();
     String str = line.content;
     for (Iterator<String> iter = invalidExpressions.iterator();

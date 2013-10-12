@@ -17,7 +17,7 @@ import org.unigram.docvalidator.validator.SentenceValidator;
  */
 public class SentenceLengthValidator implements SentenceValidator {
 
-  public List<ValidationError> process(Sentence line) {
+  public List<ValidationError> check(Sentence line) {
     List<ValidationError> result = new ArrayList<ValidationError>();
     if (line.content.length() > maxLength) {
       result.add(new ValidationError(line.position,
