@@ -1,6 +1,7 @@
 package org.unigram.docvalidator.validator;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.unigram.docvalidator.store.FileContent;
@@ -14,7 +15,7 @@ import org.unigram.docvalidator.util.ValidationError;
  */
 public abstract class SectionValidator implements Validator {
 
-  public Vector<ValidationError> check(FileContent file,
+  public List<ValidationError> check(FileContent file,
       ResultDistributor distributor) {
     Vector<ValidationError> validationErrors = new Vector<ValidationError>();
     for (Iterator<Section> sectionIterator =

@@ -1,6 +1,7 @@
 package org.unigram.docvalidator.validator;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.slf4j.Logger;
@@ -74,7 +75,7 @@ public class DocumentValidator {
         Validator validator = checkIterator.next();
         Iterator<FileContent> fileIterator = document.getFiles();
         while (fileIterator.hasNext()) {
-          Vector<ValidationError> currentErrors =
+          List<ValidationError> currentErrors =
               validator.check(fileIterator.next(), distributor);
           errors.addAll(currentErrors);
         }

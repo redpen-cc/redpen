@@ -2,6 +2,7 @@ package org.unigram.docvalidator.validator.section;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
 import java.util.Vector;
 
 import org.junit.Test;
@@ -32,7 +33,7 @@ public class SectionLengthValidatorTest {
     FileContent fileContent = new FileContent();
     fileContent.appendChild(section);
 
-    Vector<ValidationError> errors = validator.check(fileContent, new FakeResultDistributor());
+    List<ValidationError> errors = validator.check(fileContent, new FakeResultDistributor());
     assertEquals(1, errors.size());
   }
 

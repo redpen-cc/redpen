@@ -1,13 +1,14 @@
 package org.unigram.docvalidator.validator;
 
-import java.util.Vector;
+
+import java.util.List;
 
 import org.unigram.docvalidator.store.FileContent;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.ResultDistributor;
-import org.unigram.docvalidator.util.ValidationError;
 import org.unigram.docvalidator.util.Configuration;
 import org.unigram.docvalidator.util.DocumentValidatorException;
+import org.unigram.docvalidator.util.ValidationError;
 
 /**
  * Validate input document.
@@ -19,7 +20,7 @@ public interface Validator {
    * @param distributor flush output
    * @return List of ValidationError
    */
-  Vector<ValidationError> check(FileContent document,
+  List<ValidationError> check(FileContent document,
       ResultDistributor distributor);
 
   /**

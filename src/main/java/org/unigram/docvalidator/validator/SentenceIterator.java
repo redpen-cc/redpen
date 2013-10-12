@@ -35,7 +35,7 @@ public class SentenceIterator implements Validator {
     this.lineValidators = new Vector<SentenceValidator>();
   }
 
-  public Vector<ValidationError> check(FileContent file,
+  public List<ValidationError> check(FileContent file,
       ResultDistributor distributor) {
     Vector<ValidationError> errors = new Vector<ValidationError>();
     for (Iterator<SentenceValidator> iterator =
