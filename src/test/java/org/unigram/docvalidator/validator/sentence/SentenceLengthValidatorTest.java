@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.Vector;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
@@ -71,7 +71,7 @@ public class SentenceLengthValidatorTest {
     } catch (DocumentValidatorException e) {
       fail();
     }
-    Vector<ValidationError> errors = validator.process(doc);
+    List<ValidationError> errors = validator.process(doc);
     assertEquals(1, errors.size());
   }
 }
