@@ -26,7 +26,7 @@ public class MaxWordNumberValidator implements SentenceValidator {
     this.maxWordNumber = DEFAULT_MAXIMUM_WORDS_IN_A_SENTENCE;
   }
 
-  public List<ValidationError> process(Sentence sentence) {
+  public List<ValidationError> check(Sentence sentence) {
     List<ValidationError> result = new ArrayList<ValidationError>();
     String content = sentence.content;
     String[] wordList = content.split(" ");

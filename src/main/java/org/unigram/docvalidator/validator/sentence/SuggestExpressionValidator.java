@@ -25,7 +25,7 @@ public class SuggestExpressionValidator implements SentenceValidator {
     synonms = new HashMap<String, String>();
   }
 
-  public List<ValidationError> process(Sentence line) {
+  public List<ValidationError> check(Sentence line) {
     String str = line.content;
     Set<String> invalidWords = synonms.keySet();
     for (Iterator<String> iter = invalidWords.iterator(); iter.hasNext();) {

@@ -69,7 +69,7 @@ public class DocumentValidator {
     return true;
   }
 
-  public List<ValidationError> process(Document document) {
+  public List<ValidationError> check(Document document) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     for (Iterator<Validator> checkIterator =
         this.validators.iterator(); checkIterator.hasNext();) {

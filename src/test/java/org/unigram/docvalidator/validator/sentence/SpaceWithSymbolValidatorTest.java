@@ -31,7 +31,7 @@ public class SpaceWithSymbolValidatorTest {
     CharacterTable characterTable = new CharacterTable(stream);
     validator.loadCharacterTable(characterTable);
     Sentence str = new Sentence("I like apple/orange",0);
-    List<ValidationError> errors = validator.process(str);
+    List<ValidationError> errors = validator.check(str);
     assertEquals(0, errors.size());
   }
 
@@ -47,7 +47,7 @@ public class SpaceWithSymbolValidatorTest {
     CharacterTable characterTable = new CharacterTable(stream);
     validator.loadCharacterTable(characterTable);
     Sentence str = new Sentence("I like her:yes it is.",0);
-    List<ValidationError> errors = validator.process(str);
+    List<ValidationError> errors = validator.check(str);
     assertEquals(1, errors.size());
   }
 
@@ -63,7 +63,7 @@ public class SpaceWithSymbolValidatorTest {
     CharacterTable characterTable = new CharacterTable(stream);
     validator.loadCharacterTable(characterTable);
     Sentence str = new Sentence("I like her(Nancy)very much.",0);
-    List<ValidationError> errors = validator.process(str);
+    List<ValidationError> errors = validator.check(str);
     assertEquals(1, errors.size());
   }
 
@@ -80,7 +80,7 @@ public class SpaceWithSymbolValidatorTest {
     CharacterTable characterTable = new CharacterTable(stream);
     validator.loadCharacterTable(characterTable);
     Sentence str = new Sentence("I like her(Nancy)very much.",0);
-    List<ValidationError> errors = validator.process(str);
+    List<ValidationError> errors = validator.check(str);
     assertEquals(2, errors.size());
   }
 
@@ -96,7 +96,7 @@ public class SpaceWithSymbolValidatorTest {
     CharacterTable characterTable = new CharacterTable(stream);
     validator.loadCharacterTable(characterTable);
     Sentence str = new Sentence("I like 1*10",0);
-    List<ValidationError> errors = validator.process(str);
+    List<ValidationError> errors = validator.check(str);
     assertEquals(1, errors.size());
   }
 }
