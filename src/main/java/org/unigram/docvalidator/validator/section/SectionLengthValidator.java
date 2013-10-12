@@ -1,7 +1,8 @@
 package org.unigram.docvalidator.validator.section;
 
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,7 @@ import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.ValidationError;
 import org.unigram.docvalidator.util.Configuration;
 import org.unigram.docvalidator.validator.SectionValidator;
+
 /**
  * Validate the length of one section.
  */
@@ -22,8 +24,8 @@ public class SectionLengthValidator extends SectionValidator {
   }
 
   @Override
-  protected Vector<ValidationError> check(Section section) {
-    Vector<ValidationError> validationErrors = new Vector<ValidationError>();
+  protected List<ValidationError> check(Section section) {
+    List<ValidationError> validationErrors = new ArrayList<ValidationError>();
     int sectionCharNumber = 0;
     for (Iterator<Paragraph> paraIterator =
         section.getParagraph(); paraIterator.hasNext();) {

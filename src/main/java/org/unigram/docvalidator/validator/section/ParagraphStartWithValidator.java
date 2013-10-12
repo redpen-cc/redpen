@@ -1,7 +1,8 @@
 package org.unigram.docvalidator.validator.section;
 
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +29,8 @@ public class ParagraphStartWithValidator extends SectionValidator {
   }
 
   @Override
-  protected Vector<ValidationError> check(Section section) {
-    Vector<ValidationError> validationErrors = new Vector<ValidationError>();
+  protected List<ValidationError> check(Section section) {
+    List<ValidationError> validationErrors = new ArrayList<ValidationError>();
     for (Iterator<Paragraph> paraIterator =
         section.getParagraph(); paraIterator.hasNext();) {
       Paragraph currentParagraph = paraIterator.next();

@@ -1,6 +1,8 @@
 package org.unigram.docvalidator.validator;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.slf4j.Logger;
@@ -67,14 +69,14 @@ public class DocumentValidator {
     return true;
   }
 
-  public Vector<ValidationError> process(Document document) {
-    Vector<ValidationError> errors = new Vector<ValidationError>();
+  public List<ValidationError> process(Document document) {
+    List<ValidationError> errors = new ArrayList<ValidationError>();
     for (Iterator<Validator> checkIterator =
         this.validators.iterator(); checkIterator.hasNext();) {
         Validator validator = checkIterator.next();
         Iterator<FileContent> fileIterator = document.getFiles();
         while (fileIterator.hasNext()) {
-          Vector<ValidationError> currentErrors =
+          List<ValidationError> currentErrors =
               validator.check(fileIterator.next(), distributor);
           errors.addAll(currentErrors);
         }

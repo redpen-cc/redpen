@@ -1,6 +1,7 @@
 package org.unigram.docvalidator.validator.section;
 
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.unigram.docvalidator.store.Section;
 import org.unigram.docvalidator.util.CharacterTable;
@@ -18,8 +19,8 @@ public class ParagraphNumberValidator extends SectionValidator {
   public static final int DEFAULT_MAX_PARAGRAPHS_IN_A_SECTION = 100;
 
   @Override
-  protected Vector<ValidationError> check(Section section) {
-    Vector<ValidationError> validationErrors = new Vector<ValidationError>();
+  protected List<ValidationError> check(Section section) {
+    List<ValidationError> validationErrors = new ArrayList<ValidationError>();
     int paragraphNumber = section.getParagraphNumber();
     if (maxParagraphs < paragraphNumber) {
       validationErrors.add(new ValidationError(
