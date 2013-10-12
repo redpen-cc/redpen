@@ -1,5 +1,6 @@
 package org.unigram.docvalidator.validator;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -37,7 +38,7 @@ public class SentenceIterator implements Validator {
 
   public List<ValidationError> check(FileContent file,
       ResultDistributor distributor) {
-    Vector<ValidationError> errors = new Vector<ValidationError>();
+    List<ValidationError> errors = new ArrayList<ValidationError>();
     for (Iterator<SentenceValidator> iterator =
         this.lineValidators.iterator(); iterator.hasNext();) {
       SentenceValidator validator = iterator.next();
@@ -86,7 +87,7 @@ public class SentenceIterator implements Validator {
 
   // @TODO reduce the number of parameters (need refactoring)
   private void checkSection(ResultDistributor distributor,
-      Vector<ValidationError> errors, SentenceValidator validator,
+      List<ValidationError> errors, SentenceValidator validator,
       Section currentSection, String fileName) {
     for (Iterator<Paragraph> paraIterator =
         currentSection.getParagraph(); paraIterator.hasNext();) {
@@ -105,7 +106,7 @@ public class SentenceIterator implements Validator {
   }
 
   private void appendError(ResultDistributor distributor,
-      Vector<ValidationError> errors, String fileName, ValidationError e) {
+      List<ValidationError> errors, String fileName, ValidationError e) {
     if (e != null) {
       //NOTE: fileName is not specified in validators to reduce the task of them
       e.setFileName(fileName);
