@@ -18,7 +18,7 @@ public final class Paragraph implements Block {
    * get the iterator of sentences.
    * @return Iterator of Sentence in the paragraph
    */
-  public Iterator<Sentence> getChilds() {
+  public Iterator<Sentence> getSentences() {
     return sentences.iterator();
   }
 
@@ -31,8 +31,8 @@ public final class Paragraph implements Block {
     return sentences.get(lineNumber);
   }
 
-  public void appendSentence(String childBlock, int lineNum) {
-    sentences.add(new Sentence(childBlock, lineNum));
+  public void appendSentence(String content, int lineNum) {
+    sentences.add(new Sentence(content, lineNum));
   }
 
   public int getNumverOfSentences() {

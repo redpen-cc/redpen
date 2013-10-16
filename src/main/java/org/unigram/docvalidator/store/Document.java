@@ -26,7 +26,7 @@ public final class Document implements Block {
     return files.lastElement();
   }
 
-  public int getSizeOfChildren() {
+  public int getFileNumber() {
     return files.size();
   }
 

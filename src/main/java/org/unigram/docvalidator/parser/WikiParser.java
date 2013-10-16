@@ -47,7 +47,7 @@ public final class WikiParser extends AbstractDocumentParser {
     FileContent doc = new FileContent();
     //for sentences right below the begging of document
     Section currentSection = new Section(0, "");
-    doc.appendChild(currentSection);
+    doc.appendSection(currentSection);
     LinePattern prevPattern = LinePattern.VOID;
     LinePattern currentPattern = LinePattern.VOID;
     try {
@@ -61,7 +61,7 @@ public final class WikiParser extends AbstractDocumentParser {
           currentPattern = LinePattern.HEADER;
           Integer level = Integer.valueOf(head.get(0));
           Section tmpSection =  new Section(level, head.get(1));
-          doc.appendChild(tmpSection);
+          doc.appendSection(tmpSection);
           if (!addChild(currentSection, tmpSection)) {
             LOG.warn("Failed to add parent for a Seciotn: "
                 + tmpSection.getHeaderContent());
@@ -95,13 +95,13 @@ public final class WikiParser extends AbstractDocumentParser {
 
   private boolean addChild(Section candidate, Section child) {
     if (candidate.getLevel() < child.getLevel()) {
-      candidate.appendChild(child);
+      candidate.appendSection(child);
       child.setParent(candidate);
     } else { // search parent
       Section parent = candidate.getParent();
       while (parent != null) {
         if (parent.getLevel() < child.getBlockID()) {
-          parent.appendChild(child);
+          parent.appendSection(child);
           child.setParent(parent);
           candidate = child;
           break;

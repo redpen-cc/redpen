@@ -21,16 +21,16 @@ public final class FileContent implements Block {
    * get Iterator for Section in the FileContent.
    * @return Iterator of Section list
    */
-  public Iterator<Section> getChilds() {
+  public Iterator<Section> getSections() {
     return sections.iterator();
   }
 
   /**
    * add Section.
-   * @param childBlock
+   * @param section
    */
-  public void appendChild(Section childBlock) {
-     sections.add(childBlock);
+  public void appendSection(Section section) {
+     sections.add(section);
   }
 
   /**
@@ -45,7 +45,7 @@ public final class FileContent implements Block {
    * get the size of Sections.
    * @return size of Sections
    */
-  public int getSizeOfChildren() {
+  public int getSizeOfSections() {
     return sections.size();
   }
 

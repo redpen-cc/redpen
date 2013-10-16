@@ -32,7 +32,7 @@ public class ParagraphNumberValidatorTest {
     section.appendParagraph(new Paragraph());
 
     FileContent fileContent = new FileContent();
-    fileContent.appendChild(section);
+    fileContent.appendSection(section);
 
     List<ValidationError> errors = validator.check(fileContent,
         new FakeResultDistributor());
@@ -48,7 +48,7 @@ public class ParagraphNumberValidatorTest {
     section.appendParagraph(new Paragraph());
 
     FileContent fileContent = new FileContent();
-    fileContent.appendChild(section);
+    fileContent.appendSection(section);
 
     List<ValidationError> errors = validator.check(fileContent,
         new FakeResultDistributor());
