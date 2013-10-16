@@ -65,7 +65,7 @@ public class SentenceIterator implements Validator {
         validator = (SentenceValidator) new InvalidExpressionValidator();
       } else if (confName.equals("SpaceAfterPeriod")) {
         validator = (SentenceValidator) new SpaceBegginingOfSentenceValidator();
-      } else if (confName.equals("MaxCommaNumber")) {
+      } else if (confName.equals("CommaNumber")) {
         validator = (SentenceValidator) new CommaNumberValidator();
       } else if (confName.equals("WordNumber")) {
         validator = (SentenceValidator) new WordNumberValidator();
