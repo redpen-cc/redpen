@@ -15,13 +15,13 @@ import org.unigram.docvalidator.validator.SentenceValidator;
 /**
  * Validate input sentences have more words than specified.
  */
-public class MaxWordNumberValidator implements SentenceValidator {
+public class WordNumberValidator implements SentenceValidator {
   /**
    * Default maximum number of words in one sentence.
    */
   public static final int DEFAULT_MAXIMUM_WORDS_IN_A_SENTENCE = 30;
 
-  public MaxWordNumberValidator() {
+  public WordNumberValidator() {
     super();
     this.maxWordNumber = DEFAULT_MAXIMUM_WORDS_IN_A_SENTENCE;
   }
@@ -51,7 +51,7 @@ public class MaxWordNumberValidator implements SentenceValidator {
     return true;
   }
   private static Logger LOG =
-      LoggerFactory.getLogger(MaxWordNumberValidator.class);
+      LoggerFactory.getLogger(WordNumberValidator.class);
 
   private int maxWordNumber;
 }
