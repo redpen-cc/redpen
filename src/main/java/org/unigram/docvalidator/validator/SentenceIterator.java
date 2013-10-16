@@ -17,7 +17,7 @@ import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.validator.sentence.CommaNumberValidator;
 import org.unigram.docvalidator.validator.sentence.InvalidExpressionValidator;
 import org.unigram.docvalidator.validator.sentence.InvalidCharacterValidator;
-import org.unigram.docvalidator.validator.sentence.MaxWordNumberValidator;
+import org.unigram.docvalidator.validator.sentence.WordNumberValidator;
 import org.unigram.docvalidator.validator.sentence.SentenceLengthValidator;
 import org.unigram.docvalidator.validator.sentence.SpaceBegginingOfSentenceValidator;
 import org.unigram.docvalidator.validator.sentence.SymbolWithSpaceValidator;
@@ -67,8 +67,8 @@ public class SentenceIterator implements Validator {
         validator = (SentenceValidator) new SpaceBegginingOfSentenceValidator();
       } else if (confName.equals("MaxCommaNumber")) {
         validator = (SentenceValidator) new CommaNumberValidator();
-      } else if (confName.equals("MaxWordNumber")) {
-        validator = (SentenceValidator) new MaxWordNumberValidator();
+      } else if (confName.equals("WordNumber")) {
+        validator = (SentenceValidator) new WordNumberValidator();
       } else if (confName.equals("SuggestExpression")) {
         validator = (SentenceValidator) new SuggestExpressionValidator();
       } else if (confName.equals("InvalidCharacter")) {

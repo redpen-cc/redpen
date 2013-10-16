@@ -7,13 +7,13 @@ import java.util.List;
 import org.junit.Test;
 import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.validator.sentence.MaxWordNumberValidator;
+import org.unigram.docvalidator.validator.sentence.WordNumberValidator;
 
-public class MaxWordNumberValidatorTest {
+public class WordNumberValidatorTest {
 
   @Test
   public void testWithShortSentence() {
-    MaxWordNumberValidator maxWordNumberValidator = new MaxWordNumberValidator();
+    WordNumberValidator maxWordNumberValidator = new WordNumberValidator();
     Sentence str = new Sentence(
         "this sentence is short.",0);
     List<ValidationError> errors = maxWordNumberValidator.check(str);
@@ -23,7 +23,7 @@ public class MaxWordNumberValidatorTest {
 
   @Test
   public void testWithLongSentence() {
-    MaxWordNumberValidator maxWordNumberValidator = new MaxWordNumberValidator();
+    WordNumberValidator maxWordNumberValidator = new WordNumberValidator();
     Sentence str = new Sentence(
         "this sentence is very very very very very very very very very very" +
         " very very very very very very very very very very very very very very long",0);
