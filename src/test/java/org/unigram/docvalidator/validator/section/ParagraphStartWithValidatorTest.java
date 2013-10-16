@@ -21,7 +21,7 @@ public class ParagraphStartWithValidatorTest {
     paragraph.appendSentence("it like a piece of a cake.", 0);
     section.appendParagraph(paragraph);
     FileContent fileContent = new FileContent();
-    fileContent.appendChild(section);
+    fileContent.appendSection(section);
     List<ValidationError> errors = validator.check(fileContent, new FakeResultDistributor());
     assertEquals(1, errors.size());
   }
@@ -34,7 +34,7 @@ public class ParagraphStartWithValidatorTest {
     paragraph.appendSentence(" it like a piece of a cake.", 0);
     section.appendParagraph(paragraph);
     FileContent fileContent = new FileContent();
-    fileContent.appendChild(section);
+    fileContent.appendSection(section);
     List<ValidationError> errors = validator.check(fileContent, new FakeResultDistributor());
     assertEquals(0, errors.size());
   }

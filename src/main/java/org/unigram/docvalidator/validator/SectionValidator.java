@@ -18,7 +18,7 @@ public abstract class SectionValidator implements Validator {
       ResultDistributor distributor) {
     List<ValidationError> validationErrors = new ArrayList<ValidationError>();
     for (Iterator<Section> sectionIterator =
-        file.getChilds(); sectionIterator.hasNext();) {
+        file.getSections(); sectionIterator.hasNext();) {
       Section currentSection = sectionIterator.next();
       validationErrors.addAll(this.check(currentSection));
     }
