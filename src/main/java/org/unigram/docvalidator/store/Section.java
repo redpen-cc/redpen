@@ -9,14 +9,14 @@ import java.util.Vector;
 public final class Section implements Block {
   /**
    * constructor.
-   * @param l section level
+   * @param sectioLevel section level
    * @param header header content string
    */
-  public Section(int l, String header) {
+  public Section(int sectioLevel, String header) {
     super();
-    this.level = l;
+    this.level = sectioLevel;
     this.headerContent = header;
-    this.children = new Vector<Section>();
+    this.subsections = new Vector<Section>();
     this.paragraphs = new Vector<Paragraph>();
     this.lists = new Vector<List>();
   }
@@ -25,16 +25,16 @@ public final class Section implements Block {
    * get the iterator of subsections.
    * @return Iterator of Section
    */
-  public Iterator<Section> getChilds() {
-    return children.iterator();
+  public Iterator<Section> getSeubsections() {
+    return subsections.iterator();
   }
 
   /**
    * add a subsection.
-   * @param childBlock
+   * @param section section
    */
-  public void appendChild(Section childBlock) {
-    children.add(childBlock);
+  public void appendSection(Section section) {
+    subsections.add(section);
   }
 
   /**
@@ -47,26 +47,26 @@ public final class Section implements Block {
 
   /**
    * set level of section.
-   * @param l section level
+   * @param sectionLevel section level
    */
-  public void setHeaderLevel(int l) {
-    this.level = l;
+  public void setHeaderLevel(int sectionLevel) {
+    this.level = sectionLevel;
   }
 
   /**
    * Set super section.
-   * @param p super section
+   * @param parentSectionp super section
    */
-  public void setParent(Section p) {
-    this.parent = p;
+  public void setParent(Section parentSection) {
+    this.parent = parentSection;
   }
 
   /**
    * get the size of subsections.
    * @return size of subsection
    */
-  public int getSizeOfChildren() {
-    return children.size();
+  public int getNumberOfSubsections() {
+    return subsections.size();
   }
 
   /**
@@ -89,8 +89,8 @@ public final class Section implements Block {
    * get last subsection.
    * @return last subsection in this section
    */
-  public Section getLastChildSection() {
-    return children.lastElement();
+  public Section getLastSubsection() {
+    return subsections.lastElement();
   }
 
   /**
@@ -162,8 +162,8 @@ public final class Section implements Block {
   /* parent Section */
   private Section parent;
 
-  /* child secitons */
-  private Vector<Section> children;
+  /* subsecitons */
+  private Vector<Section> subsections;
 
   /* paragrahs in this section. */
   private Vector<Paragraph> paragraphs;

@@ -19,7 +19,7 @@ public final class List implements Block {
    * get iterator of list elements.
    * @return Iterator of ListElement
    */
-  public Iterator<ListElement> getChilds() {
+  public Iterator<ListElement> getListElements() {
     return listElements.iterator();
   }
 
@@ -27,7 +27,7 @@ public final class List implements Block {
    * get the number of list elements.
    * @return number of list elements
    */
-  public int getSizeOfChildren() {
+  public int getNumberOfListElements() {
     return listElements.size();
   }
 

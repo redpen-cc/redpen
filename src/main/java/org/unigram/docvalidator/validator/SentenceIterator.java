@@ -43,7 +43,7 @@ public class SentenceIterator implements Validator {
         this.lineValidators.iterator(); iterator.hasNext();) {
       SentenceValidator validator = iterator.next();
       for (Iterator<Section> sectionIterator =
-            file.getChilds(); sectionIterator.hasNext();) {
+            file.getSections(); sectionIterator.hasNext();) {
         Section currentSection = sectionIterator.next();
         checkSection(distributor, errors, validator,
             currentSection, file.getFileName());
@@ -93,7 +93,7 @@ public class SentenceIterator implements Validator {
         currentSection.getParagraph(); paraIterator.hasNext();) {
       Paragraph currentParagraph = paraIterator.next();
       for (Iterator<Sentence> lineIterator =
-          currentParagraph.getChilds(); lineIterator.hasNext();) {
+          currentParagraph.getSentences(); lineIterator.hasNext();) {
         List<ValidationError> validationErrors =
             validator.check(lineIterator.next());
         for (Iterator<ValidationError> errorIterator =

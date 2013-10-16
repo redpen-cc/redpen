@@ -62,7 +62,7 @@ public class WikiParserTest {
     InputStream is = new ByteArrayInputStream(sampleText.getBytes("utf-8")); 
     try {
       FileContent doc = parser.generateDocument(is);
-      Iterator<Section> sections = doc.getChilds();
+      Iterator<Section> sections = doc.getSections();
       int sectionNum = 0;
       Vector<Section> sectionBlocks =new Vector<Section>();
       while(sections.hasNext()) {
@@ -71,7 +71,7 @@ public class WikiParserTest {
       }
       assertEquals(3, sectionNum);
       assertEquals(1,doc.getLastSection().getSizeofLists());
-      assertEquals(5,doc.getLastSection().getLastListBlock().getSizeOfChildren());
+      assertEquals(5,doc.getLastSection().getLastListBlock().getNumberOfListElements());
       Iterator<Paragraph> paragraph = doc.getLastSection().getParagraph();
       int pcount = 0;
       while (paragraph.hasNext()) {
@@ -100,7 +100,7 @@ public class WikiParserTest {
     }
     try {
       FileContent doc = parser.generateDocument(is);
-      Section firstSections = doc.getChilds().next();
+      Section firstSections = doc.getSections().next();
       Paragraph firstParagraph = firstSections.getParagraph().next();
       assertEquals(3, firstParagraph.getNumverOfSentences());
       for (int i=0; i<expectedResult.length; i++) {
@@ -125,7 +125,7 @@ public class WikiParserTest {
     }
     try {
       FileContent doc = parser.generateDocument(is);
-      Section firstSections = doc.getChilds().next();
+      Section firstSections = doc.getSections().next();
       Paragraph firstParagraph = firstSections.getParagraph().next();
       assertEquals(5, firstParagraph.getNumverOfSentences());
     } catch (DocumentValidatorException e) {
@@ -146,7 +146,7 @@ public class WikiParserTest {
     }
     try {
       FileContent doc = parser.generateDocument(is);
-      Section firstSections = doc.getChilds().next();
+      Section firstSections = doc.getSections().next();
       assertEquals(false, firstSections.getParagraph().hasNext());
     } catch (DocumentValidatorException e) {
       fail();
@@ -166,10 +166,10 @@ public class WikiParserTest {
     }
     try {
       FileContent doc = parser.generateDocument(is);
-      Section firstSections = doc.getChilds().next();
+      Section firstSections = doc.getSections().next();
       Paragraph firstParagraph = firstSections.getParagraph().next();
       assertEquals(3, firstParagraph.getNumverOfSentences());
-      Iterator<Sentence> siter = firstParagraph.getChilds();
+      Iterator<Sentence> siter = firstParagraph.getSentences();
       while(siter.hasNext()) {
         Sentence s= siter.next();
         assertEquals(s.content, ".");
@@ -192,7 +192,7 @@ public class WikiParserTest {
     }
     try {
       FileContent doc = parser.generateDocument(is);
-      Section firstSections = doc.getChilds().next();
+      Section firstSections = doc.getSections().next();
       Paragraph firstParagraph = firstSections.getParagraph().next();
       assertEquals(2, firstParagraph.getNumverOfSentences());
     } catch (DocumentValidatorException e) {
@@ -216,7 +216,7 @@ public class WikiParserTest {
     }
     try {
       FileContent doc = parser.generateDocument(is);
-      Section firstSections = doc.getChilds().next();
+      Section firstSections = doc.getSections().next();
       Paragraph firstParagraph = firstSections.getParagraph().next();
       assertEquals(2, firstParagraph.getNumverOfSentences());
     } catch (DocumentValidatorException e) {
@@ -259,7 +259,7 @@ public class WikiParserTest {
     }
     try {
       FileContent doc = parser.generateDocument(is);
-      Section firstSections = doc.getChilds().next();
+      Section firstSections = doc.getSections().next();
       Paragraph firstParagraph = firstSections.getParagraph().next();
       assertEquals(2, firstParagraph.getNumverOfSentences());
     } catch (DocumentValidatorException e) {

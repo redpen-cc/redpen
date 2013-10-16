@@ -41,7 +41,7 @@ public final class PlainTextParser extends AbstractDocumentParser {
       e1.printStackTrace();
     }
     FileContent fileContent = new FileContent();
-    fileContent.appendChild(new Section(0, ""));
+    fileContent.appendSection(new Section(0, ""));
     Section currentSection = fileContent.getLastSection();
     currentSection.appendParagraph(new Paragraph());
     try {
