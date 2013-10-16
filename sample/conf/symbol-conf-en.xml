@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<character-table>
+  <character name="EXCLAMATION_MARK" value="!" invalid-chars="！" after-space="true" />
+  <character name="LEFT_QUATATION_MARK" value="\'"  invalid-chars="“" before-space="true" />
+  <character name="RIGHT_QUATATION_MARK" value="\'"  invalid-chars="”" after-space="true" />
+  <character name="NUMBER_SIGN" value="#" invalid-chars="＃" after-space="true" />
+  <character name="FULL_STOP" value="." invalid-chars="．。" after-space="true" />
+  <character name="COMMA" value="," invalid-chars="、，" after-space="true" />
+</character-table>
