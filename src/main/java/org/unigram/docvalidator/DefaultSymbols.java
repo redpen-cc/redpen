@@ -1,9 +1,9 @@
 package org.unigram.docvalidator;
 
 /**
- * Constants contains the many default settings used throughout the project.
+ * Contain the default symbols and characters.
  */
-public final class Constants {
+public final class DefaultSymbols {
   /**
    * Default COMMA character.
    * If comma used in validations is not specified, this value
@@ -25,5 +25,5 @@ public final class Constants {
    */
   public static final String DEFAULT_PERIOD = ".";
 
-  private Constants() { }
+  private DefaultSymbols() { }
 }

@@ -10,7 +10,7 @@ import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.Configuration;
 import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.Constants;
+import org.unigram.docvalidator.DefaultSymbols;
 
 /**
  * Abstract Parser class containing common procedures to
@@ -28,18 +28,18 @@ public abstract class AbstractDocumentParser implements Parser {
     Configuration conf = resource.getConfiguration();
     CharacterTable characterTable = resource.getCharacterTable();
 
-    this.comment = Constants.DEFAULT_COMMENT;
+    this.comment = DefaultSymbols.DEFAULT_COMMENT;
     if (conf.hasAttribute("comment")) {
       this.comment = conf.getAttribute("comment");
     }
 
-    this.comma = Constants.DEFAULT_COMMA;
+    this.comma = DefaultSymbols.DEFAULT_COMMA;
     if (characterTable.isContainCharacter("COMMA")) {
       this.comma = characterTable.getCharacter("COMMA").getValue();
       LOG.info("comma is set to \"" + this.comma + "\"");
     }
 
-    this.period = Constants.DEFAULT_PERIOD;
+    this.period = DefaultSymbols.DEFAULT_PERIOD;
     if (characterTable.isContainCharacter("FULL_STOP")) {
       this.period = characterTable.getCharacter("FULL_STOP").getValue();
       LOG.info("full stop is set to \"" + this.period + "\"");
