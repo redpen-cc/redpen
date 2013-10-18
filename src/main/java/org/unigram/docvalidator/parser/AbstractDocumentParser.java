@@ -28,18 +28,18 @@ public abstract class AbstractDocumentParser implements Parser {
     Configuration conf = resource.getConfiguration();
     CharacterTable characterTable = resource.getCharacterTable();
 
-    this.comment = DefaultSymbols.DEFAULT_COMMENT;
+    this.comment = DefaultSymbols.DEFAULT_COMMENT.getValue();
     if (conf.hasAttribute("comment")) {
       this.comment = conf.getAttribute("comment");
     }
 
-    this.comma = DefaultSymbols.DEFAULT_COMMA;
+    this.comma = DefaultSymbols.DEFAULT_COMMA.getValue();
     if (characterTable.isContainCharacter("COMMA")) {
       this.comma = characterTable.getCharacter("COMMA").getValue();
       LOG.info("comma is set to \"" + this.comma + "\"");
     }
 
-    this.period = DefaultSymbols.DEFAULT_PERIOD;
+    this.period = DefaultSymbols.DEFAULT_PERIOD.getValue();
     if (characterTable.isContainCharacter("FULL_STOP")) {
       this.period = characterTable.getCharacter("FULL_STOP").getValue();
       LOG.info("full stop is set to \"" + this.period + "\"");
