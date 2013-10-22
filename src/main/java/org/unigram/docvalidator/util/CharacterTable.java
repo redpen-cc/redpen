@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,6 +15,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.unigram.docvalidator.DefaultSymbols;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -50,6 +52,7 @@ public final class CharacterTable {
   public CharacterTable() {
     super();
     characterDictionary = new HashMap<String, DVCharacter>();
+    loadDefaultCharacterTable(characterDictionary);
   }
 
   public int getSizeDictionarySize() {
@@ -71,12 +74,24 @@ public final class CharacterTable {
     return false;
   }
 
+  private void loadDefaultCharacterTable(
+      Map<String, DVCharacter> characterTable) {
+    Iterator<String> characterNames =
+        DefaultSymbols.getAllCharacterNames();
+    while (characterNames.hasNext()) {
+      String charName = characterNames.next();
+      DVCharacter character = DefaultSymbols.get(charName);
+      characterTable.put(charName, character);
+    }
+  }
+
   /**
    * load input character configuration.
    * @param stream input configuration
    * @param characterTable TODO
    */
-  private void loadTable(InputStream stream, Map<String, DVCharacter> characterTable) {
+  private void loadTable(InputStream stream,
+      Map<String, DVCharacter> characterTable) {
     Document document = parseCharTableString(stream);
     if (document == null) {
       LOG.error("Failed to parse character table");

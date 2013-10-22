@@ -18,7 +18,6 @@ public class CharacterTableTest {
         "</character-table>");
     InputStream stream = IOUtils.toInputStream(sampleCharTable);
     CharacterTable characterTable = new CharacterTable(stream);
-    assertEquals(1, characterTable.getSizeDictionarySize());
     DVCharacter ch= characterTable.getCharacter("EXCLAMATION_MARK");
     assertNotNull(ch);
     assertEquals("!", ch.getValue());
@@ -37,7 +36,6 @@ public class CharacterTableTest {
         "</character-table>");
     InputStream stream = IOUtils.toInputStream(sampleCharTable);
     CharacterTable characterTable = new CharacterTable(stream);
-    assertEquals(1, characterTable.getSizeDictionarySize());
     DVCharacter ch= characterTable.getCharacter("EXCLAMATION_MARK");
     assertNotNull(ch);
     assertEquals("!", ch.getValue());
@@ -56,7 +54,6 @@ public class CharacterTableTest {
         "</character-table>");
     InputStream stream = IOUtils.toInputStream(sampleCharTable);
     CharacterTable characterTable = new CharacterTable(stream);
-    assertEquals(1, characterTable.getSizeDictionarySize());
     DVCharacter ch= characterTable.getCharacter("LEFT_QUATATION_MARK");
     assertEquals(2, ch.getInvalidChars().size());
     assertEquals("‘", ch.getInvalidChars().get(0));
@@ -72,7 +69,6 @@ public class CharacterTableTest {
         "</character-table>");
     InputStream stream = IOUtils.toInputStream(sampleCharTable);
     CharacterTable characterTable = new CharacterTable(stream);
-    assertEquals(1, characterTable.getSizeDictionarySize());
     DVCharacter ch= characterTable.getCharacter("LEFT_QUATATION_MARK");
     assertEquals(0, ch.getInvalidChars().size());
   }
@@ -86,7 +82,6 @@ public class CharacterTableTest {
         "</character-table>");
     InputStream stream = IOUtils.toInputStream(sampleCharTable);
     CharacterTable characterTable = new CharacterTable(stream);
-    assertEquals(1, characterTable.getSizeDictionarySize());
     DVCharacter ch= characterTable.getCharacter("QUESTION_MARK");
     assertNull(ch);
   }

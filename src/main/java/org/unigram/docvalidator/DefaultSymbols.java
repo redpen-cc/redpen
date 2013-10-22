@@ -1,6 +1,7 @@
 package org.unigram.docvalidator;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -22,6 +23,14 @@ public final class DefaultSymbols {
       return null;
     }
     return SYMBOL_TABLE.get(name);
+  }
+
+  /**
+   * Return all the names of registered characters.
+   * @return all names of characters
+   */
+  public static Iterator<String> getAllCharacterNames() {
+    return SYMBOL_TABLE.keySet().iterator();
   }
 
   private static Map<String, DVCharacter> SYMBOL_TABLE
