@@ -25,13 +25,14 @@ import org.xml.sax.SAXException;
  */
 public final class CharacterTable {
   public CharacterTable(String fileName) {
+    this();
     InputStream fis = null;
     try {
       fis = new FileInputStream(fileName);
     } catch (FileNotFoundException e) {
       LOG.error(e.getMessage());
     }
-    characterDictionary = loadTable(fis);
+    loadTable(fis, characterDictionary);
   }
 
   /**
@@ -40,7 +41,7 @@ public final class CharacterTable {
    */
   public CharacterTable(InputStream stream) {
     this();
-    characterDictionary = loadTable(stream);
+    loadTable(stream, characterDictionary);
   }
 
   /**
@@ -49,39 +50,6 @@ public final class CharacterTable {
   public CharacterTable() {
     super();
     characterDictionary = new HashMap<String, DVCharacter>();
-  }
-
-  /**
-   * load input character configuration.
-   * @param stream input configuration
-   * @return Map from Character(String) to DVCharacter
-   */
-  public Map<String, DVCharacter> loadTable(InputStream stream) {
-    Map<String, DVCharacter> charTable = new HashMap<String, DVCharacter>();
-    Document document = parseCharTableString(stream);
-    if (document == null) {
-      LOG.error("Failed to parse character table");
-      return null;
-    }
-
-    document.getDocumentElement().normalize();
-    Node root = document.getElementsByTagName("character-table").item(0);
-    NodeList nodeList = root.getChildNodes();
-    for (int temp = 0; temp < nodeList.getLength(); temp++) {
-      Node nNode = nodeList.item(temp);
-      if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-          Element element = (Element) nNode;
-          if (element.getNodeName().equals("character")) {
-            DVCharacter currentChar = createCharacter(element);
-            charTable.put(currentChar.getName(), currentChar);
-          } else {
-            LOG.error("Invalid Node Name: " + element.getNodeName());
-            return null;
-          }
-      }
-    }
-    LOG.info("Succeeded to load character table");
-    return charTable;
   }
 
   public int getSizeDictionarySize() {
@@ -101,6 +69,38 @@ public final class CharacterTable {
       return true;
     }
     return false;
+  }
+
+  /**
+   * load input character configuration.
+   * @param stream input configuration
+   * @param characterTable TODO
+   */
+  private void loadTable(InputStream stream, Map<String, DVCharacter> characterTable) {
+    Document document = parseCharTableString(stream);
+    if (document == null) {
+      LOG.error("Failed to parse character table");
+      return;
+    }
+
+    document.getDocumentElement().normalize();
+    Node root = document.getElementsByTagName("character-table").item(0);
+    NodeList nodeList = root.getChildNodes();
+    for (int temp = 0; temp < nodeList.getLength(); temp++) {
+      Node nNode = nodeList.item(temp);
+      if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+          Element element = (Element) nNode;
+          if (element.getNodeName().equals("character")) {
+            DVCharacter currentChar = createCharacter(element);
+            characterTable.put(currentChar.getName(), currentChar);
+          } else {
+            LOG.error("Invalid Node Name: " + element.getNodeName());
+            return;
+          }
+      }
+    }
+    LOG.info("Succeeded to load character table");
+    return;
   }
 
   private Document parseCharTableString(InputStream input) {
