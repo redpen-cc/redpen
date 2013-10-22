@@ -8,7 +8,7 @@ public interface ResourceExtractor {
   /**
    * load line.
    * @param line line in a file
-   * @return
+   * @return 0 when succeeded, otherwise 1
    */
   int load(String line);
 }

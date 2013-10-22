@@ -6,13 +6,13 @@ package org.unigram.docvalidator.store;
 public final class ListElement {
   /**
    * constructor.
-   * @param level indentation level
-   * @param content content of list element
+   * @param listLevel indentation level
+   * @param listContent content of list element
    */
-  public ListElement(int l, String c) {
+  public ListElement(int listLevel, String listContent) {
     super();
-    this.content = c;
-    this.level = l;
+    this.level = listLevel;
+    this.content = listContent;
   }
 
   /**

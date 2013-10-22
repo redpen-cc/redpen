@@ -12,7 +12,7 @@ public interface Block {
 
   /**
    * extract summary of the block.
-   * @return
+   * @return 0 when succeeded, 1 otherwise
    */
   int extractSummary();
 }

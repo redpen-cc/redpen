@@ -55,7 +55,7 @@ public final class Section implements Block {
 
   /**
    * Set super section.
-   * @param parentSectionp super section
+   * @param parentSection super section
    */
   public void setParent(Section parentSection) {
     this.parent = parentSection;

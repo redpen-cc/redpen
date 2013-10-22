@@ -24,7 +24,7 @@ public final class DVCharacter {
    * constructor.
    * @param charName name of target character
    * @param charValue character
-   * @param invalidChasStr list of invalid characters
+   * @param invalidCharsStr list of invalid characters
    */
   public DVCharacter(String charName, String charValue,
       String invalidCharsStr) {
@@ -38,7 +38,7 @@ public final class DVCharacter {
    * constructor.
    * @param charName name of target character
    * @param charValue character
-   * @param invalidChasStr list of invalid characters
+   * @param invalidCharsStr list of invalid characters
    * @param haveBeforeSpace flag to have a space before the character
    * @param haveAfterSpace flag to have a pace after the character
    */
@@ -123,7 +123,7 @@ public final class DVCharacter {
 
   /**
    * set the flag to know the character should have a space.
-   * @param needBeforeSpace the character should have a space after it
+   * @param afterSpace the character should have a space after it
    */
   public void setNeedAfterSpace(boolean afterSpace) {
     this.needAfterSpace = afterSpace;
