@@ -67,7 +67,7 @@ public final class FileContent implements Block {
 
   /**
    * set file name.
-   * @param fileName file name
+   * @param name file name
    */
   public void setFileName(String name) {
     this.fileName = name;

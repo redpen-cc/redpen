@@ -11,7 +11,7 @@ import java.util.Set;
 public final class Configuration {
   /**
    * constructor.
-   * @param configurationName name configuration settings
+   * @param name name configuration settings
    */
   public Configuration(String name) {
     this.configurationName = name;
@@ -22,7 +22,7 @@ public final class Configuration {
 
   /**
    * constructor.
-   * @param configurationName name configuration settings
+   * @param name name configuration settings
    * @param parent parent Configuration object
    */
   public Configuration(String name, Configuration parent) {
