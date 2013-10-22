@@ -124,8 +124,8 @@ public final class CharacterTable {
         element.getAttribute("name"),
         element.getAttribute("value"),
         element.getAttribute("invalid-chars"),
-        element.getAttribute("before-space"),
-        element.getAttribute("after-space"));
+        Boolean.parseBoolean(element.getAttribute("before-space")),
+        Boolean.parseBoolean(element.getAttribute("after-space")));
     return character;
   }
 
