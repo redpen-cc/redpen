@@ -55,9 +55,11 @@ public final class DefaultSymbols {
     SYMBOL_TABLE.put("NUMBER_SIGN",
         new DVCharacter("NUMBER_SIGN", "#", "", false, false));
     SYMBOL_TABLE.put("DOLLAR_SIGN",
-        new DVCharacter("DOLLAR_SIGN", "?", "", false, false));
+        new DVCharacter("DOLLAR_SIGN", "$", "", false, false));
     SYMBOL_TABLE.put("PERCENT_SIGN",
         new DVCharacter("PERCENT_SIGN", "%", "", false, false));
+    SYMBOL_TABLE.put("QUESTION_MARK",
+        new DVCharacter("QUESTION_MARK", "?", "", false, false));
     SYMBOL_TABLE.put("AMPERSAND",
         new DVCharacter("AMPERSAND", "&", "", false, false));
     SYMBOL_TABLE.put("LEFT_PARENTHESIS",
