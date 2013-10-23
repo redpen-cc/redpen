@@ -73,34 +73,42 @@ public final class DefaultSymbols {
         new DVCharacter("COMMENT", "#", "", false, false));
     SYMBOL_TABLE.put("FULL_STOP",
         new DVCharacter("FULL_STOP", ".", "", false, false));
-    SYMBOL_TABLE.put("PLUSH_SIGN", new DVCharacter("+", ",", "", false, false));
+    SYMBOL_TABLE.put("PLUS_SIGN",
+        new DVCharacter("PLUS_SIGN", "+", "", false, false));
     SYMBOL_TABLE.put("HYPHEN_SIGN",
-        new DVCharacter("-", ",", "", false, false));
-    SYMBOL_TABLE.put("MINUS_SIGN", new DVCharacter("-", ",", "", false, false));
-    SYMBOL_TABLE.put("SLASH", new DVCharacter("/", ",", "", false, false));
-    SYMBOL_TABLE.put("COLON", new DVCharacter(":", ",", "", false, false));
-    SYMBOL_TABLE.put("semicolon", new DVCharacter(";", ",", "", false, false));
+        new DVCharacter("HYPHEN_SIGN", "-", "", false, false));
+    SYMBOL_TABLE.put("MINUS_SIGN",
+        new DVCharacter("MINUS_SIGN", "-", "", false, false));
+    SYMBOL_TABLE.put("SLASH", new DVCharacter("SLASH", "/", "", false, false));
+    SYMBOL_TABLE.put("COLON", new DVCharacter("COLON", ":", "", false, false));
+    SYMBOL_TABLE.put("SEMICOLON",
+        new DVCharacter("SEMICOLON", ";", "", false, false));
     SYMBOL_TABLE.put("LESS_THAN_SIGN",
-        new DVCharacter("<", ",", "", false, false));
-    SYMBOL_TABLE.put("EQUAL_SIGN", new DVCharacter("=", ",", "", false, false));
+        new DVCharacter("LESS_THAN_SIGN", "<", "", false, false));
+    SYMBOL_TABLE.put("EQUAL_SIGN",
+        new DVCharacter("EQUAL_SIGN", "=", "", false, false));
     SYMBOL_TABLE.put("GREATER_THAN_SIGN",
-        new DVCharacter(">", ",", "", false, false));
-    SYMBOL_TABLE.put("AT_MARK", new DVCharacter("@", ",", "", false, false));
+        new DVCharacter("GREATER_THAN_SIGN", ">", "", false, false));
+    SYMBOL_TABLE.put("AT_MARK",
+        new DVCharacter("AT_MARK", "@", "", false, false));
     SYMBOL_TABLE.put("LEFT_SQUARE_BRACKET",
-        new DVCharacter("[", ",", "", false, false));
+        new DVCharacter("LEFT_SQUARE_BRACKET", "[", "", false, false));
     SYMBOL_TABLE.put("RIGHT_SQUARE_BRACKET",
-        new DVCharacter("[", ",", "", false, false));
-    SYMBOL_TABLE.put("BACKSLASH", new DVCharacter("\\", ",", "", false, false));
+        new DVCharacter("RIGHT_SQUARE_BRACKET", "]", "", false, false));
+    SYMBOL_TABLE.put("BACKSLASH",
+        new DVCharacter("BACKSLASH", "\\", "", false, false));
     SYMBOL_TABLE.put("CIRCUMFLEX_ACCENT",
-        new DVCharacter("^", ",", "", false, false));
-    SYMBOL_TABLE.put("LOW_LINE", new DVCharacter("_", ",", "", false, false));
+        new DVCharacter("CIRCUMFLEX_ACCENT", "^", "", false, false));
+    SYMBOL_TABLE.put("LOW_LINE",
+        new DVCharacter("LOW_LINE", "_", "", false, false));
     SYMBOL_TABLE.put("LEFT_CURLY_BRACKET",
-        new DVCharacter("{", ",", "", false, false));
+        new DVCharacter("LEFT_CURLY_BRACKET", "{", "", false, false));
     SYMBOL_TABLE.put("RIGHT_CURLY_BRACKET",
-        new DVCharacter("}", ",", "", false, false));
+        new DVCharacter("RIGHT_CURLY_BRACKET", "}", "", false, false));
     SYMBOL_TABLE.put("VERTICAL_BAR",
-        new DVCharacter("|", ",", "", false, false));
-    SYMBOL_TABLE.put("TILDE", new DVCharacter("TILDE", "~", "", false, false));
+        new DVCharacter("VERTICAL_BAR", "|", "", false, false));
+    SYMBOL_TABLE.put("TILDE",
+        new DVCharacter("TILDE", "~", "", false, false));
 
     /******************************************************************
      * Digits
