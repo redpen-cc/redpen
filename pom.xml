@@ -4,8 +4,9 @@
 
   <groupId>org.unigram</groupId>
   <version>0.0.1-SNAPSHOT</version>
-
-  <url>http://maven.apache.org</url>
+  <url>http://document-validator.org</url>
+  <artifactId>document-validator</artifactId>
+  <name>DocumentValidator</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -145,6 +146,4 @@
       <version>1.0.1</version>
     </dependency>
   </dependencies>
-  <artifactId>document-validator</artifactId>
-  <name>Document Validator</name>
 </project>
