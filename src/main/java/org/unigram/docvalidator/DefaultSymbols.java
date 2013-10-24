@@ -45,13 +45,13 @@ public final class DefaultSymbols {
     SYMBOL_TABLE.put("EXCLAMATION_MARK",
         new DVCharacter("EXCLAMATION_MARK", "!", "", false, false));
     SYMBOL_TABLE.put("LEFT_SINGLE_QUOTATION_MARK",
-        new DVCharacter("LEFT_SINGLE_QUOTATION_MARK", "\'", "", false, false));
+        new DVCharacter("LEFT_SINGLE_QUOTATION_MARK", "‘", "", false, false));
     SYMBOL_TABLE.put("RIGHT_SINGLE_QUOTATION_MARK",
-        new DVCharacter("RIGHT_SINGLE_QUOTATION_MARK", "\'", "", false, false));
+        new DVCharacter("RIGHT_SINGLE_QUOTATION_MARK", "’", "", false, false));
     SYMBOL_TABLE.put("LEFT_DOUBLE_QUOTATION_MARK",
-        new DVCharacter("LEFT_DOUBLE_QUOTATION_MARK", "\"", "", false, false));
+        new DVCharacter("LEFT_DOUBLE_QUOTATION_MARK", "“", "", false, false));
     SYMBOL_TABLE.put("RIGHT_DOBULE_QUOTATION_MARK",
-        new DVCharacter("RIGHT_DOBULE_QUOTATION_MARK", "\"", "", false, false));
+        new DVCharacter("RIGHT_DOBULE_QUOTATION_MARK", "”", "", false, false));
     SYMBOL_TABLE.put("NUMBER_SIGN",
         new DVCharacter("NUMBER_SIGN", "#", "", false, false));
     SYMBOL_TABLE.put("DOLLAR_SIGN",
