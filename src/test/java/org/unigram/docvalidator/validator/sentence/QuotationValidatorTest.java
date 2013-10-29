@@ -188,4 +188,44 @@ public class QuotationValidatorTest {
     assertNotNull(errors);
     assertEquals(1, errors.size());
   }
+
+  @Test
+  public void testLeftDoubleQuotationsWihtoutSpace() {
+    QuotationValidator validator =
+        new QuotationValidator();
+    Sentence str = new Sentence("I said“that is true”.",0);
+    List<ValidationError> errors = validator.check(str);
+    assertNotNull(errors);
+    assertEquals(1, errors.size());
+  }
+
+  @Test
+  public void testLeftAsciiDoubleQuotationsWihtoutSpace() {
+    QuotationValidator validator =
+        new QuotationValidator(true);
+    Sentence str = new Sentence("I said\"that is true\".",0);
+    List<ValidationError> errors = validator.check(str);
+    assertNotNull(errors);
+    assertEquals(1, errors.size());
+  }
+
+  @Test
+  public void testRightDoubleQuotationsWihtoutSpace() {
+    QuotationValidator validator =
+        new QuotationValidator();
+    Sentence str = new Sentence("I said “that is true”is true.",0);
+    List<ValidationError> errors = validator.check(str);
+    assertNotNull(errors);
+    assertEquals(1, errors.size());
+  }
+
+  @Test
+  public void testRightAsciiDoubleQuotationsWihtoutSpace() {
+    QuotationValidator validator =
+        new QuotationValidator(true);
+    Sentence str = new Sentence("I said \"that is true\"is true.",0);
+    List<ValidationError> errors = validator.check(str);
+    assertNotNull(errors);
+    assertEquals(1, errors.size());
+  }
 }

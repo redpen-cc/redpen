@@ -25,7 +25,7 @@ public class QuotationValidator implements SentenceValidator {
 
   public QuotationValidator() {
     super();
-    useAscii = false;
+    this.useAscii = false;
     leftSingleQuotationMark =
         DefaultSymbols.get("LEFT_SINGLE_QUOTATION_MARK");
     rightSingleQuotationMark =
@@ -40,6 +40,16 @@ public class QuotationValidator implements SentenceValidator {
   public QuotationValidator(boolean useAscii) {
     this();
     this.useAscii = useAscii;
+    if (useAscii) {
+      leftSingleQuotationMark =
+          new DVCharacter("LEFT_SINGLE_QUOTATION_MARK", "'", "", true, false);
+      rightSingleQuotationMark =
+          new DVCharacter("RIGHT_SINGLE_QUOTATION_MARK", "'", "", false, true);
+      leftDoubleQuotationMark =
+          new DVCharacter("LEFT_DOUBLE_QUOTATION_MARK", "\"", "", true, false);
+      rightDoubleQuotationMark =
+          new DVCharacter("RIGHT_DOUBLE_QUOTATION_MARK", "\"", "", false, true);
+    }
   }
 
   @Override
@@ -102,15 +112,15 @@ public class QuotationValidator implements SentenceValidator {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     int leftPosition = 0;
     int rightPosition = 0;
-    while (leftPosition >= 0) {
+    while (leftPosition >= 0 && rightPosition < sentenceString.length()) {
       leftPosition = this.getQuotePosition(sentenceString,
           leftQuotation.getValue(),
-          rightPosition);
+          rightPosition+1);
 
       if (leftPosition < 0) {
         rightPosition  = this.getQuotePosition(sentenceString,
             rightQuotation.getValue(),
-            0);
+            rightPosition+1);
       } else {
         rightPosition  = this.getQuotePosition(sentenceString,
             rightQuotation.getValue(),
@@ -155,29 +165,22 @@ public class QuotationValidator implements SentenceValidator {
             + " in line: " + sentenceString));
       }      
 
-      if (!useAscii) {
-        return errors;
-      }
-      
-      System.out.println("using ascii");
-      System.out.println("\tleftPositon: "+ leftPosition);
-      System.out.println("\trightPositon: "+ rightPosition);
-
       // check if quotes have white spaces
-      if (leftQuotation.isNeedBeforeSpace() && 
-          sentenceString.charAt(leftPosition-1) == ' ') {
+      if (leftPosition > 0 && leftQuotation.isNeedBeforeSpace() &&
+          (sentenceString.charAt(leftPosition-1) != ' ' )) {
         errors.add(new ValidationError(sentence.position,
-            "Left Character does not have : "
+            "Left quotation does not have space: "
             + " in line: " + sentenceString));
       }
 
-      if (rightQuotation.isNeedBeforeSpace() && 
-          sentenceString.charAt(leftPosition+1) == ' ') {
+      if (rightPosition > 0 && rightPosition < sentenceString.length()-1
+          && rightQuotation.isNeedAfterSpace() &&
+          (sentenceString.charAt(rightPosition+1) != ' ' &&
+              sentenceString.charAt(rightPosition+1) != '.')) {
         errors.add(new ValidationError(sentence.position,
-            "Left Character does not have : "
+            "Right quotation does not have space"
             + " in line: " + sentenceString));
       }
-
     }
     return errors;
   }
@@ -185,7 +188,7 @@ public class QuotationValidator implements SentenceValidator {
   private int getQuotePosition(String sentenceStr, String quote,
       int startPosition) {
     int quoteCandidatePosition = startPosition;
-    boolean isFound = false; 
+    boolean isFound = false;
     while (startPosition > -1) {
       quoteCandidatePosition = sentenceStr.indexOf(quote, startPosition);
       isFound = detectIsFound(sentenceStr, quoteCandidatePosition);
