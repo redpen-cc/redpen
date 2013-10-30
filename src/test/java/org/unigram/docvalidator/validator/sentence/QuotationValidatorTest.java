@@ -228,4 +228,14 @@ public class QuotationValidatorTest {
     assertNotNull(errors);
     assertEquals(1, errors.size());
   }
+
+  @Test
+  public void testDoubleQuotationsWithNonAsciiPeriod() {
+    QuotationValidator validator =
+        new QuotationValidator(true, '。');
+    Sentence str = new Sentence("I said \"that is true\"。",0);
+    List<ValidationError> errors = validator.check(str);
+    assertNotNull(errors);
+    assertEquals(0, errors.size());
+  }
 }

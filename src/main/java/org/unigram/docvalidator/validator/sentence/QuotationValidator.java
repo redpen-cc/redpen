@@ -21,6 +21,7 @@ public class QuotationValidator implements SentenceValidator {
   public QuotationValidator() {
     super();
     this.useAscii = false;
+    this.period = DefaultSymbols.get("FULL_STOP").getValue().charAt(0);
     leftSingleQuotationMark =
         DefaultSymbols.get("LEFT_SINGLE_QUOTATION_MARK");
     rightSingleQuotationMark =
@@ -47,6 +48,11 @@ public class QuotationValidator implements SentenceValidator {
     }
   }
 
+  public QuotationValidator(boolean isUseAscii, Character fullStop) {
+    this(isUseAscii);
+    this.period = fullStop;
+  }
+
   @Override
   public List<ValidationError> check(Sentence sentence) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
@@ -66,6 +72,10 @@ public class QuotationValidator implements SentenceValidator {
   @Override
   public boolean initialize(Configuration conf, CharacterTable charTable)
       throws DocumentValidatorException {
+    if (charTable.isContainCharacter("FULL_STOP")) {
+      this.period = charTable.getCharacter("FULL_STOP").getValue().charAt(0);
+    }
+
     if (conf.getAttribute("use_ascii").equals("true")) {
       useAscii = true;
       leftSingleQuotationMark =
@@ -171,10 +181,10 @@ public class QuotationValidator implements SentenceValidator {
       if (rightPosition > 0 && rightPosition < sentenceString.length() - 1
           && rightQuotation.isNeedAfterSpace()
           && (sentenceString.charAt(rightPosition + 1) != ' '
-          && sentenceString.charAt(rightPosition + 1) != '.')) {
+          && sentenceString.charAt(rightPosition + 1) != this.period)) {
         errors.add(new ValidationError(sentence.position,
             "Right quotation does not have space"
-            + " in line: " + sentenceString));
+                + " in line: " + sentenceString));
       }
     }
     return errors;
@@ -230,4 +240,6 @@ public class QuotationValidator implements SentenceValidator {
   private List<String> exceptionSuffixes;
 
   private boolean useAscii;
+
+  private Character period;
 }
