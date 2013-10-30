@@ -13,15 +13,10 @@ import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.util.ValidationError;
 import org.unigram.docvalidator.validator.SentenceValidator;
 
+/**
+ * Validator to check quotation characters.
+ */
 public class QuotationValidator implements SentenceValidator {
-
-  public static List<String> DEFAULT_EXCEPTION_SUFFIXES;
-
-  static {
-    DEFAULT_EXCEPTION_SUFFIXES = new ArrayList<String>();
-    DEFAULT_EXCEPTION_SUFFIXES.add("s"); // He's
-    DEFAULT_EXCEPTION_SUFFIXES.add("m"); // I'm
-  }
 
   public QuotationValidator() {
     super();
@@ -37,9 +32,9 @@ public class QuotationValidator implements SentenceValidator {
     exceptionSuffixes = DEFAULT_EXCEPTION_SUFFIXES;
   }
 
-  public QuotationValidator(boolean useAscii) {
+  public QuotationValidator(boolean isUseAscii) {
     this();
-    this.useAscii = useAscii;
+    this.useAscii = isUseAscii;
     if (useAscii) {
       leftSingleQuotationMark =
           new DVCharacter("LEFT_SINGLE_QUOTATION_MARK", "'", "", true, false);
@@ -108,23 +103,23 @@ public class QuotationValidator implements SentenceValidator {
   private List<ValidationError> checkQuotation(Sentence sentence,
       DVCharacter leftQuotation,
       DVCharacter rightQuotation) {
-    String sentenceString = sentence.content; 
+    String sentenceString = sentence.content;
     List<ValidationError> errors = new ArrayList<ValidationError>();
     int leftPosition = 0;
     int rightPosition = 0;
     while (leftPosition >= 0 && rightPosition < sentenceString.length()) {
       leftPosition = this.getQuotePosition(sentenceString,
           leftQuotation.getValue(),
-          rightPosition+1);
+          rightPosition + 1);
 
       if (leftPosition < 0) {
         rightPosition  = this.getQuotePosition(sentenceString,
             rightQuotation.getValue(),
-            rightPosition+1);
+            rightPosition + 1);
       } else {
         rightPosition  = this.getQuotePosition(sentenceString,
             rightQuotation.getValue(),
-            leftPosition+1);
+            leftPosition + 1);
       }
 
       // check if left and right quote pair exists
@@ -147,36 +142,36 @@ public class QuotationValidator implements SentenceValidator {
       // check inconsistent quotation marks
       int nextLeftPosition  = this.getQuotePosition(sentenceString,
           leftQuotation.getValue(),
-          leftPosition+1);
+          leftPosition + 1);
 
       int nextRightPosition  = this.getQuotePosition(sentenceString,
           leftQuotation.getValue(),
-          leftPosition+1);
+          leftPosition + 1);
 
       if (nextLeftPosition < rightPosition && nextLeftPosition > 0) {
         errors.add(new ValidationError(sentence.position,
             "Twice Right Quotation marks in succession: "
             + " in line: " + sentenceString));
-      }      
+      }
 
       if (nextRightPosition < leftPosition && nextRightPosition > 0) {
         errors.add(new ValidationError(sentence.position,
             "Twice Left Quotation marks in succession: "
             + " in line: " + sentenceString));
-      }      
+      }
 
       // check if quotes have white spaces
-      if (leftPosition > 0 && leftQuotation.isNeedBeforeSpace() &&
-          (sentenceString.charAt(leftPosition-1) != ' ' )) {
+      if (leftPosition > 0 && leftQuotation.isNeedBeforeSpace()
+          && (sentenceString.charAt(leftPosition - 1) != ' ')) {
         errors.add(new ValidationError(sentence.position,
             "Left quotation does not have space: "
             + " in line: " + sentenceString));
       }
 
-      if (rightPosition > 0 && rightPosition < sentenceString.length()-1
-          && rightQuotation.isNeedAfterSpace() &&
-          (sentenceString.charAt(rightPosition+1) != ' ' &&
-              sentenceString.charAt(rightPosition+1) != '.')) {
+      if (rightPosition > 0 && rightPosition < sentenceString.length() - 1
+          && rightQuotation.isNeedAfterSpace()
+          && (sentenceString.charAt(rightPosition + 1) != ' '
+          && sentenceString.charAt(rightPosition + 1) != '.')) {
         errors.add(new ValidationError(sentence.position,
             "Right quotation does not have space"
             + " in line: " + sentenceString));
@@ -195,7 +190,7 @@ public class QuotationValidator implements SentenceValidator {
       if (isFound) {
         return quoteCandidatePosition;
       } else if (quoteCandidatePosition >= 0 && !isFound) { // exception case
-        startPosition = quoteCandidatePosition+1;
+        startPosition = quoteCandidatePosition + 1;
       } else {
         return -1;
       }
@@ -209,11 +204,19 @@ public class QuotationValidator implements SentenceValidator {
     }
 
     for (Iterator<String> ex = exceptionSuffixes.iterator(); ex.hasNext();) {
-      if (sentenceStr.startsWith(ex.next(), startPosition+1)) {
+      if (sentenceStr.startsWith(ex.next(), startPosition + 1)) {
         return false;
       }
     }
     return true;
+  }
+
+  private static List<String> DEFAULT_EXCEPTION_SUFFIXES;
+
+  static {
+    DEFAULT_EXCEPTION_SUFFIXES = new ArrayList<String>();
+    DEFAULT_EXCEPTION_SUFFIXES.add("s"); // He's
+    DEFAULT_EXCEPTION_SUFFIXES.add("m"); // I'm
   }
 
   private DVCharacter leftSingleQuotationMark;
@@ -225,6 +228,6 @@ public class QuotationValidator implements SentenceValidator {
   private DVCharacter rightDoubleQuotationMark;
 
   private List<String> exceptionSuffixes;
-  
+
   private boolean useAscii;
 }
