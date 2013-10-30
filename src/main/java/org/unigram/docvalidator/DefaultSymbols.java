@@ -44,14 +44,6 @@ public final class DefaultSymbols {
     SYMBOL_TABLE.put("SPACE", new DVCharacter("SPACE", " ", "", false, false));
     SYMBOL_TABLE.put("EXCLAMATION_MARK",
         new DVCharacter("EXCLAMATION_MARK", "!", "", false, false));
-    SYMBOL_TABLE.put("LEFT_SINGLE_QUOTATION_MARK",
-        new DVCharacter("LEFT_SINGLE_QUOTATION_MARK", "‘", "", true, false));
-    SYMBOL_TABLE.put("RIGHT_SINGLE_QUOTATION_MARK",
-        new DVCharacter("RIGHT_SINGLE_QUOTATION_MARK", "’", "", false, true));
-    SYMBOL_TABLE.put("LEFT_DOUBLE_QUOTATION_MARK",
-        new DVCharacter("LEFT_DOUBLE_QUOTATION_MARK", "“", "", true, false));
-    SYMBOL_TABLE.put("RIGHT_DOUBLE_QUOTATION_MARK",
-        new DVCharacter("RIGHT_DOUBLE_QUOTATION_MARK", "”", "", false, true));
     SYMBOL_TABLE.put("NUMBER_SIGN",
         new DVCharacter("NUMBER_SIGN", "#", "", false, false));
     SYMBOL_TABLE.put("DOLLAR_SIGN",

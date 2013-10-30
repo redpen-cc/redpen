@@ -23,13 +23,13 @@ public class QuotationValidator implements SentenceValidator {
     this.useAscii = false;
     this.period = DefaultSymbols.get("FULL_STOP").getValue().charAt(0);
     leftSingleQuotationMark =
-        DefaultSymbols.get("LEFT_SINGLE_QUOTATION_MARK");
+        new DVCharacter("LEFT_SINGLE_QUOTATION_MARK", "‘", "", true, false);
     rightSingleQuotationMark =
-        DefaultSymbols.get("RIGHT_SINGLE_QUOTATION_MARK");
+        new DVCharacter("RIGHT_SINGLE_QUOTATION_MARK", "’", "", false, true);
     leftDoubleQuotationMark =
-        DefaultSymbols.get("LEFT_DOUBLE_QUOTATION_MARK");
+        new DVCharacter("LEFT_DOUBLE_QUOTATION_MARK", "“", "", true, false);
     rightDoubleQuotationMark =
-        DefaultSymbols.get("RIGHT_DOUBLE_QUOTATION_MARK");
+        new DVCharacter("RIGHT_DOUBLE_QUOTATION_MARK", "”", "", false, true);
     exceptionSuffixes = DEFAULT_EXCEPTION_SUFFIXES;
   }
 
