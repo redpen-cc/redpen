@@ -225,8 +225,8 @@ public class QuotationValidator implements SentenceValidator {
 
   static {
     DEFAULT_EXCEPTION_SUFFIXES = new ArrayList<String>();
-    DEFAULT_EXCEPTION_SUFFIXES.add("s"); // He's
-    DEFAULT_EXCEPTION_SUFFIXES.add("m"); // I'm
+    DEFAULT_EXCEPTION_SUFFIXES.add("s "); // He's
+    DEFAULT_EXCEPTION_SUFFIXES.add("m "); // I'm
   }
 
   private DVCharacter leftSingleQuotationMark;
