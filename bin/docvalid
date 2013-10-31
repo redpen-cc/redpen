@@ -4,34 +4,61 @@ VERSION=0.0.1-SNAPSHOT
 RUN_SCRIPT="$(basename "${0}")"
 
 usage() {
-    cat <<_EOF_
-Usage:
-${RUN_SCRIPT} [-v validator-config-file] [-c character-config-file] [-i input-file]
-
-Options:
--vSpecfy validation configuration file.
--cSpecfy character configuration file.
--iSpecify input file.
-_EOF_
+    echo "Usage: $RUN_SCRIPT [OPTIONS] INPUT-FILES"
+    echo
+    echo "Options:"
+    echo "  -v, --validation   [VALIDATION_CONFIG_FILE]"
+    echo "  -c, --character    [CHARACTER_CONFIG_FILE]"
+    echo "  -f, --input-fomart [INPUT-FILES]"
+    echo "  -h, --help"
+    echo
+    exit 1
 }
 
 main() {
     [ $# -lt 1 ] && ( usage; exit 1 );
-    while getopts "v:i:c:h" OPT; do
-        case "${OPT}" in
-            "v" )
-                VALIDATOR_CONFIG_FILE=$OPTARG;;
-            "c" )
-                CHARACTER_CONFIG_FILE=$OPTARG;;
-            "i" )
-                INPUT_FILE=$OPTARG ;;
-            * )
+
+    for OPT in "$@"
+    do
+        case "$OPT" in
+            '-h'|'--help' )
                 usage
+                exit 0
+                ;;
+            '-v'|'--validation' )
+                if [[ -z "$2" ]] || [[ "$2" =~ ^-+ ]]; then
+                    echo "$RUN_SCRIPT: option requires an argument -- $1" 1>&2
+                    exit 1
+                fi
+                VALIDATOR_CONFIG_FILE="$2"
+                shift 2
+                ;;
+            '-c'|'--character' )
+                if [[ -z "$2" ]] || [[ "$2" =~ ^-+ ]]; then
+                    echo "$RUN_SCRIPT: option requires an argument -- $1" 1>&2
+                fi
+                CHARACTER_CONFIG_FILE=$"$2"
+                shift 2
+                ;;
+            '-f'|'--input-format' )
+                if [[ -z "$2" ]] || [[ "$2" =~ ^-+ ]]; then
+                    echo "$RUN_SCRIPT: option requires an argument -- $1" 1>&2
+                fi
+                INPUT_FORMAT="$2"
+                shift 2
+                ;;
+            '--version' )
+                echo "Version: $VERSION"
+                exit 0
+                ;;
+            -*)
+                echo "$RUN_SCRIPT: illegal option -- '$(echo $1 | sed 's/^-*//')'" 1>&2
                 exit 1
                 ;;
         esac
     done
-    java -jar lib/document-validator-${VERSION}.jar --conf ${VALIDATOR_CONFIG_FILE} --char ${CHARACTER_CONFIG_FILE} --input ${INPUT_FILE}
+    INPUT_FILES="$@"
+    java -jar lib/document-validator-${VERSION}.jar --conf ${VALIDATOR_CONFIG_FILE} --char ${CHARACTER_CONFIG_FILE} --input ${INPUT_FILES}
 }
 
 [ ${#BASH_SOURCE[@]} = 1 ] && main "$@"
