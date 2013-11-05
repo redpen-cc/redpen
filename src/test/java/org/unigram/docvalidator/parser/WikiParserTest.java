@@ -245,8 +245,8 @@ public class WikiParserTest {
   public void testGenerateJapaneseDocument() {
     String japaneseConfiguraitonStr = new String(
         "<?xml version=\"1.0\"?>" +
-        "<configuration name=\"Validator\">" +
-        "</configuration>");
+        "<component name=\"Validator\">" +
+        "</component>");
 
     String japaneseCharTableStr = new String(
         "<?xml version=\"1.0\"?>" +

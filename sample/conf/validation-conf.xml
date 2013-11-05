@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<configuration name="Validator">
+<component name="Validator">
 
   <component name="SentenceIterator">
     <component name="SentenceLength">
@@ -15,4 +15,4 @@
   </component>
   <component name="ParagraphStartWith" />
 
-</configuration>
+</component>

@@ -37,8 +37,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * @author takahiko
- *
+ * Load configuration file of Validators.
  */
 public final class ConfigurationLoader {
 
@@ -59,7 +58,7 @@ public final class ConfigurationLoader {
       return null;
     }
     doc.getDocumentElement().normalize();
-    Node root = doc.getElementsByTagName("configuration").item(0);
+    Node root = doc.getElementsByTagName("component").item(0);
     Element rootElement = (Element) root;
     Configuration rootConfiguration =
         new Configuration(rootElement.getAttribute("name"));
