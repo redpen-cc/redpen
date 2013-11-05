@@ -34,7 +34,7 @@ public class ConfigurationTest {
   public void setUp () {
     String sampleConfiguraiton = new String(
         "<?xml version=\"1.0\"?>"+ 
-        "<configuration name=\"Validator\">" +
+        "<component name=\"Validator\">" +
           "<property name=\"unit\" value=\"character\" />" +
           "<property name=\"period\" value=\".\" />" +
           "<property name=\"comma\" value=\", \" />" +
@@ -47,7 +47,7 @@ public class ConfigurationTest {
           "</component>" +
           "<component name=\"SentenceComma\" />" +
           "<component name=\"InvalidSuffix\" />" +
-        "</configuration>");
+        "</component>");
 
   ConfigurationLoader loader = new ConfigurationLoader();
     InputStream stream = IOUtils.toInputStream(sampleConfiguraiton);
