@@ -37,8 +37,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * @author takahiko
- *
+ * Load configuration file of Validators.
  */
 public final class ConfigurationLoader {
 
