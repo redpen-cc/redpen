@@ -120,7 +120,7 @@ public final class WikiParser extends BasicDocumentParser {
     Matcher m = LINK_PATTERN.matcher(sentence.content);
 
     while (m.find()) {
-      String[] tagInternal = m.group().split("|");
+      String[] tagInternal = m.group(1).split("\\|");
       String tagURL = tagInternal[0];
       if (tagInternal.length > 2) {
         modContent += sentence.content.substring(
