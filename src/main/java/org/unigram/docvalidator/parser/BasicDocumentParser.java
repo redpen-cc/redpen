@@ -33,7 +33,7 @@ import org.unigram.docvalidator.DefaultSymbols;
  * Abstract Parser class containing common procedures to
  * implements the concrete Parser classes.
  */
-public abstract class AbstractDocumentParser implements Parser {
+public abstract class BasicDocumentParser implements Parser {
   /**
    * load basic configuration settings.
    * @param resource object containing configuration settings

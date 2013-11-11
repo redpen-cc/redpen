@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Parser for wiki formatted file.
  */
-public final class WikiParser extends AbstractDocumentParser {
+public final class WikiParser extends BasicDocumentParser {
   /**
    * Constructor.
    */

@@ -34,7 +34,7 @@ import org.unigram.docvalidator.util.StringUtils;
 /**
  * Parser for plain text file.
  */
-public final class PlainTextParser extends AbstractDocumentParser {
+public final class PlainTextParser extends BasicDocumentParser {
   /**
    * Constructor.
    */
