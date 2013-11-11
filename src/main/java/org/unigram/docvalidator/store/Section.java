@@ -142,6 +142,21 @@ public final class Section implements Block {
     }
   }
 
+  /**
+   * Append sentence.
+   * @param sentence sentence to append
+   */
+  public void appendSentence(Sentence sentence) {
+    if (paragraphs.size() == 0) {
+      appendParagraph(new Paragraph());
+    }
+    Paragraph currentBlock = paragraphs.lastElement();
+    currentBlock.appendSentence(sentence);
+    if (currentBlock.getNumverOfSentences() == 1) {
+      currentBlock.getLine(0).isStartaragraph = true;
+    }
+  }
+
   public int getBlockID() {
     return BlockTypes.SECTION;
   }

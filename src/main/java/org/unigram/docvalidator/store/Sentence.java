@@ -17,6 +17,9 @@
  */
 package org.unigram.docvalidator.store;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Represent a sentence in a text file.
  */
@@ -31,6 +34,7 @@ public final class Sentence implements Block {
     this.content = sentenceContent;
     this.position = sentencePosition;
     this.isStartaragraph = false;
+    this.links = new ArrayList<String>();
   }
 
   /**
@@ -47,6 +51,11 @@ public final class Sentence implements Block {
    * first sentence in a paragraph.
    */
   public boolean isStartaragraph;
+
+  /**
+   * links (including internal and external ones)
+   */
+  public List<String> links;
 
   public int getBlockID() {
     return 0;

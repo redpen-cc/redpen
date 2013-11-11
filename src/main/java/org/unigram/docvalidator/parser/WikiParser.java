@@ -20,12 +20,11 @@ package org.unigram.docvalidator.parser;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 
 import org.unigram.docvalidator.store.FileContent;
 import org.unigram.docvalidator.store.Paragraph;
 import org.unigram.docvalidator.store.Section;
+import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.util.StringUtils;
 
@@ -39,7 +38,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Parser for wiki formatted file.
  */
-public final class WikiParser extends AbstractDocumentParser {
+public final class WikiParser extends BasicDocumentParser {
   /**
    * Constructor.
    */
@@ -54,43 +53,30 @@ public final class WikiParser extends AbstractDocumentParser {
   }
 
   public FileContent generateDocument(InputStream is) {
-    BufferedReader br = null;
-    try {
-      br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-    } catch (UnsupportedEncodingException e) {
-      LOG.error(e.getMessage());
+    BufferedReader br = createReader(is);
+    if (br == null) {
+      LOG.error("Failed to create reader");
       return null;
     }
-    FileContent doc = new FileContent();
-    //for sentences right below the begging of document
+
+    FileContent fileContent = new FileContent();
+    // for sentences right below the beginning of document
     Section currentSection = new Section(0, "");
-    doc.appendSection(currentSection);
-    LinePattern prevPattern = LinePattern.VOID;
-    LinePattern currentPattern = LinePattern.VOID;
+    fileContent.appendSection(currentSection);
+    LinePattern prevPattern, currentPattern = LinePattern.VOID;
+    String line;
+    int lineNum = 0;
+    String remain = "";
     try {
-      String line;
-      int lineNum = 0;
-      String remain = "";
       while ((line = br.readLine()) != null) {
         prevPattern = currentPattern;
         Vector<String> head = new Vector<String>();
         if (check(HEADER_PATTERN, line, head)) {
           currentPattern = LinePattern.HEADER;
-          Integer level = Integer.valueOf(head.get(0));
-          Section tmpSection =  new Section(level, head.get(1));
-          doc.appendSection(tmpSection);
-          if (!addChild(currentSection, tmpSection)) {
-            LOG.warn("Failed to add parent for a Seciotn: "
-                + tmpSection.getHeaderContent());
-          }
-          currentSection = tmpSection;
+          currentSection = appendSection(fileContent, currentSection, head);
         } else if (check(LIST_PATTERN, line, head)) {
           currentPattern = LinePattern.LIST;
-          if (prevPattern != LinePattern.LIST) {
-            currentSection.appendListBlock();
-          }
-          currentSection.appendListElement(extractListLevel(head.get(0)),
-              head.get(1));
+          appendListElement(currentSection, prevPattern, head);
         } else if (line.equals("")) { // new paragraph content
           currentSection.appendParagraph(new Paragraph());
         } else { // usual sentence.
@@ -100,14 +86,68 @@ public final class WikiParser extends AbstractDocumentParser {
         prevPattern = currentPattern;
         lineNum++;
       }
-      if (remain.length() > 0) {
-        doc.getLastSection().appendSentence(remain, lineNum);
-      }
     } catch (IOException e) {
       LOG.error("Failed to parse input document: " + e.getMessage());
       return null;
     }
-    return doc;
+    if (remain.length() > 0) {
+      appendLastSentence(fileContent, lineNum, remain);
+    }
+    return fileContent;
+  }
+
+  private void appendListElement(Section currentSection,
+      LinePattern prevPattern, Vector<String> head) {
+    if (prevPattern != LinePattern.LIST) {
+      currentSection.appendListBlock();
+    }
+    currentSection.appendListElement(extractListLevel(head.get(0)),
+        head.get(1));
+  }
+
+  private Section appendSection(FileContent fileContent,
+      Section currentSection, Vector<String> head) {
+    Integer level = Integer.valueOf(head.get(0));
+    Section tmpSection =  new Section(level, head.get(1));
+    fileContent.appendSection(tmpSection);
+    if (!addChild(currentSection, tmpSection)) {
+      LOG.warn("Failed to add parent for a Seciotn: "
+          + tmpSection.getHeaderContent());
+    }
+    currentSection = tmpSection;
+    return currentSection;
+  }
+
+  private void appendLastSentence(FileContent doc, int lineNum, String remain) {
+    Sentence sentence = new Sentence(remain, lineNum);
+    parseSentence(sentence); // extract inline elements
+    doc.getLastSection().appendSentence(sentence);
+  }
+
+  private void parseSentence(Sentence sentence) {
+    String modContent = "";
+    int start = 0;
+    Matcher m = LINK_PATTERN.matcher(sentence.content);
+
+    while (m.find()) {
+      String[] tagInternal = m.group(1).split("\\|");
+      String tagURL = tagInternal[0].trim();
+      if (tagInternal.length > 2) {
+        modContent += sentence.content.substring(
+            start, m.start()) + tagInternal[1].trim();
+      } else {
+        modContent += sentence.content.substring(start, m.start())
+            + tagURL.trim();
+      }
+      sentence.links.add(tagURL);
+      start = m.end();
+    }
+
+    if (start > 0) {
+      modContent += sentence.content.substring(
+          start, sentence.content.length());
+      sentence.content = modContent;
+    }
   }
 
   private boolean addChild(Section candidate, Section child) {
@@ -139,8 +179,10 @@ public final class WikiParser extends AbstractDocumentParser {
       return line;
     } else {
       while (true) {
-        currentSection.appendSentence(
-            line.substring(0, periodPosition + 1), lineNum);
+        Sentence sentence = new Sentence(line.substring(0,
+            periodPosition + 1), lineNum);
+        parseSentence(sentence); // extract inline elements
+        currentSection.appendSentence(sentence);
         line = line.substring(periodPosition + 1, line.length());
         periodPosition = StringUtils.getSentenceEndPosition(line, this.period);
         if (periodPosition == -1) {
@@ -169,12 +211,12 @@ public final class WikiParser extends AbstractDocumentParser {
   private static Logger LOG = LoggerFactory.getLogger(WikiParser.class);
 
   private static final Pattern HEADER_PATTERN
-    = Pattern.compile("^h([1-6])\\.(.*)$");
+  = Pattern.compile("^h([1-6])\\.(.*)$");
 
   private static final Pattern LIST_PATTERN = Pattern.compile("^(-+) (.*)$");
 
-  //private static final Pattern numberedListPattern
-  // = Pattern.compile("(#+).(.*)$");
+  private static final Pattern LINK_PATTERN
+  = Pattern.compile("\\[\\[(.+?)\\]\\]");
 
   /**
    * List of elements used in wiki format.

@@ -34,7 +34,7 @@ import org.unigram.docvalidator.util.StringUtils;
 /**
  * Parser for plain text file.
  */
-public final class PlainTextParser extends AbstractDocumentParser {
+public final class PlainTextParser extends BasicDocumentParser {
   /**
    * Constructor.
    */
@@ -51,12 +51,7 @@ public final class PlainTextParser extends AbstractDocumentParser {
   }
 
   public FileContent generateDocument(InputStream is) {
-    BufferedReader br = null;
-    try {
-      br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-    } catch (UnsupportedEncodingException e1) {
-      e1.printStackTrace();
-    }
+    BufferedReader br = createReader(is);
     FileContent fileContent = new FileContent();
     fileContent.appendSection(new Section(0, ""));
     Section currentSection = fileContent.getLastSection();

@@ -28,7 +28,20 @@ public final class StringUtils {
    * @return position of full stop when there is a full stop, otherwise -1
    */
   public static int getSentenceEndPosition(String str, String period) {
-    return str.indexOf(period);
+     int position = str.indexOf(period);
+     if (-1 < position && position < str.length() -1
+         && period.equals(".") && str.charAt(position+1) == ' ') {
+       return position;
+     } else if (-1 < position && position < str.length() -1
+         && !period.equals(".")) {
+       // NOTE: for non Latin languages (in Asian languages, periods do not
+       // have tailing spaces in the end of sentences)
+       return position;
+     } else if (position == str.length() - 1) {
+       return position;
+     } else {
+       return -1;
+     }
   }
 
   private StringUtils() { }
