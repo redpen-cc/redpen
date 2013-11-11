@@ -20,8 +20,6 @@ package org.unigram.docvalidator.parser;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 
 import org.unigram.docvalidator.store.FileContent;
 import org.unigram.docvalidator.store.Paragraph;
@@ -30,7 +28,6 @@ import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.util.StringUtils;
 
-import java.util.Iterator;
 import java.util.Vector;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -56,11 +53,9 @@ public final class WikiParser extends BasicDocumentParser {
   }
 
   public FileContent generateDocument(InputStream is) {
-    BufferedReader br = null;
-    try {
-      br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-    } catch (UnsupportedEncodingException e) {
-      LOG.error(e.getMessage());
+    BufferedReader br = createReader(is);
+    if (br == null) {
+      LOG.error("Failed to create reader");
       return null;
     }
 
@@ -219,9 +214,6 @@ public final class WikiParser extends BasicDocumentParser {
   = Pattern.compile("^h([1-6])\\.(.*)$");
 
   private static final Pattern LIST_PATTERN = Pattern.compile("^(-+) (.*)$");
-
-  //private static final Pattern numberedListPattern
-  // = Pattern.compile("(#+).(.*)$");
 
   private static final Pattern LINK_PATTERN
   = Pattern.compile("\\[\\[(.+?)\\]\\]");

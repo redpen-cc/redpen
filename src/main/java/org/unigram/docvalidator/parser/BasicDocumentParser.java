@@ -17,9 +17,12 @@
  */
 package org.unigram.docvalidator.parser;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +65,17 @@ public abstract class BasicDocumentParser implements Parser {
       LOG.info("full stop is set to \"" + this.period + "\"");
     }
     return true;
+  }
+
+  protected BufferedReader createReader(InputStream is) {
+    BufferedReader br = null;
+    try {
+      br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+    } catch (UnsupportedEncodingException e) {
+      LOG.error(e.getMessage());
+      return null;
+    }
+    return br;
   }
 
   protected final InputStream loadStream(String fileName)

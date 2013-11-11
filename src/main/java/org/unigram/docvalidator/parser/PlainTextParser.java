@@ -51,12 +51,7 @@ public final class PlainTextParser extends BasicDocumentParser {
   }
 
   public FileContent generateDocument(InputStream is) {
-    BufferedReader br = null;
-    try {
-      br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-    } catch (UnsupportedEncodingException e1) {
-      e1.printStackTrace();
-    }
+    BufferedReader br = createReader(is);
     FileContent fileContent = new FileContent();
     fileContent.appendSection(new Section(0, ""));
     Section currentSection = fileContent.getLastSection();
