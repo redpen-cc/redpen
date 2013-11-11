@@ -264,6 +264,30 @@ public class WikiParserTest {
   }
 
   @Test
+  public void testPlainLinkWithSpaces() {
+    Configuration conf = new Configuration("dummy");
+    Parser parser = loadParser(new DVResource(conf));
+    String sampleText = "the url is not [[Google | http://google.com ]].";
+    InputStream is = null;
+    try {
+      is = new ByteArrayInputStream(sampleText.getBytes("utf-8"));
+    } catch (UnsupportedEncodingException e1) {
+      fail();
+    }
+    try {
+      FileContent doc = parser.generateDocument(is);
+      Section firstSections = doc.getSections().next();
+      Paragraph firstParagraph = firstSections.getParagraph().next();
+      assertEquals(1, firstParagraph.getNumverOfSentences());
+      assertEquals(1, firstParagraph.getLine(0).links.size());
+      assertEquals("Google", firstParagraph.getLine(0).links.get(0));
+      assertEquals("the url is not Google.",
+          firstParagraph.getLine(0).content);
+    } catch (DocumentValidatorException e) {
+      fail();
+    }
+  }
+  @Test
   public void testLinkWithoutTag() {
     Configuration conf = new Configuration("dummy");
     Parser parser = loadParser(new DVResource(conf));
@@ -282,6 +306,30 @@ public class WikiParserTest {
       assertEquals(1, firstParagraph.getLine(0).links.size());
       assertEquals("http://google.com", firstParagraph.getLine(0).links.get(0));
       assertEquals("url of google is http://google.com.",
+          firstParagraph.getLine(0).content);
+    } catch (DocumentValidatorException e) {
+      fail();
+    }
+  }
+
+  @Test
+  public void testIncompleteLink() {
+    Configuration conf = new Configuration("dummy");
+    Parser parser = loadParser(new DVResource(conf));
+    String sampleText = "url of google is [[http://google.com.";
+    InputStream is = null;
+    try {
+      is = new ByteArrayInputStream(sampleText.getBytes("utf-8"));
+    } catch (UnsupportedEncodingException e1) {
+      fail();
+    }
+    try {
+      FileContent doc = parser.generateDocument(is);
+      Section firstSections = doc.getSections().next();
+      Paragraph firstParagraph = firstSections.getParagraph().next();
+      assertEquals(1, firstParagraph.getNumverOfSentences());
+      assertEquals(0, firstParagraph.getLine(0).links.size());
+      assertEquals("url of google is [[http://google.com.",
           firstParagraph.getLine(0).content);
     } catch (DocumentValidatorException e) {
       fail();

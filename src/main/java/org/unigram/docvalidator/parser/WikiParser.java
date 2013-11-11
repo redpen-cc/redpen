@@ -121,12 +121,12 @@ public final class WikiParser extends BasicDocumentParser {
 
     while (m.find()) {
       String[] tagInternal = m.group(1).split("\\|");
-      String tagURL = tagInternal[0];
+      String tagURL = tagInternal[0].trim();
       if (tagInternal.length > 2) {
         modContent += sentence.content.substring(
-            start, m.start()) + tagInternal[1];
+            start, m.start()) + tagInternal[1].trim();
       } else {
-        modContent += sentence.content.substring(start, m.start()) + tagURL;
+        modContent += sentence.content.substring(start, m.start()) + tagURL.trim();
       }
       sentence.links.add(tagURL);
       start = m.end();
