@@ -63,36 +63,25 @@ public final class WikiParser extends BasicDocumentParser {
       LOG.error(e.getMessage());
       return null;
     }
-    FileContent doc = new FileContent();
-    //for sentences right below the begging of document
+
+    FileContent fileContent = new FileContent();
+    // for sentences right below the beginning of document
     Section currentSection = new Section(0, "");
-    doc.appendSection(currentSection);
-    LinePattern prevPattern = LinePattern.VOID;
-    LinePattern currentPattern = LinePattern.VOID;
+    fileContent.appendSection(currentSection);
+    LinePattern prevPattern, currentPattern = LinePattern.VOID;
+    String line;
+    int lineNum = 0;
+    String remain = "";
     try {
-      String line;
-      int lineNum = 0;
-      String remain = "";
       while ((line = br.readLine()) != null) {
         prevPattern = currentPattern;
         Vector<String> head = new Vector<String>();
         if (check(HEADER_PATTERN, line, head)) {
           currentPattern = LinePattern.HEADER;
-          Integer level = Integer.valueOf(head.get(0));
-          Section tmpSection =  new Section(level, head.get(1));
-          doc.appendSection(tmpSection);
-          if (!addChild(currentSection, tmpSection)) {
-            LOG.warn("Failed to add parent for a Seciotn: "
-                + tmpSection.getHeaderContent());
-          }
-          currentSection = tmpSection;
+          currentSection = appendSection(fileContent, currentSection, head);
         } else if (check(LIST_PATTERN, line, head)) {
           currentPattern = LinePattern.LIST;
-          if (prevPattern != LinePattern.LIST) {
-            currentSection.appendListBlock();
-          }
-          currentSection.appendListElement(extractListLevel(head.get(0)),
-              head.get(1));
+          appendListElement(currentSection, prevPattern, head);
         } else if (line.equals("")) { // new paragraph content
           currentSection.appendParagraph(new Paragraph());
         } else { // usual sentence.
@@ -102,16 +91,42 @@ public final class WikiParser extends BasicDocumentParser {
         prevPattern = currentPattern;
         lineNum++;
       }
-      if (remain.length() > 0) {
-        Sentence sentence = new Sentence(remain, lineNum);
-        parseSentence(sentence); // extract inline elements
-        doc.getLastSection().appendSentence(sentence);
-      }
     } catch (IOException e) {
       LOG.error("Failed to parse input document: " + e.getMessage());
       return null;
     }
-    return doc;
+    if (remain.length() > 0) {
+      appendLastSentence(fileContent, lineNum, remain);
+    }
+    return fileContent;
+  }
+
+  private void appendListElement(Section currentSection,
+      LinePattern prevPattern, Vector<String> head) {
+    if (prevPattern != LinePattern.LIST) {
+      currentSection.appendListBlock();
+    }
+    currentSection.appendListElement(extractListLevel(head.get(0)),
+        head.get(1));
+  }
+
+  private Section appendSection(FileContent fileContent,
+      Section currentSection, Vector<String> head) {
+    Integer level = Integer.valueOf(head.get(0));
+    Section tmpSection =  new Section(level, head.get(1));
+    fileContent.appendSection(tmpSection);
+    if (!addChild(currentSection, tmpSection)) {
+      LOG.warn("Failed to add parent for a Seciotn: "
+          + tmpSection.getHeaderContent());
+    }
+    currentSection = tmpSection;
+    return currentSection;
+  }
+
+  private void appendLastSentence(FileContent doc, int lineNum, String remain) {
+    Sentence sentence = new Sentence(remain, lineNum);
+    parseSentence(sentence); // extract inline elements
+    doc.getLastSection().appendSentence(sentence);
   }
 
   private void parseSentence(Sentence sentence) {
@@ -126,7 +141,8 @@ public final class WikiParser extends BasicDocumentParser {
         modContent += sentence.content.substring(
             start, m.start()) + tagInternal[1].trim();
       } else {
-        modContent += sentence.content.substring(start, m.start()) + tagURL.trim();
+        modContent += sentence.content.substring(start, m.start())
+            + tagURL.trim();
       }
       sentence.links.add(tagURL);
       start = m.end();
@@ -168,7 +184,8 @@ public final class WikiParser extends BasicDocumentParser {
       return line;
     } else {
       while (true) {
-        Sentence sentence = new Sentence(line.substring(0, periodPosition + 1), lineNum);
+        Sentence sentence = new Sentence(line.substring(0,
+            periodPosition + 1), lineNum);
         parseSentence(sentence); // extract inline elements
         currentSection.appendSentence(sentence);
         line = line.substring(periodPosition + 1, line.length());
