@@ -132,7 +132,7 @@ public class WikiParserTest {
   public void testGenerateDocumentWithMultipleSentenceInMultipleSentences() {
     Configuration conf = new Configuration("dummy");
     Parser parser = loadParser(new DVResource(conf));
-    String sampleText = "Tokyu is a good railway company. The company is reliable. In addition it is rich.";
+    String sampleText = "Tokyu is a good railway company. The company is reliable. In addition it is rich.\n";
     sampleText += "I like the company. Howerver someone does not like it.";
     InputStream is = null;
     try {
@@ -144,6 +144,7 @@ public class WikiParserTest {
       FileContent doc = parser.generateDocument(is);
       Section firstSections = doc.getSections().next();
       Paragraph firstParagraph = firstSections.getParagraph().next();
+      Iterator<Sentence>sentenceIterator =  firstParagraph.getSentences();
       assertEquals(5, firstParagraph.getNumverOfSentences());
     } catch (DocumentValidatorException e) {
       fail();
@@ -185,12 +186,7 @@ public class WikiParserTest {
       FileContent doc = parser.generateDocument(is);
       Section firstSections = doc.getSections().next();
       Paragraph firstParagraph = firstSections.getParagraph().next();
-      assertEquals(3, firstParagraph.getNumverOfSentences());
-      Iterator<Sentence> siter = firstParagraph.getSentences();
-      while(siter.hasNext()) {
-        Sentence s= siter.next();
-        assertEquals(s.content, ".");
-      }
+      assertEquals(1, firstParagraph.getNumverOfSentences());
     } catch (DocumentValidatorException e) {
       fail();
     }
@@ -221,7 +217,7 @@ public class WikiParserTest {
   public void testGenerateDocumentWithSentenceLongerThanOneLine() {
     Configuration conf = new Configuration("dummy");
     Parser parser = loadParser(new DVResource(conf));
-    String sampleText = "This is a good day.";
+    String sampleText = "This is a good day.\n";
     sampleText += "Hongo is located at the west of Tokyo ";
     sampleText += "which is the capital of Japan ";
     sampleText += "which is not located in the south of the earth.";
@@ -236,6 +232,28 @@ public class WikiParserTest {
       Section firstSections = doc.getSections().next();
       Paragraph firstParagraph = firstSections.getParagraph().next();
       assertEquals(2, firstParagraph.getNumverOfSentences());
+    } catch (DocumentValidatorException e) {
+      fail();
+    }
+  }
+
+  @Test
+  public void testPlainLink() {
+    Configuration conf = new Configuration("dummy");
+    Parser parser = loadParser(new DVResource(conf));
+    String sampleText = "this is a not [[pen]], but that is not a [[google|http://google.com]] either.";
+    InputStream is = null;
+    try {
+      is = new ByteArrayInputStream(sampleText.getBytes("utf-8"));
+    } catch (UnsupportedEncodingException e1) {
+      fail();
+    }
+    try {
+      FileContent doc = parser.generateDocument(is);
+      Section firstSections = doc.getSections().next();
+      Paragraph firstParagraph = firstSections.getParagraph().next();
+      assertEquals(1, firstParagraph.getNumverOfSentences());
+      assertEquals(2, firstParagraph.getLine(0).links.size());
     } catch (DocumentValidatorException e) {
       fail();
     }

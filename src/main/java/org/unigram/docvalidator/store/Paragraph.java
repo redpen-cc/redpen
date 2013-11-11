@@ -52,6 +52,10 @@ public final class Paragraph implements Block {
     sentences.add(new Sentence(content, lineNum));
   }
 
+  public void appendSentence(Sentence sentence) {
+    sentences.add(sentence);
+  }
+
   public int getNumverOfSentences() {
     return sentences.size();
   }
@@ -65,4 +69,6 @@ public final class Paragraph implements Block {
   }
 
   Vector<Sentence> sentences;
+
+
 }

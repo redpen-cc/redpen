@@ -26,9 +26,11 @@ import java.io.UnsupportedEncodingException;
 import org.unigram.docvalidator.store.FileContent;
 import org.unigram.docvalidator.store.Paragraph;
 import org.unigram.docvalidator.store.Section;
+import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.util.StringUtils;
 
+import java.util.Iterator;
 import java.util.Vector;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -101,13 +103,40 @@ public final class WikiParser extends BasicDocumentParser {
         lineNum++;
       }
       if (remain.length() > 0) {
-        doc.getLastSection().appendSentence(remain, lineNum);
+        Sentence sentence = new Sentence(remain, lineNum);
+        parseSentence(sentence); // extract inline elements
+        doc.getLastSection().appendSentence(sentence);
       }
     } catch (IOException e) {
       LOG.error("Failed to parse input document: " + e.getMessage());
       return null;
     }
     return doc;
+  }
+
+  private void parseSentence(Sentence sentence) {
+    String modContent = "";
+    int start = 0;
+    Matcher m = LINK_PATTERN.matcher(sentence.content);
+
+    while (m.find()) {
+      String[] tagInternal = m.group().split("|");
+      String tagURL = tagInternal[0];
+      if (tagInternal.length > 2) {
+        modContent += sentence.content.substring(
+            start, m.start()) + tagInternal[1];
+      } else {
+        modContent += sentence.content.substring(start, m.start()) + tagURL;
+      }
+      sentence.links.add(tagURL);
+      start = m.end();
+    }
+
+    if (start > 0) {
+      modContent += sentence.content.substring(
+          start, sentence.content.length());
+      sentence.content = modContent;
+    }
   }
 
   private boolean addChild(Section candidate, Section child) {
@@ -139,8 +168,9 @@ public final class WikiParser extends BasicDocumentParser {
       return line;
     } else {
       while (true) {
-        currentSection.appendSentence(
-            line.substring(0, periodPosition + 1), lineNum);
+        Sentence sentence = new Sentence(line.substring(0, periodPosition + 1), lineNum);
+        parseSentence(sentence); // extract inline elements
+        currentSection.appendSentence(sentence);
         line = line.substring(periodPosition + 1, line.length());
         periodPosition = StringUtils.getSentenceEndPosition(line, this.period);
         if (periodPosition == -1) {
@@ -169,12 +199,15 @@ public final class WikiParser extends BasicDocumentParser {
   private static Logger LOG = LoggerFactory.getLogger(WikiParser.class);
 
   private static final Pattern HEADER_PATTERN
-    = Pattern.compile("^h([1-6])\\.(.*)$");
+  = Pattern.compile("^h([1-6])\\.(.*)$");
 
   private static final Pattern LIST_PATTERN = Pattern.compile("^(-+) (.*)$");
 
   //private static final Pattern numberedListPattern
   // = Pattern.compile("(#+).(.*)$");
+
+  private static final Pattern LINK_PATTERN
+  = Pattern.compile("\\[\\[(.+?)\\]\\]");
 
   /**
    * List of elements used in wiki format.
