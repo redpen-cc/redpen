@@ -59,12 +59,22 @@ public final class FileContent implements Block {
   }
 
   /**
-   * get the size of Sections.
-   * @return size of Sections
+   * get the size of sections.
+   * @return size of sections
    */
   public int getSizeOfSections() {
     return sections.size();
   }
+
+  /**
+   * get the specified section.
+   * @param id section id
+   * @return Section
+   */
+  public Section getSection(int id) {
+    return sections.get(id);
+  }
+
 
   /**
    * get block id of Section class.

@@ -157,6 +157,10 @@ public final class Section implements Block {
     }
   }
 
+  /**
+   * get block id.
+   * @return block id of section
+   */
   public int getBlockID() {
     return BlockTypes.SECTION;
   }
@@ -179,23 +183,39 @@ public final class Section implements Block {
 
   /**
    * get size of list.
-   * @return number of list
+   * @return number of list block
    */
   public int getSizeofLists() {
     return lists.size();
   }
 
-  /* get last list block */
+  /**
+   *  get last list block.
+   *  @return last list block in the section
+   */
   public List getLastListBlock() {
     return lists.lastElement();
   }
 
-  public int extractSummary() {
-    return 0;
+  /**
+   * get specified list block.
+   * @param id id of list block
+   * @return number of list block
+   */
+  public List getLastListBlock(int id) {
+    return lists.get(id);
   }
 
+  /**
+   * get the number of paragraphs in the section.
+   * @return number of paragraphs
+   */
   public int getParagraphNumber() {
     return paragraphs.size();
+  }
+
+  public int extractSummary() {
+    return 0;
   }
 
   /* Seciton Level */
