@@ -23,8 +23,6 @@ import static org.junit.Assert.fail;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.Iterator;
-import java.util.Vector;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
@@ -63,24 +61,11 @@ public class WikiParserTest {
     sampleText += "The word also have posive meaning. Hower it is a bit wired.";
 
     FileContent doc = createFileContent(sampleText);
-    Iterator<Section> sections = doc.getSections();
-    int sectionNum = 0;
-    Vector<Section> sectionBlocks =new Vector<Section>();
-    while(sections.hasNext()) {
-      sectionNum += 1;
-      sectionBlocks.add(sections.next());
-    }
-
-    assertEquals(3, sectionNum);
-    assertEquals(1,doc.getLastSection().getSizeofLists());
-    assertEquals(5,doc.getLastSection().getLastListBlock().getNumberOfListElements());
-    Iterator<Paragraph> paragraph = doc.getLastSection().getParagraph();
-    int pcount = 0;
-    while (paragraph.hasNext()) {
-      pcount++;
-      paragraph.next();
-    }
-    assertEquals(2,pcount);
+    assertEquals(3, doc.getSizeOfSections());
+    Section lastSection = doc.getSection(doc.getSizeOfSections()-1);
+    assertEquals(1, lastSection.getSizeofLists());
+    assertEquals(5, lastSection.getLastListBlock().getNumberOfListElements());
+    assertEquals(2,lastSection.getParagraphNumber());
   }
 
   @Test
