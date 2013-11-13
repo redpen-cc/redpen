@@ -185,6 +185,19 @@ public final class Section implements Block {
     return lists.size();
   }
 
+  /* get last list block */
+  public List getLastListBlock() {
+    return lists.lastElement();
+  }
+
+  public int extractSummary() {
+    return 0;
+  }
+
+  public int getParagraphNumber() {
+    return paragraphs.size();
+  }
+
   /* Seciton Level */
   private int level;
 
@@ -202,18 +215,5 @@ public final class Section implements Block {
 
   /* lists */
   private Vector<List> lists;
-
-  /* get last list block */
-  public List getLastListBlock() {
-    return lists.lastElement();
-  }
-
-  public int extractSummary() {
-    return 0;
-  }
-
-  public int getParagraphNumber() {
-    return paragraphs.size();
-  }
 
 }
