@@ -77,6 +77,9 @@ public final class WikiParser extends BasicDocumentParser {
         } else if (check(LIST_PATTERN, line, head)) {
           currentPattern = LinePattern.LIST;
           appendListElement(currentSection, prevPattern, head);
+        } else if (check(NUMBERED_LIST_PATTERN, line, head)) {
+          currentPattern = LinePattern.LIST;
+          appendListElement(currentSection, prevPattern, head);
         } else if (line.equals("")) { // new paragraph content
           currentSection.appendParagraph(new Paragraph());
         } else { // usual sentence.
@@ -214,6 +217,9 @@ public final class WikiParser extends BasicDocumentParser {
   = Pattern.compile("^h([1-6])\\.(.*)$");
 
   private static final Pattern LIST_PATTERN = Pattern.compile("^(-+) (.*)$");
+
+  private static final Pattern NUMBERED_LIST_PATTERN =
+      Pattern.compile("^(#+) (.*)$");
 
   private static final Pattern LINK_PATTERN
   = Pattern.compile("\\[\\[(.+?)\\]\\]");

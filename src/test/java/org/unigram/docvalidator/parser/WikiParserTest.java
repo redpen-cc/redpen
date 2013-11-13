@@ -84,6 +84,32 @@ public class WikiParserTest {
   }
 
   @Test
+  public void testGenerateDocumentWithList() {
+    String sampleText =
+        "Threre are several railway companies in Japan as follows.\n";
+    sampleText += "- Tokyu\n";
+    sampleText += "-- Toyoko Line\n";
+    sampleText += "-- Denentoshi Line\n";
+    sampleText += "- Keio\n";
+    sampleText += "- Odakyu\n";
+    FileContent doc = createFileContent(sampleText);
+    assertEquals(5, doc.getLastSection().getLastListBlock().getNumberOfListElements());
+  }
+
+  @Test
+  public void testGenerateDocumentWithNumberedList() {
+    String sampleText =
+        "Threre are several railway companies in Japan as follows.\n";
+    sampleText += "# Tokyu\n";
+    sampleText += "## Toyoko Line\n";
+    sampleText += "## Denentoshi Line\n";
+    sampleText += "# Keio\n";
+    sampleText += "# Odakyu\n";
+    FileContent doc = createFileContent(sampleText);
+    assertEquals(5, doc.getLastSection().getLastListBlock().getNumberOfListElements());
+  }
+
+  @Test
   public void testGenerateDocumentWithMultipleSentenceInOneSentence() {
     String sampleText =
         "Tokyu is a good railway company. The company is reliable. In addition it is rich.";
