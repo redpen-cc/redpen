@@ -59,10 +59,10 @@ public final class FileContent implements Block {
   }
 
   /**
-   * get the size of sections.
+   * get the size of sections in the file.
    * @return size of sections
    */
-  public int getSizeOfSections() {
+  public int getNumberOfSections() {
     return sections.size();
   }
 

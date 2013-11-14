@@ -55,7 +55,7 @@ public class PlainTextParserTest {
     int lineNum = 0;
     while(paragraph.hasNext()) {
       Paragraph p = paragraph.next();
-      lineNum += p.getNumverOfSentences();
+      lineNum += p.getNumberOfSentences();
     }
     return lineNum;
   }
@@ -135,7 +135,7 @@ public class PlainTextParserTest {
     assertEquals(5 ,calcLineNum(section));
     Paragraph paragraph = paragraphs.lastElement();
     for (int i=0; i<expectedResult.length; i++) {
-      assertEquals(expectedResult[i], paragraph.getLine(i).content);
+      assertEquals(expectedResult[i], paragraph.getSentence(i).content);
     }
   }
 

@@ -26,6 +26,11 @@ import java.util.Vector;
  */
 public final class Document implements Block {
 
+  public Document() {
+    super();
+    files = new Vector<FileContent>();
+  }
+
   public Iterator<FileContent> getFiles() {
     return files.iterator();
   }
@@ -34,16 +39,15 @@ public final class Document implements Block {
     files.add(file);
   }
 
-  public Document() {
-    super();
-    files = new Vector<FileContent>();
+  public FileContent getFile(int id) {
+    return files.get(id);
   }
 
-  public FileContent getLastSection() {
+  public FileContent getLastFile() {
     return files.lastElement();
   }
 
-  public int getFileNumber() {
+  public int getNumberOfFiles() {
     return files.size();
   }
 

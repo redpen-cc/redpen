@@ -40,12 +40,12 @@ public final class Paragraph implements Block {
   }
 
   /**
-   * get the sentence of specified number.
-   * @param lineNumber sentence number
+   * get the specified sentence.
+   * @param sentenceNumber sentence number
    * @return sentence
    */
-  public Sentence getLine(int lineNumber) {
-    return sentences.get(lineNumber);
+  public Sentence getSentence(int sentenceNumber) {
+    return sentences.get(sentenceNumber);
   }
 
   public void appendSentence(String content, int lineNum) {
@@ -56,7 +56,7 @@ public final class Paragraph implements Block {
     sentences.add(sentence);
   }
 
-  public int getNumverOfSentences() {
+  public int getNumberOfSentences() {
     return sentences.size();
   }
 

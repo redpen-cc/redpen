@@ -61,11 +61,11 @@ public class WikiParserTest {
     sampleText += "The word also have posive meaning. Hower it is a bit wired.";
 
     FileContent doc = createFileContent(sampleText);
-    assertEquals(3, doc.getSizeOfSections());
-    Section lastSection = doc.getSection(doc.getSizeOfSections()-1);
-    assertEquals(1, lastSection.getSizeofLists());
+    assertEquals(3, doc.getNumberOfSections());
+    Section lastSection = doc.getSection(doc.getNumberOfSections()-1);
+    assertEquals(1, lastSection.getNumberOfLists());
     assertEquals(5, lastSection.getLastListBlock().getNumberOfListElements());
-    assertEquals(2,lastSection.getParagraphNumber());
+    assertEquals(2,lastSection.getNumberOfParagraphs());
   }
 
   @Test
@@ -103,9 +103,9 @@ public class WikiParserTest {
     FileContent doc = createFileContent(sampleText);
     Section firstSections = doc.getSections().next();
     Paragraph firstParagraph = firstSections.getParagraph().next();
-    assertEquals(3, firstParagraph.getNumverOfSentences());
+    assertEquals(3, firstParagraph.getNumberOfSentences());
     for (int i=0; i<expectedResult.length; i++) {
-      assertEquals(expectedResult[i], firstParagraph.getLine(i).content);
+      assertEquals(expectedResult[i], firstParagraph.getSentence(i).content);
     }
   }
 
@@ -116,7 +116,7 @@ public class WikiParserTest {
     FileContent doc = createFileContent(sampleText);
     Section firstSections = doc.getSections().next();
     Paragraph firstParagraph = firstSections.getParagraph().next();
-    assertEquals(5, firstParagraph.getNumverOfSentences());
+    assertEquals(5, firstParagraph.getNumberOfSentences());
   }
 
   @Test
@@ -133,7 +133,7 @@ public class WikiParserTest {
     FileContent doc = createFileContent(sampleText);
     Section firstSections = doc.getSections().next();
     Paragraph firstParagraph = firstSections.getParagraph().next();
-    assertEquals(1, firstParagraph.getNumverOfSentences());
+    assertEquals(1, firstParagraph.getNumberOfSentences());
   }
 
   @Test
@@ -142,7 +142,7 @@ public class WikiParserTest {
     FileContent doc = createFileContent(sampleText);
     Section firstSections = doc.getSections().next();
     Paragraph firstParagraph = firstSections.getParagraph().next();
-    assertEquals(2, firstParagraph.getNumverOfSentences());
+    assertEquals(2, firstParagraph.getNumberOfSentences());
   }
 
   @Test
@@ -154,7 +154,7 @@ public class WikiParserTest {
     FileContent doc = createFileContent(sampleText);
     Section firstSections = doc.getSections().next();
     Paragraph firstParagraph = firstSections.getParagraph().next();
-    assertEquals(2, firstParagraph.getNumverOfSentences());
+    assertEquals(2, firstParagraph.getNumberOfSentences());
   }
 
   @Test
@@ -163,12 +163,12 @@ public class WikiParserTest {
     FileContent doc = createFileContent(sampleText);
     Section firstSections = doc.getSections().next();
     Paragraph firstParagraph = firstSections.getParagraph().next();
-    assertEquals(1, firstParagraph.getNumverOfSentences());
-    assertEquals(2, firstParagraph.getLine(0).links.size());
-    assertEquals("pen", firstParagraph.getLine(0).links.get(0));
-    assertEquals("Google", firstParagraph.getLine(0).links.get(1));
+    assertEquals(1, firstParagraph.getNumberOfSentences());
+    assertEquals(2, firstParagraph.getSentence(0).links.size());
+    assertEquals("pen", firstParagraph.getSentence(0).links.get(0));
+    assertEquals("Google", firstParagraph.getSentence(0).links.get(1));
     assertEquals("this is not a pen, but also this is not Google either.",
-        firstParagraph.getLine(0).content);
+        firstParagraph.getSentence(0).content);
   }
 
   @Test
@@ -177,11 +177,11 @@ public class WikiParserTest {
     FileContent doc = createFileContent(sampleText);
     Section firstSections = doc.getSections().next();
     Paragraph firstParagraph = firstSections.getParagraph().next();
-    assertEquals(1, firstParagraph.getNumverOfSentences());
-    assertEquals(1, firstParagraph.getLine(0).links.size());
-    assertEquals("Google", firstParagraph.getLine(0).links.get(0));
+    assertEquals(1, firstParagraph.getNumberOfSentences());
+    assertEquals(1, firstParagraph.getSentence(0).links.size());
+    assertEquals("Google", firstParagraph.getSentence(0).links.get(0));
     assertEquals("the url is not Google.",
-        firstParagraph.getLine(0).content);
+        firstParagraph.getSentence(0).content);
   }
 
   @Test
@@ -190,11 +190,11 @@ public class WikiParserTest {
     FileContent doc = createFileContent(sampleText);
     Section firstSections = doc.getSections().next();
     Paragraph firstParagraph = firstSections.getParagraph().next();
-    assertEquals(1, firstParagraph.getNumverOfSentences());
-    assertEquals(1, firstParagraph.getLine(0).links.size());
-    assertEquals("http://google.com", firstParagraph.getLine(0).links.get(0));
+    assertEquals(1, firstParagraph.getNumberOfSentences());
+    assertEquals(1, firstParagraph.getSentence(0).links.size());
+    assertEquals("http://google.com", firstParagraph.getSentence(0).links.get(0));
     assertEquals("url of google is http://google.com.",
-        firstParagraph.getLine(0).content);
+        firstParagraph.getSentence(0).content);
   }
 
   @Test
@@ -203,10 +203,10 @@ public class WikiParserTest {
     FileContent doc = createFileContent(sampleText);
     Section firstSections = doc.getSections().next();
     Paragraph firstParagraph = firstSections.getParagraph().next();
-    assertEquals(1, firstParagraph.getNumverOfSentences());
-    assertEquals(0, firstParagraph.getLine(0).links.size());
+    assertEquals(1, firstParagraph.getNumberOfSentences());
+    assertEquals(0, firstParagraph.getSentence(0).links.size());
     assertEquals("url of google is [[http://google.com.",
-        firstParagraph.getLine(0).content);
+        firstParagraph.getSentence(0).content);
   }
 
   @Test
@@ -219,7 +219,7 @@ public class WikiParserTest {
     sampleText += "Gumma is very beautiful";
 
     FileContent doc = createFileContent(sampleText);
-    assertEquals(3, doc.getSizeOfSections());
+    assertEquals(3, doc.getNumberOfSections());
     Section rootSection = doc.getSection(0);
     Section h1Section = doc.getSection(1);
     Section h2Section = doc.getSection(2);
@@ -229,9 +229,9 @@ public class WikiParserTest {
     assertEquals(2, h2Section.getLevel());
 
     assertEquals(rootSection.getSubSection(0), h1Section);
-    assertEquals(h1Section.getParent(), rootSection);
-    assertEquals(h2Section.getParent(), h1Section);
-    assertEquals(rootSection.getParent(), null);
+    assertEquals(h1Section.getParentSection(), rootSection);
+    assertEquals(h2Section.getParentSection(), h1Section);
+    assertEquals(rootSection.getParentSection(), null);
   }
 
   @Test
@@ -261,7 +261,7 @@ public class WikiParserTest {
 
     Section firstSections = doc.getSections().next();
     Paragraph firstParagraph = firstSections.getParagraph().next();
-    assertEquals(2, firstParagraph.getNumverOfSentences());
+    assertEquals(2, firstParagraph.getNumberOfSentences());
   }
 
   private Parser loadParser(DVResource resource) {

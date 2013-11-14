@@ -38,7 +38,7 @@ public class ParagraphNumberValidator extends SectionValidator {
   @Override
   protected List<ValidationError> check(Section section) {
     List<ValidationError> validationErrors = new ArrayList<ValidationError>();
-    int paragraphNumber = section.getParagraphNumber();
+    int paragraphNumber = section.getNumberOfParagraphs();
     if (maxParagraphs < paragraphNumber) {
       validationErrors.add(new ValidationError(
           "The number of the paragraphs exceeds the maximum "

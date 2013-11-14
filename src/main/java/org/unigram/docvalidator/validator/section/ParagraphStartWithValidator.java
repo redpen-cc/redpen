@@ -51,7 +51,7 @@ public class ParagraphStartWithValidator extends SectionValidator {
     for (Iterator<Paragraph> paraIterator =
         section.getParagraph(); paraIterator.hasNext();) {
       Paragraph currentParagraph = paraIterator.next();
-      Sentence firstSentence = currentParagraph.getLine(0);
+      Sentence firstSentence = currentParagraph.getSentence(0);
       if (firstSentence.content.indexOf(this.beginingOfParagraph) != 0) {
         validationErrors.add(new ValidationError(
             firstSentence.position,

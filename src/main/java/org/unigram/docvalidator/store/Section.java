@@ -67,7 +67,7 @@ public final class Section implements Block {
    * get super section.
    * @return Section contains this object as a subsection
    */
-  public Section getParent() {
+  public Section getParentSection() {
     return parent;
   }
 
@@ -75,7 +75,7 @@ public final class Section implements Block {
    * set level of section.
    * @param sectionLevel section level
    */
-  public void setHeaderLevel(int sectionLevel) {
+  public void setLevel(int sectionLevel) {
     this.level = sectionLevel;
   }
 
@@ -83,7 +83,7 @@ public final class Section implements Block {
    * Set super section.
    * @param parentSection super section
    */
-  public void setParent(Section parentSection) {
+  public void setParentSection(Section parentSection) {
     this.parent = parentSection;
   }
 
@@ -146,8 +146,8 @@ public final class Section implements Block {
     }
     Paragraph currentBlock = paragraphs.lastElement();
     currentBlock.appendSentence(line, lineNum);
-    if (currentBlock.getNumverOfSentences() == 1) {
-      currentBlock.getLine(0).isStartaragraph = true;
+    if (currentBlock.getNumberOfSentences() == 1) {
+      currentBlock.getSentence(0).isStartaragraph = true;
     }
   }
 
@@ -161,8 +161,8 @@ public final class Section implements Block {
     }
     Paragraph currentBlock = paragraphs.lastElement();
     currentBlock.appendSentence(sentence);
-    if (currentBlock.getNumverOfSentences() == 1) {
-      currentBlock.getLine(0).isStartaragraph = true;
+    if (currentBlock.getNumberOfSentences() == 1) {
+      currentBlock.getSentence(0).isStartaragraph = true;
     }
   }
 
@@ -194,7 +194,7 @@ public final class Section implements Block {
    * get size of list.
    * @return number of list block
    */
-  public int getSizeofLists() {
+  public int getNumberOfLists() {
     return lists.size();
   }
 
@@ -219,7 +219,7 @@ public final class Section implements Block {
    * get the number of paragraphs in the section.
    * @return number of paragraphs
    */
-  public int getParagraphNumber() {
+  public int getNumberOfParagraphs() {
     return paragraphs.size();
   }
 
