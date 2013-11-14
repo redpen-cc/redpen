@@ -85,14 +85,6 @@ public final class FileContent implements Block {
   }
 
   /**
-   * extract Summary of FileContent.
-   * @return 0 succeeded, otherwise 1
-   */
-  public int extractSummary() {
-    return 0;
-  }
-
-  /**
    * set file name.
    * @param name file name
    */

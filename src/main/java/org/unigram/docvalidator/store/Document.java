@@ -51,11 +51,5 @@ public final class Document implements Block {
     return BlockTypes.DOCUMENT;
   }
 
-  public int extractSummary() {
-    // extract summary information from files
-    // extract total summary
-    return 0;
-  }
-
   private Vector<FileContent> files;
 }

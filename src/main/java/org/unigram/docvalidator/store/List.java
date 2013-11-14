@@ -61,9 +61,5 @@ public final class List implements Block {
     listElements.add(new ListElement(level, content));
   }
 
-  public int extractSummary() {
-    return 0;
-  }
-
   private Vector<ListElement> listElements;
 }

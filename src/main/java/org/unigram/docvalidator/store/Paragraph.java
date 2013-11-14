@@ -64,11 +64,5 @@ public final class Paragraph implements Block {
     return BlockTypes.PARAGRAPH;
   }
 
-  public int extractSummary() {
-    return 0;
-  }
-
   Vector<Sentence> sentences;
-
-
 }

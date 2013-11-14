@@ -37,6 +37,10 @@ public final class Sentence implements Block {
     this.links = new ArrayList<String>();
   }
 
+  public int getBlockID() {
+    return 0;
+  }
+
   /**
    * content of string.
    */
@@ -57,11 +61,4 @@ public final class Sentence implements Block {
    */
   public List<String> links;
 
-  public int getBlockID() {
-    return 0;
-  }
-
-  public int extractSummary() {
-    return 0;
-  }
 }

@@ -26,10 +26,4 @@ public interface Block {
   * @return block id
   */
   int getBlockID();
-
-  /**
-   * extract summary of the block.
-   * @return 0 when succeeded, 1 otherwise
-   */
-  int extractSummary();
 }

@@ -214,10 +214,6 @@ public final class Section implements Block {
     return paragraphs.size();
   }
 
-  public int extractSummary() {
-    return 0;
-  }
-
   /* Seciton Level */
   private int level;
 

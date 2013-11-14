@@ -55,7 +55,6 @@ public final class DocumentGenerator {
       }
     }
     // @TODO extract summary information to validate document effectively
-    document.extractSummary();
     return document;
   }
 
