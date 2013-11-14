@@ -55,6 +55,15 @@ public final class Section implements Block {
   }
 
   /**
+   * get the iterator of subsections.
+   * @param section id
+   * @return specified section
+   */
+  public Section getSubSection(int id) {
+    return subsections.get(id);
+  }
+
+  /**
    * get super section.
    * @return Section contains this object as a subsection
    */
