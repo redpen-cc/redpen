@@ -210,6 +210,31 @@ public class WikiParserTest {
   }
 
   @Test
+  public void testDocumentWithSections() throws UnsupportedEncodingException {
+    String sampleText = "h1. Prefectures in Japan.\n";
+    sampleText += "There are 47 prefectures in Japan.\n";
+    sampleText += "\n";
+    sampleText += "Each prefectures has its features.\n";
+    sampleText += "h2. Gunma \n";
+    sampleText += "Gumma is very beautiful";
+
+    FileContent doc = createFileContent(sampleText);
+    assertEquals(3, doc.getSizeOfSections());
+    Section rootSection = doc.getSection(0);
+    Section h1Section = doc.getSection(1);
+    Section h2Section = doc.getSection(2);
+
+    assertEquals(0, rootSection.getLevel());
+    assertEquals(1, h1Section.getLevel());
+    assertEquals(2, h2Section.getLevel());
+
+    assertEquals(rootSection.getSubSection(0), h1Section);
+    assertEquals(h1Section.getParent(), rootSection);
+    assertEquals(h2Section.getParent(), h1Section);
+    assertEquals(rootSection.getParent(), null);
+  }
+
+  @Test
   public void testGenerateJapaneseDocument() {
     String japaneseConfiguraitonStr = new String(
         "<?xml version=\"1.0\"?>" +

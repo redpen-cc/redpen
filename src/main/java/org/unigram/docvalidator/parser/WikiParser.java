@@ -155,13 +155,13 @@ public final class WikiParser extends BasicDocumentParser {
 
   private boolean addChild(Section candidate, Section child) {
     if (candidate.getLevel() < child.getLevel()) {
-      candidate.appendSection(child);
+      candidate.appendSubSection(child);
       child.setParent(candidate);
     } else { // search parent
       Section parent = candidate.getParent();
       while (parent != null) {
-        if (parent.getLevel() < child.getBlockID()) {
-          parent.appendSection(child);
+        if (parent.getLevel() < child.getLevel()) {
+          parent.appendSubSection(child);
           child.setParent(parent);
           candidate = child;
           break;

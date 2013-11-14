@@ -42,7 +42,7 @@ public final class Section implements Block {
    * get the iterator of subsections.
    * @return Iterator of Section
    */
-  public Iterator<Section> getSeubsections() {
+  public Iterator<Section> getSubSections() {
     return subsections.iterator();
   }
 
@@ -50,8 +50,17 @@ public final class Section implements Block {
    * add a subsection.
    * @param section section
    */
-  public void appendSection(Section section) {
+  public void appendSubSection(Section section) {
     subsections.add(section);
+  }
+
+  /**
+   * get the iterator of subsections.
+   * @param section id
+   * @return specified section
+   */
+  public Section getSubSection(int id) {
+    return subsections.get(id);
   }
 
   /**
