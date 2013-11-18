@@ -95,6 +95,118 @@ public class WikiParserTest {
   }
 
   @Test
+  public void testGenerateDocumentWithOneLineComment() {
+    String sampleText =
+        "There are various tests.\n";
+    sampleText += "[!-- The following should be exmples --]\n";
+    sampleText += "Most common one is unit test.\n";
+    sampleText += "Integration test is also common.\n";
+    FileContent doc = createFileContent(sampleText);
+    Section firstSections = doc.getSections().next();
+    Paragraph firstParagraph = firstSections.getParagraph().next();
+    assertEquals(3, firstParagraph.getNumberOfSentences());
+  }
+
+  @Test
+  public void testGenerateDocumentWithMultiLinesComment() {
+    String sampleText =
+        "There are various tests.\n";
+    sampleText += "[!-- \n";
+    sampleText += "The following should be exmples\n";
+    sampleText += "--]\n";
+    sampleText += "Most common one is unit test.\n";
+    sampleText += "Integration test is also common.\n";
+    FileContent doc = createFileContent(sampleText);
+    Section firstSections = doc.getSections().next();
+    Paragraph firstParagraph = firstSections.getParagraph().next();
+    assertEquals(3, firstParagraph.getNumberOfSentences());
+  }
+
+  @Test
+  public void testGenerateDocumentWithMultiLinesComment2() {
+    String sampleText =
+        "There are various tests.\n";
+    sampleText += "[!-- \n";
+    sampleText += "The following should be exmples\n";
+    sampleText += "In addition the histories should be described\n";
+    sampleText += "--]\n";
+    sampleText += "Most common one is unit test.\n";
+    sampleText += "Integration test is also common.\n";
+    FileContent doc = createFileContent(sampleText);
+    Section firstSections = doc.getSections().next();
+    Paragraph firstParagraph = firstSections.getParagraph().next();
+    assertEquals(3, firstParagraph.getNumberOfSentences());
+  }
+
+  @Test
+  public void testGenerateDocumentWithVoidComment() {
+    String sampleText =
+        "There are various tests.\n";
+    sampleText += "[!----]\n";
+    sampleText += "Most common one is unit test.\n";
+    sampleText += "Integration test is also common.\n";
+    FileContent doc = createFileContent(sampleText);
+    Section firstSections = doc.getSections().next();
+    Paragraph firstParagraph = firstSections.getParagraph().next();
+    assertEquals(3, firstParagraph.getNumberOfSentences());
+  }
+
+  @Test
+  public void testGenerateDocumentWithOnlySpaceComment() {
+    String sampleText =
+        "There are various tests.\n";
+    sampleText += "[!-- --]\n";
+    sampleText += "Most common one is unit test.\n";
+    sampleText += "Integration test is also common.\n";
+    FileContent doc = createFileContent(sampleText);
+    Section firstSections = doc.getSections().next();
+    Paragraph firstParagraph = firstSections.getParagraph().next();
+    assertEquals(3, firstParagraph.getNumberOfSentences());
+  }
+
+  @Test
+  public void testGenerateDocumentWithCommentHavingHeadSpace() {
+    String sampleText =
+        "There are various tests.\n";
+    sampleText += " [!-- BLAH BLAH --]\n";
+    sampleText += "Most common one is unit test.\n";
+    sampleText += "Integration test is also common.\n";
+    FileContent doc = createFileContent(sampleText);
+    Section firstSections = doc.getSections().next();
+    Paragraph firstParagraph = firstSections.getParagraph().next();
+    assertEquals(3, firstParagraph.getNumberOfSentences());
+  }
+
+  @Test
+  public void testGenerateDocumentWithCommentHavingTailingSpace() {
+    String sampleText =
+        "There are various tests.\n";
+    sampleText += "[!-- BLAH BLAH --] \n";
+    sampleText += "Most common one is unit test.\n";
+    sampleText += "Integration test is also common.\n";
+    FileContent doc = createFileContent(sampleText);
+    Section firstSections = doc.getSections().next();
+    Paragraph firstParagraph = firstSections.getParagraph().next();
+    assertEquals(3, firstParagraph.getNumberOfSentences());
+  }
+
+  @Test
+  public void testGenerateDocumentWithMultiLinesCommentHavingSpaces() {
+    String sampleText =
+        "There are various tests.\n";
+    sampleText += " [!-- \n";
+    sampleText += "The following should be exmples\n";
+    sampleText += "In addition the histories should be described\n";
+    sampleText += "--] \n";
+    sampleText += "Most common one is unit test.\n";
+    sampleText += "Integration test is also common.\n";
+    FileContent doc = createFileContent(sampleText);
+    Section firstSections = doc.getSections().next();
+    Paragraph firstParagraph = firstSections.getParagraph().next();
+    assertEquals(3, firstParagraph.getNumberOfSentences());
+  }
+
+  @Test
   public void testGenerateDocumentWithMultipleSentenceInOneSentence() {
     String sampleText =
         "Tokyu is a good railway company. The company is reliable. In addition it is rich.";

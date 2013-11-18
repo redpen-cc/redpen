@@ -71,7 +71,11 @@ public final class WikiParser extends BasicDocumentParser {
       while ((line = br.readLine()) != null) {
         prevPattern = currentPattern;
         Vector<String> head = new Vector<String>();
-        if (check(HEADER_PATTERN, line, head)) {
+        if (currentPattern == LinePattern.COMMENT) {
+          if (check(END_COMMENT_PATTERN, line, head)) {
+            currentPattern = LinePattern.VOID;
+          }
+        } else if (check(HEADER_PATTERN, line, head)) {
           currentPattern = LinePattern.HEADER;
           currentSection = appendSection(fileContent, currentSection, head);
         } else if (check(LIST_PATTERN, line, head)) {
@@ -80,6 +84,10 @@ public final class WikiParser extends BasicDocumentParser {
         } else if (check(NUMBERED_LIST_PATTERN, line, head)) {
           currentPattern = LinePattern.LIST;
           appendListElement(currentSection, prevPattern, head);
+        } else if (check(BEGIN_COMMENT_PATTERN, line, head)) {
+          if (!check(END_COMMENT_PATTERN, line, head)) { // skip comment
+            currentPattern = LinePattern.COMMENT;
+          }
         } else if (line.equals("")) { // new paragraph content
           currentSection.appendParagraph(new Paragraph());
         } else { // usual sentence.
@@ -221,13 +229,19 @@ public final class WikiParser extends BasicDocumentParser {
   private static final Pattern NUMBERED_LIST_PATTERN =
       Pattern.compile("^(#+) (.*)$");
 
-  private static final Pattern LINK_PATTERN
-  = Pattern.compile("\\[\\[(.+?)\\]\\]");
+  private static final Pattern LINK_PATTERN =
+      Pattern.compile("\\[\\[(.+?)\\]\\]");
+
+  private static final Pattern BEGIN_COMMENT_PATTERN =
+      Pattern.compile("\\s*^\\[!--");
+
+  private static final Pattern END_COMMENT_PATTERN =
+      Pattern.compile("--\\]$\\s*");
 
   /**
    * List of elements used in wiki format.
    */
   private enum LinePattern {
-    SENTENCE, LIST, NUM_LIST, VOID, HEADER
+    SENTENCE, LIST, NUM_LIST, VOID, HEADER, COMMENT
   }
 }
