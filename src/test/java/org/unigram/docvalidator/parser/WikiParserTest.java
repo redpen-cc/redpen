@@ -322,6 +322,42 @@ public class WikiParserTest {
   }
 
   @Test
+  public void testDocumentWithItalicWord() {
+    String sampleText = "This is a //good// day.\n";
+    FileContent doc = createFileContent(sampleText);
+    Section firstSections = doc.getSections().next();
+    Paragraph firstParagraph = firstSections.getParagraph().next();
+    assertEquals("This is a good day.", firstParagraph.getSentence(0).content);
+  }
+
+  @Test
+  public void testDocumentWithMultipleItalicWords() {
+    String sampleText = "//This// is a //good// day.\n";
+    FileContent doc = createFileContent(sampleText);
+    Section firstSections = doc.getSections().next();
+    Paragraph firstParagraph = firstSections.getParagraph().next();
+    assertEquals("This is a good day.", firstParagraph.getSentence(0).content);
+  }
+
+  @Test
+  public void testDocumentWithMultipleNearItalicWords() {
+    String sampleText = "This is //a// //good// day.\n";
+    FileContent doc = createFileContent(sampleText);
+    Section firstSections = doc.getSections().next();
+    Paragraph firstParagraph = firstSections.getParagraph().next();
+    assertEquals("This is a good day.", firstParagraph.getSentence(0).content);
+  }
+
+  @Test
+  public void testDocumentWithItalicExpression() {
+    String sampleText = "This is //a good// day.\n";
+    FileContent doc = createFileContent(sampleText);
+    Section firstSections = doc.getSections().next();
+    Paragraph firstParagraph = firstSections.getParagraph().next();
+    assertEquals("This is a good day.", firstParagraph.getSentence(0).content);
+  }
+
+  @Test
   public void testDocumentWithSections() throws UnsupportedEncodingException {
     String sampleText = "h1. Prefectures in Japan.\n";
     sampleText += "There are 47 prefectures in Japan.\n";

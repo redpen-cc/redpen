@@ -136,6 +136,20 @@ public final class WikiParser extends BasicDocumentParser {
   }
 
   private void parseSentence(Sentence sentence) {
+    extractLinks(sentence);
+    removeTags(sentence);
+  }
+
+  private void removeTags(Sentence sentence) {
+    String content = sentence.content;
+    for (int i = 0; i< INLINE_PATTERNS.length; ++i) {
+      Matcher m = INLINE_PATTERNS[i].matcher(content);
+      content= m.replaceAll("$1");
+    }
+    sentence.content = content;
+  }
+
+  private void extractLinks(Sentence sentence) {
     String modContent = "";
     int start = 0;
     Matcher m = LINK_PATTERN.matcher(sentence.content);
@@ -221,6 +235,17 @@ public final class WikiParser extends BasicDocumentParser {
 
   private static Logger LOG = LoggerFactory.getLogger(WikiParser.class);
 
+  /**
+   * List of elements used in wiki format.
+   */
+  private enum LinePattern {
+    SENTENCE, LIST, NUM_LIST, VOID, HEADER, COMMENT
+  }
+
+  /****************************************************************************
+   * patterns to handle wiki syntax
+   ***************************************************************************/
+
   private static final Pattern HEADER_PATTERN
   = Pattern.compile("^h([1-6])\\.(.*)$");
 
@@ -238,10 +263,22 @@ public final class WikiParser extends BasicDocumentParser {
   private static final Pattern END_COMMENT_PATTERN =
       Pattern.compile("--\\]$\\s*");
 
-  /**
-   * List of elements used in wiki format.
-   */
-  private enum LinePattern {
-    SENTENCE, LIST, NUM_LIST, VOID, HEADER, COMMENT
-  }
+  private static final Pattern ITALIC_PATTERN =
+      Pattern.compile("//(.+?)//");
+
+  private static final Pattern UNDERLINE_PATTERN =
+      Pattern.compile("__(.+?)__");
+
+  private static final Pattern BOLD_PATTERN =
+      Pattern.compile("\\*\\*(.+?)\\*\\*");
+
+  private static final Pattern STRIKETHROUGH_PATTERN =
+      Pattern.compile("--(.+?)--");
+
+  private static final Pattern [] INLINE_PATTERNS = {
+    ITALIC_PATTERN,
+    BOLD_PATTERN,
+    UNDERLINE_PATTERN,
+    STRIKETHROUGH_PATTERN
+  };
 }
