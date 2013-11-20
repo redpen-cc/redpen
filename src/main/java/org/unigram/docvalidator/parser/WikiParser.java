@@ -1,5 +1,5 @@
 /**
- * DocumentValidator
+l * DocumentValidator
  * Copyright (c) 2013-, Takahiko Ito, All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -26,8 +26,9 @@ import org.unigram.docvalidator.store.Paragraph;
 import org.unigram.docvalidator.store.Section;
 import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -92,7 +93,7 @@ public final class WikiParser extends BasicDocumentParser {
           currentSection.appendParagraph(new Paragraph());
         } else { // usual sentence.
           currentPattern = LinePattern.SENTENCE;
-          remain = extractSentences(lineNum, remain + line, currentSection);
+          remain = obtainSentences(lineNum, remain + line, currentSection);
         }
         prevPattern = currentPattern;
         lineNum++;
@@ -197,24 +198,18 @@ public final class WikiParser extends BasicDocumentParser {
     return true;
   }
 
-  private String extractSentences(int lineNum, String line,
+  private String obtainSentences(int lineNum, String line,
         Section currentSection) {
-    int periodPosition = StringUtils.getSentenceEndPosition(line, this.period);
-    if (periodPosition == -1) {
-      return line;
-    } else {
-      while (true) {
-        Sentence sentence = new Sentence(line.substring(0,
-            periodPosition + 1), lineNum);
-        parseSentence(sentence); // extract inline elements
-        currentSection.appendSentence(sentence);
-        line = line.substring(periodPosition + 1, line.length());
-        periodPosition = StringUtils.getSentenceEndPosition(line, this.period);
-        if (periodPosition == -1) {
-          return line;
-        }
-      }
+    List<Sentence> outputSentences = new ArrayList<Sentence>();
+    String remain = ParseUtils.extractSentences(line, this.period,
+        outputSentences);
+
+    for (Sentence sentence : outputSentences) {
+      sentence.position = lineNum;
+      parseSentence(sentence); // extract inline elements
+      currentSection.appendSentence(sentence);
     }
+    return remain;
   }
 
   private static boolean check(Pattern p, String target, Vector<String> head) {
