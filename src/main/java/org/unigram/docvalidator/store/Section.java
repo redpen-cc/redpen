@@ -120,11 +120,20 @@ public final class Section implements Block {
   }
 
   /**
-   * get paragraphs of section.
+   * get the iterator of paragraphs of section.
    * @return Iterator of Paragraph
    */
-  public Iterator<Paragraph> getParagraph() {
+  public Iterator<Paragraph> getParagraphs() {
     return paragraphs.iterator();
+  }
+
+  /**
+   * get the specified paragraph.
+   * @param id paragraph id
+   * @return paragraph
+   */
+  public Paragraph getParagraph(int id) {
+    return paragraphs.get(id);
   }
 
   /**
@@ -211,7 +220,7 @@ public final class Section implements Block {
    * @param id id of list block
    * @return number of list block
    */
-  public List getLastListBlock(int id) {
+  public List getListBlock(int id) {
     return lists.get(id);
   }
 

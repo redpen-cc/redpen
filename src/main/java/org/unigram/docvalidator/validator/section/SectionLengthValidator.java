@@ -45,7 +45,7 @@ public class SectionLengthValidator extends SectionValidator {
     List<ValidationError> validationErrors = new ArrayList<ValidationError>();
     int sectionCharNumber = 0;
     for (Iterator<Paragraph> paraIterator =
-        section.getParagraph(); paraIterator.hasNext();) {
+        section.getParagraphs(); paraIterator.hasNext();) {
       Paragraph currentPraParagraph = paraIterator.next();
       for (Iterator<Sentence> sentenceIterator =
           currentPraParagraph.getSentences(); sentenceIterator.hasNext();) {

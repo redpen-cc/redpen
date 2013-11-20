@@ -107,7 +107,7 @@ public class SentenceIterator implements Validator {
       List<ValidationError> errors, SentenceValidator validator,
       Section currentSection, String fileName) {
     for (Iterator<Paragraph> paraIterator =
-        currentSection.getParagraph(); paraIterator.hasNext();) {
+        currentSection.getParagraphs(); paraIterator.hasNext();) {
       Paragraph currentParagraph = paraIterator.next();
       for (Iterator<Sentence> lineIterator =
           currentParagraph.getSentences(); lineIterator.hasNext();) {

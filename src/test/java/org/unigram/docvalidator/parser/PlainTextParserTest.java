@@ -41,7 +41,7 @@ public class PlainTextParserTest {
   private DVResource resource;
 
   private Vector<Paragraph> extractParagraphs(Section section) {
-    Iterator<Paragraph> paragraph = section.getParagraph();
+    Iterator<Paragraph> paragraph = section.getParagraphs();
     Vector<Paragraph> paragraphs = new Vector<Paragraph>();
     while(paragraph.hasNext()) {
       Paragraph p = paragraph.next();
@@ -51,7 +51,7 @@ public class PlainTextParserTest {
   }
 
   private int calcLineNum(Section section) {
-    Iterator<Paragraph> paragraph = section.getParagraph();
+    Iterator<Paragraph> paragraph = section.getParagraphs();
     int lineNum = 0;
     while(paragraph.hasNext()) {
       Paragraph p = paragraph.next();

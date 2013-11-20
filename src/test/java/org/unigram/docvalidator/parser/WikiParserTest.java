@@ -64,7 +64,7 @@ public class WikiParserTest {
     assertEquals(3, doc.getNumberOfSections());
     Section lastSection = doc.getSection(doc.getNumberOfSections()-1);
     assertEquals(1, lastSection.getNumberOfLists());
-    assertEquals(5, lastSection.getLastListBlock().getNumberOfListElements());
+    assertEquals(5, lastSection.getListBlock(0).getNumberOfListElements());
     assertEquals(2,lastSection.getNumberOfParagraphs());
   }
 
@@ -78,7 +78,7 @@ public class WikiParserTest {
     sampleText += "- Keio\n";
     sampleText += "- Odakyu\n";
     FileContent doc = createFileContent(sampleText);
-    assertEquals(5, doc.getLastSection().getLastListBlock().getNumberOfListElements());
+    assertEquals(5, doc.getSection(0).getListBlock(0).getNumberOfListElements());
   }
 
   @Test
@@ -91,7 +91,7 @@ public class WikiParserTest {
     sampleText += "# Keio\n";
     sampleText += "# Odakyu\n";
     FileContent doc = createFileContent(sampleText);
-    assertEquals(5, doc.getLastSection().getLastListBlock().getNumberOfListElements());
+    assertEquals(5, doc.getSection(0).getListBlock(0).getNumberOfListElements());
   }
 
   @Test
@@ -102,8 +102,8 @@ public class WikiParserTest {
     sampleText += "Most common one is unit test.\n";
     sampleText += "Integration test is also common.\n";
     FileContent doc = createFileContent(sampleText);
-    Section firstSections = doc.getSections().next();
-    Paragraph firstParagraph = firstSections.getParagraph().next();
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals(3, firstParagraph.getNumberOfSentences());
   }
 
@@ -117,8 +117,8 @@ public class WikiParserTest {
     sampleText += "Most common one is unit test.\n";
     sampleText += "Integration test is also common.\n";
     FileContent doc = createFileContent(sampleText);
-    Section firstSections = doc.getSections().next();
-    Paragraph firstParagraph = firstSections.getParagraph().next();
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals(3, firstParagraph.getNumberOfSentences());
   }
 
@@ -133,8 +133,8 @@ public class WikiParserTest {
     sampleText += "Most common one is unit test.\n";
     sampleText += "Integration test is also common.\n";
     FileContent doc = createFileContent(sampleText);
-    Section firstSections = doc.getSections().next();
-    Paragraph firstParagraph = firstSections.getParagraph().next();
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals(3, firstParagraph.getNumberOfSentences());
   }
 
@@ -146,8 +146,8 @@ public class WikiParserTest {
     sampleText += "Most common one is unit test.\n";
     sampleText += "Integration test is also common.\n";
     FileContent doc = createFileContent(sampleText);
-    Section firstSections = doc.getSections().next();
-    Paragraph firstParagraph = firstSections.getParagraph().next();
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals(3, firstParagraph.getNumberOfSentences());
   }
 
@@ -159,8 +159,8 @@ public class WikiParserTest {
     sampleText += "Most common one is unit test.\n";
     sampleText += "Integration test is also common.\n";
     FileContent doc = createFileContent(sampleText);
-    Section firstSections = doc.getSections().next();
-    Paragraph firstParagraph = firstSections.getParagraph().next();
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals(3, firstParagraph.getNumberOfSentences());
   }
 
@@ -172,8 +172,8 @@ public class WikiParserTest {
     sampleText += "Most common one is unit test.\n";
     sampleText += "Integration test is also common.\n";
     FileContent doc = createFileContent(sampleText);
-    Section firstSections = doc.getSections().next();
-    Paragraph firstParagraph = firstSections.getParagraph().next();
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals(3, firstParagraph.getNumberOfSentences());
   }
 
@@ -185,8 +185,8 @@ public class WikiParserTest {
     sampleText += "Most common one is unit test.\n";
     sampleText += "Integration test is also common.\n";
     FileContent doc = createFileContent(sampleText);
-    Section firstSections = doc.getSections().next();
-    Paragraph firstParagraph = firstSections.getParagraph().next();
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals(3, firstParagraph.getNumberOfSentences());
   }
 
@@ -201,8 +201,8 @@ public class WikiParserTest {
     sampleText += "Most common one is unit test.\n";
     sampleText += "Integration test is also common.\n";
     FileContent doc = createFileContent(sampleText);
-    Section firstSections = doc.getSections().next();
-    Paragraph firstParagraph = firstSections.getParagraph().next();
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals(3, firstParagraph.getNumberOfSentences());
   }
 
@@ -213,8 +213,8 @@ public class WikiParserTest {
     String[] expectedResult = {"Tokyu is a good railway company.",
         " The company is reliable.", " In addition it is rich."};
     FileContent doc = createFileContent(sampleText);
-    Section firstSections = doc.getSections().next();
-    Paragraph firstParagraph = firstSections.getParagraph().next();
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals(3, firstParagraph.getNumberOfSentences());
     for (int i=0; i<expectedResult.length; i++) {
       assertEquals(expectedResult[i], firstParagraph.getSentence(i).content);
@@ -226,8 +226,8 @@ public class WikiParserTest {
     String sampleText = "Tokyu is a good railway company. The company is reliable. In addition it is rich.\n";
     sampleText += "I like the company. Howerver someone does not like it.";
     FileContent doc = createFileContent(sampleText);
-    Section firstSections = doc.getSections().next();
-    Paragraph firstParagraph = firstSections.getParagraph().next();
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals(5, firstParagraph.getNumberOfSentences());
   }
 
@@ -235,16 +235,16 @@ public class WikiParserTest {
   public void testGenerateDocumentWitVoidContent() {
     String sampleText = "";
     FileContent doc = createFileContent(sampleText);
-    Section firstSections = doc.getSections().next();
-    assertEquals(false, firstSections.getParagraph().hasNext());
+    Section firstSections = doc.getSection(0);
+    assertEquals(false, firstSections.getParagraphs().hasNext());
   }
 
   @Test
   public void testGenerateDocumentWithPeriodInSuccession() {
     String sampleText = "...";
     FileContent doc = createFileContent(sampleText);
-    Section firstSections = doc.getSections().next();
-    Paragraph firstParagraph = firstSections.getParagraph().next();
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals(1, firstParagraph.getNumberOfSentences());
   }
 
@@ -252,8 +252,8 @@ public class WikiParserTest {
   public void testGenerateDocumentWitoutPeriodInLastSentence() {
     String sampleText = "Hongo is located at the west of Tokyo. Saitama is located at the north";
     FileContent doc = createFileContent(sampleText);
-    Section firstSections = doc.getSections().next();
-    Paragraph firstParagraph = firstSections.getParagraph().next();
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals(2, firstParagraph.getNumberOfSentences());
   }
 
@@ -264,8 +264,8 @@ public class WikiParserTest {
     sampleText += "which is the capital of Japan ";
     sampleText += "which is not located in the south of the earth.";
     FileContent doc = createFileContent(sampleText);
-    Section firstSections = doc.getSections().next();
-    Paragraph firstParagraph = firstSections.getParagraph().next();
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals(2, firstParagraph.getNumberOfSentences());
   }
 
@@ -273,8 +273,8 @@ public class WikiParserTest {
   public void testPlainLink() {
     String sampleText = "this is not a [[pen]], but also this is not [[Google|http://google.com]] either.";
     FileContent doc = createFileContent(sampleText);
-    Section firstSections = doc.getSections().next();
-    Paragraph firstParagraph = firstSections.getParagraph().next();
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals(1, firstParagraph.getNumberOfSentences());
     assertEquals(2, firstParagraph.getSentence(0).links.size());
     assertEquals("pen", firstParagraph.getSentence(0).links.get(0));
@@ -287,8 +287,8 @@ public class WikiParserTest {
   public void testPlainLinkWithSpaces() {
     String sampleText = "the url is not [[Google | http://google.com ]].";
     FileContent doc = createFileContent(sampleText);
-    Section firstSections = doc.getSections().next();
-    Paragraph firstParagraph = firstSections.getParagraph().next();
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals(1, firstParagraph.getNumberOfSentences());
     assertEquals(1, firstParagraph.getSentence(0).links.size());
     assertEquals("Google", firstParagraph.getSentence(0).links.get(0));
@@ -300,8 +300,8 @@ public class WikiParserTest {
   public void testLinkWithoutTag() {
     String sampleText = "url of google is [[http://google.com]].";
     FileContent doc = createFileContent(sampleText);
-    Section firstSections = doc.getSections().next();
-    Paragraph firstParagraph = firstSections.getParagraph().next();
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals(1, firstParagraph.getNumberOfSentences());
     assertEquals(1, firstParagraph.getSentence(0).links.size());
     assertEquals("http://google.com", firstParagraph.getSentence(0).links.get(0));
@@ -313,8 +313,8 @@ public class WikiParserTest {
   public void testIncompleteLink() {
     String sampleText = "url of google is [[http://google.com.";
     FileContent doc = createFileContent(sampleText);
-    Section firstSections = doc.getSections().next();
-    Paragraph firstParagraph = firstSections.getParagraph().next();
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals(1, firstParagraph.getNumberOfSentences());
     assertEquals(0, firstParagraph.getSentence(0).links.size());
     assertEquals("url of google is [[http://google.com.",
@@ -325,8 +325,8 @@ public class WikiParserTest {
   public void testDocumentWithItalicWord() {
     String sampleText = "This is a //good// day.\n";
     FileContent doc = createFileContent(sampleText);
-    Section firstSections = doc.getSections().next();
-    Paragraph firstParagraph = firstSections.getParagraph().next();
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals("This is a good day.", firstParagraph.getSentence(0).content);
   }
 
@@ -334,8 +334,8 @@ public class WikiParserTest {
   public void testDocumentWithMultipleItalicWords() {
     String sampleText = "//This// is a //good// day.\n";
     FileContent doc = createFileContent(sampleText);
-    Section firstSections = doc.getSections().next();
-    Paragraph firstParagraph = firstSections.getParagraph().next();
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals("This is a good day.", firstParagraph.getSentence(0).content);
   }
 
@@ -343,8 +343,8 @@ public class WikiParserTest {
   public void testDocumentWithMultipleNearItalicWords() {
     String sampleText = "This is //a// //good// day.\n";
     FileContent doc = createFileContent(sampleText);
-    Section firstSections = doc.getSections().next();
-    Paragraph firstParagraph = firstSections.getParagraph().next();
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals("This is a good day.", firstParagraph.getSentence(0).content);
   }
 
@@ -352,8 +352,8 @@ public class WikiParserTest {
   public void testDocumentWithItalicExpression() {
     String sampleText = "This is //a good// day.\n";
     FileContent doc = createFileContent(sampleText);
-    Section firstSections = doc.getSections().next();
-    Paragraph firstParagraph = firstSections.getParagraph().next();
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals("This is a good day.", firstParagraph.getSentence(0).content);
   }
 
@@ -407,8 +407,8 @@ public class WikiParserTest {
       fail();
     }
 
-    Section firstSections = doc.getSections().next();
-    Paragraph firstParagraph = firstSections.getParagraph().next();
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals(2, firstParagraph.getNumberOfSentences());
   }
 

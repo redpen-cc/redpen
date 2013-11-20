@@ -49,7 +49,7 @@ public class ParagraphStartWithValidator extends SectionValidator {
   protected List<ValidationError> check(Section section) {
     List<ValidationError> validationErrors = new ArrayList<ValidationError>();
     for (Iterator<Paragraph> paraIterator =
-        section.getParagraph(); paraIterator.hasNext();) {
+        section.getParagraphs(); paraIterator.hasNext();) {
       Paragraph currentParagraph = paraIterator.next();
       Sentence firstSentence = currentParagraph.getSentence(0);
       if (firstSentence.content.indexOf(this.beginingOfParagraph) != 0) {
