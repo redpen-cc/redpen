@@ -35,12 +35,10 @@ public final class StringUtils {
     int position = str.indexOf(period, offset);
 
     if (checkPosition(position, str)) {
-
       if (period.equals(".") && str.charAt(position+1) == ' ') {
         return position;
-      }
-
-      if (!period.equals(".")) {
+      } else if (!period.equals(".") &&
+          str.indexOf(period, position+1) != position+1) {
         // NOTE: for non Latin languages (in Asian languages, periods do not
         // have tailing spaces in the end of sentences)
         return position;
@@ -74,5 +72,4 @@ public final class StringUtils {
   }
 
   private StringUtils() { }
-
 }
