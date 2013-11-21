@@ -53,4 +53,33 @@ public class StringUtilsTest {
     assertEquals(8, StringUtils.getSentenceEndPosition(str, "。"));
   }
 
+  @Test
+  public void tesEndPositionDodsWithSpace() {
+    String str = new String ("this is a pen... ");
+    assertEquals(15, StringUtils.getSentenceEndPosition(str, "."));
+  }
+
+  @Test
+  public void tesEndPositionDods() {
+    String str = new String ("this is a pen...");
+    assertEquals(15, StringUtils.getSentenceEndPosition(str, "."));
+  }
+
+  @Test
+  public void tesEndPositionDodsWithinTwoSencences() {
+    String str = new String ("this is a pen... But that is a pencil.");
+    assertEquals(15, StringUtils.getSentenceEndPosition(str, "."));
+  }
+
+  @Test
+  public void tesEndPositionDodsWithinTwoSencencesWithoutSpace() {
+    String str = new String ("this is a pen...But that is a pencil.");
+    assertEquals(36, StringUtils.getSentenceEndPosition(str, "."));
+  }
+
+  @Test
+  public void tesEndPositionDodsWithinTwoSencencesWithoutSpace2() {
+    String str = new String ("this is a pen...But that is a pencil. ");
+    assertEquals(36, StringUtils.getSentenceEndPosition(str, "."));
+  }
 }
