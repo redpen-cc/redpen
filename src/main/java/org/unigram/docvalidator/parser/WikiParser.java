@@ -79,7 +79,7 @@ public final class WikiParser extends BasicDocumentParser {
           }
         } else if (check(HEADER_PATTERN, line, head)) {
           currentPattern = LinePattern.HEADER;
-          currentSection = appendSection(fileContent, currentSection, head);
+          currentSection = appendSection(fileContent, currentSection, head, lineNum);
         } else if (check(LIST_PATTERN, line, head)) {
           currentPattern = LinePattern.LIST;
           appendListElement(currentSection, prevPattern, head);
@@ -119,10 +119,13 @@ public final class WikiParser extends BasicDocumentParser {
   }
 
   private Section appendSection(FileContent fileContent,
-      Section currentSection, Vector<String> head) {
+      Section currentSection, Vector<String> head, int lineNum) {
     Integer level = Integer.valueOf(head.get(0));
     List<Sentence> outputSentences = new ArrayList<Sentence>();
-    obtainSentences(0, head.get(1), outputSentences);
+    String remainHeader = obtainSentences(0, head.get(1), outputSentences);
+    if (remainHeader != null && remainHeader.length() > 0) {
+      outputSentences.add(new Sentence(remainHeader, lineNum));
+    }
     Section tmpSection =  new Section(level, outputSentences);
     fileContent.appendSection(tmpSection);
     if (!addChild(currentSection, tmpSection)) {

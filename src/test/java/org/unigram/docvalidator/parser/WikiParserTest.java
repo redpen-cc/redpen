@@ -375,6 +375,20 @@ public class WikiParserTest {
   }
 
   @Test
+  public void testDocumentWithHeaderWitoutPeriod()
+      throws UnsupportedEncodingException {
+    String sampleText = "";
+    sampleText += "h1. About Gunma\n";
+    sampleText += "Gunma is located at west of Saitama.\n";
+    sampleText += "The word also have posive meaning. Hower it is a bit wired.";
+
+    FileContent doc = createFileContent(sampleText);
+    Section lastSection = doc.getSection(doc.getNumberOfSections()-1);
+    assertEquals(1, lastSection.getHeaderContentsListSize());
+    assertEquals(" About Gunma", lastSection.getHeaderContent(0).content);
+  }
+
+  @Test
   public void testDocumentWithSections() throws UnsupportedEncodingException {
     String sampleText = "h1. Prefectures in Japan.\n";
     sampleText += "There are 47 prefectures in Japan.\n";
