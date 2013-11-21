@@ -37,31 +37,39 @@ public final class StringUtils {
     if (checkPosition(position, str)) {
       if (period.equals(".") && str.charAt(position+1) == ' ') {
         return position;
-      } else if (!period.equals(".") &&
-          str.indexOf(period, position+1) != position+1) {
-        // NOTE: for non Latin languages (in Asian languages, periods do not
-        // have tailing spaces in the end of sentences)
-        return position;
       }
-
-      if (str.indexOf(period, position+1) == position+1) {
-        // NOTE: handling of period in succession
-        if ((position+1) == str.length() -1) {
-          return position+1;
-        } else {
-          return getEndPosition(str, period, position+1);
-        }
-      } else {
-        return getEndPosition(str, period, position+1);
-      }
+      return handleSuccessivePeriods(str, period, position);
     }
 
     if (position == str.length() - 1) {
       // NOTE: period in end of sentence should be the end of the sentence
-      // even if there is no whitespace after it.
+      // even if there is NO tailing whitespace.
       return position;
     }
     return -1;
+  }
+
+  private static int handleSuccessivePeriods(String str, String period,
+      int position) {
+    int nextPosition = position+1;
+
+    if (!period.equals(".") &&
+        str.indexOf(period, nextPosition) != nextPosition) {
+      // NOTE: Non Latin languages (especially Asian languages, periods do not
+      // have tailing spaces in the end of sentences)
+      return position;
+    }
+
+    if (str.indexOf(period, nextPosition) == nextPosition) {
+      // NOTE: handling of period in succession
+      if ((position+1) == str.length() -1) {
+        return nextPosition;
+      } else {
+        return getEndPosition(str, period, nextPosition);
+      }
+    } else {
+      return getEndPosition(str, period, nextPosition);
+    }
   }
 
   private static boolean checkPosition(int position, String str) {
