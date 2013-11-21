@@ -23,11 +23,11 @@ import java.util.Vector;
 /**
  * Represent List in semi-structured format such as wiki.
  */
-public final class List implements Block {
+public final class ListBlock implements Block {
   /**
    * Constructor.
    */
-  public List() {
+  public ListBlock() {
     super();
     this.listElements = new Vector<ListElement>();
   }

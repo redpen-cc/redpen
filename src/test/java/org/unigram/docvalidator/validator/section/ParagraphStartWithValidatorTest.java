@@ -33,7 +33,7 @@ public class ParagraphStartWithValidatorTest {
   @Test
   public void testStartWithoutSpace() {
     ParagraphStartWithValidator validator = new ParagraphStartWithValidator();
-    Section section = new Section(0, "");
+    Section section = new Section(0);
     Paragraph paragraph = new Paragraph();
     paragraph.appendSentence("it like a piece of a cake.", 0);
     section.appendParagraph(paragraph);
@@ -46,7 +46,7 @@ public class ParagraphStartWithValidatorTest {
   @Test
   public void testStartWithSpace() {
     ParagraphStartWithValidator validator = new ParagraphStartWithValidator();
-    Section section = new Section(0, "");
+    Section section = new Section(0);
     Paragraph paragraph = new Paragraph();
     paragraph.appendSentence(" it like a piece of a cake.", 0);
     section.appendParagraph(paragraph);

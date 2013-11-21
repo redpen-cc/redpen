@@ -62,7 +62,8 @@ public final class WikiParser extends BasicDocumentParser {
 
     FileContent fileContent = new FileContent();
     // for sentences right below the beginning of document
-    Section currentSection = new Section(0, "");
+    List<Sentence> headers = new ArrayList<Sentence>();
+    Section currentSection = new Section(0, headers);
     fileContent.appendSection(currentSection);
     LinePattern prevPattern, currentPattern = LinePattern.VOID;
     String line;
@@ -93,7 +94,7 @@ public final class WikiParser extends BasicDocumentParser {
           currentSection.appendParagraph(new Paragraph());
         } else { // usual sentence.
           currentPattern = LinePattern.SENTENCE;
-          remain = obtainSentences(lineNum, remain + line, currentSection);
+          remain = appendSentencesIntoSection(lineNum, remain + line, currentSection);
         }
         prevPattern = currentPattern;
         lineNum++;
@@ -120,11 +121,13 @@ public final class WikiParser extends BasicDocumentParser {
   private Section appendSection(FileContent fileContent,
       Section currentSection, Vector<String> head) {
     Integer level = Integer.valueOf(head.get(0));
-    Section tmpSection =  new Section(level, head.get(1));
+    List<Sentence> outputSentences = new ArrayList<Sentence>();
+    obtainSentences(0, head.get(1), outputSentences);
+    Section tmpSection =  new Section(level, outputSentences);
     fileContent.appendSection(tmpSection);
     if (!addChild(currentSection, tmpSection)) {
       LOG.warn("Failed to add parent for a Seciotn: "
-          + tmpSection.getHeaderContent());
+          + tmpSection.getHeaderContents().next());
     }
     currentSection = tmpSection;
     return currentSection;
@@ -199,18 +202,26 @@ public final class WikiParser extends BasicDocumentParser {
   }
 
   private String obtainSentences(int lineNum, String line,
-        Section currentSection) {
-    List<Sentence> outputSentences = new ArrayList<Sentence>();
+      List<Sentence> outputSentences) {
     String remain = ParseUtils.extractSentences(line, this.period,
         outputSentences);
-
     for (Sentence sentence : outputSentences) {
       sentence.position = lineNum;
       parseSentence(sentence); // extract inline elements
-      currentSection.appendSentence(sentence);
     }
     return remain;
   }
+
+  private String appendSentencesIntoSection(int lineNum, String line,
+      Section currentSection) {
+  List<Sentence> outputSentences = new ArrayList<Sentence>();
+  String remain = obtainSentences(lineNum, line, outputSentences);
+
+  for (Sentence sentence : outputSentences) {
+    currentSection.appendSentence(sentence);
+  }
+  return remain;
+}
 
   private static boolean check(Pattern p, String target, Vector<String> head) {
     Matcher m = p.matcher(target);

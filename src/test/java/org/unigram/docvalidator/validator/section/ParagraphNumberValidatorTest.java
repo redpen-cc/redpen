@@ -41,7 +41,7 @@ public class ParagraphNumberValidatorTest {
   public void testSectionWithManySection() {
     ParagraphNumberValidatorForTest validator = new ParagraphNumberValidatorForTest();
     validator.setMaxNumber();
-    Section section = new Section(0, "");
+    Section section = new Section(0);
 
     section.appendParagraph(new Paragraph());
     section.appendParagraph(new Paragraph());
@@ -61,7 +61,7 @@ public class ParagraphNumberValidatorTest {
     ParagraphNumberValidatorForTest validator = new ParagraphNumberValidatorForTest();
     validator.setMaxNumber();
 
-    Section section = new Section(0, "");
+    Section section = new Section(0);
     section.appendParagraph(new Paragraph());
 
     FileContent fileContent = new FileContent();

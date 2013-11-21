@@ -17,8 +17,12 @@
  */
 package org.unigram.docvalidator.store;
 
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
+
+import org.unigram.docvalidator.parser.ParseUtils;
+
 
 /**
  * Represent a section in semi-structured text format such as wiki.
@@ -27,15 +31,28 @@ public final class Section implements Block {
   /**
    * constructor.
    * @param sectioLevel section level
+   */
+  public Section(int sectioLevel) {
+    super();
+    this.level = sectioLevel;
+    this.headerContent = new ArrayList<Sentence>();
+    this.subsections = new ArrayList<Section>();
+    this.paragraphs = new ArrayList<Paragraph>();
+    this.lists = new ArrayList<ListBlock>();
+  }
+
+  /**
+   * constructor.
+   * @param sectioLevel section level
    * @param header header content string
    */
-  public Section(int sectioLevel, String header) {
+  public Section(int sectioLevel, List<Sentence> header) {
     super();
     this.level = sectioLevel;
     this.headerContent = header;
-    this.subsections = new Vector<Section>();
-    this.paragraphs = new Vector<Paragraph>();
-    this.lists = new Vector<List>();
+    this.subsections = new ArrayList<Section>();
+    this.paragraphs = new ArrayList<Paragraph>();
+    this.lists = new ArrayList<ListBlock>();
   }
 
   /**
@@ -104,19 +121,38 @@ public final class Section implements Block {
   }
 
   /**
-   * get header.
-   * @return content string of header.
+   * get iterator of header sentences.
+   * @return contents of header.
+   * NOTE: header can contain more than one header sentences.
    */
-  public String getHeaderContent() {
-    return headerContent;
+  public Iterator<Sentence> getHeaderContents() {
+    return headerContent.iterator();
   }
+
+  /**
+   * get iterator of header sentences.
+   * @param id id of sentence in header
+   * @return contents of header.
+   */
+  public Sentence getHeaderContent(int id) {
+    return headerContent.get(id);
+  }
+
+  /**
+   * Get the number of sentences in header
+   * @return
+   */
+  public int getHeaderContentsListSize() {
+    return headerContent.size();
+  }
+
 
   /**
    * get last subsection.
    * @return last subsection in this section
    */
   public Section getLastSubsection() {
-    return subsections.lastElement();
+    return subsections.get(subsections.size()-1);
   }
 
   /**
@@ -153,7 +189,7 @@ public final class Section implements Block {
     if (paragraphs.size() == 0) {
       appendParagraph(new Paragraph());
     }
-    Paragraph currentBlock = paragraphs.lastElement();
+    Paragraph currentBlock = paragraphs.get(paragraphs.size()-1);
     currentBlock.appendSentence(line, lineNum);
     if (currentBlock.getNumberOfSentences() == 1) {
       currentBlock.getSentence(0).isStartaragraph = true;
@@ -168,7 +204,7 @@ public final class Section implements Block {
     if (paragraphs.size() == 0) {
       appendParagraph(new Paragraph());
     }
-    Paragraph currentBlock = paragraphs.lastElement();
+    Paragraph currentBlock = paragraphs.get(paragraphs.size()-1);
     currentBlock.appendSentence(sentence);
     if (currentBlock.getNumberOfSentences() == 1) {
       currentBlock.getSentence(0).isStartaragraph = true;
@@ -187,7 +223,7 @@ public final class Section implements Block {
    * Append List.
    */
   public void appendListBlock() {
-    this.lists.add(new List());
+    this.lists.add(new ListBlock());
   }
 
   /**
@@ -196,7 +232,7 @@ public final class Section implements Block {
    * @param content list content
    */
   public void appendListElement(int listLevel, String content) {
-    this.lists.lastElement().appendElement(listLevel, content);
+    this.lists.get(lists.size() - 1).appendElement(listLevel, content);
   }
 
   /**
@@ -211,8 +247,8 @@ public final class Section implements Block {
    *  get last list block.
    *  @return last list block in the section
    */
-  public List getLastListBlock() {
-    return lists.lastElement();
+  public ListBlock getLastListBlock() {
+    return lists.get(lists.size() -1);
   }
 
   /**
@@ -220,7 +256,7 @@ public final class Section implements Block {
    * @param id id of list block
    * @return number of list block
    */
-  public List getListBlock(int id) {
+  public ListBlock getListBlock(int id) {
     return lists.get(id);
   }
 
@@ -236,18 +272,18 @@ public final class Section implements Block {
   private int level;
 
   /* Header*/
-  private String headerContent;
+  private List<Sentence> headerContent;
 
   /* parent Section */
   private Section parent;
 
   /* subsecitons */
-  private Vector<Section> subsections;
+  private List<Section> subsections;
 
   /* paragrahs in this section. */
-  private Vector<Paragraph> paragraphs;
+  private List<Paragraph> paragraphs;
 
   /* lists */
-  private Vector<List> lists;
+  private List<ListBlock> lists;
 
 }

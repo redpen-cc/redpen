@@ -20,7 +20,6 @@ package org.unigram.docvalidator.validator.section;
 import static org.junit.Assert.*;
 
 import java.util.List;
-import java.util.Vector;
 
 import org.junit.Test;
 import org.unigram.docvalidator.store.FileContent;
@@ -43,7 +42,7 @@ public class SectionLengthValidatorTest {
     SectionLengthValidatorForTest validator = new SectionLengthValidatorForTest();
     validator.setMaxLength();
 
-    Section section = new Section(0, "");
+    Section section = new Section(0);
     Paragraph paragraph = new Paragraph();
     paragraph.appendSentence("it like a piece of a cake.", 0);
     section.appendParagraph(paragraph);
