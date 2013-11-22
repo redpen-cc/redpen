@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.junit.Test;
 import org.unigram.docvalidator.store.FileContent;
-import org.unigram.docvalidator.store.ListBlock;
 import org.unigram.docvalidator.store.Paragraph;
 import org.unigram.docvalidator.store.Section;
 import org.unigram.docvalidator.store.Sentence;
@@ -51,6 +50,7 @@ class DummyValidator implements SentenceValidator {
   private List<String> sentenceStrings;
 }
 
+// TODO refeactor the following tests using utility functions.
 public class SentenceIteratorTest {
 
   @Test
