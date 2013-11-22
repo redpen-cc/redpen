@@ -79,13 +79,14 @@ public final class WikiParser extends BasicDocumentParser {
           }
         } else if (check(HEADER_PATTERN, line, head)) {
           currentPattern = LinePattern.HEADER;
-          currentSection = appendSection(fileContent, currentSection, head, lineNum);
+          currentSection = appendSection(fileContent, currentSection, head,
+              lineNum);
         } else if (check(LIST_PATTERN, line, head)) {
           currentPattern = LinePattern.LIST;
-          appendListElement(currentSection, prevPattern, head);
+          appendListElement(currentSection, prevPattern, head, lineNum);
         } else if (check(NUMBERED_LIST_PATTERN, line, head)) {
           currentPattern = LinePattern.LIST;
-          appendListElement(currentSection, prevPattern, head);
+          appendListElement(currentSection, prevPattern, head, lineNum);
         } else if (check(BEGIN_COMMENT_PATTERN, line, head)) {
           if (!check(END_COMMENT_PATTERN, line, head)) { // skip comment
             currentPattern = LinePattern.COMMENT;
@@ -94,7 +95,8 @@ public final class WikiParser extends BasicDocumentParser {
           currentSection.appendParagraph(new Paragraph());
         } else { // usual sentence.
           currentPattern = LinePattern.SENTENCE;
-          remain = appendSentencesIntoSection(lineNum, remain + line, currentSection);
+          remain = appendSentencesIntoSection(lineNum, remain + line,
+              currentSection);
         }
         prevPattern = currentPattern;
         lineNum++;
@@ -110,12 +112,18 @@ public final class WikiParser extends BasicDocumentParser {
   }
 
   private void appendListElement(Section currentSection,
-      LinePattern prevPattern, Vector<String> head) {
+      LinePattern prevPattern, Vector<String> head, int lineNum) {
     if (prevPattern != LinePattern.LIST) {
       currentSection.appendListBlock();
     }
+    List<Sentence> outputSentences = new ArrayList<Sentence>();
+    String remainSentence= obtainSentences(0, head.get(1), outputSentences);
     currentSection.appendListElement(extractListLevel(head.get(0)),
-        head.get(1));
+        outputSentences);
+    // NOTE: for list content without period
+    if (remainSentence != null && remainSentence.length() > 0) {
+      outputSentences.add(new Sentence(remainSentence, lineNum));
+    }
   }
 
   private Section appendSection(FileContent fileContent,
@@ -123,9 +131,11 @@ public final class WikiParser extends BasicDocumentParser {
     Integer level = Integer.valueOf(head.get(0));
     List<Sentence> outputSentences = new ArrayList<Sentence>();
     String remainHeader = obtainSentences(0, head.get(1), outputSentences);
+    // NOTE: for header without period
     if (remainHeader != null && remainHeader.length() > 0) {
       outputSentences.add(new Sentence(remainHeader, lineNum));
     }
+
     Section tmpSection =  new Section(level, outputSentences);
     fileContent.appendSection(tmpSection);
     if (!addChild(currentSection, tmpSection)) {

@@ -21,9 +21,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.unigram.docvalidator.parser.ParseUtils;
-
-
 /**
  * Represent a section in semi-structured text format such as wiki.
  */
@@ -229,10 +226,10 @@ public final class Section implements Block {
   /**
    * Append List element.
    * @param listLevel list level
-   * @param content list content
+   * @param contents list content
    */
-  public void appendListElement(int listLevel, String content) {
-    this.lists.get(lists.size() - 1).appendElement(listLevel, content);
+  public void appendListElement(int listLevel, List<Sentence> contents) {
+    this.lists.get(lists.size() - 1).appendElement(listLevel, contents);
   }
 
   /**

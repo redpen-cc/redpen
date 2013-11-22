@@ -29,6 +29,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.unigram.docvalidator.ConfigurationLoader;
 import org.unigram.docvalidator.store.FileContent;
+import org.unigram.docvalidator.store.ListBlock;
 import org.unigram.docvalidator.store.Paragraph;
 import org.unigram.docvalidator.store.Section;
 import org.unigram.docvalidator.util.CharacterTable;
@@ -386,6 +387,43 @@ public class WikiParserTest {
     Section lastSection = doc.getSection(doc.getNumberOfSections()-1);
     assertEquals(1, lastSection.getHeaderContentsListSize());
     assertEquals(" About Gunma", lastSection.getHeaderContent(0).content);
+  }
+
+  @Test
+  public void testDocumentWithList()
+      throws UnsupportedEncodingException {
+    String sampleText = "";
+    sampleText += "h1. About Gunma. About Saitama.\n";
+    sampleText += "- Gunma is located at west of Saitama.\n";
+    sampleText += "- The word also have posive meaning. Hower it is a bit wired.";
+
+    FileContent doc = createFileContent(sampleText);
+    Section lastSection = doc.getSection(doc.getNumberOfSections()-1);
+    ListBlock listBlock = lastSection.getListBlock(0);
+    assertEquals(2, listBlock.getNumberOfListElements());
+    assertEquals(1, listBlock.getListElement(0).getNumberOfSentences());
+    assertEquals("Gunma is located at west of Saitama.",
+        listBlock.getListElement(0).getSentence(0).content);
+    assertEquals("The word also have posive meaning.",
+        listBlock.getListElement(1).getSentence(0).content);
+    assertEquals(" Hower it is a bit wired.",
+        listBlock.getListElement(1).getSentence(1).content);
+  }
+
+  @Test
+  public void testDocumentWithListWithoutPeriod()
+      throws UnsupportedEncodingException {
+    String sampleText = "";
+    sampleText += "h1. About Gunma. About Saitama.\n";
+    sampleText += "- Gunma is located at west of Saitama\n";
+
+    FileContent doc = createFileContent(sampleText);
+    Section lastSection = doc.getSection(doc.getNumberOfSections()-1);
+    ListBlock listBlock = lastSection.getListBlock(0);
+    assertEquals(1, listBlock.getNumberOfListElements());
+    assertEquals(1, listBlock.getListElement(0).getNumberOfSentences());
+    assertEquals("Gunma is located at west of Saitama",
+        listBlock.getListElement(0).getSentence(0).content);
   }
 
   @Test
