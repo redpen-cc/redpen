@@ -39,7 +39,7 @@ public final class ListElement {
    * get content of list element.
    * @return all contents of list element
    */
-  public Iterator<Sentence> getSentencesIterator() {
+  public Iterator<Sentence> getSentences() {
     return contents.iterator();
   }
 

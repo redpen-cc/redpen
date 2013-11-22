@@ -49,15 +49,15 @@ public class SentenceIterator implements Validator {
    * constructor.
    * @throws DocumentValidatorException
    */
-  public SentenceIterator() throws DocumentValidatorException {
-    this.lineValidators = new Vector<SentenceValidator>();
+  public SentenceIterator() {
+    this.sentenceValidators = new Vector<SentenceValidator>();
   }
 
   public List<ValidationError> check(FileContent file,
       ResultDistributor distributor) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     for (Iterator<SentenceValidator> iterator =
-        this.lineValidators.iterator(); iterator.hasNext();) {
+        this.sentenceValidators.iterator(); iterator.hasNext();) {
       SentenceValidator validator = iterator.next();
       for (Iterator<Section> sectionIterator =
             file.getSections(); sectionIterator.hasNext();) {
@@ -97,7 +97,7 @@ public class SentenceIterator implements Validator {
             "There is no validator like " + confName);
       }
       validator.initialize(currentConfiguration, charTable);
-      this.lineValidators.add(validator);
+      this.sentenceValidators.add(validator);
     }
     return true;
   }
@@ -132,6 +132,10 @@ public class SentenceIterator implements Validator {
     }
   }
 
- private Vector<SentenceValidator> lineValidators;
+  protected void addSentenceValidator(
+      SentenceValidator sentenceValidator) {
+    this.sentenceValidators.add(sentenceValidator);
+  }
 
+  private Vector<SentenceValidator> sentenceValidators;
 }
