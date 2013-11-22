@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Vector;
 
 import org.unigram.docvalidator.store.FileContent;
+import org.unigram.docvalidator.store.ListBlock;
+import org.unigram.docvalidator.store.ListElement;
 import org.unigram.docvalidator.store.Paragraph;
 import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.store.Section;
@@ -107,6 +109,7 @@ public class SentenceIterator implements Validator {
       Section currentSection, String fileName) {
     checkParagraphs(distributor, errors, validator, currentSection, fileName);
     checkHeaders(distributor, errors, validator, currentSection, fileName);
+    checkListElements(distributor, errors, validator, currentSection, fileName);
   }
 
   private void checkParagraphs(ResultDistributor distributor,
@@ -128,6 +131,23 @@ public class SentenceIterator implements Validator {
     for (Iterator<Sentence> iterator = currentSection.getHeaderContents();
         iterator.hasNext();) {
       applyValidator(distributor, errors, validator, fileName, iterator);
+    }
+  }
+
+  private void checkListElements(ResultDistributor distributor,
+      List<ValidationError> errors, SentenceValidator validator,
+      Section currentSection, String fileName) {
+    for (Iterator<ListBlock> listBlockIterator = currentSection.getListBlocks();
+        listBlockIterator.hasNext();) {
+      ListBlock listBlock = listBlockIterator.next();
+      for(Iterator<ListElement> listElementIterator =
+          listBlock.getListElements(); listElementIterator.hasNext();) {
+        ListElement listElemnt = listElementIterator.next();
+        for (Iterator<Sentence> sentenceIterator = listElemnt.getSentences();
+            sentenceIterator.hasNext();) {
+          applyValidator(distributor, errors, validator, fileName, sentenceIterator);
+        }
+      }
     }
   }
 

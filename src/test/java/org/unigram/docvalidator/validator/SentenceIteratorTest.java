@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.unigram.docvalidator.store.FileContent;
+import org.unigram.docvalidator.store.ListBlock;
 import org.unigram.docvalidator.store.Paragraph;
 import org.unigram.docvalidator.store.Section;
 import org.unigram.docvalidator.store.Sentence;
@@ -95,4 +96,31 @@ public class SentenceIteratorTest {
     sentenceIterator.check(fileContent, new FakeResultDistributor());
     assertEquals(3, validator.getSentenceStrings().size());
   }
+
+  @Test
+  public void testDocumentWithList() {
+    List<Sentence>headers = new ArrayList<Sentence>();
+    headers.add(new Sentence("this is it.", 0));
+    Section section = new Section(0, headers);
+    Paragraph paragraph = new Paragraph();
+    paragraph.appendSentence("it is a piece of a cake.", 0);
+    paragraph.appendSentence("that is also a piece of a cake.", 1);
+    section.appendParagraph(paragraph);
+
+    List<Sentence> listContents = new ArrayList<Sentence>();
+    listContents.add(new Sentence("this is list", 0));
+    section.appendListBlock();
+    section.appendListElement(0, listContents);
+    FileContent fileContent = new FileContent();
+    fileContent.appendSection(section);
+
+    SentenceIteratorForTest sentenceIterator = new SentenceIteratorForTest();
+    List<SentenceValidator> validatorList = new ArrayList<SentenceValidator>();
+    DummyValidator validator = new DummyValidator();
+    validatorList.add(validator);
+    sentenceIterator.appendValidators(validatorList);
+    sentenceIterator.check(fileContent, new FakeResultDistributor());
+    assertEquals(4, validator.getSentenceStrings().size());
+  }
+
 }

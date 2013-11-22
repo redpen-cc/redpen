@@ -258,6 +258,14 @@ public final class Section implements Block {
   }
 
   /**
+   * get specified list block.
+   * @return number of list block
+   */
+  public Iterator<ListBlock> getListBlocks() {
+    return lists.iterator();
+  }
+
+  /**
    * get the number of paragraphs in the section.
    * @return number of paragraphs
    */
