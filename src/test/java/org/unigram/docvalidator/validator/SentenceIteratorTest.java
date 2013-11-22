@@ -74,4 +74,25 @@ public class SentenceIteratorTest {
     assertEquals("that is also a piece of a cake.",
         validator.getSentenceStrings().get(1));
   }
+
+  @Test
+  public void testDocumentWithHeader() {
+    List<Sentence>headers = new ArrayList<Sentence>();
+    headers.add(new Sentence("this is it.", 0));
+    Section section = new Section(0, headers);
+    Paragraph paragraph = new Paragraph();
+    paragraph.appendSentence("it is a piece of a cake.", 0);
+    paragraph.appendSentence("that is also a piece of a cake.", 1);
+    section.appendParagraph(paragraph);
+    FileContent fileContent = new FileContent();
+    fileContent.appendSection(section);
+
+    SentenceIteratorForTest sentenceIterator = new SentenceIteratorForTest();
+    List<SentenceValidator> validatorList = new ArrayList<SentenceValidator>();
+    DummyValidator validator = new DummyValidator();
+    validatorList.add(validator);
+    sentenceIterator.appendValidators(validatorList);
+    sentenceIterator.check(fileContent, new FakeResultDistributor());
+    assertEquals(3, validator.getSentenceStrings().size());
+  }
 }

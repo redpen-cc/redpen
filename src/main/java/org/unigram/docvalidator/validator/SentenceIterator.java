@@ -102,8 +102,14 @@ public class SentenceIterator implements Validator {
     return true;
   }
 
-  // @TODO reduce the number of parameters (need refactoring)
   private void checkSection(ResultDistributor distributor,
+      List<ValidationError> errors, SentenceValidator validator,
+      Section currentSection, String fileName) {
+    checkParagraphs(distributor, errors, validator, currentSection, fileName);
+    checkHeaders(distributor, errors, validator, currentSection, fileName);
+  }
+
+  private void checkParagraphs(ResultDistributor distributor,
       List<ValidationError> errors, SentenceValidator validator,
       Section currentSection, String fileName) {
     for (Iterator<Paragraph> paraIterator =
@@ -111,15 +117,35 @@ public class SentenceIterator implements Validator {
       Paragraph currentParagraph = paraIterator.next();
       for (Iterator<Sentence> lineIterator =
           currentParagraph.getSentences(); lineIterator.hasNext();) {
-        List<ValidationError> validationErrors =
-            validator.check(lineIterator.next());
-        for (Iterator<ValidationError> errorIterator =
-            validationErrors.iterator();
-            errorIterator.hasNext();) {
-          appendError(distributor, errors, fileName, errorIterator.next());
-        }
+        applyValidator(distributor, errors, validator, fileName, lineIterator);
       }
     }
+  }
+
+  private void checkHeaders(ResultDistributor distributor,
+      List<ValidationError> errors, SentenceValidator validator,
+      Section currentSection, String fileName) {
+    for (Iterator<Sentence> iterator = currentSection.getHeaderContents();
+        iterator.hasNext();) {
+      applyValidator(distributor, errors, validator, fileName, iterator);
+    }
+  }
+
+  private void applyValidator(ResultDistributor distributor,
+      List<ValidationError> errors, SentenceValidator validator,
+      String fileName, Iterator<Sentence> lineIterator) {
+    List<ValidationError> validationErrors =
+        validator.check(lineIterator.next());
+    for (Iterator<ValidationError> errorIterator =
+        validationErrors.iterator();
+        errorIterator.hasNext();) {
+      appendError(distributor, errors, fileName, errorIterator.next());
+    }
+  }
+
+  protected void addSentenceValidator(
+      SentenceValidator sentenceValidator) {
+    this.sentenceValidators.add(sentenceValidator);
   }
 
   private void appendError(ResultDistributor distributor,
@@ -130,11 +156,6 @@ public class SentenceIterator implements Validator {
       distributor.flushResult(e);
       errors.add(e);
     }
-  }
-
-  protected void addSentenceValidator(
-      SentenceValidator sentenceValidator) {
-    this.sentenceValidators.add(sentenceValidator);
   }
 
   private Vector<SentenceValidator> sentenceValidators;
