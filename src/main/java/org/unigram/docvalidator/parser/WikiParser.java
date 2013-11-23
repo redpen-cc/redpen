@@ -1,5 +1,5 @@
 /**
- * DocumentValidator
+l * DocumentValidator
  * Copyright (c) 2013-, Takahiko Ito, All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -26,8 +26,9 @@ import org.unigram.docvalidator.store.Paragraph;
 import org.unigram.docvalidator.store.Section;
 import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -61,7 +62,8 @@ public final class WikiParser extends BasicDocumentParser {
 
     FileContent fileContent = new FileContent();
     // for sentences right below the beginning of document
-    Section currentSection = new Section(0, "");
+    List<Sentence> headers = new ArrayList<Sentence>();
+    Section currentSection = new Section(0, headers);
     fileContent.appendSection(currentSection);
     LinePattern prevPattern, currentPattern = LinePattern.VOID;
     String line;
@@ -77,13 +79,14 @@ public final class WikiParser extends BasicDocumentParser {
           }
         } else if (check(HEADER_PATTERN, line, head)) {
           currentPattern = LinePattern.HEADER;
-          currentSection = appendSection(fileContent, currentSection, head);
+          currentSection = appendSection(fileContent, currentSection, head,
+              lineNum);
         } else if (check(LIST_PATTERN, line, head)) {
           currentPattern = LinePattern.LIST;
-          appendListElement(currentSection, prevPattern, head);
+          appendListElement(currentSection, prevPattern, head, lineNum);
         } else if (check(NUMBERED_LIST_PATTERN, line, head)) {
           currentPattern = LinePattern.LIST;
-          appendListElement(currentSection, prevPattern, head);
+          appendListElement(currentSection, prevPattern, head, lineNum);
         } else if (check(BEGIN_COMMENT_PATTERN, line, head)) {
           if (!check(END_COMMENT_PATTERN, line, head)) { // skip comment
             currentPattern = LinePattern.COMMENT;
@@ -92,7 +95,8 @@ public final class WikiParser extends BasicDocumentParser {
           currentSection.appendParagraph(new Paragraph());
         } else { // usual sentence.
           currentPattern = LinePattern.SENTENCE;
-          remain = extractSentences(lineNum, remain + line, currentSection);
+          remain = appendSentencesIntoSection(lineNum, remain + line,
+              currentSection);
         }
         prevPattern = currentPattern;
         lineNum++;
@@ -108,22 +112,35 @@ public final class WikiParser extends BasicDocumentParser {
   }
 
   private void appendListElement(Section currentSection,
-      LinePattern prevPattern, Vector<String> head) {
+      LinePattern prevPattern, Vector<String> head, int lineNum) {
     if (prevPattern != LinePattern.LIST) {
       currentSection.appendListBlock();
     }
+    List<Sentence> outputSentences = new ArrayList<Sentence>();
+    String remainSentence= obtainSentences(0, head.get(1), outputSentences);
     currentSection.appendListElement(extractListLevel(head.get(0)),
-        head.get(1));
+        outputSentences);
+    // NOTE: for list content without period
+    if (remainSentence != null && remainSentence.length() > 0) {
+      outputSentences.add(new Sentence(remainSentence, lineNum));
+    }
   }
 
   private Section appendSection(FileContent fileContent,
-      Section currentSection, Vector<String> head) {
+      Section currentSection, Vector<String> head, int lineNum) {
     Integer level = Integer.valueOf(head.get(0));
-    Section tmpSection =  new Section(level, head.get(1));
+    List<Sentence> outputSentences = new ArrayList<Sentence>();
+    String remainHeader = obtainSentences(0, head.get(1), outputSentences);
+    // NOTE: for header without period
+    if (remainHeader != null && remainHeader.length() > 0) {
+      outputSentences.add(new Sentence(remainHeader, lineNum));
+    }
+
+    Section tmpSection =  new Section(level, outputSentences);
     fileContent.appendSection(tmpSection);
     if (!addChild(currentSection, tmpSection)) {
       LOG.warn("Failed to add parent for a Seciotn: "
-          + tmpSection.getHeaderContent());
+          + tmpSection.getHeaderContents().next());
     }
     currentSection = tmpSection;
     return currentSection;
@@ -197,25 +214,27 @@ public final class WikiParser extends BasicDocumentParser {
     return true;
   }
 
-  private String extractSentences(int lineNum, String line,
-        Section currentSection) {
-    int periodPosition = StringUtils.getSentenceEndPosition(line, this.period);
-    if (periodPosition == -1) {
-      return line;
-    } else {
-      while (true) {
-        Sentence sentence = new Sentence(line.substring(0,
-            periodPosition + 1), lineNum);
-        parseSentence(sentence); // extract inline elements
-        currentSection.appendSentence(sentence);
-        line = line.substring(periodPosition + 1, line.length());
-        periodPosition = StringUtils.getSentenceEndPosition(line, this.period);
-        if (periodPosition == -1) {
-          return line;
-        }
-      }
+  private String obtainSentences(int lineNum, String line,
+      List<Sentence> outputSentences) {
+    String remain = ParseUtils.extractSentences(line, this.period,
+        outputSentences);
+    for (Sentence sentence : outputSentences) {
+      sentence.position = lineNum;
+      parseSentence(sentence); // extract inline elements
     }
+    return remain;
   }
+
+  private String appendSentencesIntoSection(int lineNum, String line,
+      Section currentSection) {
+  List<Sentence> outputSentences = new ArrayList<Sentence>();
+  String remain = obtainSentences(lineNum, line, outputSentences);
+
+  for (Sentence sentence : outputSentences) {
+    currentSection.appendSentence(sentence);
+  }
+  return remain;
+}
 
   private static boolean check(Pattern p, String target, Vector<String> head) {
     Matcher m = p.matcher(target);

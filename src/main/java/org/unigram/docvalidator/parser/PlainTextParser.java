@@ -20,14 +20,16 @@ package org.unigram.docvalidator.parser;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.store.FileContent;
 import org.unigram.docvalidator.store.Paragraph;
 import org.unigram.docvalidator.store.Section;
+import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.util.StringUtils;
 
@@ -53,7 +55,8 @@ public final class PlainTextParser extends BasicDocumentParser {
   public FileContent generateDocument(InputStream is) {
     BufferedReader br = createReader(is);
     FileContent fileContent = new FileContent();
-    fileContent.appendSection(new Section(0, ""));
+    List<Sentence> headers = new ArrayList<Sentence>();
+    fileContent.appendSection(new Section(0, headers));
     Section currentSection = fileContent.getLastSection();
     currentSection.appendParagraph(new Paragraph());
     try {

@@ -17,6 +17,9 @@
  */
 package org.unigram.docvalidator.store;
 
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * Element of List in semi-strcutured text format such as wiki.
  */
@@ -26,18 +29,34 @@ public final class ListElement {
    * @param listLevel indentation level
    * @param listContent content of list element
    */
-  public ListElement(int listLevel, String listContent) {
+  public ListElement(int listLevel, List<Sentence> listContents) {
     super();
     this.level = listLevel;
-    this.content = listContent;
+    this.contents = listContents;
   }
 
   /**
    * get content of list element.
+   * @return all contents of list element
+   */
+  public Iterator<Sentence> getSentences() {
+    return contents.iterator();
+  }
+
+  /**
+   * get specified content
    * @return content of list element
    */
-  public String getContent() {
-    return content;
+  public Sentence getSentence(int id) {
+    return contents.get(id);
+  }
+
+  /**
+   * get number of content sentence
+   * @return number of sentences in the list item
+   */
+  public int getNumberOfSentences() {
+    return contents.size();
   }
 
   /**
@@ -48,7 +67,7 @@ public final class ListElement {
     return level;
   }
 
-  private String content;
+  private List<Sentence> contents;
 
   private int level;
 }

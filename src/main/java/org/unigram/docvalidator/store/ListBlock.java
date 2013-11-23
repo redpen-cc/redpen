@@ -18,16 +18,17 @@
 package org.unigram.docvalidator.store;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 /**
  * Represent List in semi-structured format such as wiki.
  */
-public final class List implements Block {
+public final class ListBlock implements Block {
   /**
    * Constructor.
    */
-  public List() {
+  public ListBlock() {
     super();
     this.listElements = new Vector<ListElement>();
   }
@@ -48,6 +49,13 @@ public final class List implements Block {
     return listElements.size();
   }
 
+  /**
+   * get iterator of list elements.
+   * @return Iterator of ListElement
+   */
+  public ListElement getListElement(int id) {
+    return listElements.get(id);
+  }
   public int getBlockID() {
     return BlockTypes.LIST;
   }
@@ -55,10 +63,10 @@ public final class List implements Block {
   /**
    * Append ListElement.
    * @param level indentation level
-   * @param content content of list element
+   * @param contents contents of list element
    */
-  public void appendElement(int level, String content) {
-    listElements.add(new ListElement(level, content));
+  public void appendElement(int level, List<Sentence> contents) {
+    listElements.add(new ListElement(level, contents));
   }
 
   private Vector<ListElement> listElements;

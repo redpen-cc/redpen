@@ -28,22 +28,56 @@ public final class StringUtils {
    * @return position of full stop when there is a full stop, otherwise -1
    */
   public static int getSentenceEndPosition(String str, String period) {
-     int position = str.indexOf(period);
-     if (-1 < position && position < str.length() -1
-         && period.equals(".") && str.charAt(position+1) == ' ') {
-       return position;
-     } else if (-1 < position && position < str.length() -1
-         && !period.equals(".")) {
-       // NOTE: for non Latin languages (in Asian languages, periods do not
-       // have tailing spaces in the end of sentences)
-       return position;
-     } else if (position == str.length() - 1) {
-       return position;
-     } else {
-       return -1;
-     }
+    return getEndPosition(str, period, 0);
+  }
+
+  private static int getEndPosition(String str, String period, int offset) {
+    int position = str.indexOf(period, offset);
+
+    if (checkPosition(position, str)) {
+      if (period.equals(".") && str.charAt(position+1) == ' ') {
+        return position;
+      }
+      return handleSuccessivePeriods(str, period, position);
+    }
+
+    if (position == str.length() - 1) {
+      // NOTE: period in end of sentence should be the end of the sentence
+      // even if there is NO tailing whitespace.
+      return position;
+    }
+    return -1;
+  }
+
+  private static int handleSuccessivePeriods(String str, String period,
+      int position) {
+    int nextPosition = position+1;
+
+    if (!period.equals(".") &&
+        str.indexOf(period, nextPosition) != nextPosition) {
+      // NOTE: Non Latin languages (especially Asian languages, periods do not
+      // have tailing spaces in the end of sentences)
+      return position;
+    }
+
+    if (str.indexOf(period, nextPosition) == nextPosition) {
+      // NOTE: handling of period in succession
+      if ((position+1) == str.length() -1) {
+        return nextPosition;
+      } else {
+        return getEndPosition(str, period, nextPosition);
+      }
+    } else {
+      return getEndPosition(str, period, nextPosition);
+    }
+  }
+
+  private static boolean checkPosition(int position, String str) {
+    if (-1 < position && position < str.length() -1) {
+      return true;
+    }
+    return false;
   }
 
   private StringUtils() { }
-
 }
