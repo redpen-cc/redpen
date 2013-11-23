@@ -68,7 +68,7 @@ public class WikiParserTest {
     assertEquals(5, lastSection.getListBlock(0).getNumberOfListElements());
     assertEquals(2,lastSection.getNumberOfParagraphs());
     assertEquals(1, lastSection.getHeaderContentsListSize());
-    assertEquals(" About Gunma.", lastSection.getHeaderContent(0).content);
+    assertEquals("About Gunma.", lastSection.getHeaderContent(0).content);
   }
 
   @Test
@@ -371,7 +371,7 @@ public class WikiParserTest {
     FileContent doc = createFileContent(sampleText);
     Section lastSection = doc.getSection(doc.getNumberOfSections()-1);
     assertEquals(2, lastSection.getHeaderContentsListSize());
-    assertEquals(" About Gunma.", lastSection.getHeaderContent(0).content);
+    assertEquals("About Gunma.", lastSection.getHeaderContent(0).content);
     assertEquals(" About Saitama.", lastSection.getHeaderContent(1).content);
   }
 
@@ -386,7 +386,7 @@ public class WikiParserTest {
     FileContent doc = createFileContent(sampleText);
     Section lastSection = doc.getSection(doc.getNumberOfSections()-1);
     assertEquals(1, lastSection.getHeaderContentsListSize());
-    assertEquals(" About Gunma", lastSection.getHeaderContent(0).content);
+    assertEquals("About Gunma", lastSection.getHeaderContent(0).content);
   }
 
   @Test

@@ -266,7 +266,7 @@ public final class WikiParser extends BasicDocumentParser {
    ***************************************************************************/
 
   private static final Pattern HEADER_PATTERN
-  = Pattern.compile("^h([1-6])\\.(.*)$");
+  = Pattern.compile("^h([1-6])\\. (.*)$");
 
   private static final Pattern LIST_PATTERN = Pattern.compile("^(-+) (.*)$");
 
