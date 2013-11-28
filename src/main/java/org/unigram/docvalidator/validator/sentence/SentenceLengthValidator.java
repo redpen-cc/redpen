@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.util.Configuration;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.validator.SentenceValidator;
 
@@ -50,7 +50,7 @@ public class SentenceLengthValidator implements SentenceValidator {
     this.maxLength = DEFAULT_MAX_LENGTH;
   }
 
-  public boolean initialize(Configuration conf, CharacterTable characterTable)
+  public boolean initialize(ValidatorConfiguration conf, CharacterTable characterTable)
         throws DocumentValidatorException {
     if (conf.getAttribute("max_length") == null) {
       this.maxLength = DEFAULT_MAX_LENGTH;

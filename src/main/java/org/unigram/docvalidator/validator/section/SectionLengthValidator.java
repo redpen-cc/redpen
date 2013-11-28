@@ -28,7 +28,7 @@ import org.unigram.docvalidator.store.Section;
 import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.util.Configuration;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.validator.SectionValidator;
 
 /**
@@ -62,7 +62,7 @@ public class SectionLengthValidator extends SectionValidator {
   }
 
   @Override
-  public boolean loadConfiguration(Configuration conf,
+  public boolean loadConfiguration(ValidatorConfiguration conf,
       CharacterTable characterTable) {
     if (conf.getAttribute("max_char_number") == null) {
       this.maxSectionCharNumber = DEFAULT_MAXIMUM_CHAR_NUMBER_IN_A_SECTION;

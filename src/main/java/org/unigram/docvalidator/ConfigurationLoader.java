@@ -28,7 +28,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.unigram.docvalidator.util.Configuration;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -51,7 +51,7 @@ public final class ConfigurationLoader {
    * @param stream input configuration settings
    * @return Configuration loaded from input stream
    */
-  public Configuration loadConfiguraiton(InputStream stream) {
+  public ValidatorConfiguration loadConfiguraiton(InputStream stream) {
     Document doc = parseConfigurationString(stream);
     if (doc == null) {
       LOG.error("Failed to parse configuration string");
@@ -60,8 +60,8 @@ public final class ConfigurationLoader {
     doc.getDocumentElement().normalize();
     Node root = doc.getElementsByTagName("component").item(0);
     Element rootElement = (Element) root;
-    Configuration rootConfiguration =
-        new Configuration(rootElement.getAttribute("name"));
+    ValidatorConfiguration rootConfiguration =
+        new ValidatorConfiguration(rootElement.getAttribute("name"));
 
     NodeList nodeList = root.getChildNodes();
     for (int temp = 0; temp < nodeList.getLength(); temp++) {
@@ -86,7 +86,7 @@ public final class ConfigurationLoader {
    * @return Configuration object containing the settings written in input file
    * @throws DocumentValidatorException
    */
-  public Configuration loadConfiguraiton(String xmlFile)
+  public ValidatorConfiguration loadConfiguraiton(String xmlFile)
       throws DocumentValidatorException {
     InputStream fis = null;
     try {
@@ -113,10 +113,10 @@ public final class ConfigurationLoader {
     return doc;
   }
 
-  private Configuration createConfiguration(Element element,
-      Configuration parent) {
-    Configuration currentConfiguration =
-        new Configuration(element.getAttribute("name"), parent);
+  private ValidatorConfiguration createConfiguration(Element element,
+      ValidatorConfiguration parent) {
+    ValidatorConfiguration currentConfiguration =
+        new ValidatorConfiguration(element.getAttribute("name"), parent);
     NodeList nodeList = element.getChildNodes();
     for (int temp = 0; temp < nodeList.getLength(); temp++) {
       Node childNode = nodeList.item(temp);

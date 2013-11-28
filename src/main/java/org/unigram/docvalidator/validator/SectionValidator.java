@@ -24,7 +24,7 @@ import java.util.List;
 import org.unigram.docvalidator.store.FileContent;
 import org.unigram.docvalidator.store.Section;
 import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.Configuration;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.ResultDistributor;
 import org.unigram.docvalidator.util.ValidationError;
 /**
@@ -50,7 +50,7 @@ public abstract class SectionValidator implements Validator {
    */
   protected abstract List<ValidationError> check(Section section);
 
-  public abstract boolean loadConfiguration(Configuration conf,
+  public abstract boolean loadConfiguration(ValidatorConfiguration conf,
       CharacterTable characterTable);
 
 }

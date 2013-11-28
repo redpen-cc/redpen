@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 import org.unigram.docvalidator.store.Section;
 import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.Configuration;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.ValidationError;
 import org.unigram.docvalidator.validator.SectionValidator;
 /**
@@ -49,7 +49,7 @@ public class ParagraphNumberValidator extends SectionValidator {
   }
 
   @Override
-  public boolean loadConfiguration(Configuration conf,
+  public boolean loadConfiguration(ValidatorConfiguration conf,
       CharacterTable characterTable) {
     if (conf.getAttribute("max_char_number") == null) {
       this.maxParagraphs = DEFAULT_MAX_PARAGRAPHS_IN_A_SECTION;

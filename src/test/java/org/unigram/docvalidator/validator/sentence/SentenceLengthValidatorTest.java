@@ -34,7 +34,7 @@ import org.unigram.docvalidator.store.Document;
 import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.FakeResultDistributor;
 import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.util.Configuration;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.validator.DocumentValidator;
 
@@ -42,7 +42,7 @@ public class SentenceLengthValidatorTest {
 
   private String sampleText;
   private Document doc;
-  private Configuration conf;
+  private ValidatorConfiguration conf;
 
   private String sampleConfiguraitonStr = new String(
       "<?xml version=\"1.0\"?>" +

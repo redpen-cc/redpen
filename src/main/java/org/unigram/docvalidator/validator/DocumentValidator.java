@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.store.Document;
 import org.unigram.docvalidator.store.FileContent;
 import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.Configuration;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.DefaultResultDistributor;
 import org.unigram.docvalidator.util.DocumentValidatorException;
@@ -61,9 +61,9 @@ public class DocumentValidator {
 
   public boolean loadValidators() {
     this.validators.clear();
-     for (Iterator<Configuration> confIterator =
+     for (Iterator<ValidatorConfiguration> confIterator =
          this.conf.getChildren(); confIterator.hasNext();) {
-       Configuration currentConfiguration = confIterator.next();
+       ValidatorConfiguration currentConfiguration = confIterator.next();
        String confName = currentConfiguration.getConfigurationName();
        Validator validator = null;
        try {
@@ -103,7 +103,7 @@ public class DocumentValidator {
 
   private Vector<Validator> validators;
 
-  private Configuration conf;
+  private ValidatorConfiguration conf;
 
   private CharacterTable charTable;
 

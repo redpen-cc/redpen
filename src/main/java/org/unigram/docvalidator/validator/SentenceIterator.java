@@ -31,7 +31,7 @@ import org.unigram.docvalidator.store.Section;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.ResultDistributor;
 import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.util.Configuration;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.validator.sentence.CommaNumberValidator;
 import org.unigram.docvalidator.validator.sentence.InvalidExpressionValidator;
@@ -71,11 +71,11 @@ public class SentenceIterator implements Validator {
     return errors;
   }
 
-  public boolean loadConfiguration(Configuration conf,
+  public boolean loadConfiguration(ValidatorConfiguration conf,
       CharacterTable charTable) throws DocumentValidatorException {
-    for (Iterator<Configuration> confIterator =  conf.getChildren();
+    for (Iterator<ValidatorConfiguration> confIterator =  conf.getChildren();
         confIterator.hasNext();) {
-      Configuration currentConfiguration = confIterator.next();
+      ValidatorConfiguration currentConfiguration = confIterator.next();
       String confName = currentConfiguration.getConfigurationName();
       SentenceValidator validator = null;
       if (confName.equals("SentenceLength")) {

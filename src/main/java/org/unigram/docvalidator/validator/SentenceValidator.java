@@ -22,7 +22,7 @@ import java.util.List;
 import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.util.Configuration;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 
 /**
@@ -43,6 +43,6 @@ public interface SentenceValidator {
    * @return true when initialization succeeded, otherwise false
    * @throws DocumentValidatorException
    */
-  boolean initialize(Configuration conf, CharacterTable charTable)
+  boolean initialize(ValidatorConfiguration conf, CharacterTable charTable)
       throws DocumentValidatorException;
 }

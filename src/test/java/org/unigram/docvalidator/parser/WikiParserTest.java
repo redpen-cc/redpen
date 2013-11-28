@@ -33,7 +33,7 @@ import org.unigram.docvalidator.store.ListBlock;
 import org.unigram.docvalidator.store.Paragraph;
 import org.unigram.docvalidator.store.Section;
 import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.Configuration;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 
@@ -497,7 +497,7 @@ public class WikiParserTest {
       String characterTableString) throws DocumentValidatorException {
     InputStream configStream = IOUtils.toInputStream(configurationString);
     ConfigurationLoader loader = new ConfigurationLoader();
-    Configuration conf = loader.loadConfiguraiton(configStream);
+    ValidatorConfiguration conf = loader.loadConfiguraiton(configStream);
 
     CharacterTable characterTable = null;
     if (characterTableString.length() > 0) {
@@ -509,7 +509,7 @@ public class WikiParserTest {
   }
 
   private FileContent createFileContent(String inputDocumentString,
-      Configuration conf,
+      ValidatorConfiguration conf,
       CharacterTable characterTable) {
     InputStream inputDocumentStream = null;
     try {
@@ -536,7 +536,7 @@ public class WikiParserTest {
 
   private FileContent createFileContent(
       String inputDocumentString) {
-    Configuration conf = new Configuration("dummy");
+    ValidatorConfiguration conf = new ValidatorConfiguration("dummy");
     Parser parser = loadParser(new DVResource(conf));
     InputStream is;
     try {

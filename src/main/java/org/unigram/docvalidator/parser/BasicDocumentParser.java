@@ -27,7 +27,7 @@ import java.io.UnsupportedEncodingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.Configuration;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.DefaultSymbols;
@@ -45,7 +45,7 @@ public abstract class BasicDocumentParser implements Parser {
     if (resource == null) {
       return false;
     }
-    Configuration conf = resource.getConfiguration();
+    ValidatorConfiguration conf = resource.getConfiguration();
     CharacterTable characterTable = resource.getCharacterTable();
 
     this.comment = DefaultSymbols.get("COMMENT").getValue();

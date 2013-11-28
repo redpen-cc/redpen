@@ -11,7 +11,7 @@ import org.unigram.docvalidator.store.Paragraph;
 import org.unigram.docvalidator.store.Section;
 import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.Configuration;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.FakeResultDistributor;
 import org.unigram.docvalidator.util.ValidationError;
 
@@ -38,7 +38,7 @@ class DummyValidator implements SentenceValidator {
     sentenceStrings = new ArrayList<String>();
   }
 
-  public boolean initialize(Configuration conf,
+  public boolean initialize(ValidatorConfiguration conf,
       CharacterTable characterTable) {
     return true;
   }

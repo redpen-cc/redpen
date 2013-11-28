@@ -24,7 +24,7 @@ import java.util.Set;
 
 import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.Configuration;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DVCharacter;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.util.ValidationError;
@@ -48,7 +48,7 @@ public class InvalidCharacterValidator implements SentenceValidator {
     return errors;
   }
 
-  public boolean initialize(Configuration conf, CharacterTable characterTable)
+  public boolean initialize(ValidatorConfiguration conf, CharacterTable characterTable)
       throws DocumentValidatorException {
     this.characterTable = characterTable;
     return true;

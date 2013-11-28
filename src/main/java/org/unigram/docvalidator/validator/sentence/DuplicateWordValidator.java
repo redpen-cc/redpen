@@ -23,7 +23,7 @@ import java.util.List;
 import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.util.Configuration;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.validator.SentenceValidator;
 
@@ -35,7 +35,7 @@ public class DuplicateWordValidator implements SentenceValidator {
     return new ArrayList<ValidationError>();
   }
 
-  public boolean initialize(Configuration conf, CharacterTable characterTable)
+  public boolean initialize(ValidatorConfiguration conf, CharacterTable characterTable)
       throws DocumentValidatorException {
     return false;
   }
