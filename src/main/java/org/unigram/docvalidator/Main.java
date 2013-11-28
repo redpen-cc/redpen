@@ -87,8 +87,13 @@ public final class Main {
     if (commandLine.hasOption("c")) {
       configFileName = commandLine.getOptionValue("c");
     }
+
     ConfigurationLoader configLoder = new ConfigurationLoader();
     DVResource conf = configLoder.loadConfiguraiton(configFileName);
+    if (conf == null) {
+      LOG.error("Failed to initialize the DocumentValidator resource.");
+      return;
+    }
 
     Document document =
         DocumentGenerator.generate(inputFileNames, conf, format);

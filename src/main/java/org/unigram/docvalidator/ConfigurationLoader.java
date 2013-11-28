@@ -20,6 +20,7 @@ import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
@@ -41,7 +42,6 @@ public class ConfigurationLoader {
     DVResource resorce = this.loadConfiguraiton(fis);
     IOUtils.closeQuietly(fis);
     return resorce;
-    
   }
 
   /**
@@ -61,35 +61,52 @@ public class ConfigurationLoader {
     Element rootElement = (Element) root;
 
     // Load ValidatorConfiguraiton
+    NodeList validatorCongigElementList =
+        rootElement.getElementsByTagName("validator-config");
+    if (validatorCongigElementList.getLength() <= 0) {
+      LOG.error("No \"validator-config\" block found in the configuration");
+      return null;
+    } else if (validatorCongigElementList.getLength() > 1) {
+      LOG.warn("More than one \"symbol-table\" blocks in the configuration");
+    }
+
     Element Validator =
         (Element) rootElement.getElementsByTagName("validator-config").item(0);
-    String ValidatorConfigurationPath = Validator.getTextContent();
-    LOG.info("Validation Setting file: " + ValidatorConfigurationPath);
+    String validatorConfigurationPath = Validator.getTextContent();
+    LOG.info("Validation Setting file: " + validatorConfigurationPath);
     ValidationConfigurationLoader validationLoader =
         new ValidationConfigurationLoader();
     ValidatorConfiguration validatorConfiguration = null;
     try {
       validatorConfiguration =
-          validationLoader.loadConfiguraiton(ValidatorConfigurationPath);
+          validationLoader.loadConfiguraiton(validatorConfigurationPath);
     } catch (DocumentValidatorException e) {
       LOG.error(e.getLocalizedMessage());
       return null;
     }
 
     // Load CharacterTable
+    NodeList characterTableElementList =
+        rootElement.getElementsByTagName("symbol-table");
+    if (characterTableElementList.getLength() <= 0) {
+      LOG.error("No \"symbol-table\" block found in the configuration");
+      return null;
+    } else if (characterTableElementList.getLength() > 1) {
+      LOG.warn("More than one \"symbol-table\" blocks in the configuration");
+    }
     Element characterTableElement =
         (Element) rootElement.getElementsByTagName("symbol-table").item(0);
-    String CharacterConfigurationPath = characterTableElement.getTextContent();
-    LOG.info("Symbol setting file: " + CharacterConfigurationPath);
+    String characterConfigurationPath = characterTableElement.getTextContent();
+    LOG.info("Symbol setting file: " + characterConfigurationPath);
     CharacterTable characterTable =
-        new CharacterTable(CharacterConfigurationPath);
+        new CharacterTable(characterConfigurationPath);
 
-    // TODO load other configurations 
+    // TODO load other configurations
 
     // Create DVResource
     return new DVResource(validatorConfiguration, characterTable);
   }
-  
+
   static private Document parseConfigurationString(InputStream input) {
     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
     Document doc = null;
