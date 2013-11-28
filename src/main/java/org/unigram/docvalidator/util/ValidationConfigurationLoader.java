@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package org.unigram.docvalidator;
+package org.unigram.docvalidator.util;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -39,12 +39,12 @@ import org.xml.sax.SAXException;
 /**
  * Load configuration file of Validators.
  */
-public final class ConfigurationLoader {
+public final class ValidationConfigurationLoader {
 
   /**
    * Default Constructor.
    */
-  public ConfigurationLoader() { }
+  public ValidationConfigurationLoader() { }
 
   /**
    * Constructor.
@@ -133,5 +133,5 @@ public final class ConfigurationLoader {
   }
 
   private static Logger LOG =
-      LoggerFactory.getLogger(ConfigurationLoader.class);
+      LoggerFactory.getLogger(ValidationConfigurationLoader.class);
 }

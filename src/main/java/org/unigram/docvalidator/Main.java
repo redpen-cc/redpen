@@ -21,6 +21,7 @@ package org.unigram.docvalidator;
 import org.unigram.docvalidator.store.Document;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
+import org.unigram.docvalidator.util.ValidationConfigurationLoader;
 import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.validator.DocumentValidator;
@@ -97,7 +98,7 @@ public final class Main {
     if (commandLine.hasOption("C")) {
      charTableFileName = commandLine.getOptionValue("C");
     }
-    ConfigurationLoader configLoder = new ConfigurationLoader();
+    ValidationConfigurationLoader configLoder = new ValidationConfigurationLoader();
     ValidatorConfiguration conf = configLoder.loadConfiguraiton(configFileName);
 
     DVResource resource = null;

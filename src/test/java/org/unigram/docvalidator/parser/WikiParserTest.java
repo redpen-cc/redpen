@@ -27,7 +27,7 @@ import java.io.UnsupportedEncodingException;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
-import org.unigram.docvalidator.ConfigurationLoader;
+import org.unigram.docvalidator.util.ValidationConfigurationLoader;
 import org.unigram.docvalidator.store.FileContent;
 import org.unigram.docvalidator.store.ListBlock;
 import org.unigram.docvalidator.store.Paragraph;
@@ -496,7 +496,7 @@ public class WikiParserTest {
       String configurationString,
       String characterTableString) throws DocumentValidatorException {
     InputStream configStream = IOUtils.toInputStream(configurationString);
-    ConfigurationLoader loader = new ConfigurationLoader();
+    ValidationConfigurationLoader loader = new ValidationConfigurationLoader();
     ValidatorConfiguration conf = loader.loadConfiguraiton(configStream);
 
     CharacterTable characterTable = null;

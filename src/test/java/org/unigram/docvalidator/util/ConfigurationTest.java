@@ -26,7 +26,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.unigram.docvalidator.ConfigurationLoader;
+import org.unigram.docvalidator.util.ValidationConfigurationLoader;
 
 public class ConfigurationTest {
 
@@ -49,7 +49,7 @@ public class ConfigurationTest {
           "<component name=\"InvalidSuffix\" />" +
         "</component>");
 
-  ConfigurationLoader loader = new ConfigurationLoader();
+  ValidationConfigurationLoader loader = new ValidationConfigurationLoader();
     InputStream stream = IOUtils.toInputStream(sampleConfiguraiton);
     this.conf = loader.loadConfiguraiton(stream);
     if (this.conf == null) {

@@ -27,7 +27,7 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
-import org.unigram.docvalidator.ConfigurationLoader;
+import org.unigram.docvalidator.util.ValidationConfigurationLoader;
 import org.unigram.docvalidator.parser.Parser;
 import org.unigram.docvalidator.parser.PlainTextParser;
 import org.unigram.docvalidator.store.Document;
@@ -58,7 +58,7 @@ public class SentenceLengthValidatorTest {
   public void setup() {
     this.doc = new Document();
     this.sampleText = "This is a long long long long long long long long long long long long long long long sentence.\n";
-    ConfigurationLoader loader = new ConfigurationLoader();
+    ValidationConfigurationLoader loader = new ValidationConfigurationLoader();
     InputStream stream = IOUtils.toInputStream(this.sampleConfiguraitonStr);
     this.conf = loader.loadConfiguraiton(stream);
     if (this.conf == null) {
