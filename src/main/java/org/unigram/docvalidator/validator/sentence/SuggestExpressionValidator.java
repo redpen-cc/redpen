@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.util.Configuration;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.util.FileLoader;
 import org.unigram.docvalidator.util.KeyValueDictionaryExtractor;
@@ -59,7 +59,7 @@ public class SuggestExpressionValidator implements SentenceValidator {
     return null;
   }
 
-  public boolean initialize(Configuration conf, CharacterTable characterTable)
+  public boolean initialize(ValidatorConfiguration conf, CharacterTable characterTable)
       throws DocumentValidatorException {
     String confFile = conf.getAttribute("invalid_word_file");
     LOG.info("dictionary file is " + confFile);

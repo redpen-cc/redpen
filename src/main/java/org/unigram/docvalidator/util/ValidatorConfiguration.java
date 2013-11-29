@@ -25,15 +25,15 @@ import java.util.Set;
 /**
  * Configuration for Validators.
  */
-public final class Configuration {
+public final class ValidatorConfiguration {
   /**
    * constructor.
    * @param name name configuration settings
    */
-  public Configuration(String name) {
+  public ValidatorConfiguration(String name) {
     this.configurationName = name;
     this.attributes = new HashMap<String, String>();
-    this.childConfigurations = new ArrayList<Configuration>(0);
+    this.childConfigurations = new ArrayList<ValidatorConfiguration>(0);
     this.parentConfiguration = null;
   }
 
@@ -42,10 +42,10 @@ public final class Configuration {
    * @param name name configuration settings
    * @param parent parent Configuration object
    */
-  public Configuration(String name, Configuration parent) {
+  public ValidatorConfiguration(String name, ValidatorConfiguration parent) {
     this.configurationName = name;
     this.attributes = new HashMap<String, String>();
-    this.childConfigurations = new ArrayList<Configuration>(0);
+    this.childConfigurations = new ArrayList<ValidatorConfiguration>(0);
     this.parentConfiguration = parent;
   }
 
@@ -83,7 +83,7 @@ public final class Configuration {
     attributes.put(name, value);
   }
 
-  public Iterator<Configuration> getChildren() {
+  public Iterator<ValidatorConfiguration> getChildren() {
     return childConfigurations.iterator();
   }
 
@@ -95,15 +95,15 @@ public final class Configuration {
     return childConfigurations.size();
   }
 
-  public void setParent(Configuration parent) {
+  public void setParent(ValidatorConfiguration parent) {
     this.parentConfiguration = parent;
   }
 
-  public Configuration getParent() {
+  public ValidatorConfiguration getParent() {
     return this.parentConfiguration;
   }
 
-  public void addChild(Configuration childConfig) {
+  public void addChild(ValidatorConfiguration childConfig) {
     this.childConfigurations.add(childConfig);
   }
 
@@ -111,7 +111,7 @@ public final class Configuration {
 
   private HashMap<String, String> attributes;
 
-  private ArrayList<Configuration> childConfigurations;
+  private ArrayList<ValidatorConfiguration> childConfigurations;
 
-  private Configuration parentConfiguration;
+  private ValidatorConfiguration parentConfiguration;
 }

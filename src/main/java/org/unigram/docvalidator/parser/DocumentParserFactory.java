@@ -34,9 +34,9 @@ public final class DocumentParserFactory {
   public static Parser generate(String parserType, DVResource resource)
         throws DocumentValidatorException {
     Parser docparser = null;
-    if (parserType == "w") {
+    if (parserType.equals("w")) {
       docparser = new WikiParser();
-    } else if (parserType == "t") {
+    } else if (parserType.equals("t")) {
       docparser = new PlainTextParser();
     } else {
       throw new DocumentValidatorException("Specified parser type not exist: "

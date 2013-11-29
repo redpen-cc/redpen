@@ -26,7 +26,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.unigram.docvalidator.ConfigurationLoader;
+import org.unigram.docvalidator.util.ValidationConfigurationLoader;
 
 public class ConfigurationTest {
 
@@ -49,9 +49,8 @@ public class ConfigurationTest {
           "<component name=\"InvalidSuffix\" />" +
         "</component>");
 
-  ConfigurationLoader loader = new ConfigurationLoader();
     InputStream stream = IOUtils.toInputStream(sampleConfiguraiton);
-    this.conf = loader.loadConfiguraiton(stream);
+    this.conf = ValidationConfigurationLoader.loadConfiguraiton(stream);
     if (this.conf == null) {
       fail();
     }
@@ -76,9 +75,9 @@ public class ConfigurationTest {
 
   @Test
   public void testChildProperties() {
-    Iterator<Configuration> iterator = conf.getChildren();
+    Iterator<ValidatorConfiguration> iterator = conf.getChildren();
     while(iterator.hasNext()) {
-      Configuration childConfiguration = iterator.next();
+      ValidatorConfiguration childConfiguration = iterator.next();
       if ("SentenceLength".equals(childConfiguration.getConfigurationName())) {
           assertEquals("30", childConfiguration.getAttribute("max_length"));
       }
@@ -87,9 +86,9 @@ public class ConfigurationTest {
 
   @Test
   public void testPropertyInParent() {
-    Iterator<Configuration> iterator = conf.getChildren();
+    Iterator<ValidatorConfiguration> iterator = conf.getChildren();
     while(iterator.hasNext()) {
-      Configuration childConfiguration = iterator.next();
+      ValidatorConfiguration childConfiguration = iterator.next();
       if ("SentenceLength".equals(childConfiguration.getConfigurationName())) {
         assertNotNull(childConfiguration.getParent());
         assertEquals(".", childConfiguration.getAttribute("period"));
@@ -99,9 +98,9 @@ public class ConfigurationTest {
 
   @Test
   public void testPropertyNotInParent() {
-    Iterator<Configuration> iterator = conf.getChildren();
+    Iterator<ValidatorConfiguration> iterator = conf.getChildren();
     while(iterator.hasNext()) {
-      Configuration childConfiguration = iterator.next();
+      ValidatorConfiguration childConfiguration = iterator.next();
       if ("SentenceLength".equals(childConfiguration.getConfigurationName())) {
         assertNotNull(childConfiguration.getParent());
         assertEquals(null, childConfiguration.getAttribute("foobar"));
@@ -111,9 +110,9 @@ public class ConfigurationTest {
 
   @Test
   public void testPropertyInBrother() {
-    Iterator<Configuration> iterator = conf.getChildren();
+    Iterator<ValidatorConfiguration> iterator = conf.getChildren();
     while(iterator.hasNext()) {
-      Configuration childConfiguration = iterator.next();
+      ValidatorConfiguration childConfiguration = iterator.next();
       if ("SentenceLength".equals(childConfiguration.getConfigurationName())) {
         assertNotNull(childConfiguration.getParent());
         assertEquals(null, childConfiguration.getAttribute("max_comma_num"));
@@ -121,5 +120,5 @@ public class ConfigurationTest {
     }
   }
 
-  private Configuration conf=null;
+  private ValidatorConfiguration conf=null;
 }

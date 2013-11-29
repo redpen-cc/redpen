@@ -19,8 +19,6 @@
 package org.unigram.docvalidator;
 
 import org.unigram.docvalidator.store.Document;
-import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.Configuration;
 import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.validator.DocumentValidator;
@@ -42,12 +40,11 @@ public final class Main {
     String format = "t";
     String[] inputFileNames = null;
     String configFileName = "";
-    String charTableFileName = "";
 
     Options options = new Options();
     options.addOption("h", "help", false, "help");
     OptionBuilder.withLongOpt("format");
-    OptionBuilder.withDescription("date format");
+    OptionBuilder.withDescription("input data format");
     OptionBuilder.hasArg();
     OptionBuilder.withArgName("FORMAT");
     options.addOption(OptionBuilder.create("f"));
@@ -60,10 +57,6 @@ public final class Main {
     OptionBuilder.withDescription("configuraiton file");
     OptionBuilder.hasArg();
     options.addOption(OptionBuilder.create("c"));
-    OptionBuilder.withLongOpt("char");
-    OptionBuilder.withDescription("character table file");
-    OptionBuilder.hasArg();
-    options.addOption(OptionBuilder.create("C"));
     options.addOption("v", "version", false,
         "print the version information and exit");
 
@@ -94,26 +87,19 @@ public final class Main {
     if (commandLine.hasOption("c")) {
       configFileName = commandLine.getOptionValue("c");
     }
-    if (commandLine.hasOption("C")) {
-     charTableFileName = commandLine.getOptionValue("C");
-    }
-    ConfigurationLoader configLoder = new ConfigurationLoader();
-    Configuration conf = configLoder.loadConfiguraiton(configFileName);
 
-    DVResource resource = null;
-    if (charTableFileName != null) {
-      LOG.info("loading character table file: " + charTableFileName);
-      CharacterTable characterTable = new CharacterTable(charTableFileName);
-      resource = new DVResource(conf, characterTable);
-    } else {
-      LOG.warn("NO character table file is specified");
-      resource = new DVResource(conf);
+    ConfigurationLoader configLoder = new ConfigurationLoader();
+    DVResource conf = configLoder.loadConfiguraiton(configFileName);
+    if (conf == null) {
+      LOG.error("Failed to initialize the DocumentValidator resource.");
+      return;
     }
+
     Document document =
-        DocumentGenerator.generate(inputFileNames, resource, format);
+        DocumentGenerator.generate(inputFileNames, conf, format);
 
     // validate document
-    DocumentValidator validator = new DocumentValidator(resource);
+    DocumentValidator validator = new DocumentValidator(conf);
     validator.check(document);
 
     return;

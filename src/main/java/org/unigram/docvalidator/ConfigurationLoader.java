@@ -1,20 +1,3 @@
-/**
- * DocumentValidator
- * Copyright (c) 2013-, Takahiko Ito, All rights reserved.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 3.0 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.
- */
 package org.unigram.docvalidator;
 
 import java.io.FileInputStream;
@@ -26,10 +9,14 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.unigram.docvalidator.util.Configuration;
+import org.unigram.docvalidator.util.CharacterTable;
+import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.DocumentValidatorException;
+import org.unigram.docvalidator.util.ValidationConfigurationLoader;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -37,67 +24,113 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * Load configuration file of Validators.
+ * Load the central configuration of DocumentValidator
  */
-public final class ConfigurationLoader {
-
+public class ConfigurationLoader {
   /**
-   * Default Constructor.
+   * load DocumentValidator settings.
+   * @param confiFileName input configuration settings
+   * @return DocumentVidator configuration resources
    */
-  public ConfigurationLoader() { }
+  public DVResource loadConfiguraiton(String configFileName) {
+    InputStream fis = null;
+    try {
+      fis = new FileInputStream(configFileName);
+    } catch (FileNotFoundException e) {
+      LOG.error(e.getMessage());
+    }
+    DVResource resorce = this.loadConfiguraiton(fis);
+    IOUtils.closeQuietly(fis);
+    return resorce;
+  }
 
   /**
-   * Constructor.
+   * load DocumentValidator settings.
    * @param stream input configuration settings
    * @return Configuration loaded from input stream
+   * NOTE: return null when failed to create DVResource
    */
-  public Configuration loadConfiguraiton(InputStream stream) {
+  public DVResource loadConfiguraiton(InputStream stream) {
     Document doc = parseConfigurationString(stream);
     if (doc == null) {
       LOG.error("Failed to parse configuration string");
       return null;
     }
+
+    // Get root node
     doc.getDocumentElement().normalize();
-    Node root = doc.getElementsByTagName("component").item(0);
+    NodeList rootCongigElementList =
+        doc.getElementsByTagName("configuration");
+    if (rootCongigElementList.getLength() == 0) {
+      LOG.error("No \"configuration\" block found in the configuration");
+      return null;
+    } else if (rootCongigElementList.getLength() > 1) {
+      LOG.warn("More than one \"configuration\" blocks in the configuration");
+    }
+    Node root = rootCongigElementList.item(0);
     Element rootElement = (Element) root;
-    Configuration rootConfiguration =
-        new Configuration(rootElement.getAttribute("name"));
+    LOG.info("Succeeded to load configuration file");
 
-    NodeList nodeList = root.getChildNodes();
-    for (int temp = 0; temp < nodeList.getLength(); temp++) {
-        Node nNode = nodeList.item(temp);
-        if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-            Element element = (Element) nNode;
-            if (element.getNodeName().equals("component")) {
-              rootConfiguration.addChild(
-                  this.createConfiguration(element, rootConfiguration));
-            } else if  (element.getNodeName().equals("property")) {
-              rootConfiguration.addAttribute(element.getAttribute("name"),
-                  element.getAttribute("value"));
-            }
-        }
+    // Load ValidatorConfiguraiton
+    NodeList validatorCongigElementList =
+        rootElement.getElementsByTagName("validator-config");
+    if (validatorCongigElementList.getLength() == 0) {
+      LOG.error("No \"validator-config\" block found in the configuration");
+      return null;
+    } else if (validatorCongigElementList.getLength() > 1) {
+      LOG.warn("More than one \"symbol-table\" blocks in the configuration");
     }
-    return rootConfiguration;
+    ValidatorConfiguration validatorConfiguration =
+        extractValidatorConfiguration(
+            (Element) validatorCongigElementList.item(0));
+    if (validatorConfiguration == null) {
+      LOG.error("Failed to create Validator Configuration Object.");
+    }
+    LOG.info("Succeeded to load validator configuration setting");
+
+    // Load CharacterTable
+    NodeList characterTableElementList =
+        rootElement.getElementsByTagName("symbol-table");
+    if (characterTableElementList.getLength() == 0) {
+      LOG.error("No \"symbol-table\" block found in the configuration");
+      return null;
+    } else if (characterTableElementList.getLength() > 1) {
+      LOG.warn("More than one \"symbol-table\" blocks in the configuration");
+    }
+    CharacterTable characterTable =
+        extractCharacterTable((Element) characterTableElementList.item(0));
+    LOG.info("Succeeded to load character configuration setting");
+    // TODO load other configurations
+
+    // Create DVResource
+    return new DVResource(validatorConfiguration, characterTable);
   }
 
-  /**
-   * Load Configuration settings from the specified file.
-   * @param xmlFile configuration file (xml format)
-   * @return Configuration object containing the settings written in input file
-   * @throws DocumentValidatorException
-   */
-  public Configuration loadConfiguraiton(String xmlFile)
-      throws DocumentValidatorException {
-    InputStream fis = null;
+  protected CharacterTable extractCharacterTable(
+      Element characterTableElement) {
+    String characterConfigurationPath = characterTableElement.getTextContent();
+    LOG.info("Symbol setting file: " + characterConfigurationPath);
+    CharacterTable characterTable =
+        new CharacterTable(characterConfigurationPath);
+    return characterTable;
+  }
+
+  protected ValidatorConfiguration extractValidatorConfiguration(
+      Element validatorElement) {
+    String validatorConfigurationPath = validatorElement.getTextContent();
+    LOG.info("Validation Setting file: " + validatorConfigurationPath);
+    ValidatorConfiguration validatorConfiguration = null;
     try {
-      fis = new FileInputStream(xmlFile);
-    } catch (FileNotFoundException e) {
-      LOG.error(e.getMessage());
+      validatorConfiguration =
+          ValidationConfigurationLoader.loadConfiguraiton(validatorConfigurationPath);
+    } catch (DocumentValidatorException e) {
+      LOG.error(e.getLocalizedMessage());
+      return null;
     }
-    return this.loadConfiguraiton(fis);
+    return validatorConfiguration;
   }
 
-  private Document parseConfigurationString(InputStream input) {
+  static private Document parseConfigurationString(InputStream input) {
     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
     Document doc = null;
     try {
@@ -111,25 +144,6 @@ public final class ConfigurationLoader {
       LOG.error(e.getMessage());
     }
     return doc;
-  }
-
-  private Configuration createConfiguration(Element element,
-      Configuration parent) {
-    Configuration currentConfiguration =
-        new Configuration(element.getAttribute("name"), parent);
-    NodeList nodeList = element.getChildNodes();
-    for (int temp = 0; temp < nodeList.getLength(); temp++) {
-      Node childNode = nodeList.item(temp);
-      if (childNode.getNodeName().equals("component")) {
-        currentConfiguration.addChild(this.createConfiguration(
-            (Element) childNode, currentConfiguration));
-      } else if (childNode.getNodeName().equals("property")) {
-        Element currentElement = (Element) childNode;
-        currentConfiguration.addAttribute(currentElement.getAttribute("name"),
-              currentElement.getAttribute("value"));
-      }
-    }
-    return currentConfiguration;
   }
 
   private static Logger LOG =

@@ -25,7 +25,7 @@ public final class DVResource {
    * constructor.
    * @param validatorConf settings of Validators
    */
-  public DVResource(Configuration validatorConf) {
+  public DVResource(ValidatorConfiguration validatorConf) {
     super();
     this.configuration = validatorConf;
     this.characterTable = new CharacterTable();
@@ -36,7 +36,7 @@ public final class DVResource {
    * @param validatorConf settings of Validators.
    * @param characterConf settings of characters and symbols
    */
-  public DVResource(Configuration validatorConf,
+  public DVResource(ValidatorConfiguration validatorConf,
       CharacterTable characterConf) {
     super();
     this.configuration = validatorConf;
@@ -47,7 +47,7 @@ public final class DVResource {
    * get Configuration.
    * @return Configuration
    */
-  public Configuration getConfiguration() {
+  public ValidatorConfiguration getConfiguration() {
     return configuration;
   }
 
@@ -59,7 +59,7 @@ public final class DVResource {
     return characterTable;
   }
 
-  private Configuration configuration;
+  private ValidatorConfiguration configuration;
 
   private CharacterTable characterTable;
 }

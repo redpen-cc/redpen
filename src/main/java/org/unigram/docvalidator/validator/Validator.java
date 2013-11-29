@@ -23,7 +23,7 @@ import java.util.List;
 import org.unigram.docvalidator.store.FileContent;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.ResultDistributor;
-import org.unigram.docvalidator.util.Configuration;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.util.ValidationError;
 
@@ -47,6 +47,6 @@ public interface Validator {
    * @return true succeeded, otherwise false
    * @throws DocumentValidatorException
    */
-  boolean loadConfiguration(Configuration conf,
+  boolean loadConfiguration(ValidatorConfiguration conf,
       CharacterTable charTable) throws DocumentValidatorException;
 }

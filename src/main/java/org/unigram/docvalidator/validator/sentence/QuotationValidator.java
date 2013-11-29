@@ -24,7 +24,7 @@ import java.util.List;
 import org.unigram.docvalidator.DefaultSymbols;
 import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.Configuration;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DVCharacter;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.util.ValidationError;
@@ -87,7 +87,7 @@ public class QuotationValidator implements SentenceValidator {
   }
 
   @Override
-  public boolean initialize(Configuration conf, CharacterTable charTable)
+  public boolean initialize(ValidatorConfiguration conf, CharacterTable charTable)
       throws DocumentValidatorException {
     if (charTable.isContainCharacter("FULL_STOP")) {
       this.period = charTable.getCharacter("FULL_STOP").getValue().charAt(0);

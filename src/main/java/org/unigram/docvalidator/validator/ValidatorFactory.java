@@ -18,7 +18,7 @@
 package org.unigram.docvalidator.validator;
 
 import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.Configuration;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.validator.section.ParagraphNumberValidator;
 import org.unigram.docvalidator.validator.section.ParagraphStartWithValidator;
@@ -29,7 +29,7 @@ import org.unigram.docvalidator.validator.section.SectionLengthValidator;
  */
 public final class ValidatorFactory {
   public static Validator createValidator(String validatorType,
-      Configuration conf, CharacterTable charTable)
+      ValidatorConfiguration conf, CharacterTable charTable)
         throws DocumentValidatorException {
   Validator validator = null;
   // @todo accept plug-in validators.

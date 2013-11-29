@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.util.Configuration;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.validator.SentenceValidator;
 /**
@@ -67,7 +67,7 @@ public class CommaNumberValidator implements SentenceValidator {
     return result;
   }
 
-  public boolean initialize(Configuration conf, CharacterTable characterTable)
+  public boolean initialize(ValidatorConfiguration conf, CharacterTable characterTable)
       throws DocumentValidatorException {
     //TODO search parent configurations to get comma settings...
     this.maxCommaNum = DEFAULT_MAX_COMMA_NUMBER;

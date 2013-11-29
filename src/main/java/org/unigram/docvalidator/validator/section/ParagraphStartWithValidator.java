@@ -27,7 +27,7 @@ import org.unigram.docvalidator.store.Paragraph;
 import org.unigram.docvalidator.store.Section;
 import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.Configuration;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.ValidationError;
 import org.unigram.docvalidator.validator.SectionValidator;
 
@@ -63,7 +63,7 @@ public class ParagraphStartWithValidator extends SectionValidator {
   }
 
   @Override
-  public boolean loadConfiguration(Configuration conf,
+  public boolean loadConfiguration(ValidatorConfiguration conf,
       CharacterTable characterTable) {
     if (conf.getAttribute("paragraph_start_with") == null) {
       this.beginingOfParagraph = DEFAULT_PARAGRAPH_START_WITH;
