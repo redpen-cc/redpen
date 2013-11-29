@@ -50,6 +50,7 @@ public final class ValidationConfigurationLoader {
    * Constructor.
    * @param stream input configuration settings
    * @return Configuration loaded from input stream
+   * NOTE: return null when failed to create Configuration object
    */
   public ValidatorConfiguration loadConfiguraiton(InputStream stream) {
     Document doc = parseConfigurationString(stream);
@@ -57,13 +58,27 @@ public final class ValidationConfigurationLoader {
       LOG.error("Failed to parse configuration string");
       return null;
     }
+
     doc.getDocumentElement().normalize();
-    Node root = doc.getElementsByTagName("component").item(0);
-    Element rootElement = (Element) root;
+    NodeList rootComponentElementList = doc.getElementsByTagName("component");
+        doc.getElementsByTagName("configuration");
+    if (rootComponentElementList.getLength() == 0) {
+      LOG.error("No \"configuration\" block found in the configuration");
+      return null;
+    } else if (rootComponentElementList.getLength() > 1) {
+      LOG.warn("Found more than one root \"component\" blocks in the configuration");
+      LOG.warn("Use the first configuration block ...");
+    }
+
+    Element rootElement = (Element) rootComponentElementList.item(0);
     ValidatorConfiguration rootConfiguration =
         new ValidatorConfiguration(rootElement.getAttribute("name"));
 
-    NodeList nodeList = root.getChildNodes();
+    NodeList nodeList = rootElement.getChildNodes();
+    if (nodeList.getLength() == 0) {
+      LOG.warn("No validator is registrated...");
+    }
+
     for (int temp = 0; temp < nodeList.getLength(); temp++) {
         Node nNode = nodeList.item(temp);
         if (nNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -74,6 +89,9 @@ public final class ValidationConfigurationLoader {
             } else if  (element.getNodeName().equals("property")) {
               rootConfiguration.addAttribute(element.getAttribute("name"),
                   element.getAttribute("value"));
+            } else {
+              LOG.warn("Invalid block: \"" + element.getNodeName() + "\"");
+              LOG.warn("Skip this block ...");
             }
         }
     }
@@ -120,13 +138,17 @@ public final class ValidationConfigurationLoader {
     NodeList nodeList = element.getChildNodes();
     for (int temp = 0; temp < nodeList.getLength(); temp++) {
       Node childNode = nodeList.item(temp);
-      if (childNode.getNodeName().equals("component")) {
+      String nodeName = childNode.getNodeName();
+      if (nodeName.equals("component")) {
         currentConfiguration.addChild(this.createConfiguration(
             (Element) childNode, currentConfiguration));
-      } else if (childNode.getNodeName().equals("property")) {
+      } else if (nodeName.equals("property")) {
         Element currentElement = (Element) childNode;
         currentConfiguration.addAttribute(currentElement.getAttribute("name"),
               currentElement.getAttribute("value"));
+      } else {
+        LOG.warn("Invalid block: \"" + nodeName + "\"");
+        LOG.warn("Skip this block ...");
       }
     }
     return currentConfiguration;
