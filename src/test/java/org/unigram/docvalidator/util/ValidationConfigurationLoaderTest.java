@@ -21,8 +21,8 @@ public class ValidationConfigurationLoaderTest {
         "  </component>" +
         "</component>");
     InputStream stream = IOUtils.toInputStream(sampleConfiguraitonStr);
-    ValidationConfigurationLoader loader = new ValidationConfigurationLoader();
-    ValidatorConfiguration conf = loader.loadConfiguraiton(stream);
+    ValidatorConfiguration conf =
+        ValidationConfigurationLoader.loadConfiguraiton(stream);
     assertNotNull(conf);
     assertEquals(1, conf.getChildrenNumber());
   }
@@ -34,8 +34,8 @@ public class ValidationConfigurationLoaderTest {
         "<component name=\"Validator\">" +
         "</component>");
     InputStream stream = IOUtils.toInputStream(sampleConfiguraitonStr);
-    ValidationConfigurationLoader loader = new ValidationConfigurationLoader();
-    ValidatorConfiguration conf = loader.loadConfiguraiton(stream);
+    ValidatorConfiguration conf =
+        ValidationConfigurationLoader.loadConfiguraiton(stream);
     assertNotNull(conf);
     assertEquals(0, conf.getChildrenNumber());
   }
@@ -49,8 +49,8 @@ public class ValidationConfigurationLoaderTest {
         "  <dummy name=\"ParagraphLength\" />"+
         "</component>");
     InputStream stream = IOUtils.toInputStream(sampleConfiguraitonStr);
-    ValidationConfigurationLoader loader = new ValidationConfigurationLoader();
-    ValidatorConfiguration conf = loader.loadConfiguraiton(stream);
+    ValidatorConfiguration conf =
+        ValidationConfigurationLoader.loadConfiguraiton(stream);
     assertNotNull(conf);
     assertEquals(1, conf.getChildrenNumber());
   }

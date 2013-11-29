@@ -49,9 +49,8 @@ public class ConfigurationTest {
           "<component name=\"InvalidSuffix\" />" +
         "</component>");
 
-  ValidationConfigurationLoader loader = new ValidationConfigurationLoader();
     InputStream stream = IOUtils.toInputStream(sampleConfiguraiton);
-    this.conf = loader.loadConfiguraiton(stream);
+    this.conf = ValidationConfigurationLoader.loadConfiguraiton(stream);
     if (this.conf == null) {
       fail();
     }

@@ -58,9 +58,8 @@ public class SentenceLengthValidatorTest {
   public void setup() {
     this.doc = new Document();
     this.sampleText = "This is a long long long long long long long long long long long long long long long sentence.\n";
-    ValidationConfigurationLoader loader = new ValidationConfigurationLoader();
     InputStream stream = IOUtils.toInputStream(this.sampleConfiguraitonStr);
-    this.conf = loader.loadConfiguraiton(stream);
+    this.conf = ValidationConfigurationLoader.loadConfiguraiton(stream);
     if (this.conf == null) {
       fail();
     }

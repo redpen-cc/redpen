@@ -42,17 +42,12 @@ import org.xml.sax.SAXException;
 public final class ValidationConfigurationLoader {
 
   /**
-   * Default Constructor.
-   */
-  public ValidationConfigurationLoader() { }
-
-  /**
    * Constructor.
    * @param stream input configuration settings
    * @return Configuration loaded from input stream
    * NOTE: return null when failed to create Configuration object
    */
-  public ValidatorConfiguration loadConfiguraiton(InputStream stream) {
+  public static ValidatorConfiguration loadConfiguraiton(InputStream stream) {
     Document doc = parseConfigurationString(stream);
     if (doc == null) {
       LOG.error("Failed to parse configuration string");
@@ -85,7 +80,7 @@ public final class ValidationConfigurationLoader {
             Element element = (Element) nNode;
             if (element.getNodeName().equals("component")) {
               rootConfiguration.addChild(
-                  this.createConfiguration(element, rootConfiguration));
+                  createConfiguration(element, rootConfiguration));
             } else if  (element.getNodeName().equals("property")) {
               rootConfiguration.addAttribute(element.getAttribute("name"),
                   element.getAttribute("value"));
@@ -104,7 +99,7 @@ public final class ValidationConfigurationLoader {
    * @return Configuration object containing the settings written in input file
    * @throws DocumentValidatorException
    */
-  public ValidatorConfiguration loadConfiguraiton(String xmlFile)
+  public static ValidatorConfiguration loadConfiguraiton(String xmlFile)
       throws DocumentValidatorException {
     InputStream fis = null;
     try {
@@ -112,10 +107,10 @@ public final class ValidationConfigurationLoader {
     } catch (FileNotFoundException e) {
       LOG.error(e.getMessage());
     }
-    return this.loadConfiguraiton(fis);
+    return loadConfiguraiton(fis);
   }
 
-  private Document parseConfigurationString(InputStream input) {
+  private static Document parseConfigurationString(InputStream input) {
     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
     Document doc = null;
     try {
@@ -131,7 +126,7 @@ public final class ValidationConfigurationLoader {
     return doc;
   }
 
-  private ValidatorConfiguration createConfiguration(Element element,
+  private static ValidatorConfiguration createConfiguration(Element element,
       ValidatorConfiguration parent) {
     ValidatorConfiguration currentConfiguration =
         new ValidatorConfiguration(element.getAttribute("name"), parent);
@@ -140,7 +135,7 @@ public final class ValidationConfigurationLoader {
       Node childNode = nodeList.item(temp);
       String nodeName = childNode.getNodeName();
       if (nodeName.equals("component")) {
-        currentConfiguration.addChild(this.createConfiguration(
+        currentConfiguration.addChild(createConfiguration(
             (Element) childNode, currentConfiguration));
       } else if (nodeName.equals("property")) {
         Element currentElement = (Element) childNode;
@@ -153,6 +148,11 @@ public final class ValidationConfigurationLoader {
     }
     return currentConfiguration;
   }
+
+  /**
+   * Default Constructor.
+   */
+  private ValidationConfigurationLoader() { }
 
   private static Logger LOG =
       LoggerFactory.getLogger(ValidationConfigurationLoader.class);

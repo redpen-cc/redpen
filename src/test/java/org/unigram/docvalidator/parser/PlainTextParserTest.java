@@ -88,9 +88,9 @@ public class PlainTextParserTest {
 
   @Before
   public void setup() {
-    ValidationConfigurationLoader loader = new ValidationConfigurationLoader();
     InputStream stream = IOUtils.toInputStream(this.sampleConfiguraitonStr);
-    this.resource = new DVResource(loader.loadConfiguraiton(stream));
+    this.resource =
+        new DVResource(ValidationConfigurationLoader.loadConfiguraiton(stream));
     if (this.resource == null) {
       fail();
     }

@@ -496,8 +496,8 @@ public class WikiParserTest {
       String configurationString,
       String characterTableString) throws DocumentValidatorException {
     InputStream configStream = IOUtils.toInputStream(configurationString);
-    ValidationConfigurationLoader loader = new ValidationConfigurationLoader();
-    ValidatorConfiguration conf = loader.loadConfiguraiton(configStream);
+    ValidatorConfiguration conf =
+        ValidationConfigurationLoader.loadConfiguraiton(configStream);
 
     CharacterTable characterTable = null;
     if (characterTableString.length() > 0) {
