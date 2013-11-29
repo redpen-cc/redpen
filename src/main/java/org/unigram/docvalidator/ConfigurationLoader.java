@@ -48,6 +48,7 @@ public class ConfigurationLoader {
    * load DocumentValidator settings.
    * @param stream input configuration settings
    * @return Configuration loaded from input stream
+   * NOTE: return null when failed to create DVResource
    */
   public DVResource loadConfiguraiton(InputStream stream) {
     Document doc = parseConfigurationString(stream);
@@ -56,23 +57,67 @@ public class ConfigurationLoader {
       return null;
     }
 
+    // Get root node
     doc.getDocumentElement().normalize();
-    Node root = doc.getElementsByTagName("configuration").item(0);
+    NodeList rootCongigElementList =
+        doc.getElementsByTagName("configuration");
+    if (rootCongigElementList.getLength() == 0) {
+      LOG.error("No \"configuration\" block found in the configuration");
+      return null;
+    } else if (rootCongigElementList.getLength() > 1) {
+      LOG.warn("More than one \"configuration\" blocks in the configuration");
+    }
+    Node root = rootCongigElementList.item(0);
     Element rootElement = (Element) root;
+    LOG.info("Succeeded to load configuration file");
 
     // Load ValidatorConfiguraiton
     NodeList validatorCongigElementList =
         rootElement.getElementsByTagName("validator-config");
-    if (validatorCongigElementList.getLength() <= 0) {
+    if (validatorCongigElementList.getLength() == 0) {
       LOG.error("No \"validator-config\" block found in the configuration");
       return null;
     } else if (validatorCongigElementList.getLength() > 1) {
       LOG.warn("More than one \"symbol-table\" blocks in the configuration");
     }
+    ValidatorConfiguration validatorConfiguration =
+        extractValidatorConfiguration(
+            (Element) validatorCongigElementList.item(0));
+    if (validatorConfiguration == null) {
+      LOG.error("Failed to create Validator Configuration Object.");
+    }
+    LOG.info("Succeeded to load validator configuration setting");
 
-    Element Validator =
-        (Element) rootElement.getElementsByTagName("validator-config").item(0);
-    String validatorConfigurationPath = Validator.getTextContent();
+    // Load CharacterTable
+    NodeList characterTableElementList =
+        rootElement.getElementsByTagName("symbol-table");
+    if (characterTableElementList.getLength() == 0) {
+      LOG.error("No \"symbol-table\" block found in the configuration");
+      return null;
+    } else if (characterTableElementList.getLength() > 1) {
+      LOG.warn("More than one \"symbol-table\" blocks in the configuration");
+    }
+    CharacterTable characterTable =
+        extractCharacterTable((Element) characterTableElementList.item(0));
+    LOG.info("Succeeded to load character configuration setting");
+    // TODO load other configurations
+
+    // Create DVResource
+    return new DVResource(validatorConfiguration, characterTable);
+  }
+
+  protected CharacterTable extractCharacterTable(
+      Element characterTableElement) {
+    String characterConfigurationPath = characterTableElement.getTextContent();
+    LOG.info("Symbol setting file: " + characterConfigurationPath);
+    CharacterTable characterTable =
+        new CharacterTable(characterConfigurationPath);
+    return characterTable;
+  }
+
+  protected ValidatorConfiguration extractValidatorConfiguration(
+      Element validatorElement) {
+    String validatorConfigurationPath = validatorElement.getTextContent();
     LOG.info("Validation Setting file: " + validatorConfigurationPath);
     ValidationConfigurationLoader validationLoader =
         new ValidationConfigurationLoader();
@@ -84,27 +129,7 @@ public class ConfigurationLoader {
       LOG.error(e.getLocalizedMessage());
       return null;
     }
-
-    // Load CharacterTable
-    NodeList characterTableElementList =
-        rootElement.getElementsByTagName("symbol-table");
-    if (characterTableElementList.getLength() <= 0) {
-      LOG.error("No \"symbol-table\" block found in the configuration");
-      return null;
-    } else if (characterTableElementList.getLength() > 1) {
-      LOG.warn("More than one \"symbol-table\" blocks in the configuration");
-    }
-    Element characterTableElement =
-        (Element) rootElement.getElementsByTagName("symbol-table").item(0);
-    String characterConfigurationPath = characterTableElement.getTextContent();
-    LOG.info("Symbol setting file: " + characterConfigurationPath);
-    CharacterTable characterTable =
-        new CharacterTable(characterConfigurationPath);
-
-    // TODO load other configurations
-
-    // Create DVResource
-    return new DVResource(validatorConfiguration, characterTable);
+    return validatorConfiguration;
   }
 
   static private Document parseConfigurationString(InputStream input) {
