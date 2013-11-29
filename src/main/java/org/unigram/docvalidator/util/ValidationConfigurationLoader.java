@@ -141,9 +141,6 @@ public final class ValidationConfigurationLoader {
         Element currentElement = (Element) childNode;
         currentConfiguration.addAttribute(currentElement.getAttribute("name"),
               currentElement.getAttribute("value"));
-      } else {
-        LOG.warn("Invalid block: \"" + nodeName + "\"");
-        LOG.warn("Skip this block ...");
       }
     }
     return currentConfiguration;
