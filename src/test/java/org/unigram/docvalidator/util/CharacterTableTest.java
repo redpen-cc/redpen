@@ -34,7 +34,7 @@ public class CharacterTableTest {
         "<character name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\" before-space=\"false\" after-space=\"true\"/>" +
         "</character-table>");
     InputStream stream = IOUtils.toInputStream(sampleCharTable);
-    CharacterTable characterTable = new CharacterTable(stream);
+    CharacterTable characterTable = CharacterTableLoader.load(stream);
     DVCharacter ch= characterTable.getCharacter("EXCLAMATION_MARK");
     assertNotNull(ch);
     assertEquals("!", ch.getValue());
@@ -52,7 +52,7 @@ public class CharacterTableTest {
         "<character name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\"/>" +
         "</character-table>");
     InputStream stream = IOUtils.toInputStream(sampleCharTable);
-    CharacterTable characterTable = new CharacterTable(stream);
+    CharacterTable characterTable = CharacterTableLoader.load(stream);
     DVCharacter ch= characterTable.getCharacter("EXCLAMATION_MARK");
     assertNotNull(ch);
     assertEquals("!", ch.getValue());
@@ -70,7 +70,7 @@ public class CharacterTableTest {
         "<character name=\"LEFT_QUOTATION_MARK\" value=\"\'\" invalid-chars=\"‘’\"/>" +
         "</character-table>");
     InputStream stream = IOUtils.toInputStream(sampleCharTable);
-    CharacterTable characterTable = new CharacterTable(stream);
+    CharacterTable characterTable = CharacterTableLoader.load(stream);
     DVCharacter ch= characterTable.getCharacter("LEFT_QUOTATION_MARK");
     assertEquals(2, ch.getInvalidChars().size());
     assertEquals("‘", ch.getInvalidChars().get(0));
@@ -85,7 +85,7 @@ public class CharacterTableTest {
         "<character name=\"LEFT_QUOTATION_MARK\" value=\"\'\"/>" +
         "</character-table>");
     InputStream stream = IOUtils.toInputStream(sampleCharTable);
-    CharacterTable characterTable = new CharacterTable(stream);
+    CharacterTable characterTable = CharacterTableLoader.load(stream);
     DVCharacter ch= characterTable.getCharacter("LEFT_QUOTATION_MARK");
     assertEquals(0, ch.getInvalidChars().size());
   }
@@ -97,7 +97,7 @@ public class CharacterTableTest {
         "<character-table>" +
         "</character-table>");
     InputStream stream = IOUtils.toInputStream(sampleCharTable);
-    CharacterTable characterTable = new CharacterTable(stream);
+    CharacterTable characterTable = CharacterTableLoader.load(stream);
     DVCharacter ch= characterTable.getCharacter("COMMA");
     assertEquals(0, ch.getInvalidChars().size());
     assertNotNull(ch);
@@ -112,7 +112,7 @@ public class CharacterTableTest {
         "<character name=\"EXCLAMATION_MARK\" value=\"！\" />" +
         "</character-table>");
     InputStream stream = IOUtils.toInputStream(sampleCharTable);
-    CharacterTable characterTable = new CharacterTable(stream);
+    CharacterTable characterTable = CharacterTableLoader.load(stream);
     DVCharacter ch= characterTable.getCharacter("EXCLAMATION_MARK");
     assertNotNull(ch);
     assertEquals("！", ch.getValue());
@@ -126,7 +126,7 @@ public class CharacterTableTest {
         "<character name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\"/>" +
         "</character-table>");
     InputStream stream = IOUtils.toInputStream(sampleCharTable);
-    CharacterTable characterTable = new CharacterTable(stream);
+    CharacterTable characterTable = CharacterTableLoader.load(stream);
     // NOTE: HADOOP_CHARACTER does not exist even in default settings
     DVCharacter ch= characterTable.getCharacter("HADOOP_CHARACTER");
     assertNull(ch);

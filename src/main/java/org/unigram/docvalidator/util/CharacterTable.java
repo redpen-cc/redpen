@@ -17,9 +17,6 @@
  */
 package org.unigram.docvalidator.util;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -31,33 +28,12 @@ import org.slf4j.LoggerFactory;
  * Configuration table of characters used in DocumentValidator.
  */
 public final class CharacterTable {
-  public CharacterTable(String fileName) {
-    this();
-    InputStream fis = null;
-    try {
-      fis = new FileInputStream(fileName);
-    } catch (FileNotFoundException e) {
-      LOG.error(e.getMessage());
-    }
-    CharacterTableLoader.loadTable(fis, characterDictionary);
-  }
-
-  /**
-   * constructor.
-   * @param stream input configuration
-   */
-  public CharacterTable(InputStream stream) {
-    this();
-    CharacterTableLoader.loadTable(stream, characterDictionary);
-  }
-
   /**
    * constructor.
    */
   public CharacterTable() {
     super();
     characterDictionary = new HashMap<String, DVCharacter>();
-    CharacterTableLoader.loadDefaultCharacterTable(characterDictionary);
   }
 
   public int getSizeDictionarySize() {
@@ -72,6 +48,10 @@ public final class CharacterTable {
     return this.characterDictionary.get(name);
   }
 
+  public Map<String, DVCharacter> getCharacterDictionary() {
+    return characterDictionary;
+  }
+
   public boolean isContainCharacter(String name) {
     if (this.characterDictionary.get(name) != null) {
       return true;
@@ -82,4 +62,5 @@ public final class CharacterTable {
   static Logger LOG = LoggerFactory.getLogger(CharacterTable.class);
 
   private Map<String, DVCharacter> characterDictionary;
+
 }

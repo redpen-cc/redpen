@@ -26,6 +26,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.CharacterTable;
+import org.unigram.docvalidator.util.CharacterTableLoader;
 import org.unigram.docvalidator.util.ValidationError;
 import org.unigram.docvalidator.validator.sentence.InvalidCharacterValidator;
 
@@ -45,7 +46,7 @@ public class InvalidCharacterValidatorTest {
         "<character name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\"/>" +
         "</character-table>");
     InputStream stream = IOUtils.toInputStream(sampleCharTable);
-    CharacterTable characterTable = new CharacterTable(stream);
+    CharacterTable characterTable = CharacterTableLoader.load(stream);
     validator.loadCharacterTable(characterTable);
     Sentence str = new Sentence("わたしはカラオケが大好き！",0);
     List<ValidationError> errors = validator.check(str);
@@ -61,7 +62,7 @@ public class InvalidCharacterValidatorTest {
         "<character name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\"/>" +
         "</character-table>");
     InputStream stream = IOUtils.toInputStream(sampleCharTable);
-    CharacterTable characterTable = new CharacterTable(stream);
+    CharacterTable characterTable = CharacterTableLoader.load(stream);
     validator.loadCharacterTable(characterTable);
     Sentence str = new Sentence("I like karaoke!",0);
     List<ValidationError> errors = validator.check(str);
@@ -78,7 +79,7 @@ public class InvalidCharacterValidatorTest {
         "<character name=\"COMMA\" value=\",\" invalid-chars=\"、\"/>" +
         "</character-table>");
     InputStream stream = IOUtils.toInputStream(sampleCharTable);
-    CharacterTable characterTable = new CharacterTable(stream);
+    CharacterTable characterTable = CharacterTableLoader.load(stream);
     validator.loadCharacterTable(characterTable);
     Sentence str = new Sentence("わたしは、カラオケが好き！",0);
     List<ValidationError> errors = validator.check(str);

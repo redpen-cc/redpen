@@ -33,6 +33,7 @@ import org.unigram.docvalidator.store.ListBlock;
 import org.unigram.docvalidator.store.Paragraph;
 import org.unigram.docvalidator.store.Section;
 import org.unigram.docvalidator.util.CharacterTable;
+import org.unigram.docvalidator.util.CharacterTableLoader;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.DocumentValidatorException;
@@ -503,7 +504,7 @@ public class WikiParserTest {
     if (characterTableString.length() > 0) {
       InputStream characterTableStream =
           IOUtils.toInputStream(characterTableString);
-      characterTable = new CharacterTable(characterTableStream);
+      characterTable = CharacterTableLoader.load(characterTableStream);
     }
     return createFileContent(inputDocumentString, conf, characterTable);
   }
