@@ -2,12 +2,14 @@ package org.unigram.docvalidator.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.unigram.docvalidator.DefaultSymbols;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -73,6 +75,17 @@ public class CharacterTableLoader {
         Boolean.parseBoolean(element.getAttribute("before-space")),
         Boolean.parseBoolean(element.getAttribute("after-space")));
     return character;
+  }
+
+  static public void loadDefaultCharacterTable(
+      Map<String, DVCharacter> characterTable) {
+    Iterator<String> characterNames =
+        DefaultSymbols.getAllCharacterNames();
+    while (characterNames.hasNext()) {
+      String charName = characterNames.next();
+      DVCharacter character = DefaultSymbols.get(charName);
+      characterTable.put(charName, character);
+    }
   }
 
 }

@@ -21,13 +21,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.unigram.docvalidator.DefaultSymbols;
 
 /**
  * Configuration table of characters used in DocumentValidator.
@@ -59,7 +57,7 @@ public final class CharacterTable {
   public CharacterTable() {
     super();
     characterDictionary = new HashMap<String, DVCharacter>();
-    loadDefaultCharacterTable(characterDictionary);
+    CharacterTableLoader.loadDefaultCharacterTable(characterDictionary);
   }
 
   public int getSizeDictionarySize() {
@@ -79,17 +77,6 @@ public final class CharacterTable {
       return true;
     }
     return false;
-  }
-
-  private void loadDefaultCharacterTable(
-      Map<String, DVCharacter> characterTable) {
-    Iterator<String> characterNames =
-        DefaultSymbols.getAllCharacterNames();
-    while (characterNames.hasNext()) {
-      String charName = characterNames.next();
-      DVCharacter character = DefaultSymbols.get(charName);
-      characterTable.put(charName, character);
-    }
   }
 
   static Logger LOG = LoggerFactory.getLogger(CharacterTable.class);
