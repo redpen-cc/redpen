@@ -19,6 +19,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.ErrorHandler;
 
 public class CharacterTableLoader {
 
@@ -33,6 +35,7 @@ public class CharacterTableLoader {
       fis = new FileInputStream(fileName);
     } catch (FileNotFoundException e) {
       LOG.error(e.getMessage());
+      return null;
     }
     return load(fis);
   }
@@ -47,8 +50,12 @@ public class CharacterTableLoader {
     Map<String, DVCharacter> characterDictionary =
         characterTable.getCharacterDictionary();
     loadDefaultCharacterTable(characterDictionary);
-    loadTable(stream, characterDictionary);
-    return characterTable;
+    if (loadTable(stream, characterDictionary)) {
+      return characterTable;
+    } else {
+      return null;
+    }
+
   }
 
   /**
@@ -66,7 +73,15 @@ public class CharacterTableLoader {
     }
 
     document.getDocumentElement().normalize();
-    Node root = document.getElementsByTagName("character-table").item(0);
+    NodeList rootNodeList = document.getElementsByTagName("character-table");
+    if (rootNodeList.getLength() == 0) {
+      LOG.error("No \"character-table\" block found...");
+      return false;
+    } else if (rootNodeList.getLength() > 1) {
+      LOG.warn("Found more than one \"character-table\" blocks.");
+      LOG.warn("Use the first block ...");
+    }
+    Node root = rootNodeList.item(0);
     NodeList nodeList = root.getChildNodes();
     for (int temp = 0; temp < nodeList.getLength(); temp++) {
       Node nNode = nodeList.item(temp);
@@ -74,34 +89,63 @@ public class CharacterTableLoader {
           Element element = (Element) nNode;
           if (element.getNodeName().equals("character")) {
             DVCharacter currentChar = createCharacter(element);
-            characterTable.put(currentChar.getName(), currentChar);
+            if (currentChar == null) {
+              LOG.warn("Found a invalid character setting element.");
+              LOG.warn("Skip this element...");
+            } else {
+              characterTable.put(currentChar.getName(), currentChar);
+            }
           } else {
-            LOG.error("Invalid Node Name: " + element.getNodeName());
+            LOG.error("Invalid Node Name \"" +
+                element.getNodeName() + "\" exist.");
             return false;
           }
       }
     }
     LOG.info("Succeeded to load character table");
-    return false;
+    return true;
   }
 
   private static Document parseCharTableString(InputStream input) {
     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+    DocumentBuilder dBuilder = null;
+    try {
+      dBuilder = dbFactory.newDocumentBuilder();
+    } catch (ParserConfigurationException e) {
+      LOG.error("In parseCharTableString: " + e.getMessage());
+      return null;
+    }
+
+    dBuilder.setErrorHandler(new ErrorHandler() {
+      public void warning(SAXParseException e) throws SAXException {
+        throw e;
+      }
+      public void fatalError(SAXParseException e) throws SAXException {
+        throw e;
+      }
+      public void error(SAXParseException e) throws SAXException {
+        throw e;
+      }
+    });
+
     Document doc = null;
     try {
-      DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
       doc = dBuilder.parse(input);
     } catch (SAXException e) {
-      LOG.error(e.getMessage());
+      LOG.error("In parseCharTableString: " + e.getMessage());
     } catch (IOException e) {
-      LOG.error(e.getMessage());
-    } catch (ParserConfigurationException e) {
-      LOG.error(e.getMessage());
+      LOG.error("In parseCharTableString: " + e.getMessage());
+    } catch (Throwable t) {
+      LOG.error("Unknow error");
     }
     return doc;
   }
 
   private static DVCharacter createCharacter(Element element) {
+    if (!element.hasAttribute("name") || !element.hasAttribute("value")) {
+      LOG.warn("Found element does not have name and value attribute...");
+      return null;
+    }
     DVCharacter character = new DVCharacter(
         element.getAttribute("name"),
         element.getAttribute("value"),
