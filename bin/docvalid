@@ -11,11 +11,12 @@ usage() {
     echo "  -f, --input-format [INPUT-FORMAT (Default t)]"
     echo "  -h, --help"
     echo
-    exit 1
 }
 
 main() {
-    [ $# -lt 1 ] && ( usage; exit 1 );
+    if [ $# -lt 1 ]; then
+	usage; exit 1;
+    fi
 
     INPUT_FORMAT="t"
     for OPT in "$@"
