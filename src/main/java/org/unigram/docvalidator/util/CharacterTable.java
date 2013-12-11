@@ -106,13 +106,14 @@ public final class CharacterTable {
    * load input character configuration.
    * @param stream input configuration
    * @param characterTable TODO
+   * @return TODO
    */
-  private void loadTable(InputStream stream,
+  private boolean loadTable(InputStream stream,
       Map<String, DVCharacter> characterTable) {
     Document document = parseCharTableString(stream);
     if (document == null) {
       LOG.error("Failed to parse character table");
-      return;
+      return false;
     }
 
     document.getDocumentElement().normalize();
@@ -127,12 +128,12 @@ public final class CharacterTable {
             characterTable.put(currentChar.getName(), currentChar);
           } else {
             LOG.error("Invalid Node Name: " + element.getNodeName());
-            return;
+            return false;
           }
       }
     }
     LOG.info("Succeeded to load character table");
-    return;
+    return false;
   }
 
   private Document parseCharTableString(InputStream input) {
