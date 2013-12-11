@@ -1,4 +1,4 @@
 <configuration>
-  <validator-config>sample/conf/validation-conf.xml</validator-config>
-  <symbol-table>sample/conf/symbol-conf-en.xml</symbol-table>
+  <validator>sample/conf/validation-conf.xml</validator>
+  <character-table>sample/conf/symbol-conf-en.xml</character-table>
 </configuration>
