@@ -26,6 +26,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.CharacterTable;
+import org.unigram.docvalidator.util.CharacterTableLoader;
 import org.unigram.docvalidator.util.ValidationError;
 import org.unigram.docvalidator.validator.sentence.SymbolWithSpaceValidator;
 
@@ -45,7 +46,7 @@ public class SpaceWithSymbolValidatorTest {
         "<character name=\"SLASH\" value=\"/\" />" +
         "</character-table>");
     InputStream stream = IOUtils.toInputStream(sampleCharTable);
-    CharacterTable characterTable = new CharacterTable(stream);
+    CharacterTable characterTable = CharacterTableLoader.load(stream);
     validator.loadCharacterTable(characterTable);
     Sentence str = new Sentence("I like apple/orange",0);
     List<ValidationError> errors = validator.check(str);
@@ -61,7 +62,7 @@ public class SpaceWithSymbolValidatorTest {
         "<character name=\"COLLON\" value=\":\" after-space=\"true\" />" +
         "</character-table>");
     InputStream stream = IOUtils.toInputStream(sampleCharTable);
-    CharacterTable characterTable = new CharacterTable(stream);
+    CharacterTable characterTable = CharacterTableLoader.load(stream);
     validator.loadCharacterTable(characterTable);
     Sentence str = new Sentence("I like her:yes it is.",0);
     List<ValidationError> errors = validator.check(str);
@@ -77,7 +78,7 @@ public class SpaceWithSymbolValidatorTest {
         "<character name=\"LEFT_PARENTHEIS\" value=\"(\" invalid-chars=\"（\" before-space=\"true\" />" +
         "</character-table>");
     InputStream stream = IOUtils.toInputStream(sampleCharTable);
-    CharacterTable characterTable = new CharacterTable(stream);
+    CharacterTable characterTable = CharacterTableLoader.load(stream);
     validator.loadCharacterTable(characterTable);
     Sentence str = new Sentence("I like her(Nancy)very much.",0);
     List<ValidationError> errors = validator.check(str);
@@ -94,7 +95,7 @@ public class SpaceWithSymbolValidatorTest {
         "<character name=\"RIGHT_PARENTHEIS\" value=\")\" after-space=\"true\" />" +
         "</character-table>");
     InputStream stream = IOUtils.toInputStream(sampleCharTable);
-    CharacterTable characterTable = new CharacterTable(stream);
+    CharacterTable characterTable = CharacterTableLoader.load(stream);
     validator.loadCharacterTable(characterTable);
     Sentence str = new Sentence("I like her(Nancy)very much.",0);
     List<ValidationError> errors = validator.check(str);
@@ -110,7 +111,7 @@ public class SpaceWithSymbolValidatorTest {
         "<character name=\"ASTARISK\" value=\"*\" before-space=\"true\" after-space=\"true\" />" +
         "</character-table>");
     InputStream stream = IOUtils.toInputStream(sampleCharTable);
-    CharacterTable characterTable = new CharacterTable(stream);
+    CharacterTable characterTable = CharacterTableLoader.load(stream);
     validator.loadCharacterTable(characterTable);
     Sentence str = new Sentence("I like 1*10",0);
     List<ValidationError> errors = validator.check(str);
