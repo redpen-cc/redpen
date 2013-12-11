@@ -30,8 +30,8 @@ public class ConfigurationLoaderTest {
   public void testLoadConfiguration() {
     String sampleConfigString =
         "<configuration> " +
-            "  <validator-config>sample/conf/validation-conf.xml</validator-config>" +
-            "  <symbol-table>sample/conf/symbol-conf-en.xml</symbol-table>" +
+            "  <validator>sample/conf/validation-conf.xml</validator>" +
+            "  <character-table>sample/conf/symbol-conf-en.xml</character-table>" +
         "</configuration>";
     ConfigurationLoader configurationLoader = new ConfigurationLoaderForTest();
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
@@ -44,7 +44,7 @@ public class ConfigurationLoaderTest {
   public void testLoadConfigurationWithoutValidatorConfig() {
     String sampleConfigString =
         "<configuration> " +
-        "  <symbol-table>sample/conf/symbol-conf-en.xml</symbol-table>" +
+        "  <character-table>sample/conf/symbol-conf-en.xml</character-table>" +
         "</configuration>";
     ConfigurationLoader configurationLoader = new ConfigurationLoaderForTest();
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
@@ -57,7 +57,7 @@ public class ConfigurationLoaderTest {
   public void testLoadConfigurationWithoutCharacterConfig() {
     String sampleConfigString =
         "<configuration> " +
-        "  <validator-config>sample/conf/validation-conf.xml</validator-config>" +
+        "  <validator>sample/conf/validation-conf.xml</validator>" +
         "</configuration>";
     ConfigurationLoader configurationLoader = new ConfigurationLoaderForTest();
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
@@ -70,8 +70,8 @@ public class ConfigurationLoaderTest {
   public void testLoadConfigurationWithoutRootConfigBlock() {
     String sampleConfigString =
         "<dummy> " +
-            "  <validator-config>sample/conf/validation-conf.xml</validator-config>" +
-            "  <symbol-table>sample/conf/symbol-conf-en.xml</symbol-table>" +
+            "  <validator>sample/conf/validation-conf.xml</validator>" +
+            "  <character-table>sample/conf/symbol-conf-en.xml</character-table>" +
         "</dummy>";
     ConfigurationLoader configurationLoader = new ConfigurationLoaderForTest();
     InputStream stream = IOUtils.toInputStream(sampleConfigString);

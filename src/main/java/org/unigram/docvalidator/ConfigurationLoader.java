@@ -73,12 +73,12 @@ public class ConfigurationLoader {
 
     // Load ValidatorConfiguraiton
     NodeList validatorCongigElementList =
-        rootElement.getElementsByTagName("validator-config");
+        rootElement.getElementsByTagName("validator");
     if (validatorCongigElementList.getLength() == 0) {
-      LOG.error("No \"validator-config\" block found in the configuration");
+      LOG.error("No \"validator\" block found in the configuration");
       return null;
     } else if (validatorCongigElementList.getLength() > 1) {
-      LOG.warn("More than one \"symbol-table\" blocks in the configuration");
+      LOG.warn("More than one \"validator\" blocks in the configuration");
     }
     ValidatorConfiguration validatorConfiguration =
         extractValidatorConfiguration(
@@ -90,12 +90,12 @@ public class ConfigurationLoader {
 
     // Load CharacterTable
     NodeList characterTableElementList =
-        rootElement.getElementsByTagName("symbol-table");
+        rootElement.getElementsByTagName("character-table");
     if (characterTableElementList.getLength() == 0) {
-      LOG.error("No \"symbol-table\" block found in the configuration");
+      LOG.error("No \"character-table\" block found in the configuration");
       return null;
     } else if (characterTableElementList.getLength() > 1) {
-      LOG.warn("More than one \"symbol-table\" blocks in the configuration");
+      LOG.warn("More than one \"character-table\" blocks in the configuration");
     }
     CharacterTable characterTable =
         extractCharacterTable((Element) characterTableElementList.item(0));
