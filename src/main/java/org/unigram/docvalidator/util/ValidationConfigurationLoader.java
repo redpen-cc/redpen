@@ -115,12 +115,15 @@ public final class ValidationConfigurationLoader {
     Document doc = null;
     try {
       DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+      dBuilder.setErrorHandler(new SAXErrorHandler());
       doc = dBuilder.parse(input);
     } catch (SAXException e) {
       LOG.error(e.getMessage());
     } catch (IOException e) {
       LOG.error(e.getMessage());
     } catch (ParserConfigurationException e) {
+      LOG.error(e.getMessage());
+    } catch (Throwable e) {
       LOG.error(e.getMessage());
     }
     return doc;

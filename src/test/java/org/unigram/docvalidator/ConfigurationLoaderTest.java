@@ -79,4 +79,36 @@ public class ConfigurationLoaderTest {
     IOUtils.closeQuietly(stream);
     assertNull(resorce);
   }
+
+  @Test
+  public void testLoadConfigurationWithoutContent() {
+    String sampleConfigString = "";
+    ConfigurationLoader configurationLoader = new ConfigurationLoaderForTest();
+    InputStream stream = IOUtils.toInputStream(sampleConfigString);
+    DVResource resorce = configurationLoader.loadConfiguraiton(stream);
+    IOUtils.closeQuietly(stream);
+    assertNull(resorce);
+  }
+
+  @Test
+  public void testLoadNullConfiguration() {
+    ConfigurationLoader configurationLoader = new ConfigurationLoaderForTest();
+    InputStream stream = null;
+    DVResource resorce = configurationLoader.loadConfiguraiton(stream);
+    assertNull(resorce);
+  }
+
+  @Test
+  public void testLoadInvalidConfiguration() {
+    String sampleConfigString =
+        "<configuration> " +
+            "  <validator>sample/conf/validation-conf.xml</validator>" +
+            "  <character-table>sample/conf/symbol-conf-en.xml</character-table>" +
+        "<configuration>"; // NOTE: no slash
+    ConfigurationLoader configurationLoader = new ConfigurationLoaderForTest();
+    InputStream stream = IOUtils.toInputStream(sampleConfigString);
+    DVResource resorce = configurationLoader.loadConfiguraiton(stream);
+    IOUtils.closeQuietly(stream);
+    assertNull(resorce);
+  }
 }
