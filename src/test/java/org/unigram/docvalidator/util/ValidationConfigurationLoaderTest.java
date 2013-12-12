@@ -25,6 +25,7 @@ public class ValidationConfigurationLoaderTest {
         ValidationConfigurationLoader.loadConfiguraiton(stream);
     assertNotNull(conf);
     assertEquals(1, conf.getChildrenNumber());
+    IOUtils.closeQuietly(stream);
   }
 
   @Test
@@ -38,6 +39,7 @@ public class ValidationConfigurationLoaderTest {
         ValidationConfigurationLoader.loadConfiguraiton(stream);
     assertNotNull(conf);
     assertEquals(0, conf.getChildrenNumber());
+    IOUtils.closeQuietly(stream);
   }
 
   @Test
@@ -53,6 +55,39 @@ public class ValidationConfigurationLoaderTest {
         ValidationConfigurationLoader.loadConfiguraiton(stream);
     assertNotNull(conf);
     assertEquals(1, conf.getChildrenNumber());
+    IOUtils.closeQuietly(stream);
   }
 
+  @Test
+  public void testLoadValidatorInvalidXMLConfig() {
+    String sampleConfiguraitonStr = new String(
+        "<?xml version=\"1.0\"?>" +
+        "<component name=\"Validator\">" +
+        "  <component name=\"ParagraphLength\" />"+
+        "  <dummy name=\"ParagraphLength\" />"+
+        "<component>"); // NOTE: no slash
+    InputStream stream = IOUtils.toInputStream(sampleConfiguraitonStr);
+    ValidatorConfiguration conf =
+        ValidationConfigurationLoader.loadConfiguraiton(stream);
+    assertNull(conf);
+    IOUtils.closeQuietly(stream);
+  }
+
+  @Test
+  public void testLoadValidatorConfigWithoutContent() {
+    String sampleConfiguraitonStr = new String("");
+    InputStream stream = IOUtils.toInputStream(sampleConfiguraitonStr);
+    ValidatorConfiguration conf =
+        ValidationConfigurationLoader.loadConfiguraiton(stream);
+    assertNull(conf);
+    IOUtils.closeQuietly(stream);
+  }
+
+  @Test
+  public void testNull() {
+    InputStream stream = null;
+    ValidatorConfiguration conf =
+        ValidationConfigurationLoader.loadConfiguraiton(stream);
+    assertNull(conf);
+  }
 }

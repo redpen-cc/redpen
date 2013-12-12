@@ -16,6 +16,7 @@ import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.CharacterTableLoader;
 import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.DocumentValidatorException;
+import org.unigram.docvalidator.util.SAXErrorHandler;
 import org.unigram.docvalidator.util.ValidationConfigurationLoader;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.w3c.dom.Document;
@@ -136,12 +137,15 @@ public class ConfigurationLoader {
     Document doc = null;
     try {
       DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+      dBuilder.setErrorHandler(new SAXErrorHandler());
       doc = dBuilder.parse(input);
     } catch (SAXException e) {
       LOG.error(e.getMessage());
     } catch (IOException e) {
       LOG.error(e.getMessage());
     } catch (ParserConfigurationException e) {
+      LOG.error(e.getMessage());
+    } catch (Throwable e) {
       LOG.error(e.getMessage());
     }
     return doc;
