@@ -116,17 +116,7 @@ public class CharacterTableLoader {
       return null;
     }
 
-    dBuilder.setErrorHandler(new ErrorHandler() {
-      public void warning(SAXParseException e) throws SAXException {
-        throw e;
-      }
-      public void fatalError(SAXParseException e) throws SAXException {
-        throw e;
-      }
-      public void error(SAXParseException e) throws SAXException {
-        throw e;
-      }
-    });
+    dBuilder.setErrorHandler(new SAXErrorHandler());
 
     Document doc = null;
     try {
