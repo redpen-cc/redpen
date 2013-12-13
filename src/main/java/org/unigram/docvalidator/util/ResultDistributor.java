@@ -27,4 +27,10 @@ public interface ResultDistributor {
    * @return 0 succeeded, otherwise 1
    */
   int flushResult(ValidationError err);
+
+  /**
+   * set Formatter object
+   * @param formatter
+   */
+  void setFormatter(Formatter formatter);
 }

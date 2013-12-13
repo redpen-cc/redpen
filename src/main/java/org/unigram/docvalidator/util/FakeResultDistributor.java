@@ -27,4 +27,7 @@ public class FakeResultDistributor implements ResultDistributor {
   public FakeResultDistributor() {
     super();
   }
+
+  @Override
+  public void setFormatter(Formatter formatter) {} // nothing todo
 }

@@ -33,6 +33,7 @@ public class DefaultResultDistributor implements ResultDistributor {
   public DefaultResultDistributor(OutputStream os) {
     super();
     writer = new PrintWriter(os);
+    formatter = new PlainFormatter();
   }
 
   /**
@@ -48,10 +49,17 @@ public class DefaultResultDistributor implements ResultDistributor {
    * @param err validation error
    */
   public int flushResult(ValidationError err) {
-    writer.println(err.toString());
+    writer.println(formatter.format(err));
     writer.flush();
     return 0;
   }
+
+  @Override
+  public void setFormatter(Formatter formatter) {
+    this.formatter = formatter;
+  }
+
+  private Formatter formatter;
 
   private PrintWriter writer;
 }
