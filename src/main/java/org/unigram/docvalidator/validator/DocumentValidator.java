@@ -27,9 +27,9 @@ import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.store.Document;
 import org.unigram.docvalidator.store.FileContent;
 import org.unigram.docvalidator.util.CharacterTable;
+import org.unigram.docvalidator.util.ResultDistributorFactory;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DVResource;
-import org.unigram.docvalidator.util.DefaultResultDistributor;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.util.ResultDistributor;
 import org.unigram.docvalidator.util.ValidationError;
@@ -41,15 +41,19 @@ public class DocumentValidator {
 
   public DocumentValidator(DVResource resource,
       ResultDistributor resultDistributor)
-      throws DocumentValidatorException {
+        throws DocumentValidatorException {
     this(resource);
+    if (resultDistributor == null) {
+      throw new DocumentValidatorException("ResultDistributor is null");
+    }
     this.distributor = resultDistributor;
   }
 
   public DocumentValidator(DVResource resource)
       throws DocumentValidatorException {
     super();
-    this.distributor = new DefaultResultDistributor(System.out);
+    this.distributor = ResultDistributorFactory.createDistributor("default",
+        System.out);
     this.validators = new Vector<Validator>();
     this.conf = resource.getConfiguration();
     this.charTable = resource.getCharacterTable();
