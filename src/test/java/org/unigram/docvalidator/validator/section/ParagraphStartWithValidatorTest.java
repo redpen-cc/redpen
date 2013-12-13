@@ -25,7 +25,8 @@ import org.junit.Test;
 import org.unigram.docvalidator.store.FileContent;
 import org.unigram.docvalidator.store.Paragraph;
 import org.unigram.docvalidator.store.Section;
-import org.unigram.docvalidator.util.FakeResultDistributor;
+import org.unigram.docvalidator.util.ResultDistributor;
+import org.unigram.docvalidator.util.ResultDistributorFactory;
 import org.unigram.docvalidator.util.ValidationError;
 
 public class ParagraphStartWithValidatorTest {
@@ -39,7 +40,8 @@ public class ParagraphStartWithValidatorTest {
     section.appendParagraph(paragraph);
     FileContent fileContent = new FileContent();
     fileContent.appendSection(section);
-    List<ValidationError> errors = validator.check(fileContent, new FakeResultDistributor());
+    ResultDistributor distributor = ResultDistributorFactory.createDistributor("fake", null);
+    List<ValidationError> errors = validator.check(fileContent, distributor);
     assertEquals(1, errors.size());
   }
 
@@ -52,7 +54,8 @@ public class ParagraphStartWithValidatorTest {
     section.appendParagraph(paragraph);
     FileContent fileContent = new FileContent();
     fileContent.appendSection(section);
-    List<ValidationError> errors = validator.check(fileContent, new FakeResultDistributor());
+    ResultDistributor distributor = ResultDistributorFactory.createDistributor("fake", null);
+    List<ValidationError> errors = validator.check(fileContent, distributor);
     assertEquals(0, errors.size());
   }
 
