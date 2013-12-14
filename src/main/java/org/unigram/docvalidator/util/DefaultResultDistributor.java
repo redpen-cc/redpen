@@ -49,9 +49,19 @@ public class DefaultResultDistributor implements ResultDistributor {
    * @param err validation error
    */
   public int flushResult(ValidationError err) {
-    writer.println(formatter.format(err));
+    writer.println(formatter.convertError(err));
     writer.flush();
     return 0;
+  }
+
+  @Override
+  public void flushHeader() {
+    writer.println(formatter.header());
+  }
+
+  @Override
+  public void flushFooter() {
+    writer.println(formatter.footer());
   }
 
   @Override
@@ -62,4 +72,5 @@ public class DefaultResultDistributor implements ResultDistributor {
   private Formatter formatter;
 
   private PrintWriter writer;
+
 }

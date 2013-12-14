@@ -21,6 +21,17 @@ package org.unigram.docvalidator.util;
  * ResultDistributor flush the errors reported from Validators.
  */
 public interface ResultDistributor {
+
+  /**
+   * flush header block of semi-structured format.
+   */
+  public void flushHeader();
+
+  /**
+   * flush footer block of semi-structured format.
+   */
+  public void flushFooter();
+
   /**
    * flush given ValidationError.
    * @param err error reproted from a Validator

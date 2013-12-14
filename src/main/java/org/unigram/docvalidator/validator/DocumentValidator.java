@@ -91,6 +91,7 @@ public class DocumentValidator {
   }
 
   public List<ValidationError> check(Document document) {
+    distributor.flushHeader();
     List<ValidationError> errors = new ArrayList<ValidationError>();
     for (Iterator<Validator> checkIterator =
         this.validators.iterator(); checkIterator.hasNext();) {
@@ -102,6 +103,7 @@ public class DocumentValidator {
           errors.addAll(currentErrors);
         }
     }
+    distributor.flushFooter();
     return errors;
   }
 
