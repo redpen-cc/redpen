@@ -52,7 +52,7 @@ public class DocumentValidator {
   public DocumentValidator(DVResource resource)
       throws DocumentValidatorException {
     super();
-    this.distributor = ResultDistributorFactory.createDistributor("default",
+    this.distributor = ResultDistributorFactory.createDistributor("plain",
         System.out);
     this.validators = new Vector<Validator>();
     this.conf = resource.getConfiguration();

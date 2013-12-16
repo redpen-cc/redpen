@@ -25,25 +25,29 @@ import org.slf4j.LoggerFactory;
 
 public class ResultDistributorFactory {
 
-  static public ResultDistributor createDistributor(String type,
+  static public ResultDistributor createDistributor(String outputFormat,
       OutputStream output) {
-    if(type == null) {
-      LOG.error("Specified distributor type is null...");
+    if(outputFormat == null) {
+      LOG.error("Specified output format is null...");
       return null;
     }
 
-    LOG.info("Creating Distributor...");
-    if (type.equals("default")) {
-      if (output == null) {
-        LOG.error("Output stream is null...");
-        return null;
-      }
-      return new DefaultResultDistributor(output);
-    } else if (type.equals("fake")) {
-      return new FakeResultDistributor();
+    if (output == null) {
+      LOG.error("Output stream is null...");
+      return null;
     }
-    LOG.error("No specified distributor...");
-    return null;
+    ResultDistributor distributor = new DefaultResultDistributor(output);
+
+    LOG.info("Creating Distributor...");
+    if (outputFormat.equals("plain")) {
+      distributor.setFormatter(new PlainFormatter());
+    }  else if(outputFormat.equals("xml")) {
+      distributor.setFormatter(new XMLFormatter());
+    } else {
+      LOG.error("No specified distributor...");
+      return null;
+    }
+    return distributor;
   }
 
   private static Logger LOG = LoggerFactory.getLogger(ResultDistributor.class);

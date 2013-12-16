@@ -67,7 +67,7 @@ public class DefaultResultDistributor implements ResultDistributor {
   public void flushHeader() {
     String header = formatter.header();
     if (header != null) {
-      writer.println();
+      writer.println(header);
     }
   }
 
@@ -75,7 +75,8 @@ public class DefaultResultDistributor implements ResultDistributor {
   public void flushFooter() {
     String footer = formatter.footer();
     if (footer != null) {
-      writer.println();
+      writer.println(footer);
+      writer.flush();
     }
   }
 
