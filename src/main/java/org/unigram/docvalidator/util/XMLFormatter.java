@@ -14,11 +14,11 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
-
-import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
 
 public class XMLFormatter implements Formatter {
 
@@ -78,11 +78,19 @@ public class XMLFormatter implements Formatter {
 
   private Transformer createTransformer()
       throws TransformerFactoryConfigurationError {
-    TransformerFactory tf = TransformerFactoryImpl.newInstance();
+    TransformerFactory tf = null;
+    try {
+       tf = TransformerFactory.newInstance();
+    } catch (Throwable e) {
+      LOG.error(e.getMessage());
+      return null;
+    }
+
     Transformer transformer = null;
     try {
       transformer = tf.newTransformer();
     } catch (TransformerConfigurationException e) {
+      LOG.error(e.getMessage());
       return null;
     }
     transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
@@ -101,4 +109,6 @@ public class XMLFormatter implements Formatter {
 
   private DocumentBuilder db;
 
+  private static Logger LOG =
+      LoggerFactory.getLogger(XMLFormatter.class);
 }
