@@ -24,8 +24,14 @@ import org.junit.Test;
 public class ResultDistributorFactoryTest {
 
   @Test
-  public void testCreateDistributor() {
-    ResultDistributor distributor = ResultDistributorFactory.createDistributor("default", System.out);
+  public void testCreatePlainDistributor() {
+    ResultDistributor distributor = ResultDistributorFactory.createDistributor("plain", System.out);
+    assertNotNull(distributor);
+  }
+
+  @Test
+  public void testCreateXMLDistributor() {
+    ResultDistributor distributor = ResultDistributorFactory.createDistributor("xml", System.out);
     assertNotNull(distributor);
   }
 
@@ -43,7 +49,7 @@ public class ResultDistributorFactoryTest {
 
   @Test
   public void testNullOutputDistributor() {
-    ResultDistributor distributor = ResultDistributorFactory.createDistributor("default", null);
+    ResultDistributor distributor = ResultDistributorFactory.createDistributor("plain", null);
     assertNull(distributor);
   }
 

@@ -27,4 +27,13 @@ public class FakeResultDistributor implements ResultDistributor {
   public FakeResultDistributor() {
     super();
   }
+
+  @Override
+  public void setFormatter(Formatter formatter) {}
+
+  @Override
+  public void flushHeader() {}
+
+  @Override
+  public void flushFooter() {}
 }

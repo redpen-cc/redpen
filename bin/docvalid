@@ -9,6 +9,7 @@ usage() {
     echo "Options:"
     echo "  -c, --configuration [CONFIG_FILE]"
     echo "  -f, --input-format [INPUT-FORMAT (Default t)]"
+    echo "  -r, --result-format [RESULT-FORMAT (Default plain)]"
     echo "  -h, --help"
     echo
 }
@@ -19,9 +20,10 @@ main() {
     fi
 
     INPUT_FORMAT="t"
+    RESULT_FORMAT="plain"
     for OPT in "$@"
     do
-        case "$OPT" in
+       case "$OPT" in
             '-h'|'--help' )
                 usage
                 exit 0
@@ -40,6 +42,13 @@ main() {
                 INPUT_FORMAT="$2"
                 shift 2
                 ;;
+            '-r'|'--result-format' )
+                if [[ -z "$2" ]] || [[ "$2" =~ ^-+ ]]; then
+                    echo "$RUN_SCRIPT: option requires an argument -- $1" 1>&2
+                fi
+                RESULT_FORMAT="$2"
+                shift 2
+                ;;
             '--version' )
                 echo "Version: $VERSION"
                 exit 0
@@ -51,7 +60,7 @@ main() {
         esac
     done
     INPUT_FILES="$@"
-    java -jar lib/document-validator-${VERSION}.jar --conf ${CONFIG_FILE} --format ${INPUT_FORMAT} --input ${INPUT_FILES}
+    java -jar lib/document-validator-${VERSION}.jar --conf ${CONFIG_FILE} --format ${INPUT_FORMAT} --input ${INPUT_FILES} --result-format ${RESULT_FORMAT}
 }
 
 [ ${#BASH_SOURCE[@]} = 1 ] && main "$@"

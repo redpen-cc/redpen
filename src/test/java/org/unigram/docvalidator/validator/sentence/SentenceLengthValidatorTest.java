@@ -32,8 +32,8 @@ import org.unigram.docvalidator.parser.Parser;
 import org.unigram.docvalidator.parser.PlainTextParser;
 import org.unigram.docvalidator.store.Document;
 import org.unigram.docvalidator.util.DVResource;
+import org.unigram.docvalidator.util.FakeResultDistributor;
 import org.unigram.docvalidator.util.ResultDistributor;
-import org.unigram.docvalidator.util.ResultDistributorFactory;
 import org.unigram.docvalidator.util.ValidationError;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DocumentValidatorException;
@@ -83,7 +83,7 @@ public class SentenceLengthValidatorTest {
   @Test
   public void testLength() {
     DocumentValidator validator = null;
-    ResultDistributor distributor = ResultDistributorFactory.createDistributor("fake", null);
+    ResultDistributor distributor = new FakeResultDistributor();
     try {
       validator = new DocumentValidator(new DVResource(conf), distributor);
     } catch (DocumentValidatorException e) {

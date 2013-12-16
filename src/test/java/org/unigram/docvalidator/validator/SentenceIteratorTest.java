@@ -11,6 +11,7 @@ import org.unigram.docvalidator.store.Paragraph;
 import org.unigram.docvalidator.store.Section;
 import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.CharacterTable;
+import org.unigram.docvalidator.util.FakeResultDistributor;
 import org.unigram.docvalidator.util.ResultDistributor;
 import org.unigram.docvalidator.util.ResultDistributorFactory;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
@@ -69,7 +70,7 @@ public class SentenceIteratorTest {
     DummyValidator validator = new DummyValidator();
     validatorList.add(validator);
     sentenceIterator.appendValidators(validatorList);
-    ResultDistributor distributor = ResultDistributorFactory.createDistributor("fake", null);
+    ResultDistributor distributor = new FakeResultDistributor();
     sentenceIterator.check(fileContent, distributor);
     assertEquals(2, validator.getSentenceStrings().size());
     assertEquals("it is a piece of a cake.",
@@ -95,7 +96,7 @@ public class SentenceIteratorTest {
     DummyValidator validator = new DummyValidator();
     validatorList.add(validator);
     sentenceIterator.appendValidators(validatorList);
-    ResultDistributor distributor = ResultDistributorFactory.createDistributor("fake", null);
+    ResultDistributor distributor = new FakeResultDistributor();
     sentenceIterator.check(fileContent, distributor);
     assertEquals(3, validator.getSentenceStrings().size());
   }
@@ -122,7 +123,7 @@ public class SentenceIteratorTest {
     DummyValidator validator = new DummyValidator();
     validatorList.add(validator);
     sentenceIterator.appendValidators(validatorList);
-    ResultDistributor distributor = ResultDistributorFactory.createDistributor("fake", null);
+    ResultDistributor distributor = new FakeResultDistributor();
     sentenceIterator.check(fileContent, distributor);
     assertEquals(4, validator.getSentenceStrings().size());
   }

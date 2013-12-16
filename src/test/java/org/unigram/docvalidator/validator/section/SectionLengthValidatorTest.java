@@ -27,7 +27,6 @@ import org.unigram.docvalidator.store.Paragraph;
 import org.unigram.docvalidator.store.Section;
 import org.unigram.docvalidator.util.FakeResultDistributor;
 import org.unigram.docvalidator.util.ResultDistributor;
-import org.unigram.docvalidator.util.ResultDistributorFactory;
 import org.unigram.docvalidator.util.ValidationError;
 import org.unigram.docvalidator.validator.section.SectionLengthValidator;
 
@@ -50,8 +49,7 @@ public class SectionLengthValidatorTest {
     section.appendParagraph(paragraph);
     FileContent fileContent = new FileContent();
     fileContent.appendSection(section);
-    ResultDistributor distributor =
-        ResultDistributorFactory.createDistributor("fake", null);
+    ResultDistributor distributor = new FakeResultDistributor();
     List<ValidationError> errors = validator.check(fileContent, distributor);
     assertEquals(1, errors.size());
   }
