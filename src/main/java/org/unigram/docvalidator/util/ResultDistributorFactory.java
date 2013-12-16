@@ -39,12 +39,17 @@ public class ResultDistributorFactory {
     ResultDistributor distributor = new DefaultResultDistributor(output);
 
     LOG.info("Creating Distributor...");
-    if (outputFormat.equals("plain")) {
-      distributor.setFormatter(new PlainFormatter());
-    }  else if(outputFormat.equals("xml")) {
-      distributor.setFormatter(new XMLFormatter());
-    } else {
-      LOG.error("No specified distributor...");
+    try {
+      if (outputFormat.equals("plain")) {
+        distributor.setFormatter(new PlainFormatter());
+      }  else if(outputFormat.equals("xml")) {
+        distributor.setFormatter(new XMLFormatter());
+      } else {
+        LOG.error("No specified distributor...");
+        return null;
+      }
+    } catch (DocumentValidatorException e) {
+      LOG.error(e.getMessage());
       return null;
     }
     return distributor;
