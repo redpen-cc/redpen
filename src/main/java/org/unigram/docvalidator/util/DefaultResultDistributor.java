@@ -32,6 +32,9 @@ public class DefaultResultDistributor implements ResultDistributor {
    */
   public DefaultResultDistributor(OutputStream os) {
     super();
+    if (os == null) {
+      throw new IllegalArgumentException("argument OutputStream is null");
+    }
     writer = new PrintWriter(os);
     formatter = new PlainFormatter();
   }
@@ -41,6 +44,9 @@ public class DefaultResultDistributor implements ResultDistributor {
    * @param ps output stream
    */
   public DefaultResultDistributor(PrintStream ps) {
+    if (ps == null) {
+      throw new IllegalArgumentException("argument PrintStream is null");
+    }
     writer = new PrintWriter(ps);
   }
 
@@ -49,6 +55,9 @@ public class DefaultResultDistributor implements ResultDistributor {
    * @param err validation error
    */
   public int flushResult(ValidationError err) {
+    if (err == null) {
+      throw new IllegalArgumentException("argument ValidationError is null");
+    }
     writer.println(formatter.convertError(err));
     writer.flush();
     return 0;
@@ -56,16 +65,25 @@ public class DefaultResultDistributor implements ResultDistributor {
 
   @Override
   public void flushHeader() {
-    writer.println(formatter.header());
+    String header = formatter.header();
+    if (header != null) {
+      writer.println();
+    }
   }
 
   @Override
   public void flushFooter() {
-    writer.println(formatter.footer());
+    String footer = formatter.footer();
+    if (footer != null) {
+      writer.println();
+    }
   }
 
   @Override
   public void setFormatter(Formatter formatter) {
+    if (formatter == null) {
+      throw new IllegalArgumentException("arugment formatter is null");
+    }
     this.formatter = formatter;
   }
 
