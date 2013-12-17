@@ -485,7 +485,7 @@ public class WikiParserTest {
   private Parser loadParser(DVResource resource) {
     Parser parser = null;
     try {
-      parser = DocumentParserFactory.generate("w", resource);
+      parser = DocumentParserFactory.generate("wiki", resource);
     } catch (DocumentValidatorException e1) {
       fail();
       e1.printStackTrace();

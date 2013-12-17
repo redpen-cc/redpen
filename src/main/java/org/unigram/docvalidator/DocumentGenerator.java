@@ -44,7 +44,9 @@ public final class DocumentGenerator {
       docparser = DocumentParserFactory.generate(format, resource);
     } catch (DocumentValidatorException e) {
       LOG.error("Failed to create document parser: " + e.getMessage());
+      return null;
     }
+
     Document document = new Document();
     for (int i = 0; i < inputFileNames.length; i++) {
       try {
