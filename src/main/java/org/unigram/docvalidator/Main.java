@@ -79,7 +79,7 @@ public final class Main {
         return;
     }
 
-    String inputFormatormat = "t";
+    String inputFormat = "plain";
     String[] inputFileNames = null;
     String configFileName = "";
     String resultFormat = "plain";
@@ -93,7 +93,7 @@ public final class Main {
         return;
     }
     if (commandLine.hasOption("f")) {
-      inputFormatormat = commandLine.getOptionValue("f");
+      inputFormat = commandLine.getOptionValue("f");
     }
     if (commandLine.hasOption("i")) {
       inputFileNames = commandLine.getOptionValues("i");
@@ -113,7 +113,11 @@ public final class Main {
     }
 
     Document document =
-        DocumentGenerator.generate(inputFileNames, conf, inputFormatormat);
+        DocumentGenerator.generate(inputFileNames, conf, inputFormat);
+    if (document == null) {
+      LOG.error("Failed to create a Document object");
+      return;
+    }
 
     // validate document
     ResultDistributor distributor =

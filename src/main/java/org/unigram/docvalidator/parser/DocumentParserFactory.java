@@ -26,7 +26,7 @@ import org.unigram.docvalidator.util.DocumentValidatorException;
 public final class DocumentParserFactory {
   /**
    * Create DocuemntParser object following specified input file format.
-   * @param parserType type of parser (plain text, wiki etc.)
+   * @param parserType type of parser (plain or wiki etc.)
    * @param resource configuration settings
    * @return Parser object
    * @throws DocumentValidatorException
@@ -34,9 +34,9 @@ public final class DocumentParserFactory {
   public static Parser generate(String parserType, DVResource resource)
         throws DocumentValidatorException {
     Parser docparser = null;
-    if (parserType.equals("w")) {
+    if (parserType.equals("wiki")) {
       docparser = new WikiParser();
-    } else if (parserType.equals("t")) {
+    } else if (parserType.equals("plain")) {
       docparser = new PlainTextParser();
     } else {
       throw new DocumentValidatorException("Specified parser type not exist: "

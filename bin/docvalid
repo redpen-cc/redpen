@@ -8,7 +8,7 @@ usage() {
     echo
     echo "Options:"
     echo "  -c, --configuration [CONFIG_FILE]"
-    echo "  -f, --input-format [INPUT-FORMAT (Default t)]"
+    echo "  -f, --input-format [INPUT-FORMAT (Default plain)]"
     echo "  -r, --result-format [RESULT-FORMAT (Default plain)]"
     echo "  -h, --help"
     echo
@@ -19,7 +19,7 @@ main() {
 	usage; exit 1;
     fi
 
-    INPUT_FORMAT="t"
+    INPUT_FORMAT="plain"
     RESULT_FORMAT="plain"
     for OPT in "$@"
     do
