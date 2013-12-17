@@ -79,5 +79,9 @@ public final class StringUtils {
     return false;
   }
 
+  public static boolean isKatakana(char c) {
+    return Character.UnicodeBlock.of(c) == Character.UnicodeBlock.KATAKANA;
+  }
+
   private StringUtils() { }
 }

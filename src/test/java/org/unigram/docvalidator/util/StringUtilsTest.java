@@ -94,4 +94,24 @@ public class StringUtilsTest {
     String str = new String ("これは。。。ペンですか。");
     assertEquals(5, StringUtils.getSentenceEndPosition(str, "。"));
   }
+
+  @Test
+  public void tesIsKatakanaWithHiraganaA() {
+    assertFalse(StringUtils.isKatakana('あ'));
+  }
+
+  @Test
+  public void tesIsKatakanaWithKatakanaA() {
+    assertTrue(StringUtils.isKatakana('ア'));
+  }
+
+  @Test
+  public void tesIsKatakanaWithHyphen() {
+    assertTrue(StringUtils.isKatakana('ー'));
+  }
+
+  @Test
+  public void tesIsKatakanaWithKatakanaMiddleDot() {
+    assertTrue(StringUtils.isKatakana('・'));
+  }
 }

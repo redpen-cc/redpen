@@ -31,37 +31,119 @@ import org.unigram.docvalidator.validator.SentenceValidator;
 
 public class KatakanaEndHyphenValidatorTest {
   @Test
-  public void testIsKatakana() {
-    assertFalse(KatakanaEndHyphenValidator.isKatakana('あ'));
-    assertFalse(KatakanaEndHyphenValidator.isKatakana('ー'));
-    assertTrue(KatakanaEndHyphenValidator.isKatakana('ア'));
+  public void testEmptyString() {
+    KatakanaEndHyphenValidator validator
+      = new KatakanaEndHyphenValidator();
+    Sentence str = new Sentence("", 0);
+    List<ValidationError> errors = validator.check(str);
+    assertEquals(str.toString(), 0, errors.size());
   }
 
   @Test
-  public void testKatakanaEndHyphenValidator() {
-    KatakanaEndHyphenValidator validator = new KatakanaEndHyphenValidator();
-    Sentence str;
-    List<ValidationError> errors;
-    str = new Sentence("カラオケ", 0);
-    errors = validator.check(str);
-    assertEquals("カラオケ", 0, errors.size());
-    str = new Sentence("ヒーター", 0);
-    errors = validator.check(str);
-    assertEquals("ヒーター", 0, errors.size());
-    str = new Sentence("ビター", 0);
-    errors = validator.check(str);
-    assertEquals("ビター", 0, errors.size());
-    str = new Sentence("コンピューターが壊れた。", 0);
-    errors = validator.check(str);
-    assertEquals("コンピューターが壊れた。", 1, errors.size());
-    str = new Sentence("壊れたコンピューター", 0);
-    errors = validator.check(str);
-    assertEquals("壊れたコンピューター", 1, errors.size());
-    str = new Sentence("僕のコンピューターが壊れた。", 0);
-    errors = validator.check(str);
-    assertEquals("僕のコンピューターが壊れた。", 1, errors.size());
-    str = new Sentence("僕のコンピュータが壊れた。", 0);
-    errors = validator.check(str);
-    assertEquals("僕のコンピュータが壊れた。", 0, errors.size());
+  public void testSingleHiragana() {
+    KatakanaEndHyphenValidator validator
+      = new KatakanaEndHyphenValidator();
+    Sentence str = new Sentence("あ", 0);
+    List<ValidationError> errors = validator.check(str);
+    assertEquals(str.toString(), 0, errors.size());
+  }
+
+  @Test
+  public void testSingleKatakana() {
+    KatakanaEndHyphenValidator validator
+      = new KatakanaEndHyphenValidator();
+    Sentence str = new Sentence("ア", 0);
+    List<ValidationError> errors = validator.check(str);
+    assertEquals(str.toString(), 0, errors.size());
+  }
+
+  @Test
+  public void testKatakanaOfLength2() {
+    KatakanaEndHyphenValidator validator
+      = new KatakanaEndHyphenValidator();
+    Sentence str = new Sentence("ドア", 0);
+    List<ValidationError> errors = validator.check(str);
+    assertEquals(str.toString(), 0, errors.size());
+  }
+
+  @Test
+  public void testKatakanaOfLength3andHyphen() {
+    KatakanaEndHyphenValidator validator
+      = new KatakanaEndHyphenValidator();
+    Sentence str = new Sentence("ミラー", 0);
+    List<ValidationError> errors = validator.check(str);
+    assertEquals(str.toString(), 0, errors.size());
+  }
+
+  @Test
+  public void testKatakanaOfLength4andHyphen() {
+    KatakanaEndHyphenValidator validator
+      = new KatakanaEndHyphenValidator();
+    Sentence str = new Sentence("コーヒー", 0); // This is an error.
+    List<ValidationError> errors = validator.check(str);
+    assertEquals(str.toString(), 1, errors.size());
+  }
+
+  @Test
+  public void testSentenceBeginningWithKatakanaWithHypen() {
+    KatakanaEndHyphenValidator validator
+      = new KatakanaEndHyphenValidator();
+    Sentence str = new Sentence("コンピューターが壊れた。", 0);
+    List<ValidationError> errors = validator.check(str);
+    assertEquals(str.toString(), 1, errors.size());
+  }
+
+  @Test
+  public void testSentenceBeginningWithKatakanaWithoutHypen() {
+    KatakanaEndHyphenValidator validator
+      = new KatakanaEndHyphenValidator();
+    Sentence str = new Sentence("コンピュータが壊れた。", 0);
+    List<ValidationError> errors = validator.check(str);
+    assertEquals(str.toString(), 0, errors.size());
+  }
+
+  @Test
+  public void testSentenceContainKatakanaWithHypen() {
+    KatakanaEndHyphenValidator validator
+      = new KatakanaEndHyphenValidator();
+    Sentence str = new Sentence("僕のコンピューターが壊れた。", 0);
+    List<ValidationError> errors = validator.check(str);
+    assertEquals(str.toString(), 1, errors.size());
+  }
+
+  @Test
+  public void testSentenceContainKatakanaWitouthHypen() {
+    KatakanaEndHyphenValidator validator
+      = new KatakanaEndHyphenValidator();
+    Sentence str = new Sentence("僕のコンピュータが壊れた。", 0);
+    List<ValidationError> errors = validator.check(str);
+    assertEquals(str.toString(), 0, errors.size());
+  }
+
+  @Test
+  public void testSentenceEndingWithKatakanaWithHypen() {
+    KatakanaEndHyphenValidator validator
+      = new KatakanaEndHyphenValidator();
+    Sentence str = new Sentence("僕のコンピューター", 0);
+    List<ValidationError> errors = validator.check(str);
+    assertEquals(str.toString(), 1, errors.size());
+  }
+
+  @Test
+  public void testSentenceEndingWithKatakanaWithoutHypen() {
+    KatakanaEndHyphenValidator validator
+      = new KatakanaEndHyphenValidator();
+    Sentence str = new Sentence("僕のコンピュータ", 0);
+    List<ValidationError> errors = validator.check(str);
+    assertEquals(str.toString(), 0, errors.size());
+  }
+
+  @Test
+  public void testSentenceContainWithKatakanaMiddleDot() {
+    KatakanaEndHyphenValidator validator
+      = new KatakanaEndHyphenValidator();
+    Sentence str = new Sentence("コーヒー・コンピューター", 0);
+    List<ValidationError> errors = validator.check(str);
+    assertEquals(str.toString(), 2, errors.size());
   }
 }

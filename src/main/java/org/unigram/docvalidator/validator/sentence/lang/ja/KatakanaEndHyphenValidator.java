@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.CharacterTable;
+import org.unigram.docvalidator.util.StringUtils;
 import org.unigram.docvalidator.util.ValidationError;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DocumentValidatorException;
@@ -55,42 +56,57 @@ public class KatakanaEndHyphenValidator implements SentenceValidator {
    */
   private static final boolean DEFAULT_WITH_HYPEN = false;
   /**
-   * Default Katakana limit length.
+   * Default Katakana limit length without hypen.
    */
-  private static final int DEFAULT_KATAKANA_LIMIT_LENGTH = 2;
+  private static final int DEFAULT_KATAKANA_LIMIT_LENGTH = 3;
   /**
    * Katakana end hyphen character.
    */
   private static final char HYPHEN = 'ー';
+  /**
+   * Katakana middle dot character.
+   */
+  private static final char KATAKANA_MIDDLE_DOT = '・';
 
   public List<ValidationError> check(Sentence sentence) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     if (withHypen) {
       return errors;
     }
-    char c;
-    int sentenceLength = sentence.content.length();
+    List<ValidationError> result;
     StringBuffer katakana = new StringBuffer("");
-    for (int i = 0; i < sentenceLength; i++) {
-      c = sentence.content.charAt(i);
-      if (isKatakana(c)) {
+    for (int i = 0; i < sentence.content.length(); i++) {
+      char c = sentence.content.charAt(i);
+      if (StringUtils.isKatakana(c) && c != KATAKANA_MIDDLE_DOT) {
         katakana.append(c);
       } else {
-        if (DEFAULT_KATAKANA_LIMIT_LENGTH < katakana.length()
-            && c == HYPHEN) {
-          katakana.append(c);
-          errors.add(new ValidationError(sentence.position,
-              "Invalid Katakana end hypen found: " + katakana.toString()
-              + " in \"" + sentence.content + "\""));
+        result = this.checkKatakanaEndHyphen(sentence, katakana);
+        if (result != null) {
+          errors.addAll(result);
         }
         katakana.delete(0, katakana.length());
       }
     }
+    result = this.checkKatakanaEndHyphen(sentence, katakana);
+    if (result != null) {
+      errors.addAll(result);
+    }
     return errors;
   }
 
-  public static boolean isKatakana(char c) {
-    return Character.UnicodeBlock.of(c) == Character.UnicodeBlock.KATAKANA;
+  private List<ValidationError> checkKatakanaEndHyphen(Sentence sentence,
+      StringBuffer katakana) {
+    List<ValidationError> errors = new ArrayList<ValidationError>();
+    if (isKatakanaEndHyphen(katakana)) {
+      errors.add(new ValidationError(sentence.position,
+          "Invalid Katakana end hypen found: " + katakana.toString()
+          + " in \"" + sentence.content + "\""));
+    }
+    return errors;
+  }    
+  public static boolean isKatakanaEndHyphen(StringBuffer katakana) {
+    return (DEFAULT_KATAKANA_LIMIT_LENGTH < katakana.length()
+            && katakana.charAt(katakana.length() - 1) == HYPHEN);
   }
 
   public KatakanaEndHyphenValidator() {
