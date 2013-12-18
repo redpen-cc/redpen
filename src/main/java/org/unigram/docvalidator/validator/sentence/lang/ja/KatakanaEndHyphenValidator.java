@@ -48,13 +48,8 @@ import org.unigram.docvalidator.validator.SentenceValidator;
  *    and stuffed syllable is 1 except for Youon.
  *
  * Note that KatakanaEndHyphenValidator only checks the rules a) and b).
- * Default "with hyphen" mode is false, which follows a) and b).
  */
 public class KatakanaEndHyphenValidator implements SentenceValidator {
-  /**
-   * Default "with hypen" mode.
-   */
-  private static final boolean DEFAULT_WITH_HYPEN = false;
   /**
    * Default Katakana limit length without hypen.
    */
@@ -70,9 +65,6 @@ public class KatakanaEndHyphenValidator implements SentenceValidator {
 
   public List<ValidationError> check(Sentence sentence) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
-    if (withHypen) {
-      return errors;
-    }
     List<ValidationError> result;
     StringBuffer katakana = new StringBuffer("");
     for (int i = 0; i < sentence.content.length(); i++) {
@@ -111,19 +103,14 @@ public class KatakanaEndHyphenValidator implements SentenceValidator {
 
   public KatakanaEndHyphenValidator() {
     super();
-    withHypen = DEFAULT_WITH_HYPEN;
   }
 
   public boolean initialize(ValidatorConfiguration conf, CharacterTable characterTable)
         throws DocumentValidatorException {
-    if (conf.getAttribute("katakana_end_hyphen").equals("true")) {
-      withHypen = true;
-    }
+    //TODO support exception word list.
     return true;
   }
 
   private static Logger LOG =
       LoggerFactory.getLogger(KatakanaEndHyphenValidator.class);
-
-  private boolean withHypen;
 }
