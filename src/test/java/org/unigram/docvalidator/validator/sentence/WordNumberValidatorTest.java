@@ -49,4 +49,12 @@ public class WordNumberValidatorTest {
     assertEquals(0, errors.size());
   }
 
+  @Test
+  public void testWithZeroLengthSentence() {
+    WordNumberValidator maxWordNumberValidator = new WordNumberValidator();
+    Sentence str = new Sentence("", 0);
+    List<ValidationError> errors = maxWordNumberValidator.check(str);
+    assertNotNull(errors);
+    assertEquals(0, errors.size());
+  }
 }

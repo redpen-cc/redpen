@@ -29,11 +29,36 @@ import org.unigram.docvalidator.validator.sentence.CommaNumberValidator;
 public class CommaNumberValidatorTest {
 
   @Test
-  public void test() {
+  public void testWithSentenceContainingManyCommas() {
     CommaNumberValidator commaNumberValidator = new CommaNumberValidator();
+    String content = "is it true, not true, but it should be ture, right, or not right.";
     Sentence str = new Sentence(
-        "is it true, not true, but it should be ture, right, or not right.",0);
-    List<ValidationError> error = commaNumberValidator.check(str);
-    assertNotNull(error);
+        content ,0);
+    List<ValidationError> errors = commaNumberValidator.check(str);
+    assertNotNull(errors);
+    assertEquals(1, errors.size());
+    assertEquals(content, errors.get(0).getSentence().content);
+  }
+
+  @Test
+  public void testWithtSentenceWithoutComma() {
+    CommaNumberValidator commaNumberValidator = new CommaNumberValidator();
+    String content = "is it true.";
+    Sentence str = new Sentence(
+        content ,0);
+    List<ValidationError> errors = commaNumberValidator.check(str);
+    assertNotNull(errors);
+    assertEquals(0, errors.size());
+  }
+
+  @Test
+  public void testWithtZeroLengthSentence() {
+    CommaNumberValidator commaNumberValidator = new CommaNumberValidator();
+    String content = "";
+    Sentence str = new Sentence(
+        content ,0);
+    List<ValidationError> errors = commaNumberValidator.check(str);
+    assertNotNull(errors);
+    assertEquals(0, errors.size());
   }
 }

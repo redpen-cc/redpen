@@ -32,6 +32,7 @@ class SuggestExpressionValidatorForTest extends SuggestExpressionValidator {
   void loadSynonyms () {
     synonms = new HashMap<String, String>();
     synonms.put("like","such as");
+    synonms.put("info","infomation");
   }
 }
 
@@ -43,5 +44,36 @@ public class SuggestExpressionValidatorTest {
     Sentence str = new Sentence("it like a piece of a cake.",0);
     List<ValidationError> error = synonymValidator.check(str);
     assertNotNull(error);
+    assertEquals(1, error.size());
+  }
+
+  @Test
+  public void testWitoutSynonym() {
+    SuggestExpressionValidatorForTest synonymValidator = new SuggestExpressionValidatorForTest();
+    synonymValidator.loadSynonyms();
+    Sentence str = new Sentence("it love a piece of a cake.",0);
+    List<ValidationError> error = synonymValidator.check(str);
+    assertNotNull(error);
+    assertEquals(0, error.size());
+  }
+
+  @Test
+  public void testWithMultipleSynonyms() {
+    SuggestExpressionValidatorForTest synonymValidator = new SuggestExpressionValidatorForTest();
+    synonymValidator.loadSynonyms();
+    Sentence str = new Sentence("it like a the info.",0);
+    List<ValidationError> error = synonymValidator.check(str);
+    assertNotNull(error);
+    assertEquals(2, error.size());
+  }
+
+  @Test
+  public void testWitoutZeroLengthSentence() {
+    SuggestExpressionValidatorForTest synonymValidator = new SuggestExpressionValidatorForTest();
+    synonymValidator.loadSynonyms();
+    Sentence str = new Sentence("",0);
+    List<ValidationError> error = synonymValidator.check(str);
+    assertNotNull(error);
+    assertEquals(0, error.size());
   }
 }

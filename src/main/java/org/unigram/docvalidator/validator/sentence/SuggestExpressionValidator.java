@@ -43,20 +43,19 @@ public class SuggestExpressionValidator implements SentenceValidator {
   }
 
   public List<ValidationError> check(Sentence line) {
+    List<ValidationError> result = new ArrayList<ValidationError>();
     String str = line.content;
     Set<String> invalidWords = synonms.keySet();
     for (Iterator<String> iter = invalidWords.iterator(); iter.hasNext();) {
       String w = iter.next();
       if (str.indexOf(w) != -1) {
-        List<ValidationError> result = new ArrayList<ValidationError>();
         result.add(new ValidationError(
             line.position, "Found invalid word, \"" + w + "\". "
                 + "Use the synonym of the word \""
                 + synonms.get(w) + "\" instead.", line));
-        return result;
       }
     }
-    return null;
+    return result;
   }
 
   public boolean initialize(ValidatorConfiguration conf, CharacterTable characterTable)
