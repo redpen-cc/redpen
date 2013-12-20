@@ -50,9 +50,9 @@ public class SuggestExpressionValidator implements SentenceValidator {
       if (str.indexOf(w) != -1) {
         List<ValidationError> result = new ArrayList<ValidationError>();
         result.add(new ValidationError(
-            line.position, "Found invalid word, \""
-                + w + "\"in line: " + str + "Use the synonym of the word \""
-                + synonms.get(w) + "\" instead."));
+            line.position, "Found invalid word, \"" + w + "\". "
+                + "Use the synonym of the word \""
+                + synonms.get(w) + "\" instead.", line));
         return result;
       }
     }

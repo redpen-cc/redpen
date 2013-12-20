@@ -17,6 +17,8 @@
  */
 package org.unigram.docvalidator.util;
 
+import org.unigram.docvalidator.store.Sentence;
+
 /**
  * Error to report invalid point from Validators.
  */
@@ -27,20 +29,31 @@ public class ValidationError {
     this.lineNumber = -1;
     this.message = errorMessage;
     this.fileName = "";
+    this.sentence = null;
   }
 
   public ValidationError(int errorLineNumber, String errorMessage) {
-    super();
+    this(errorMessage);
     this.lineNumber = errorLineNumber;
-    this.message = errorMessage;
     this.fileName = "";
   }
 
   public ValidationError(int errorLineNumber, String errorMessage,
-      String erorFileName) {
-    super();
-    this.lineNumber = errorLineNumber;
-    this.message = errorMessage;
+      Sentence sentence) {
+    this(errorLineNumber, errorMessage);
+    this.sentence = sentence;
+  }
+
+  public ValidationError(int errorLineNumber, String errorMessage,
+      String errorFileName) {
+    this(errorLineNumber, errorMessage);
+    this.fileName = errorFileName;
+  }
+
+  public ValidationError(int errorLineNumber, String errorMessage,
+      Sentence sentence, String erorFileName) {
+    this(errorLineNumber, errorMessage);
+    this.sentence = sentence;
     this.fileName = erorFileName;
   }
 
@@ -68,14 +81,27 @@ public class ValidationError {
     this.fileName = erroFileName;
   }
 
+  public Sentence getSentence() {
+    return sentence;
+  }
+
+  public void setSentence(Sentence sentence) {
+    this.sentence = sentence;
+  }
+
   @Override
   public String toString() {
+    StringBuffer str = new StringBuffer();
     if (this.fileName == null || this.fileName.equals("")) {
-      return "CheckError[" + lineNumber + "] = " + message;
+      str.append("ValidationError[" + lineNumber + " (" + message+ ")]");
     } else {
-      return "CheckError[" + this.fileName + ": "
-          + lineNumber + "] = " + message;
+      str.append("ValidationError[" + this.fileName +
+          lineNumber + " (" + message+ ")]");
     }
+    if(this.sentence != null) {
+      str.append(" at line: " + sentence.content);
+    }
+    return str.toString();
   }
 
   private int lineNumber;
@@ -83,4 +109,6 @@ public class ValidationError {
   private String message;
 
   private String fileName;
+
+  private Sentence sentence;
 }

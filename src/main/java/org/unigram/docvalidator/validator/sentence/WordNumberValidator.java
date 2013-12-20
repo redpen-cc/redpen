@@ -51,7 +51,7 @@ public class WordNumberValidator implements SentenceValidator {
     if (wordNum > maxWordNumber) {
       result.add(new ValidationError(sentence.position,
           "The number of the words exceeds the maximum "
-          + String.valueOf(wordNum) + " in line: " + sentence.content));
+          + String.valueOf(wordNum), sentence));
     }
     return result;
   }

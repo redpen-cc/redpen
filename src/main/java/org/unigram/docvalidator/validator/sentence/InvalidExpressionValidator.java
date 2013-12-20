@@ -51,8 +51,7 @@ public class InvalidExpressionValidator implements SentenceValidator {
       String w = iter.next();
       if (str.indexOf(w) != -1) {
         result.add(new ValidationError(line.position,
-            "Found invalid expression: \""
-            + w + "\" in line: " + str));
+            "Found invalid expression: \""+ w + "\"", line));
       }
     }
     return result;
