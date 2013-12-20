@@ -40,7 +40,7 @@ public class XMLFormatter implements Formatter {
     doc.appendChild(errorElement);
 
     if (error.getMessage()!= null && !error.getMessage().equals("")) {
-      Element contentElement = doc.createElement("content");
+      Element contentElement = doc.createElement("message");
       errorElement.appendChild(contentElement);
       Text content = doc.createTextNode(error.getMessage());
       contentElement.appendChild(content);
@@ -57,6 +57,13 @@ public class XMLFormatter implements Formatter {
     errorElement.appendChild(lineNumberElement);
     Text lineNum = doc.createTextNode(Integer.toString(error.getLineNumber()));
     lineNumberElement.appendChild(lineNum);
+
+    if (error.getSentence() != null && !error.getSentence().content.equals("")) {
+      Element sentencElement = doc.createElement("sentence");
+      errorElement.appendChild(sentencElement);
+      Text content = doc.createTextNode(error.getSentence().content);
+      sentencElement.appendChild(content);
+    }
 
     // create a transformer
     Transformer transformer = createTransformer();

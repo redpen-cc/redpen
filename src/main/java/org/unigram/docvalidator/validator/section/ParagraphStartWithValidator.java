@@ -55,8 +55,8 @@ public class ParagraphStartWithValidator extends SectionValidator {
       if (firstSentence.content.indexOf(this.beginingOfParagraph) != 0) {
         validationErrors.add(new ValidationError(
             firstSentence.position,
-            "Found invalid begining of paragraph: \""
-            + "\" in line: " + firstSentence.content));
+            "Found invalid begining of paragraph: \"",
+            firstSentence));
       }
     }
     return validationErrors;

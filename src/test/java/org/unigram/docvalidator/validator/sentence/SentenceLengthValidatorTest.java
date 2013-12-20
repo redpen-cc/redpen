@@ -19,78 +19,46 @@ package org.unigram.docvalidator.validator.sentence;
 
 import static org.junit.Assert.*;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
-
-import org.apache.commons.io.IOUtils;
-import org.junit.Before;
 import org.junit.Test;
-import org.unigram.docvalidator.util.ValidationConfigurationLoader;
-import org.unigram.docvalidator.parser.Parser;
-import org.unigram.docvalidator.parser.PlainTextParser;
-import org.unigram.docvalidator.store.Document;
-import org.unigram.docvalidator.util.DVResource;
-import org.unigram.docvalidator.util.FakeResultDistributor;
-import org.unigram.docvalidator.util.ResultDistributor;
+import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
-import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.validator.DocumentValidator;
+
+class SentenceLengthValidatorForTest extends SentenceLengthValidator {
+  protected void setMaxLength(int maxLength) {
+    this.maxLength = maxLength;
+  }
+}
 
 public class SentenceLengthValidatorTest {
-
-  private String sampleText;
-  private Document doc;
-  private ValidatorConfiguration conf;
-
-  private String sampleConfiguraitonStr = new String(
-      "<?xml version=\"1.0\"?>" +
-      "<component name=\"Validator\">" +
-      "  <component name=\"SentenceIterator\">" +
-      "    <component name=\"SentenceLength\">"+
-      "      <property name=\"max_length\" value=\"10\"/>" +
-      "    </component>" +
-      "  </component>" +
-      "</component>");
-
-  @Before
-  public void setup() {
-    this.doc = new Document();
-    this.sampleText = "This is a long long long long long long long long long long long long long long long sentence.\n";
-    InputStream stream = IOUtils.toInputStream(this.sampleConfiguraitonStr);
-    this.conf = ValidationConfigurationLoader.loadConfiguraiton(stream);
-    if (this.conf == null) {
-      fail();
-    }
-
-    Parser parser = new PlainTextParser();
-    parser.initialize(new DVResource(conf));
-    InputStream is = null;
-    try {
-      is = new ByteArrayInputStream(sampleText.getBytes("utf-8"));
-    } catch (UnsupportedEncodingException e) {
-      fail();
-    }
-    try {
-      this.doc.appendFile(parser.generateDocument(is));
-    } catch (DocumentValidatorException e) {
-      fail();
-    }
+  @Test
+  public void testWithLongSentence(){
+    SentenceLengthValidatorForTest validator = new SentenceLengthValidatorForTest();
+    validator.setMaxLength(30);
+    Sentence str = new Sentence("this is a very long long long long long long"
+        + "long long long long long long sentence.",0);
+    List<ValidationError> error = validator.check(str);
+    assertNotNull(error);
+    assertEquals(1, error.size());
   }
 
   @Test
-  public void testLength() {
-    DocumentValidator validator = null;
-    ResultDistributor distributor = new FakeResultDistributor();
-    try {
-      validator = new DocumentValidator(new DVResource(conf), distributor);
-    } catch (DocumentValidatorException e) {
-      System.out.println(e.getMessage());
-      fail();
-    }
-    List<ValidationError> errors = validator.check(doc);
-    assertEquals(1, errors.size());
+  public void testWithShortSentence(){
+    SentenceLengthValidatorForTest validator = new SentenceLengthValidatorForTest();
+    validator.setMaxLength(30);
+    Sentence str = new Sentence("this is a sentence.",0);
+    List<ValidationError> error = validator.check(str);
+    assertNotNull(error);
+    assertEquals(0, error.size());
+  }
+
+  @Test
+  public void testWithZeroLengthSentence(){
+    SentenceLengthValidatorForTest validator = new SentenceLengthValidatorForTest();
+    validator.setMaxLength(30);
+    Sentence str = new Sentence("",0);
+    List<ValidationError> error = validator.check(str);
+    assertNotNull(error);
+    assertEquals(0, error.size());
   }
 }

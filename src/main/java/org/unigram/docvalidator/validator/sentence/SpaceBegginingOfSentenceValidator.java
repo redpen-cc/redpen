@@ -39,8 +39,8 @@ public class SpaceBegginingOfSentenceValidator implements SentenceValidator {
     if (!sentence.isStartaragraph
         && !String.valueOf(content.charAt(0)).equals(" ")) {
       result.add(new ValidationError(sentence.position,
-          "Space not exist the beggining of sentence "
-      + " in line: " + sentence.content));
+          "Space not exist the beggining of sentence.",
+          sentence));
     }
     return result;
   }

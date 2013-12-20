@@ -91,11 +91,11 @@ public class KatakanaEndHyphenValidator implements SentenceValidator {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     if (isKatakanaEndHyphen(katakana)) {
       errors.add(new ValidationError(sentence.position,
-          "Invalid Katakana end hypen found: " + katakana.toString()
-          + " in \"" + sentence.content + "\""));
+          "Invalid Katakana end hypen found \"" + katakana.toString() + "\"",
+          sentence));
     }
     return errors;
-  }    
+  }
   public static boolean isKatakanaEndHyphen(StringBuffer katakana) {
     return (DEFAULT_KATAKANA_LIMIT_LENGTH < katakana.length()
             && katakana.charAt(katakana.length() - 1) == HYPHEN);

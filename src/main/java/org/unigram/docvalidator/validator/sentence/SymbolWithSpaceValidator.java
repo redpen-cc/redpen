@@ -70,15 +70,14 @@ public class SymbolWithSpaceValidator  implements SentenceValidator {
           && !Character.isWhitespace(sentenceStr.charAt(position - 1))) {
         return new ValidationError(sentence.position,
             "Need white space before symbol (" +  character.getName()
-            + "): " + sentenceStr.charAt(position)
-            + " in \"" + sentenceStr + "\"");
+            + "): " + sentenceStr.charAt(position) + ".",
+            sentence);
       } else if (position < sentenceStr.length() - 1
           && character.isNeedAfterSpace()
           && !Character.isWhitespace(sentenceStr.charAt(position + 1))) {
         return new ValidationError(sentence.position,
             "Need white space after symbol (" + character.getName()
-            + "): " + sentenceStr.charAt(position)
-            + " in \"" + sentenceStr + "\"");
+            + "): " + sentenceStr.charAt(position), sentence);
       }
     }
     return null;
