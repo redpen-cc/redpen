@@ -50,7 +50,7 @@ public class InvalidExpressionValidator implements SentenceValidator {
         iter.hasNext();) {
       String w = iter.next();
       if (str.indexOf(w) != -1) {
-        result.add(new ValidationError(line.position,
+        result.add(new ValidationError(
             "Found invalid expression: \""+ w + "\"", line));
       }
     }

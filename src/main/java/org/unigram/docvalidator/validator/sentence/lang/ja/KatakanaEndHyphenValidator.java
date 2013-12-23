@@ -90,7 +90,7 @@ public class KatakanaEndHyphenValidator implements SentenceValidator {
       StringBuffer katakana) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     if (isKatakanaEndHyphen(katakana)) {
-      errors.add(new ValidationError(sentence.position,
+      errors.add(new ValidationError(
           "Invalid Katakana end hypen found \"" + katakana.toString() + "\"",
           sentence));
     }

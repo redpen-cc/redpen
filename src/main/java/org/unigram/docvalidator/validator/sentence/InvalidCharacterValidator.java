@@ -62,7 +62,7 @@ public class InvalidCharacterValidator implements SentenceValidator {
         charIterator.hasNext();) {
        String invalidcChar = charIterator.next();
        if (sentenceStr.indexOf(invalidcChar) != -1) {
-         return new ValidationError(sentence.position,
+         return new ValidationError(
              "Invalid symbol found: \"" + invalidcChar +"\"",
              sentence);
       }
