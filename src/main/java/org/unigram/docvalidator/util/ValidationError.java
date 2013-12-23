@@ -38,9 +38,9 @@ public class ValidationError {
     this.fileName = "";
   }
 
-  public ValidationError(int errorLineNumber, String errorMessage,
+  public ValidationError(String errorMessage,
       Sentence sentence) {
-    this(errorLineNumber, errorMessage);
+    this(sentence.position, errorMessage);
     this.sentence = sentence;
   }
 
@@ -50,9 +50,9 @@ public class ValidationError {
     this.fileName = errorFileName;
   }
 
-  public ValidationError(int errorLineNumber, String errorMessage,
+  public ValidationError(String errorMessage,
       Sentence sentence, String erorFileName) {
-    this(errorLineNumber, errorMessage);
+    this(sentence.position, errorMessage);
     this.sentence = sentence;
     this.fileName = erorFileName;
   }

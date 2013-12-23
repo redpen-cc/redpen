@@ -151,7 +151,7 @@ public class QuotationValidator implements SentenceValidator {
 
       // check if left and right quote pair exists
       if (leftPosition >= 0 && rightPosition < 0) {
-        errors.add(new ValidationError(sentence.position,
+        errors.add(new ValidationError(
             "Right Quotation mark does not exist."
             + String.valueOf(sentence.content.length()),
             sentence));
@@ -159,7 +159,7 @@ public class QuotationValidator implements SentenceValidator {
       }
 
       if (leftPosition < 0 && rightPosition >= 0) {
-        errors.add(new ValidationError(sentence.position,
+        errors.add(new ValidationError(
             "left Quotation mark does not exist."
             + String.valueOf(sentence.content.length()),
             sentence));
@@ -176,13 +176,13 @@ public class QuotationValidator implements SentenceValidator {
           leftPosition + 1);
 
       if (nextLeftPosition < rightPosition && nextLeftPosition > 0) {
-        errors.add(new ValidationError(sentence.position,
+        errors.add(new ValidationError(
             "Twice Right Quotation marks in succession.",
             sentence));
       }
 
       if (nextRightPosition < leftPosition && nextRightPosition > 0) {
-        errors.add(new ValidationError(sentence.position,
+        errors.add(new ValidationError(
             "Twice Left Quotation marks in succession.",
             sentence));
       }
@@ -190,7 +190,7 @@ public class QuotationValidator implements SentenceValidator {
       // check if quotes have white spaces
       if (leftPosition > 0 && leftQuotation.isNeedBeforeSpace()
           && (sentenceString.charAt(leftPosition - 1) != ' ')) {
-        errors.add(new ValidationError(sentence.position,
+        errors.add(new ValidationError(
             "Left quotation does not have space.",
             sentence));
       }
@@ -199,7 +199,7 @@ public class QuotationValidator implements SentenceValidator {
           && rightQuotation.isNeedAfterSpace()
           && (sentenceString.charAt(rightPosition + 1) != ' '
           && sentenceString.charAt(rightPosition + 1) != this.period)) {
-        errors.add(new ValidationError(sentence.position,
+        errors.add(new ValidationError(
             "Right quotation does not have space",
             sentence));
       }

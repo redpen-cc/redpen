@@ -18,7 +18,7 @@ public class XMLFormatterTest {
 
   @Test
   public void testConvertValidationError() {
-    ValidationError error = new ValidationError(0, "Fatal Error",
+    ValidationError error = new ValidationError("Fatal Error",
         new Sentence("This is a sentence", 0), "foobar.md");
     XMLFormatter formatter = createXMLFormatter();
     String resultString = formatter.convertError(error);

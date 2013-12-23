@@ -50,7 +50,7 @@ public class SuggestExpressionValidator implements SentenceValidator {
       String w = iter.next();
       if (str.indexOf(w) != -1) {
         result.add(new ValidationError(
-            line.position, "Found invalid word, \"" + w + "\". "
+            "Found invalid word, \"" + w + "\". "
                 + "Use the synonym of the word \""
                 + synonms.get(w) + "\" instead.", line));
       }

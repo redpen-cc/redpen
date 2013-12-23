@@ -60,7 +60,7 @@ public class CommaNumberValidator implements SentenceValidator {
       content = content.substring(position + 1, content.length());
     }
     if (maxCommaNum < commaCount) {
-      result.add(new ValidationError(line.position,
+      result.add(new ValidationError(
           "The number of comma is exceeds the maximum \""
           + String.valueOf(commaCount) + "\".", line));
     }
