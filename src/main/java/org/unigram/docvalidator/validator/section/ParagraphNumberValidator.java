@@ -42,7 +42,7 @@ public class ParagraphNumberValidator extends SectionValidator {
     if (maxParagraphs < paragraphNumber) {
       validationErrors.add(new ValidationError(
           "The number of the paragraphs exceeds the maximum "
-              + String.valueOf(paragraphNumber))); // @TODO add file information
+              + String.valueOf(paragraphNumber), section.getHeaderContent(0)));
       return validationErrors;
     }
     return validationErrors;

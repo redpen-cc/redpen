@@ -41,12 +41,28 @@ public final class Section implements Block {
   /**
    * constructor.
    * @param sectioLevel section level
-   * @param header header content string
+   * @param header header contents
    */
   public Section(int sectioLevel, List<Sentence> header) {
     super();
     this.level = sectioLevel;
     this.headerContent = header;
+    this.subsections = new ArrayList<Section>();
+    this.paragraphs = new ArrayList<Paragraph>();
+    this.lists = new ArrayList<ListBlock>();
+  }
+
+  /**
+   * constructor.
+   * @param sectionLevel section level
+   * @param string header content string
+   */
+  public Section(int sectionLevel, String headerString) {
+    this.level = sectionLevel;
+    Sentence headerSentence = new Sentence(headerString, 0);
+    List<Sentence> headers = new ArrayList<Sentence>();
+    headers.add(headerSentence);
+    this.headerContent = headers;
     this.subsections = new ArrayList<Section>();
     this.paragraphs = new ArrayList<Paragraph>();
     this.lists = new ArrayList<ListBlock>();
@@ -128,11 +144,17 @@ public final class Section implements Block {
 
   /**
    * get iterator of header sentences.
+   * When there is not specified header in the section,
+   * return null otherwise return specified id.
    * @param id id of sentence in header
    * @return contents of header.
    */
   public Sentence getHeaderContent(int id) {
-    return headerContent.get(id);
+    if (headerContent.size() > id) {
+      return headerContent.get(id);
+    } else {
+      return null;
+    }
   }
 
   /**

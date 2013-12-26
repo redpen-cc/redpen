@@ -43,7 +43,7 @@ public class SectionLengthValidatorTest {
     SectionLengthValidatorForTest validator = new SectionLengthValidatorForTest();
     validator.setMaxLength();
 
-    Section section = new Section(0);
+    Section section = new Section(0, "header");
     Paragraph paragraph = new Paragraph();
     paragraph.appendSentence("it like a piece of a cake.", 0);
     section.appendParagraph(paragraph);
