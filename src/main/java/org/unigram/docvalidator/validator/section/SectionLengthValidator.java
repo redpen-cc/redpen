@@ -53,9 +53,11 @@ public class SectionLengthValidator extends SectionValidator {
         sectionCharNumber += sentence.content.length();
       }
       if (sectionCharNumber > maxSectionCharNumber) {
-        validationErrors.add(new ValidationError(
+        ValidationError error = new ValidationError(
             "The number of the charractor exceeds the maximum \""
-                + String.valueOf(sectionCharNumber) + "\".")); // @TODO add file information
+                + String.valueOf(sectionCharNumber) + "\".",
+                section.getHeaderContent(0));
+        validationErrors.add(error);
       }
     }
     return validationErrors;

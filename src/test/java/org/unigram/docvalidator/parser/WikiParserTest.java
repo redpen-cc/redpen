@@ -428,7 +428,8 @@ public class WikiParserTest {
   }
 
   @Test
-  public void testDocumentWithSections() throws UnsupportedEncodingException {
+  public void testDocumentWithMultipleSections()
+      throws UnsupportedEncodingException {
     String sampleText = "h1. Prefectures in Japan.\n";
     sampleText += "There are 47 prefectures in Japan.\n";
     sampleText += "\n";
@@ -450,6 +451,10 @@ public class WikiParserTest {
     assertEquals(h1Section.getParentSection(), rootSection);
     assertEquals(h2Section.getParentSection(), h1Section);
     assertEquals(rootSection.getParentSection(), null);
+
+    assertEquals(0, rootSection.getHeaderContent(0).position);
+    assertEquals(0, h1Section.getHeaderContent(0).position);
+    assertEquals(4, h2Section.getHeaderContent(0).position);
   }
 
   @Test

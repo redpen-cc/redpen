@@ -137,6 +137,8 @@ public class PlainTextParserTest {
     for (int i=0; i<expectedResult.length; i++) {
       assertEquals(expectedResult[i], paragraph.getSentence(i).content);
     }
+    assertEquals(0, section.getHeaderContent(0).position);
+    assertEquals("", section.getHeaderContent(0).content);
   }
 
   @Test

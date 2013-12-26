@@ -27,7 +27,6 @@ import org.unigram.docvalidator.store.Paragraph;
 import org.unigram.docvalidator.store.Section;
 import org.unigram.docvalidator.util.FakeResultDistributor;
 import org.unigram.docvalidator.util.ResultDistributor;
-import org.unigram.docvalidator.util.ResultDistributorFactory;
 import org.unigram.docvalidator.util.ValidationError;
 
 public class ParagraphStartWithValidatorTest {
@@ -35,7 +34,7 @@ public class ParagraphStartWithValidatorTest {
   @Test
   public void testStartWithoutSpace() {
     ParagraphStartWithValidator validator = new ParagraphStartWithValidator();
-    Section section = new Section(0);
+    Section section = new Section(0, "header");
     Paragraph paragraph = new Paragraph();
     paragraph.appendSentence("it like a piece of a cake.", 0);
     section.appendParagraph(paragraph);

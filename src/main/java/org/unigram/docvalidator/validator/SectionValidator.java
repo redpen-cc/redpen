@@ -31,13 +31,19 @@ import org.unigram.docvalidator.util.ValidationError;
  * Validate sections in documents.
  */
 public abstract class SectionValidator implements Validator {
+
+  public abstract boolean loadConfiguration(ValidatorConfiguration conf,
+      CharacterTable characterTable);
+
   public List<ValidationError> check(FileContent file,
       ResultDistributor distributor) {
     List<ValidationError> validationErrors = new ArrayList<ValidationError>();
     for (Iterator<Section> sectionIterator =
         file.getSections(); sectionIterator.hasNext();) {
       Section currentSection = sectionIterator.next();
-      validationErrors.addAll(this.check(currentSection));
+      List<ValidationError> errors = this.check(currentSection);
+      addFileInfomation(errors, file, currentSection);
+      validationErrors.addAll(errors);
     }
     return validationErrors;
   }
@@ -50,7 +56,11 @@ public abstract class SectionValidator implements Validator {
    */
   protected abstract List<ValidationError> check(Section section);
 
-  public abstract boolean loadConfiguration(ValidatorConfiguration conf,
-      CharacterTable characterTable);
-
+  private void addFileInfomation(List<ValidationError> errors,
+      FileContent file, Section section) {
+    for (ValidationError error : errors) {
+      error.setFileName(file.getFileName());
+      error.setLineNumber(section.getHeaderContent(0).position);
+    }
+  }
 }
