@@ -63,10 +63,13 @@ public final class WikiParser extends BasicDocumentParser {
     FileContent fileContent = new FileContent();
     // for sentences right below the beginning of document
     List<Sentence> headers = new ArrayList<Sentence>();
+    headers.add(new Sentence("", 0));
     Section currentSection = new Section(0, headers);
     fileContent.appendSection(currentSection);
+
+    // begin parsing
     LinePattern prevPattern, currentPattern = LinePattern.VOID;
-    String line;
+    String line = null;
     int lineNum = 0;
     String remain = "";
     try {
@@ -130,7 +133,7 @@ public final class WikiParser extends BasicDocumentParser {
       Section currentSection, Vector<String> head, int lineNum) {
     Integer level = Integer.valueOf(head.get(0));
     List<Sentence> outputSentences = new ArrayList<Sentence>();
-    String remainHeader = obtainSentences(0, head.get(1), outputSentences);
+    String remainHeader = obtainSentences(lineNum, head.get(1), outputSentences);
     // NOTE: for header without period
     if (remainHeader != null && remainHeader.length() > 0) {
       outputSentences.add(new Sentence(remainHeader, lineNum));

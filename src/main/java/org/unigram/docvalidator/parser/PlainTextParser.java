@@ -56,6 +56,8 @@ public final class PlainTextParser extends BasicDocumentParser {
     BufferedReader br = createReader(is);
     FileContent fileContent = new FileContent();
     List<Sentence> headers = new ArrayList<Sentence>();
+    headers.add(new Sentence("", 0));
+
     fileContent.appendSection(new Section(0, headers));
     Section currentSection = fileContent.getLastSection();
     currentSection.appendParagraph(new Paragraph());
