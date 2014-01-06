@@ -173,7 +173,7 @@ public final class WikiParser extends BasicDocumentParser {
   }
 
   private void extractLinks(Sentence sentence) {
-    String modContent = "";
+    StringBuffer modContent = new StringBuffer();
     int start = 0;
     Matcher m = LINK_PATTERN.matcher(sentence.content);
 
@@ -181,20 +181,22 @@ public final class WikiParser extends BasicDocumentParser {
       String[] tagInternal = m.group(1).split("\\|");
       String tagURL = tagInternal[0].trim();
       if (tagInternal.length > 2) {
-        modContent += sentence.content.substring(
-            start, m.start()) + tagInternal[1].trim();
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(sentence.content.substring(start, m.start()));
+        buffer.append(tagInternal[1].trim());
+        modContent.append(buffer);
       } else {
-        modContent += sentence.content.substring(start, m.start())
-            + tagURL.trim();
+        modContent.append(sentence.content.substring(start, m.start())
+            + tagURL.trim());
       }
       sentence.links.add(tagURL);
       start = m.end();
     }
 
     if (start > 0) {
-      modContent += sentence.content.substring(
-          start, sentence.content.length());
-      sentence.content = modContent;
+      modContent.append(sentence.content.substring(
+          start, sentence.content.length()));
+      sentence.content = modContent.toString();
     }
   }
 
