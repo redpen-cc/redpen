@@ -210,7 +210,6 @@ public final class WikiParser extends BasicDocumentParser {
         if (parent.getLevel() < child.getLevel()) {
           parent.appendSubSection(child);
           child.setParentSection(parent);
-          candidate = child;
           break;
         }
         parent = parent.getParentSection();
