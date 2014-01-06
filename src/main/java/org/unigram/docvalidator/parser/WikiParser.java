@@ -71,7 +71,7 @@ public final class WikiParser extends BasicDocumentParser {
     LinePattern prevPattern, currentPattern = LinePattern.VOID;
     String line = null;
     int lineNum = 0;
-    String remain = "";
+    StringBuffer remain = new StringBuffer();
     try {
       while ((line = br.readLine()) != null) {
         prevPattern = currentPattern;
@@ -98,8 +98,11 @@ public final class WikiParser extends BasicDocumentParser {
           currentSection.appendParagraph(new Paragraph());
         } else { // usual sentence.
           currentPattern = LinePattern.SENTENCE;
-          remain = appendSentencesIntoSection(lineNum, remain + line,
+          String remainStr = appendSentencesIntoSection(lineNum,
+              remain.append(line).toString(),
               currentSection);
+          remain.delete(0, remain.length());
+          remain.append(remainStr);
         }
         prevPattern = currentPattern;
         lineNum++;
@@ -109,7 +112,7 @@ public final class WikiParser extends BasicDocumentParser {
       return null;
     }
     if (remain.length() > 0) {
-      appendLastSentence(fileContent, lineNum, remain);
+      appendLastSentence(fileContent, lineNum, remain.toString());
     }
     return fileContent;
   }
