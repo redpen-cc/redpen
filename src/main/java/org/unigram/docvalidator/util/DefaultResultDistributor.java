@@ -19,7 +19,7 @@ package org.unigram.docvalidator.util;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 
 /**
  * An implementation of ResultDistributor which flush the result into
@@ -35,7 +35,12 @@ public class DefaultResultDistributor implements ResultDistributor {
     if (os == null) {
       throw new IllegalArgumentException("argument OutputStream is null");
     }
-    writer = new PrintWriter(os);
+    try {
+      writer = new PrintStream(os, true, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      throw new IllegalStateException("Specified output stream is illegal: " +
+          e.getMessage());
+    }
     formatter = new PlainFormatter();
   }
 
@@ -47,7 +52,12 @@ public class DefaultResultDistributor implements ResultDistributor {
     if (ps == null) {
       throw new IllegalArgumentException("argument PrintStream is null");
     }
-    writer = new PrintWriter(ps);
+    try {
+      writer = new PrintStream(ps, true, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      throw new IllegalStateException("Specified output stream is illegal: " +
+          e.getMessage());
+    }
   }
 
   /**
@@ -90,6 +100,6 @@ public class DefaultResultDistributor implements ResultDistributor {
 
   private Formatter formatter;
 
-  private PrintWriter writer;
+  private PrintStream writer;
 
 }

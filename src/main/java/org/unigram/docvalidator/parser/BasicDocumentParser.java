@@ -27,7 +27,6 @@ import java.io.UnsupportedEncodingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.DefaultSymbols;
@@ -45,19 +44,7 @@ public abstract class BasicDocumentParser implements Parser {
     if (resource == null) {
       return false;
     }
-    ValidatorConfiguration conf = resource.getConfiguration();
     CharacterTable characterTable = resource.getCharacterTable();
-
-    this.comment = DefaultSymbols.get("COMMENT").getValue();
-    if (conf.hasAttribute("comment")) {
-      this.comment = conf.getAttribute("comment");
-    }
-
-    this.comma = DefaultSymbols.get("COMMA").getValue();
-    if (characterTable.isContainCharacter("COMMA")) {
-      this.comma = characterTable.getCharacter("COMMA").getValue();
-      LOG.info("comma is set to \"" + this.comma + "\"");
-    }
 
     this.period = DefaultSymbols.get("FULL_STOP").getValue();
     if (characterTable.isContainCharacter("FULL_STOP")) {
@@ -94,9 +81,8 @@ public abstract class BasicDocumentParser implements Parser {
     return inputStream;
   }
 
-  protected String comma;
-  protected String comment;
   protected String period;
 
-  private static Logger LOG = LoggerFactory.getLogger(Parser.class);
+  private static Logger LOG = LoggerFactory.getLogger(
+      BasicDocumentParser.class);
 }

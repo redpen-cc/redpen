@@ -62,7 +62,7 @@ public final class PlainTextParser extends BasicDocumentParser {
     Section currentSection = fileContent.getLastSection();
     currentSection.appendParagraph(new Paragraph());
     try {
-      String remain = new String("");
+      String remain = "";
       String line;
       int lineNum = 0;
       while ((line = br.readLine()) != null) {

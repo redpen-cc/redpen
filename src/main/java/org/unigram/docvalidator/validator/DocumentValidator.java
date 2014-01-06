@@ -79,13 +79,7 @@ public class DocumentValidator {
              + confName + "\" : " + e.getMessage());
          return false;
       }
-
-      if (validator != null) {
-         this.validators.add(validator);
-       } else {
-         LOG.error("Failed to create validator \" " + confName + "\"");
-         return false;
-       }
+       this.validators.add(validator);
      }
     return true;
   }
