@@ -39,7 +39,7 @@ public class SpaceBeginingOfStenceValidatorTest {
   }
 
   @Test
-  public void testProcessWithEndSpace() {
+  public void testProcessEndSpace() {
     SpaceBegginingOfSentenceValidator spaceValidator =
         new SpaceBegginingOfSentenceValidator();
     Sentence str = new Sentence(" That is true.",0);
@@ -49,10 +49,21 @@ public class SpaceBeginingOfStenceValidatorTest {
   }
 
   @Test
-  public void testProcessWithHeadSentenceInAParagraph() {
+  public void testProcessHeadSentenceInAParagraph() {
     SpaceBegginingOfSentenceValidator spaceValidator =
         new SpaceBegginingOfSentenceValidator();
     Sentence str = new Sentence("That is true.",0);
+    str.isStartaragraph = true;
+    List<ValidationError> errors = spaceValidator.check(str);
+    assertNotNull(errors);
+    assertEquals(0, errors.size());
+  }
+
+  @Test
+  public void testProcessZerorLengthSentence() {
+    SpaceBegginingOfSentenceValidator spaceValidator =
+        new SpaceBegginingOfSentenceValidator();
+    Sentence str = new Sentence("",0);
     str.isStartaragraph = true;
     List<ValidationError> errors = spaceValidator.check(str);
     assertNotNull(errors);
