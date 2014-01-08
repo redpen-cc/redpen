@@ -18,6 +18,8 @@
 package org.unigram.docvalidator.parser;
 
 import static org.junit.Assert.*;
+import org.junit.Test;
+import org.junit.Before;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -26,8 +28,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import org.apache.commons.io.IOUtils;
-import org.junit.Before;
-import org.junit.Test;
+
 import org.unigram.docvalidator.util.ValidationConfigurationLoader;
 import org.unigram.docvalidator.store.FileContent;
 import org.unigram.docvalidator.store.Paragraph;
@@ -38,9 +39,8 @@ import org.unigram.docvalidator.util.DocumentValidatorException;
 public class PlainTextParserTest {
 
   private Parser parser = null;
-  private DVResource resource;
 
-  private Vector<Paragraph> extractParagraphs(Section section) {
+    private Vector<Paragraph> extractParagraphs(Section section) {
     Iterator<Paragraph> paragraph = section.getParagraphs();
     Vector<Paragraph> paragraphs = new Vector<Paragraph>();
     while(paragraph.hasNext()) {
@@ -89,9 +89,8 @@ public class PlainTextParserTest {
   @Before
   public void setup() {
     InputStream stream = IOUtils.toInputStream(this.sampleConfiguraitonStr);
-    this.resource =
-        new DVResource(ValidationConfigurationLoader.loadConfiguraiton(stream));
-    if (this.resource == null) {
+      DVResource resource = new DVResource(ValidationConfigurationLoader.loadConfiguraiton(stream));
+    if (resource == null) {
       fail();
     }
     try {

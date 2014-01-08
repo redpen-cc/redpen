@@ -29,7 +29,7 @@ public class CharacterTableLoader {
    * @param fileName configuration file name
    * @return generated character table or null if loading was failed.
    */
-  public static final CharacterTable load(String fileName){
+  public static CharacterTable load(String fileName){
     InputStream fis = null;
     try {
       fis = new FileInputStream(fileName);
@@ -45,7 +45,7 @@ public class CharacterTableLoader {
    * @param stream input stream for configuration settings
    * @return generated character table or null if loading was failed.
    */
-  public static final CharacterTable load(InputStream stream){
+  public static CharacterTable load(InputStream stream){
     CharacterTable characterTable = new CharacterTable();
     Map<String, DVCharacter> characterDictionary =
         characterTable.getCharacterDictionary();
@@ -64,7 +64,7 @@ public class CharacterTableLoader {
    * @param characterTable TODO
    * @return TODO
    */
-  private final static boolean loadTable(InputStream stream,
+  private static boolean loadTable(InputStream stream,
       Map<String, DVCharacter> characterTable) {
     Document document = parseCharTableString(stream);
     if (document == null) {
