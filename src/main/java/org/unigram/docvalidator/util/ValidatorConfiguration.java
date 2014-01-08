@@ -50,10 +50,7 @@ public final class ValidatorConfiguration {
   }
 
   public boolean hasAttribute(String name) {
-    if (this.attributes.containsKey(name)) {
-      return true;
-    }
-    return false;
+    return this.attributes.containsKey(name);
   }
 
   public String getAttribute(String name) {

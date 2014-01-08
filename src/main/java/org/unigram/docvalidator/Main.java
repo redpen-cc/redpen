@@ -124,8 +124,6 @@ public final class Main {
         ResultDistributorFactory.createDistributor(resultFormat, System.out);
     DocumentValidator validator = new DocumentValidator(conf, distributor);
     validator.check(document);
-
-    return;
   }
 
   private static void printHelp(Options opt) {
