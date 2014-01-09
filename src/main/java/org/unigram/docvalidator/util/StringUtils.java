@@ -73,10 +73,7 @@ public final class StringUtils {
   }
 
   private static boolean checkPosition(int position, String str) {
-    if (-1 < position && position < str.length() -1) {
-      return true;
-    }
-    return false;
+    return -1 < position && position < str.length() - 1;
   }
 
   public static boolean isKatakana(char c) {

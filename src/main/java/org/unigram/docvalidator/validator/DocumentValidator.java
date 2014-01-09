@@ -63,6 +63,7 @@ public class DocumentValidator {
     }
   }
 
+  @SuppressWarnings("BooleanMethodIsAlwaysInverted")
   public boolean loadValidators() {
     this.validators.clear();
      for (Iterator<ValidatorConfiguration> confIterator =

@@ -200,6 +200,7 @@ public final class WikiParser extends BasicDocumentParser {
     }
   }
 
+  @SuppressWarnings("BooleanMethodIsAlwaysInverted")
   private boolean addChild(Section candidate, Section child) {
     if (candidate.getLevel() < child.getLevel()) {
       candidate.appendSubSection(child);
