@@ -47,7 +47,7 @@ public class InvalidExpressionValidator implements SentenceValidator {
     List<ValidationError> result = new ArrayList<ValidationError>();
     String str = line.content;
     for (String w : invalidExpressions) {
-      if (str.indexOf(w) != -1) {
+      if (str.contains(w)) {
         result.add(new ValidationError(
             "Found invalid expression: \"" + w + "\"", line));
       }

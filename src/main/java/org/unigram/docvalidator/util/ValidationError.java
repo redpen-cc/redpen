@@ -91,7 +91,7 @@ public class ValidationError {
 
   @Override
   public String toString() {
-    StringBuffer str = new StringBuffer();
+    StringBuilder str = new StringBuilder();
     if (this.fileName == null || this.fileName.equals("")) {
       str.append("ValidationError[" + lineNumber + " (" + message+ ")]");
     } else {

@@ -57,7 +57,7 @@ public class InvalidCharacterValidator implements SentenceValidator {
     DVCharacter character = characterTable.getCharacter(name);
     List<String> invalidCharsList = character.getInvalidChars();
     for (String invalidcChar : invalidCharsList) {
-      if (sentenceStr.indexOf(invalidcChar) != -1) {
+      if (sentenceStr.contains(invalidcChar)) {
         return new ValidationError(
             "Invalid symbol found: \"" + invalidcChar + "\"",
             sentence);

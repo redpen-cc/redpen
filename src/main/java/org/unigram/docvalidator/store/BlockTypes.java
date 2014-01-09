@@ -52,7 +52,7 @@ public class BlockTypes {
         if (id == null) {
             throw new IllegalArgumentException("given name " + aName);
         }
-        return id.intValue();
+        return id;
     }
 
     private BlockTypes() {
@@ -78,7 +78,7 @@ public class BlockTypes {
         try {
           final Integer value = f.getInt(name);
           BLOCK_NAME_TO_ID.put(name, value);
-          final int tokenValue = value.intValue();
+          final int tokenValue = value;
           if (tokenValue > tempTokenValueToName.length - 1) {
             final String[] temp = new String[tokenValue + 1];
             System.arraycopy(tempTokenValueToName, 0,

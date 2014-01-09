@@ -71,7 +71,7 @@ public final class WikiParser extends BasicDocumentParser {
     LinePattern prevPattern, currentPattern = LinePattern.VOID;
     String line = null;
     int lineNum = 0;
-    StringBuffer remain = new StringBuffer();
+    StringBuilder remain = new StringBuilder();
     try {
       while ((line = br.readLine()) != null) {
         prevPattern = currentPattern;
@@ -173,7 +173,7 @@ public final class WikiParser extends BasicDocumentParser {
   }
 
   private void extractLinks(Sentence sentence) {
-    StringBuffer modContent = new StringBuffer();
+    StringBuilder modContent = new StringBuilder();
     int start = 0;
     Matcher m = LINK_PATTERN.matcher(sentence.content);
 
@@ -181,7 +181,7 @@ public final class WikiParser extends BasicDocumentParser {
       String[] tagInternal = m.group(1).split("\\|");
       String tagURL = tagInternal[0].trim();
       if (tagInternal.length > 2) {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         buffer.append(sentence.content.substring(start, m.start()));
         buffer.append(tagInternal[1].trim());
         modContent.append(buffer);
