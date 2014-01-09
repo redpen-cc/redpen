@@ -13,7 +13,6 @@ import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.FakeResultDistributor;
 import org.unigram.docvalidator.util.ResultDistributor;
-import org.unigram.docvalidator.util.ResultDistributorFactory;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.ValidationError;
 
