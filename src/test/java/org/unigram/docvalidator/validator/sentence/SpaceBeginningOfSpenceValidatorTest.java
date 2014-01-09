@@ -25,12 +25,12 @@ import org.junit.Test;
 import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.ValidationError;
 
-public class SpaceBeginingOfStenceValidatorTest {
+public class SpaceBeginningOfSpenceValidatorTest {
 
   @Test
   public void testProcessSetenceWithoutEndSpace() {
-    SpaceBeginingOfSentenceValidator spaceValidator =
-        new SpaceBeginingOfSentenceValidator();
+    SpaceBeginningOfSentenceValidator spaceValidator =
+        new SpaceBeginningOfSentenceValidator();
     Sentence str = new Sentence("That is true.",0);
     List<ValidationError> errors = spaceValidator.check(str);
     assertNotNull(errors);
@@ -39,8 +39,8 @@ public class SpaceBeginingOfStenceValidatorTest {
 
   @Test
   public void testProcessEndSpace() {
-    SpaceBeginingOfSentenceValidator spaceValidator =
-        new SpaceBeginingOfSentenceValidator();
+    SpaceBeginningOfSentenceValidator spaceValidator =
+        new SpaceBeginningOfSentenceValidator();
     Sentence str = new Sentence(" That is true.",0);
     List<ValidationError> errors = spaceValidator.check(str);
     assertNotNull(errors);
@@ -49,8 +49,8 @@ public class SpaceBeginingOfStenceValidatorTest {
 
   @Test
   public void testProcessHeadSentenceInAParagraph() {
-    SpaceBeginingOfSentenceValidator spaceValidator =
-        new SpaceBeginingOfSentenceValidator();
+    SpaceBeginningOfSentenceValidator spaceValidator =
+        new SpaceBeginningOfSentenceValidator();
     Sentence str = new Sentence("That is true.",0);
     str.isStartParagraph = true;
     List<ValidationError> errors = spaceValidator.check(str);
@@ -60,8 +60,8 @@ public class SpaceBeginingOfStenceValidatorTest {
 
   @Test
   public void testProcessZerorLengthSentence() {
-    SpaceBeginingOfSentenceValidator spaceValidator =
-        new SpaceBeginingOfSentenceValidator();
+    SpaceBeginningOfSentenceValidator spaceValidator =
+        new SpaceBeginningOfSentenceValidator();
     Sentence str = new Sentence("",0);
     str.isStartParagraph = true;
     List<ValidationError> errors = spaceValidator.check(str);
