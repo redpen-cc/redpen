@@ -55,5 +55,5 @@ public final class Document implements Block {
     return BlockTypes.DOCUMENT;
   }
 
-  private Vector<FileContent> files;
+  private final Vector<FileContent> files;
 }

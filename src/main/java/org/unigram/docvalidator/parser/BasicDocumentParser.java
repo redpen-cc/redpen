@@ -82,6 +82,6 @@ public abstract class BasicDocumentParser implements Parser {
 
   protected String period;
 
-  private static Logger LOG = LoggerFactory.getLogger(
+  private static final Logger LOG = LoggerFactory.getLogger(
       BasicDocumentParser.class);
 }

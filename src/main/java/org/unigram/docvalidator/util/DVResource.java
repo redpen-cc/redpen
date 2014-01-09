@@ -59,7 +59,7 @@ public final class DVResource {
     return characterTable;
   }
 
-  private ValidatorConfiguration configuration;
+  private final ValidatorConfiguration configuration;
 
-  private CharacterTable characterTable;
+  private final CharacterTable characterTable;
 }

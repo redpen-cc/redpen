@@ -89,7 +89,7 @@ public class CommaNumberValidator implements SentenceValidator {
     return true;
   }
 
-  private static Logger LOG =
+  private static final Logger LOG =
       LoggerFactory.getLogger(CommaNumberValidator.class);
 
   private int maxCommaNum;

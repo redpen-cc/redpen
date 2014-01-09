@@ -67,7 +67,7 @@ public class WordNumberValidator implements SentenceValidator {
     }
     return true;
   }
-  private static Logger LOG =
+  private static final Logger LOG =
       LoggerFactory.getLogger(WordNumberValidator.class);
 
   private int maxWordNumber;

@@ -73,6 +73,6 @@ public class InvalidExpressionValidator implements SentenceValidator {
 
   private Set<String> invalidExpressions;
 
-  private static Logger LOG =
+  private static final Logger LOG =
       LoggerFactory.getLogger(InvalidExpressionValidator.class);
 }

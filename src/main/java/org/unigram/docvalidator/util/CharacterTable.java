@@ -58,6 +58,6 @@ public final class CharacterTable {
 
   static Logger LOG = LoggerFactory.getLogger(CharacterTable.class);
 
-  private Map<String, DVCharacter> characterDictionary;
+  private final Map<String, DVCharacter> characterDictionary;
 
 }

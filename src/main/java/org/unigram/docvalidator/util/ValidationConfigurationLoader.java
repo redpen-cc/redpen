@@ -153,6 +153,6 @@ public final class ValidationConfigurationLoader {
    */
   private ValidationConfigurationLoader() { }
 
-  private static Logger LOG =
+  private static final Logger LOG =
       LoggerFactory.getLogger(ValidationConfigurationLoader.class);
 }

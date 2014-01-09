@@ -67,7 +67,7 @@ public final class ListElement {
     return level;
   }
 
-  private List<Sentence> contents;
+  private final List<Sentence> contents;
 
-  private int level;
+  private final int level;
 }

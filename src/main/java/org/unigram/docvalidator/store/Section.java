@@ -299,18 +299,18 @@ public final class Section implements Block {
   private int level;
 
   /* Header*/
-  private List<Sentence> headerContent;
+  private final List<Sentence> headerContent;
 
   /* parent Section */
   private Section parent;
 
   /* subsecitons */
-  private List<Section> subsections;
+  private final List<Section> subsections;
 
   /* paragrahs in this section. */
-  private List<Paragraph> paragraphs;
+  private final List<Paragraph> paragraphs;
 
   /* lists */
-  private List<ListBlock> lists;
+  private final List<ListBlock> lists;
 
 }

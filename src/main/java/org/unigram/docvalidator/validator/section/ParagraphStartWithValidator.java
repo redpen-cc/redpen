@@ -75,7 +75,7 @@ public class ParagraphStartWithValidator extends SectionValidator {
 
   private String beginingOfParagraph;
 
-  private static Logger LOG =
+  private static final Logger LOG =
       LoggerFactory.getLogger(ParagraphStartWithValidator.class);
 
 }

@@ -100,7 +100,7 @@ public final class FileContent implements Block {
     return fileName;
   }
 
-  private Vector<Section> sections;
+  private final Vector<Section> sections;
 
   private String fileName;
 }

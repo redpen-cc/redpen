@@ -131,7 +131,7 @@ public final class Main {
     formatter.printHelp("ParseArgs", opt);
   }
 
-  private static Logger LOG = LoggerFactory.getLogger(Main.class);
+  private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 
   private Main() {
     super();

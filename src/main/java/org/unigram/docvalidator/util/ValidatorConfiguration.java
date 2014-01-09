@@ -104,11 +104,11 @@ public final class ValidatorConfiguration {
     this.childConfigurations.add(childConfig);
   }
 
-  private String configurationName;
+  private final String configurationName;
 
-  private HashMap<String, String> attributes;
+  private final HashMap<String, String> attributes;
 
-  private ArrayList<ValidatorConfiguration> childConfigurations;
+  private final ArrayList<ValidatorConfiguration> childConfigurations;
 
   private ValidatorConfiguration parentConfiguration;
 }

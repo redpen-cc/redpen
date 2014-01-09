@@ -73,7 +73,7 @@ public class SuggestExpressionValidator implements SentenceValidator {
     return true;
   }
 
-  private static Logger LOG =
+  private static final Logger LOG =
       LoggerFactory.getLogger(SuggestExpressionValidator.class);
 
   protected Map<String, String> synonms;

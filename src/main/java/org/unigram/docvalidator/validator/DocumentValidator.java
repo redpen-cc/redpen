@@ -100,13 +100,13 @@ public class DocumentValidator {
     return errors;
   }
 
-  private Vector<Validator> validators;
+  private final Vector<Validator> validators;
 
-  private ValidatorConfiguration conf;
+  private final ValidatorConfiguration conf;
 
-  private CharacterTable charTable;
+  private final CharacterTable charTable;
 
   private ResultDistributor distributor;
 
-  private static Logger LOG = LoggerFactory.getLogger(DocumentValidator.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DocumentValidator.class);
 }

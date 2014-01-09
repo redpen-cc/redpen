@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Parser for wiki formatted file.
  */
+@SuppressWarnings("ALL")
 public final class WikiParser extends BasicDocumentParser {
   /**
    * Constructor.
@@ -258,7 +259,7 @@ public final class WikiParser extends BasicDocumentParser {
     return listPrefix.length();
   }
 
-  private static Logger LOG = LoggerFactory.getLogger(WikiParser.class);
+  private static final Logger LOG = LoggerFactory.getLogger(WikiParser.class);
 
   /**
    * List of elements used in wiki format.

@@ -59,6 +59,6 @@ public final class Sentence implements Block {
   /**
    * links (including internal and external ones)
    */
-  public List<String> links;
+  public final List<String> links;
 
 }

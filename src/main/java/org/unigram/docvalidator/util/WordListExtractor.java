@@ -40,5 +40,5 @@ public class WordListExtractor implements ResourceExtractor {
     return wordList;
   }
 
-  private Set<String> wordList;
+  private final Set<String> wordList;
 }

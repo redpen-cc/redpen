@@ -116,6 +116,6 @@ public class XMLFormatter implements Formatter {
 
   private DocumentBuilder db;
 
-  private static Logger LOG =
+  private static final Logger LOG =
       LoggerFactory.getLogger(XMLFormatter.class);
 }

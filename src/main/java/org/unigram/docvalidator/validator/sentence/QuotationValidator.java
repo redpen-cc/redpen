@@ -237,7 +237,7 @@ public class QuotationValidator implements SentenceValidator {
     return true;
   }
 
-  private static List<String> DEFAULT_EXCEPTION_SUFFIXES;
+  private static final List<String> DEFAULT_EXCEPTION_SUFFIXES;
 
   static {
     DEFAULT_EXCEPTION_SUFFIXES = new ArrayList<String>();
@@ -253,7 +253,7 @@ public class QuotationValidator implements SentenceValidator {
 
   private DVCharacter rightDoubleQuotationMark;
 
-  private List<String> exceptionSuffixes;
+  private final List<String> exceptionSuffixes;
 
   private boolean useAscii;
 

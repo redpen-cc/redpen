@@ -82,7 +82,7 @@ public class FileLoader {
     return 0;
   }
 
-  private static Logger LOG = LoggerFactory.getLogger(FileLoader.class);
+  private static final Logger LOG = LoggerFactory.getLogger(FileLoader.class);
 
-  private ResourceExtractor resourceExtractor;
+  private final ResourceExtractor resourceExtractor;
 }

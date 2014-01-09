@@ -60,7 +60,7 @@ public final class DocumentGenerator {
     return document;
   }
 
-  private static Logger LOG = LoggerFactory.getLogger(DocumentGenerator.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DocumentGenerator.class);
 
   private DocumentGenerator() {
     super();

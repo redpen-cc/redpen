@@ -63,7 +63,7 @@ public class SentenceLengthValidator implements SentenceValidator {
     return true;
   }
 
-  private static Logger LOG =
+  private static final Logger LOG =
       LoggerFactory.getLogger(SentenceLengthValidator.class);
 
   protected int maxLength;

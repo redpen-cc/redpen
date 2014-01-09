@@ -177,5 +177,5 @@ public class SentenceIterator implements Validator {
     }
   }
 
-  private Vector<SentenceValidator> sentenceValidators;
+  private final Vector<SentenceValidator> sentenceValidators;
 }
