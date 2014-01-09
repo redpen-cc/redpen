@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Element of List in semi-strcutured text format such as wiki.
+ * Element of List in semi-structured text format such as wiki.
  */
 public final class ListElement {
   /**
@@ -67,7 +67,7 @@ public final class ListElement {
     return level;
   }
 
-  private List<Sentence> contents;
+  private final List<Sentence> contents;
 
-  private int level;
+  private final int level;
 }

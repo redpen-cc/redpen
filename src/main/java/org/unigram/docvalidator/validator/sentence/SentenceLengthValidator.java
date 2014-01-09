@@ -30,9 +30,10 @@ import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.validator.SentenceValidator;
 
 /**
- * Validate input sentences contain more charcters more than specified.
+ * Validate input sentences contain more characters more than specified.
  */
 public class SentenceLengthValidator implements SentenceValidator {
+  @SuppressWarnings("WeakerAccess")
   public static final int DEFAULT_MAX_LENGTH = 30;
 
   public List<ValidationError> check(Sentence line) {
@@ -63,7 +64,7 @@ public class SentenceLengthValidator implements SentenceValidator {
     return true;
   }
 
-  private static Logger LOG =
+  private static final Logger LOG =
       LoggerFactory.getLogger(SentenceLengthValidator.class);
 
   protected int maxLength;

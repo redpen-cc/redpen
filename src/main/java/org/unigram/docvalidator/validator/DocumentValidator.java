@@ -63,13 +63,14 @@ public class DocumentValidator {
     }
   }
 
+  @SuppressWarnings("BooleanMethodIsAlwaysInverted")
   public boolean loadValidators() {
     this.validators.clear();
      for (Iterator<ValidatorConfiguration> confIterator =
          this.conf.getChildren(); confIterator.hasNext();) {
        ValidatorConfiguration currentConfiguration = confIterator.next();
        String confName = currentConfiguration.getConfigurationName();
-       Validator validator = null;
+       Validator validator;
        try {
          validator =
              ValidatorFactory.createValidator(confName,
@@ -87,27 +88,25 @@ public class DocumentValidator {
   public List<ValidationError> check(Document document) {
     distributor.flushHeader();
     List<ValidationError> errors = new ArrayList<ValidationError>();
-    for (Iterator<Validator> checkIterator =
-        this.validators.iterator(); checkIterator.hasNext();) {
-        Validator validator = checkIterator.next();
-        Iterator<FileContent> fileIterator = document.getFiles();
-        while (fileIterator.hasNext()) {
-          List<ValidationError> currentErrors =
-              validator.check(fileIterator.next(), distributor);
-          errors.addAll(currentErrors);
-        }
+    for (Validator validator : this.validators) {
+      Iterator<FileContent> fileIterator = document.getFiles();
+      while (fileIterator.hasNext()) {
+        List<ValidationError> currentErrors =
+            validator.check(fileIterator.next(), distributor);
+        errors.addAll(currentErrors);
+      }
     }
     distributor.flushFooter();
     return errors;
   }
 
-  private Vector<Validator> validators;
+  private final Vector<Validator> validators;
 
-  private ValidatorConfiguration conf;
+  private final ValidatorConfiguration conf;
 
-  private CharacterTable charTable;
+  private final CharacterTable charTable;
 
   private ResultDistributor distributor;
 
-  private static Logger LOG = LoggerFactory.getLogger(DocumentValidator.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DocumentValidator.class);
 }

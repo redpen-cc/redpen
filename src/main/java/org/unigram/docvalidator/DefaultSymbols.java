@@ -50,7 +50,7 @@ public final class DefaultSymbols {
     return SYMBOL_TABLE.keySet().iterator();
   }
 
-  private static Map<String, DVCharacter> SYMBOL_TABLE
+  private static final Map<String, DVCharacter> SYMBOL_TABLE
     = new HashMap<String, DVCharacter>();
 
   static {
@@ -138,7 +138,7 @@ public final class DefaultSymbols {
     SYMBOL_TABLE.put("DIGIT_NINE", new DVCharacter("9", ",", "", false, false));
   }
 
-  private static Logger LOG = LoggerFactory.getLogger(DefaultSymbols.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DefaultSymbols.class);
 
   private DefaultSymbols() { }
 }

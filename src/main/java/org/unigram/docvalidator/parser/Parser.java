@@ -46,7 +46,7 @@ public interface Parser {
 
   /**
    * initialize parser.
-   * @param resource configuration resrouces
+   * @param resource configuration resources
    * @return true if the configurations are loaded, otherwise false
    */
   boolean initialize(DVResource resource);

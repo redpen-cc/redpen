@@ -18,7 +18,6 @@
 package org.unigram.docvalidator.validator.sentence;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.unigram.docvalidator.DefaultSymbols;
@@ -210,13 +209,13 @@ public class QuotationValidator implements SentenceValidator {
   private int getQuotePosition(String sentenceStr, String quote,
       int startPosition) {
     int quoteCandidatePosition = startPosition;
-    boolean isFound = false;
+    boolean isFound;
     while (startPosition > -1) {
       quoteCandidatePosition = sentenceStr.indexOf(quote, startPosition);
       isFound = detectIsFound(sentenceStr, quoteCandidatePosition);
       if (isFound) {
         return quoteCandidatePosition;
-      } else if (quoteCandidatePosition >= 0 && !isFound) { // exception case
+      } else if (quoteCandidatePosition >= 0) { // exception case
         startPosition = quoteCandidatePosition + 1;
       } else {
         return -1;
@@ -230,15 +229,15 @@ public class QuotationValidator implements SentenceValidator {
       return false;
     }
 
-    for (Iterator<String> ex = exceptionSuffixes.iterator(); ex.hasNext();) {
-      if (sentenceStr.startsWith(ex.next(), startPosition + 1)) {
+    for (String exceptionSuffix : exceptionSuffixes) {
+      if (sentenceStr.startsWith(exceptionSuffix, startPosition + 1)) {
         return false;
       }
     }
     return true;
   }
 
-  private static List<String> DEFAULT_EXCEPTION_SUFFIXES;
+  private static final List<String> DEFAULT_EXCEPTION_SUFFIXES;
 
   static {
     DEFAULT_EXCEPTION_SUFFIXES = new ArrayList<String>();
@@ -254,7 +253,7 @@ public class QuotationValidator implements SentenceValidator {
 
   private DVCharacter rightDoubleQuotationMark;
 
-  private List<String> exceptionSuffixes;
+  private final List<String> exceptionSuffixes;
 
   private boolean useAscii;
 

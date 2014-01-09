@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Parser for wiki formatted file.
  */
+@SuppressWarnings("ALL")
 public final class WikiParser extends BasicDocumentParser {
   /**
    * Constructor.
@@ -69,9 +70,9 @@ public final class WikiParser extends BasicDocumentParser {
 
     // begin parsing
     LinePattern prevPattern, currentPattern = LinePattern.VOID;
-    String line = null;
+    String line;
     int lineNum = 0;
-    StringBuffer remain = new StringBuffer();
+    StringBuilder remain = new StringBuilder();
     try {
       while ((line = br.readLine()) != null) {
         prevPattern = currentPattern;
@@ -104,7 +105,6 @@ public final class WikiParser extends BasicDocumentParser {
           remain.delete(0, remain.length());
           remain.append(remainStr);
         }
-        prevPattern = currentPattern;
         lineNum++;
       }
     } catch (IOException e) {
@@ -165,15 +165,15 @@ public final class WikiParser extends BasicDocumentParser {
 
   private void removeTags(Sentence sentence) {
     String content = sentence.content;
-    for (int i = 0; i< INLINE_PATTERNS.length; ++i) {
-      Matcher m = INLINE_PATTERNS[i].matcher(content);
-      content= m.replaceAll("$1");
+    for (Pattern INLINE_PATTERN : INLINE_PATTERNS) {
+      Matcher m = INLINE_PATTERN.matcher(content);
+      content = m.replaceAll("$1");
     }
     sentence.content = content;
   }
 
   private void extractLinks(Sentence sentence) {
-    StringBuffer modContent = new StringBuffer();
+    StringBuilder modContent = new StringBuilder();
     int start = 0;
     Matcher m = LINK_PATTERN.matcher(sentence.content);
 
@@ -181,13 +181,12 @@ public final class WikiParser extends BasicDocumentParser {
       String[] tagInternal = m.group(1).split("\\|");
       String tagURL = tagInternal[0].trim();
       if (tagInternal.length > 2) {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         buffer.append(sentence.content.substring(start, m.start()));
         buffer.append(tagInternal[1].trim());
         modContent.append(buffer);
       } else {
-        modContent.append(sentence.content.substring(start, m.start())
-            + tagURL.trim());
+        modContent.append(sentence.content.substring(start, m.start())).append(tagURL.trim());
       }
       sentence.links.add(tagURL);
       start = m.end();
@@ -200,6 +199,7 @@ public final class WikiParser extends BasicDocumentParser {
     }
   }
 
+  @SuppressWarnings("BooleanMethodIsAlwaysInverted")
   private boolean addChild(Section candidate, Section child) {
     if (candidate.getLevel() < child.getLevel()) {
       candidate.appendSubSection(child);
@@ -259,7 +259,7 @@ public final class WikiParser extends BasicDocumentParser {
     return listPrefix.length();
   }
 
-  private static Logger LOG = LoggerFactory.getLogger(WikiParser.class);
+  private static final Logger LOG = LoggerFactory.getLogger(WikiParser.class);
 
   /**
    * List of elements used in wiki format.

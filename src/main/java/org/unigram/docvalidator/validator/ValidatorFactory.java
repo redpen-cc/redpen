@@ -31,7 +31,7 @@ public final class ValidatorFactory {
   public static Validator createValidator(String validatorType,
       ValidatorConfiguration conf, CharacterTable charTable)
         throws DocumentValidatorException {
-  Validator validator = null;
+  Validator validator;
   // @todo accept plug-in validators.
   if (validatorType.equals("SentenceIterator")) {
     validator =  new SentenceIterator();

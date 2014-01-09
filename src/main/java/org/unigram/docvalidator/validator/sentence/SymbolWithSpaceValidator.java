@@ -18,7 +18,6 @@
 package org.unigram.docvalidator.validator.sentence;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -38,10 +37,8 @@ public class SymbolWithSpaceValidator  implements SentenceValidator {
   public List<ValidationError> check(Sentence sentence) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     Set<String> names = characterTable.getNames();
-    for (Iterator<String> nameIterator = names.iterator();
-        nameIterator.hasNext();) {
-      String name = nameIterator.next();
-      ValidationError error = validateCharcter(sentence, name);
+    for (String name : names) {
+      ValidationError error = validateCharacter(sentence, name);
       if (error != null) {
         errors.add(error);
       }
@@ -56,7 +53,7 @@ public class SymbolWithSpaceValidator  implements SentenceValidator {
     return true;
   }
 
-  private ValidationError validateCharcter(Sentence sentence, String name) {
+  private ValidationError validateCharacter(Sentence sentence, String name) {
     String sentenceStr = sentence.content;
     DVCharacter character = characterTable.getCharacter(name);
     if (!character.isNeedAfterSpace() && !character.isNeedBeforeSpace()) {

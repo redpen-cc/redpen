@@ -51,10 +51,10 @@ public class ValidationError {
   }
 
   public ValidationError(String errorMessage,
-      Sentence sentence, String erorFileName) {
+      Sentence sentence, String errorFileName) {
     this(sentence.position, errorMessage);
     this.sentence = sentence;
-    this.fileName = erorFileName;
+    this.fileName = errorFileName;
   }
 
   public int getLineNumber() {
@@ -91,15 +91,14 @@ public class ValidationError {
 
   @Override
   public String toString() {
-    StringBuffer str = new StringBuffer();
+    StringBuilder str = new StringBuilder();
     if (this.fileName == null || this.fileName.equals("")) {
-      str.append("ValidationError[" + lineNumber + " (" + message+ ")]");
+      str.append("ValidationError[").append(lineNumber).append(" (").append(message).append(")]");
     } else {
-      str.append("ValidationError[" + this.fileName +
-          lineNumber + " (" + message+ ")]");
+      str.append("ValidationError[").append(this.fileName).append(lineNumber).append(" (").append(message).append(")]");
     }
     if(this.sentence != null) {
-      str.append(" at line: " + sentence.content);
+      str.append(" at line: ").append(sentence.content);
     }
     return str.toString();
   }

@@ -19,8 +19,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.ErrorHandler;
 
 public class CharacterTableLoader {
 
@@ -29,8 +27,8 @@ public class CharacterTableLoader {
    * @param fileName configuration file name
    * @return generated character table or null if loading was failed.
    */
-  public static final CharacterTable load(String fileName){
-    InputStream fis = null;
+  public static CharacterTable load(String fileName){
+    InputStream fis;
     try {
       fis = new FileInputStream(fileName);
     } catch (FileNotFoundException e) {
@@ -45,7 +43,7 @@ public class CharacterTableLoader {
    * @param stream input stream for configuration settings
    * @return generated character table or null if loading was failed.
    */
-  public static final CharacterTable load(InputStream stream){
+  public static CharacterTable load(InputStream stream){
     CharacterTable characterTable = new CharacterTable();
     Map<String, DVCharacter> characterDictionary =
         characterTable.getCharacterDictionary();
@@ -64,7 +62,7 @@ public class CharacterTableLoader {
    * @param characterTable TODO
    * @return TODO
    */
-  private final static boolean loadTable(InputStream stream,
+  private static boolean loadTable(InputStream stream,
       Map<String, DVCharacter> characterTable) {
     Document document = parseCharTableString(stream);
     if (document == null) {
@@ -108,7 +106,7 @@ public class CharacterTableLoader {
 
   private static Document parseCharTableString(InputStream input) {
     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-    DocumentBuilder dBuilder = null;
+    DocumentBuilder dBuilder;
     try {
       dBuilder = dbFactory.newDocumentBuilder();
     } catch (ParserConfigurationException e) {
@@ -126,7 +124,7 @@ public class CharacterTableLoader {
     } catch (IOException e) {
       LOG.error("In parseCharTableString: " + e.getMessage());
     } catch (Throwable t) {
-      LOG.error("Unknow error");
+      LOG.error("Unknown error");
     }
     return doc;
   }
@@ -136,13 +134,12 @@ public class CharacterTableLoader {
       LOG.warn("Found element does not have name and value attribute...");
       return null;
     }
-    DVCharacter character = new DVCharacter(
+    return new DVCharacter(
         element.getAttribute("name"),
         element.getAttribute("value"),
         element.getAttribute("invalid-chars"),
         Boolean.parseBoolean(element.getAttribute("before-space")),
         Boolean.parseBoolean(element.getAttribute("after-space")));
-    return character;
   }
 
   private static void loadDefaultCharacterTable(
@@ -156,5 +153,5 @@ public class CharacterTableLoader {
     }
   }
 
-  static Logger LOG = LoggerFactory.getLogger(CharacterTableLoader.class);
+  private static final Logger LOG = LoggerFactory.getLogger(CharacterTableLoader.class);
 }

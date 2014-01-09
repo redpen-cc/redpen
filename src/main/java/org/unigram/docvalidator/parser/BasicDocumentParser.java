@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.DVResource;
-import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.DefaultSymbols;
 
 /**
@@ -55,7 +54,7 @@ public abstract class BasicDocumentParser implements Parser {
   }
 
   protected BufferedReader createReader(InputStream is) {
-    BufferedReader br = null;
+    BufferedReader br;
     try {
       br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
     } catch (UnsupportedEncodingException e) {
@@ -65,8 +64,7 @@ public abstract class BasicDocumentParser implements Parser {
     return br;
   }
 
-  protected final InputStream loadStream(String fileName)
-      throws DocumentValidatorException {
+  protected final InputStream loadStream(String fileName) {
     InputStream inputStream = null;
     if (fileName == null || fileName.equals("")) {
       LOG.error("input file was not specified.");
@@ -75,7 +73,7 @@ public abstract class BasicDocumentParser implements Parser {
       try {
         inputStream = new FileInputStream(fileName);
       } catch (FileNotFoundException e) {
-        LOG.error("Input file is not fould: " + e.getMessage());
+        LOG.error("Input file is not found: " + e.getMessage());
       }
     }
     return inputStream;
@@ -83,6 +81,6 @@ public abstract class BasicDocumentParser implements Parser {
 
   protected String period;
 
-  private static Logger LOG = LoggerFactory.getLogger(
+  private static final Logger LOG = LoggerFactory.getLogger(
       BasicDocumentParser.class);
 }

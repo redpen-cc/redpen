@@ -19,7 +19,6 @@ package org.unigram.docvalidator.validator.sentence;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,20 +38,19 @@ public class SuggestExpressionValidator implements SentenceValidator {
 
   public SuggestExpressionValidator() {
     super();
-    synonms = new HashMap<String, String>();
+    synonyms = new HashMap<String, String>();
   }
 
   public List<ValidationError> check(Sentence line) {
     List<ValidationError> result = new ArrayList<ValidationError>();
     String str = line.content;
-    Set<String> invalidWords = synonms.keySet();
-    for (Iterator<String> iter = invalidWords.iterator(); iter.hasNext();) {
-      String w = iter.next();
-      if (str.indexOf(w) != -1) {
+    Set<String> invalidWords = synonyms.keySet();
+    for (String w : invalidWords) {
+      if (str.contains(w)) {
         result.add(new ValidationError(
             "Found invalid word, \"" + w + "\". "
                 + "Use the synonym of the word \""
-                + synonms.get(w) + "\" instead.", line));
+                + synonyms.get(w) + "\" instead.", line));
       }
     }
     return result;
@@ -71,12 +69,12 @@ public class SuggestExpressionValidator implements SentenceValidator {
     if (loader.loadFile(confFile) != 0) {
       return false;
     }
-    synonms = extractor.get();
+    synonyms = extractor.get();
     return true;
   }
 
-  private static Logger LOG =
+  private static final Logger LOG =
       LoggerFactory.getLogger(SuggestExpressionValidator.class);
 
-  protected Map<String, String> synonms;
+  protected Map<String, String> synonyms;
 }

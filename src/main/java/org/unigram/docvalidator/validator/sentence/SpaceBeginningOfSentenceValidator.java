@@ -31,15 +31,15 @@ import org.unigram.docvalidator.validator.SentenceValidator;
  * Validate input sentences except for first sentence of a paragraph start with
  * a space.
  */
-public class SpaceBegginingOfSentenceValidator implements SentenceValidator {
+public class SpaceBeginningOfSentenceValidator implements SentenceValidator {
 
   public List<ValidationError> check(Sentence sentence) {
     List<ValidationError> result = new ArrayList<ValidationError>();
     String content = sentence.content;
-    if (!sentence.isStartaragraph && content.length() > 0
+    if (!sentence.isStartParagraph && content.length() > 0
         && !String.valueOf(content.charAt(0)).equals(" ")) {
       result.add(new ValidationError(
-          "Space not exist the beggining of sentence.",
+          "Space not exist the beginning of sentence.",
           sentence));
     }
     return result;

@@ -24,14 +24,13 @@ import java.util.List;
 import org.junit.Test;
 import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.validator.sentence.SpaceBegginingOfSentenceValidator;
 
-public class SpaceBeginingOfStenceValidatorTest {
+public class SpaceBeginningOfSpenceValidatorTest {
 
   @Test
   public void testProcessSetenceWithoutEndSpace() {
-    SpaceBegginingOfSentenceValidator spaceValidator =
-        new SpaceBegginingOfSentenceValidator();
+    SpaceBeginningOfSentenceValidator spaceValidator =
+        new SpaceBeginningOfSentenceValidator();
     Sentence str = new Sentence("That is true.",0);
     List<ValidationError> errors = spaceValidator.check(str);
     assertNotNull(errors);
@@ -40,8 +39,8 @@ public class SpaceBeginingOfStenceValidatorTest {
 
   @Test
   public void testProcessEndSpace() {
-    SpaceBegginingOfSentenceValidator spaceValidator =
-        new SpaceBegginingOfSentenceValidator();
+    SpaceBeginningOfSentenceValidator spaceValidator =
+        new SpaceBeginningOfSentenceValidator();
     Sentence str = new Sentence(" That is true.",0);
     List<ValidationError> errors = spaceValidator.check(str);
     assertNotNull(errors);
@@ -50,10 +49,10 @@ public class SpaceBeginingOfStenceValidatorTest {
 
   @Test
   public void testProcessHeadSentenceInAParagraph() {
-    SpaceBegginingOfSentenceValidator spaceValidator =
-        new SpaceBegginingOfSentenceValidator();
+    SpaceBeginningOfSentenceValidator spaceValidator =
+        new SpaceBeginningOfSentenceValidator();
     Sentence str = new Sentence("That is true.",0);
-    str.isStartaragraph = true;
+    str.isStartParagraph = true;
     List<ValidationError> errors = spaceValidator.check(str);
     assertNotNull(errors);
     assertEquals(0, errors.size());
@@ -61,10 +60,10 @@ public class SpaceBeginingOfStenceValidatorTest {
 
   @Test
   public void testProcessZerorLengthSentence() {
-    SpaceBegginingOfSentenceValidator spaceValidator =
-        new SpaceBegginingOfSentenceValidator();
+    SpaceBeginningOfSentenceValidator spaceValidator =
+        new SpaceBeginningOfSentenceValidator();
     Sentence str = new Sentence("",0);
-    str.isStartaragraph = true;
+    str.isStartParagraph = true;
     List<ValidationError> errors = spaceValidator.check(str);
     assertNotNull(errors);
     assertEquals(0, errors.size());

@@ -50,10 +50,7 @@ public final class ValidatorConfiguration {
   }
 
   public boolean hasAttribute(String name) {
-    if (this.attributes.containsKey(name)) {
-      return true;
-    }
-    return false;
+    return this.attributes.containsKey(name);
   }
 
   public String getAttribute(String name) {
@@ -107,11 +104,11 @@ public final class ValidatorConfiguration {
     this.childConfigurations.add(childConfig);
   }
 
-  private String configurationName;
+  private final String configurationName;
 
-  private HashMap<String, String> attributes;
+  private final HashMap<String, String> attributes;
 
-  private ArrayList<ValidatorConfiguration> childConfigurations;
+  private final ArrayList<ValidatorConfiguration> childConfigurations;
 
   private ValidatorConfiguration parentConfiguration;
 }

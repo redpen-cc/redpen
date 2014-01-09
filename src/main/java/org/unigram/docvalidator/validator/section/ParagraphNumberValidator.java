@@ -26,13 +26,14 @@ import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.ValidationError;
 import org.unigram.docvalidator.validator.SectionValidator;
 /**
- * Validate paragraph number. If a section has paragraphs more than spcified,
+ * Validate paragraph number. If a section has paragraphs more than specified,
  * This validator reports it.
  */
 public class ParagraphNumberValidator extends SectionValidator {
   /**
    * Default maximum number of paragraphs in a section.
    */
+  @SuppressWarnings("WeakerAccess")
   public static final int DEFAULT_MAX_PARAGRAPHS_IN_A_SECTION = 100;
 
   @Override

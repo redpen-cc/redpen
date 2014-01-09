@@ -106,5 +106,5 @@ public final class PlainTextParser extends BasicDocumentParser {
     }
   }
 
-  private static Logger LOG = LoggerFactory.getLogger(PlainTextParser.class);
+  private static final Logger LOG = LoggerFactory.getLogger(PlainTextParser.class);
 }

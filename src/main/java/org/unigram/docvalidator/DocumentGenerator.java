@@ -39,7 +39,7 @@ public final class DocumentGenerator {
   static Document generate(String[] inputFileNames,
         DVResource resource,
         String format) {
-    Parser docparser = null;
+    Parser docparser;
     try {
       docparser = DocumentParserFactory.generate(format, resource);
     } catch (DocumentValidatorException e) {
@@ -48,9 +48,9 @@ public final class DocumentGenerator {
     }
 
     Document document = new Document();
-    for (int i = 0; i < inputFileNames.length; i++) {
+    for (String inputFileName : inputFileNames) {
       try {
-        document.appendFile(docparser.generateDocument(inputFileNames[i]));
+        document.appendFile(docparser.generateDocument(inputFileName));
       } catch (DocumentValidatorException e) {
         e.printStackTrace();
         return null;
@@ -60,7 +60,7 @@ public final class DocumentGenerator {
     return document;
   }
 
-  private static Logger LOG = LoggerFactory.getLogger(DocumentGenerator.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DocumentGenerator.class);
 
   private DocumentGenerator() {
     super();

@@ -33,20 +33,19 @@ import org.slf4j.LoggerFactory;
 public class FileLoader {
   /**
    * constructor.
-   * @param ex ResoruceExtractor
+   * @param ex ResourceExtractor
    */
   public FileLoader(ResourceExtractor ex) {
     this.resourceExtractor = ex;
   }
 
   public int loadFile(String fileName) {
-    InputStream inputStream = null;
+    InputStream inputStream;
     try {
       LOG.warn("input file: " + fileName);
       inputStream = new FileInputStream(fileName);
     } catch (IOException e) {
       LOG.error("IO Error ", e);
-      IOUtils.closeQuietly(inputStream);
       return 1;
     }
     if (loadFile(inputStream) != 0) {
@@ -66,7 +65,7 @@ public class FileLoader {
     try {
       inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
       BufferedReader br = new BufferedReader(inputStreamReader);
-      String line = null;
+      String line;
       while ((line = br.readLine()) != null) {
         if (this.resourceExtractor.load(line) != 0) {
           LOG.error("Failed to load line:" + line);
@@ -83,7 +82,7 @@ public class FileLoader {
     return 0;
   }
 
-  private static Logger LOG = LoggerFactory.getLogger(FileLoader.class);
+  private static final Logger LOG = LoggerFactory.getLogger(FileLoader.class);
 
-  private ResourceExtractor resourceExtractor;
+  private final ResourceExtractor resourceExtractor;
 }

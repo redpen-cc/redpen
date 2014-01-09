@@ -93,7 +93,7 @@ public class DefaultResultDistributor implements ResultDistributor {
   @Override
   public void setFormatter(Formatter formatter) {
     if (formatter == null) {
-      throw new IllegalArgumentException("arugment formatter is null");
+      throw new IllegalArgumentException("argument formatter is null");
     }
     this.formatter = formatter;
   }

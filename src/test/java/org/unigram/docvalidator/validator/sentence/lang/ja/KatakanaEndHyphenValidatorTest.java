@@ -23,11 +23,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.unigram.docvalidator.store.Sentence;
-import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
-import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.validator.SentenceValidator;
 
 public class KatakanaEndHyphenValidatorTest {
   @Test

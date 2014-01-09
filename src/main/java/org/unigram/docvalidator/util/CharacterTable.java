@@ -53,14 +53,11 @@ public final class CharacterTable {
   }
 
   public boolean isContainCharacter(String name) {
-    if (this.characterDictionary.get(name) != null) {
-      return true;
-    }
-    return false;
+    return this.characterDictionary.get(name) != null;
   }
 
   static Logger LOG = LoggerFactory.getLogger(CharacterTable.class);
 
-  private Map<String, DVCharacter> characterDictionary;
+  private final Map<String, DVCharacter> characterDictionary;
 
 }

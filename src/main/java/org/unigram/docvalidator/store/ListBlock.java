@@ -69,5 +69,5 @@ public final class ListBlock implements Block {
     listElements.add(new ListElement(level, contents));
   }
 
-  private Vector<ListElement> listElements;
+  private final Vector<ListElement> listElements;
 }

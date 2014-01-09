@@ -36,6 +36,7 @@ public class WordNumberValidator implements SentenceValidator {
   /**
    * Default maximum number of words in one sentence.
    */
+  @SuppressWarnings("WeakerAccess")
   public static final int DEFAULT_MAXIMUM_WORDS_IN_A_SENTENCE = 30;
 
   public WordNumberValidator() {
@@ -67,7 +68,7 @@ public class WordNumberValidator implements SentenceValidator {
     }
     return true;
   }
-  private static Logger LOG =
+  private static final Logger LOG =
       LoggerFactory.getLogger(WordNumberValidator.class);
 
   private int maxWordNumber;

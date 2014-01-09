@@ -19,7 +19,6 @@ package org.unigram.docvalidator.validator.sentence;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -46,12 +45,10 @@ public class InvalidExpressionValidator implements SentenceValidator {
   public List<ValidationError> check(Sentence line) {
     List<ValidationError> result = new ArrayList<ValidationError>();
     String str = line.content;
-    for (Iterator<String> iter = invalidExpressions.iterator();
-        iter.hasNext();) {
-      String w = iter.next();
-      if (str.indexOf(w) != -1) {
+    for (String w : invalidExpressions) {
+      if (str.contains(w)) {
         result.add(new ValidationError(
-            "Found invalid expression: \""+ w + "\"", line));
+            "Found invalid expression: \"" + w + "\"", line));
       }
     }
     return result;
@@ -76,6 +73,6 @@ public class InvalidExpressionValidator implements SentenceValidator {
 
   private Set<String> invalidExpressions;
 
-  private static Logger LOG =
+  private static final Logger LOG =
       LoggerFactory.getLogger(InvalidExpressionValidator.class);
 }

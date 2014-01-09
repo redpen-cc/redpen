@@ -43,5 +43,5 @@ public class KeyValueDictionaryExtractor implements ResourceExtractor {
     return map;
   }
 
-  private Map<String, String> map;
+  private final Map<String, String> map;
 }
