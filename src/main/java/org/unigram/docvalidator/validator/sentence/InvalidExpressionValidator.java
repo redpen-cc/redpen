@@ -46,12 +46,10 @@ public class InvalidExpressionValidator implements SentenceValidator {
   public List<ValidationError> check(Sentence line) {
     List<ValidationError> result = new ArrayList<ValidationError>();
     String str = line.content;
-    for (Iterator<String> iter = invalidExpressions.iterator();
-        iter.hasNext();) {
-      String w = iter.next();
+    for (String w : invalidExpressions) {
       if (str.indexOf(w) != -1) {
         result.add(new ValidationError(
-            "Found invalid expression: \""+ w + "\"", line));
+            "Found invalid expression: \"" + w + "\"", line));
       }
     }
     return result;

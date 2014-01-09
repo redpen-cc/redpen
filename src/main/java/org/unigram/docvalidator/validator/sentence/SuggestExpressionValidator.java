@@ -46,8 +46,7 @@ public class SuggestExpressionValidator implements SentenceValidator {
     List<ValidationError> result = new ArrayList<ValidationError>();
     String str = line.content;
     Set<String> invalidWords = synonms.keySet();
-    for (Iterator<String> iter = invalidWords.iterator(); iter.hasNext();) {
-      String w = iter.next();
+    for (String w : invalidWords) {
       if (str.indexOf(w) != -1) {
         result.add(new ValidationError(
             "Found invalid word, \"" + w + "\". "

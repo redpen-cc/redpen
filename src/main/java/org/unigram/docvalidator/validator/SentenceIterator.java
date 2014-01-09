@@ -159,10 +159,8 @@ public class SentenceIterator implements Validator {
       String fileName, Iterator<Sentence> lineIterator) {
     List<ValidationError> validationErrors =
         validator.check(lineIterator.next());
-    for (Iterator<ValidationError> errorIterator =
-        validationErrors.iterator();
-        errorIterator.hasNext();) {
-      appendError(distributor, errors, fileName, errorIterator.next());
+    for (ValidationError validationError : validationErrors) {
+      appendError(distributor, errors, fileName, validationError);
     }
   }
 

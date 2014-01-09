@@ -37,9 +37,7 @@ public class InvalidCharacterValidator implements SentenceValidator {
   public List<ValidationError> check(Sentence sentence) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     Set<String> names = characterTable.getNames();
-    for (Iterator<String> nameIterator = names.iterator();
-        nameIterator.hasNext();) {
-      String name = nameIterator.next();
+    for (String name : names) {
       ValidationError error = validateCharcter(sentence, name);
       if (error != null) {
         errors.add(error);
@@ -58,13 +56,11 @@ public class InvalidCharacterValidator implements SentenceValidator {
     String sentenceStr = sentence.content;
     DVCharacter character = characterTable.getCharacter(name);
     List<String> invalidCharsList = character.getInvalidChars();
-    for (Iterator<String> charIterator = invalidCharsList.iterator();
-        charIterator.hasNext();) {
-       String invalidcChar = charIterator.next();
-       if (sentenceStr.indexOf(invalidcChar) != -1) {
-         return new ValidationError(
-             "Invalid symbol found: \"" + invalidcChar +"\"",
-             sentence);
+    for (String invalidcChar : invalidCharsList) {
+      if (sentenceStr.indexOf(invalidcChar) != -1) {
+        return new ValidationError(
+            "Invalid symbol found: \"" + invalidcChar + "\"",
+            sentence);
       }
     }
     return null;

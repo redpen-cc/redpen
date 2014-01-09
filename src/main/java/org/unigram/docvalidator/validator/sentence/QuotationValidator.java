@@ -230,8 +230,8 @@ public class QuotationValidator implements SentenceValidator {
       return false;
     }
 
-    for (Iterator<String> ex = exceptionSuffixes.iterator(); ex.hasNext();) {
-      if (sentenceStr.startsWith(ex.next(), startPosition + 1)) {
+    for (String exceptionSuffixe : exceptionSuffixes) {
+      if (sentenceStr.startsWith(exceptionSuffixe, startPosition + 1)) {
         return false;
       }
     }

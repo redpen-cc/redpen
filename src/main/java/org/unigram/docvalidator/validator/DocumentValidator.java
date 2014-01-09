@@ -88,15 +88,13 @@ public class DocumentValidator {
   public List<ValidationError> check(Document document) {
     distributor.flushHeader();
     List<ValidationError> errors = new ArrayList<ValidationError>();
-    for (Iterator<Validator> checkIterator =
-        this.validators.iterator(); checkIterator.hasNext();) {
-        Validator validator = checkIterator.next();
-        Iterator<FileContent> fileIterator = document.getFiles();
-        while (fileIterator.hasNext()) {
-          List<ValidationError> currentErrors =
-              validator.check(fileIterator.next(), distributor);
-          errors.addAll(currentErrors);
-        }
+    for (Validator validator : this.validators) {
+      Iterator<FileContent> fileIterator = document.getFiles();
+      while (fileIterator.hasNext()) {
+        List<ValidationError> currentErrors =
+            validator.check(fileIterator.next(), distributor);
+        errors.addAll(currentErrors);
+      }
     }
     distributor.flushFooter();
     return errors;

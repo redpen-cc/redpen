@@ -48,9 +48,9 @@ public final class DocumentGenerator {
     }
 
     Document document = new Document();
-    for (int i = 0; i < inputFileNames.length; i++) {
+    for (String inputFileName : inputFileNames) {
       try {
-        document.appendFile(docparser.generateDocument(inputFileNames[i]));
+        document.appendFile(docparser.generateDocument(inputFileName));
       } catch (DocumentValidatorException e) {
         e.printStackTrace();
         return null;

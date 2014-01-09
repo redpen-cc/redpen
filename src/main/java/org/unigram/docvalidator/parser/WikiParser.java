@@ -165,9 +165,9 @@ public final class WikiParser extends BasicDocumentParser {
 
   private void removeTags(Sentence sentence) {
     String content = sentence.content;
-    for (int i = 0; i< INLINE_PATTERNS.length; ++i) {
-      Matcher m = INLINE_PATTERNS[i].matcher(content);
-      content= m.replaceAll("$1");
+    for (Pattern INLINE_PATTERN : INLINE_PATTERNS) {
+      Matcher m = INLINE_PATTERN.matcher(content);
+      content = m.replaceAll("$1");
     }
     sentence.content = content;
   }

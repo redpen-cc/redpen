@@ -70,30 +70,29 @@ public class BlockTypes {
     static {
         final Field[] fields = BlockTypes.class.getDeclaredFields();
         String[] tempTokenValueToName = new String[0];
-        for (int i = 0; i < fields.length; i++) {
-            final Field f = fields[i];
-            if (f.getType() != Integer.TYPE) {
-                continue;
-            }
-            final String name = f.getName();
-            try {
-              final Integer value = f.getInt(name);
-              BLOCK_NAME_TO_ID.put(name, value);
-              final int tokenValue = value.intValue();
-              if (tokenValue > tempTokenValueToName.length - 1) {
-                  final String[] temp = new String[tokenValue + 1];
-                  System.arraycopy(tempTokenValueToName, 0,
-                                   temp, 0, tempTokenValueToName.length);
-                  tempTokenValueToName = temp;
-              }
-              tempTokenValueToName[tokenValue] = name;
-          } catch (final IllegalArgumentException e) {
-              e.printStackTrace();
-              System.exit(1);
-          } catch (final IllegalAccessException e) {
-              e.printStackTrace();
-              System.exit(1);
-          }
+      for (final Field f : fields) {
+        if (f.getType() != Integer.TYPE) {
+          continue;
         }
+        final String name = f.getName();
+        try {
+          final Integer value = f.getInt(name);
+          BLOCK_NAME_TO_ID.put(name, value);
+          final int tokenValue = value.intValue();
+          if (tokenValue > tempTokenValueToName.length - 1) {
+            final String[] temp = new String[tokenValue + 1];
+            System.arraycopy(tempTokenValueToName, 0,
+                temp, 0, tempTokenValueToName.length);
+            tempTokenValueToName = temp;
+          }
+          tempTokenValueToName[tokenValue] = name;
+        } catch (final IllegalArgumentException e) {
+          e.printStackTrace();
+          System.exit(1);
+        } catch (final IllegalAccessException e) {
+          e.printStackTrace();
+          System.exit(1);
+        }
+      }
     }
 }
