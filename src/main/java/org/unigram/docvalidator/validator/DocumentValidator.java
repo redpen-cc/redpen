@@ -70,7 +70,7 @@ public class DocumentValidator {
          this.conf.getChildren(); confIterator.hasNext();) {
        ValidatorConfiguration currentConfiguration = confIterator.next();
        String confName = currentConfiguration.getConfigurationName();
-       Validator validator = null;
+       Validator validator;
        try {
          validator =
              ValidatorFactory.createValidator(confName,

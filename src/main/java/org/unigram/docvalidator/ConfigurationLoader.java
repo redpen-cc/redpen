@@ -119,7 +119,7 @@ public class ConfigurationLoader {
       Element validatorElement) {
     String validatorConfigurationPath = validatorElement.getTextContent();
     LOG.info("Validation Setting file: " + validatorConfigurationPath);
-    ValidatorConfiguration validatorConfiguration = null;
+    ValidatorConfiguration validatorConfiguration;
     try {
       validatorConfiguration =
           ValidationConfigurationLoader.loadConfiguraiton(validatorConfigurationPath);

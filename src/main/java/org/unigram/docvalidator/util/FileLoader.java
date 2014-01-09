@@ -40,7 +40,7 @@ public class FileLoader {
   }
 
   public int loadFile(String fileName) {
-    InputStream inputStream = null;
+    InputStream inputStream;
     try {
       LOG.warn("input file: " + fileName);
       inputStream = new FileInputStream(fileName);
@@ -65,7 +65,7 @@ public class FileLoader {
     try {
       inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
       BufferedReader br = new BufferedReader(inputStreamReader);
-      String line = null;
+      String line;
       while ((line = br.readLine()) != null) {
         if (this.resourceExtractor.load(line) != 0) {
           LOG.error("Failed to load line:" + line);

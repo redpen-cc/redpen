@@ -28,7 +28,7 @@ public class CharacterTableLoader {
    * @return generated character table or null if loading was failed.
    */
   public static CharacterTable load(String fileName){
-    InputStream fis = null;
+    InputStream fis;
     try {
       fis = new FileInputStream(fileName);
     } catch (FileNotFoundException e) {
@@ -106,7 +106,7 @@ public class CharacterTableLoader {
 
   private static Document parseCharTableString(InputStream input) {
     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-    DocumentBuilder dBuilder = null;
+    DocumentBuilder dBuilder;
     try {
       dBuilder = dbFactory.newDocumentBuilder();
     } catch (ParserConfigurationException e) {

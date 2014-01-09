@@ -69,7 +69,7 @@ public final class WikiParser extends BasicDocumentParser {
 
     // begin parsing
     LinePattern prevPattern, currentPattern = LinePattern.VOID;
-    String line = null;
+    String line;
     int lineNum = 0;
     StringBuilder remain = new StringBuilder();
     try {
@@ -104,7 +104,6 @@ public final class WikiParser extends BasicDocumentParser {
           remain.delete(0, remain.length());
           remain.append(remainStr);
         }
-        prevPattern = currentPattern;
         lineNum++;
       }
     } catch (IOException e) {

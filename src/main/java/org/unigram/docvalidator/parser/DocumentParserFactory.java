@@ -33,7 +33,7 @@ public final class DocumentParserFactory {
    */
   public static Parser generate(String parserType, DVResource resource)
         throws DocumentValidatorException {
-    Parser docparser = null;
+    Parser docparser;
     if (parserType.equals("wiki")) {
       docparser = new WikiParser();
     } else if (parserType.equals("plain")) {

@@ -209,7 +209,7 @@ public class QuotationValidator implements SentenceValidator {
   private int getQuotePosition(String sentenceStr, String quote,
       int startPosition) {
     int quoteCandidatePosition = startPosition;
-    boolean isFound = false;
+    boolean isFound;
     while (startPosition > -1) {
       quoteCandidatePosition = sentenceStr.indexOf(quote, startPosition);
       isFound = detectIsFound(sentenceStr, quoteCandidatePosition);

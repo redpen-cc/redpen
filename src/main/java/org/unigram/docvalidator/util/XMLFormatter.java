@@ -85,7 +85,7 @@ public class XMLFormatter implements Formatter {
 
   private Transformer createTransformer()
       throws TransformerFactoryConfigurationError {
-    TransformerFactory tf = null;
+    TransformerFactory tf;
     try {
        tf = TransformerFactory.newInstance();
     } catch (Throwable e) {
@@ -93,7 +93,7 @@ public class XMLFormatter implements Formatter {
       return null;
     }
 
-    Transformer transformer = null;
+    Transformer transformer;
     try {
       transformer = tf.newTransformer();
     } catch (TransformerConfigurationException e) {

@@ -55,7 +55,7 @@ public abstract class BasicDocumentParser implements Parser {
   }
 
   protected BufferedReader createReader(InputStream is) {
-    BufferedReader br = null;
+    BufferedReader br;
     try {
       br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
     } catch (UnsupportedEncodingException e) {

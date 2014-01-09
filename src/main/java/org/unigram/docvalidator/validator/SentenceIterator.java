@@ -76,7 +76,7 @@ public class SentenceIterator implements Validator {
         confIterator.hasNext();) {
       ValidatorConfiguration currentConfiguration = confIterator.next();
       String confName = currentConfiguration.getConfigurationName();
-      SentenceValidator validator = null;
+      SentenceValidator validator;
       if (confName.equals("SentenceLength")) {
         validator = new SentenceLengthValidator();
       } else if (confName.equals("InvalidExpression")) {
