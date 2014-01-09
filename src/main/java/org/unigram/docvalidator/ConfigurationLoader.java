@@ -112,9 +112,7 @@ public class ConfigurationLoader {
       Element characterTableElement) {
     String characterConfigurationPath = characterTableElement.getTextContent();
     LOG.info("Symbol setting file: " + characterConfigurationPath);
-    CharacterTable characterTable =
-        CharacterTableLoader.load(characterConfigurationPath);
-    return characterTable;
+    return CharacterTableLoader.load(characterConfigurationPath);
   }
 
   protected ValidatorConfiguration extractValidatorConfiguration(

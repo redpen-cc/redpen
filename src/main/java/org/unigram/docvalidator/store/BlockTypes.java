@@ -77,8 +77,7 @@ public class BlockTypes {
             }
             final String name = f.getName();
             try {
-              Integer id = f.getInt(name);
-              final Integer value = id;
+              final Integer value = f.getInt(name);
               BLOCK_NAME_TO_ID.put(name, value);
               final int tokenValue = value.intValue();
               if (tokenValue > tempTokenValueToName.length - 1) {

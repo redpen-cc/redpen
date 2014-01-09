@@ -136,13 +136,12 @@ public class CharacterTableLoader {
       LOG.warn("Found element does not have name and value attribute...");
       return null;
     }
-    DVCharacter character = new DVCharacter(
+    return new DVCharacter(
         element.getAttribute("name"),
         element.getAttribute("value"),
         element.getAttribute("invalid-chars"),
         Boolean.parseBoolean(element.getAttribute("before-space")),
         Boolean.parseBoolean(element.getAttribute("after-space")));
-    return character;
   }
 
   private static void loadDefaultCharacterTable(
