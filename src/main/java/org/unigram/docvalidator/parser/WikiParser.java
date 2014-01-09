@@ -185,8 +185,7 @@ public final class WikiParser extends BasicDocumentParser {
         buffer.append(tagInternal[1].trim());
         modContent.append(buffer);
       } else {
-        modContent.append(sentence.content.substring(start, m.start())
-            + tagURL.trim());
+        modContent.append(sentence.content.substring(start, m.start())).append(tagURL.trim());
       }
       sentence.links.add(tagURL);
       start = m.end();
