@@ -229,8 +229,8 @@ public class QuotationValidator implements SentenceValidator {
       return false;
     }
 
-    for (String exceptionSuffixe : exceptionSuffixes) {
-      if (sentenceStr.startsWith(exceptionSuffixe, startPosition + 1)) {
+    for (String exceptionSuffix : exceptionSuffixes) {
+      if (sentenceStr.startsWith(exceptionSuffix, startPosition + 1)) {
         return false;
       }
     }

@@ -28,8 +28,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
-import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -47,7 +45,7 @@ public final class ValidationConfigurationLoader {
    * @return Configuration loaded from input stream
    * NOTE: return null when failed to create Configuration object
    */
-  public static ValidatorConfiguration loadConfiguraiton(InputStream stream) {
+  public static ValidatorConfiguration loadConfiguration(InputStream stream) {
     Document doc = parseConfigurationString(stream);
     if (doc == null) {
       LOG.error("Failed to parse configuration string");
@@ -71,7 +69,7 @@ public final class ValidationConfigurationLoader {
 
     NodeList nodeList = rootElement.getChildNodes();
     if (nodeList.getLength() == 0) {
-      LOG.warn("No validator is registrated...");
+      LOG.warn("No validator is registered...");
     }
 
     for (int temp = 0; temp < nodeList.getLength(); temp++) {
@@ -99,14 +97,14 @@ public final class ValidationConfigurationLoader {
    * @return Configuration object containing the settings written in input file
    * @throws DocumentValidatorException
    */
-  public static ValidatorConfiguration loadConfiguraiton(String xmlFile) {
+  public static ValidatorConfiguration loadConfiguration(String xmlFile) {
     InputStream fis = null;
     try {
       fis = new FileInputStream(xmlFile);
     } catch (FileNotFoundException e) {
       LOG.error(e.getMessage());
     }
-    return loadConfiguraiton(fis);
+    return loadConfiguration(fis);
   }
 
   private static Document parseConfigurationString(InputStream input) {

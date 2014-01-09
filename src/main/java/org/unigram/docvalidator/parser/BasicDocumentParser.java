@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.DVResource;
-import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.DefaultSymbols;
 
 /**
@@ -74,7 +73,7 @@ public abstract class BasicDocumentParser implements Parser {
       try {
         inputStream = new FileInputStream(fileName);
       } catch (FileNotFoundException e) {
-        LOG.error("Input file is not fould: " + e.getMessage());
+        LOG.error("Input file is not found: " + e.getMessage());
       }
     }
     return inputStream;

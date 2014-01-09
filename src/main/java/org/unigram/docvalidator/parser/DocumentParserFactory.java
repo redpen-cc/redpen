@@ -21,11 +21,11 @@ import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 
 /**
- * Factory class of DoucmentParser.
+ * Factory class of DocumentParser.
  */
 public final class DocumentParserFactory {
   /**
-   * Create DocuemntParser object following specified input file format.
+   * Create DocumentParser object following specified input file format.
    * @param parserType type of parser (plain or wiki etc.)
    * @param resource configuration settings
    * @return Parser object

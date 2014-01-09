@@ -34,7 +34,7 @@ public interface ResultDistributor {
 
   /**
    * flush given ValidationError.
-   * @param err error reproted from a Validator
+   * @param err error reported from a Validator
    * @return 0 succeeded, otherwise 1
    */
   int flushResult(ValidationError err);

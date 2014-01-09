@@ -124,7 +124,7 @@ public class CharacterTableLoader {
     } catch (IOException e) {
       LOG.error("In parseCharTableString: " + e.getMessage());
     } catch (Throwable t) {
-      LOG.error("Unknow error");
+      LOG.error("Unknown error");
     }
     return doc;
   }

@@ -51,10 +51,10 @@ public class ValidationError {
   }
 
   public ValidationError(String errorMessage,
-      Sentence sentence, String erorFileName) {
+      Sentence sentence, String errorFileName) {
     this(sentence.position, errorMessage);
     this.sentence = sentence;
-    this.fileName = erorFileName;
+    this.fileName = errorFileName;
   }
 
   public int getLineNumber() {

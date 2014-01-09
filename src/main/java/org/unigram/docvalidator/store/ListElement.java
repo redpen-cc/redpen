@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Element of List in semi-strcutured text format such as wiki.
+ * Element of List in semi-structured text format such as wiki.
  */
 public final class ListElement {
   /**

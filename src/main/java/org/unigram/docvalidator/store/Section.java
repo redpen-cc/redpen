@@ -211,7 +211,7 @@ public final class Section implements Block {
     Paragraph currentBlock = paragraphs.get(paragraphs.size()-1);
     currentBlock.appendSentence(line, lineNum);
     if (currentBlock.getNumberOfSentences() == 1) {
-      currentBlock.getSentence(0).isStartaragraph = true;
+      currentBlock.getSentence(0).isStartParagraph = true;
     }
   }
 
@@ -226,7 +226,7 @@ public final class Section implements Block {
     Paragraph currentBlock = paragraphs.get(paragraphs.size()-1);
     currentBlock.appendSentence(sentence);
     if (currentBlock.getNumberOfSentences() == 1) {
-      currentBlock.getSentence(0).isStartaragraph = true;
+      currentBlock.getSentence(0).isStartParagraph = true;
     }
   }
 

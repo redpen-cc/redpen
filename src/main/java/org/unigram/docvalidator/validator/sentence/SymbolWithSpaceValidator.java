@@ -38,7 +38,7 @@ public class SymbolWithSpaceValidator  implements SentenceValidator {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     Set<String> names = characterTable.getNames();
     for (String name : names) {
-      ValidationError error = validateCharcter(sentence, name);
+      ValidationError error = validateCharacter(sentence, name);
       if (error != null) {
         errors.add(error);
       }
@@ -53,7 +53,7 @@ public class SymbolWithSpaceValidator  implements SentenceValidator {
     return true;
   }
 
-  private ValidationError validateCharcter(Sentence sentence, String name) {
+  private ValidationError validateCharacter(Sentence sentence, String name) {
     String sentenceStr = sentence.content;
     DVCharacter character = characterTable.getCharacter(name);
     if (!character.isNeedAfterSpace() && !character.isNeedBeforeSpace()) {

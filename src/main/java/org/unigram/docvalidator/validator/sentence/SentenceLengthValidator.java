@@ -30,7 +30,7 @@ import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.validator.SentenceValidator;
 
 /**
- * Validate input sentences contain more charcters more than specified.
+ * Validate input sentences contain more characters more than specified.
  */
 public class SentenceLengthValidator implements SentenceValidator {
   @SuppressWarnings("WeakerAccess")

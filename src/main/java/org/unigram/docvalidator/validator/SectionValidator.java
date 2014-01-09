@@ -42,7 +42,7 @@ public abstract class SectionValidator implements Validator {
         file.getSections(); sectionIterator.hasNext();) {
       Section currentSection = sectionIterator.next();
       List<ValidationError> errors = this.check(currentSection);
-      addFileInfomation(errors, file, currentSection);
+      addFileInformation(errors, file, currentSection);
       validationErrors.addAll(errors);
     }
     return validationErrors;
@@ -56,8 +56,8 @@ public abstract class SectionValidator implements Validator {
    */
   protected abstract List<ValidationError> check(Section section);
 
-  private void addFileInfomation(List<ValidationError> errors,
-      FileContent file, Section section) {
+  private void addFileInformation(List<ValidationError> errors,
+                                  FileContent file, Section section) {
     for (ValidationError error : errors) {
       error.setFileName(file.getFileName());
       error.setLineNumber(section.getHeaderContent(0).position);

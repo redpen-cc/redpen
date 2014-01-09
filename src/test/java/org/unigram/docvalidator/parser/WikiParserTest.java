@@ -503,7 +503,7 @@ public class WikiParserTest {
       String characterTableString) throws DocumentValidatorException {
     InputStream configStream = IOUtils.toInputStream(configurationString);
     ValidatorConfiguration conf =
-        ValidationConfigurationLoader.loadConfiguraiton(configStream);
+        ValidationConfigurationLoader.loadConfiguration(configStream);
 
     CharacterTable characterTable = null;
     if (characterTableString.length() > 0) {

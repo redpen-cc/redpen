@@ -33,14 +33,7 @@ import org.unigram.docvalidator.util.ResultDistributor;
 import org.unigram.docvalidator.util.ValidationError;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.validator.sentence.CommaNumberValidator;
-import org.unigram.docvalidator.validator.sentence.InvalidExpressionValidator;
-import org.unigram.docvalidator.validator.sentence.InvalidCharacterValidator;
-import org.unigram.docvalidator.validator.sentence.WordNumberValidator;
-import org.unigram.docvalidator.validator.sentence.SentenceLengthValidator;
-import org.unigram.docvalidator.validator.sentence.SpaceBegginingOfSentenceValidator;
-import org.unigram.docvalidator.validator.sentence.SymbolWithSpaceValidator;
-import org.unigram.docvalidator.validator.sentence.SuggestExpressionValidator;
+import org.unigram.docvalidator.validator.sentence.*;
 import org.unigram.docvalidator.validator.sentence.lang.ja.KatakanaEndHyphenValidator;
 
 /**
@@ -82,7 +75,7 @@ public class SentenceIterator implements Validator {
       } else if (confName.equals("InvalidExpression")) {
         validator = new InvalidExpressionValidator();
       } else if (confName.equals("SpaceAfterPeriod")) {
-        validator = new SpaceBegginingOfSentenceValidator();
+        validator = new SpaceBeginningOfSentenceValidator();
       } else if (confName.equals("CommaNumber")) {
         validator = new CommaNumberValidator();
       } else if (confName.equals("WordNumber")) {

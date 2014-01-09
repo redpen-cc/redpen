@@ -18,7 +18,7 @@
 package org.unigram.docvalidator.util;
 
 /**
- * Contains Settings used thoughout DocumentValidator.
+ * Contains Settings used throughout DocumentValidator.
  */
 public final class DVResource {
   /**

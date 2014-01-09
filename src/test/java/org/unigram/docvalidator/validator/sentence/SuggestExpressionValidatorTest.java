@@ -25,14 +25,13 @@ import java.util.List;
 import org.junit.Test;
 import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.validator.sentence.SuggestExpressionValidator;
 
 
 class SuggestExpressionValidatorForTest extends SuggestExpressionValidator {
   void loadSynonyms () {
-    synonms = new HashMap<String, String>();
-    synonms.put("like","such as");
-    synonms.put("info","infomation");
+    synonyms = new HashMap<String, String>();
+    synonyms.put("like","such as");
+    synonyms.put("info","infomation");
   }
 }
 

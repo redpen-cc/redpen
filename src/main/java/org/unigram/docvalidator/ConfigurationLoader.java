@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.CharacterTableLoader;
 import org.unigram.docvalidator.util.DVResource;
-import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.util.SAXErrorHandler;
 import org.unigram.docvalidator.util.ValidationConfigurationLoader;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
@@ -31,19 +30,19 @@ import org.xml.sax.SAXException;
 public class ConfigurationLoader {
   /**
    * load DocumentValidator settings.
-   * @param confiFileName input configuration settings
-   * @return DocumentVidator configuration resources
+   * @param configFileName input configuration settings
+   * @return Validator configuration resources
    */
-  public DVResource loadConfiguraiton(String configFileName) {
+  public DVResource loadConfiguration(String configFileName) {
     InputStream fis = null;
     try {
       fis = new FileInputStream(configFileName);
     } catch (FileNotFoundException e) {
       LOG.error(e.getMessage());
     }
-    DVResource resorce = this.loadConfiguraiton(fis);
+    DVResource resource = this.loadConfiguraiton(fis);
     IOUtils.closeQuietly(fis);
-    return resorce;
+    return resource;
   }
 
   /**
@@ -61,30 +60,30 @@ public class ConfigurationLoader {
 
     // Get root node
     doc.getDocumentElement().normalize();
-    NodeList rootCongigElementList =
+    NodeList rootConfigElementList =
         doc.getElementsByTagName("configuration");
-    if (rootCongigElementList.getLength() == 0) {
+    if (rootConfigElementList.getLength() == 0) {
       LOG.error("No \"configuration\" block found in the configuration");
       return null;
-    } else if (rootCongigElementList.getLength() > 1) {
+    } else if (rootConfigElementList.getLength() > 1) {
       LOG.warn("More than one \"configuration\" blocks in the configuration");
     }
-    Node root = rootCongigElementList.item(0);
+    Node root = rootConfigElementList.item(0);
     Element rootElement = (Element) root;
     LOG.info("Succeeded to load configuration file");
 
     // Load ValidatorConfiguraiton
-    NodeList validatorCongigElementList =
+    NodeList validatorConfigElementList =
         rootElement.getElementsByTagName("validator");
-    if (validatorCongigElementList.getLength() == 0) {
+    if (validatorConfigElementList.getLength() == 0) {
       LOG.error("No \"validator\" block found in the configuration");
       return null;
-    } else if (validatorCongigElementList.getLength() > 1) {
+    } else if (validatorConfigElementList.getLength() > 1) {
       LOG.warn("More than one \"validator\" blocks in the configuration");
     }
     ValidatorConfiguration validatorConfiguration =
         extractValidatorConfiguration(
-            (Element) validatorCongigElementList.item(0));
+            (Element) validatorConfigElementList.item(0));
     if (validatorConfiguration == null) {
       LOG.error("Failed to create Validator Configuration Object.");
     }
@@ -119,9 +118,7 @@ public class ConfigurationLoader {
       Element validatorElement) {
     String validatorConfigurationPath = validatorElement.getTextContent();
     LOG.info("Validation Setting file: " + validatorConfigurationPath);
-    ValidatorConfiguration validatorConfiguration =
-          ValidationConfigurationLoader.loadConfiguraiton(validatorConfigurationPath);
-    return validatorConfiguration;
+    return ValidationConfigurationLoader.loadConfiguration(validatorConfigurationPath);
   }
 
   static private Document parseConfigurationString(InputStream input) {

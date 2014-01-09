@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 public class FileLoader {
   /**
    * constructor.
-   * @param ex ResoruceExtractor
+   * @param ex ResourceExtractor
    */
   public FileLoader(ResourceExtractor ex) {
     this.resourceExtractor = ex;

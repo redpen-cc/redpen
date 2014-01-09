@@ -22,7 +22,7 @@ public class ValidationConfigurationLoaderTest {
         "</component>");
     InputStream stream = IOUtils.toInputStream(sampleConfiguraitonStr);
     ValidatorConfiguration conf =
-        ValidationConfigurationLoader.loadConfiguraiton(stream);
+        ValidationConfigurationLoader.loadConfiguration(stream);
     assertNotNull(conf);
     assertEquals(1, conf.getChildrenNumber());
     IOUtils.closeQuietly(stream);
@@ -36,7 +36,7 @@ public class ValidationConfigurationLoaderTest {
         "</component>");
     InputStream stream = IOUtils.toInputStream(sampleConfiguraitonStr);
     ValidatorConfiguration conf =
-        ValidationConfigurationLoader.loadConfiguraiton(stream);
+        ValidationConfigurationLoader.loadConfiguration(stream);
     assertNotNull(conf);
     assertEquals(0, conf.getChildrenNumber());
     IOUtils.closeQuietly(stream);
@@ -52,7 +52,7 @@ public class ValidationConfigurationLoaderTest {
         "</component>");
     InputStream stream = IOUtils.toInputStream(sampleConfiguraitonStr);
     ValidatorConfiguration conf =
-        ValidationConfigurationLoader.loadConfiguraiton(stream);
+        ValidationConfigurationLoader.loadConfiguration(stream);
     assertNotNull(conf);
     assertEquals(1, conf.getChildrenNumber());
     IOUtils.closeQuietly(stream);
@@ -68,7 +68,7 @@ public class ValidationConfigurationLoaderTest {
         "<component>"); // NOTE: no slash
     InputStream stream = IOUtils.toInputStream(sampleConfiguraitonStr);
     ValidatorConfiguration conf =
-        ValidationConfigurationLoader.loadConfiguraiton(stream);
+        ValidationConfigurationLoader.loadConfiguration(stream);
     assertNull(conf);
     IOUtils.closeQuietly(stream);
   }
@@ -78,7 +78,7 @@ public class ValidationConfigurationLoaderTest {
     String sampleConfiguraitonStr = new String("");
     InputStream stream = IOUtils.toInputStream(sampleConfiguraitonStr);
     ValidatorConfiguration conf =
-        ValidationConfigurationLoader.loadConfiguraiton(stream);
+        ValidationConfigurationLoader.loadConfiguration(stream);
     assertNull(conf);
     IOUtils.closeQuietly(stream);
   }
@@ -87,7 +87,7 @@ public class ValidationConfigurationLoaderTest {
   public void testNull() {
     InputStream stream = null;
     ValidatorConfiguration conf =
-        ValidationConfigurationLoader.loadConfiguraiton(stream);
+        ValidationConfigurationLoader.loadConfiguration(stream);
     assertNull(conf);
   }
 }

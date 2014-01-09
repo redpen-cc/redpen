@@ -26,7 +26,6 @@ import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.unigram.docvalidator.util.ValidationConfigurationLoader;
 
 public class ConfigurationTest {
 
@@ -50,7 +49,7 @@ public class ConfigurationTest {
         "</component>");
 
     InputStream stream = IOUtils.toInputStream(sampleConfiguraiton);
-    this.conf = ValidationConfigurationLoader.loadConfiguraiton(stream);
+    this.conf = ValidationConfigurationLoader.loadConfiguration(stream);
     if (this.conf == null) {
       fail();
     }

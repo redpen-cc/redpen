@@ -33,7 +33,7 @@ public final class Sentence implements Block {
     super();
     this.content = sentenceContent;
     this.position = sentencePosition;
-    this.isStartaragraph = false;
+    this.isStartParagraph = false;
     this.links = new ArrayList<String>();
   }
 
@@ -54,7 +54,7 @@ public final class Sentence implements Block {
   /**
    * first sentence in a paragraph.
    */
-  public boolean isStartaragraph;
+  public boolean isStartParagraph;
 
   /**
    * links (including internal and external ones)

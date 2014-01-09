@@ -55,7 +55,7 @@ public final class Main {
     options.addOption(OptionBuilder.create("i"));
 
     OptionBuilder.withLongOpt("conf");
-    OptionBuilder.withDescription("configuraiton file");
+    OptionBuilder.withDescription("configuration file");
     OptionBuilder.hasArg();
     options.addOption(OptionBuilder.create("c"));
 
@@ -74,7 +74,7 @@ public final class Main {
     try {
       commandLine = parser.parse(options, args);
     } catch (ParseException e) {
-        LOG.error("Error occured in parsing command line options ");
+        LOG.error("Error occurred in parsing command line options ");
         printHelp(options);
         return;
     }
@@ -105,8 +105,8 @@ public final class Main {
       resultFormat = commandLine.getOptionValue("r");
     }
 
-    ConfigurationLoader configLoder = new ConfigurationLoader();
-    DVResource conf = configLoder.loadConfiguraiton(configFileName);
+    ConfigurationLoader configLoader = new ConfigurationLoader();
+    DVResource conf = configLoader.loadConfiguration(configFileName);
     if (conf == null) {
       LOG.error("Failed to initialize the DocumentValidator resource.");
       return;
