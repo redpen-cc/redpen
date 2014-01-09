@@ -59,11 +59,9 @@ public class SentenceIterator implements Validator {
   public List<ValidationError> check(FileContent file,
       ResultDistributor distributor) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
-    for (Iterator<SentenceValidator> iterator =
-        this.sentenceValidators.iterator(); iterator.hasNext();) {
-      SentenceValidator validator = iterator.next();
+    for (SentenceValidator validator : this.sentenceValidators) {
       for (Iterator<Section> sectionIterator =
-            file.getSections(); sectionIterator.hasNext();) {
+               file.getSections(); sectionIterator.hasNext(); ) {
         Section currentSection = sectionIterator.next();
         checkSection(distributor, errors, validator,
             currentSection, file.getFileName());

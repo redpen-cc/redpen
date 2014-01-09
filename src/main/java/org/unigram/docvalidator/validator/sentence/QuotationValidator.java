@@ -18,7 +18,6 @@
 package org.unigram.docvalidator.validator.sentence;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.unigram.docvalidator.DefaultSymbols;
