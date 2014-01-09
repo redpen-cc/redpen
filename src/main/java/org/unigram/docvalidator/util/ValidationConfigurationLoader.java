@@ -99,8 +99,7 @@ public final class ValidationConfigurationLoader {
    * @return Configuration object containing the settings written in input file
    * @throws DocumentValidatorException
    */
-  public static ValidatorConfiguration loadConfiguraiton(String xmlFile)
-      throws DocumentValidatorException {
+  public static ValidatorConfiguration loadConfiguraiton(String xmlFile) {
     InputStream fis = null;
     try {
       fis = new FileInputStream(xmlFile);

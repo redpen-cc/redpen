@@ -65,8 +65,7 @@ public abstract class BasicDocumentParser implements Parser {
     return br;
   }
 
-  protected final InputStream loadStream(String fileName)
-      throws DocumentValidatorException {
+  protected final InputStream loadStream(String fileName) {
     InputStream inputStream = null;
     if (fileName == null || fileName.equals("")) {
       LOG.error("input file was not specified.");
