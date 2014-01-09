@@ -38,6 +38,7 @@ public class ParagraphStartWithValidator extends SectionValidator {
   /**
    * Default matter paragraph start with.
    */
+  @SuppressWarnings("WeakerAccess")
   public static final String DEFAULT_PARAGRAPH_START_WITH = " ";
 
   public ParagraphStartWithValidator() {

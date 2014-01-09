@@ -33,6 +33,7 @@ import org.unigram.docvalidator.validator.SentenceValidator;
  * Validate input sentences contain more charcters more than specified.
  */
 public class SentenceLengthValidator implements SentenceValidator {
+  @SuppressWarnings("WeakerAccess")
   public static final int DEFAULT_MAX_LENGTH = 30;
 
   public List<ValidationError> check(Sentence line) {

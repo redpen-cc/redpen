@@ -64,5 +64,5 @@ public final class Paragraph implements Block {
     return BlockTypes.PARAGRAPH;
   }
 
-  final Vector<Sentence> sentences;
+  private final Vector<Sentence> sentences;
 }

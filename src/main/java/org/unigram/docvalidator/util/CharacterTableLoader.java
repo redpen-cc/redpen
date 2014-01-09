@@ -153,5 +153,5 @@ public class CharacterTableLoader {
     }
   }
 
-  static final Logger LOG = LoggerFactory.getLogger(CharacterTableLoader.class);
+  private static final Logger LOG = LoggerFactory.getLogger(CharacterTableLoader.class);
 }

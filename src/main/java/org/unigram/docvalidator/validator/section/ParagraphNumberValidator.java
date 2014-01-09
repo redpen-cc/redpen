@@ -33,6 +33,7 @@ public class ParagraphNumberValidator extends SectionValidator {
   /**
    * Default maximum number of paragraphs in a section.
    */
+  @SuppressWarnings("WeakerAccess")
   public static final int DEFAULT_MAX_PARAGRAPHS_IN_A_SECTION = 100;
 
   @Override
