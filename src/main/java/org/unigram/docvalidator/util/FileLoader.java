@@ -46,7 +46,6 @@ public class FileLoader {
       inputStream = new FileInputStream(fileName);
     } catch (IOException e) {
       LOG.error("IO Error ", e);
-      IOUtils.closeQuietly(inputStream);
       return 1;
     }
     if (loadFile(inputStream) != 0) {

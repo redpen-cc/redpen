@@ -48,7 +48,7 @@ public class BlockTypes {
     }
 
     public static int getTokenId(String aName) {
-        final Integer id = (Integer) BLOCK_NAME_TO_ID.get(aName);
+        final Integer id = BLOCK_NAME_TO_ID.get(aName);
         if (id == null) {
             throw new IllegalArgumentException("given name " + aName);
         }

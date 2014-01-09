@@ -78,23 +78,23 @@ public class SentenceIterator implements Validator {
       String confName = currentConfiguration.getConfigurationName();
       SentenceValidator validator = null;
       if (confName.equals("SentenceLength")) {
-        validator = (SentenceValidator) new SentenceLengthValidator();
+        validator = new SentenceLengthValidator();
       } else if (confName.equals("InvalidExpression")) {
-        validator = (SentenceValidator) new InvalidExpressionValidator();
+        validator = new InvalidExpressionValidator();
       } else if (confName.equals("SpaceAfterPeriod")) {
-        validator = (SentenceValidator) new SpaceBegginingOfSentenceValidator();
+        validator = new SpaceBegginingOfSentenceValidator();
       } else if (confName.equals("CommaNumber")) {
-        validator = (SentenceValidator) new CommaNumberValidator();
+        validator = new CommaNumberValidator();
       } else if (confName.equals("WordNumber")) {
-        validator = (SentenceValidator) new WordNumberValidator();
+        validator = new WordNumberValidator();
       } else if (confName.equals("SuggestExpression")) {
-        validator = (SentenceValidator) new SuggestExpressionValidator();
+        validator = new SuggestExpressionValidator();
       } else if (confName.equals("InvalidCharacter")) {
-          validator = (SentenceValidator) new InvalidCharacterValidator();
+          validator = new InvalidCharacterValidator();
       } else if (confName.equals("SpaceWithSymbol")) {
-        validator = (SentenceValidator) new SymbolWithSpaceValidator();
+        validator = new SymbolWithSpaceValidator();
       } else if (confName.equals("KatakanaEndHyphen")) {
-        validator = (SentenceValidator) new KatakanaEndHyphenValidator();
+        validator = new KatakanaEndHyphenValidator();
       } else {
         throw new DocumentValidatorException(
             "There is no validator like " + confName);

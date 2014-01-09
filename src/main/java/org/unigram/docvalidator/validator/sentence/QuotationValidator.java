@@ -215,7 +215,7 @@ public class QuotationValidator implements SentenceValidator {
       isFound = detectIsFound(sentenceStr, quoteCandidatePosition);
       if (isFound) {
         return quoteCandidatePosition;
-      } else if (quoteCandidatePosition >= 0 && !isFound) { // exception case
+      } else if (quoteCandidatePosition >= 0) { // exception case
         startPosition = quoteCandidatePosition + 1;
       } else {
         return -1;
