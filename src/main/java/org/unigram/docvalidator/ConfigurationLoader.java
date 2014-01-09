@@ -119,14 +119,8 @@ public class ConfigurationLoader {
       Element validatorElement) {
     String validatorConfigurationPath = validatorElement.getTextContent();
     LOG.info("Validation Setting file: " + validatorConfigurationPath);
-    ValidatorConfiguration validatorConfiguration;
-    try {
-      validatorConfiguration =
+    ValidatorConfiguration validatorConfiguration =
           ValidationConfigurationLoader.loadConfiguraiton(validatorConfigurationPath);
-    } catch (DocumentValidatorException e) {
-      LOG.error(e.getLocalizedMessage());
-      return null;
-    }
     return validatorConfiguration;
   }
 
@@ -149,6 +143,6 @@ public class ConfigurationLoader {
     return doc;
   }
 
-  private static Logger LOG =
+  private static final Logger LOG =
       LoggerFactory.getLogger(ConfigurationLoader.class);
 }
