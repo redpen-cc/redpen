@@ -1,7 +1,9 @@
 #!/bin/bash
 
-VERSION=0.0.1-SNAPSHOT
+VERSION=0.1
 RUN_SCRIPT="$(basename "${0}")"
+DV_HOME=`dirname "$this"`
+MAIN_CLASS="org.unigram.docvalidator.Main"
 
 usage() {
     echo "Usage: $RUN_SCRIPT [OPTIONS] INPUT-FILES"
@@ -60,7 +62,15 @@ main() {
         esac
     done
     INPUT_FILES="$@"
-    java -jar lib/document-validator-${VERSION}.jar --conf ${CONFIG_FILE} --format ${INPUT_FORMAT} --input ${INPUT_FILES} --result-format ${RESULT_FORMAT}
+
+    # add jars to class path
+    DV_CLASSPATH=lib
+    for f in $DV_HOME/lib/*; do
+	DV_CLASSPATH=$DV_CLASSPATH:$f
+    done
+    export CLASSPATH=$DV_CLASSPATH:$CLASSPATH
+
+    java ${MAIN_CLASS} --conf ${CONFIG_FILE} --format ${INPUT_FORMAT} --input ${INPUT_FILES} --result-format ${RESULT_FORMAT}
 }
 
 [ ${#BASH_SOURCE[@]} = 1 ] && main "$@"
