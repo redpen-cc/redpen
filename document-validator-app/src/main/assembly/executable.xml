@@ -12,11 +12,18 @@
       </includes>
     </fileSet>
     <fileSet>
-      <directory></directory>
-      <outputDirectory>/</outputDirectory>
+      <directory>sample</directory>
+      <outputDirectory>/sample</outputDirectory>
       <includes>
-        <include>bin/*</include>
-        <include>sample/**/*</include>
+        <include>**/*</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>bin</directory>
+      <outputDirectory>/bin</outputDirectory>
+      <fileMode>755</fileMode>
+      <includes>
+        <include>*</include>
       </includes>
     </fileSet>
   </fileSets>
