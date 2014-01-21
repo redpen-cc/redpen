@@ -18,10 +18,12 @@
 
 package org.unigram.docvalidator.parser.markdown;
 
+import org.parboiled.common.StringUtils;
 import org.pegdown.Printer;
 import org.pegdown.ast.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.unigram.docvalidator.parser.ParseUtils;
 import org.unigram.docvalidator.store.FileContent;
 import org.unigram.docvalidator.store.Paragraph;
 import org.unigram.docvalidator.store.Section;
@@ -61,10 +63,13 @@ public class ToFileContentSerializer implements Visitor {
 
   private StringBuilder remainStr = new StringBuilder();
   private List<Integer> lineList = null;
+  // TODO multi period character not supported
+  private String period;
 
-  public ToFileContentSerializer(FileContent fileContent, List<Integer> lineList) {
+  public ToFileContentSerializer(FileContent fileContent, List<Integer> lineList, String period) {
     this.fileContent = fileContent;
     this.lineList = lineList;
+    this.period = period;
     currentSection = fileContent.getLastSection();
   }
 
@@ -74,7 +79,7 @@ public class ToFileContentSerializer implements Visitor {
     return fileContent;
   }
 
-  private void fixParagraph(){
+  private void fixSentence(){
     // 1. remain sentence append currentSection
     //TODO need line number
     List<Sentence> sentences = createSentenceList();
@@ -157,9 +162,27 @@ public class ToFileContentSerializer implements Visitor {
 
   private List<Sentence> createSentenceList() {
     List<Sentence> newSentences = new ArrayList<Sentence>();
+    Sentence currentSentence = null;
+    StringBuffer sentenceContent = new StringBuffer();
     for(CandidateSentence candidateSentence: candidateSentences){
-      //FIXME create sentence phase is not implemented
-      System.out.println(candidateSentence.toString());
+      String remain = ParseUtils.extractSentences(candidateSentence.getSentence(), this.period,newSentences);
+
+      //TODO refactor StringUtils...
+      if(StringUtils.isNotEmpty(remain)){
+        if(currentSentence != null){
+          currentSentence.content += candidateSentence.getSentence();
+        }else{
+          currentSentence = new Sentence(remain, candidateSentence.getLineNum());
+          newSentences.add(currentSentence);
+        }
+        // FIXME check: pegdown extract 1 candidate sentence to 1 link?
+        if(StringUtils.isNotEmpty(candidateSentence.getLink())){
+          currentSentence.links.add(candidateSentence.getLink());
+        }
+      }else{
+        currentSentence = null;
+      }
+
     }
     candidateSentences.clear();
     return newSentences;
@@ -189,15 +212,14 @@ public class ToFileContentSerializer implements Visitor {
 
   private void appendSection(HeaderNode headerNode){
     // 1. remain sentence flush to current section
-    //    TODO flush ListBlock or other blocks
-    List<Sentence> sentences = createSentenceList();
-    //FIXME maybe, add appendSentences method to Section
-    for(Sentence sentence: sentences ){
-      currentSection.appendSentence(sentence);
-    }
+    fixSentence();
 
-    // 2. create new Section
-    Section newSection = new Section(headerNode.getLevel());
+    // 2. retrieve children for header content create;
+    visitChildren(headerNode);
+    List<Sentence> headerContents = createSentenceList();
+
+    // 3. create new Section
+    Section newSection = new Section(headerNode.getLevel(), headerContents);
     fileContent.appendSection(newSection);
     //FIXME move this check process to addChild
     if (!addChild(currentSection, newSection)) {
@@ -250,7 +272,7 @@ public class ToFileContentSerializer implements Visitor {
   @Override
   public void visit(BulletListNode bulletListNode) {
     //FIXME test and check
-    fixParagraph();
+    fixSentence();
     currentSection.appendParagraph(new Paragraph());
     // TODO handle bulletListNode and orderdListNode
     if(itemDepth == 0) {
@@ -264,7 +286,7 @@ public class ToFileContentSerializer implements Visitor {
   @Override
   public void visit(OrderedListNode orderedListNode) {
     //FIXME test and check
-    fixParagraph();
+    fixSentence();
     currentSection.appendParagraph(new Paragraph());
     // TODO handle bulletListNode and orderdListNode
     if(itemDepth == 0) {
@@ -288,7 +310,7 @@ public class ToFileContentSerializer implements Visitor {
   public void visit(ParaNode paraNode) {
     currentSection.appendParagraph(new Paragraph());
     visitChildren(paraNode);
-    fixParagraph();
+    fixSentence();
   }
 
   @Override

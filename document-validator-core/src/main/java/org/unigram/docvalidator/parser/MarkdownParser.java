@@ -95,7 +95,7 @@ public class MarkdownParser extends BasicDocumentParser {
 
       // TODO create fileContent after parsing... overhead...
       RootNode rootNode = pegDownProcessor.parseMarkdown(sb.toString().toCharArray());
-      ToFileContentSerializer serializer = new ToFileContentSerializer(fileContent, lineList);
+      ToFileContentSerializer serializer = new ToFileContentSerializer(fileContent, lineList, this.period);
       fileContent = serializer.toFileContent(rootNode);
 
     } catch (ParsingTimeoutException e) {
@@ -111,6 +111,8 @@ public class MarkdownParser extends BasicDocumentParser {
 
     return fileContent;
   }
+
+
 
   private static final Logger LOG = LoggerFactory.getLogger(MarkdownParser.class);
 
