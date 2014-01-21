@@ -9,13 +9,14 @@ public class ParseUtils {
 
   /**
    * Get Sentence lists.
-   * @param line input line which can contain more than one sentences
-   * @param period full stop character
+   *
+   * @param line            input line which can contain more than one sentences
+   * @param period          full stop character
    * @param outputSentences List of extracted sentences
    * @return remaining line
    */
   static public String extractSentences(String line, String period,
-      List<Sentence> outputSentences) {
+                                        List<Sentence> outputSentences) {
     int periodPosition = StringUtils.getSentenceEndPosition(line, period);
     if (periodPosition == -1) {
       return line;

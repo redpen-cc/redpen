@@ -20,13 +20,15 @@ package org.unigram.docvalidator.util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 /**
  * Represent a character settings.
  */
 public final class DVCharacter {
   /**
-   * constructor.
-   * @param charName name of target character
+   * Constructor.
+   *
+   * @param charName  name of target character
    * @param charValue character
    */
   public DVCharacter(String charName, String charValue) {
@@ -38,13 +40,14 @@ public final class DVCharacter {
   }
 
   /**
-   * constructor.
-   * @param charName name of target character
-   * @param charValue character
+   * Constructor.
+   *
+   * @param charName        name of target character
+   * @param charValue       character
    * @param invalidCharsStr list of invalid characters
    */
   public DVCharacter(String charName, String charValue,
-      String invalidCharsStr) {
+                     String invalidCharsStr) {
     this(charName, charValue);
     if (invalidCharsStr.length() > 0) {
       this.invalidChars = Arrays.asList(invalidCharsStr.split("(?!^)"));
@@ -52,30 +55,33 @@ public final class DVCharacter {
   }
 
   /**
-   * constructor.
-   * @param charName name of target character
-   * @param charValue character
+   * Constructor.
+   *
+   * @param charName        name of target character
+   * @param charValue       character
    * @param invalidCharsStr list of invalid characters
    * @param haveBeforeSpace flag to have a space before the character
-   * @param haveAfterSpace flag to have a pace after the character
+   * @param haveAfterSpace  flag to have a pace after the character
    */
   public DVCharacter(String charName, String charValue, String invalidCharsStr,
-      boolean haveBeforeSpace, boolean haveAfterSpace) {
+                     boolean haveBeforeSpace, boolean haveAfterSpace) {
     this(charName, charValue, invalidCharsStr);
     this.needBeforeSpace = haveBeforeSpace;
     this.needAfterSpace = haveAfterSpace;
   }
 
   /**
-   * get name of character.
-   * @return name
+   * Get name of character.
+   *
+   * @return character name
    */
   public String getName() {
     return name;
   }
 
   /**
-   * set name of character.
+   * Set name of character.
+   *
    * @param charName name of character
    */
   public void setName(String charName) {
@@ -83,7 +89,8 @@ public final class DVCharacter {
   }
 
   /**
-   * get value of character.
+   * Get value of character.
+   *
    * @return character
    */
   public String getValue() {
@@ -91,7 +98,8 @@ public final class DVCharacter {
   }
 
   /**
-   * set value of character.
+   * Set value of character.
+   *
    * @param charValue
    */
   public void setValue(String charValue) {
@@ -99,7 +107,8 @@ public final class DVCharacter {
   }
 
   /**
-   * get invalid characters.
+   * Get invalid characters.
+   *
    * @return a list of invalid characters
    */
   public List<String> getInvalidChars() {
@@ -107,7 +116,8 @@ public final class DVCharacter {
   }
 
   /**
-   * set invalid characters.
+   * Set invalid characters.
+   *
    * @param invalidCharList list of invalid characters
    */
   public void setInvalidChars(List<String> invalidCharList) {
@@ -115,7 +125,8 @@ public final class DVCharacter {
   }
 
   /**
-   * get the flag to know the character should have a space.
+   * Get the flag to know the character should have a space.
+   *
    * @return flag to determine the character should have a space before it
    */
   public boolean isNeedBeforeSpace() {
@@ -123,7 +134,8 @@ public final class DVCharacter {
   }
 
   /**
-   * set the flag to know the character should have a space.
+   * Set the flag to know the character should have a space.
+   *
    * @param beforeSpace the character should have a space before it
    */
   public void setNeedBeforeSpace(boolean beforeSpace) {
@@ -131,7 +143,8 @@ public final class DVCharacter {
   }
 
   /**
-   * get the flag to know the character should have a space.
+   * Get the flag to know the character should have a space.
+   *
    * @return flag to determine the character should have a space after it
    */
   public boolean isNeedAfterSpace() {
@@ -139,7 +152,8 @@ public final class DVCharacter {
   }
 
   /**
-   * set the flag to know the character should have a space.
+   * Set the flag to know the character should have a space.
+   *
    * @param afterSpace the character should have a space after it
    */
   public void setNeedAfterSpace(boolean afterSpace) {

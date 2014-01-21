@@ -36,7 +36,8 @@ import org.unigram.docvalidator.DefaultSymbols;
  */
 public abstract class BasicDocumentParser implements Parser {
   /**
-   * load basic configuration settings.
+   * Given configuration resource, return basic configuration settings.
+   *
    * @param resource object containing configuration settings
    */
   public final boolean initialize(DVResource resource) {

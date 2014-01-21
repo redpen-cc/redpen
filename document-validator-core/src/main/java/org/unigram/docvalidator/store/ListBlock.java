@@ -34,7 +34,8 @@ public final class ListBlock implements Block {
   }
 
   /**
-   * get iterator of list elements.
+   * Get iterator of list elements.
+   *
    * @return Iterator of ListElement
    */
   public Iterator<ListElement> getListElements() {
@@ -42,7 +43,8 @@ public final class ListBlock implements Block {
   }
 
   /**
-   * get the number of list elements.
+   * Get the number of list elements.
+   *
    * @return number of list elements
    */
   public int getNumberOfListElements() {
@@ -50,19 +52,22 @@ public final class ListBlock implements Block {
   }
 
   /**
-   * get iterator of list elements.
+   * Get iterator of list elements.
+   *
    * @return Iterator of ListElement
    */
   public ListElement getListElement(int id) {
     return listElements.get(id);
   }
+
   public int getBlockID() {
     return BlockTypes.LIST;
   }
 
   /**
    * Append ListElement.
-   * @param level indentation level
+   *
+   * @param level    indentation level
    * @param contents contents of list element
    */
   public void appendElement(int level, List<Sentence> contents) {

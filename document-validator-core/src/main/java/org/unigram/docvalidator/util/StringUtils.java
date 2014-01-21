@@ -22,10 +22,11 @@ package org.unigram.docvalidator.util;
  */
 public final class StringUtils {
   /**
-   * get sentence end position.
-   * @param str input string
+   * Get sentence end position.
+   *
+   * @param str    input string
    * @param period full stop character
-   * @return position of full stop when there is a full stop, otherwise -1
+   * @return position of full stop when there is a full stop, -1 otherwise
    */
   public static int getSentenceEndPosition(String str, String period) {
     return getEndPosition(str, period, 0);
@@ -35,7 +36,7 @@ public final class StringUtils {
     int position = str.indexOf(period, offset);
 
     if (checkPosition(position, str)) {
-      if (period.equals(".") && str.charAt(position+1) == ' ') {
+      if (period.equals(".") && str.charAt(position + 1) == ' ') {
         return position;
       }
       return handleSuccessivePeriods(str, period, position);
@@ -50,8 +51,8 @@ public final class StringUtils {
   }
 
   private static int handleSuccessivePeriods(String str, String period,
-      int position) {
-    int nextPosition = position+1;
+                                             int position) {
+    int nextPosition = position + 1;
 
     if (!period.equals(".") &&
         str.indexOf(period, nextPosition) != nextPosition) {
@@ -62,7 +63,7 @@ public final class StringUtils {
 
     if (str.indexOf(period, nextPosition) == nextPosition) {
       // NOTE: handling of period in succession
-      if ((position+1) == str.length() -1) {
+      if ((position + 1) == str.length() - 1) {
         return nextPosition;
       } else {
         return getEndPosition(str, period, nextPosition);
@@ -80,5 +81,6 @@ public final class StringUtils {
     return Character.UnicodeBlock.of(c) == Character.UnicodeBlock.KATAKANA;
   }
 
-  private StringUtils() { }
+  private StringUtils() {
+  }
 }

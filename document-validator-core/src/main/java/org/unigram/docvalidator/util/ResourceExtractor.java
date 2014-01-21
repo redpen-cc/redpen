@@ -24,6 +24,7 @@ package org.unigram.docvalidator.util;
 public interface ResourceExtractor {
   /**
    * load line.
+   *
    * @param line line in a file
    * @return 0 when succeeded, otherwise 1
    */

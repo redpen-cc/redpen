@@ -24,12 +24,20 @@ import java.util.Map;
  * An ResourceExtractor implementation for KeyValue input data.
  */
 public class KeyValueDictionaryExtractor implements ResourceExtractor {
-
+  /**
+   * Constructor.
+   */
   public KeyValueDictionaryExtractor() {
     super();
     map = new HashMap<String, String>();
   }
 
+  /**
+   * Load input file. The input file TSV with two columns.
+   *
+   * @param line line in a file
+   * @return 0 when succeeded to load, 1 otherwise
+   */
   public int load(String line) {
     String[] result = line.split("\t");
     if (result.length != 2) {

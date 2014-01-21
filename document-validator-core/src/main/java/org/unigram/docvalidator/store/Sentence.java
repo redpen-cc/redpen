@@ -21,12 +21,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represent a sentence in a text file.
+ * Sentence block in a Document.
  */
 public final class Sentence implements Block {
   /**
-   * constructor.
-   * @param sentenceContent content of sentence
+   * Constructor.
+   *
+   * @param sentenceContent  content of sentence
    * @param sentencePosition sentence position
    */
   public Sentence(String sentenceContent, int sentencePosition) {
@@ -42,22 +43,22 @@ public final class Sentence implements Block {
   }
 
   /**
-   * content of string.
+   * Content of string.
    */
   public String content;
 
   /**
-   * sentence position in a file.
+   * Sentence position in a file.
    */
   public int position;
 
   /**
-   * first sentence in a paragraph.
+   * First sentence in a paragraph.
    */
   public boolean isStartParagraph;
 
   /**
-   * links (including internal and external ones)
+   * Links (including internal and external ones)
    */
   public final List<String> links;
 

@@ -24,6 +24,11 @@ import org.unigram.docvalidator.store.Sentence;
  */
 public class ValidationError {
 
+  /**
+   * Constructor.
+   *
+   * @param errorMessage error message
+   */
   public ValidationError(String errorMessage) {
     super();
     this.lineNumber = -1;
@@ -32,59 +37,125 @@ public class ValidationError {
     this.sentence = null;
   }
 
+  /**
+   * Constructor.
+   *
+   * @param errorLineNumber error position (line number)
+   * @param errorMessage    error message
+   */
   public ValidationError(int errorLineNumber, String errorMessage) {
     this(errorMessage);
     this.lineNumber = errorLineNumber;
     this.fileName = "";
   }
 
+  /**
+   * Constructor.
+   *
+   * @param errorMessage error message
+   * @param sentence     sentence containing validation error
+   */
   public ValidationError(String errorMessage,
-      Sentence sentence) {
+                         Sentence sentence) {
     this(sentence.position, errorMessage);
     this.sentence = sentence;
   }
 
+  /**
+   * Constructor.
+   *
+   * @param errorLineNumber error position (line number)
+   * @param errorMessage    error message
+   * @param errorFileName   file name in which the error occurs
+   */
   public ValidationError(int errorLineNumber, String errorMessage,
-      String errorFileName) {
+                         String errorFileName) {
     this(errorLineNumber, errorMessage);
     this.fileName = errorFileName;
   }
 
+  /**
+   * Constructor.
+   *
+   * @param errorMessage  error message
+   * @param sentence      sentence containing validation error
+   * @param errorFileName file name in which the error occurs
+   */
   public ValidationError(String errorMessage,
-      Sentence sentence, String errorFileName) {
+                         Sentence sentence, String errorFileName) {
     this(sentence.position, errorMessage);
     this.sentence = sentence;
     this.fileName = errorFileName;
   }
 
+  /**
+   * Get line number in which the error occurs.
+   *
+   * @return
+   */
   public int getLineNumber() {
     return lineNumber;
   }
 
+  /**
+   * Set the line number in which error occurs.
+   *
+   * @param errorLineNumber
+   */
   public void setLineNumber(int errorLineNumber) {
     this.lineNumber = errorLineNumber;
   }
 
+  /**
+   * Get error message.
+   *
+   * @return error message
+   */
   public String getMessage() {
     return message;
   }
 
+  /**
+   * Set error message.
+   *
+   * @param errorMessage
+   */
   public void setMessage(String errorMessage) {
     this.message = errorMessage;
   }
 
+  /**
+   * Get file name.
+   *
+   * @return file name
+   */
   public String getFileName() {
     return fileName;
   }
 
-  public void setFileName(String erroFileName) {
-    this.fileName = erroFileName;
+  /**
+   * Set file name
+   *
+   * @param errorFileName
+   */
+  public void setFileName(String errorFileName) {
+    this.fileName = errorFileName;
   }
 
+  /**
+   * Get sentence containing the error.
+   *
+   * @return sentence
+   */
   public Sentence getSentence() {
     return sentence;
   }
 
+  /**
+   * Set sentence contains the error.
+   *
+   * @param sentence sentence containing validation error
+   */
   public void setSentence(Sentence sentence) {
     this.sentence = sentence;
   }
@@ -97,7 +168,7 @@ public class ValidationError {
     } else {
       str.append("ValidationError[").append(this.fileName).append(lineNumber).append(" (").append(message).append(")]");
     }
-    if(this.sentence != null) {
+    if (this.sentence != null) {
       str.append(" at line: ").append(sentence.content);
     }
     return str.toString();

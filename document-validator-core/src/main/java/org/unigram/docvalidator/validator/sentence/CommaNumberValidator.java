@@ -43,6 +43,9 @@ public class CommaNumberValidator implements SentenceValidator {
    */
   public static final String DEFAULT_COMMA = ",";
 
+  /**
+   * Constructor.
+   */
   public CommaNumberValidator() {
     super();
     maxCommaNum = DEFAULT_MAX_COMMA_NUMBER;

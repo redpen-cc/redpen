@@ -26,7 +26,7 @@ import java.util.Vector;
  */
 public final class FileContent implements Block {
   /**
-   * constructor.
+   * Constructor.
    */
   public FileContent() {
     super();
@@ -35,7 +35,8 @@ public final class FileContent implements Block {
   }
 
   /**
-   * get Iterator for Section in the FileContent.
+   * Get Iterator for Section in the FileContent.
+   *
    * @return Iterator of Section list
    */
   public Iterator<Section> getSections() {
@@ -43,15 +44,17 @@ public final class FileContent implements Block {
   }
 
   /**
-   * add Section.
-   * @param section
+   * Add a Section.
+   *
+   * @param section a section in file content
    */
   public void appendSection(Section section) {
-     sections.add(section);
+    sections.add(section);
   }
 
   /**
-   * get last Section.
+   * Get last Section.
+   *
    * @return last section in the FileContent
    */
   public Section getLastSection() {
@@ -59,7 +62,8 @@ public final class FileContent implements Block {
   }
 
   /**
-   * get the size of sections in the file.
+   * Get the size of sections in the file.
+   *
    * @return size of sections
    */
   public int getNumberOfSections() {
@@ -67,9 +71,10 @@ public final class FileContent implements Block {
   }
 
   /**
-   * get the specified section.
+   * Get the specified section.
+   *
    * @param id section id
-   * @return Section
+   * @return a section with specified id
    */
   public Section getSection(int id) {
     return sections.get(id);
@@ -77,7 +82,8 @@ public final class FileContent implements Block {
 
 
   /**
-   * get block id of Section class.
+   * Get block id of Section class.
+   *
    * @return block id
    */
   public int getBlockID() {
@@ -85,7 +91,8 @@ public final class FileContent implements Block {
   }
 
   /**
-   * set file name.
+   * Set file name.
+   *
    * @param name file name
    */
   public void setFileName(String name) {
@@ -93,7 +100,8 @@ public final class FileContent implements Block {
   }
 
   /**
-   * get file name.
+   * Get file name.
+   *
    * @return file name
    */
   public String getFileName() {

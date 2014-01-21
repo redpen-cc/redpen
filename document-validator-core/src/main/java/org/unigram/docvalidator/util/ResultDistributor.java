@@ -23,25 +23,25 @@ package org.unigram.docvalidator.util;
 public interface ResultDistributor {
 
   /**
-   * flush header block of semi-structured format.
+   * Flush header block of semi-structured format.
    */
   public void flushHeader();
 
   /**
-   * flush footer block of semi-structured format.
+   * Flush footer block of semi-structured format.
    */
   public void flushFooter();
 
   /**
-   * flush given ValidationError.
+   * Flush given ValidationError.
    * @param err error reported from a Validator
    * @return 0 succeeded, otherwise 1
    */
-  int flushResult(ValidationError err);
+  public int flushResult(ValidationError err);
 
   /**
    * set Formatter object
    * @param formatter
    */
-  void setFormatter(Formatter formatter);
+  public void setFormatter(Formatter formatter);
 }

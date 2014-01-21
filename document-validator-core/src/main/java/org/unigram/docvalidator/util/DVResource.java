@@ -22,7 +22,8 @@ package org.unigram.docvalidator.util;
  */
 public final class DVResource {
   /**
-   * constructor.
+   * Constructor.
+   *
    * @param validatorConf settings of Validators
    */
   public DVResource(ValidatorConfiguration validatorConf) {
@@ -32,19 +33,21 @@ public final class DVResource {
   }
 
   /**
-   * constructor.
+   * Constructor.
+   *
    * @param validatorConf settings of Validators.
    * @param characterConf settings of characters and symbols
    */
   public DVResource(ValidatorConfiguration validatorConf,
-      CharacterTable characterConf) {
+                    CharacterTable characterConf) {
     super();
     this.configuration = validatorConf;
     this.characterTable = characterConf;
   }
 
   /**
-   * get Configuration.
+   * Get Configuration.
+   *
    * @return Configuration
    */
   public ValidatorConfiguration getConfiguration() {
@@ -52,7 +55,8 @@ public final class DVResource {
   }
 
   /**
-   * get CharacterTable.
+   * Get CharacterTable.
+   *
    * @return CharacterTable
    */
   public CharacterTable getCharacterTable() {
