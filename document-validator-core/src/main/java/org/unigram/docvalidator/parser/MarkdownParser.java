@@ -83,7 +83,7 @@ public class MarkdownParser extends BasicDocumentParser {
         sb.append(line);
         sb.append("\n");
         // TODO surrogate pair ?
-        charCount += line.length()+1;
+        charCount += line.length() + 1;
         lineList.add(charCount);
       }
 
@@ -111,7 +111,6 @@ public class MarkdownParser extends BasicDocumentParser {
 
     return fileContent;
   }
-
 
 
   private static final Logger LOG = LoggerFactory.getLogger(MarkdownParser.class);

@@ -32,20 +32,19 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 public class MarkdownParserTest {
 
   @Before
-  public void setup(){
+  public void setup() {
   }
 
   @Test
   public void testNullDocument() {
-    try{
+    try {
       FileContent doc = createFileContentFromInputStream(null);
       fail("no error");
-    }catch(AssertionError as){
+    } catch (AssertionError as) {
 
     }
   }
@@ -72,7 +71,7 @@ public class MarkdownParserTest {
     FileContent doc = createFileContent(sampleText);
     assertNotNull("doc is null", doc);
     assertEquals(3, doc.getNumberOfSections());
-    Section lastSection = doc.getSection(doc.getNumberOfSections()-1);
+    Section lastSection = doc.getSection(doc.getNumberOfSections() - 1);
     assertEquals(1, lastSection.getNumberOfLists());
     assertEquals(5, lastSection.getListBlock(0).getNumberOfListElements());
     assertEquals(3, lastSection.getNumberOfParagraphs());
@@ -115,7 +114,7 @@ public class MarkdownParserTest {
     Section firstSections = doc.getSection(0);
     Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals(3, firstParagraph.getNumberOfSentences());
-    for (int i=0; i<expectedResult.length; i++) {
+    for (int i = 0; i < expectedResult.length; i++) {
       assertEquals(expectedResult[i], firstParagraph.getSentence(i).content);
     }
   }
@@ -182,7 +181,8 @@ public class MarkdownParserTest {
     return parser;
   }
 
-  private FileContent createFileContentFromInputStream(InputStream inputStream) {
+  private FileContent createFileContentFromInputStream(
+      InputStream inputStream) {
     ValidatorConfiguration conf = new ValidatorConfiguration("dummy");
     Parser parser = loadParser(new DVResource(conf));
     FileContent doc = null;

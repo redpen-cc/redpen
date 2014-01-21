@@ -66,24 +66,25 @@ public class ToFileContentSerializer implements Visitor {
   // TODO multi period character not supported
   private String period;
 
-  public ToFileContentSerializer(FileContent fileContent, List<Integer> lineList, String period) {
+  public ToFileContentSerializer(FileContent fileContent,
+                                 List<Integer> lineList, String period) {
     this.fileContent = fileContent;
     this.lineList = lineList;
     this.period = period;
     currentSection = fileContent.getLastSection();
   }
 
-  public FileContent toFileContent(RootNode astRoot){
+  public FileContent toFileContent(RootNode astRoot) {
     checkArgNotNull(astRoot, "astRoot");
     astRoot.accept(this);
     return fileContent;
   }
 
-  private void fixSentence(){
+  private void fixSentence() {
     // 1. remain sentence append currentSection
     //TODO need line number
     List<Sentence> sentences = createSentenceList();
-    for(Sentence sentence : sentences){
+    for (Sentence sentence : sentences) {
       currentSection.appendSentence(sentence);
     }
   }
@@ -129,18 +130,19 @@ public class ToFileContentSerializer implements Visitor {
 
   private List<CandidateSentence> candidateSentences = new ArrayList<CandidateSentence>();
 
-  private void addCandidateSentence(int lineNum, String text){
+  private void addCandidateSentence(int lineNum, String text) {
     addCandidateSentence(lineNum, text, null);
   }
-  private void addCandidateSentence(int lineNum, String text, String link){
+
+  private void addCandidateSentence(int lineNum, String text, String link) {
     candidateSentences.add(new CandidateSentence(lineNum, text, link));
   }
 
   private int lineNumberFromStartIndex(int startIndex) {
     int lineNum = 0;
     // TODO test
-    for(int end : lineList){
-      if(end < startIndex){
+    for (int end : lineList) {
+      if (end < startIndex) {
         break;
       }
       lineNum++;
@@ -150,7 +152,7 @@ public class ToFileContentSerializer implements Visitor {
 
   private Printer printer = new Printer();
 
-  private String printChildrenToString(SuperNode node){
+  private String printChildrenToString(SuperNode node) {
     // FIXME check usecase
     Printer priorPrinter = printer;
     printer = new Printer();
@@ -164,22 +166,22 @@ public class ToFileContentSerializer implements Visitor {
     List<Sentence> newSentences = new ArrayList<Sentence>();
     Sentence currentSentence = null;
     StringBuffer sentenceContent = new StringBuffer();
-    for(CandidateSentence candidateSentence: candidateSentences){
-      String remain = ParseUtils.extractSentences(candidateSentence.getSentence(), this.period,newSentences);
+    for (CandidateSentence candidateSentence : candidateSentences) {
+      String remain = ParseUtils.extractSentences(candidateSentence.getSentence(), this.period, newSentences);
 
       //TODO refactor StringUtils...
-      if(StringUtils.isNotEmpty(remain)){
-        if(currentSentence != null){
+      if (StringUtils.isNotEmpty(remain)) {
+        if (currentSentence != null) {
           currentSentence.content += candidateSentence.getSentence();
-        }else{
+        } else {
           currentSentence = new Sentence(remain, candidateSentence.getLineNum());
           newSentences.add(currentSentence);
         }
         // FIXME check: pegdown extract 1 candidate sentence to 1 link?
-        if(StringUtils.isNotEmpty(candidateSentence.getLink())){
+        if (StringUtils.isNotEmpty(candidateSentence.getLink())) {
           currentSentence.links.add(candidateSentence.getLink());
         }
-      }else{
+      } else {
         currentSentence = null;
       }
 
@@ -210,7 +212,7 @@ public class ToFileContentSerializer implements Visitor {
     return true;
   }
 
-  private void appendSection(HeaderNode headerNode){
+  private void appendSection(HeaderNode headerNode) {
     // 1. remain sentence flush to current section
     fixSentence();
 
@@ -248,8 +250,9 @@ public class ToFileContentSerializer implements Visitor {
 
   @Override
   public void visit(CodeNode codeNode) {
-    addCandidateSentence(lineNumberFromStartIndex(codeNode.getStartIndex()),codeNode.getText());
+    addCandidateSentence(lineNumberFromStartIndex(codeNode.getStartIndex()), codeNode.getText());
   }
+
   @Override
   public void visit(ExpImageNode expImageNode) {
     // TODO exp image not implement
@@ -272,11 +275,11 @@ public class ToFileContentSerializer implements Visitor {
   public void visit(BulletListNode bulletListNode) {
     //FIXME test and check
     // TODO handle bulletListNode and orderdListNode
-    if(itemDepth == 0) {
+    if (itemDepth == 0) {
       fixSentence();
       currentSection.appendParagraph(new Paragraph());
       currentSection.appendListBlock();
-    }else{
+    } else {
       List<Sentence> sentences = createSentenceList();
       currentSection.appendListElement(itemDepth, sentences);
     }
@@ -288,11 +291,11 @@ public class ToFileContentSerializer implements Visitor {
   @Override
   public void visit(OrderedListNode orderedListNode) {
     // TODO handle bulletListNode and orderdListNode
-    if(itemDepth == 0) {
+    if (itemDepth == 0) {
       fixSentence();
       currentSection.appendParagraph(new Paragraph());
       currentSection.appendListBlock();
-    }else{
+    } else {
       List<Sentence> sentences = createSentenceList();
       currentSection.appendListElement(itemDepth, sentences);
     }
@@ -307,7 +310,7 @@ public class ToFileContentSerializer implements Visitor {
     visitChildren(listItemNode);
     List<Sentence> sentences = createSentenceList();
     // TODO for nested ListNode process
-    if(sentences != null && sentences.size() > 0){
+    if (sentences != null && sentences.size() > 0) {
       currentSection.appendListElement(itemDepth, sentences);
     }
   }
@@ -338,7 +341,7 @@ public class ToFileContentSerializer implements Visitor {
   @Override
   public void visit(SimpleNode simpleNode) {
     //TODO check detail
-    switch (simpleNode.getType()){
+    switch (simpleNode.getType()) {
       case Linebreak:
         break;
       case Nbsp:
@@ -358,14 +361,14 @@ public class ToFileContentSerializer implements Visitor {
         addCandidateSentence(lineNumberFromStartIndex(simpleNode.getStartIndex()), "—");
         break;
       default:
-        LOG.warn("Illegal SimpleNode:["+simpleNode.toString()+"]");
+        LOG.warn("Illegal SimpleNode:[" + simpleNode.toString() + "]");
     }
   }
 
   @Override
   public void visit(SpecialTextNode specialTextNode) {
     // TODO to sentence
-    addCandidateSentence(lineNumberFromStartIndex(specialTextNode.getStartIndex()),specialTextNode.getText());
+    addCandidateSentence(lineNumberFromStartIndex(specialTextNode.getStartIndex()), specialTextNode.getText());
   }
 
   @Override
@@ -393,7 +396,6 @@ public class ToFileContentSerializer implements Visitor {
     // FIXME implement
     // TODO remove tag
   }
-
 
 
   @Override
