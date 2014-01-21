@@ -64,9 +64,9 @@ public class FileLoader {
     BufferedReader bufferedReader = null;
     try {
       inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-      BufferedReader br = new BufferedReader(inputStreamReader);
+      bufferedReader = new BufferedReader(inputStreamReader);
       String line;
-      while ((line = br.readLine()) != null) {
+      while ((line = bufferedReader.readLine()) != null) {
         if (this.resourceExtractor.load(line) != 0) {
           LOG.error("Failed to load line:" + line);
           return 1;
