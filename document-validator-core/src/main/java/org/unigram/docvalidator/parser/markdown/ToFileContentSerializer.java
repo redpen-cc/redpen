@@ -267,16 +267,18 @@ public class ToFileContentSerializer implements Visitor {
     appendSection(headerNode);
   }
 
-
   // list part
   @Override
   public void visit(BulletListNode bulletListNode) {
     //FIXME test and check
-    fixSentence();
-    currentSection.appendParagraph(new Paragraph());
     // TODO handle bulletListNode and orderdListNode
     if(itemDepth == 0) {
+      fixSentence();
+      currentSection.appendParagraph(new Paragraph());
       currentSection.appendListBlock();
+    }else{
+      List<Sentence> sentences = createSentenceList();
+      currentSection.appendListElement(itemDepth, sentences);
     }
     itemDepth++;
     visitChildren(bulletListNode);
@@ -285,24 +287,29 @@ public class ToFileContentSerializer implements Visitor {
 
   @Override
   public void visit(OrderedListNode orderedListNode) {
-    //FIXME test and check
-    fixSentence();
-    currentSection.appendParagraph(new Paragraph());
     // TODO handle bulletListNode and orderdListNode
     if(itemDepth == 0) {
+      fixSentence();
+      currentSection.appendParagraph(new Paragraph());
       currentSection.appendListBlock();
+    }else{
+      List<Sentence> sentences = createSentenceList();
+      currentSection.appendListElement(itemDepth, sentences);
     }
     itemDepth++;
     visitChildren(orderedListNode);
     itemDepth--;
   }
 
+
   @Override
   public void visit(ListItemNode listItemNode) {
-    //FIXME only text node sentence
     visitChildren(listItemNode);
     List<Sentence> sentences = createSentenceList();
-    currentSection.appendListElement(itemDepth, sentences);
+    // TODO for nested ListNode process
+    if(sentences != null && sentences.size() > 0){
+      currentSection.appendListElement(itemDepth, sentences);
+    }
   }
 
 

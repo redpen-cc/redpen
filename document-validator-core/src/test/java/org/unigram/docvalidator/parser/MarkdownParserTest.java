@@ -21,6 +21,7 @@ package org.unigram.docvalidator.parser;
 import org.junit.Before;
 import org.junit.Test;
 import org.unigram.docvalidator.store.FileContent;
+import org.unigram.docvalidator.store.Paragraph;
 import org.unigram.docvalidator.store.Section;
 import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.DocumentValidatorException;
@@ -31,6 +32,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class MarkdownParserTest {
 
@@ -60,10 +62,10 @@ public class MarkdownParserTest {
     sampleText += "Gunma is located at west of Saitama.\n";
     sampleText += "\n";
     sampleText += "* Features\n";
-    sampleText += "  * Main City: Gumma City\n";
-    sampleText += "  * Capical: 200 Millon\n";
+    sampleText += "    * Main City: Gumma City\n";
+    sampleText += "    * Capical: 200 Millon\n";
     sampleText += "* Location\n";
-    sampleText += "  * Japan\n";
+    sampleText += "    * Japan\n";
     sampleText += "\n";
     sampleText += "The word also have posive meaning. Hower it is a bit wired.";
 
@@ -73,9 +75,99 @@ public class MarkdownParserTest {
     Section lastSection = doc.getSection(doc.getNumberOfSections()-1);
     assertEquals(1, lastSection.getNumberOfLists());
     assertEquals(5, lastSection.getListBlock(0).getNumberOfListElements());
-    assertEquals(3,lastSection.getNumberOfParagraphs());
+    assertEquals(3, lastSection.getNumberOfParagraphs());
     assertEquals(1, lastSection.getHeaderContentsListSize());
     assertEquals("About Gunma.", lastSection.getHeaderContent(0).content);
+  }
+
+
+  @Test
+  public void testGenerateDocumentWithList() {
+    String sampleText =
+        "Threre are several railway companies in Japan as follows.\n";
+    sampleText += "\n";
+    sampleText += "- Tokyu\n";
+    sampleText += "    - Toyoko Line\n";
+    sampleText += "    - Denentoshi Line\n";
+    sampleText += "- Keio\n";
+    sampleText += "- Odakyu\n";
+    FileContent doc = createFileContent(sampleText);
+    assertEquals(5, doc.getSection(0).getListBlock(0).getNumberOfListElements());
+    assertEquals("Tokyu", doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).content);
+    assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(0).getLevel());
+    assertEquals("Toyoko Line", doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).content);
+    assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(1).getLevel());
+    assertEquals("Denentoshi Line", doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).content);
+    assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(2).getLevel());
+    assertEquals("Keio", doc.getSection(0).getListBlock(0).getListElement(3).getSentence(0).content);
+    assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(3).getLevel());
+    assertEquals("Odakyu", doc.getSection(0).getListBlock(0).getListElement(4).getSentence(0).content);
+    assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(4).getLevel());
+  }
+
+  @Test
+  public void testGenerateDocumentWithMultipleSentenceInOneSentence() {
+    String sampleText =
+        "Tokyu is a good railway company. The company is reliable. In addition it is rich.";
+    String[] expectedResult = {"Tokyu is a good railway company.",
+        " The company is reliable.", " In addition it is rich."};
+    FileContent doc = createFileContent(sampleText);
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
+    assertEquals(3, firstParagraph.getNumberOfSentences());
+    for (int i=0; i<expectedResult.length; i++) {
+      assertEquals(expectedResult[i], firstParagraph.getSentence(i).content);
+    }
+  }
+
+
+  @Test
+  public void testGenerateDocumentWithMultipleSentenceInMultipleSentences() {
+    String sampleText = "Tokyu is a good railway company. The company is reliable. In addition it is rich.\n";
+    sampleText += "I like the company. Howerver someone does not like it.";
+    FileContent doc = createFileContent(sampleText);
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
+    assertEquals(5, firstParagraph.getNumberOfSentences());
+  }
+
+  @Test
+  public void testGenerateDocumentWitVoidContent() {
+    String sampleText = "";
+    FileContent doc = createFileContent(sampleText);
+    Section firstSections = doc.getSection(0);
+    assertEquals(false, firstSections.getParagraphs().hasNext());
+  }
+
+  @Test
+  public void testGenerateDocumentWithPeriodInSuccession() {
+    String sampleText = "...";
+    FileContent doc = createFileContent(sampleText);
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
+    assertEquals(1, firstParagraph.getNumberOfSentences());
+  }
+
+
+  @Test
+  public void testGenerateDocumentWitoutPeriodInLastSentence() {
+    String sampleText = "Hongo is located at the west of Tokyo. Saitama is located at the north";
+    FileContent doc = createFileContent(sampleText);
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
+    assertEquals(2, firstParagraph.getNumberOfSentences());
+  }
+
+  @Test
+  public void testGenerateDocumentWithSentenceLongerThanOneLine() {
+    String sampleText = "This is a good day.\n";
+    sampleText += "Hongo is located at the west of Tokyo ";
+    sampleText += "which is the capital of Japan ";
+    sampleText += "which is not located in the south of the earth.";
+    FileContent doc = createFileContent(sampleText);
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
+    assertEquals(2, firstParagraph.getNumberOfSentences());
   }
 
 
