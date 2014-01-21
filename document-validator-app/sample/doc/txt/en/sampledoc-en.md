@@ -1,0 +1,7 @@
+ln bibliometrics and link analysis studies many attempts have been made to analyze the relationship amongscientific papers, authors andjoumals and recently, these research results have been found to be effective for analyzing the link structure ofweb pages as we11. In addition,  Most of these methods are concernedwith the two link analysis measures: relatedness between documenatsndglobal importance of individual documents. These measures, however,have been discussed independently in previous work。
+
+To provide a unified perspective on the two link analysis measures, this thesis explores the application of kemel as metrics to link analysis. Kene1-based machine leaming methods are becoming more and more popular due to their ability to deal with (semi-)structured data such as strings and graphs. The framework provided by the kernels establishes relative importance, in which the degree of ‘relativity’ or the bias between relatedness and importance, is naturally contro11ed by a parameter characterizing individual kerels in the family.
+
+In contrast to these methods, we address new relatedness measures that overcome two limitation of traditional relatedness measures. These relatedness measures also defined as kernels. By introducing a new parameterization, we obtain a link analysis measures that are intermediate between global importance andthe extended relatedness measure.
+
+Next, we extend our keme1-based.link analysis based on generative process of links (citations). This method overcomes a problem in our keme1-based link analysis.
