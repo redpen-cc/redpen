@@ -17,9 +17,9 @@
  */
 package org.unigram.docvalidator.store;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 /**
  * Represent List in semi-structured format such as wiki.
@@ -30,7 +30,7 @@ public final class ListBlock implements Block {
    */
   public ListBlock() {
     super();
-    this.listElements = new Vector<ListElement>();
+    this.listElements = new ArrayList<ListElement>();
   }
 
   /**
@@ -69,5 +69,5 @@ public final class ListBlock implements Block {
     listElements.add(new ListElement(level, contents));
   }
 
-  private final Vector<ListElement> listElements;
+  private final List<ListElement> listElements;
 }

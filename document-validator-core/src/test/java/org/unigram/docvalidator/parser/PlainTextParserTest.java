@@ -24,8 +24,9 @@ import org.junit.Before;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 
@@ -40,9 +41,9 @@ public class PlainTextParserTest {
 
   private Parser parser = null;
 
-    private Vector<Paragraph> extractParagraphs(Section section) {
+    private List<Paragraph> extractParagraphs(Section section) {
     Iterator<Paragraph> paragraph = section.getParagraphs();
-    Vector<Paragraph> paragraphs = new Vector<Paragraph>();
+    List<Paragraph> paragraphs = new ArrayList<Paragraph>();
     while(paragraph.hasNext()) {
       Paragraph p = paragraph.next();
       paragraphs.add(p);
@@ -129,10 +130,10 @@ public class PlainTextParserTest {
           " I like the company.", " Howerver someone does not like it."};
     FileContent doc = generateDocument(sampleText);
     Section section = doc.getLastSection();
-    Vector<Paragraph> paragraphs = extractParagraphs(section);
+    List<Paragraph> paragraphs = extractParagraphs(section);
     assertEquals(1, paragraphs.size());
     assertEquals(5 ,calcLineNum(section));
-    Paragraph paragraph = paragraphs.lastElement();
+    Paragraph paragraph = paragraphs.get(paragraphs.size()-1);
     for (int i=0; i<expectedResult.length; i++) {
       assertEquals(expectedResult[i], paragraph.getSentence(i).content);
     }
@@ -145,7 +146,7 @@ public class PlainTextParserTest {
     String sampleText = "";
     FileContent doc = generateDocument(sampleText);
     Section section = doc.getLastSection();
-    Vector<Paragraph> paragraphs = extractParagraphs(section);
+    List<Paragraph> paragraphs = extractParagraphs(section);
     assertEquals(1, paragraphs.size());
     assertEquals(0 ,calcLineNum(section));
   }

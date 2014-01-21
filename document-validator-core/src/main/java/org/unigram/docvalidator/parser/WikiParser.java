@@ -1,5 +1,5 @@
 /**
-l * DocumentValidator
+ * DocumentValidator
  * Copyright (c) 2013-, Takahiko Ito, All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -29,7 +29,6 @@ import org.unigram.docvalidator.util.DocumentValidatorException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -76,7 +75,7 @@ public final class WikiParser extends BasicDocumentParser {
     try {
       while ((line = br.readLine()) != null) {
         prevPattern = currentPattern;
-        Vector<String> head = new Vector<String>();
+        List<String> head = new ArrayList<String>();
         if (currentPattern == LinePattern.COMMENT) {
           if (check(END_COMMENT_PATTERN, line, head)) {
             currentPattern = LinePattern.VOID;
@@ -118,7 +117,7 @@ public final class WikiParser extends BasicDocumentParser {
   }
 
   private void appendListElement(Section currentSection,
-      LinePattern prevPattern, Vector<String> head, int lineNum) {
+      LinePattern prevPattern, List<String> head, int lineNum) {
     if (prevPattern != LinePattern.LIST) {
       currentSection.appendListBlock();
     }
@@ -133,7 +132,7 @@ public final class WikiParser extends BasicDocumentParser {
   }
 
   private Section appendSection(FileContent fileContent,
-      Section currentSection, Vector<String> head, int lineNum) {
+      Section currentSection, List<String> head, int lineNum) {
     Integer level = Integer.valueOf(head.get(0));
     List<Sentence> outputSentences = new ArrayList<Sentence>();
     String remainHeader = obtainSentences(lineNum, head.get(1), outputSentences);
@@ -243,7 +242,7 @@ public final class WikiParser extends BasicDocumentParser {
   return remain;
 }
 
-  private static boolean check(Pattern p, String target, Vector<String> head) {
+  private static boolean check(Pattern p, String target, List<String> head) {
     Matcher m = p.matcher(target);
     if (m.matches()) {
       for (int i = 1; i <= m.groupCount(); i++) {
