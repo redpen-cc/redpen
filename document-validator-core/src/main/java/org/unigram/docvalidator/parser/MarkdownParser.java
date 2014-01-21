@@ -44,7 +44,7 @@ import java.util.List;
  */
 public class MarkdownParser extends BasicDocumentParser {
 
-  PegDownProcessor pegDownProcessor = new PegDownProcessor(
+  private PegDownProcessor pegDownProcessor = new PegDownProcessor(
       Extensions.HARDWRAPS
           + Extensions.AUTOLINKS
           + Extensions.FENCED_CODE_BLOCKS);
@@ -94,8 +94,10 @@ public class MarkdownParser extends BasicDocumentParser {
       fileContent.appendSection(currentSection);
 
       // TODO create fileContent after parsing... overhead...
-      RootNode rootNode = pegDownProcessor.parseMarkdown(sb.toString().toCharArray());
-      ToFileContentSerializer serializer = new ToFileContentSerializer(fileContent, lineList, this.period);
+      RootNode rootNode =
+          pegDownProcessor.parseMarkdown(sb.toString().toCharArray());
+      ToFileContentSerializer serializer =
+          new ToFileContentSerializer(fileContent, lineList, this.period);
       fileContent = serializer.toFileContent(rootNode);
 
     } catch (ParsingTimeoutException e) {
@@ -113,6 +115,7 @@ public class MarkdownParser extends BasicDocumentParser {
   }
 
 
-  private static final Logger LOG = LoggerFactory.getLogger(MarkdownParser.class);
+  private static final Logger LOG =
+      LoggerFactory.getLogger(MarkdownParser.class);
 
 }
