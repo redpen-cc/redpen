@@ -17,8 +17,9 @@
  */
 package org.unigram.docvalidator.store;
 
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * Represent a paragraph of text.
@@ -29,7 +30,7 @@ public final class Paragraph implements Block {
    */
   public Paragraph() {
     super();
-    sentences = new Vector<Sentence>();
+    sentences = new ArrayList<Sentence>();
   }
 
   /**
@@ -83,5 +84,5 @@ public final class Paragraph implements Block {
     return BlockTypes.PARAGRAPH;
   }
 
-  private final Vector<Sentence> sentences;
+  private final List<Sentence> sentences;
 }

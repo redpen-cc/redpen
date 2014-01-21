@@ -17,8 +17,9 @@
  */
 package org.unigram.docvalidator.store;
 
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * Document class represent input document, which consists
@@ -28,7 +29,7 @@ public final class Document implements Block {
 
   public Document() {
     super();
-    files = new Vector<FileContent>();
+    files = new ArrayList<FileContent>();
   }
 
   /**
@@ -65,7 +66,11 @@ public final class Document implements Block {
    * @return a file added in the last
    */
   public FileContent getLastFile() {
-    return files.lastElement();
+    FileContent fileContent = null;
+    if (files.size() > 0) {
+      fileContent = files.get(files.size() - 1);
+    }
+    return fileContent;
   }
 
   /**
@@ -81,5 +86,5 @@ public final class Document implements Block {
     return BlockTypes.DOCUMENT;
   }
 
-  private final Vector<FileContent> files;
+  private final List<FileContent> files;
 }

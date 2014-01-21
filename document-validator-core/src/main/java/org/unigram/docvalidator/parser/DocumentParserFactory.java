@@ -40,6 +40,8 @@ public final class DocumentParserFactory {
       docparser = new WikiParser();
     } else if (parserType.equals("plain")) {
       docparser = new PlainTextParser();
+    } else if (parserType.equals("markdown")) {
+      docparser = new MarkdownParser();
     } else {
       throw new DocumentValidatorException("Specified parser type not exist: "
           + parserType);

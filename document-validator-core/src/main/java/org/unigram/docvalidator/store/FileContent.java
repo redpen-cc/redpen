@@ -17,8 +17,9 @@
  */
 package org.unigram.docvalidator.store;
 
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * FileContent represents a file with many elements
@@ -30,7 +31,7 @@ public final class FileContent implements Block {
    */
   public FileContent() {
     super();
-    sections = new Vector<Section>();
+    sections = new ArrayList<Section>();
     fileName = "";
   }
 
@@ -58,7 +59,11 @@ public final class FileContent implements Block {
    * @return last section in the FileContent
    */
   public Section getLastSection() {
-    return sections.lastElement();
+    Section section = null;
+    if (sections.size() > 0) {
+      section = sections.get(sections.size() - 1);
+    }
+    return section;
   }
 
   /**
@@ -108,7 +113,7 @@ public final class FileContent implements Block {
     return fileName;
   }
 
-  private final Vector<Section> sections;
+  private final List<Section> sections;
 
   private String fileName;
 }
