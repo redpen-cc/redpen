@@ -58,6 +58,7 @@ public class MarkdownParserTest {
     sampleText += "## About Gunma.\n";
     sampleText += "\n";
     sampleText += "Gunma is located at west of Saitama.\n";
+    sampleText += "\n";
     sampleText += "* Features\n";
     sampleText += "  * Main City: Gumma City\n";
     sampleText += "  * Capical: 200 Millon\n";
@@ -72,7 +73,7 @@ public class MarkdownParserTest {
     Section lastSection = doc.getSection(doc.getNumberOfSections()-1);
     assertEquals(1, lastSection.getNumberOfLists());
     assertEquals(5, lastSection.getListBlock(0).getNumberOfListElements());
-    assertEquals(2,lastSection.getNumberOfParagraphs());
+    assertEquals(3,lastSection.getNumberOfParagraphs());
     assertEquals(1, lastSection.getHeaderContentsListSize());
     assertEquals("About Gunma.", lastSection.getHeaderContent(0).content);
   }
