@@ -64,12 +64,31 @@ public class WikiParserTest {
 
     FileContent doc = createFileContent(sampleText);
     assertEquals(3, doc.getNumberOfSections());
+    // first section
+    final Section firstSection = doc.getSection(0);
+    assertEquals(1, firstSection.getHeaderContentsListSize());
+    assertEquals("", firstSection.getHeaderContent(0).content);
+    assertEquals(0, firstSection.getNumberOfLists());
+    assertEquals(0, firstSection.getNumberOfParagraphs());
+    assertEquals(2, firstSection.getNumberOfSubsections());
+
+    // 2nd section
+    final Section secondSection = doc.getSection(1);
+    assertEquals(1, secondSection.getHeaderContentsListSize());
+    assertEquals("About Gekioko.", secondSection.getHeaderContent(0).content);
+    assertEquals(0, secondSection.getNumberOfLists());
+    assertEquals(2, secondSection.getNumberOfParagraphs());
+    assertEquals(0, secondSection.getNumberOfSubsections());
+    assertEquals(firstSection, secondSection.getParentSection());
+
+    // last section
     Section lastSection = doc.getSection(doc.getNumberOfSections()-1);
     assertEquals(1, lastSection.getNumberOfLists());
     assertEquals(5, lastSection.getListBlock(0).getNumberOfListElements());
     assertEquals(2,lastSection.getNumberOfParagraphs());
     assertEquals(1, lastSection.getHeaderContentsListSize());
     assertEquals("About Gunma.", lastSection.getHeaderContent(0).content);
+    assertEquals(firstSection, lastSection.getParentSection());
   }
 
   @Test
@@ -83,6 +102,16 @@ public class WikiParserTest {
     sampleText += "- Odakyu\n";
     FileContent doc = createFileContent(sampleText);
     assertEquals(5, doc.getSection(0).getListBlock(0).getNumberOfListElements());
+    assertEquals("Tokyu", doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).content);
+    assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(0).getLevel());
+    assertEquals("Toyoko Line", doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).content);
+    assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(1).getLevel());
+    assertEquals("Denentoshi Line", doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).content);
+    assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(2).getLevel());
+    assertEquals("Keio", doc.getSection(0).getListBlock(0).getListElement(3).getSentence(0).content);
+    assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(3).getLevel());
+    assertEquals("Odakyu", doc.getSection(0).getListBlock(0).getListElement(4).getSentence(0).content);
+    assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(4).getLevel());
   }
 
   @Test
@@ -96,6 +125,16 @@ public class WikiParserTest {
     sampleText += "# Odakyu\n";
     FileContent doc = createFileContent(sampleText);
     assertEquals(5, doc.getSection(0).getListBlock(0).getNumberOfListElements());
+    assertEquals("Tokyu", doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).content);
+    assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(0).getLevel());
+    assertEquals("Toyoko Line", doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).content);
+    assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(1).getLevel());
+    assertEquals("Denentoshi Line", doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).content);
+    assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(2).getLevel());
+    assertEquals("Keio", doc.getSection(0).getListBlock(0).getListElement(3).getSentence(0).content);
+    assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(3).getLevel());
+    assertEquals("Odakyu", doc.getSection(0).getListBlock(0).getListElement(4).getSentence(0).content);
+    assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(4).getLevel());
   }
 
   @Test
