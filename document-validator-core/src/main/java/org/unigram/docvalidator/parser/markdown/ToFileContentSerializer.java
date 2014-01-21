@@ -128,12 +128,16 @@ public class ToFileContentSerializer implements Visitor {
   }
 
   /**
-   * traverse markdown tree that parsed Pegdown
+   * traverse markdown tree that parsed Pegdown.
    * @param astRoot Pegdown RootNode
    *                (markdown tree that is parsed pegdown parser)
    * @return file content that re-parse Pegdown RootNode.
+   * @exception org.unigram.docvalidator.util.DocumentValidatorException
+   * Fail to traverse markdown tree
+   *
    */
-  public FileContent toFileContent(RootNode astRoot) throws DocumentValidatorException {
+  public FileContent toFileContent(RootNode astRoot)
+      throws DocumentValidatorException {
     try {
       checkArgNotNull(astRoot, "astRoot");
       astRoot.accept(this);
