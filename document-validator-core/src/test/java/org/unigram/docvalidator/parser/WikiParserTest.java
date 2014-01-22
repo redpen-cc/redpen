@@ -80,6 +80,11 @@ public class WikiParserTest {
     assertEquals(2, secondSection.getNumberOfParagraphs());
     assertEquals(0, secondSection.getNumberOfSubsections());
     assertEquals(firstSection, secondSection.getParentSection());
+    // check paragraph in 2nd section
+    assertEquals(1, secondSection.getParagraph(0).getNumberOfSentences());
+    assertEquals(true, secondSection.getParagraph(0).getSentence(0).isStartParagraph);
+    assertEquals(1, secondSection.getParagraph(1).getNumberOfSentences());
+    assertEquals(true, secondSection.getParagraph(1).getSentence(0).isStartParagraph);
 
     // last section
     Section lastSection = doc.getSection(doc.getNumberOfSections()-1);
@@ -89,6 +94,15 @@ public class WikiParserTest {
     assertEquals(1, lastSection.getHeaderContentsListSize());
     assertEquals("About Gunma.", lastSection.getHeaderContent(0).content);
     assertEquals(firstSection, lastSection.getParentSection());
+
+    // check paragraph in last section
+    assertEquals(1, lastSection.getParagraph(0).getNumberOfSentences());
+    assertEquals(true, lastSection.getParagraph(0).getSentence(0).isStartParagraph);
+    assertEquals(2, lastSection.getParagraph(1).getNumberOfSentences());
+    assertEquals(true, lastSection.getParagraph(1).getSentence(0).isStartParagraph);
+    assertEquals(false, lastSection.getParagraph(1).getSentence(1).isStartParagraph);
+
+
   }
 
   @Test
