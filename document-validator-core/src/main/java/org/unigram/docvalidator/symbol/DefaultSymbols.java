@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.
  */
-package org.unigram.docvalidator;
+package org.unigram.docvalidator.symbol;
 
 import java.util.HashMap;
 import java.util.Iterator;
