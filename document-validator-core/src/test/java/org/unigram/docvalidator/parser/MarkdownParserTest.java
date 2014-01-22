@@ -42,7 +42,7 @@ public class MarkdownParserTest {
   @Test
   public void testNullDocument() {
     try {
-      FileContent doc = createFileContentFromInputStream(null);
+      createFileContentFromInputStream(null);
       fail("no error");
     } catch (AssertionError as) {
 
@@ -71,14 +71,45 @@ public class MarkdownParserTest {
     FileContent doc = createFileContent(sampleText);
     assertNotNull("doc is null", doc);
     assertEquals(3, doc.getNumberOfSections());
+    // first section
+    final Section firstSection = doc.getSection(0);
+    assertEquals(1, firstSection.getHeaderContentsListSize());
+    assertEquals("", firstSection.getHeaderContent(0).content);
+    assertEquals(0, firstSection.getNumberOfLists());
+    assertEquals(0, firstSection.getNumberOfParagraphs());
+    assertEquals(1, firstSection.getNumberOfSubsections());
+
+    // 2nd section
+    final Section secondSection = doc.getSection(1);
+    assertEquals(1, secondSection.getHeaderContentsListSize());
+    assertEquals("About Gekioko.", secondSection.getHeaderContent(0).content);
+    assertEquals(0, secondSection.getNumberOfLists());
+    assertEquals(2, secondSection.getNumberOfParagraphs());
+    assertEquals(1, secondSection.getNumberOfSubsections());
+    assertEquals(firstSection, secondSection.getParentSection());
+    // check paragraph in 2nd section
+    assertEquals(1, secondSection.getParagraph(0).getNumberOfSentences());
+    assertEquals(true, secondSection.getParagraph(0).getSentence(0).isStartParagraph);
+    assertEquals(1, secondSection.getParagraph(1).getNumberOfSentences());
+    assertEquals(true, secondSection.getParagraph(1).getSentence(0).isStartParagraph);
+
     Section lastSection = doc.getSection(doc.getNumberOfSections() - 1);
     assertEquals(1, lastSection.getNumberOfLists());
     assertEquals(5, lastSection.getListBlock(0).getNumberOfListElements());
-    assertEquals(3, lastSection.getNumberOfParagraphs());
+    assertEquals(2, lastSection.getNumberOfParagraphs());
     assertEquals(1, lastSection.getHeaderContentsListSize());
+    assertEquals(0, lastSection.getNumberOfSubsections());
     assertEquals("About Gunma.", lastSection.getHeaderContent(0).content);
-  }
+    assertEquals(secondSection, lastSection.getParentSection());
 
+    // check paragraph in last section
+    assertEquals(1, lastSection.getParagraph(0).getNumberOfSentences());
+    assertEquals(true, lastSection.getParagraph(0).getSentence(0).isStartParagraph);
+    assertEquals(2, lastSection.getParagraph(1).getNumberOfSentences());
+    assertEquals(true, lastSection.getParagraph(1).getSentence(0).isStartParagraph);
+    assertEquals(false, lastSection.getParagraph(1).getSentence(1).isStartParagraph);
+
+  }
 
   @Test
   public void testGenerateDocumentWithList() {
@@ -187,7 +218,7 @@ public class MarkdownParserTest {
     Parser parser = loadParser(new DVResource(conf));
     FileContent doc = null;
     try {
-      parser.generateDocument(inputStream);
+      doc = parser.generateDocument(inputStream);
     } catch (DocumentValidatorException e) {
       e.printStackTrace();
       fail();

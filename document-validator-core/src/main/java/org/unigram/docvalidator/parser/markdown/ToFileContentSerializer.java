@@ -352,7 +352,6 @@ public class ToFileContentSerializer implements Visitor {
     // TODO handle bulletListNode and orderdListNode
     if (itemDepth == 0) {
       fixSentence();
-      currentSection.appendParagraph(new Paragraph());
       currentSection.appendListBlock();
     } else {
       List<Sentence> sentences = createSentenceList();
@@ -368,7 +367,6 @@ public class ToFileContentSerializer implements Visitor {
     // TODO handle bulletListNode and orderdListNode
     if (itemDepth == 0) {
       fixSentence();
-      currentSection.appendParagraph(new Paragraph());
       currentSection.appendListBlock();
     } else {
       List<Sentence> sentences = createSentenceList();
