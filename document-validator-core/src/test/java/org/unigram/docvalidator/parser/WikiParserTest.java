@@ -51,7 +51,7 @@ public class WikiParserTest {
     sampleText += "Gekioko pun pun maru means very very angry.\n";
     sampleText += "\n";
     sampleText += "The word also have posive meaning.\n";
-    sampleText += "h1. About Gunma.\n";
+    sampleText += "h2. About Gunma.\n";
     sampleText += "\n";
     sampleText += "Gunma is located at west of Saitama.\n";
     sampleText += "- Features\n";
@@ -70,7 +70,7 @@ public class WikiParserTest {
     assertEquals("", firstSection.getHeaderContent(0).content);
     assertEquals(0, firstSection.getNumberOfLists());
     assertEquals(0, firstSection.getNumberOfParagraphs());
-    assertEquals(2, firstSection.getNumberOfSubsections());
+    assertEquals(1, firstSection.getNumberOfSubsections());
 
     // 2nd section
     final Section secondSection = doc.getSection(1);
@@ -78,7 +78,7 @@ public class WikiParserTest {
     assertEquals("About Gekioko.", secondSection.getHeaderContent(0).content);
     assertEquals(0, secondSection.getNumberOfLists());
     assertEquals(2, secondSection.getNumberOfParagraphs());
-    assertEquals(0, secondSection.getNumberOfSubsections());
+    assertEquals(1, secondSection.getNumberOfSubsections());
     assertEquals(firstSection, secondSection.getParentSection());
     // check paragraph in 2nd section
     assertEquals(1, secondSection.getParagraph(0).getNumberOfSentences());
@@ -92,8 +92,9 @@ public class WikiParserTest {
     assertEquals(5, lastSection.getListBlock(0).getNumberOfListElements());
     assertEquals(2,lastSection.getNumberOfParagraphs());
     assertEquals(1, lastSection.getHeaderContentsListSize());
+    assertEquals(0, lastSection.getNumberOfSubsections());
     assertEquals("About Gunma.", lastSection.getHeaderContent(0).content);
-    assertEquals(firstSection, lastSection.getParentSection());
+    assertEquals(secondSection, lastSection.getParentSection());
 
     // check paragraph in last section
     assertEquals(1, lastSection.getParagraph(0).getNumberOfSentences());
@@ -101,7 +102,6 @@ public class WikiParserTest {
     assertEquals(2, lastSection.getParagraph(1).getNumberOfSentences());
     assertEquals(true, lastSection.getParagraph(1).getSentence(0).isStartParagraph);
     assertEquals(false, lastSection.getParagraph(1).getSentence(1).isStartParagraph);
-
 
   }
 
