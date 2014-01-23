@@ -20,6 +20,7 @@ import org.unigram.docvalidator.util.ValidationConfigurationLoader;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -40,7 +41,7 @@ public class ConfigurationLoader {
     } catch (FileNotFoundException e) {
       LOG.error(e.getMessage());
     }
-    DVResource resource = this.loadConfiguraiton(fis);
+    DVResource resource = this.loadConfiguration(fis);
     IOUtils.closeQuietly(fis);
     return resource;
   }
@@ -51,7 +52,7 @@ public class ConfigurationLoader {
    * @return Configuration loaded from input stream
    * NOTE: return null when failed to create DVResource
    */
-  public DVResource loadConfiguraiton(InputStream stream) {
+  public DVResource loadConfiguration(InputStream stream) {
     Document doc = parseConfigurationString(stream);
     if (doc == null) {
       LOG.error("Failed to parse configuration string");
@@ -72,7 +73,7 @@ public class ConfigurationLoader {
     Element rootElement = (Element) root;
     LOG.info("Succeeded to load configuration file");
 
-    // Load ValidatorConfiguraiton
+    // Load ValidatorConfiguration
     NodeList validatorConfigElementList =
         rootElement.getElementsByTagName("validator");
     if (validatorConfigElementList.getLength() == 0) {
@@ -89,18 +90,35 @@ public class ConfigurationLoader {
     }
     LOG.info("Succeeded to load validator configuration setting");
 
-    // Load CharacterTable
-    NodeList characterTableElementList =
-        rootElement.getElementsByTagName("character-table");
-    if (characterTableElementList.getLength() == 0) {
-      LOG.error("No \"character-table\" block found in the configuration");
-      return null;
-    } else if (characterTableElementList.getLength() > 1) {
-      LOG.warn("More than one \"character-table\" blocks in the configuration");
+    // Load lang
+    NodeList langElementList =
+        rootElement.getElementsByTagName("lang");
+    String lang = "en"; // default language
+    String charTableFilePath = null;
+    if (langElementList.getLength() == 0) {
+      LOG.warn("No \"lang\" block found in the configuration");
+    } else {
+      Node langNode = langElementList.item(0);
+      lang = langNode.getTextContent();
+      NamedNodeMap langAttributes = langNode.getAttributes();
+      if (langAttributes.getLength() > 0) {
+        charTableFilePath = langAttributes.getNamedItem("char-conf").getNodeValue();
+      }
     }
-    CharacterTable characterTable =
-        extractCharacterTable((Element) characterTableElementList.item(0));
+    LOG.info("Setting lang as \"" + lang + "\"");
+    LOG.info("Setting character table setting file as \"" + charTableFilePath + "\"");
+
+    // Load CharacterTable
+    // FIXME dv should work without character settings
+    CharacterTable characterTable;
+    if (charTableFilePath == null || charTableFilePath.equals("")) {
+      LOG.error("No \"char-conf\" attribute found in the configuration");
+      return null;
+    }
+    characterTable = extractCharacterTable(charTableFilePath, lang);
+
     LOG.info("Succeeded to load character configuration setting");
+
     // TODO load other configurations
 
     // Create DVResource
@@ -108,10 +126,9 @@ public class ConfigurationLoader {
   }
 
   protected CharacterTable extractCharacterTable(
-      Element characterTableElement) {
-    String characterConfigurationPath = characterTableElement.getTextContent();
+      String characterConfigurationPath, String lang) {
     LOG.info("Symbol setting file: " + characterConfigurationPath);
-    return CharacterTableLoader.load(characterConfigurationPath);
+    return CharacterTableLoader.load(characterConfigurationPath, lang);
   }
 
   protected ValidatorConfiguration extractValidatorConfiguration(

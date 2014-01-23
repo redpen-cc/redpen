@@ -14,6 +14,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.symbol.DefaultSymbols;
+import org.unigram.docvalidator.symbol.JaDefaultSymbols;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -35,7 +36,7 @@ public class CharacterTableLoader {
       LOG.error(e.getMessage());
       return null;
     }
-    return load(fis);
+    return load(fis, "en");
   }
 
   /**
@@ -44,16 +45,35 @@ public class CharacterTableLoader {
    * @return generated character table or null if loading was failed.
    */
   public static CharacterTable load(InputStream stream){
+    return load(stream, "en");
+  }
+
+  /**
+   * load CharacterTable.
+   * @param fileName configuration file name
+   * @return generated character table or null if loading was failed.
+   */
+  public static CharacterTable load(String fileName, String lang){
+    InputStream fis;
+    try {
+      fis = new FileInputStream(fileName);
+    } catch (FileNotFoundException e) {
+      LOG.error(e.getMessage());
+      return null;
+    }
+    return load(fis, lang);
+  }
+
+  public static CharacterTable load(InputStream stream, String lang){
     CharacterTable characterTable = new CharacterTable();
     Map<String, DVCharacter> characterDictionary =
         characterTable.getCharacterDictionary();
-    loadDefaultCharacterTable(characterDictionary);
+    loadDefaultCharacterTable(characterDictionary, lang);
     if (loadTable(stream, characterDictionary)) {
       return characterTable;
     } else {
       return null;
     }
-
   }
 
   /**
@@ -143,13 +163,26 @@ public class CharacterTableLoader {
   }
 
   private static void loadDefaultCharacterTable(
-      Map<String, DVCharacter> characterTable) {
-    Iterator<String> characterNames =
-        DefaultSymbols.getAllCharacterNames();
+      Map<String, DVCharacter> characterTable, String lang) {
+    Iterator<String> characterNames;
+    if (lang.equals("ja")) {
+      characterNames =
+          JaDefaultSymbols.getAllCharacterNames();
+    } else {
+      characterNames =
+          DefaultSymbols.getAllCharacterNames();
+    }
+
     while (characterNames.hasNext()) {
       String charName = characterNames.next();
-      DVCharacter character = DefaultSymbols.get(charName);
-      characterTable.put(charName, character);
+      // FIXME should be remove if statement with a refactoring
+      if (lang.equals("ja")) {
+        DVCharacter character = JaDefaultSymbols.get(charName);
+        characterTable.put(charName, character);
+      } else {
+        DVCharacter character = DefaultSymbols.get(charName);
+        characterTable.put(charName, character);
+      }
     }
   }
 
