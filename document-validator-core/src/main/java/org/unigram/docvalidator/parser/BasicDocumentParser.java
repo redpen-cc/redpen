@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.DVResource;
-import org.unigram.docvalidator.symbol.DefaultSymbols;
 
 /**
  * Abstract Parser class containing common procedures to
@@ -41,14 +40,22 @@ public abstract class BasicDocumentParser implements Parser {
    */
   public final boolean initialize(DVResource resource) {
     if (resource == null) {
+      LOG.error("Given resource is null");
       return false;
     }
-    CharacterTable characterTable = resource.getCharacterTable();
+    if (resource.getCharacterTable() == null) {
+      LOG.error("Character table in the given resource is null");
+      return false;
+    }
 
-    this.period = DefaultSymbols.get("FULL_STOP").getValue();
+    CharacterTable characterTable = resource.getCharacterTable();
+    this.period = ".";
     if (characterTable.isContainCharacter("FULL_STOP")) {
       this.period = characterTable.getCharacter("FULL_STOP").getValue();
-      LOG.info("full stop is set to \"" + this.period + "\"");
+      LOG.info("Full stop is set to \"" + this.period + "\"");
+    } else {
+      LOG.warn("FULL_STOP does not exist in the configuration");
+      LOG.info("Set FULL_STOP as \"" + this.period + "\"");
     }
     return true;
   }

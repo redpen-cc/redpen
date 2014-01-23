@@ -1,44 +1,13 @@
 package org.unigram.docvalidator.symbol;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.util.DVCharacter;
 
 /**
  * Contain default settings for Japanese text
  */
-public class JaDefaultSymbols {
-  /**
-   * Get the specified character or symbol.
-   *
-   * @param name name of symbol
-   * @return specified character
-   */
-  public static DVCharacter get(String name) {
-    if (!SYMBOL_TABLE.containsKey(name)) {
-      LOG.info(name + " is not defined in DefaultSymbols.");
-      return null;
-    }
-    return SYMBOL_TABLE.get(name);
-  }
+public class JaDefaultSymbols extends DVSymbols {
 
-  /**
-   * Return all the names of registered characters.
-   *
-   * @return all names of characters
-   */
-  public static Iterator<String> getAllCharacterNames() {
-    return SYMBOL_TABLE.keySet().iterator();
-  }
-
-  private static final Map<String, DVCharacter> SYMBOL_TABLE
-      = new HashMap<String, DVCharacter>();
-
-  static {
+  public JaDefaultSymbols() {
     /******************************************************************
      * Common symbols
      ******************************************************************/
@@ -120,9 +89,4 @@ public class JaDefaultSymbols {
         new DVCharacter("8", ",", "", false, false));
     SYMBOL_TABLE.put("DIGIT_NINE", new DVCharacter("9", ",", "", false, false));
   }
-
-  private static final Logger LOG = LoggerFactory.getLogger(DefaultSymbols.class);
-
-  private JaDefaultSymbols() { }
-
 }

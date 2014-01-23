@@ -13,6 +13,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.unigram.docvalidator.symbol.DVSymbols;
 import org.unigram.docvalidator.symbol.DefaultSymbols;
 import org.unigram.docvalidator.symbol.JaDefaultSymbols;
 import org.w3c.dom.Document;
@@ -164,25 +165,18 @@ public class CharacterTableLoader {
 
   private static void loadDefaultCharacterTable(
       Map<String, DVCharacter> characterTable, String lang) {
-    Iterator<String> characterNames;
+    DVSymbols symbolSettings;
     if (lang.equals("ja")) {
-      characterNames =
-          JaDefaultSymbols.getAllCharacterNames();
+      symbolSettings = new JaDefaultSymbols();
     } else {
-      characterNames =
-          DefaultSymbols.getAllCharacterNames();
+      symbolSettings = new DefaultSymbols();
     }
 
+    Iterator<String> characterNames = symbolSettings.getAllCharacterNames();
     while (characterNames.hasNext()) {
       String charName = characterNames.next();
-      // FIXME should be remove if statement with a refactoring
-      if (lang.equals("ja")) {
-        DVCharacter character = JaDefaultSymbols.get(charName);
-        characterTable.put(charName, character);
-      } else {
-        DVCharacter character = DefaultSymbols.get(charName);
-        characterTable.put(charName, character);
-      }
+      DVCharacter character = symbolSettings.get(charName);
+      characterTable.put(charName, character);
     }
   }
 

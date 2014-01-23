@@ -17,43 +17,14 @@
  */
 package org.unigram.docvalidator.symbol;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.util.DVCharacter;
 
 /**
  * Contain the default symbols and characters.
  */
-public final class DefaultSymbols {
-  /**
-   * Get the specified character or symbol.
-   * @param name name of symbol
-   * @return specified character
-   */
-  public static DVCharacter get(String name) {
-    if (!SYMBOL_TABLE.containsKey(name)) {
-      LOG.info(name + " is not defined in DefaultSymbols.");
-      return null;
-    }
-    return SYMBOL_TABLE.get(name);
-  }
+public final class DefaultSymbols extends DVSymbols {
 
-  /**
-   * Return all the names of registered characters.
-   * @return all names of characters
-   */
-  public static Iterator<String> getAllCharacterNames() {
-    return SYMBOL_TABLE.keySet().iterator();
-  }
-
-  private static final Map<String, DVCharacter> SYMBOL_TABLE
-    = new HashMap<String, DVCharacter>();
-
-  static {
+  public DefaultSymbols() {
     /******************************************************************
      * Common symbols
      ******************************************************************/
@@ -81,7 +52,7 @@ public final class DefaultSymbols {
     SYMBOL_TABLE.put("COMMENT",
         new DVCharacter("COMMENT", "#", "", false, false));
     SYMBOL_TABLE.put("FULL_STOP",
-        new DVCharacter("FULL_STOP", ".", "", false, false));
+        new DVCharacter("FULL_STOP", ".","", false, false));
     SYMBOL_TABLE.put("PLUS_SIGN",
         new DVCharacter("PLUS_SIGN", "+", "", false, false));
     SYMBOL_TABLE.put("HYPHEN_SIGN",
@@ -137,8 +108,4 @@ public final class DefaultSymbols {
         new DVCharacter("8", ",", "", false, false));
     SYMBOL_TABLE.put("DIGIT_NINE", new DVCharacter("9", ",", "", false, false));
   }
-
-  private static final Logger LOG = LoggerFactory.getLogger(DefaultSymbols.class);
-
-  private DefaultSymbols() { }
 }
