@@ -4,6 +4,10 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+/**
+ * Error handler class of SAX parser. Without this class SAXParser flush the error messages into standard
+ * error.
+ */
 public class SAXErrorHandler implements ErrorHandler {
 
   @Override

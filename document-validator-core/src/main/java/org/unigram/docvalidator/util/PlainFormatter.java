@@ -1,5 +1,8 @@
 package org.unigram.docvalidator.util;
 
+/**
+ * Format input error into a string message.
+ */
 public class PlainFormatter implements Formatter {
 
   @Override

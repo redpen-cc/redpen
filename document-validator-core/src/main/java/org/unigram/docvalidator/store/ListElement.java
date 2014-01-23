@@ -25,9 +25,10 @@ import java.util.List;
  */
 public final class ListElement {
   /**
-   * constructor.
-   * @param listLevel indentation level
-   * @param listContent content of list element
+   * Constructor.
+   *
+   * @param listLevel    indentation level
+   * @param listContents content of list element
    */
   public ListElement(int listLevel, List<Sentence> listContents) {
     super();
@@ -36,7 +37,8 @@ public final class ListElement {
   }
 
   /**
-   * get content of list element.
+   * Get content of list element.
+   *
    * @return all contents of list element
    */
   public Iterator<Sentence> getSentences() {
@@ -44,7 +46,8 @@ public final class ListElement {
   }
 
   /**
-   * get specified content
+   * Get specified content
+   *
    * @return content of list element
    */
   public Sentence getSentence(int id) {
@@ -52,7 +55,8 @@ public final class ListElement {
   }
 
   /**
-   * get number of content sentence
+   * Get number of content sentence
+   *
    * @return number of sentences in the list item
    */
   public int getNumberOfSentences() {
@@ -60,7 +64,8 @@ public final class ListElement {
   }
 
   /**
-   * get indentation level.
+   * Get indentation level.
+   *
    * @return indentation level
    */
   public int getLevel() {

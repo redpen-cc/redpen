@@ -20,8 +20,16 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
+/**
+ * XML Output formatter.
+ */
 public class XMLFormatter implements Formatter {
 
+  /**
+   * Constructor.
+   *
+   * @throws DocumentValidatorException when failed to create Formatter
+   */
   public XMLFormatter() throws DocumentValidatorException {
     super();
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -39,7 +47,7 @@ public class XMLFormatter implements Formatter {
     Element errorElement = doc.createElement("error");
     doc.appendChild(errorElement);
 
-    if (error.getMessage()!= null && !error.getMessage().equals("")) {
+    if (error.getMessage() != null && !error.getMessage().equals("")) {
       Element contentElement = doc.createElement("message");
       errorElement.appendChild(contentElement);
       Text content = doc.createTextNode(error.getMessage());
@@ -87,7 +95,7 @@ public class XMLFormatter implements Formatter {
       throws TransformerFactoryConfigurationError {
     TransformerFactory tf;
     try {
-       tf = TransformerFactory.newInstance();
+      tf = TransformerFactory.newInstance();
     } catch (Throwable e) {
       LOG.error(e.getMessage());
       return null;

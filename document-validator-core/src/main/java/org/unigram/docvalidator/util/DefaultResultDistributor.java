@@ -27,7 +27,8 @@ import java.io.UnsupportedEncodingException;
  */
 public class DefaultResultDistributor implements ResultDistributor {
   /**
-   * constructor.
+   * Constructor.
+   *
    * @param os output stream
    */
   public DefaultResultDistributor(OutputStream os) {
@@ -45,7 +46,8 @@ public class DefaultResultDistributor implements ResultDistributor {
   }
 
   /**
-   * constructor.
+   * Constructor.
+   *
    * @param ps output stream
    */
   public DefaultResultDistributor(PrintStream ps) {
@@ -61,7 +63,8 @@ public class DefaultResultDistributor implements ResultDistributor {
   }
 
   /**
-   * output given validation error.
+   * Output given validation error.
+   *
    * @param err validation error
    */
   public int flushResult(ValidationError err) {

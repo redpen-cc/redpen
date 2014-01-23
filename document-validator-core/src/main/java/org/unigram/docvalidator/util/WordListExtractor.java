@@ -26,16 +26,30 @@ import java.util.Set;
  */
 public class WordListExtractor implements ResourceExtractor {
 
+  /**
+   * Constructor.
+   */
   public WordListExtractor() {
     super();
     wordList = new HashSet<String>();
   }
 
+  /**
+   * Load　word list file.
+   *
+   * @param line line in a file
+   * @return 0 when succeeded.
+   */
   public int load(String line) {
     wordList.add(line);
     return 0;
   }
 
+  /**
+   * Get word list.
+   *
+   * @return word list
+   */
   public Set<String> get() {
     return wordList;
   }

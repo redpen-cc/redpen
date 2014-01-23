@@ -22,32 +22,36 @@ import java.io.InputStream;
 import org.unigram.docvalidator.store.FileContent;
 import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.DocumentValidatorException;
+
 /**
  * Parser generates FileContent from input.
  */
 public interface Parser {
   /**
-   * generate FileContent instance from a stream.
+   * Given input stream, return FileContent instance from a stream.
+   *
    * @param io input stream containing input content
-   * @return FileContent object
-   * @throws DocumentValidatorException
+   * @return a generated file content
+   * @throws DocumentValidatorException if Parser failed to parse input.
    */
   FileContent generateDocument(InputStream io)
       throws DocumentValidatorException;
 
   /**
-   * generate FileContent instance for the specified file.
+   * Given input file name, return FileContent instance for the specified file.
+   *
    * @param fileName input file name
-   * @return FileContent object
-   * @throws DocumentValidatorException
+   * @return a generated file content
+   * @throws DocumentValidatorException if Parser failed to parse input.
    */
   FileContent generateDocument(String fileName)
-        throws DocumentValidatorException;
+      throws DocumentValidatorException;
 
   /**
-   * initialize parser.
+   * Initialize parser.
+   *
    * @param resource configuration resources
-   * @return true if the configurations are loaded, otherwise false
+   * @return true if the configurations are loaded, false otherwise
    */
   boolean initialize(DVResource resource);
 }

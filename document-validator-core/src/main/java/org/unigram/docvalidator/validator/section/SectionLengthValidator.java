@@ -35,7 +35,9 @@ import org.unigram.docvalidator.validator.SectionValidator;
  * Validate the length of one section.
  */
 public class SectionLengthValidator extends SectionValidator {
-
+  /**
+   * Constructor.
+   */
   public SectionLengthValidator() {
     super();
   }

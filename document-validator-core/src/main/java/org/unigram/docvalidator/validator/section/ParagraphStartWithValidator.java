@@ -41,6 +41,9 @@ public class ParagraphStartWithValidator extends SectionValidator {
   @SuppressWarnings("WeakerAccess")
   public static final String DEFAULT_PARAGRAPH_START_WITH = " ";
 
+  /**
+   * Constructor.
+   */
   public ParagraphStartWithValidator() {
     super();
     this.beginningOfParagraph = DEFAULT_PARAGRAPH_START_WITH;

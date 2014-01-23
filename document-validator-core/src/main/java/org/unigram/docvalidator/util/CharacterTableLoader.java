@@ -23,11 +23,12 @@ import org.xml.sax.SAXException;
 public class CharacterTableLoader {
 
   /**
-   * load CharacterTable.
+   * Load CharacterTable.
+   *
    * @param fileName configuration file name
-   * @return generated character table or null if loading was failed.
+   * @return generated character table or null if loading was failed
    */
-  public static CharacterTable load(String fileName){
+  public static CharacterTable load(String fileName) {
     InputStream fis;
     try {
       fis = new FileInputStream(fileName);
@@ -39,11 +40,12 @@ public class CharacterTableLoader {
   }
 
   /**
-   * load CharacterTable.
+   * Load CharacterTable.
+   *
    * @param stream input stream for configuration settings
    * @return generated character table or null if loading was failed.
    */
-  public static CharacterTable load(InputStream stream){
+  public static CharacterTable load(InputStream stream) {
     CharacterTable characterTable = new CharacterTable();
     Map<String, DVCharacter> characterDictionary =
         characterTable.getCharacterDictionary();
@@ -57,13 +59,14 @@ public class CharacterTableLoader {
   }
 
   /**
-   * load input character configuration.
-   * @param stream input configuration
-   * @param characterTable TODO
-   * @return TODO
+   * Load input character configuration.
+   *
+   * @param stream         input configuration
+   * @param characterTable character settings
+   * @return true when the table is successfully loaded, false otherwise
    */
   private static boolean loadTable(InputStream stream,
-      Map<String, DVCharacter> characterTable) {
+                                   Map<String, DVCharacter> characterTable) {
     Document document = parseCharTableString(stream);
     if (document == null) {
       LOG.error("Failed to parse character table");
@@ -84,20 +87,20 @@ public class CharacterTableLoader {
     for (int temp = 0; temp < nodeList.getLength(); temp++) {
       Node nNode = nodeList.item(temp);
       if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-          Element element = (Element) nNode;
-          if (element.getNodeName().equals("character")) {
-            DVCharacter currentChar = createCharacter(element);
-            if (currentChar == null) {
-              LOG.warn("Found a invalid character setting element.");
-              LOG.warn("Skip this element...");
-            } else {
-              characterTable.put(currentChar.getName(), currentChar);
-            }
+        Element element = (Element) nNode;
+        if (element.getNodeName().equals("character")) {
+          DVCharacter currentChar = createCharacter(element);
+          if (currentChar == null) {
+            LOG.warn("Found a invalid character setting element.");
+            LOG.warn("Skip this element...");
           } else {
-            LOG.error("Invalid Node Name \"" +
-                element.getNodeName() + "\" exist.");
-            return false;
+            characterTable.put(currentChar.getName(), currentChar);
           }
+        } else {
+          LOG.error("Invalid Node Name \"" +
+              element.getNodeName() + "\" exist.");
+          return false;
+        }
       }
     }
     LOG.info("Succeeded to load character table");
