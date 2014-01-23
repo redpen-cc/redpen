@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.unigram.docvalidator.store.Sentence;
+import org.unigram.docvalidator.symbol.DefaultSymbols;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DVCharacter;
@@ -36,7 +37,7 @@ public class QuotationValidator implements SentenceValidator {
   public QuotationValidator() {
     super();
     this.useAscii = false;
-    this.period = '.';
+    this.period = DefaultSymbols.getInstance().get("FULL_STOP").getValue().charAt(0);
     leftSingleQuotationMark =
         new DVCharacter("LEFT_SINGLE_QUOTATION_MARK", "‘", "", true, false);
     rightSingleQuotationMark =

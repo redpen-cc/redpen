@@ -7,6 +7,10 @@ import org.unigram.docvalidator.util.DVCharacter;
  */
 public class JaDefaultSymbols extends DVSymbols {
 
+  public static DVSymbols getInstance() {
+    return instance;
+  }
+
   public JaDefaultSymbols() {
     /******************************************************************
      * Common symbols
@@ -89,4 +93,6 @@ public class JaDefaultSymbols extends DVSymbols {
         new DVCharacter("8", ",", "", false, false));
     SYMBOL_TABLE.put("DIGIT_NINE", new DVCharacter("9", ",", "", false, false));
   }
+
+  private static DVSymbols instance = new JaDefaultSymbols();
 }

@@ -26,6 +26,7 @@ import java.io.UnsupportedEncodingException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.unigram.docvalidator.symbol.DefaultSymbols;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.DVResource;
 
@@ -49,7 +50,7 @@ public abstract class BasicDocumentParser implements Parser {
     }
 
     CharacterTable characterTable = resource.getCharacterTable();
-    this.period = ".";
+    this.period = DefaultSymbols.getInstance().get("FULL_STOP").getValue();
     if (characterTable.isContainCharacter("FULL_STOP")) {
       this.period = characterTable.getCharacter("FULL_STOP").getValue();
       LOG.info("Full stop is set to \"" + this.period + "\"");

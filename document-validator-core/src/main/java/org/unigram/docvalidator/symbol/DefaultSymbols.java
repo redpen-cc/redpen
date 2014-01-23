@@ -24,7 +24,11 @@ import org.unigram.docvalidator.util.DVCharacter;
  */
 public final class DefaultSymbols extends DVSymbols {
 
-  public DefaultSymbols() {
+  public static DVSymbols getInstance() {
+    return instance;
+  }
+
+  private DefaultSymbols() {
     /******************************************************************
      * Common symbols
      ******************************************************************/
@@ -107,5 +111,10 @@ public final class DefaultSymbols extends DVSymbols {
     SYMBOL_TABLE.put("DIGIT_EIGHT",
         new DVCharacter("8", ",", "", false, false));
     SYMBOL_TABLE.put("DIGIT_NINE", new DVCharacter("9", ",", "", false, false));
+
+    // not create instance
+    instance = null;
   }
+
+  private static DVSymbols instance = new DefaultSymbols();
 }

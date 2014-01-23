@@ -167,9 +167,9 @@ public class CharacterTableLoader {
       Map<String, DVCharacter> characterTable, String lang) {
     DVSymbols symbolSettings;
     if (lang.equals("ja")) {
-      symbolSettings = new JaDefaultSymbols();
+      symbolSettings = JaDefaultSymbols.getInstance();
     } else {
-      symbolSettings = new DefaultSymbols();
+      symbolSettings = DefaultSymbols.getInstance();
     }
 
     Iterator<String> characterNames = symbolSettings.getAllCharacterNames();
