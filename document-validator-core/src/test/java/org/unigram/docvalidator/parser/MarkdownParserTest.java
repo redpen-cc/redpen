@@ -207,17 +207,16 @@ public class MarkdownParserTest {
     Section firstSections = doc.getSection(0);
     Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals(1, firstParagraph.getNumberOfSentences());
-    assertEquals(2, firstParagraph.getSentence(0).links.size());
-    // PegDown Parser relate visit(RefLinkNode) method
-    assertEquals("", firstParagraph.getSentence(0).links.get(0));
-    assertEquals("http://google.com", firstParagraph.getSentence(0).links.get(1));
-    assertEquals("this is not a pen, but also this is not Google either.",
+    assertEquals(1, firstParagraph.getSentence(0).links.size());
+    // PegDown Parser is related to visit(RefLinkNode) method
+    assertEquals("http://google.com", firstParagraph.getSentence(0).links.get(0));
+    assertEquals("this is not a [pen], but also this is not Google either.",
         firstParagraph.getSentence(0).content);
   }
 
   @Test
   public void testPlainLinkWithSpaces() {
-    // PegDown Parser relate visit(ExpLinkNode) method
+    // PegDown Parser is related to visit(ExpLinkNode) method
     String sampleText = "the url is not [Google]( http://google.com ).";
     FileContent doc = createFileContent(sampleText);
     Section firstSections = doc.getSection(0);
@@ -231,7 +230,7 @@ public class MarkdownParserTest {
 
   @Test
   public void testLinkWithoutTag() {
-    // PegDown Parser relate visit(AutoLinkNode) method
+    // PegDown Parser is related tovisit(AutoLinkNode) method
     String sampleText = "url of google is http://google.com.";
     FileContent doc = createFileContent(sampleText);
     Section firstSections = doc.getSection(0);

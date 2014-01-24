@@ -128,7 +128,7 @@ public class ToFileContentSerializer implements Visitor {
   }
 
   /**
-   * traverse markdown tree that parsed Pegdown.
+   * Traverse markdown tree that parsed Pegdown.
    *
    * @param astRoot Pegdown RootNode
    *                (markdown tree that is parsed pegdown parser)
@@ -216,7 +216,7 @@ public class ToFileContentSerializer implements Visitor {
       }
 
       // TODO ...
-      if (org.unigram.docvalidator.util.StringUtils.getSentenceEndPosition(currentSentence.content, this.period) != -1 ) {
+      if (org.unigram.docvalidator.util.StringUtils.getSentenceEndPosition(currentSentence.content, this.period) != -1) {
         currentSentence = null;
       }
 
@@ -300,7 +300,7 @@ public class ToFileContentSerializer implements Visitor {
   public void visit(ExpLinkNode expLinkNode) {
     // title attribute don't use
     String linkName = printChildrenToString(expLinkNode);
-    // FIXME how to handle url, if linkName include period character?
+    // FIXME how to handle url, if linkName includes period character?
     // TODO temporary implementation
     CandidateSentence lastCandidateSentence =
         candidateSentences.get(candidateSentences.size() - 1);
@@ -474,12 +474,22 @@ public class ToFileContentSerializer implements Visitor {
     // TODO temporary implementation
     CandidateSentence lastCandidateSentence =
         candidateSentences.get(candidateSentences.size() - 1);
-    lastCandidateSentence.setLink(url);
+    if (StringUtils.isNotEmpty(url)) {
+      lastCandidateSentence.setLink(url);
+    } else {
+      lastCandidateSentence.setSentence(
+          "[" + lastCandidateSentence.getSentence() + "]");
+    }
   }
 
   private String getRefLinkUrl(SuperNode referenceKey, String linkName) {
     //FIXME need to implement
-    return "";
+    ReferenceNode refNode = references.get(linkName);
+    StringBuilder sb = new StringBuilder();
+    if (refNode != null) {
+      sb.append(refNode.getUrl());
+    }
+    return sb.toString();
   }
 
   // html part

@@ -47,9 +47,12 @@ final class CandidateSentence {
     return link;
   }
 
-
   public void setLink(String url) {
     this.link = url;
+  }
+
+  public void setSentence(String text) {
+    this.sentence = text;
   }
 
   @Override
