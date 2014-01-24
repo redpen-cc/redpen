@@ -200,6 +200,47 @@ public class MarkdownParserTest {
     assertEquals(2, firstParagraph.getNumberOfSentences());
   }
 
+  @Test
+  public void testPlainLink() {
+    String sampleText = "this is not a [pen], but also this is not [Google](http://google.com) either.";
+    FileContent doc = createFileContent(sampleText);
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
+    assertEquals(1, firstParagraph.getNumberOfSentences());
+    assertEquals(1, firstParagraph.getSentence(0).links.size());
+    // PegDown Parser is related to visit(RefLinkNode) method
+    assertEquals("http://google.com", firstParagraph.getSentence(0).links.get(0));
+    assertEquals("this is not a [pen], but also this is not Google either.",
+        firstParagraph.getSentence(0).content);
+  }
+
+  @Test
+  public void testPlainLinkWithSpaces() {
+    // PegDown Parser is related to visit(ExpLinkNode) method
+    String sampleText = "the url is not [Google]( http://google.com ).";
+    FileContent doc = createFileContent(sampleText);
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
+    assertEquals(1, firstParagraph.getNumberOfSentences());
+    assertEquals(1, firstParagraph.getSentence(0).links.size());
+    assertEquals("http://google.com", firstParagraph.getSentence(0).links.get(0));
+    assertEquals("the url is not Google.",
+        firstParagraph.getSentence(0).content);
+  }
+
+  @Test
+  public void testLinkWithoutTag() {
+    // PegDown Parser is related tovisit(AutoLinkNode) method
+    String sampleText = "url of google is http://google.com.";
+    FileContent doc = createFileContent(sampleText);
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
+    assertEquals(1, firstParagraph.getNumberOfSentences());
+    assertEquals(1, firstParagraph.getSentence(0).links.size());
+    assertEquals("http://google.com", firstParagraph.getSentence(0).links.get(0));
+    assertEquals("url of google is http://google.com.",
+        firstParagraph.getSentence(0).content);
+  }
 
   private Parser loadParser(DVResource resource) {
     Parser parser = null;
