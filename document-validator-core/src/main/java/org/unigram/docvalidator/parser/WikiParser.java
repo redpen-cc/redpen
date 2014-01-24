@@ -175,17 +175,24 @@ public final class WikiParser extends BasicDocumentParser {
     StringBuilder modContent = new StringBuilder();
     int start = 0;
     Matcher m = LINK_PATTERN.matcher(sentence.content);
-
     while (m.find()) {
       String[] tagInternal = m.group(1).split("\\|");
-      String tagURL = tagInternal[0].trim();
-      if (tagInternal.length > 2) {
+      String tagURL = null;
+      if (tagInternal.length == 1) {
+        tagURL = tagInternal[0].trim();
+        modContent.append(sentence.content.substring(start, m.start())).append(tagURL.trim());
+      } else if (tagInternal.length == 0) {
+        LOG.warn("Invalid link block: vacant block");
+        tagURL = "";
+      } else {
+        if (tagInternal.length > 2) {
+          LOG.warn("Invalid link block: there are more than two link blocks at line " + sentence.position);
+        }
+        tagURL = tagInternal[1].trim();
         StringBuilder buffer = new StringBuilder();
         buffer.append(sentence.content.substring(start, m.start()));
-        buffer.append(tagInternal[1].trim());
+        buffer.append(tagInternal[0].trim());
         modContent.append(buffer);
-      } else {
-        modContent.append(sentence.content.substring(start, m.start())).append(tagURL.trim());
       }
       sentence.links.add(tagURL);
       start = m.end();
@@ -280,7 +287,7 @@ public final class WikiParser extends BasicDocumentParser {
       Pattern.compile("^(#+) (.*)$");
 
   private static final Pattern LINK_PATTERN =
-      Pattern.compile("\\[\\[(.+?)\\]\\]");
+      Pattern.compile("\\[\\[(.*?)\\]\\]");
 
   private static final Pattern BEGIN_COMMENT_PATTERN =
       Pattern.compile("\\s*^\\[!--");

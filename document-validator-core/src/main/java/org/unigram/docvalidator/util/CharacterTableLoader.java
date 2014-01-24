@@ -145,6 +145,7 @@ public class CharacterTableLoader {
         Boolean.parseBoolean(element.getAttribute("after-space")));
   }
 
+
   private static void loadDefaultCharacterTable(
       Map<String, DVCharacter> characterTable) {
     Iterator<String> characterNames =
