@@ -213,7 +213,10 @@ public class ToFileContentSerializer implements Visitor {
         if (candidateSentence.getLink() != null) {
           currentSentence.links.add(candidateSentence.getLink());
         }
-      } else {
+      }
+
+      // TODO ...
+      if (org.unigram.docvalidator.util.StringUtils.getSentenceEndPosition(currentSentence.content, this.period) != -1 ) {
         currentSentence = null;
       }
 
