@@ -35,7 +35,7 @@ public class ParseUtils {
 
   /**
    * FIXME temporary implementation! need to refactor
-   * Get Sentence lists without create last sentence.
+   * Get Sentence lists without creating the last sentence.
    * @param line input line which can contain more than one sentences
    * @param period full stop character
    * @param outputSentences List of extracted sentences
