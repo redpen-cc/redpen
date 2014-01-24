@@ -335,7 +335,7 @@ public class WikiParserTest {
     assertEquals(1, firstParagraph.getNumberOfSentences());
     assertEquals(2, firstParagraph.getSentence(0).links.size());
     assertEquals("pen", firstParagraph.getSentence(0).links.get(0));
-    assertEquals("Google", firstParagraph.getSentence(0).links.get(1));
+    assertEquals("http://google.com", firstParagraph.getSentence(0).links.get(1));
     assertEquals("this is not a pen, but also this is not Google either.",
         firstParagraph.getSentence(0).content);
   }
@@ -348,7 +348,7 @@ public class WikiParserTest {
     Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals(1, firstParagraph.getNumberOfSentences());
     assertEquals(1, firstParagraph.getSentence(0).links.size());
-    assertEquals("Google", firstParagraph.getSentence(0).links.get(0));
+    assertEquals("http://google.com", firstParagraph.getSentence(0).links.get(0));
     assertEquals("the url is not Google.",
         firstParagraph.getSentence(0).content);
   }
@@ -367,7 +367,7 @@ public class WikiParserTest {
   }
 
   @Test
-  public void testIncompleteLink() {
+     public void testIncompleteLink() {
     String sampleText = "url of google is [[http://google.com.";
     FileContent doc = createFileContent(sampleText);
     Section firstSections = doc.getSection(0);
@@ -375,6 +375,32 @@ public class WikiParserTest {
     assertEquals(1, firstParagraph.getNumberOfSentences());
     assertEquals(0, firstParagraph.getSentence(0).links.size());
     assertEquals("url of google is [[http://google.com.",
+        firstParagraph.getSentence(0).content);
+  }
+
+  @Test
+  public void testPlainLinkWithThreeBlock() {
+    String sampleText = "this is not a pen, but also this is not [[Google|http://google.com|dummy]] either.";
+    FileContent doc = createFileContent(sampleText);
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
+    assertEquals(1, firstParagraph.getNumberOfSentences());
+    assertEquals(1, firstParagraph.getSentence(0).links.size());
+    assertEquals("http://google.com", firstParagraph.getSentence(0).links.get(0));
+    assertEquals("this is not a pen, but also this is not Google either.",
+        firstParagraph.getSentence(0).content);
+  }
+
+  @Test
+  public void testVacantListBlock() {
+    String sampleText = "this is not a pen, but also this is not [[]] Google either.";
+    FileContent doc = createFileContent(sampleText);
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
+    assertEquals(1, firstParagraph.getNumberOfSentences());
+    assertEquals(1, firstParagraph.getSentence(0).links.size());
+    assertEquals("", firstParagraph.getSentence(0).links.get(0));
+    assertEquals("this is not a pen, but also this is not  Google either.",
         firstParagraph.getSentence(0).content);
   }
 
