@@ -367,7 +367,7 @@ public class WikiParserTest {
   }
 
   @Test
-     public void testIncompleteLink() {
+  public void testIncompleteLink() {
     String sampleText = "url of google is [[http://google.com.";
     FileContent doc = createFileContent(sampleText);
     Section firstSections = doc.getSection(0);
