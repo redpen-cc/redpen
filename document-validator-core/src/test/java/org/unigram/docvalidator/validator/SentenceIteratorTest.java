@@ -6,13 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
-import org.unigram.docvalidator.store.FileContent;
-import org.unigram.docvalidator.store.Paragraph;
-import org.unigram.docvalidator.store.Section;
-import org.unigram.docvalidator.store.Sentence;
+import org.unigram.docvalidator.store.*;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.FakeResultDistributor;
-import org.unigram.docvalidator.util.ResultDistributor;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.ValidationError;
 
@@ -51,26 +47,21 @@ class DummyValidator implements SentenceValidator {
   private List<String> sentenceStrings;
 }
 
-// TODO refeactor the following tests using utility functions.
 public class SentenceIteratorTest {
-
   @Test
-  public void testSimpleDocument() {
-    Section section = new Section(0);
-    Paragraph paragraph = new Paragraph();
-    paragraph.appendSentence("it is a piece of a cake.", 0);
-    paragraph.appendSentence("that is also a piece of a cake.", 1);
-    section.appendParagraph(paragraph);
+  public void testSimpleFileContent() {
     FileContent fileContent = new FileContent();
-    fileContent.appendSection(section);
+    String [] sentences = {"it is a piece of a cake.",
+        "that is also a piece of a cake."};
+    addSentences(fileContent, sentences);
 
     SentenceIteratorForTest sentenceIterator = new SentenceIteratorForTest();
     List<SentenceValidator> validatorList = new ArrayList<SentenceValidator>();
     DummyValidator validator = new DummyValidator();
     validatorList.add(validator);
     sentenceIterator.appendValidators(validatorList);
-    ResultDistributor distributor = new FakeResultDistributor();
-    sentenceIterator.check(fileContent, distributor);
+    sentenceIterator.check(fileContent, new FakeResultDistributor());
+
     assertEquals(2, validator.getSentenceStrings().size());
     assertEquals("it is a piece of a cake.",
         validator.getSentenceStrings().get(0));
@@ -80,51 +71,79 @@ public class SentenceIteratorTest {
 
   @Test
   public void testDocumentWithHeader() {
-    List<Sentence>headers = new ArrayList<Sentence>();
-    headers.add(new Sentence("this is it.", 0));
-    Section section = new Section(0, headers);
-    Paragraph paragraph = new Paragraph();
-    paragraph.appendSentence("it is a piece of a cake.", 0);
-    paragraph.appendSentence("that is also a piece of a cake.", 1);
-    section.appendParagraph(paragraph);
     FileContent fileContent = new FileContent();
-    fileContent.appendSection(section);
+    String [] sentences = {"it is a piece of a cake.",
+        "that is also a piece of a cake."};
+    addSentences(fileContent, sentences);
+    addHeader(fileContent, "this is it");
 
     SentenceIteratorForTest sentenceIterator = new SentenceIteratorForTest();
     List<SentenceValidator> validatorList = new ArrayList<SentenceValidator>();
     DummyValidator validator = new DummyValidator();
     validatorList.add(validator);
     sentenceIterator.appendValidators(validatorList);
-    ResultDistributor distributor = new FakeResultDistributor();
-    sentenceIterator.check(fileContent, distributor);
+    sentenceIterator.check(fileContent, new FakeResultDistributor());
+
     assertEquals(3, validator.getSentenceStrings().size());
   }
 
   @Test
   public void testDocumentWithList() {
-    List<Sentence>headers = new ArrayList<Sentence>();
-    headers.add(new Sentence("this is it.", 0));
-    Section section = new Section(0, headers);
-    Paragraph paragraph = new Paragraph();
-    paragraph.appendSentence("it is a piece of a cake.", 0);
-    paragraph.appendSentence("that is also a piece of a cake.", 1);
-    section.appendParagraph(paragraph);
-
-    List<Sentence> listContents = new ArrayList<Sentence>();
-    listContents.add(new Sentence("this is list", 0));
-    section.appendListBlock();
-    section.appendListElement(0, listContents);
     FileContent fileContent = new FileContent();
-    fileContent.appendSection(section);
+    String [] sentences = {"it is a piece of a cake.",
+        "that is also a piece of a cake."};
+    addSentences(fileContent, sentences);
+    addHeader(fileContent, "this is it");
+    String [] lists = {"this is a list."};
+    addList(fileContent, lists);
 
-    SentenceIteratorForTest sentenceIterator = new SentenceIteratorForTest();
-    List<SentenceValidator> validatorList = new ArrayList<SentenceValidator>();
     DummyValidator validator = new DummyValidator();
-    validatorList.add(validator);
-    sentenceIterator.appendValidators(validatorList);
-    ResultDistributor distributor = new FakeResultDistributor();
-    sentenceIterator.check(fileContent, distributor);
+    SentenceIterator sentenceIterator = generateSentenceIterator(validator);
+    sentenceIterator.check(fileContent, new FakeResultDistributor());
+
     assertEquals(4, validator.getSentenceStrings().size());
   }
 
+  private SentenceIterator generateSentenceIterator(SentenceValidator validator) {
+    SentenceIteratorForTest sentenceIterator = new SentenceIteratorForTest();
+    List<SentenceValidator> validatorList = new ArrayList<SentenceValidator>();
+    validatorList.add(validator);
+    sentenceIterator.appendValidators(validatorList);
+    return sentenceIterator;
+  }
+
+  private void addSentences(FileContent fileContent, String[] sentences) {
+    if (fileContent.getNumberOfSections() == 0) {
+      fileContent.appendSection(new Section(0));
+    }
+    Section section = fileContent.getSection(0);
+    Paragraph paragraph = new Paragraph();
+    for (int i = 0; i < sentences.length; i++) {
+      paragraph.appendSentence(sentences[i], i);
+    }
+    section.appendParagraph(paragraph);
+  }
+
+  private void addHeader(FileContent fileContent, String header) {
+    if (fileContent.getNumberOfSections() == 0) {
+      fileContent.appendSection(new Section(0));
+    }
+    Section section = fileContent.getSection(0);
+    List<Sentence> headers = new ArrayList<Sentence>();
+    headers.add(new Sentence(header, 0));
+    section.setHeaderContent(headers);
+  }
+
+  private void addList(FileContent fileContent, String[] listElements) {
+    if (fileContent.getNumberOfSections() == 0) {
+      fileContent.appendSection(new Section(0));
+    }
+    Section section = fileContent.getSection(0);
+    List<Sentence> listContents = new ArrayList<Sentence>();
+    for (int i = 0; i < listElements.length; i++) {
+      listContents.add(new Sentence(listElements[i],i));
+    }
+    section.appendListBlock();
+    section.appendListElement(0, listContents);
+  }
 }
