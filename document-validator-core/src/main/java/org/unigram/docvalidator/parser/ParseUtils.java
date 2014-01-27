@@ -39,10 +39,12 @@ public class ParseUtils {
    * @param line input line which can contain more than one sentences
    * @param period full stop character
    * @param outputSentences List of extracted sentences
+   * @param position line number
    * @return remaining line or last sentence
    */
   public static String extractSentencesWithoutLastSentence(
-      String line, String period, List<Sentence> outputSentences) {
+      String line, String period, List<Sentence> outputSentences,
+      int position) {
     int periodPosition = StringUtils.getSentenceEndPosition(line, period);
     if (periodPosition == -1) {
       return line;
@@ -52,7 +54,7 @@ public class ParseUtils {
           return line;
         }
         Sentence sentence =
-            new Sentence(line.substring(0, periodPosition + 1), 0);
+            new Sentence(line.substring(0, periodPosition + 1), position);
         outputSentences.add(sentence);
         line = line.substring(periodPosition + 1, line.length());
         periodPosition = StringUtils.getSentenceEndPosition(line, period);

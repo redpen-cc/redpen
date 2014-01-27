@@ -169,7 +169,7 @@ public class ToFileContentSerializer implements Visitor {
     int lineNum = 0;
     // TODO test
     for (int end : lineList) {
-      if (end < startIndex) {
+      if (startIndex < end) {
         break;
       }
       lineNum++;
@@ -198,7 +198,7 @@ public class ToFileContentSerializer implements Visitor {
       String remain =
           ParseUtils.extractSentencesWithoutLastSentence(
               candidateSentence.getSentence(),
-              this.period, newSentences);
+              this.period, newSentences, candidateSentence.getLineNum());
 
       //TODO refactor StringUtils...
       if (StringUtils.isNotEmpty(remain)) {
@@ -216,7 +216,8 @@ public class ToFileContentSerializer implements Visitor {
       }
 
       // TODO ...
-      if (org.unigram.docvalidator.util.StringUtils.getSentenceEndPosition(currentSentence.content, this.period) != -1) {
+      if (org.unigram.docvalidator.util.StringUtils.getSentenceEndPosition(
+          currentSentence.content, this.period) != -1) {
         currentSentence = null;
       }
 
