@@ -26,6 +26,10 @@ class SentenceIteratorForTest extends SentenceIterator {
 
 class DummyValidator implements SentenceValidator {
   public List<ValidationError> check(Sentence sentence) {
+    // NOTE: throw a exception when input sentence when sentence is zero length.
+    if (sentence.content.equals("")) {
+      throw new RuntimeException("The content of input sentence is null");
+    }
     sentenceStrings.add(sentence.content);
     return new ArrayList<ValidationError>();
   }
@@ -55,11 +59,8 @@ public class SentenceIteratorTest {
         "that is also a piece of a cake."};
     addSentences(fileContent, sentences);
 
-    SentenceIteratorForTest sentenceIterator = new SentenceIteratorForTest();
-    List<SentenceValidator> validatorList = new ArrayList<SentenceValidator>();
     DummyValidator validator = new DummyValidator();
-    validatorList.add(validator);
-    sentenceIterator.appendValidators(validatorList);
+    SentenceIterator sentenceIterator = generateSentenceIterator(validator);
     sentenceIterator.check(fileContent, new FakeResultDistributor());
 
     assertEquals(2, validator.getSentenceStrings().size());
@@ -70,25 +71,28 @@ public class SentenceIteratorTest {
   }
 
   @Test
-  public void testDocumentWithHeader() {
+  public void testFileContentWithHeader() {
     FileContent fileContent = new FileContent();
     String [] sentences = {"it is a piece of a cake.",
         "that is also a piece of a cake."};
     addSentences(fileContent, sentences);
     addHeader(fileContent, "this is it");
 
-    SentenceIteratorForTest sentenceIterator = new SentenceIteratorForTest();
-    List<SentenceValidator> validatorList = new ArrayList<SentenceValidator>();
     DummyValidator validator = new DummyValidator();
-    validatorList.add(validator);
-    sentenceIterator.appendValidators(validatorList);
+    SentenceIterator sentenceIterator = generateSentenceIterator(validator);
     sentenceIterator.check(fileContent, new FakeResultDistributor());
 
     assertEquals(3, validator.getSentenceStrings().size());
+    assertEquals("it is a piece of a cake.",
+        validator.getSentenceStrings().get(0));
+    assertEquals("that is also a piece of a cake.",
+        validator.getSentenceStrings().get(1));
+    assertEquals("this is it",
+        validator.getSentenceStrings().get(2));
   }
 
   @Test
-  public void testDocumentWithList() {
+  public void testFileContentWithList() {
     FileContent fileContent = new FileContent();
     String [] sentences = {"it is a piece of a cake.",
         "that is also a piece of a cake."};
@@ -102,6 +106,43 @@ public class SentenceIteratorTest {
     sentenceIterator.check(fileContent, new FakeResultDistributor());
 
     assertEquals(4, validator.getSentenceStrings().size());
+    assertEquals("it is a piece of a cake.",
+        validator.getSentenceStrings().get(0));
+    assertEquals("that is also a piece of a cake.",
+        validator.getSentenceStrings().get(1));
+    assertEquals("this is it",
+        validator.getSentenceStrings().get(2));
+    assertEquals("this is a list.",
+        validator.getSentenceStrings().get(3));
+  }
+
+  @Test
+  public void testFileContentWithoutContent() {
+    FileContent fileContent = new FileContent();
+    String [] sentences = {};
+    addSentences(fileContent, sentences);
+
+    DummyValidator validator = new DummyValidator();
+    SentenceIterator sentenceIterator = generateSentenceIterator(validator);
+    sentenceIterator.check(fileContent, new FakeResultDistributor());
+
+    assertEquals(0, validator.getSentenceStrings().size());
+  }
+
+  @Test
+  public void testExceptionFromSentenceValidator() {
+    FileContent fileContent = new FileContent();
+    String [] sentences = {""};
+    addSentences(fileContent, sentences);
+
+    DummyValidator validator = new DummyValidator();
+    SentenceIterator sentenceIterator = generateSentenceIterator(validator);
+    try {
+      sentenceIterator.check(fileContent, new FakeResultDistributor());
+    } catch (Throwable e) {
+      fail();
+    }
+    assertEquals(0, validator.getSentenceStrings().size());
   }
 
   private SentenceIterator generateSentenceIterator(SentenceValidator validator) {

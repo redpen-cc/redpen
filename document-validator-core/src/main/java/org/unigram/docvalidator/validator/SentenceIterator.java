@@ -22,6 +22,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.store.FileContent;
 import org.unigram.docvalidator.store.ListBlock;
 import org.unigram.docvalidator.store.ListElement;
@@ -34,7 +36,7 @@ import org.unigram.docvalidator.util.ValidationError;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.validator.sentence.*;
-import org.unigram.docvalidator.validator.sentence.lang.ja.KatakanaEndHyphenValidator;
+import org.unigram.docvalidator.validator.sentence.lang.ja.*;
 
 /**
  * Validator for input sentences. Sentence iterator calls appended
@@ -54,7 +56,7 @@ public class SentenceIterator implements Validator {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     for (SentenceValidator validator : this.sentenceValidators) {
       for (Iterator<Section> sectionIterator =
-               file.getSections(); sectionIterator.hasNext(); ) {
+               file.getSections(); sectionIterator.hasNext();) {
         Section currentSection = sectionIterator.next();
         checkSection(distributor, errors, validator,
             currentSection, file.getFileName());
@@ -83,7 +85,7 @@ public class SentenceIterator implements Validator {
       } else if (confName.equals("SuggestExpression")) {
         validator = new SuggestExpressionValidator();
       } else if (confName.equals("InvalidCharacter")) {
-          validator = new InvalidCharacterValidator();
+        validator = new InvalidCharacterValidator();
       } else if (confName.equals("SpaceWithSymbol")) {
         validator = new SymbolWithSpaceValidator();
       } else if (confName.equals("KatakanaEndHyphen")) {
@@ -114,7 +116,8 @@ public class SentenceIterator implements Validator {
       Paragraph currentParagraph = paraIterator.next();
       for (Iterator<Sentence> lineIterator =
           currentParagraph.getSentences(); lineIterator.hasNext();) {
-        applyValidator(distributor, errors, validator, fileName, lineIterator);
+        applyValidator(distributor, errors, validator, fileName,
+            lineIterator.next());
       }
     }
   }
@@ -124,7 +127,7 @@ public class SentenceIterator implements Validator {
       Section currentSection, String fileName) {
     for (Iterator<Sentence> iterator = currentSection.getHeaderContents();
         iterator.hasNext();) {
-      applyValidator(distributor, errors, validator, fileName, iterator);
+      applyValidator(distributor, errors, validator, fileName, iterator.next());
     }
   }
 
@@ -134,12 +137,13 @@ public class SentenceIterator implements Validator {
     for (Iterator<ListBlock> listBlockIterator = currentSection.getListBlocks();
         listBlockIterator.hasNext();) {
       ListBlock listBlock = listBlockIterator.next();
-      for(Iterator<ListElement> listElementIterator =
+      for (Iterator<ListElement> listElementIterator =
           listBlock.getListElements(); listElementIterator.hasNext();) {
         ListElement listElemnt = listElementIterator.next();
         for (Iterator<Sentence> sentenceIterator = listElemnt.getSentences();
             sentenceIterator.hasNext();) {
-          applyValidator(distributor, errors, validator, fileName, sentenceIterator);
+          applyValidator(distributor, errors, validator, fileName,
+              sentenceIterator.next());
         }
       }
     }
@@ -147,9 +151,16 @@ public class SentenceIterator implements Validator {
 
   private void applyValidator(ResultDistributor distributor,
       List<ValidationError> errors, SentenceValidator validator,
-      String fileName, Iterator<Sentence> lineIterator) {
-    List<ValidationError> validationErrors =
-        validator.check(lineIterator.next());
+      String fileName, Sentence sentence) {
+    List<ValidationError> validationErrors;
+    try {
+      validationErrors =
+          validator.check(sentence);
+    } catch (Throwable e) {
+      //TODO add validator type info
+      LOG.error("Error in checking sentence: \"" + sentence.content +  "\"");
+      return;
+    }
     for (ValidationError validationError : validationErrors) {
       appendError(distributor, errors, fileName, validationError);
     }
@@ -171,4 +182,7 @@ public class SentenceIterator implements Validator {
   }
 
   private final Vector<SentenceValidator> sentenceValidators;
+
+  private static final Logger LOG =
+      LoggerFactory.getLogger(SentenceIterator.class);
 }
