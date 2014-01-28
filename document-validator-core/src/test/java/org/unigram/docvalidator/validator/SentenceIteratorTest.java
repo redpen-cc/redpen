@@ -27,7 +27,7 @@ class SentenceIteratorForTest extends SentenceIterator {
 class DummyValidator implements SentenceValidator {
   public List<ValidationError> check(Sentence sentence) {
     // NOTE: throw a exception when input sentence when sentence is zero length.
-    if (sentence.content.equals("")) {
+    if ("".equals(sentence.content)) {
       throw new RuntimeException("The content of input sentence is null");
     }
     sentenceStrings.add(sentence.content);
@@ -155,7 +155,7 @@ public class SentenceIteratorTest {
   }
 
   @Test
-  public void testExceptionFromSentenceValidator() {
+  public void testNoExceptionFromSentenceValidator() {
     FileContent fileContent = generateFileContent("tested file");
     String [] sentences = {""};
     addSentences(fileContent, sentences);
