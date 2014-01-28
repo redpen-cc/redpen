@@ -20,7 +20,6 @@ package org.unigram.docvalidator.validator;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +65,7 @@ public class DocumentValidator {
     super();
     this.distributor = ResultDistributorFactory.createDistributor("plain",
         System.out);
-    this.validators = new Vector<Validator>();
+    this.validators = new ArrayList<Validator>();
     this.conf = resource.getConfiguration();
     this.charTable = resource.getCharacterTable();
     if (!loadValidators()) {
@@ -123,7 +122,7 @@ public class DocumentValidator {
     return errors;
   }
 
-  private final Vector<Validator> validators;
+  protected final List<Validator> validators;
 
   private final ValidatorConfiguration conf;
 
