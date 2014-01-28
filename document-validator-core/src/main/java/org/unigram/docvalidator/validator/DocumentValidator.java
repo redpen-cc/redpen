@@ -113,13 +113,29 @@ public class DocumentValidator {
     for (Validator validator : this.validators) {
       Iterator<FileContent> fileIterator = document.getFiles();
       while (fileIterator.hasNext()) {
-        List<ValidationError> currentErrors =
-            validator.check(fileIterator.next(), distributor);
-        errors.addAll(currentErrors);
+        try {
+          List<ValidationError> currentErrors =
+              validator.check(fileIterator.next(), distributor);
+          errors.addAll(currentErrors);
+        } catch (Throwable e) {
+          LOG.error("Error occurs in validation: " + e.getMessage());
+          LOG.error("Validator class: " + validator.getClass());
+        }
       }
     }
     distributor.flushFooter();
     return errors;
+  }
+
+  /**
+   * Constructor only for testing.
+   */
+  protected DocumentValidator() {
+    this.distributor = ResultDistributorFactory.createDistributor("plain",
+        System.out);
+    this.validators = new ArrayList<Validator>();
+    this.conf = null;
+    this.charTable = null;
   }
 
   protected final List<Validator> validators;
