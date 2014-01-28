@@ -83,7 +83,7 @@ public class DocumentValidator {
   public boolean loadValidators() {
     this.validators.clear();
     for (Iterator<ValidatorConfiguration> confIterator =
-             this.conf.getChildren(); confIterator.hasNext(); ) {
+             this.conf.getChildren(); confIterator.hasNext();) {
       ValidatorConfiguration currentConfiguration = confIterator.next();
       String confName = currentConfiguration.getConfigurationName();
       Validator validator;
@@ -138,7 +138,16 @@ public class DocumentValidator {
     this.charTable = null;
   }
 
-  protected final List<Validator> validators;
+  /**
+   * Append a specified validator.
+   *
+   * @param validator Validator used in testing
+   */
+  protected void appendValidator(Validator validator) {
+    this.validators.add(validator);
+  }
+
+  private final List<Validator> validators;
 
   private final ValidatorConfiguration conf;
 
@@ -146,5 +155,6 @@ public class DocumentValidator {
 
   private ResultDistributor distributor;
 
-  private static final Logger LOG = LoggerFactory.getLogger(DocumentValidator.class);
+  private static final Logger LOG =
+      LoggerFactory.getLogger(DocumentValidator.class);
 }

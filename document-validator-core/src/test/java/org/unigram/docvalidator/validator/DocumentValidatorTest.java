@@ -21,7 +21,7 @@ class DocumentValidatorForTest extends DocumentValidator {
   }
 
   public void addValidator(Validator validator) {
-    this.validators.add(validator);
+    this.appendValidator(validator);
   }
 }
 
