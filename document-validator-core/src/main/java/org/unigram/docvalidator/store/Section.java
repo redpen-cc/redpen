@@ -149,8 +149,8 @@ public final class Section implements Block {
    *
    * @param headerContentList section level
    */
-  public void setHeaderContent(List<Sentence> headerContentList) {
-    this.headerContent = headerContentList;
+  public void appendHeaderContent(List<Sentence> headerContentList) {
+    this.headerContent.addAll(headerContentList);
   }
 
   /**

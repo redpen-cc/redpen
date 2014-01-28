@@ -197,7 +197,7 @@ public class SentenceIteratorTest {
     Section section = fileContent.getSection(0);
     List<Sentence> headers = new ArrayList<Sentence>();
     headers.add(new Sentence(header, 0));
-    section.setHeaderContent(headers);
+    section.appendHeaderContent(headers);
   }
 
   private void addList(FileContent fileContent, String[] listElements) {
