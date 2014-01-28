@@ -145,6 +145,15 @@ public final class Section implements Block {
   }
 
   /**
+   * Append contents of a header.
+   *
+   * @param headerContentList header contents
+   */
+  public void appendHeaderContent(List<Sentence> headerContentList) {
+    this.headerContent.addAll(headerContentList);
+  }
+
+  /**
    * Get iterator of header sentences.
    *
    * @return contents of header.
@@ -321,7 +330,7 @@ public final class Section implements Block {
   }
 
   /* Header */
-  private final List<Sentence> headerContent;
+  private List<Sentence> headerContent;
 
   /* Subsections */
   private final List<Section> subsections;
@@ -338,3 +347,4 @@ public final class Section implements Block {
   /* parent Section */
   private Section parent;
 }
+
