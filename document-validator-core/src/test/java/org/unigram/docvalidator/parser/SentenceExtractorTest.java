@@ -14,7 +14,7 @@ public class SentenceExtractorTest {
   public void testSimple() {
     SentenceExtractor extractor = new SentenceExtractor();
     List<Sentence> outputSentences = new ArrayList<Sentence>();
-    String remain = extractor.extract("this is a pen.", ".",
+    String remain = extractor.extract("this is a pen.",
         outputSentences);
     assertEquals(1, outputSentences.size());
     assertEquals("", remain);
@@ -24,7 +24,7 @@ public class SentenceExtractorTest {
   public void testMultipleSentences() {
     SentenceExtractor extractor = new SentenceExtractor();
     List<Sentence> outputSentences = new ArrayList<Sentence>();
-    String remain = extractor.extract("this is a pen. that is a paper.", ".",
+    String remain = extractor.extract("this is a pen. that is a paper.",
         outputSentences);
     assertEquals(2, outputSentences.size());
     assertEquals("", remain);
@@ -34,7 +34,7 @@ public class SentenceExtractorTest {
   public void testMultipleSentencesWithoutPeriodInTheEnd() {
     SentenceExtractor extractor = new SentenceExtractor();
     List<Sentence> outputSentences = new ArrayList<Sentence>();
-    String remain = extractor.extract("this is a pen. that is a paper", ".",
+    String remain = extractor.extract("this is a pen. that is a paper",
         outputSentences);
     assertEquals(1, outputSentences.size());
     assertEquals(" that is a paper", remain); // NOTE: second sentence start with white space.
@@ -44,7 +44,7 @@ public class SentenceExtractorTest {
   public void testVoidLine() {
     SentenceExtractor extractor = new SentenceExtractor();
     List<Sentence> outputSentences = new ArrayList<Sentence>();
-    String remain = extractor.extract("", ".",
+    String remain = extractor.extract("",
         outputSentences);
     assertEquals(0, outputSentences.size());
     assertEquals(remain, ""); // NOTE: second sentence start with white space.
@@ -54,7 +54,7 @@ public class SentenceExtractorTest {
   public void testJustPeriodLine() {
     SentenceExtractor extractor = new SentenceExtractor();
     List<Sentence> outputSentences = new ArrayList<Sentence>();
-    String remain = extractor.extract(".", ".",
+    String remain = extractor.extract(".",
         outputSentences);
     assertEquals(1, outputSentences.size());
     assertEquals("", remain);

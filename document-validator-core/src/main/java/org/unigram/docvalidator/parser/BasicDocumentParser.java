@@ -51,6 +51,7 @@ public abstract class BasicDocumentParser implements Parser {
       this.period = characterTable.getCharacter("FULL_STOP").getValue();
       LOG.info("full stop is set to \"" + this.period + "\"");
     }
+    this.sentenceExtractor = new SentenceExtractor(this.period);
     return true;
   }
 
@@ -81,6 +82,8 @@ public abstract class BasicDocumentParser implements Parser {
   }
 
   protected String period;
+
+  protected SentenceExtractor sentenceExtractor;
 
   private static final Logger LOG = LoggerFactory.getLogger(
       BasicDocumentParser.class);

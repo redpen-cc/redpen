@@ -118,15 +118,14 @@ public class ToFileContentSerializer implements Visitor {
    *
    * @param content          FileContent
    * @param listOfLineNumber the list of line number
-   * @param parserPeriod     end character of sentence
+   * @param extractor        utility object to extract a sentence list
    */
   public ToFileContentSerializer(FileContent content,
                                  List<Integer> listOfLineNumber,
-                                 String parserPeriod) {
+                                 SentenceExtractor extractor) {
     this.fileContent = content;
     this.lineList = listOfLineNumber;
-    this.period = parserPeriod;
-    this.sentenceExtractor = new SentenceExtractor();
+    this.sentenceExtractor = extractor;
     currentSection = fileContent.getLastSection();
   }
 
@@ -200,8 +199,7 @@ public class ToFileContentSerializer implements Visitor {
     for (CandidateSentence candidateSentence : candidateSentences) {
       String remain =
           sentenceExtractor.extractWithoutLastSentence(
-              candidateSentence.getSentence(),
-              this.period, newSentences, candidateSentence.getLineNum());
+              candidateSentence.getSentence(), newSentences, candidateSentence.getLineNum());
 
       //TODO refactor StringUtils...
       if (StringUtils.isNotEmpty(remain)) {
@@ -220,7 +218,7 @@ public class ToFileContentSerializer implements Visitor {
 
       // TODO ...
       if (org.unigram.docvalidator.util.StringUtils.getSentenceEndPosition(
-          currentSentence.content, this.period) != -1) {
+          currentSentence.content, sentenceExtractor.getFullStop()) != -1) {
         currentSentence = null;
       }
 

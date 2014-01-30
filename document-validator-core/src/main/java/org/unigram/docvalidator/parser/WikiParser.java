@@ -45,7 +45,7 @@ public final class WikiParser extends BasicDocumentParser {
    */
   public WikiParser() {
     super();
-    this.sentenceExtractor = new SentenceExtractor();
+    this.sentenceExtractor = null;
   }
 
   public FileContent generateDocument(String fileName)
@@ -230,8 +230,7 @@ public final class WikiParser extends BasicDocumentParser {
 
   private String obtainSentences(int lineNum, String line,
       List<Sentence> outputSentences) {
-    String remain = sentenceExtractor.extract(line, this.period,
-        outputSentences);
+    String remain = sentenceExtractor.extract(line, outputSentences);
     for (Sentence sentence : outputSentences) {
       sentence.position = lineNum;
       parseSentence(sentence); // extract inline elements
@@ -274,8 +273,6 @@ public final class WikiParser extends BasicDocumentParser {
   private enum LinePattern {
     SENTENCE, LIST, NUM_LIST, VOID, HEADER, COMMENT
   }
-
-  private SentenceExtractor sentenceExtractor;
 
   /****************************************************************************
    * patterns to handle wiki syntax

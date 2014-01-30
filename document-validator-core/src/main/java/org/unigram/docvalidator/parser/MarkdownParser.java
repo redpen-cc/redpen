@@ -97,9 +97,8 @@ public class MarkdownParser extends BasicDocumentParser {
       RootNode rootNode =
           pegDownProcessor.parseMarkdown(sb.toString().toCharArray());
       ToFileContentSerializer serializer =
-          new ToFileContentSerializer(fileContent, lineList, this.period);
+          new ToFileContentSerializer(fileContent, lineList, this.sentenceExtractor);
       fileContent = serializer.toFileContent(rootNode);
-
     } catch (ParsingTimeoutException e) {
       LOG.error("Failed to parse timeout");
       return null;
@@ -109,8 +108,6 @@ public class MarkdownParser extends BasicDocumentParser {
     } finally {
       IOUtils.closeQuietly(br);
     }
-
-
     return fileContent;
   }
 
