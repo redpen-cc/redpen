@@ -67,7 +67,7 @@ public final class PlainTextParser extends BasicDocumentParser {
       int lineNum = 0;
       while ((line = br.readLine()) != null) {
         int periodPosition =
-            StringUtils.getSentenceEndPosition(line, this.period);
+            sentenceExtractor.getSentenceEndPosition(line);
         if (line.equals("")) {
           currentSection.appendParagraph(new Paragraph());
         } else if (periodPosition == -1) {
@@ -90,7 +90,7 @@ public final class PlainTextParser extends BasicDocumentParser {
 
   private String extractSentences(int lineNum, String line,
       Section currentSection) {
-    int periodPosition = StringUtils.getSentenceEndPosition(line, this.period);
+    int periodPosition = sentenceExtractor.getSentenceEndPosition(line);
     if (periodPosition == -1) {
       return line;
     } else {
@@ -98,7 +98,7 @@ public final class PlainTextParser extends BasicDocumentParser {
         currentSection.appendSentence(
             line.substring(0, periodPosition + 1), lineNum);
         line = line.substring(periodPosition + 1, line.length());
-        periodPosition = StringUtils.getSentenceEndPosition(line, this.period);
+        periodPosition = sentenceExtractor.getSentenceEndPosition(line);
         if (periodPosition == -1) {
           return line;
         }

@@ -23,6 +23,8 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,12 +48,30 @@ public abstract class BasicDocumentParser implements Parser {
     }
     CharacterTable characterTable = resource.getCharacterTable();
 
-    this.period = DefaultSymbols.get("FULL_STOP").getValue();
+    // set full stop characters
     if (characterTable.isContainCharacter("FULL_STOP")) {
-      this.period = characterTable.getCharacter("FULL_STOP").getValue();
-      LOG.info("full stop is set to \"" + this.period + "\"");
+      this.periods.add(characterTable.getCharacter("FULL_STOP").getValue());
+    } else {
+      this.periods.add(DefaultSymbols.get("FULL_STOP").getValue());
     }
-    this.sentenceExtractor = new SentenceExtractor(this.period);
+
+    if (characterTable.isContainCharacter("QUESTION_MARK")) {
+      this.periods.add(characterTable.getCharacter("QUESTION_MARK").getValue());
+    } else {
+      this.periods.add(DefaultSymbols.get("QUESTION_MARK").getValue());
+    }
+
+    if (characterTable.isContainCharacter("EXCLAMATION_MARK")) {
+      this.periods.add(characterTable.getCharacter("EXCLAMATION_MARK").getValue());
+    } else {
+      this.periods.add(DefaultSymbols.get("EXCLAMATION_MARK").getValue());
+    }
+
+    for (String period : this.periods) {
+      LOG.info("\"" + period + "\" is added as a end of sentence character");
+    }
+
+    this.sentenceExtractor = new SentenceExtractor(this.periods);
     return true;
   }
 
@@ -81,7 +101,7 @@ public abstract class BasicDocumentParser implements Parser {
     return inputStream;
   }
 
-  protected String period;
+  protected List<String> periods = new ArrayList<String>();
 
   protected SentenceExtractor sentenceExtractor;
 

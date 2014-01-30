@@ -217,8 +217,7 @@ public class ToFileContentSerializer implements Visitor {
       }
 
       // TODO ...
-      if (sentenceExtractor.getSentenceEndPosition(
-          currentSentence.content, sentenceExtractor.getFullStop()) != -1) {
+      if (sentenceExtractor.getSentenceEndPosition(currentSentence.content) != -1) {
         currentSentence = null;
       }
 

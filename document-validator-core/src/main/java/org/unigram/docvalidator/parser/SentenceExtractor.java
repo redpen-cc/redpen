@@ -1,5 +1,6 @@
 package org.unigram.docvalidator.parser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.unigram.docvalidator.DefaultSymbols;
@@ -14,16 +15,20 @@ public final class SentenceExtractor {
    * Default Constructor.
    */
   public SentenceExtractor() {
-    this.fullStop = DefaultSymbols.get("FULL_STOP").getValue();
+    this.fullStopList = new ArrayList<String>();
+    this.fullStopList.add(DefaultSymbols.get("FULL_STOP").getValue());
+    this.fullStopList.add(DefaultSymbols.get("QUESTION_MARK").getValue());
+    this.fullStopList.add(DefaultSymbols.get("EXCLAMATION_MARK").getValue());
   }
 
   /**
    * Constructor.
    *
-   * @param period full stop character
+   * @param periods set of full stop characters
    */
-  public SentenceExtractor(String period) {
-    this.fullStop = period;
+  public SentenceExtractor(List<String> periods) {
+    this.fullStopList = new ArrayList<String>();
+    this.fullStopList.addAll(periods);
   }
 
   /**
@@ -34,7 +39,7 @@ public final class SentenceExtractor {
    * @return remaining line
    */
   public String extract(String line, List<Sentence> outputSentences) {
-    int periodPosition = StringUtils.getSentenceEndPosition(line, fullStop);
+    int periodPosition = StringUtils.getSentenceEndPosition(line, fullStopList.get(0));
     if (periodPosition == -1) {
       return line;
     } else {
@@ -43,7 +48,7 @@ public final class SentenceExtractor {
             periodPosition + 1), 0);
         outputSentences.add(sentence);
         line = line.substring(periodPosition + 1, line.length());
-        periodPosition = StringUtils.getSentenceEndPosition(line, fullStop);
+        periodPosition = StringUtils.getSentenceEndPosition(line, fullStopList.get(0));
         if (periodPosition == -1) {
           return line;
         }
@@ -62,7 +67,7 @@ public final class SentenceExtractor {
   public String extractWithoutLastSentence(
       String line, List<Sentence> outputSentences,
       int position) {
-    int periodPosition = StringUtils.getSentenceEndPosition(line, fullStop);
+    int periodPosition = StringUtils.getSentenceEndPosition(line, fullStopList.get(0));
     if (periodPosition == -1) {
       return line;
     } else {
@@ -74,7 +79,7 @@ public final class SentenceExtractor {
             new Sentence(line.substring(0, periodPosition + 1), position);
         outputSentences.add(sentence);
         line = line.substring(periodPosition + 1, line.length());
-        periodPosition = StringUtils.getSentenceEndPosition(line, fullStop);
+        periodPosition = StringUtils.getSentenceEndPosition(line, fullStopList.get(0));
         if (periodPosition == -1) {
           return line;
         }
@@ -82,26 +87,25 @@ public final class SentenceExtractor {
     }
   }
 
-
   /**
    * Given string, return sentence end position.
    *
    * @param str    input string
-   * @param period full stop character
    * @return position of full stop when there is a full stop, -1 otherwise
    */
-  public int getSentenceEndPosition(String str, String period) {
-    return StringUtils.getSentenceEndPosition(str, period);
+  public int getSentenceEndPosition(String str) {
+    return StringUtils.getSentenceEndPosition(str, fullStopList.get(0));
   }
 
 
   /**
    * Return period character.
+   *
    * @return period character
    */
   public String getFullStop() {
-    return fullStop;
+    return fullStopList.get(0);
   }
 
-  private String fullStop;
+  private List<String> fullStopList;
 }

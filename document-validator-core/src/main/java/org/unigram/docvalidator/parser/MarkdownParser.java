@@ -114,5 +114,4 @@ public class MarkdownParser extends BasicDocumentParser {
 
   private static final Logger LOG =
       LoggerFactory.getLogger(MarkdownParser.class);
-
 }
