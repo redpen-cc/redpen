@@ -5,7 +5,15 @@ import java.util.List;
 import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.StringUtils;
 
-public class ParseUtils {
+/**
+ * Utility Class to extract a Sentence list from given String.
+ */
+public final class SentenceExtractor {
+  /**
+   * DefaultConstructor.
+   */
+  public SentenceExtractor() {
+  }
 
   /**
    * Get Sentence lists.
@@ -15,14 +23,15 @@ public class ParseUtils {
    * @param outputSentences List of extracted sentences
    * @return remaining line
    */
-  static public String extractSentences(String line, String period,
-                                        List<Sentence> outputSentences) {
+  public String extract(String line, String period,
+                               List<Sentence> outputSentences) {
     int periodPosition = StringUtils.getSentenceEndPosition(line, period);
     if (periodPosition == -1) {
       return line;
     } else {
       while (true) {
-        Sentence sentence = new Sentence(line.substring(0, periodPosition + 1), 0);
+        Sentence sentence = new Sentence(line.substring(0,
+            periodPosition + 1), 0);
         outputSentences.add(sentence);
         line = line.substring(periodPosition + 1, line.length());
         periodPosition = StringUtils.getSentenceEndPosition(line, period);
@@ -42,7 +51,7 @@ public class ParseUtils {
    * @param position line number
    * @return remaining line or last sentence
    */
-  public static String extractSentencesWithoutLastSentence(
+  public String extractWithoutLastSentence(
       String line, String period, List<Sentence> outputSentences,
       int position) {
     int periodPosition = StringUtils.getSentenceEndPosition(line, period);

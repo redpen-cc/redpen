@@ -61,7 +61,7 @@ import org.pegdown.ast.Visitor;
 import org.pegdown.ast.WikiLinkNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.unigram.docvalidator.parser.ParseUtils;
+import org.unigram.docvalidator.parser.SentenceExtractor;
 import org.unigram.docvalidator.store.FileContent;
 import org.unigram.docvalidator.store.Paragraph;
 import org.unigram.docvalidator.store.Section;
@@ -86,6 +86,8 @@ public class ToFileContentSerializer implements Visitor {
       LoggerFactory.getLogger(ToFileContentSerializer.class);
 
   private FileContent fileContent = null;
+
+  private SentenceExtractor sentenceExtractor;
 
   private final Map<String, ReferenceNode> references =
       new HashMap<String, ReferenceNode>();
@@ -124,6 +126,7 @@ public class ToFileContentSerializer implements Visitor {
     this.fileContent = content;
     this.lineList = listOfLineNumber;
     this.period = parserPeriod;
+    this.sentenceExtractor = new SentenceExtractor();
     currentSection = fileContent.getLastSection();
   }
 
@@ -196,7 +199,7 @@ public class ToFileContentSerializer implements Visitor {
         new StringBuffer();
     for (CandidateSentence candidateSentence : candidateSentences) {
       String remain =
-          ParseUtils.extractSentencesWithoutLastSentence(
+          sentenceExtractor.extractWithoutLastSentence(
               candidateSentence.getSentence(),
               this.period, newSentences, candidateSentence.getLineNum());
 
