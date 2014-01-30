@@ -82,6 +82,19 @@ public final class SentenceExtractor {
     }
   }
 
+
+  /**
+   * Given string, return sentence end position.
+   *
+   * @param str    input string
+   * @param period full stop character
+   * @return position of full stop when there is a full stop, -1 otherwise
+   */
+  public int getSentenceEndPosition(String str, String period) {
+    return StringUtils.getSentenceEndPosition(str, period);
+  }
+
+
   /**
    * Return period character.
    * @return period character

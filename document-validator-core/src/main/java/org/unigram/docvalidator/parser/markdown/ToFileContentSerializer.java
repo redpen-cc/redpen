@@ -217,7 +217,7 @@ public class ToFileContentSerializer implements Visitor {
       }
 
       // TODO ...
-      if (org.unigram.docvalidator.util.StringUtils.getSentenceEndPosition(
+      if (sentenceExtractor.getSentenceEndPosition(
           currentSentence.content, sentenceExtractor.getFullStop()) != -1) {
         currentSentence = null;
       }
