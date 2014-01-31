@@ -28,58 +28,6 @@ public final class StringUtils {
    * Get sentence end position.
    *
    * @param str    input string
-   * @param period full stop character
-   * @return position of full stop when there is a full stop, -1 otherwise
-   */
-  public static int getSentenceEndPosition(String str, String period) {
-    return getEndPosition(str, period, 0);
-  }
-
-  private static int getEndPosition(String str, String period, int offset) {
-    int position = str.indexOf(period, offset);
-
-    if (checkPosition(position, str)) {
-      if (isBasicLatin(period.charAt(0)) && str.charAt(position + 1) == ' ') {
-        return position;
-      }
-      return handleSuccessivePeriods(str, period, position);
-    }
-
-    if (position == str.length() - 1) {
-      // NOTE: period in end of sentence should be the end of the sentence
-      // even if there is NO tailing whitespace.
-      return position;
-    }
-    return -1;
-  }
-
-  private static int handleSuccessivePeriods(String str, String period,
-                                             int position) {
-    int nextPosition = position + 1;
-
-    if (!isBasicLatin(period.charAt(0))
-        && str.indexOf(period, nextPosition) != nextPosition) {
-      // NOTE: Non Latin languages (especially Asian languages, periods do not
-      // have tailing spaces in the end of sentences)
-      return position;
-    }
-
-    if (str.indexOf(period, nextPosition) == nextPosition) {
-      // NOTE: handling of period in succession
-      if ((position + 1) == str.length() - 1) {
-        return nextPosition;
-      } else {
-        return getEndPosition(str, period, nextPosition);
-      }
-    } else {
-      return getEndPosition(str, period, nextPosition);
-    }
-  }
-
-  /**
-   * Get sentence end position.
-   *
-   * @param str    input string
    * @param pattern pattern of end of sentence
    * @return position of full stop when there is a full stop, -1 otherwise
    */
