@@ -39,7 +39,7 @@ public final class StringUtils {
     int position = str.indexOf(period, offset);
 
     if (checkPosition(position, str)) {
-      if (period.equals(".") && str.charAt(position + 1) == ' ') {
+      if (isBasicLatin(period.charAt(0)) && str.charAt(position + 1) == ' ') {
         return position;
       }
       return handleSuccessivePeriods(str, period, position);
@@ -57,7 +57,7 @@ public final class StringUtils {
                                              int position) {
     int nextPosition = position + 1;
 
-    if (!period.equals(".")
+    if (!isBasicLatin(period.charAt(0))
         && str.indexOf(period, nextPosition) != nextPosition) {
       // NOTE: Non Latin languages (especially Asian languages, periods do not
       // have tailing spaces in the end of sentences)
@@ -95,7 +95,7 @@ public final class StringUtils {
     }
 
     if (checkPosition(position, str)) {
-      if (('.' == str.charAt(position) && ' ' == str.charAt(position + 1))) {
+      if ((isBasicLatin(str.charAt(position)) && ' ' == str.charAt(position + 1))) {
         return position;
       }
       return handleSuccessivePeriods(str, pattern, position);
@@ -118,7 +118,7 @@ public final class StringUtils {
       matchPosition = matcher.start();
     }
 
-    if (matchPosition > -1 && ('.' != str.charAt(matchPosition))
+    if (matchPosition > -1 && (!isBasicLatin(str.charAt(matchPosition)))
         && matchPosition != nextPosition) {
       // NOTE: Non Latin languages (especially Asian languages, periods do not
       // have tailing spaces in the end of sentences)
@@ -143,6 +143,10 @@ public final class StringUtils {
 
   public static boolean isKatakana(char c) {
     return Character.UnicodeBlock.of(c) == Character.UnicodeBlock.KATAKANA;
+  }
+
+  public static boolean isBasicLatin(char c) {
+    return Character.UnicodeBlock.of(c) == Character.UnicodeBlock.BASIC_LATIN;
   }
 
   private StringUtils() {

@@ -182,6 +182,20 @@ public class StringUtilsTest {
   }
 
   @Test
+  public void testEndPositionWithPatternContainingMultipleCharacters() {
+    Pattern pattern = Pattern.compile("\\?|\\.");
+    String str = new String ("is this a pen? yes it is.");
+    assertEquals(13, StringUtils.getSentenceEndPosition(str, pattern));
+  }
+
+  @Test
+  public void testEndPositionWithPatternContainingMultipleNonAsciCharacters() {
+    Pattern pattern = Pattern.compile("。|？");
+    String str = new String ("これは群馬ですか？いいえ埼玉です。");
+    assertEquals(8, StringUtils.getSentenceEndPosition(str, pattern));
+  }
+
+  @Test
   public void tesIsKatakanaWithHiraganaA() {
     assertFalse(StringUtils.isKatakana('あ'));
   }
@@ -199,5 +213,30 @@ public class StringUtilsTest {
   @Test
   public void tesIsKatakanaWithKatakanaMiddleDot() {
     assertTrue(StringUtils.isKatakana('・'));
+  }
+
+  @Test
+  public void tesIsBasicLatinWithHiraganaA() {
+    assertFalse(StringUtils.isBasicLatin('あ'));
+  }
+
+  @Test
+  public void tesIsBasicLatinWithKatakanaA() {
+    assertFalse(StringUtils.isBasicLatin('ア'));
+  }
+
+  @Test
+  public void tesIsBasicLatinWithHyphen() {
+    assertTrue(StringUtils.isBasicLatin('-'));
+  }
+
+  @Test
+  public void tesIsBasicLatinWithPeriod() {
+    assertTrue(StringUtils.isBasicLatin('.'));
+  }
+
+  @Test
+  public void tesIsBasicLatinWithKatakanaMiddleDot() {
+    assertFalse(StringUtils.isBasicLatin('・'));
   }
 }

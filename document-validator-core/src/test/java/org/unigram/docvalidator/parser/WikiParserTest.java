@@ -279,13 +279,25 @@ public class WikiParserTest {
   }
 
   @Test
-  public void testGenerateDocumentWithMultipleSentenceInMultipleSentences() {
+  public void testGenerateDocumentWithMultipleSentences() {
     String sampleText = "Tokyu is a good railway company. The company is reliable. In addition it is rich.\n";
     sampleText += "I like the company. Howerver someone does not like it.";
     FileContent doc = createFileContent(sampleText);
     Section firstSections = doc.getSection(0);
     Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals(5, firstParagraph.getNumberOfSentences());
+  }
+
+  @Test
+  public void testGenerateDocumentWithMultipleSentencesWithVaraiousStopCharacters() {
+    String sampleText = "Is Tokyu a good railway company? The company is reliable. In addition it is rich!\n";
+    FileContent doc = createFileContent(sampleText);
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
+    assertEquals(3, firstParagraph.getNumberOfSentences());
+    assertEquals("Is Tokyu a good railway company?", doc.getSection(0).getParagraph(0).getSentence(0).content);
+    assertEquals(" The company is reliable.", doc.getSection(0).getParagraph(0).getSentence(1).content);
+    assertEquals(" In addition it is rich!", doc.getSection(0).getParagraph(0).getSentence(2).content);
   }
 
   @Test

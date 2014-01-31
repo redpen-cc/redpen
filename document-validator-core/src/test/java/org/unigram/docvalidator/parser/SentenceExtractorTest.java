@@ -17,6 +17,7 @@ public class SentenceExtractorTest {
     String remain = extractor.extract("this is a pen.",
         outputSentences);
     assertEquals(1, outputSentences.size());
+    assertEquals("this is a pen.", outputSentences.get(0).content);
     assertEquals("", remain);
   }
 
@@ -27,6 +28,20 @@ public class SentenceExtractorTest {
     String remain = extractor.extract("this is a pen. that is a paper.",
         outputSentences);
     assertEquals(2, outputSentences.size());
+    assertEquals("this is a pen.", outputSentences.get(0).content);
+    assertEquals(" that is a paper.", outputSentences.get(1).content);
+    assertEquals("", remain);
+  }
+
+  @Test
+  public void testTwoSentencesWithDifferentStopCharacters() {
+    SentenceExtractor extractor = new SentenceExtractor();
+    List<Sentence> outputSentences = new ArrayList<Sentence>();
+    String remain = extractor.extract("is this a pen? that is a paper.",
+        outputSentences);
+    assertEquals(2, outputSentences.size());
+    assertEquals("is this a pen?", outputSentences.get(0).content);
+    assertEquals(" that is a paper.", outputSentences.get(1).content);
     assertEquals("", remain);
   }
 
@@ -37,7 +52,38 @@ public class SentenceExtractorTest {
     String remain = extractor.extract("this is a pen. that is a paper",
         outputSentences);
     assertEquals(1, outputSentences.size());
+    assertEquals("this is a pen.",outputSentences.get(0).content);
     assertEquals(" that is a paper", remain); // NOTE: second sentence start with white space.
+  }
+
+  @Test
+  public void testJapaneseSimple() {
+    List<String> stopChars = new ArrayList<String>();
+    stopChars.add("。");
+    stopChars.add("？");
+    SentenceExtractor extractor = new SentenceExtractor(stopChars);
+    List<Sentence> outputSentences = new ArrayList<Sentence>();
+    String remain = extractor.extract("これは埼玉ですか？いいえ群馬です。",
+        outputSentences);
+    assertEquals(2, outputSentences.size());
+    assertEquals("これは埼玉ですか？", outputSentences.get(0).content);
+    assertEquals("いいえ群馬です。", outputSentences.get(1).content);
+    assertEquals("", remain);
+  }
+
+  @Test
+  public void testJapaneseSimpleWithSpace() {
+    List<String> stopChars = new ArrayList<String>();
+    stopChars.add("。");
+    stopChars.add("？");
+    SentenceExtractor extractor = new SentenceExtractor(stopChars);
+    List<Sentence> outputSentences = new ArrayList<Sentence>();
+    String remain = extractor.extract("これは埼玉ですか？ いいえ群馬です。",
+        outputSentences);
+    assertEquals(2, outputSentences.size());
+    assertEquals("これは埼玉ですか？", outputSentences.get(0).content);
+    assertEquals(" いいえ群馬です。", outputSentences.get(1).content);
+    assertEquals("", remain);
   }
 
   @Test
