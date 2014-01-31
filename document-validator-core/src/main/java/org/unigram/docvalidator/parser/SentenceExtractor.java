@@ -21,7 +21,7 @@ public final class SentenceExtractor {
     this.fullStopList.add(DefaultSymbols.get("QUESTION_MARK").getValue());
     this.fullStopList.add(DefaultSymbols.get("EXCLAMATION_MARK").getValue());
     this.fullStopPattern = Pattern.compile(
-        this.constructPatternString(this.fullStopList));
+        this.constructEndSentencePattern(this.fullStopList));
   }
 
   /**
@@ -33,7 +33,7 @@ public final class SentenceExtractor {
     this.fullStopList = new ArrayList<String>();
     this.fullStopList.addAll(periods);
     this.fullStopPattern = Pattern.compile(
-        this.constructPatternString(this.fullStopList));
+        this.constructEndSentencePattern(this.fullStopList));
   }
 
   /**
@@ -121,7 +121,7 @@ public final class SentenceExtractor {
    *                      sentences such as period
    * @return regex pattern to detect end sentences
    */
-  protected static String constructPatternString(List<String> endCharacters) {
+  protected static String constructEndSentencePattern(List<String> endCharacters) {
     if (endCharacters == null || endCharacters.size() == 0) {
       throw new IllegalArgumentException("No end character is specified");
     }

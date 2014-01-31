@@ -17,6 +17,9 @@
  */
 package org.unigram.docvalidator.util;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Utility class to handle a string.
  */
@@ -54,8 +57,8 @@ public final class StringUtils {
                                              int position) {
     int nextPosition = position + 1;
 
-    if (!period.equals(".") &&
-        str.indexOf(period, nextPosition) != nextPosition) {
+    if (!period.equals(".")
+        && str.indexOf(period, nextPosition) != nextPosition) {
       // NOTE: Non Latin languages (especially Asian languages, periods do not
       // have tailing spaces in the end of sentences)
       return position;
@@ -70,6 +73,65 @@ public final class StringUtils {
       }
     } else {
       return getEndPosition(str, period, nextPosition);
+    }
+  }
+
+  /**
+   * Get sentence end position.
+   *
+   * @param str    input string
+   * @param pattern pattern of end of sentence
+   * @return position of full stop when there is a full stop, -1 otherwise
+   */
+  public static int getSentenceEndPosition(String str, Pattern pattern) {
+    return getEndPosition(str, pattern, 0);
+  }
+
+  private static int getEndPosition(String str, Pattern pattern, int offset) {
+    int position = -1;
+    Matcher matcher = pattern.matcher(str);
+    if (matcher.find(offset)) {
+      position = matcher.start();
+    }
+
+    if (checkPosition(position, str)) {
+      if (('.' == str.charAt(position) && str.charAt(position + 1) == ' ')) {
+        return position;
+      }
+      return handleSuccessivePeriods(str, pattern, position);
+    }
+
+    if (position == str.length() - 1) {
+      // NOTE: period in end of sentence should be the end of the sentence
+      // even if there is NO tailing whitespace.
+      return position;
+    }
+    return -1;
+  }
+
+  private static int handleSuccessivePeriods(String str, Pattern pattern, int position) {
+    int nextPosition = position + 1;
+    Matcher matcher = pattern.matcher(str);
+    int matchPosition = -1;
+    if (matcher.find(nextPosition)) {
+      matchPosition = matcher.start();
+    }
+
+    if (('.' != str.charAt(matchPosition)) && matchPosition != nextPosition) {
+      // NOTE: Non Latin languages (especially Asian languages, periods do not
+      // have tailing spaces in the end of sentences)
+      return position;
+    }
+
+    if (getEndPosition(str, pattern, nextPosition) == nextPosition) {
+      // NOTE: handling of period in succession
+      if ((position + 1) == str.length() - 1) {
+        return nextPosition;
+      } else {
+        return getEndPosition(str, pattern, nextPosition);
+      }
+    } else {
+      return getEndPosition(str, pattern, nextPosition);
     }
   }
 
