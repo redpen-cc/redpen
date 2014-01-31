@@ -63,18 +63,28 @@ public class SentenceExtractorTest {
   @Test
   public void testConstructPatternString() {
     List<String> endCharacters = new ArrayList<String>();
+    endCharacters.add("\\.");
+    endCharacters.add("?");
+    endCharacters.add("!");
+    assertEquals("\\.|\\?|\\!", SentenceExtractor.constructEndSentencePattern(
+        endCharacters));
+  }
+
+  @Test
+  public void testConstructPatternStringWithoutEscape() {
+    List<String> endCharacters = new ArrayList<String>();
     endCharacters.add(".");
     endCharacters.add("?");
     endCharacters.add("!");
-    assertEquals("[.|?|!]", SentenceExtractor.constructEndSentencePattern(
+    assertEquals("\\.|\\?|\\!", SentenceExtractor.constructEndSentencePattern(
         endCharacters));
   }
 
   @Test
      public void testConstructPatternStringForSingleCharacter() {
     List<String> endCharacters = new ArrayList<String>();
-    endCharacters.add(".");
-    assertEquals("[.]", SentenceExtractor.constructEndSentencePattern(
+    endCharacters.add("\\.");
+    assertEquals("\\.", SentenceExtractor.constructEndSentencePattern(
         endCharacters));
   }
 

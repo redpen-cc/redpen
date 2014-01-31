@@ -95,7 +95,7 @@ public final class StringUtils {
     }
 
     if (checkPosition(position, str)) {
-      if (('.' == str.charAt(position) && str.charAt(position + 1) == ' ')) {
+      if (('.' == str.charAt(position) && ' ' == str.charAt(position + 1))) {
         return position;
       }
       return handleSuccessivePeriods(str, pattern, position);
@@ -109,7 +109,8 @@ public final class StringUtils {
     return -1;
   }
 
-  private static int handleSuccessivePeriods(String str, Pattern pattern, int position) {
+  private static int handleSuccessivePeriods(String str,
+                                             Pattern pattern, int position) {
     int nextPosition = position + 1;
     Matcher matcher = pattern.matcher(str);
     int matchPosition = -1;
@@ -117,13 +118,14 @@ public final class StringUtils {
       matchPosition = matcher.start();
     }
 
-    if (('.' != str.charAt(matchPosition)) && matchPosition != nextPosition) {
+    if (matchPosition > -1 && ('.' != str.charAt(matchPosition))
+        && matchPosition != nextPosition) {
       // NOTE: Non Latin languages (especially Asian languages, periods do not
       // have tailing spaces in the end of sentences)
       return position;
     }
 
-    if (getEndPosition(str, pattern, nextPosition) == nextPosition) {
+    if (matchPosition == nextPosition) {
       // NOTE: handling of period in succession
       if ((position + 1) == str.length() - 1) {
         return nextPosition;

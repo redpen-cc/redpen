@@ -44,7 +44,7 @@ public final class SentenceExtractor {
    * @return remaining line
    */
   public String extract(String line, List<Sentence> outputSentences) {
-    int periodPosition = StringUtils.getSentenceEndPosition(line, fullStopList.get(0));
+    int periodPosition = StringUtils.getSentenceEndPosition(line, fullStopPattern);
     if (periodPosition == -1) {
       return line;
     } else {
@@ -53,7 +53,7 @@ public final class SentenceExtractor {
             periodPosition + 1), 0);
         outputSentences.add(sentence);
         line = line.substring(periodPosition + 1, line.length());
-        periodPosition = StringUtils.getSentenceEndPosition(line, fullStopList.get(0));
+        periodPosition = StringUtils.getSentenceEndPosition(line, fullStopPattern);
         if (periodPosition == -1) {
           return line;
         }
@@ -72,7 +72,7 @@ public final class SentenceExtractor {
   public String extractWithoutLastSentence(
       String line, List<Sentence> outputSentences,
       int position) {
-    int periodPosition = StringUtils.getSentenceEndPosition(line, fullStopList.get(0));
+    int periodPosition = StringUtils.getSentenceEndPosition(line, fullStopPattern);
     if (periodPosition == -1) {
       return line;
     } else {
@@ -84,7 +84,7 @@ public final class SentenceExtractor {
             new Sentence(line.substring(0, periodPosition + 1), position);
         outputSentences.add(sentence);
         line = line.substring(periodPosition + 1, line.length());
-        periodPosition = StringUtils.getSentenceEndPosition(line, fullStopList.get(0));
+        periodPosition = StringUtils.getSentenceEndPosition(line, fullStopPattern);
         if (periodPosition == -1) {
           return line;
         }
@@ -99,7 +99,7 @@ public final class SentenceExtractor {
    * @return position of full stop when there is a full stop, -1 otherwise
    */
   public int getSentenceEndPosition(String str) {
-    return StringUtils.getSentenceEndPosition(str, fullStopList.get(0));
+    return StringUtils.getSentenceEndPosition(str, fullStopPattern);
   }
 
 
@@ -127,16 +127,28 @@ public final class SentenceExtractor {
     }
     StringBuilder patternString = new StringBuilder();
     int index = 0;
-    patternString.append("[");
     for (String endChar : endCharacters) {
+      endChar = handleSpecialCharacter(endChar);
       if (index != 0) {
         patternString.append("|");
       }
       patternString.append(endChar);
       index++;
     }
-    patternString.append("]");
     return patternString.toString();
+  }
+
+  private static String handleSpecialCharacter(String endChar) {
+    if (endChar.equals(".")) {
+      endChar = "\\.";
+    }
+    if (endChar.equals("?")) {
+      endChar = "\\?";
+    }
+    if (endChar.equals("!")) {
+      endChar = "\\!";
+    }
+    return endChar;
   }
 
   private List<String> fullStopList;
