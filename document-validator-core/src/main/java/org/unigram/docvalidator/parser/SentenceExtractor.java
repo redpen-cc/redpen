@@ -2,6 +2,7 @@ package org.unigram.docvalidator.parser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.unigram.docvalidator.DefaultSymbols;
 import org.unigram.docvalidator.store.Sentence;
@@ -19,6 +20,8 @@ public final class SentenceExtractor {
     this.fullStopList.add(DefaultSymbols.get("FULL_STOP").getValue());
     this.fullStopList.add(DefaultSymbols.get("QUESTION_MARK").getValue());
     this.fullStopList.add(DefaultSymbols.get("EXCLAMATION_MARK").getValue());
+    this.fullStopPattern = Pattern.compile(
+        this.constructPatternString(this.fullStopList));
   }
 
   /**
@@ -29,6 +32,8 @@ public final class SentenceExtractor {
   public SentenceExtractor(List<String> periods) {
     this.fullStopList = new ArrayList<String>();
     this.fullStopList.addAll(periods);
+    this.fullStopPattern = Pattern.compile(
+        this.constructPatternString(this.fullStopList));
   }
 
   /**
@@ -107,5 +112,34 @@ public final class SentenceExtractor {
     return fullStopList.get(0);
   }
 
+  /**
+   * Given a set of sentence end characters, construct the
+   * regex to detect end sentences.
+   * This method is protected permission just for testing.
+   *
+   * @param endCharacters characters used in the end of
+   *                      sentences such as period
+   * @return regex pattern to detect end sentences
+   */
+  protected static String constructPatternString(List<String> endCharacters) {
+    if (endCharacters == null || endCharacters.size() == 0) {
+      throw new IllegalArgumentException("No end character is specified");
+    }
+    StringBuilder patternString = new StringBuilder();
+    int index = 0;
+    patternString.append("[");
+    for (String endChar : endCharacters) {
+      if (index != 0) {
+        patternString.append("|");
+      }
+      patternString.append(endChar);
+      index++;
+    }
+    patternString.append("]");
+    return patternString.toString();
+  }
+
   private List<String> fullStopList;
+
+  private Pattern fullStopPattern;
 }

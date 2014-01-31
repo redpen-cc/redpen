@@ -60,4 +60,32 @@ public class SentenceExtractorTest {
     assertEquals("", remain);
   }
 
+  @Test
+  public void testConstructPatternString() {
+    List<String> endCharacters = new ArrayList<String>();
+    endCharacters.add(".");
+    endCharacters.add("?");
+    endCharacters.add("!");
+    assertEquals("[.|?|!]", SentenceExtractor.constructPatternString(
+        endCharacters));
+  }
+
+  @Test
+     public void testConstructPatternStringForSingleCharacter() {
+    List<String> endCharacters = new ArrayList<String>();
+    endCharacters.add(".");
+    assertEquals("[.]", SentenceExtractor.constructPatternString(
+        endCharacters));
+  }
+
+  @Test (expected=IllegalArgumentException.class)
+  public void testThrowExceptionGivenVoidList() {
+    List<String> endCharacters = new ArrayList<String>();
+    SentenceExtractor.constructPatternString(endCharacters);
+  }
+
+  @Test (expected=IllegalArgumentException.class)
+  public void testThrowExceptionGivenNull() {
+    SentenceExtractor.constructPatternString(null);
+  }
 }
