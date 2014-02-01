@@ -31,7 +31,6 @@ import org.unigram.docvalidator.store.Paragraph;
 import org.unigram.docvalidator.store.Section;
 import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.util.StringUtils;
 
 /**
  * Parser for plain text file.
@@ -67,7 +66,7 @@ public final class PlainTextParser extends BasicDocumentParser {
       int lineNum = 0;
       while ((line = br.readLine()) != null) {
         int periodPosition =
-            sentenceExtractor.getSentenceEndPosition(line);
+            this.getSentenceExtractor().getSentenceEndPosition(line);
         if (line.equals("")) {
           currentSection.appendParagraph(new Paragraph());
         } else if (periodPosition == -1) {
@@ -90,7 +89,7 @@ public final class PlainTextParser extends BasicDocumentParser {
 
   private String extractSentences(int lineNum, String line,
       Section currentSection) {
-    int periodPosition = sentenceExtractor.getSentenceEndPosition(line);
+    int periodPosition = getSentenceExtractor().getSentenceEndPosition(line);
     if (periodPosition == -1) {
       return line;
     } else {
@@ -98,7 +97,7 @@ public final class PlainTextParser extends BasicDocumentParser {
         currentSection.appendSentence(
             line.substring(0, periodPosition + 1), lineNum);
         line = line.substring(periodPosition + 1, line.length());
-        periodPosition = sentenceExtractor.getSentenceEndPosition(line);
+        periodPosition = getSentenceExtractor().getSentenceEndPosition(line);
         if (periodPosition == -1) {
           return line;
         }
@@ -106,5 +105,6 @@ public final class PlainTextParser extends BasicDocumentParser {
     }
   }
 
-  private static final Logger LOG = LoggerFactory.getLogger(PlainTextParser.class);
+  private static final Logger LOG =
+      LoggerFactory.getLogger(PlainTextParser.class);
 }

@@ -199,7 +199,8 @@ public class ToFileContentSerializer implements Visitor {
     for (CandidateSentence candidateSentence : candidateSentences) {
       String remain =
           sentenceExtractor.extractWithoutLastSentence(
-              candidateSentence.getSentence(), newSentences, candidateSentence.getLineNum());
+              candidateSentence.getSentence(),
+              newSentences, candidateSentence.getLineNum());
 
       //TODO refactor StringUtils...
       if (StringUtils.isNotEmpty(remain)) {
@@ -217,7 +218,8 @@ public class ToFileContentSerializer implements Visitor {
       }
 
       // TODO ...
-      if (sentenceExtractor.getSentenceEndPosition(currentSentence.content) != -1) {
+      if (sentenceExtractor.getSentenceEndPosition(
+          currentSentence.content) != -1) {
         currentSentence = null;
       }
 

@@ -16,24 +16,22 @@ public final class SentenceExtractor {
    * Default Constructor.
    */
   public SentenceExtractor() {
-    this.fullStopList = new ArrayList<String>();
-    this.fullStopList.add(DefaultSymbols.get("FULL_STOP").getValue());
-    this.fullStopList.add(DefaultSymbols.get("QUESTION_MARK").getValue());
-    this.fullStopList.add(DefaultSymbols.get("EXCLAMATION_MARK").getValue());
+    List<String> fullStopList = new ArrayList<String>();
+    fullStopList.add(DefaultSymbols.get("FULL_STOP").getValue());
+    fullStopList.add(DefaultSymbols.get("QUESTION_MARK").getValue());
+    fullStopList.add(DefaultSymbols.get("EXCLAMATION_MARK").getValue());
     this.fullStopPattern = Pattern.compile(
-        this.constructEndSentencePattern(this.fullStopList));
+        this.constructEndSentencePattern(fullStopList));
   }
 
   /**
    * Constructor.
    *
-   * @param periods set of full stop characters
+   * @param fullStopList set of end of sentence characters
    */
-  public SentenceExtractor(List<String> periods) {
-    this.fullStopList = new ArrayList<String>();
-    this.fullStopList.addAll(periods);
+  public SentenceExtractor(List<String> fullStopList) {
     this.fullStopPattern = Pattern.compile(
-        this.constructEndSentencePattern(this.fullStopList));
+        this.constructEndSentencePattern(fullStopList));
   }
 
   /**
@@ -44,7 +42,8 @@ public final class SentenceExtractor {
    * @return remaining line
    */
   public String extract(String line, List<Sentence> outputSentences) {
-    int periodPosition = StringUtils.getSentenceEndPosition(line, fullStopPattern);
+    int periodPosition =
+        StringUtils.getSentenceEndPosition(line, fullStopPattern);
     if (periodPosition == -1) {
       return line;
     } else {
@@ -52,8 +51,10 @@ public final class SentenceExtractor {
         Sentence sentence = new Sentence(line.substring(0,
             periodPosition + 1), 0);
         outputSentences.add(sentence);
-        line = line.substring(periodPosition + 1, line.length());
-        periodPosition = StringUtils.getSentenceEndPosition(line, fullStopPattern);
+        line = line.substring(periodPosition + 1,
+            line.length());
+        periodPosition =
+            StringUtils.getSentenceEndPosition(line, fullStopPattern);
         if (periodPosition == -1) {
           return line;
         }
@@ -72,7 +73,8 @@ public final class SentenceExtractor {
   public String extractWithoutLastSentence(
       String line, List<Sentence> outputSentences,
       int position) {
-    int periodPosition = StringUtils.getSentenceEndPosition(line, fullStopPattern);
+    int periodPosition =
+        StringUtils.getSentenceEndPosition(line, fullStopPattern);
     if (periodPosition == -1) {
       return line;
     } else {
@@ -84,7 +86,8 @@ public final class SentenceExtractor {
             new Sentence(line.substring(0, periodPosition + 1), position);
         outputSentences.add(sentence);
         line = line.substring(periodPosition + 1, line.length());
-        periodPosition = StringUtils.getSentenceEndPosition(line, fullStopPattern);
+        periodPosition =
+            StringUtils.getSentenceEndPosition(line, fullStopPattern);
         if (periodPosition == -1) {
           return line;
         }
@@ -102,16 +105,6 @@ public final class SentenceExtractor {
     return StringUtils.getSentenceEndPosition(str, fullStopPattern);
   }
 
-
-  /**
-   * Return period character.
-   *
-   * @return period character
-   */
-  public String getFullStop() {
-    return fullStopList.get(0);
-  }
-
   /**
    * Given a set of sentence end characters, construct the
    * regex to detect end sentences.
@@ -121,7 +114,8 @@ public final class SentenceExtractor {
    *                      sentences such as period
    * @return regex pattern to detect end sentences
    */
-  protected static String constructEndSentencePattern(List<String> endCharacters) {
+  protected static String constructEndSentencePattern(
+      List<String> endCharacters) {
     if (endCharacters == null || endCharacters.size() == 0) {
       throw new IllegalArgumentException("No end character is specified");
     }
@@ -150,8 +144,6 @@ public final class SentenceExtractor {
     }
     return endChar;
   }
-
-  private List<String> fullStopList;
 
   private Pattern fullStopPattern;
 }

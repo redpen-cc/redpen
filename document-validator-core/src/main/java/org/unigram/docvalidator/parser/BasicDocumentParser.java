@@ -62,7 +62,8 @@ public abstract class BasicDocumentParser implements Parser {
     }
 
     if (characterTable.isContainCharacter("EXCLAMATION_MARK")) {
-      this.periods.add(characterTable.getCharacter("EXCLAMATION_MARK").getValue());
+      this.periods.add(
+          characterTable.getCharacter("EXCLAMATION_MARK").getValue());
     } else {
       this.periods.add(DefaultSymbols.get("EXCLAMATION_MARK").getValue());
     }
@@ -101,10 +102,20 @@ public abstract class BasicDocumentParser implements Parser {
     return inputStream;
   }
 
-  protected List<String> periods = new ArrayList<String>();
+  /**
+   * Get SentenceExtractor object.
+   *
+   * @return sentence extractor object
+   */
+  protected SentenceExtractor getSentenceExtractor() {
+    return sentenceExtractor;
+  }
 
-  protected SentenceExtractor sentenceExtractor;
+  private SentenceExtractor sentenceExtractor;
+
+  private List<String> periods = new ArrayList<String>();
 
   private static final Logger LOG = LoggerFactory.getLogger(
       BasicDocumentParser.class);
+
 }

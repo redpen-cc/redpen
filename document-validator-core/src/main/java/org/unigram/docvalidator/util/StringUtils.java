@@ -43,7 +43,8 @@ public final class StringUtils {
     }
 
     if (checkPosition(position, str)) {
-      if ((isBasicLatin(str.charAt(position)) && ' ' == str.charAt(position + 1))) {
+      if ((isBasicLatin(str.charAt(position))
+          && ' ' == str.charAt(position + 1))) {
         return position;
       }
       return handleSuccessivePeriods(str, pattern, position);
