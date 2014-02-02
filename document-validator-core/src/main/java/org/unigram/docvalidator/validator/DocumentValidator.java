@@ -20,7 +20,6 @@ package org.unigram.docvalidator.validator;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +65,7 @@ public class DocumentValidator {
     super();
     this.distributor = ResultDistributorFactory.createDistributor("plain",
         System.out);
-    this.validators = new Vector<Validator>();
+    this.validators = new ArrayList<Validator>();
     this.conf = resource.getConfiguration();
     this.charTable = resource.getCharacterTable();
     if (!loadValidators()) {
@@ -84,7 +83,7 @@ public class DocumentValidator {
   public boolean loadValidators() {
     this.validators.clear();
     for (Iterator<ValidatorConfiguration> confIterator =
-             this.conf.getChildren(); confIterator.hasNext(); ) {
+             this.conf.getChildren(); confIterator.hasNext();) {
       ValidatorConfiguration currentConfiguration = confIterator.next();
       String confName = currentConfiguration.getConfigurationName();
       Validator validator;
@@ -114,16 +113,41 @@ public class DocumentValidator {
     for (Validator validator : this.validators) {
       Iterator<FileContent> fileIterator = document.getFiles();
       while (fileIterator.hasNext()) {
-        List<ValidationError> currentErrors =
-            validator.check(fileIterator.next(), distributor);
-        errors.addAll(currentErrors);
+        try {
+          List<ValidationError> currentErrors =
+              validator.check(fileIterator.next(), distributor);
+          errors.addAll(currentErrors);
+        } catch (Throwable e) {
+          LOG.error("Error occurs in validation: " + e.getMessage());
+          LOG.error("Validator class: " + validator.getClass());
+        }
       }
     }
     distributor.flushFooter();
     return errors;
   }
 
-  private final Vector<Validator> validators;
+  /**
+   * Constructor only for testing.
+   */
+  protected DocumentValidator() {
+    this.distributor = ResultDistributorFactory.createDistributor("plain",
+        System.out);
+    this.validators = new ArrayList<Validator>();
+    this.conf = null;
+    this.charTable = null;
+  }
+
+  /**
+   * Append a specified validator.
+   *
+   * @param validator Validator used in testing
+   */
+  protected void appendValidator(Validator validator) {
+    this.validators.add(validator);
+  }
+
+  private final List<Validator> validators;
 
   private final ValidatorConfiguration conf;
 
@@ -131,5 +155,6 @@ public class DocumentValidator {
 
   private ResultDistributor distributor;
 
-  private static final Logger LOG = LoggerFactory.getLogger(DocumentValidator.class);
+  private static final Logger LOG =
+      LoggerFactory.getLogger(DocumentValidator.class);
 }
