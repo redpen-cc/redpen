@@ -122,7 +122,7 @@ public final class WikiParser extends BasicDocumentParser {
       currentSection.appendListBlock();
     }
     List<Sentence> outputSentences = new ArrayList<Sentence>();
-    String remainSentence= obtainSentences(0, head.get(1), outputSentences);
+    String remainSentence = obtainSentences(0, head.get(1), outputSentences);
     currentSection.appendListElement(extractListLevel(head.get(0)),
         outputSentences);
     // NOTE: for list content without period
@@ -135,7 +135,8 @@ public final class WikiParser extends BasicDocumentParser {
       Section currentSection, List<String> head, int lineNum) {
     Integer level = Integer.valueOf(head.get(0));
     List<Sentence> outputSentences = new ArrayList<Sentence>();
-    String remainHeader = obtainSentences(lineNum, head.get(1), outputSentences);
+    String remainHeader =
+        obtainSentences(lineNum, head.get(1), outputSentences);
     // NOTE: for header without period
     if (remainHeader != null && remainHeader.length() > 0) {
       outputSentences.add(new Sentence(remainHeader, lineNum));
@@ -180,13 +181,16 @@ public final class WikiParser extends BasicDocumentParser {
       String tagURL = null;
       if (tagInternal.length == 1) {
         tagURL = tagInternal[0].trim();
-        modContent.append(sentence.content.substring(start, m.start())).append(tagURL.trim());
+        modContent.append(sentence.content.substring(
+            start, m.start())).append(tagURL.trim());
       } else if (tagInternal.length == 0) {
         LOG.warn("Invalid link block: vacant block");
         tagURL = "";
       } else {
         if (tagInternal.length > 2) {
-          LOG.warn("Invalid link block: there are more than two link blocks at line " + sentence.position);
+          LOG.warn(
+              "Invalid link block: there are more than two link blocks at line "
+                  + sentence.position);
         }
         tagURL = tagInternal[1].trim();
         StringBuilder buffer = new StringBuilder();
@@ -229,8 +233,7 @@ public final class WikiParser extends BasicDocumentParser {
 
   private String obtainSentences(int lineNum, String line,
       List<Sentence> outputSentences) {
-    String remain = ParseUtils.extractSentences(line, this.period,
-        outputSentences);
+    String remain = getSentenceExtractor().extract(line, outputSentences);
     for (Sentence sentence : outputSentences) {
       sentence.position = lineNum;
       parseSentence(sentence); // extract inline elements
@@ -275,7 +278,7 @@ public final class WikiParser extends BasicDocumentParser {
   }
 
   /****************************************************************************
-   * patterns to handle wiki syntax
+   * patterns to handle wiki syntax.
    ***************************************************************************/
 
   private static final Pattern HEADER_PATTERN

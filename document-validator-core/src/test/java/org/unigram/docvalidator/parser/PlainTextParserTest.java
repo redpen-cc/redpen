@@ -126,13 +126,32 @@ public class PlainTextParserTest {
     sampleText += "The company is reliable. In addition it is rich. ";
     sampleText += "I like the company. Howerver someone does not like it.";
     String[] expectedResult = {"Tokyu is a good railway company.",
-          " The company is reliable.", " In addition it is rich.",
-          " I like the company.", " Howerver someone does not like it."};
+        " The company is reliable.", " In addition it is rich.",
+        " I like the company.", " Howerver someone does not like it."};
     FileContent doc = generateDocument(sampleText);
     Section section = doc.getLastSection();
     List<Paragraph> paragraphs = extractParagraphs(section);
     assertEquals(1, paragraphs.size());
     assertEquals(5 ,calcLineNum(section));
+    Paragraph paragraph = paragraphs.get(paragraphs.size()-1);
+    for (int i=0; i<expectedResult.length; i++) {
+      assertEquals(expectedResult[i], paragraph.getSentence(i).content);
+    }
+    assertEquals(0, section.getHeaderContent(0).position);
+    assertEquals("", section.getHeaderContent(0).content);
+  }
+
+  @Test
+  public void testGenerateDocumentWithMultipleSentenceContainsVariousStopCharacters() {
+    String sampleText = "Is Tokyu a good railway company? ";
+    sampleText += "Yes it is. In addition it is rich!";
+    String[] expectedResult = {"Is Tokyu a good railway company?",
+        " Yes it is.", " In addition it is rich!"};
+    FileContent doc = generateDocument(sampleText);
+    Section section = doc.getLastSection();
+    List<Paragraph> paragraphs = extractParagraphs(section);
+    assertEquals(1, paragraphs.size());
+    assertEquals(3 ,calcLineNum(section));
     Paragraph paragraph = paragraphs.get(paragraphs.size()-1);
     for (int i=0; i<expectedResult.length; i++) {
       assertEquals(expectedResult[i], paragraph.getSentence(i).content);
