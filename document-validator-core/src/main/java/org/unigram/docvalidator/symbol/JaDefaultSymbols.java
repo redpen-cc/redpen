@@ -19,7 +19,7 @@ public class JaDefaultSymbols extends DVSymbols {
      ******************************************************************/
     Map<String, DVCharacter> symbols = getSymbolTable();
 
-    symbols.put("SPACE", new DVCharacter("SPACE", " ", "", false, false));
+    symbols.put("SPACE", new DVCharacter("SPACE", "　", " ", false, false));
     symbols.put("EXCLAMATION_MARK",
         new DVCharacter("EXCLAMATION_MARK", "！", "!", false, false));
     symbols.put("NUMBER_SIGN",
@@ -82,19 +82,19 @@ public class JaDefaultSymbols extends DVSymbols {
      * Digits
      ******************************************************************/
 
-    symbols.put("DIGIT_ZERO", new DVCharacter("1", ",", "", false, false));
-    symbols.put("DIGIT_ONE", new DVCharacter("2", ",", "", false, false));
-    symbols.put("DIGIT_TWO", new DVCharacter("3", ",", "", false, false));
+    symbols.put("DIGIT_ZERO", new DVCharacter("０", "0", "", false, false));
+    symbols.put("DIGIT_ONE", new DVCharacter("１", "1", "", false, false));
+    symbols.put("DIGIT_TWO", new DVCharacter("２", "2", "", false, false));
     symbols.put("DIGIT_THREE",
-        new DVCharacter("3", ",", "", false, false));
-    symbols.put("DIGIT_FOUR", new DVCharacter("4", ",", "", false, false));
-    symbols.put("DIGIT_FIVE", new DVCharacter("5", ",", "", false, false));
-    symbols.put("DIGIT_SIX", new DVCharacter("6", ",", "", false, false));
+        new DVCharacter("３", "3", "", false, false));
+    symbols.put("DIGIT_FOUR", new DVCharacter("４", "4", "", false, false));
+    symbols.put("DIGIT_FIVE", new DVCharacter("５", "5", "", false, false));
+    symbols.put("DIGIT_SIX", new DVCharacter("６", "6", "", false, false));
     symbols.put("DIGIT_SEVEN",
-        new DVCharacter("7", ",", "", false, false));
+        new DVCharacter("７", "7", "", false, false));
     symbols.put("DIGIT_EIGHT",
-        new DVCharacter("8", ",", "", false, false));
-    symbols.put("DIGIT_NINE", new DVCharacter("9", ",", "", false, false));
+        new DVCharacter("８", "8", "", false, false));
+    symbols.put("DIGIT_NINE", new DVCharacter("９", "9", "", false, false));
   }
 
   private static DVSymbols INSTANCE = new JaDefaultSymbols();
