@@ -37,7 +37,9 @@ import org.unigram.docvalidator.validator.SentenceValidator;
  * Validate input sentences contain invalid expression.
  */
 public class InvalidExpressionValidator implements SentenceValidator {
-
+  /**
+   * Constructor.
+   */
   public InvalidExpressionValidator() {
     invalidExpressions = new HashSet<String>();
   }

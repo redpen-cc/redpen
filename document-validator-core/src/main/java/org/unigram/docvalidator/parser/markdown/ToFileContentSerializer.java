@@ -61,7 +61,7 @@ import org.pegdown.ast.Visitor;
 import org.pegdown.ast.WikiLinkNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.unigram.docvalidator.parser.ParseUtils;
+import org.unigram.docvalidator.parser.SentenceExtractor;
 import org.unigram.docvalidator.store.FileContent;
 import org.unigram.docvalidator.store.Paragraph;
 import org.unigram.docvalidator.store.Section;
@@ -86,6 +86,8 @@ public class ToFileContentSerializer implements Visitor {
       LoggerFactory.getLogger(ToFileContentSerializer.class);
 
   private FileContent fileContent = null;
+
+  private SentenceExtractor sentenceExtractor;
 
   private final Map<String, ReferenceNode> references =
       new HashMap<String, ReferenceNode>();
@@ -116,25 +118,25 @@ public class ToFileContentSerializer implements Visitor {
    *
    * @param content          FileContent
    * @param listOfLineNumber the list of line number
-   * @param parserPeriod     end character of sentence
+   * @param extractor        utility object to extract a sentence list
    */
   public ToFileContentSerializer(FileContent content,
                                  List<Integer> listOfLineNumber,
-                                 String parserPeriod) {
+                                 SentenceExtractor extractor) {
     this.fileContent = content;
     this.lineList = listOfLineNumber;
-    this.period = parserPeriod;
+    this.sentenceExtractor = extractor;
     currentSection = fileContent.getLastSection();
   }
 
   /**
-   * traverse markdown tree that parsed Pegdown.
+   * Traverse markdown tree that parsed Pegdown.
+   *
    * @param astRoot Pegdown RootNode
    *                (markdown tree that is parsed pegdown parser)
    * @return file content that re-parse Pegdown RootNode.
-   * @exception org.unigram.docvalidator.util.DocumentValidatorException
+   * @throws org.unigram.docvalidator.util.DocumentValidatorException
    * Fail to traverse markdown tree
-   *
    */
   public FileContent toFileContent(RootNode astRoot)
       throws DocumentValidatorException {
@@ -157,50 +159,6 @@ public class ToFileContentSerializer implements Visitor {
     }
   }
 
-  /**
-   * Buffer list of to candidate sentence.
-   */
-  private final class CandidateSentence {
-    private int lineNum;
-
-    private String sentence;
-
-    private String link;
-
-    private CandidateSentence(int line, String lineCharacter) {
-      this.lineNum = line;
-      this.sentence = lineCharacter;
-    }
-
-    private CandidateSentence(int line,
-                              String lineCharacter, String linkCharacter) {
-      this.lineNum = line;
-      this.sentence = lineCharacter;
-      this.link = linkCharacter;
-    }
-
-    public int getLineNum() {
-      return lineNum;
-    }
-
-    public String getSentence() {
-      return sentence;
-    }
-
-    public String getLink() {
-      return link;
-    }
-
-    @Override
-    public String toString() {
-      return "CandidateSentence{"
-          + "lineNum=" + lineNum
-          + ", sentence='" + sentence + '\''
-          + ", link='" + link + '\''
-          + '}';
-    }
-  }
-
   private void addCandidateSentence(int lineNum, String text) {
     addCandidateSentence(lineNum, text, null);
   }
@@ -213,7 +171,7 @@ public class ToFileContentSerializer implements Visitor {
     int lineNum = 0;
     // TODO test
     for (int end : lineList) {
-      if (end < startIndex) {
+      if (startIndex < end) {
         break;
       }
       lineNum++;
@@ -240,8 +198,9 @@ public class ToFileContentSerializer implements Visitor {
         new StringBuffer();
     for (CandidateSentence candidateSentence : candidateSentences) {
       String remain =
-          ParseUtils.extractSentences(candidateSentence.getSentence(),
-              this.period, newSentences);
+          sentenceExtractor.extractWithoutLastSentence(
+              candidateSentence.getSentence(),
+              newSentences, candidateSentence.getLineNum());
 
       //TODO refactor StringUtils...
       if (StringUtils.isNotEmpty(remain)) {
@@ -253,10 +212,14 @@ public class ToFileContentSerializer implements Visitor {
           newSentences.add(currentSentence);
         }
         // FIXME check: pegdown extract 1 candidate sentence to 1 link?
-        if (StringUtils.isNotEmpty(candidateSentence.getLink())) {
+        if (candidateSentence.getLink() != null) {
           currentSentence.links.add(candidateSentence.getLink());
         }
-      } else {
+      }
+
+      // TODO ...
+      if (sentenceExtractor.getSentenceEndPosition(
+          currentSentence.content) != -1) {
         currentSentence = null;
       }
 
@@ -315,6 +278,9 @@ public class ToFileContentSerializer implements Visitor {
   @Override
   public void visit(AutoLinkNode autoLinkNode) {
     // TODO GitHub Markdown Extension
+    addCandidateSentence(
+        lineNumberFromStartIndex(autoLinkNode.getStartIndex()),
+        autoLinkNode.getText(), autoLinkNode.getText());
   }
 
   @Override
@@ -336,8 +302,12 @@ public class ToFileContentSerializer implements Visitor {
   @Override
   public void visit(ExpLinkNode expLinkNode) {
     // title attribute don't use
-    addCandidateSentence(expLinkNode.getStartIndex(),
-        printChildrenToString(expLinkNode), expLinkNode.url);
+    String linkName = printChildrenToString(expLinkNode);
+    // FIXME how to handle url, if linkName includes period character?
+    // TODO temporary implementation
+    CandidateSentence lastCandidateSentence =
+        candidateSentences.get(candidateSentences.size() - 1);
+    lastCandidateSentence.setLink(expLinkNode.url);
   }
 
   @Override
@@ -352,7 +322,6 @@ public class ToFileContentSerializer implements Visitor {
     // TODO handle bulletListNode and orderdListNode
     if (itemDepth == 0) {
       fixSentence();
-      currentSection.appendParagraph(new Paragraph());
       currentSection.appendListBlock();
     } else {
       List<Sentence> sentences = createSentenceList();
@@ -368,7 +337,6 @@ public class ToFileContentSerializer implements Visitor {
     // TODO handle bulletListNode and orderdListNode
     if (itemDepth == 0) {
       fixSentence();
-      currentSection.appendParagraph(new Paragraph());
       currentSection.appendListBlock();
     } else {
       List<Sentence> sentences = createSentenceList();
@@ -470,6 +438,8 @@ public class ToFileContentSerializer implements Visitor {
     addCandidateSentence(
         lineNumberFromStartIndex(
             textNode.getStartIndex()), textNode.getText());
+    // for printChildrenToString
+    printer.print(textNode.getText());
   }
 
   // code block
@@ -501,6 +471,28 @@ public class ToFileContentSerializer implements Visitor {
   public void visit(RefLinkNode refLinkNode) {
     // TODO reference link require implement
     // to expand sentence
+    String linkName = printChildrenToString(refLinkNode);
+    String url = getRefLinkUrl(refLinkNode.referenceKey, linkName);
+    // FIXME how to handle url, if linkName include period character?
+    // TODO temporary implementation
+    CandidateSentence lastCandidateSentence =
+        candidateSentences.get(candidateSentences.size() - 1);
+    if (StringUtils.isNotEmpty(url)) {
+      lastCandidateSentence.setLink(url);
+    } else {
+      lastCandidateSentence.setSentence(
+          "[" + lastCandidateSentence.getSentence() + "]");
+    }
+  }
+
+  private String getRefLinkUrl(SuperNode referenceKey, String linkName) {
+    //FIXME need to implement
+    ReferenceNode refNode = references.get(linkName);
+    StringBuilder sb = new StringBuilder();
+    if (refNode != null) {
+      sb.append(refNode.getUrl());
+    }
+    return sb.toString();
   }
 
   // html part

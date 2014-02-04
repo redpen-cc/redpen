@@ -34,6 +34,9 @@ import org.unigram.docvalidator.validator.SentenceValidator;
  */
 public class QuotationValidator implements SentenceValidator {
 
+  /**
+   * Constructor.
+   */
   public QuotationValidator() {
     super();
     this.useAscii = false;
@@ -49,6 +52,11 @@ public class QuotationValidator implements SentenceValidator {
     exceptionSuffixes = DEFAULT_EXCEPTION_SUFFIXES;
   }
 
+  /**
+   * Constructor.
+   * @param isUseAscii true when this validator uses ascii setting,
+   *                   false uses the user-defined character settings
+   */
   public QuotationValidator(boolean isUseAscii) {
     this();
     this.useAscii = isUseAscii;
@@ -64,6 +72,12 @@ public class QuotationValidator implements SentenceValidator {
     }
   }
 
+  /**
+   * Constructor.
+   * @param isUseAscii true when this validator uses ascii setting,
+   *                   false uses the user-defined character settings
+   * @param fullStop period character
+   */
   public QuotationValidator(boolean isUseAscii, Character fullStop) {
     this(isUseAscii);
     this.period = fullStop;

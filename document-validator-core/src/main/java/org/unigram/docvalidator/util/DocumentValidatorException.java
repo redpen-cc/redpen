@@ -22,17 +22,29 @@ package org.unigram.docvalidator.util;
  */
 @SuppressWarnings("serial")
 public class DocumentValidatorException extends Exception {
-
+  /**
+   * Constructor.
+   */
   public DocumentValidatorException() {
     super();
   }
 
+  /**
+   * Constructor.
+   *
+   * @param message error message
+   */
   public DocumentValidatorException(String message) {
     super(message);
   }
 
+  /**
+   * Constructor.
+   *
+   * @param message error message
+   * @param cause   error cause
+   */
   public DocumentValidatorException(String message, Throwable cause) {
     super(message, cause);
   }
-
 }

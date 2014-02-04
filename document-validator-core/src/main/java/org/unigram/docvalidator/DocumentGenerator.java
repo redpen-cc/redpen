@@ -31,14 +31,15 @@ import org.unigram.docvalidator.util.DocumentValidatorException;
 public final class DocumentGenerator {
   /**
    * Generate Document from input file.
+   *
    * @param inputFileNames input file name
-   * @param resource configuration resource
-   * @param format input file format
-   * @return Document object
+   * @param resource       configuration resource
+   * @param format         input file format
+   * @return a generated Document object
    */
   static Document generate(String[] inputFileNames,
-        DVResource resource,
-        String format) {
+                           DVResource resource,
+                           String format) {
     Parser docparser;
     try {
       docparser = DocumentParserFactory.generate(format, resource);

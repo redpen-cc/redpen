@@ -51,7 +51,7 @@ public class WikiParserTest {
     sampleText += "Gekioko pun pun maru means very very angry.\n";
     sampleText += "\n";
     sampleText += "The word also have posive meaning.\n";
-    sampleText += "h1. About Gunma.\n";
+    sampleText += "h2. About Gunma.\n";
     sampleText += "\n";
     sampleText += "Gunma is located at west of Saitama.\n";
     sampleText += "- Features\n";
@@ -64,12 +64,45 @@ public class WikiParserTest {
 
     FileContent doc = createFileContent(sampleText);
     assertEquals(3, doc.getNumberOfSections());
+    // first section
+    final Section firstSection = doc.getSection(0);
+    assertEquals(1, firstSection.getHeaderContentsListSize());
+    assertEquals("", firstSection.getHeaderContent(0).content);
+    assertEquals(0, firstSection.getNumberOfLists());
+    assertEquals(0, firstSection.getNumberOfParagraphs());
+    assertEquals(1, firstSection.getNumberOfSubsections());
+
+    // 2nd section
+    final Section secondSection = doc.getSection(1);
+    assertEquals(1, secondSection.getHeaderContentsListSize());
+    assertEquals("About Gekioko.", secondSection.getHeaderContent(0).content);
+    assertEquals(0, secondSection.getNumberOfLists());
+    assertEquals(2, secondSection.getNumberOfParagraphs());
+    assertEquals(1, secondSection.getNumberOfSubsections());
+    assertEquals(firstSection, secondSection.getParentSection());
+    // check paragraph in 2nd section
+    assertEquals(1, secondSection.getParagraph(0).getNumberOfSentences());
+    assertEquals(true, secondSection.getParagraph(0).getSentence(0).isStartParagraph);
+    assertEquals(1, secondSection.getParagraph(1).getNumberOfSentences());
+    assertEquals(true, secondSection.getParagraph(1).getSentence(0).isStartParagraph);
+
+    // last section
     Section lastSection = doc.getSection(doc.getNumberOfSections()-1);
     assertEquals(1, lastSection.getNumberOfLists());
     assertEquals(5, lastSection.getListBlock(0).getNumberOfListElements());
     assertEquals(2,lastSection.getNumberOfParagraphs());
     assertEquals(1, lastSection.getHeaderContentsListSize());
+    assertEquals(0, lastSection.getNumberOfSubsections());
     assertEquals("About Gunma.", lastSection.getHeaderContent(0).content);
+    assertEquals(secondSection, lastSection.getParentSection());
+
+    // check paragraph in last section
+    assertEquals(1, lastSection.getParagraph(0).getNumberOfSentences());
+    assertEquals(true, lastSection.getParagraph(0).getSentence(0).isStartParagraph);
+    assertEquals(2, lastSection.getParagraph(1).getNumberOfSentences());
+    assertEquals(true, lastSection.getParagraph(1).getSentence(0).isStartParagraph);
+    assertEquals(false, lastSection.getParagraph(1).getSentence(1).isStartParagraph);
+
   }
 
   @Test
@@ -83,6 +116,16 @@ public class WikiParserTest {
     sampleText += "- Odakyu\n";
     FileContent doc = createFileContent(sampleText);
     assertEquals(5, doc.getSection(0).getListBlock(0).getNumberOfListElements());
+    assertEquals("Tokyu", doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).content);
+    assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(0).getLevel());
+    assertEquals("Toyoko Line", doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).content);
+    assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(1).getLevel());
+    assertEquals("Denentoshi Line", doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).content);
+    assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(2).getLevel());
+    assertEquals("Keio", doc.getSection(0).getListBlock(0).getListElement(3).getSentence(0).content);
+    assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(3).getLevel());
+    assertEquals("Odakyu", doc.getSection(0).getListBlock(0).getListElement(4).getSentence(0).content);
+    assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(4).getLevel());
   }
 
   @Test
@@ -96,6 +139,16 @@ public class WikiParserTest {
     sampleText += "# Odakyu\n";
     FileContent doc = createFileContent(sampleText);
     assertEquals(5, doc.getSection(0).getListBlock(0).getNumberOfListElements());
+    assertEquals("Tokyu", doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).content);
+    assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(0).getLevel());
+    assertEquals("Toyoko Line", doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).content);
+    assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(1).getLevel());
+    assertEquals("Denentoshi Line", doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).content);
+    assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(2).getLevel());
+    assertEquals("Keio", doc.getSection(0).getListBlock(0).getListElement(3).getSentence(0).content);
+    assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(3).getLevel());
+    assertEquals("Odakyu", doc.getSection(0).getListBlock(0).getListElement(4).getSentence(0).content);
+    assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(4).getLevel());
   }
 
   @Test
@@ -226,13 +279,25 @@ public class WikiParserTest {
   }
 
   @Test
-  public void testGenerateDocumentWithMultipleSentenceInMultipleSentences() {
+  public void testGenerateDocumentWithMultipleSentences() {
     String sampleText = "Tokyu is a good railway company. The company is reliable. In addition it is rich.\n";
     sampleText += "I like the company. Howerver someone does not like it.";
     FileContent doc = createFileContent(sampleText);
     Section firstSections = doc.getSection(0);
     Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals(5, firstParagraph.getNumberOfSentences());
+  }
+
+  @Test
+  public void testGenerateDocumentWithMultipleSentencesWithVaraiousStopCharacters() {
+    String sampleText = "Is Tokyu a good railway company? The company is reliable. In addition it is rich!\n";
+    FileContent doc = createFileContent(sampleText);
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
+    assertEquals(3, firstParagraph.getNumberOfSentences());
+    assertEquals("Is Tokyu a good railway company?", doc.getSection(0).getParagraph(0).getSentence(0).content);
+    assertEquals(" The company is reliable.", doc.getSection(0).getParagraph(0).getSentence(1).content);
+    assertEquals(" In addition it is rich!", doc.getSection(0).getParagraph(0).getSentence(2).content);
   }
 
   @Test
@@ -282,7 +347,7 @@ public class WikiParserTest {
     assertEquals(1, firstParagraph.getNumberOfSentences());
     assertEquals(2, firstParagraph.getSentence(0).links.size());
     assertEquals("pen", firstParagraph.getSentence(0).links.get(0));
-    assertEquals("Google", firstParagraph.getSentence(0).links.get(1));
+    assertEquals("http://google.com", firstParagraph.getSentence(0).links.get(1));
     assertEquals("this is not a pen, but also this is not Google either.",
         firstParagraph.getSentence(0).content);
   }
@@ -295,7 +360,7 @@ public class WikiParserTest {
     Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals(1, firstParagraph.getNumberOfSentences());
     assertEquals(1, firstParagraph.getSentence(0).links.size());
-    assertEquals("Google", firstParagraph.getSentence(0).links.get(0));
+    assertEquals("http://google.com", firstParagraph.getSentence(0).links.get(0));
     assertEquals("the url is not Google.",
         firstParagraph.getSentence(0).content);
   }
@@ -322,6 +387,32 @@ public class WikiParserTest {
     assertEquals(1, firstParagraph.getNumberOfSentences());
     assertEquals(0, firstParagraph.getSentence(0).links.size());
     assertEquals("url of google is [[http://google.com.",
+        firstParagraph.getSentence(0).content);
+  }
+
+  @Test
+  public void testPlainLinkWithThreeBlock() {
+    String sampleText = "this is not a pen, but also this is not [[Google|http://google.com|dummy]] either.";
+    FileContent doc = createFileContent(sampleText);
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
+    assertEquals(1, firstParagraph.getNumberOfSentences());
+    assertEquals(1, firstParagraph.getSentence(0).links.size());
+    assertEquals("http://google.com", firstParagraph.getSentence(0).links.get(0));
+    assertEquals("this is not a pen, but also this is not Google either.",
+        firstParagraph.getSentence(0).content);
+  }
+
+  @Test
+  public void testVacantListBlock() {
+    String sampleText = "this is not a pen, but also this is not [[]] Google either.";
+    FileContent doc = createFileContent(sampleText);
+    Section firstSections = doc.getSection(0);
+    Paragraph firstParagraph = firstSections.getParagraph(0);
+    assertEquals(1, firstParagraph.getNumberOfSentences());
+    assertEquals(1, firstParagraph.getSentence(0).links.size());
+    assertEquals("", firstParagraph.getSentence(0).links.get(0));
+    assertEquals("this is not a pen, but also this is not  Google either.",
         firstParagraph.getSentence(0).content);
   }
 

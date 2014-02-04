@@ -32,13 +32,20 @@ import org.slf4j.LoggerFactory;
  */
 public class FileLoader {
   /**
-   * constructor.
+   * Constructor.
+   *
    * @param ex ResourceExtractor
    */
   public FileLoader(ResourceExtractor ex) {
     this.resourceExtractor = ex;
   }
 
+  /**
+   * Load input file.
+   *
+   * @param fileName input file name.
+   * @return 0 when succeeded to load, 1 otherwise
+   */
   public int loadFile(String fileName) {
     InputStream inputStream;
     try {
@@ -55,6 +62,12 @@ public class FileLoader {
     return 0;
   }
 
+  /**
+   * Load input stream
+   *
+   * @param inputStream input stream
+   * @return 0 when succeeded to load input stream, 1 otherwise
+   */
   public int loadFile(InputStream inputStream) {
     if (inputStream == null) {
       LOG.error("Input Stream is null");
