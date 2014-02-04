@@ -19,11 +19,11 @@ public abstract class DVSymbols {
    * @return specified character
    */
   public DVCharacter get(String name) {
-    if (!SYMBOL_TABLE.containsKey(name)) {
+    if (!symbolTable.containsKey(name)) {
       LOG.info(name + " is not defined in DefaultSymbols.");
       return null;
     }
-    return SYMBOL_TABLE.get(name);
+    return symbolTable.get(name);
   }
 
   /**
@@ -32,10 +32,14 @@ public abstract class DVSymbols {
    * @return all names of characters
    */
   public Iterator<String> getAllCharacterNames() {
-    return SYMBOL_TABLE.keySet().iterator();
+    return symbolTable.keySet().iterator();
   }
 
-  protected final Map<String, DVCharacter> SYMBOL_TABLE
+  protected Map<String, DVCharacter> getSymbolTable() {
+    return symbolTable;
+  }
+
+  private final Map<String, DVCharacter> symbolTable
       = new HashMap<String, DVCharacter>();
 
   private static final Logger LOG = LoggerFactory.getLogger(DVSymbols.class);

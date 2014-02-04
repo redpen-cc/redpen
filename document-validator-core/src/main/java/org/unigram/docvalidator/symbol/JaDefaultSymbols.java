@@ -2,97 +2,100 @@ package org.unigram.docvalidator.symbol;
 
 import org.unigram.docvalidator.util.DVCharacter;
 
+import java.util.Map;
+
 /**
- * Contain default settings for Japanese text
+ * Contain default settings for Japanese text.
  */
 public class JaDefaultSymbols extends DVSymbols {
 
   public static DVSymbols getInstance() {
-    return instance;
+    return INSTANCE;
   }
 
   public JaDefaultSymbols() {
     /******************************************************************
      * Common symbols
      ******************************************************************/
+    Map<String, DVCharacter> symbols = getSymbolTable();
 
-    SYMBOL_TABLE.put("SPACE", new DVCharacter("SPACE", " ", "", false, false));
-    SYMBOL_TABLE.put("EXCLAMATION_MARK",
+    symbols.put("SPACE", new DVCharacter("SPACE", " ", "", false, false));
+    symbols.put("EXCLAMATION_MARK",
         new DVCharacter("EXCLAMATION_MARK", "！", "!", false, false));
-    SYMBOL_TABLE.put("NUMBER_SIGN",
+    symbols.put("NUMBER_SIGN",
         new DVCharacter("NUMBER_SIGN", "＃", "#", false, false));
-    SYMBOL_TABLE.put("DOLLAR_SIGN",
+    symbols.put("DOLLAR_SIGN",
         new DVCharacter("DOLLAR_SIGN", "$", "＄", false, false));
-    SYMBOL_TABLE.put("PERCENT_SIGN",
+    symbols.put("PERCENT_SIGN",
         new DVCharacter("PERCENT_SIGN", "％", "%", false, false));
-    SYMBOL_TABLE.put("QUESTION_MARK",
+    symbols.put("QUESTION_MARK",
         new DVCharacter("QUESTION_MARK", "？", "?", false, false));
-    SYMBOL_TABLE.put("AMPERSAND",
+    symbols.put("AMPERSAND",
         new DVCharacter("AMPERSAND", "＆", "&", false, false));
-    SYMBOL_TABLE.put("LEFT_PARENTHESIS",
+    symbols.put("LEFT_PARENTHESIS",
         new DVCharacter("LEFT_PARENTHESIS", "（", "(", false, false));
-    SYMBOL_TABLE.put("RIGHT_PARENTHESIS",
+    symbols.put("RIGHT_PARENTHESIS",
         new DVCharacter("RIGHT_PARENTHESIS", "）", ")", false, false));
-    SYMBOL_TABLE.put("ASTERISK",
+    symbols.put("ASTERISK",
         new DVCharacter("ASTERISK", "＊", "*", false, false));
-    SYMBOL_TABLE.put("COMMA", new DVCharacter("COMMA", "、", ",", false, false));
-    SYMBOL_TABLE.put("FULL_STOP",
+    symbols.put("COMMA", new DVCharacter("COMMA", "、", ",", false, false));
+    symbols.put("FULL_STOP",
         new DVCharacter("FULL_STOP", "。", ".", false, false));
-    SYMBOL_TABLE.put("PLUS_SIGN",
+    symbols.put("PLUS_SIGN",
         new DVCharacter("PLUS_SIGN", "＋", "+", false, false));
-    SYMBOL_TABLE.put("HYPHEN_SIGN",
+    symbols.put("HYPHEN_SIGN",
         new DVCharacter("HYPHEN_SIGN", "ー", "-", false, false));
-    SYMBOL_TABLE.put("MINUS_SIGN",
+    symbols.put("MINUS_SIGN",
         new DVCharacter("MINUS_SIGN", "ー", "-", false, false));
-    SYMBOL_TABLE.put("SLASH", new DVCharacter("SLASH", "／", "/", false, false));
-    SYMBOL_TABLE.put("COLON", new DVCharacter("COLON", "：", ":", false, false));
-    SYMBOL_TABLE.put("SEMICOLON",
+    symbols.put("SLASH", new DVCharacter("SLASH", "／", "/", false, false));
+    symbols.put("COLON", new DVCharacter("COLON", "：", ":", false, false));
+    symbols.put("SEMICOLON",
         new DVCharacter("SEMICOLON", "；", ";", false, false));
-    SYMBOL_TABLE.put("LESS_THAN_SIGN",
+    symbols.put("LESS_THAN_SIGN",
         new DVCharacter("LESS_THAN_SIGN", "＜", "<", false, false));
-    SYMBOL_TABLE.put("EQUAL_SIGN",
+    symbols.put("EQUAL_SIGN",
         new DVCharacter("EQUAL_SIGN", "＝", "=", false, false));
-    SYMBOL_TABLE.put("GREATER_THAN_SIGN",
+    symbols.put("GREATER_THAN_SIGN",
         new DVCharacter("GREATER_THAN_SIGN", "＞", ">", false, false));
-    SYMBOL_TABLE.put("AT_MARK",
+    symbols.put("AT_MARK",
         new DVCharacter("AT_MARK", "＠", "@", false, false));
-    SYMBOL_TABLE.put("LEFT_SQUARE_BRACKET",
+    symbols.put("LEFT_SQUARE_BRACKET",
         new DVCharacter("LEFT_SQUARE_BRACKET", "「", "", false, false));
-    SYMBOL_TABLE.put("RIGHT_SQUARE_BRACKET",
+    symbols.put("RIGHT_SQUARE_BRACKET",
         new DVCharacter("RIGHT_SQUARE_BRACKET", "」", "", false, false));
-    SYMBOL_TABLE.put("BACKSLASH",
+    symbols.put("BACKSLASH",
         new DVCharacter("BACKSLASH", "¥", "\\", false, false));
-    SYMBOL_TABLE.put("CIRCUMFLEX_ACCENT",
+    symbols.put("CIRCUMFLEX_ACCENT",
         new DVCharacter("CIRCUMFLEX_ACCENT", "＾", "^", false, false));
-    SYMBOL_TABLE.put("LOW_LINE",
+    symbols.put("LOW_LINE",
         new DVCharacter("LOW_LINE", "＿", "_", false, false));
-    SYMBOL_TABLE.put("LEFT_CURLY_BRACKET",
+    symbols.put("LEFT_CURLY_BRACKET",
         new DVCharacter("LEFT_CURLY_BRACKET", "｛", "", false, false));
-    SYMBOL_TABLE.put("RIGHT_CURLY_BRACKET",
+    symbols.put("RIGHT_CURLY_BRACKET",
         new DVCharacter("RIGHT_CURLY_BRACKET", "｝", "", false, false));
-    SYMBOL_TABLE.put("VERTICAL_BAR",
+    symbols.put("VERTICAL_BAR",
         new DVCharacter("VERTICAL_BAR", "｜", "|", false, false));
-    SYMBOL_TABLE.put("TILDE",
+    symbols.put("TILDE",
         new DVCharacter("TILDE", "〜", "~", false, false));
 
     /******************************************************************
      * Digits
      ******************************************************************/
 
-    SYMBOL_TABLE.put("DIGIT_ZERO", new DVCharacter("1", ",", "", false, false));
-    SYMBOL_TABLE.put("DIGIT_ONE", new DVCharacter("2", ",", "", false, false));
-    SYMBOL_TABLE.put("DIGIT_TWO", new DVCharacter("3", ",", "", false, false));
-    SYMBOL_TABLE.put("DIGIT_THREE",
+    symbols.put("DIGIT_ZERO", new DVCharacter("1", ",", "", false, false));
+    symbols.put("DIGIT_ONE", new DVCharacter("2", ",", "", false, false));
+    symbols.put("DIGIT_TWO", new DVCharacter("3", ",", "", false, false));
+    symbols.put("DIGIT_THREE",
         new DVCharacter("3", ",", "", false, false));
-    SYMBOL_TABLE.put("DIGIT_FOUR", new DVCharacter("4", ",", "", false, false));
-    SYMBOL_TABLE.put("DIGIT_FIVE", new DVCharacter("5", ",", "", false, false));
-    SYMBOL_TABLE.put("DIGIT_SIX", new DVCharacter("6", ",", "", false, false));
-    SYMBOL_TABLE.put("DIGIT_SEVEN",
+    symbols.put("DIGIT_FOUR", new DVCharacter("4", ",", "", false, false));
+    symbols.put("DIGIT_FIVE", new DVCharacter("5", ",", "", false, false));
+    symbols.put("DIGIT_SIX", new DVCharacter("6", ",", "", false, false));
+    symbols.put("DIGIT_SEVEN",
         new DVCharacter("7", ",", "", false, false));
-    SYMBOL_TABLE.put("DIGIT_EIGHT",
+    symbols.put("DIGIT_EIGHT",
         new DVCharacter("8", ",", "", false, false));
-    SYMBOL_TABLE.put("DIGIT_NINE", new DVCharacter("9", ",", "", false, false));
+    symbols.put("DIGIT_NINE", new DVCharacter("9", ",", "", false, false));
   }
 
-  private static DVSymbols instance = new JaDefaultSymbols();
+  private static DVSymbols INSTANCE = new JaDefaultSymbols();
 }

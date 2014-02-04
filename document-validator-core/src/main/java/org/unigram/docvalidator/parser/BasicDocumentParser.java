@@ -56,22 +56,27 @@ public abstract class BasicDocumentParser implements Parser {
 
     // set full stop characters
     if (characterTable.isContainCharacter("FULL_STOP")) {
-      this.periods.add(characterTable.getCharacter("FULL_STOP").getValue());
+      this.periods.add(
+          characterTable.getCharacter("FULL_STOP").getValue());
     } else {
-      this.periods.add(DefaultSymbols.getInstance().get("FULL_STOP").getValue());
+      this.periods.add(
+          DefaultSymbols.getInstance().get("FULL_STOP").getValue());
     }
 
     if (characterTable.isContainCharacter("QUESTION_MARK")) {
-      this.periods.add(characterTable.getCharacter("QUESTION_MARK").getValue());
+      this.periods.add(
+          characterTable.getCharacter("QUESTION_MARK").getValue());
     } else {
-      this.periods.add(DefaultSymbols.getInstance().get("QUESTION_MARK").getValue());
+      this.periods.add(
+          DefaultSymbols.getInstance().get("QUESTION_MARK").getValue());
     }
 
     if (characterTable.isContainCharacter("EXCLAMATION_MARK")) {
       this.periods.add(
           characterTable.getCharacter("EXCLAMATION_MARK").getValue());
     } else {
-      this.periods.add(DefaultSymbols.getInstance().get("EXCLAMATION_MARK").getValue());
+      this.periods.add(
+          DefaultSymbols.getInstance().get("EXCLAMATION_MARK").getValue());
     }
 
     for (String period : this.periods) {

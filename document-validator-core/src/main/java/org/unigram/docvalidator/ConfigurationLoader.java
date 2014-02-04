@@ -26,7 +26,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * Load the central configuration of DocumentValidator
+ * Load the central configuration of DocumentValidator.
  */
 public class ConfigurationLoader {
   /**
@@ -102,11 +102,13 @@ public class ConfigurationLoader {
       lang = langNode.getTextContent();
       NamedNodeMap langAttributes = langNode.getAttributes();
       if (langAttributes.getLength() > 0) {
-        charTableFilePath = langAttributes.getNamedItem("char-conf").getNodeValue();
+        charTableFilePath =
+            langAttributes.getNamedItem("char-conf").getNodeValue();
       }
     }
     LOG.info("Setting lang as \"" + lang + "\"");
-    LOG.info("Setting character table setting file as \"" + charTableFilePath + "\"");
+    LOG.info("Setting character table setting file as \""
+        + charTableFilePath + "\"");
 
     // Load CharacterTable
     // FIXME dv should work without character settings
@@ -135,10 +137,11 @@ public class ConfigurationLoader {
       Element validatorElement) {
     String validatorConfigurationPath = validatorElement.getTextContent();
     LOG.info("Validation Setting file: " + validatorConfigurationPath);
-    return ValidationConfigurationLoader.loadConfiguration(validatorConfigurationPath);
+    return ValidationConfigurationLoader.loadConfiguration(
+        validatorConfigurationPath);
   }
 
-  static private Document parseConfigurationString(InputStream input) {
+  private static Document parseConfigurationString(InputStream input) {
     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
     Document doc = null;
     try {

@@ -22,7 +22,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class CharacterTableLoader {
+/**
+ * Load CharacterTable from a file or stream.
+ */
+public final class CharacterTableLoader {
 
   /**
    * Load CharacterTable.
@@ -47,16 +50,18 @@ public class CharacterTableLoader {
    * @param stream input stream for configuration settings
    * @return generated character table or null if loading was failed.
    */
-  public static CharacterTable load(InputStream stream){
+  public static CharacterTable load(InputStream stream) {
     return load(stream, "en");
   }
 
   /**
-   * load CharacterTable.
+   * Load CharacterTable from a given file.
+   *
    * @param fileName configuration file name
+   * @param lang target language
    * @return generated character table or null if loading was failed.
    */
-  public static CharacterTable load(String fileName, String lang){
+  public static CharacterTable load(String fileName, String lang) {
     InputStream fis;
     try {
       fis = new FileInputStream(fileName);
@@ -67,7 +72,14 @@ public class CharacterTableLoader {
     return load(fis, lang);
   }
 
-  public static CharacterTable load(InputStream stream, String lang){
+  /**
+   * Load CharacterTable from a given stream.
+   *
+   * @param stream input configuration
+   * @param lang target language
+   * @return generated character table or null if loading was failed.
+   */
+  public static CharacterTable load(InputStream stream, String lang) {
     CharacterTable characterTable = new CharacterTable();
     Map<String, DVCharacter> characterDictionary =
         characterTable.getCharacterDictionary();
@@ -118,8 +130,8 @@ public class CharacterTableLoader {
             characterTable.put(currentChar.getName(), currentChar);
           }
         } else {
-          LOG.error("Invalid Node Name \"" +
-              element.getNodeName() + "\" exist.");
+          LOG.error("Invalid Node Name \""
+              + element.getNodeName() + "\" exist.");
           return false;
         }
       }
@@ -166,7 +178,6 @@ public class CharacterTableLoader {
         Boolean.parseBoolean(element.getAttribute("after-space")));
   }
 
-
   private static void loadDefaultCharacterTable(
       Map<String, DVCharacter> characterTable, String lang) {
     DVSymbols symbolSettings;
@@ -184,5 +195,10 @@ public class CharacterTableLoader {
     }
   }
 
-  private static final Logger LOG = LoggerFactory.getLogger(CharacterTableLoader.class);
+  private CharacterTableLoader() {
+    // for safe
+  }
+
+  private static final Logger LOG =
+      LoggerFactory.getLogger(CharacterTableLoader.class);
 }
