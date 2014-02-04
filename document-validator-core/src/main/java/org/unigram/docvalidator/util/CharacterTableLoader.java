@@ -30,6 +30,10 @@ public final class CharacterTableLoader {
   /**
    * Load CharacterTable.
    *
+   * Note: language is set to "en" with this constructor. When you want
+   * to specify the language,use the constructor with language as the
+   * parameter.
+   *
    * @param fileName configuration file name
    * @return generated character table or null if loading was failed
    */
@@ -46,6 +50,10 @@ public final class CharacterTableLoader {
 
   /**
    * Load CharacterTable.
+   *
+   * Note: language is set to "en" with this constructor. When you want
+   * to specify the language,use the constructor with language as the
+   * parameter.
    *
    * @param stream input stream for configuration settings
    * @return generated character table or null if loading was failed.
