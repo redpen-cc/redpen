@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.unigram.docvalidator.DefaultSymbols;
 import org.unigram.docvalidator.store.Sentence;
+import org.unigram.docvalidator.symbol.DVSymbols;
+import org.unigram.docvalidator.symbol.DefaultSymbols;
 import org.unigram.docvalidator.util.StringUtils;
 
 /**
@@ -16,10 +17,11 @@ public final class SentenceExtractor {
    * Default Constructor.
    */
   public SentenceExtractor() {
+    DVSymbols symbols = DefaultSymbols.getInstance();
     List<String> fullStopList = new ArrayList<String>();
-    fullStopList.add(DefaultSymbols.get("FULL_STOP").getValue());
-    fullStopList.add(DefaultSymbols.get("QUESTION_MARK").getValue());
-    fullStopList.add(DefaultSymbols.get("EXCLAMATION_MARK").getValue());
+    fullStopList.add(symbols.get("FULL_STOP").getValue());
+    fullStopList.add(symbols.get("QUESTION_MARK").getValue());
+    fullStopList.add(symbols.get("EXCLAMATION_MARK").getValue());
     this.fullStopPattern = Pattern.compile(
         this.constructEndSentencePattern(fullStopList));
   }

@@ -13,17 +13,26 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.unigram.docvalidator.DefaultSymbols;
+import org.unigram.docvalidator.symbol.DVSymbols;
+import org.unigram.docvalidator.symbol.DefaultSymbols;
+import org.unigram.docvalidator.symbol.JaDefaultSymbols;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class CharacterTableLoader {
+/**
+ * Load CharacterTable from a file or stream.
+ */
+public final class CharacterTableLoader {
 
   /**
    * Load CharacterTable.
+   *
+   * Note: language is set to "en" with this constructor. When you want
+   * to specify the language,use the constructor with language as the
+   * parameter.
    *
    * @param fileName configuration file name
    * @return generated character table or null if loading was failed
@@ -36,26 +45,58 @@ public class CharacterTableLoader {
       LOG.error(e.getMessage());
       return null;
     }
-    return load(fis);
+    return load(fis, "en");
   }
 
   /**
    * Load CharacterTable.
    *
+   * Note: language is set to "en" with this constructor. When you want
+   * to specify the language,use the constructor with language as the
+   * parameter.
+   *
    * @param stream input stream for configuration settings
    * @return generated character table or null if loading was failed.
    */
   public static CharacterTable load(InputStream stream) {
+    return load(stream, "en");
+  }
+
+  /**
+   * Load CharacterTable from a given file.
+   *
+   * @param fileName configuration file name
+   * @param lang target language
+   * @return generated character table or null if loading was failed.
+   */
+  public static CharacterTable load(String fileName, String lang) {
+    InputStream fis;
+    try {
+      fis = new FileInputStream(fileName);
+    } catch (FileNotFoundException e) {
+      LOG.error(e.getMessage());
+      return null;
+    }
+    return load(fis, lang);
+  }
+
+  /**
+   * Load CharacterTable from a given stream.
+   *
+   * @param stream input configuration
+   * @param lang target language
+   * @return generated character table or null if loading was failed.
+   */
+  public static CharacterTable load(InputStream stream, String lang) {
     CharacterTable characterTable = new CharacterTable();
     Map<String, DVCharacter> characterDictionary =
         characterTable.getCharacterDictionary();
-    loadDefaultCharacterTable(characterDictionary);
+    loadDefaultCharacterTable(characterDictionary, lang);
     if (loadTable(stream, characterDictionary)) {
       return characterTable;
     } else {
       return null;
     }
-
   }
 
   /**
@@ -97,8 +138,8 @@ public class CharacterTableLoader {
             characterTable.put(currentChar.getName(), currentChar);
           }
         } else {
-          LOG.error("Invalid Node Name \"" +
-              element.getNodeName() + "\" exist.");
+          LOG.error("Invalid Node Name \""
+              + element.getNodeName() + "\" exist.");
           return false;
         }
       }
@@ -145,17 +186,27 @@ public class CharacterTableLoader {
         Boolean.parseBoolean(element.getAttribute("after-space")));
   }
 
-
   private static void loadDefaultCharacterTable(
-      Map<String, DVCharacter> characterTable) {
-    Iterator<String> characterNames =
-        DefaultSymbols.getAllCharacterNames();
+      Map<String, DVCharacter> characterTable, String lang) {
+    DVSymbols symbolSettings;
+    if (lang.equals("ja")) {
+      symbolSettings = JaDefaultSymbols.getInstance();
+    } else {
+      symbolSettings = DefaultSymbols.getInstance();
+    }
+
+    Iterator<String> characterNames = symbolSettings.getAllCharacterNames();
     while (characterNames.hasNext()) {
       String charName = characterNames.next();
-      DVCharacter character = DefaultSymbols.get(charName);
+      DVCharacter character = symbolSettings.get(charName);
       characterTable.put(charName, character);
     }
   }
 
-  private static final Logger LOG = LoggerFactory.getLogger(CharacterTableLoader.class);
+  private CharacterTableLoader() {
+    // for safe
+  }
+
+  private static final Logger LOG =
+      LoggerFactory.getLogger(CharacterTableLoader.class);
 }

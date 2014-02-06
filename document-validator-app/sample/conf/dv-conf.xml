@@ -1,4 +1,4 @@
 <configuration>
   <validator>sample/conf/validation-conf.xml</validator>
-  <character-table>sample/conf/symbol-conf-en.xml</character-table>
+  <lang char-conf="sample/conf/symbol-conf-en.xml">en</lang>
 </configuration>
