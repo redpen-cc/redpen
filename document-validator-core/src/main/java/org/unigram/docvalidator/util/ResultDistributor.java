@@ -25,23 +25,23 @@ public interface ResultDistributor {
   /**
    * Flush header block of semi-structured format.
    */
-  public void flushHeader();
+  void flushHeader();
 
   /**
    * Flush footer block of semi-structured format.
    */
-  public void flushFooter();
+  void flushFooter();
 
   /**
    * Flush given ValidationError.
    * @param err error reported from a Validator
    * @return 0 succeeded, otherwise 1
    */
-  public int flushResult(ValidationError err);
+  int flushResult(ValidationError err);
 
   /**
    * Set Formatter object.
    * @param formatter
    */
-  public void setFormatter(Formatter formatter);
+  void setFormatter(Formatter formatter);
 }
