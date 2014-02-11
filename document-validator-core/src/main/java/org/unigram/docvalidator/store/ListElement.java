@@ -46,7 +46,7 @@ public final class ListElement {
   }
 
   /**
-   * Get specified content
+   * Given sentence id, return the content of sentence.
    *
    * @return content of list element
    */
@@ -55,9 +55,9 @@ public final class ListElement {
   }
 
   /**
-   * Get number of content sentence
+   * Get the number of content sentence.
    *
-   * @return number of sentences in the list item
+   * @return the number of sentences in the list item
    */
   public int getNumberOfSentences() {
     return contents.size();

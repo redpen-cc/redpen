@@ -106,7 +106,7 @@ public final class ValidatorConfiguration {
   }
 
   /**
-   * Add an attribute
+   * Add an attribute.
    *
    * @param name  attribute name
    * @param value attribute value
@@ -116,7 +116,7 @@ public final class ValidatorConfiguration {
   }
 
   /**
-   * Get sub configurations
+   * Get sub-configurations.
    *
    * @return sub-configuration list
    */

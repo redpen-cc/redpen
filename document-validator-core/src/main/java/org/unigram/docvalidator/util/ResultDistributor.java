@@ -40,7 +40,7 @@ public interface ResultDistributor {
   public int flushResult(ValidationError err);
 
   /**
-   * set Formatter object
+   * Set Formatter object.
    * @param formatter
    */
   public void setFormatter(Formatter formatter);

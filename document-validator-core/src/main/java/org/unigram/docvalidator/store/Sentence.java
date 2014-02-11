@@ -58,7 +58,7 @@ public final class Sentence implements Block {
   public boolean isStartParagraph;
 
   /**
-   * Links (including internal and external ones)
+   * Links (including internal and external ones).
    */
   public final List<String> links;
 

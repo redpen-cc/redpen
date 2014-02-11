@@ -34,6 +34,10 @@ import org.unigram.docvalidator.util.FileLoader;
 import org.unigram.docvalidator.util.KeyValueDictionaryExtractor;
 import org.unigram.docvalidator.validator.SentenceValidator;
 
+/**
+ * If input sentences contain invalid expressions, this validator
+ * returns the errors with corrected expressions.
+ */
 public class SuggestExpressionValidator implements SentenceValidator {
 
   public SuggestExpressionValidator() {

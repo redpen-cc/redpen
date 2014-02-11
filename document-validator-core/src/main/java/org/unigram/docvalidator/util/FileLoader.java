@@ -63,7 +63,7 @@ public class FileLoader {
   }
 
   /**
-   * Load input stream
+   * Given a input stream, load the contents.
    *
    * @param inputStream input stream
    * @return 0 when succeeded to load input stream, 1 otherwise

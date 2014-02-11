@@ -1,5 +1,9 @@
 package org.unigram.docvalidator.util;
 
+/**
+ * This interface is for classes to define output format of
+ * reported ValidationError objects.
+ */
 public interface Formatter {
   /**
    * Convert ValidationError into a string to flush a error message.
