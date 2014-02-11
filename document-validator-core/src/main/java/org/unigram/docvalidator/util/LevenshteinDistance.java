@@ -42,7 +42,7 @@ public final class LevenshteinDistance {
   };
 
   /**
-   * Set the cost for "insertion"
+   * Set the cost for "insertion".
    * @param const a cost for "insertion"
    */
   public static synchronized void setInsertionCost(int cost) {
@@ -50,7 +50,7 @@ public final class LevenshteinDistance {
   }
 
   /**
-   * Set the cost for "deletion"
+   * Set the cost for "deletion".
    * @param const a cost for "deletio"
    */
   public static synchronized void setDeletionCost(int cost) {
@@ -58,7 +58,7 @@ public final class LevenshteinDistance {
   }
 
   /**
-   * Set the cost for "substitution"
+   * Set the cost for "substitution".
    * @param const a cost for "substitution"
    */
   public static synchronized void setSubstitutionCost(int cost) {
@@ -66,7 +66,7 @@ public final class LevenshteinDistance {
   }
 
   /**
-   * Get the cost for "insertion"
+   * Get the cost for "insertion".
    * @return the cost for "insertion"
    */
   public static int getInsertionCost() {
