@@ -27,16 +27,26 @@ package org.unigram.docvalidator.util;
  */
 public final class LevenshteinDistance {
 
-  private static int insertionCost = 1;
-  private static int deletionCost = 1;
-  private static int substitutionCost = 1;
+  public static int DEFAULT_INSERTION_COST = 1;
+  public static int DEFAULT_DELETION_COST = 1;
+  public static int DEFAULT_SUBSTITUTION_COST = 1;
+
+  private static int INSERTION_COST;
+  private static int DELETION_COST;
+  private static int SUBSTITUTION_COST;
+
+  static {
+    INSERTION_COST = DEFAULT_INSERTION_COST;
+    DELETION_COST = DEFAULT_DELETION_COST;
+    SUBSTITUTION_COST = DEFAULT_SUBSTITUTION_COST;
+  };
 
   /**
    * Set the cost for "insertion"
    * @param const a cost for "insertion"
    */
   public static synchronized void setInsertionCost(int cost) {
-    insertionCost = cost;
+    INSERTION_COST = cost;
   }
 
   /**
@@ -44,7 +54,7 @@ public final class LevenshteinDistance {
    * @param const a cost for "deletio"
    */
   public static synchronized void setDeletionCost(int cost) {
-    deletionCost = cost;
+    DELETION_COST = cost;
   }
 
   /**
@@ -52,7 +62,7 @@ public final class LevenshteinDistance {
    * @param const a cost for "substitution"
    */
   public static synchronized void setSubstitutionCost(int cost) {
-    substitutionCost = cost;
+    SUBSTITUTION_COST = cost;
   }
 
   /**
@@ -60,7 +70,7 @@ public final class LevenshteinDistance {
    * @return the cost for "insertion"
    */
   public static int getInsertionCost() {
-    return insertionCost;
+    return INSERTION_COST;
   }
 
   /**
@@ -68,7 +78,7 @@ public final class LevenshteinDistance {
    * @return the cost for "deletion"
    */
   public static int getDeletionCost() {
-    return deletionCost;
+    return DELETION_COST;
   }
 
   /**
@@ -76,7 +86,7 @@ public final class LevenshteinDistance {
    * @return the cost for "substitution"
    */
   public static int getSubstitutionCost() {
-    return substitutionCost;
+    return SUBSTITUTION_COST;
   }
 
   /**
@@ -93,10 +103,10 @@ public final class LevenshteinDistance {
       return 0;
     }
     if (a == null && b != null) {
-      return b.length() * insertionCost;
+      return b.length() * INSERTION_COST;
     }
     if (a != null && b == null) {
-      return a.length() * insertionCost;
+      return a.length() * INSERTION_COST;
     }
 
     final int lengthA = a.length();
@@ -105,10 +115,10 @@ public final class LevenshteinDistance {
 
     // Initialization
     for (int i = 0; i < lengthA + 1; i++) {
-      distance[i][0] = i * deletionCost;
+      distance[i][0] = i * DELETION_COST;
     }
     for (int j = 0; j < lengthB + 1; j++) {
-      distance[0][j] = j * insertionCost;
+      distance[0][j] = j * INSERTION_COST;
     }
 
     for (int i = 1; i < lengthA + 1; i++) {
@@ -117,9 +127,9 @@ public final class LevenshteinDistance {
           distance[i][j] = distance[i - 1][j - 1];
         } else {
           distance[i][j] = Math.min(Math.min(
-            distance[i - 1][j]     + deletionCost,
-            distance[i][j - 1]     + insertionCost),
-            distance[i - 1][j - 1] + substitutionCost);
+            distance[i - 1][j]     + DELETION_COST,
+            distance[i][j - 1]     + INSERTION_COST),
+            distance[i - 1][j - 1] + SUBSTITUTION_COST);
        }
       }
     }
