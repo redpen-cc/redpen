@@ -77,7 +77,8 @@ public final class CharacterTable {
    * Detect the specified character is exit in the dictionary.
    *
    * @param name character name
-   * @return character when exist, null when the specified character does not exist
+   * @return character when exist, null when the specified
+   * character does not exist
    */
   public boolean isContainCharacter(String name) {
     return this.characterDictionary.get(name) != null;

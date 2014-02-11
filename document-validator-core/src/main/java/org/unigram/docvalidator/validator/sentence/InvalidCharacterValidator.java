@@ -45,7 +45,8 @@ public class InvalidCharacterValidator implements SentenceValidator {
     return errors;
   }
 
-  public boolean initialize(ValidatorConfiguration conf, CharacterTable characterTable)
+  public boolean initialize(ValidatorConfiguration conf,
+                            CharacterTable characterTable)
       throws DocumentValidatorException {
     this.characterTable = characterTable;
     return true;

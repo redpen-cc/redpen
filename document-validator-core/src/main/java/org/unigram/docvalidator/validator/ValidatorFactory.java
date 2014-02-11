@@ -37,8 +37,9 @@ public final class ValidatorFactory {
    * @return
    * @throws DocumentValidatorException
    */
-  public static Validator createValidator(String validatorType,
-                                          ValidatorConfiguration conf, CharacterTable charTable)
+  public static Validator createValidator(
+      String validatorType, ValidatorConfiguration conf,
+      CharacterTable charTable)
       throws DocumentValidatorException {
     Validator validator;
     // @todo accept plug-in validators.

@@ -66,7 +66,8 @@ public class XMLFormatter implements Formatter {
     Text lineNum = doc.createTextNode(Integer.toString(error.getLineNumber()));
     lineNumberElement.appendChild(lineNum);
 
-    if (error.getSentence() != null && !error.getSentence().content.equals("")) {
+    if (error.getSentence() != null
+        && !error.getSentence().content.equals("")) {
       Element sentencElement = doc.createElement("sentence");
       errorElement.appendChild(sentencElement);
       Text content = doc.createTextNode(error.getSentence().content);

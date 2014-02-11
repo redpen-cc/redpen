@@ -64,5 +64,6 @@ public class ResultDistributorFactory {
     return distributor;
   }
 
-  private static final Logger LOG = LoggerFactory.getLogger(ResultDistributor.class);
+  private static final Logger LOG =
+      LoggerFactory.getLogger(ResultDistributor.class);
 }

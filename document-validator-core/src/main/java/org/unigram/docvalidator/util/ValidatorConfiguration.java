@@ -55,7 +55,8 @@ public final class ValidatorConfiguration {
    * Check if the configuration has the settings for the specified attribute.
    *
    * @param name attribute name
-   * @return true when the configuration contains the specified attribute, false otherwise
+   * @return true when the configuration contains the specified attribute,
+   * false otherwise
    */
   public boolean hasAttribute(String name) {
     return this.attributes.containsKey(name);

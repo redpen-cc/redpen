@@ -52,7 +52,8 @@ public class SentenceLengthValidator implements SentenceValidator {
     this.maxLength = DEFAULT_MAX_LENGTH;
   }
 
-  public boolean initialize(ValidatorConfiguration conf, CharacterTable characterTable)
+  public boolean initialize(
+      ValidatorConfiguration conf, CharacterTable characterTable)
         throws DocumentValidatorException {
     if (conf.getAttribute("max_length") == null) {
       this.maxLength = DEFAULT_MAX_LENGTH;

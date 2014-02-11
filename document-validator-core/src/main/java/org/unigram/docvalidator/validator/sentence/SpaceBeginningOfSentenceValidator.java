@@ -45,7 +45,8 @@ public class SpaceBeginningOfSentenceValidator implements SentenceValidator {
     return result;
   }
 
-  public boolean initialize(ValidatorConfiguration conf, CharacterTable characterTable)
+  public boolean initialize(
+      ValidatorConfiguration conf, CharacterTable characterTable)
       throws DocumentValidatorException {
     return true;
   }

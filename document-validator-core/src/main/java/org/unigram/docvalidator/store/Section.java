@@ -164,8 +164,8 @@ public final class Section implements Block {
   }
 
   /**
-   * Get iterator of header sentences. When there is not specified header in the section,
-   * return null otherwise return specified id.
+   * Get iterator of header sentences. When there is not specified
+   * header in the section, return null otherwise return specified id.
    *
    * @param id id of sentence in header
    * @return contents of header.

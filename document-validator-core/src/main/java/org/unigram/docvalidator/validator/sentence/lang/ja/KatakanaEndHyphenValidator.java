@@ -105,7 +105,8 @@ public class KatakanaEndHyphenValidator implements SentenceValidator {
     super();
   }
 
-  public boolean initialize(ValidatorConfiguration conf, CharacterTable characterTable)
+  public boolean initialize(
+      ValidatorConfiguration conf, CharacterTable characterTable)
         throws DocumentValidatorException {
     //TODO support exception word list.
     return true;
