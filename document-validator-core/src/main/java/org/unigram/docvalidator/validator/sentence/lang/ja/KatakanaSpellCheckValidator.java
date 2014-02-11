@@ -35,7 +35,7 @@ import org.unigram.docvalidator.validator.SentenceValidator;
 /**
  * Validate the correctness of Katakana word spelling.
  * Japanese Katakana words have orthographical variations.
- * For example, "index" is written in Katakana by 
+ * For example, "index" is written in Katakana by
  * "インデクス" or "インデックス".
  * Unfortunately, we can not detect whether is correct or not
  * because there is no specific rule.
