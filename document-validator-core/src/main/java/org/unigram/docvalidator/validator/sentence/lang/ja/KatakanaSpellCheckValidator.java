@@ -54,11 +54,12 @@ import org.unigram.docvalidator.validator.SentenceValidator;
  */
 public class KatakanaSpellCheckValidator implements SentenceValidator {
   /**
-   * Default a similarity ratio between the length and the distance.
+   * The default similarity ratio between the length and the distance.
    */
   private static final float SIMILARITY_RATIO = 0.3f;
   /**
-   * Default a threshold
+   * The default threshold value for the length of Katakana word
+   * to ignore.
    */
   private static final int MAX_IGNORE_KATAKANA_LENGTH = 3;
   /**
