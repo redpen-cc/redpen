@@ -121,7 +121,8 @@ public class KatakanaSpellCheckValidator implements SentenceValidator {
     super();
   }
 
-  public boolean initialize(ValidatorConfiguration conf, CharacterTable characterTable)
+  public boolean initialize(ValidatorConfiguration conf,
+      CharacterTable characterTable)
       throws DocumentValidatorException {
     //TODO: support the exception word list.
     //TODO: configurable SIMILARITY_RATIO.
