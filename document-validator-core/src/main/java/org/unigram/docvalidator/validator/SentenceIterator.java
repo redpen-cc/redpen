@@ -44,6 +44,7 @@ import org.unigram.docvalidator.validator.sentence.SuggestExpressionValidator;
 import org.unigram.docvalidator.validator.sentence.SymbolWithSpaceValidator;
 import org.unigram.docvalidator.validator.sentence.WordNumberValidator;
 import org.unigram.docvalidator.validator.sentence.lang.ja.KatakanaEndHyphenValidator;
+import org.unigram.docvalidator.validator.sentence.lang.ja.KatakanaSpellCheckValidator;
 
 /**
  * Validator for input sentences. Sentence iterator calls appended
@@ -97,6 +98,8 @@ public class SentenceIterator implements Validator {
         validator = new SymbolWithSpaceValidator();
       } else if (confName.equals("KatakanaEndHyphen")) {
         validator = new KatakanaEndHyphenValidator();
+      } else if (confName.equals("KatakanaSpellCheckValidator")) {
+        validator = new KatakanaSpellCheckValidator();
       } else {
         throw new DocumentValidatorException(
             "There is no validator like " + confName);
