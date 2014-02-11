@@ -93,7 +93,7 @@ public final class LevenshteinDistance {
    * Get the Levenshtein distance for given two strings.
    *
    * @see http://en.wikipedia.org/wiki/Levenshtein_distance.
-   * 
+   *
    * @param a a string.
    * @param b one another string.
    * @return Levenshtein distance.
