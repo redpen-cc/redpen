@@ -126,4 +126,10 @@ public final class LevenshteinDistance {
 
     return distance[lengthA][lengthB];
   }
+
+  /**
+   * Default Constructor.
+   */
+  private LevenshteinDistance() {
+  }
 }
