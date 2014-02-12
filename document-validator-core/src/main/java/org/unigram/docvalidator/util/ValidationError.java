@@ -134,7 +134,7 @@ public class ValidationError {
   }
 
   /**
-   * Set file name
+   * Set file name.
    *
    * @param errorFileName
    */
