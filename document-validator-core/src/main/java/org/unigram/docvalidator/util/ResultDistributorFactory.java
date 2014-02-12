@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Factory class of ResultDistributor.
  */
-public class ResultDistributorFactory {
+public final class ResultDistributorFactory {
   /**
    * Create ResultDistributor object.
    *
@@ -62,6 +62,10 @@ public class ResultDistributorFactory {
       return null;
     }
     return distributor;
+  }
+
+  private ResultDistributorFactory() {
+    // for safe
   }
 
   private static final Logger LOG =
