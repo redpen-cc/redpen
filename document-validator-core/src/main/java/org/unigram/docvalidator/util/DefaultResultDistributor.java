@@ -39,8 +39,8 @@ public class DefaultResultDistributor implements ResultDistributor {
     try {
       writer = new PrintStream(os, true, "UTF-8");
     } catch (UnsupportedEncodingException e) {
-      throw new IllegalStateException("Specified output stream is illegal: " +
-          e.getMessage());
+      throw new IllegalStateException("Specified output stream is illegal: "
+          + e.getMessage());
     }
     myFormatter = new PlainFormatter();
   }
@@ -57,8 +57,8 @@ public class DefaultResultDistributor implements ResultDistributor {
     try {
       writer = new PrintStream(ps, true, "UTF-8");
     } catch (UnsupportedEncodingException e) {
-      throw new IllegalStateException("Specified output stream is illegal: " +
-          e.getMessage());
+      throw new IllegalStateException("Specified output stream is illegal: "
+          + e.getMessage());
     }
   }
 
