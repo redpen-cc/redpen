@@ -10,7 +10,6 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -92,8 +91,7 @@ public class XMLFormatter implements Formatter {
     return writer.toString();
   }
 
-  private Transformer createTransformer()
-      throws TransformerFactoryConfigurationError {
+  private Transformer createTransformer() {
     TransformerFactory tf;
     try {
       tf = TransformerFactory.newInstance();
