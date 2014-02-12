@@ -34,7 +34,7 @@ public class ResultDistributorFactory {
    * @param output       output stream
    * @return ResultDistributor object when succeeded to create, null otherwise
    */
-  static public ResultDistributor createDistributor(String outputFormat,
+  public static ResultDistributor createDistributor(String outputFormat,
                                                     OutputStream output) {
     if (outputFormat == null) {
       LOG.error("Specified output format is null...");
