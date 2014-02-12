@@ -52,6 +52,10 @@ public class InvalidCharacterValidator implements SentenceValidator {
     return true;
   }
 
+  protected void setCharacterTable(CharacterTable characters) {
+    this.characterTable = characters;
+  }
+
   private ValidationError validateCharacter(Sentence sentence, String name) {
     String sentenceStr = sentence.content;
     DVCharacter character = characterTable.getCharacter(name);
@@ -66,5 +70,5 @@ public class InvalidCharacterValidator implements SentenceValidator {
     return null;
   }
 
-  protected CharacterTable characterTable;
+  private CharacterTable characterTable;
 }

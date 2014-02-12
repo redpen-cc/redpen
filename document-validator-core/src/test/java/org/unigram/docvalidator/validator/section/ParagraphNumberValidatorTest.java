@@ -31,7 +31,7 @@ import org.unigram.docvalidator.util.ValidationError;
 
 class ParagraphNumberValidatorForTest extends ParagraphNumberValidator {
   public void setMaxNumber() {
-    this.maxParagraphs = 3;
+    this.setMaxParagraphNumber(3);
   }
 }
 

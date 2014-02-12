@@ -78,8 +78,12 @@ public class SuggestExpressionValidator implements SentenceValidator {
     return true;
   }
 
+  protected void setSynonyms(Map<String, String> synonymMap) {
+    this.synonyms = synonymMap;
+  }
+
   private static final Logger LOG =
       LoggerFactory.getLogger(SuggestExpressionValidator.class);
 
-  protected Map<String, String> synonyms;
+  private Map<String, String> synonyms;
 }

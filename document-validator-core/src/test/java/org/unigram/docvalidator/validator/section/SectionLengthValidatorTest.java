@@ -32,7 +32,7 @@ import org.unigram.docvalidator.validator.section.SectionLengthValidator;
 
 class SectionLengthValidatorForTest extends SectionLengthValidator {
   void setMaxLength() {
-    this.maxSectionCharNumber = 10;
+    this.setMaxSectionLength(10);
   }
 }
 
