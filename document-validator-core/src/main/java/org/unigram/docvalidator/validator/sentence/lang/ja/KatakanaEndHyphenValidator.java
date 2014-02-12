@@ -33,7 +33,7 @@ import org.unigram.docvalidator.validator.SentenceValidator;
 /**
  * Validate the end hyphens of Katakana words in Japanese documents.
  * Japanese Katakana words have variations in end hyphen.
- * For example, "computer" is written in Katakana by 
+ * For example, "computer" is written in Katakana by
  * "コンピュータ (without hyphen) ", and "コンピューター (with hypen) ".
  * This validator check if Katakana words ending format is match
  * the predefined standard. See JIS Z8301, G.6.2.2 b) G.3.
