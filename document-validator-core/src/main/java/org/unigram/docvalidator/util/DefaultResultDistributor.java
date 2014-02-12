@@ -42,7 +42,7 @@ public class DefaultResultDistributor implements ResultDistributor {
       throw new IllegalStateException("Specified output stream is illegal: " +
           e.getMessage());
     }
-    formatter = new PlainFormatter();
+    myFormatter = new PlainFormatter();
   }
 
   /**
@@ -71,14 +71,14 @@ public class DefaultResultDistributor implements ResultDistributor {
     if (err == null) {
       throw new IllegalArgumentException("argument ValidationError is null");
     }
-    writer.println(formatter.convertError(err));
+    writer.println(myFormatter.convertError(err));
     writer.flush();
     return 0;
   }
 
   @Override
   public void flushHeader() {
-    String header = formatter.header();
+    String header = myFormatter.header();
     if (header != null) {
       writer.println(header);
     }
@@ -86,7 +86,7 @@ public class DefaultResultDistributor implements ResultDistributor {
 
   @Override
   public void flushFooter() {
-    String footer = formatter.footer();
+    String footer = myFormatter.footer();
     if (footer != null) {
       writer.println(footer);
       writer.flush();
@@ -98,10 +98,10 @@ public class DefaultResultDistributor implements ResultDistributor {
     if (formatter == null) {
       throw new IllegalArgumentException("argument formatter is null");
     }
-    this.formatter = formatter;
+    this.myFormatter = formatter;
   }
 
-  private Formatter formatter;
+  private Formatter myFormatter;
 
   private PrintStream writer;
 
