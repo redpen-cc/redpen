@@ -144,7 +144,7 @@ public final class WikiParser extends BasicDocumentParser {
 
     // To deal with header content as a paragraph
     if (outputSentences.size() > 0) {
-      outputSentences.get(0).isStartParagraph = true;
+      outputSentences.get(0).isFirstSentence = true;
     }
 
     Section tmpSection =  new Section(level, outputSentences);

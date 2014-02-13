@@ -34,7 +34,7 @@ public final class Sentence implements Block {
     super();
     this.content = sentenceContent;
     this.position = sentencePosition;
-    this.isStartParagraph = false;
+    this.isFirstSentence = false;
     this.links = new ArrayList<String>();
   }
 
@@ -53,9 +53,10 @@ public final class Sentence implements Block {
   public int position;
 
   /**
-   * First sentence in a paragraph.
+   * Flag for knowing if the sentence is the first sentence
+   * of a block, such as paragraph, list, header.
    */
-  public boolean isStartParagraph;
+  public boolean isFirstSentence;
 
   /**
    * Links (including internal and external ones)

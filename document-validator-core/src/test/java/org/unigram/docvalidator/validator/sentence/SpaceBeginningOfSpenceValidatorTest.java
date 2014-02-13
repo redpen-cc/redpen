@@ -52,7 +52,7 @@ public class SpaceBeginningOfSpenceValidatorTest {
     SpaceBeginningOfSentenceValidator spaceValidator =
         new SpaceBeginningOfSentenceValidator();
     Sentence str = new Sentence("That is true.",0);
-    str.isStartParagraph = true;
+    str.isFirstSentence = true;
     List<ValidationError> errors = spaceValidator.check(str);
     assertNotNull(errors);
     assertEquals(0, errors.size());
@@ -63,7 +63,7 @@ public class SpaceBeginningOfSpenceValidatorTest {
     SpaceBeginningOfSentenceValidator spaceValidator =
         new SpaceBeginningOfSentenceValidator();
     Sentence str = new Sentence("",0);
-    str.isStartParagraph = true;
+    str.isFirstSentence = true;
     List<ValidationError> errors = spaceValidator.check(str);
     assertNotNull(errors);
     assertEquals(0, errors.size());

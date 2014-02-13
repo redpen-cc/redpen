@@ -260,7 +260,7 @@ public class ToFileContentSerializer implements Visitor {
 
     // To deal with a header content as a paragraph
     if (headerContents.size() > 0) {
-      headerContents.get(0).isStartParagraph = true;
+      headerContents.get(0).isFirstSentence = true;
     }
 
     // 3. create new Section
