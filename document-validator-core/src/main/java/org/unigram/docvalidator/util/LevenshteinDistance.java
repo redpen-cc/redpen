@@ -26,9 +26,19 @@ package org.unigram.docvalidator.util;
  * is 1, and each value is configurable.
  */
 public final class LevenshteinDistance {
-
+  /**
+   * A constant holding the default insertion cost.
+   */
   public static int DEFAULT_INSERTION_COST = 1;
+
+  /**
+   * A constant holding the default deletion cost.
+   */
   public static int DEFAULT_DELETION_COST = 1;
+
+  /**
+   * A constant holding the default substitution cost.
+   */
   public static int DEFAULT_SUBSTITUTION_COST = 1;
 
   private static int INSERTION_COST;
