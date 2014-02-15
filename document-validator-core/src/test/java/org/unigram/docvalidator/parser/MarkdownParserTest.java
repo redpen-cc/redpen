@@ -94,10 +94,10 @@ public class MarkdownParserTest {
     assertEquals(firstSection, secondSection.getParentSection());
     // check paragraph in 2nd section
     assertEquals(1, secondSection.getParagraph(0).getNumberOfSentences());
-    assertEquals(true, secondSection.getParagraph(0).getSentence(0).isStartParagraph);
+    assertEquals(true, secondSection.getParagraph(0).getSentence(0).isFirstSentence);
     assertEquals(1, secondSection.getParagraph(0).getSentence(0).position);
     assertEquals(1, secondSection.getParagraph(1).getNumberOfSentences());
-    assertEquals(true, secondSection.getParagraph(1).getSentence(0).isStartParagraph);
+    assertEquals(true, secondSection.getParagraph(1).getSentence(0).isFirstSentence);
     assertEquals(3, secondSection.getParagraph(1).getSentence(0).position);
 
     Section lastSection = doc.getSection(doc.getNumberOfSections() - 1);
@@ -111,12 +111,12 @@ public class MarkdownParserTest {
 
     // check paragraph in last section
     assertEquals(1, lastSection.getParagraph(0).getNumberOfSentences());
-    assertEquals(true, lastSection.getParagraph(0).getSentence(0).isStartParagraph);
+    assertEquals(true, lastSection.getParagraph(0).getSentence(0).isFirstSentence);
     assertEquals(6, lastSection.getParagraph(0).getSentence(0).position);
     assertEquals(2, lastSection.getParagraph(1).getNumberOfSentences());
-    assertEquals(true, lastSection.getParagraph(1).getSentence(0).isStartParagraph);
+    assertEquals(true, lastSection.getParagraph(1).getSentence(0).isFirstSentence);
     assertEquals(14, lastSection.getParagraph(1).getSentence(0).position);
-    assertEquals(false, lastSection.getParagraph(1).getSentence(1).isStartParagraph);
+    assertEquals(false, lastSection.getParagraph(1).getSentence(1).isFirstSentence);
     assertEquals(14, lastSection.getParagraph(1).getSentence(1).position);
   }
 

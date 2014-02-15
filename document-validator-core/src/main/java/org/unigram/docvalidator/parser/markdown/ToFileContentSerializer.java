@@ -256,6 +256,11 @@ public class ToFileContentSerializer implements Visitor {
     visitChildren(headerNode);
     List<Sentence> headerContents = createSentenceList();
 
+    // To deal with a header content as a paragraph
+    if (headerContents.size() > 0) {
+      headerContents.get(0).isFirstSentence = true;
+    }
+
     // 3. create new Section
     Section newSection = new Section(headerNode.getLevel(), headerContents);
     fileContent.appendSection(newSection);
