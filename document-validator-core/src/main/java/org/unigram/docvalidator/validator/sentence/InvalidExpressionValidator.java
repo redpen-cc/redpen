@@ -57,7 +57,7 @@ public class InvalidExpressionValidator implements SentenceValidator {
   }
 
   public boolean initialize(ValidatorConfiguration conf,
-                            CharacterTable characterTable)
+      CharacterTable characterTable)
       throws DocumentValidatorException {
     String confFile = conf.getAttribute("dictionary");
     LOG.info("dictionary file is " + confFile);

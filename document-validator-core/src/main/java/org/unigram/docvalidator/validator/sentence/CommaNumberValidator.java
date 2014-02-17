@@ -71,7 +71,7 @@ public class CommaNumberValidator implements SentenceValidator {
   }
 
   public boolean initialize(ValidatorConfiguration conf,
-                            CharacterTable characterTable)
+      CharacterTable characterTable)
       throws DocumentValidatorException {
     //TODO search parent configurations to get comma settings...
     this.maxCommaNum = DEFAULT_MAX_COMMA_NUMBER;
