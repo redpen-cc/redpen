@@ -19,12 +19,13 @@ package org.unigram.docvalidator;
 
 import org.junit.Test;
 import org.unigram.docvalidator.store.Document;
+import org.unigram.docvalidator.util.DocumentValidatorException;
 
 import static org.junit.Assert.*;
 
 public class SampleDocumentGeneratorTest {
   @Test
-  public void testGenerateSimplePlainDocument() {
+  public void testGenerateSimplePlainDocument() throws DocumentValidatorException {
     String sampleText = "";
     sampleText += "Gekioko pun pun maru means very very angry.\n";
     Document doc = SampleDocumentGenerator.generateOneFileDocument(sampleText, "wiki");
@@ -39,7 +40,7 @@ public class SampleDocumentGeneratorTest {
   }
 
   @Test
-  public void testGenerateSimpleWikiDocument() {
+  public void testGenerateSimpleWikiDocument() throws DocumentValidatorException {
     String sampleText = "";
     sampleText += "h1. About Gekioko.\n";
     sampleText += "Gekioko pun pun maru means very very angry.\n";
@@ -56,7 +57,7 @@ public class SampleDocumentGeneratorTest {
   }
 
   @Test
-  public void testGenerateSimpleMarkdownDocument() {
+  public void testGenerateSimpleMarkdownDocument() throws DocumentValidatorException {
     String sampleText = "";
     sampleText += "# About Gekioko.\n";
     sampleText += "Gekioko pun pun maru means very very angry.\n";

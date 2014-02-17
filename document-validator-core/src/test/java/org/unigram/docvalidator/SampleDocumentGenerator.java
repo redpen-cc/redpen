@@ -18,8 +18,6 @@
 package org.unigram.docvalidator;
 
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.parser.DocumentParserFactory;
 import org.unigram.docvalidator.parser.Parser;
 import org.unigram.docvalidator.store.Document;
@@ -46,10 +44,9 @@ public class SampleDocumentGenerator {
    * @return Document object
    */
   public static Document generateOneFileDocument(String docString,
-      String type) {
+      String type) throws DocumentValidatorException {
     if (docString == null) {
-      LOG.error("input string is null");
-      return null;
+      throw new DocumentValidatorException("Input string is null");
     }
 
     Parser parser;
@@ -58,8 +55,8 @@ public class SampleDocumentGenerator {
           new ValidatorConfiguration("dummy"), new CharacterTable());
       parser = DocumentParserFactory.generate(type, resource);
     } catch (DocumentValidatorException e) {
-      LOG.error("Failed to create document parser: " + e.getMessage());
-      return null;
+      throw new DocumentValidatorException(
+          "Failed to create a parser: " + e.getMessage());
     }
 
     InputStream stream = IOUtils.toInputStream(docString);
@@ -67,12 +64,9 @@ public class SampleDocumentGenerator {
     try {
       document.appendFile(parser.generateDocument(stream));
     } catch (DocumentValidatorException e) {
-      LOG.error("Failed to parse input document: " + e.getMessage());
-      return null;
+      throw new DocumentValidatorException(
+          "Failed to parse input document: " + e.getMessage());
     }
     return document;
   }
-
-  private static final Logger LOG =
-      LoggerFactory.getLogger(SampleDocumentGeneratorTest.class);
 }
