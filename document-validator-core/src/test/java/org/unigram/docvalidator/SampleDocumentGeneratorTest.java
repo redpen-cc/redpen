@@ -72,4 +72,9 @@ public class SampleDocumentGeneratorTest {
     assertEquals("Gekioko pun pun maru means very very angry.", doc.getFile(0).getSection(1)
         .getParagraph(0).getSentence(0).content);
   }
+
+  @Test(expected=NullPointerException.class)
+  public void testInputNullDocument() throws DocumentValidatorException {
+    SampleDocumentGenerator.generateOneFileDocument(null, "markdown");
+  }
 }

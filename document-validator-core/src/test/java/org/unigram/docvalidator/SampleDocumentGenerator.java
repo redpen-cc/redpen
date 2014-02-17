@@ -45,28 +45,13 @@ public class SampleDocumentGenerator {
    */
   public static Document generateOneFileDocument(String docString,
       String type) throws DocumentValidatorException {
-    if (docString == null) {
-      throw new DocumentValidatorException("Input string is null");
-    }
-
-    Parser parser;
-    try {
-      DVResource resource = new DVResource(
-          new ValidatorConfiguration("dummy"), new CharacterTable());
-      parser = DocumentParserFactory.generate(type, resource);
-    } catch (DocumentValidatorException e) {
-      throw new DocumentValidatorException(
-          "Failed to create a parser: " + e.getMessage());
-    }
+    DVResource resource = new DVResource(
+        new ValidatorConfiguration("dummy"), new CharacterTable());
+    Parser parser = DocumentParserFactory.generate(type, resource);
 
     InputStream stream = IOUtils.toInputStream(docString);
     Document document = new Document();
-    try {
-      document.appendFile(parser.generateDocument(stream));
-    } catch (DocumentValidatorException e) {
-      throw new DocumentValidatorException(
-          "Failed to parse input document: " + e.getMessage());
-    }
+    document.appendFile(parser.generateDocument(stream));
     return document;
   }
 }
