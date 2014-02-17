@@ -59,7 +59,7 @@ public final class Sentence implements Block {
   public boolean isFirstSentence;
 
   /**
-   * Links (including internal and external ones)
+   * Links (including internal and external ones).
    */
   public final List<String> links;
 

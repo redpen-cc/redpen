@@ -60,7 +60,8 @@ public final class ValidationConfigurationLoader {
       LOG.error("No \"configuration\" block found in the configuration");
       return null;
     } else if (rootComponentElementList.getLength() > 1) {
-      LOG.warn("Found more than one root \"component\" blocks in the configuration");
+      LOG.warn("Found more than one root \"component\""
+          + " blocks in the configuration");
       LOG.warn("Use the first configuration block ...");
     }
 
@@ -127,8 +128,8 @@ public final class ValidationConfigurationLoader {
     return doc;
   }
 
-  private static ValidatorConfiguration createConfiguration(Element element,
-                                                            ValidatorConfiguration parent) {
+  private static ValidatorConfiguration createConfiguration(
+      Element element, ValidatorConfiguration parent) {
     ValidatorConfiguration currentConfiguration =
         new ValidatorConfiguration(element.getAttribute("name"), parent);
     NodeList nodeList = element.getChildNodes();

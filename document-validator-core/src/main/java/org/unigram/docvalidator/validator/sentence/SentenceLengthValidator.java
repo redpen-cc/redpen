@@ -33,6 +33,9 @@ import org.unigram.docvalidator.validator.SentenceValidator;
  * Validate input sentences contain more characters more than specified.
  */
 public class SentenceLengthValidator implements SentenceValidator {
+  /**
+   * Default maximum length of sentences.
+   */
   @SuppressWarnings("WeakerAccess")
   public static final int DEFAULT_MAX_LENGTH = 30;
 
@@ -52,7 +55,8 @@ public class SentenceLengthValidator implements SentenceValidator {
     this.maxLength = DEFAULT_MAX_LENGTH;
   }
 
-  public boolean initialize(ValidatorConfiguration conf, CharacterTable characterTable)
+  public boolean initialize(
+      ValidatorConfiguration conf, CharacterTable characterTable)
         throws DocumentValidatorException {
     if (conf.getAttribute("max_length") == null) {
       this.maxLength = DEFAULT_MAX_LENGTH;
@@ -64,8 +68,12 @@ public class SentenceLengthValidator implements SentenceValidator {
     return true;
   }
 
+  protected void setMaxLength(int max) {
+    this.maxLength = max;
+  }
+
   private static final Logger LOG =
       LoggerFactory.getLogger(SentenceLengthValidator.class);
 
-  protected int maxLength;
+  private int maxLength;
 }

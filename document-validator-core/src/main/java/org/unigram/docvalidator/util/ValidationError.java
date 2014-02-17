@@ -53,12 +53,12 @@ public class ValidationError {
    * Constructor.
    *
    * @param errorMessage error message
-   * @param sentence     sentence containing validation error
+   * @param sentenceWithError sentence containing validation error
    */
   public ValidationError(String errorMessage,
-                         Sentence sentence) {
-    this(sentence.position, errorMessage);
-    this.sentence = sentence;
+                         Sentence sentenceWithError) {
+    this(sentenceWithError.position, errorMessage);
+    this.sentence = sentenceWithError;
   }
 
   /**
@@ -78,13 +78,13 @@ public class ValidationError {
    * Constructor.
    *
    * @param errorMessage  error message
-   * @param sentence      sentence containing validation error
+   * @param sentenceWithError sentence containing validation error
    * @param errorFileName file name in which the error occurs
    */
   public ValidationError(String errorMessage,
-                         Sentence sentence, String errorFileName) {
-    this(sentence.position, errorMessage);
-    this.sentence = sentence;
+                         Sentence sentenceWithError, String errorFileName) {
+    this(sentenceWithError.position, errorMessage);
+    this.sentence = sentenceWithError;
     this.fileName = errorFileName;
   }
 
@@ -134,7 +134,7 @@ public class ValidationError {
   }
 
   /**
-   * Set file name
+   * Set file name.
    *
    * @param errorFileName
    */
@@ -152,21 +152,23 @@ public class ValidationError {
   }
 
   /**
-   * Set sentence contains the error.
+   * Set sentenceWithError contains the error.
    *
-   * @param sentence sentence containing validation error
+   * @param sentenceWithError sentenceWithError containing validation error
    */
-  public void setSentence(Sentence sentence) {
-    this.sentence = sentence;
+  public void setSentence(Sentence sentenceWithError) {
+    this.sentence = sentenceWithError;
   }
 
   @Override
   public String toString() {
     StringBuilder str = new StringBuilder();
     if (this.fileName == null || this.fileName.equals("")) {
-      str.append("ValidationError[").append(lineNumber).append(" (").append(message).append(")]");
+      str.append("ValidationError[").append(lineNumber)
+          .append(" (").append(message).append(")]");
     } else {
-      str.append("ValidationError[").append(this.fileName).append(lineNumber).append(" (").append(message).append(")]");
+      str.append("ValidationError[").append(this.fileName)
+          .append(lineNumber).append(" (").append(message).append(")]");
     }
     if (this.sentence != null) {
       str.append(" at line: ").append(sentence.content);

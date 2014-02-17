@@ -61,5 +61,9 @@ public class ParagraphNumberValidator extends SectionValidator {
     return true;
   }
 
-  protected int maxParagraphs;
+  protected void setMaxParagraphNumber(int max) {
+    this.maxParagraphs = max;
+  }
+
+  private int maxParagraphs;
 }

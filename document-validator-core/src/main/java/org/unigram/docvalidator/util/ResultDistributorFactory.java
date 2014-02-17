@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Factory class of ResultDistributor.
  */
-public class ResultDistributorFactory {
+public final class ResultDistributorFactory {
   /**
    * Create ResultDistributor object.
    *
@@ -33,7 +33,7 @@ public class ResultDistributorFactory {
    * @param output       output stream
    * @return ResultDistributor object when succeeded to create, null otherwise
    */
-  static public ResultDistributor createDistributor(String outputFormat,
+  public static ResultDistributor createDistributor(String outputFormat,
                                                     OutputStream output) {
     if (outputFormat == null) {
       LOG.error("Specified output format is null...");
@@ -63,5 +63,10 @@ public class ResultDistributorFactory {
     return distributor;
   }
 
-  private static final Logger LOG = LoggerFactory.getLogger(ResultDistributor.class);
+  private ResultDistributorFactory() {
+    // for safe
+  }
+
+  private static final Logger LOG =
+      LoggerFactory.getLogger(ResultDistributor.class);
 }

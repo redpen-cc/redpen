@@ -27,7 +27,6 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -83,7 +82,8 @@ public class XMLFormatter implements Formatter {
     Text lineNum = doc.createTextNode(Integer.toString(error.getLineNumber()));
     lineNumberElement.appendChild(lineNum);
 
-    if (error.getSentence() != null && !error.getSentence().content.equals("")) {
+    if (error.getSentence() != null
+        && !error.getSentence().content.equals("")) {
       Element sentencElement = doc.createElement("sentence");
       errorElement.appendChild(sentencElement);
       Text content = doc.createTextNode(error.getSentence().content);
@@ -108,8 +108,7 @@ public class XMLFormatter implements Formatter {
     return writer.toString();
   }
 
-  private Transformer createTransformer()
-      throws TransformerFactoryConfigurationError {
+  private Transformer createTransformer() {
     TransformerFactory tf;
     try {
       tf = TransformerFactory.newInstance();

@@ -40,7 +40,8 @@ public class QuotationValidator implements SentenceValidator {
   public QuotationValidator() {
     super();
     this.useAscii = false;
-    this.period = DefaultSymbols.getInstance().get("FULL_STOP").getValue().charAt(0);
+    this.period = DefaultSymbols.getInstance().get(
+        "FULL_STOP").getValue().charAt(0);
     leftSingleQuotationMark =
         new DVCharacter("LEFT_SINGLE_QUOTATION_MARK", "‘", "", true, false);
     rightSingleQuotationMark =
@@ -100,7 +101,8 @@ public class QuotationValidator implements SentenceValidator {
   }
 
   @Override
-  public boolean initialize(ValidatorConfiguration conf, CharacterTable charTable)
+  public boolean initialize(
+      ValidatorConfiguration conf, CharacterTable charTable)
       throws DocumentValidatorException {
     if (charTable.isContainCharacter("FULL_STOP")) {
       this.period = charTable.getCharacter("FULL_STOP").getValue().charAt(0);

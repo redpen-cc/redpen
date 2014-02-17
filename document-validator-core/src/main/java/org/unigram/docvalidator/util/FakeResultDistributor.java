@@ -33,11 +33,11 @@ public class FakeResultDistributor implements ResultDistributor {
   }
 
   @Override
-  public void setFormatter(Formatter formatter) {}
+  public void setFormatter(Formatter formatter) { }
 
   @Override
-  public void flushHeader() {}
+  public void flushHeader() { }
 
   @Override
-  public void flushFooter() {}
+  public void flushFooter() { }
 }

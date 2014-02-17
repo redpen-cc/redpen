@@ -22,8 +22,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
- * Error handler class of SAX parser. Without this class SAXParser flush the error messages into standard
- * error.
+ * Error handler class of SAX parser. Without this class SAXParser
+ * flushes the error messages into the standard error.
  */
 public class SAXErrorHandler implements ErrorHandler {
 

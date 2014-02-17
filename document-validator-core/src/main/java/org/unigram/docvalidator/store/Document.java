@@ -74,7 +74,7 @@ public final class Document implements Block {
   }
 
   /**
-   * Return the file number in Document
+   * Return the file number in Document.
    *
    * @return the number of files
    */

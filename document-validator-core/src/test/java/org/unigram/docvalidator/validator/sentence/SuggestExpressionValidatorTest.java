@@ -21,6 +21,7 @@ import static org.junit.Assert.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 import org.unigram.docvalidator.store.Sentence;
@@ -29,9 +30,10 @@ import org.unigram.docvalidator.util.ValidationError;
 
 class SuggestExpressionValidatorForTest extends SuggestExpressionValidator {
   void loadSynonyms () {
-    synonyms = new HashMap<String, String>();
-    synonyms.put("like","such as");
-    synonyms.put("info","infomation");
+    Map<String, String> synonymSamples = new HashMap<String, String>();
+    synonymSamples.put("like", "such as");
+    synonymSamples.put("info", "infomation");
+    this.setSynonyms(synonymSamples);
   }
 }
 

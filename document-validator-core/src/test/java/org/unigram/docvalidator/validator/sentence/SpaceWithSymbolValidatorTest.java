@@ -32,7 +32,7 @@ import org.unigram.docvalidator.validator.sentence.SymbolWithSpaceValidator;
 
 class SpaceWithSymbolValidatorForTest extends SymbolWithSpaceValidator {
   void loadCharacterTable (CharacterTable characterTable) {
-    this.characterTable = characterTable;
+    this.setCharacterTable(characterTable);
   }
 }
 

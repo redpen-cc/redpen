@@ -45,10 +45,15 @@ public class InvalidCharacterValidator implements SentenceValidator {
     return errors;
   }
 
-  public boolean initialize(ValidatorConfiguration conf, CharacterTable characterTable)
+  public boolean initialize(ValidatorConfiguration conf,
+      CharacterTable characters)
       throws DocumentValidatorException {
-    this.characterTable = characterTable;
+    this.characterTable = characters;
     return true;
+  }
+
+  protected void setCharacterTable(CharacterTable characters) {
+    this.characterTable = characters;
   }
 
   private ValidationError validateCharacter(Sentence sentence, String name) {
@@ -65,5 +70,5 @@ public class InvalidCharacterValidator implements SentenceValidator {
     return null;
   }
 
-  protected CharacterTable characterTable;
+  private CharacterTable characterTable;
 }

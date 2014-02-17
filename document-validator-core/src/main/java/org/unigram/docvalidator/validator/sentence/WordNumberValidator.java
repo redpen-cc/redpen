@@ -57,7 +57,8 @@ public class WordNumberValidator implements SentenceValidator {
     return result;
   }
 
-  public boolean initialize(ValidatorConfiguration conf, CharacterTable characterTable)
+  public boolean initialize(
+      ValidatorConfiguration conf, CharacterTable characterTable)
       throws DocumentValidatorException {
     if (conf.getAttribute("max_word_num") == null) {
       this.maxWordNumber = DEFAULT_MAXIMUM_WORDS_IN_A_SENTENCE;

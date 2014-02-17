@@ -32,7 +32,7 @@ import org.unigram.docvalidator.validator.sentence.InvalidCharacterValidator;
 
 class InvalidCharacterValidatorForTest extends InvalidCharacterValidator {
   void loadCharacterTable (CharacterTable characterTable) {
-    this.characterTable = characterTable;
+    this.setCharacterTable(characterTable);
   }
 }
 

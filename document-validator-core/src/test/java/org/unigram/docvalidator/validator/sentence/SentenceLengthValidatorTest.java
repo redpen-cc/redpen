@@ -25,8 +25,8 @@ import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.ValidationError;
 
 class SentenceLengthValidatorForTest extends SentenceLengthValidator {
-  protected void setMaxLength(int maxLength) {
-    this.maxLength = maxLength;
+  protected void setLengthLimit(int maxLength) {
+    this.setMaxLength(maxLength);
   }
 }
 
@@ -34,7 +34,7 @@ public class SentenceLengthValidatorTest {
   @Test
   public void testWithLongSentence(){
     SentenceLengthValidatorForTest validator = new SentenceLengthValidatorForTest();
-    validator.setMaxLength(30);
+    validator.setLengthLimit(30);
     Sentence str = new Sentence("this is a very long long long long long long"
         + "long long long long long long sentence.",0);
     List<ValidationError> error = validator.check(str);
@@ -45,7 +45,7 @@ public class SentenceLengthValidatorTest {
   @Test
   public void testWithShortSentence(){
     SentenceLengthValidatorForTest validator = new SentenceLengthValidatorForTest();
-    validator.setMaxLength(30);
+    validator.setLengthLimit(30);
     Sentence str = new Sentence("this is a sentence.",0);
     List<ValidationError> error = validator.check(str);
     assertNotNull(error);
@@ -55,7 +55,7 @@ public class SentenceLengthValidatorTest {
   @Test
   public void testWithZeroLengthSentence(){
     SentenceLengthValidatorForTest validator = new SentenceLengthValidatorForTest();
-    validator.setMaxLength(30);
+    validator.setLengthLimit(30);
     Sentence str = new Sentence("",0);
     List<ValidationError> error = validator.check(str);
     assertNotNull(error);

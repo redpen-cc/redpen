@@ -34,6 +34,10 @@ import org.unigram.docvalidator.util.FileLoader;
 import org.unigram.docvalidator.util.KeyValueDictionaryExtractor;
 import org.unigram.docvalidator.validator.SentenceValidator;
 
+/**
+ * If input sentences contain invalid expressions, this validator
+ * returns the errors with corrected expressions.
+ */
 public class SuggestExpressionValidator implements SentenceValidator {
 
   public SuggestExpressionValidator() {
@@ -56,7 +60,8 @@ public class SuggestExpressionValidator implements SentenceValidator {
     return result;
   }
 
-  public boolean initialize(ValidatorConfiguration conf, CharacterTable characterTable)
+  public boolean initialize(
+      ValidatorConfiguration conf, CharacterTable characterTable)
       throws DocumentValidatorException {
     String confFile = conf.getAttribute("invalid_word_file");
     LOG.info("dictionary file is " + confFile);
@@ -73,8 +78,12 @@ public class SuggestExpressionValidator implements SentenceValidator {
     return true;
   }
 
+  protected void setSynonyms(Map<String, String> synonymMap) {
+    this.synonyms = synonymMap;
+  }
+
   private static final Logger LOG =
       LoggerFactory.getLogger(SuggestExpressionValidator.class);
 
-  protected Map<String, String> synonyms;
+  private Map<String, String> synonyms;
 }

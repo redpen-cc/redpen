@@ -79,11 +79,15 @@ public class SectionLengthValidator extends SectionValidator {
     return true;
   }
 
+  protected void setMaxSectionLength(int max) {
+    this.maxSectionCharNumber = max;
+  }
+
   private static final int DEFAULT_MAXIMUM_CHAR_NUMBER_IN_A_SECTION = 1000;
 
   private static final Logger LOG =
       LoggerFactory.getLogger(SectionLengthValidator.class);
 
-  protected int maxSectionCharNumber;
+  private int maxSectionCharNumber;
 
 }

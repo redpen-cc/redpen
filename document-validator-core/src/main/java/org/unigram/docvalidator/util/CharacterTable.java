@@ -21,9 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Configuration table of characters used in DocumentValidator.
  */
@@ -77,13 +74,12 @@ public final class CharacterTable {
    * Detect the specified character is exit in the dictionary.
    *
    * @param name character name
-   * @return character when exist, null when the specified character does not exist
+   * @return character when exist, null when the specified
+   * character does not exist
    */
   public boolean isContainCharacter(String name) {
     return this.characterDictionary.get(name) != null;
   }
-
-  static Logger LOG = LoggerFactory.getLogger(CharacterTable.class);
 
   private final Map<String, DVCharacter> characterDictionary;
 
