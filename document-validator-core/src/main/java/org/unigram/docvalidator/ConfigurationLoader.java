@@ -158,7 +158,7 @@ public class ConfigurationLoader {
         validatorConfigurationPath);
   }
 
-  private static Document parseConfigurationString(InputStream input) {
+  protected static Document parseConfigurationString(InputStream input) {
     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
     Document doc = null;
     try {

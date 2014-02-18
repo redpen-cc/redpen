@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <link rel="stylesheet" type="text/css" href="css/documentvalidator.css"/>
+    <title>RedPen Document Validator</title>
+</head>
+<body>
+
+
+<section id="main">
+    <h1>Welcome to the RedPen Document Validator</h1>
+
+    <p>To try the validator add a document and press submit!</p>
+
+    <form>
+        <textarea id="textarea" rows="10" cols="60" autofocus placeholder="Copy and paste a document here..."></textarea>
+        <input title="" type="button" value="Submit" onclick="validateDocument()"/>
+        <input title="clear" type="button" value="Clear" onclick="clearResult()"/>
+    </form>
+
+    <div id="result">
+    </div>
+
+</section>
+</body>
+<script src="js/documentvalidator.js"></script>
+</html>
