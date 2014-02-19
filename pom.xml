@@ -16,6 +16,7 @@
   <modules>
     <module>document-validator-core</module>
     <module>document-validator-app</module>
+    <module>document-validator-server</module>
   </modules>
 
   <dependencyManagement>

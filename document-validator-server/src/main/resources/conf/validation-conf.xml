@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<component name="Validator">
+
+  <component name="SentenceIterator">
+    <component name="SentenceLength">
+      <property name="max_length" value="50"/>
+    </component>
+    <component name="SpaceAfterPeriod" />
+    <component name="InvalidCharacter" />
+    <component name="SpaceWithSymbol" />
+  </component>
+
+  <component name="SectionLength">
+    <property name="max_char_number" value="50"/>
+  </component>
+  <component name="ParagraphStartWith" />
+
+</component>
