@@ -25,23 +25,28 @@ import org.unigram.docvalidator.util.DocumentValidatorException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
+/**
+ * Initiation of the document validator server.
+ */
 public class DocumentValidatorInitServlet extends HttpServlet {
 
-    private static Logger log = LogManager.getLogger(DocumentValidatorInitServlet.class);
+  private static Logger log = LogManager.getLogger(
+    DocumentValidatorInitServlet.class
+  );
 
-    @Override
-    public void init() throws ServletException {
-        log.info("Starting Document Validator Server.");
-        try {
-            DocumentValidatorServer.initialize();
-            log.info("Document Validator Server is running.");
-        } catch (DocumentValidatorException e) {
-            log.error("Could not initialize Document Validator Server: ", e);
-        }
+  @Override
+  public void init() throws ServletException {
+    log.info("Starting Document Validator Server.");
+    try {
+      DocumentValidatorServer.initialize();
+      log.info("Document Validator Server is running.");
+    } catch (DocumentValidatorException e) {
+      log.error("Could not initialize Document Validator Server: ", e);
     }
+  }
 
-    @Override
-    public void destroy() {
-        log.info("Stopping Document Validator Server.");
-    }
+  @Override
+  public void destroy() {
+    log.info("Stopping Document Validator Server.");
+  }
 }

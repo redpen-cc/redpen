@@ -32,32 +32,40 @@ import org.w3c.dom.NodeList;
 
 import java.io.InputStream;
 
+/**
+ * Loads the configuration files as resource streams.
+ */
 public class ServerConfigurationLoader extends ConfigurationLoader {
-    @Override
-    public DVResource loadConfiguration(InputStream stream) {
-        Document doc = parseConfigurationString(stream);
 
-        doc.getDocumentElement().normalize();
-        NodeList rootConfig = doc.getElementsByTagName("configuration");
-        Element root = (Element) rootConfig.item(0);
+  @Override
+  public DVResource loadConfiguration(InputStream stream) {
+    Document doc = parseConfigurationString(stream);
 
-        NodeList validatorConfig = root.getElementsByTagName("validator");
+    doc.getDocumentElement().normalize();
+    NodeList rootConfig = doc.getElementsByTagName("configuration");
+    Element root = (Element) rootConfig.item(0);
 
-        ValidatorConfiguration vc = ValidationConfigurationLoader.loadConfiguration(
-            getClass()
-                .getClassLoader()
-                .getResourceAsStream("/" + validatorConfig.item(0).getTextContent())
-        );
+    NodeList validatorConfig = root.getElementsByTagName("validator");
 
-        Node langConfig = root.getElementsByTagName("lang").item(0);
-        String language = langConfig.getTextContent();
+    ValidatorConfiguration vc = ValidationConfigurationLoader.loadConfiguration(
+      getClass()
+        .getClassLoader()
+        .getResourceAsStream("/" + validatorConfig.item(0).getTextContent())
+    );
 
-        NamedNodeMap attributes = langConfig.getAttributes();
-        String characterTablePath = attributes.getNamedItem("char-conf").getNodeValue();
+    Node langConfig = root.getElementsByTagName("lang").item(0);
+    String language = langConfig.getTextContent();
 
-        CharacterTable characterTable = CharacterTableLoader.load(
-            getClass().getClassLoader().getResourceAsStream("/" + characterTablePath), language);
+    NamedNodeMap attributes = langConfig.getAttributes();
+    String characterTablePath = attributes.getNamedItem("char-conf")
+      .getNodeValue();
 
-        return new DVResource(vc, characterTable);
-    }
+    CharacterTable characterTable = CharacterTableLoader.load(
+      getClass()
+        .getClassLoader()
+        .getResourceAsStream("/" + characterTablePath),
+      language);
+
+    return new DVResource(vc, characterTable);
+  }
 }

@@ -28,45 +28,52 @@ import org.unigram.docvalidator.util.ResultDistributor;
 import org.unigram.docvalidator.util.ResultDistributorFactory;
 import org.unigram.docvalidator.validator.DocumentValidator;
 
+/**
+ * Document validator server.
+ */
 public class DocumentValidatorServer {
 
-    private static Logger log = LogManager.getLogger(DocumentValidatorServer.class);
+  private static Logger log = LogManager.getLogger(
+    DocumentValidatorServer.class
+  );
 
-    private static DocumentValidatorServer documentValidatorServer;
+  private static DocumentValidatorServer documentValidatorServer;
 
-    private DocumentValidator validator;
+  private DocumentValidator validator;
 
-    private DVResource documentValidatorResource;
+  private DVResource documentValidatorResource;
 
-    private DocumentValidatorServer() throws DocumentValidatorException {
-        ConfigurationLoader configLoader = new ServerConfigurationLoader();
-        documentValidatorResource = configLoader.loadConfiguration(
-            getClass()
-                .getClassLoader()
-                .getResourceAsStream("/conf/dv-conf.xml")
-        );
+  private DocumentValidatorServer() throws DocumentValidatorException {
+    ConfigurationLoader configLoader = new ServerConfigurationLoader();
+    documentValidatorResource = configLoader.loadConfiguration(
+      getClass()
+        .getClassLoader()
+        .getResourceAsStream("/conf/dv-conf.xml")
+    );
 
-        ResultDistributor distributor = ResultDistributorFactory.createDistributor("plain", System.out);
-        validator = new DocumentValidator(documentValidatorResource, distributor);
+    ResultDistributor distributor = ResultDistributorFactory
+      .createDistributor("plain", System.out);
+    validator = new DocumentValidator(documentValidatorResource, distributor);
+  }
+
+  public DocumentValidator getValidator() {
+    return validator;
+  }
+
+  public DVResource getDocumentValidatorResource() {
+    return documentValidatorResource;
+  }
+
+  public static DocumentValidatorServer getInstance() throws
+    DocumentValidatorException {
+    if (documentValidatorServer == null) {
+      initialize();
     }
+    return documentValidatorServer;
+  }
 
-    public DocumentValidator getValidator() {
-        return validator;
-    }
-
-    public DVResource getDocumentValidatorResource() {
-        return documentValidatorResource;
-    }
-
-    public static DocumentValidatorServer getInstance() throws DocumentValidatorException {
-        if (documentValidatorServer == null) {
-            initialize();
-        }
-        return documentValidatorServer;
-    }
-
-    public static void initialize() throws DocumentValidatorException {
-        log.info("Initializing Document Validator");
-        documentValidatorServer = new DocumentValidatorServer();
-    }
+  public static void initialize() throws DocumentValidatorException {
+    log.info("Initializing Document Validator");
+    documentValidatorServer = new DocumentValidatorServer();
+  }
 }

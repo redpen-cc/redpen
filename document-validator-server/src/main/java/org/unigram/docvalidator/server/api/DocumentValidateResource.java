@@ -41,42 +41,51 @@ import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+/**
+ * Resource to validate documents.
+ */
 @Path("/document")
 public class DocumentValidateResource {
 
-    private static final Logger log = LogManager.getLogger(DocumentValidateResource.class);
+  private static final Logger log = LogManager.getLogger(
+    DocumentValidateResource.class
+  );
 
-    @Path("/validate")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response validateDocument(@QueryParam("doc") @DefaultValue("") String document) throws JSONException, DocumentValidatorException, UnsupportedEncodingException {
-        log.info("Validating document");
+  @Path("/validate")
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response validateDocument(@QueryParam("doc") @DefaultValue("")
+                                     String document) throws
+    JSONException, DocumentValidatorException, UnsupportedEncodingException {
 
-        DocumentValidatorServer server = DocumentValidatorServer.getInstance();
-        JSONObject json = new JSONObject();
+    log.info("Validating document");
 
-        json.put("document", document);
+    DocumentValidatorServer server = DocumentValidatorServer.getInstance();
+    JSONObject json = new JSONObject();
 
-        PlainTextParser parser = new PlainTextParser();
-        parser.initialize(server.getDocumentValidatorResource());
-        FileContent fileContent = parser.generateDocument(new ByteArrayInputStream(document.getBytes("UTF-8")));
+    json.put("document", document);
 
-        Document d = new Document();
-        d.appendFile(fileContent);
+    PlainTextParser parser = new PlainTextParser();
+    parser.initialize(server.getDocumentValidatorResource());
+    FileContent fileContent = parser.generateDocument(new
+      ByteArrayInputStream(document.getBytes("UTF-8")));
 
-        List<ValidationError> errors = server.getValidator().check(d);
+    Document d = new Document();
+    d.appendFile(fileContent);
 
-        JSONArray jsonErrors = new JSONArray();
+    List<ValidationError> errors = server.getValidator().check(d);
 
-        for (ValidationError error : errors) {
-            JSONObject jsonError = new JSONObject();
-            jsonError.put("sentence", error.getSentence().content);
-            jsonError.put("message", error.getMessage());
-            jsonErrors.put(jsonError);
-        }
+    JSONArray jsonErrors = new JSONArray();
 
-        json.put("errors", jsonErrors);
-
-        return Response.ok().entity(json).build();
+    for (ValidationError error : errors) {
+      JSONObject jsonError = new JSONObject();
+      jsonError.put("sentence", error.getSentence().content);
+      jsonError.put("message", error.getMessage());
+      jsonErrors.put(jsonError);
     }
+
+    json.put("errors", jsonErrors);
+
+    return Response.ok().entity(json).build();
+  }
 }
