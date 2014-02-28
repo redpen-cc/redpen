@@ -2,7 +2,7 @@
 
 VERSION=0.1
 RUN_SCRIPT="$(basename "${0}")"
-DV_HOME=`dirname "$this"`
+DV_HOME=${DV_HOME:-`dirname "$this"`}
 MAIN_CLASS="org.unigram.docvalidator.Main"
 
 usage() {
