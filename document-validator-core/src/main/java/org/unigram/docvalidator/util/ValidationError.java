@@ -91,7 +91,7 @@ public class ValidationError {
   /**
    * Get line number in which the error occurs.
    *
-   * @return
+   * @return the number of line
    */
   public int getLineNumber() {
     return lineNumber;
@@ -100,7 +100,7 @@ public class ValidationError {
   /**
    * Set the line number in which error occurs.
    *
-   * @param errorLineNumber
+   * @param errorLineNumber line number in which error occurs
    */
   public void setLineNumber(int errorLineNumber) {
     this.lineNumber = errorLineNumber;
@@ -118,7 +118,7 @@ public class ValidationError {
   /**
    * Set error message.
    *
-   * @param errorMessage
+   * @param errorMessage error message
    */
   public void setMessage(String errorMessage) {
     this.message = errorMessage;
@@ -136,7 +136,7 @@ public class ValidationError {
   /**
    * Set file name.
    *
-   * @param errorFileName
+   * @param errorFileName file name in which the error occurs
    */
   public void setFileName(String errorFileName) {
     this.fileName = errorFileName;
@@ -162,18 +162,12 @@ public class ValidationError {
 
   @Override
   public String toString() {
-    StringBuilder str = new StringBuilder();
-    if (this.fileName == null || this.fileName.equals("")) {
-      str.append("ValidationError[").append(lineNumber)
-          .append(" (").append(message).append(")]");
-    } else {
-      str.append("ValidationError[").append(this.fileName)
-          .append(lineNumber).append(" (").append(message).append(")]");
-    }
-    if (this.sentence != null) {
-      str.append(" at line: ").append(sentence.content);
-    }
-    return str.toString();
+    return "ValidationError{" +
+        "lineNumber=" + lineNumber +
+        ", message='" + message + '\'' +
+        ", fileName='" + fileName + '\'' +
+        ", sentence=" + sentence +
+        '}';
   }
 
   private int lineNumber;
