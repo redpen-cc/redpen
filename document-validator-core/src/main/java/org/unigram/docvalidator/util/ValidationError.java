@@ -27,63 +27,71 @@ public class ValidationError {
   /**
    * Constructor.
    *
-   * @param errorMessage error message
+   * @param validatorClass validator class
+   * @param errorMessage   error message
    */
-  public ValidationError(String errorMessage) {
+  public ValidationError(Class validatorClass, String errorMessage) {
     super();
     this.lineNumber = -1;
     this.message = errorMessage;
     this.fileName = "";
     this.sentence = null;
+    this.validatorName = validatorClass.getSimpleName();
   }
 
   /**
    * Constructor.
    *
-   * @param errorLineNumber error position (line number)
+   * @param validatorClass  validator class
    * @param errorMessage    error message
+   * @param errorLineNumber error position (line number)
    */
-  public ValidationError(int errorLineNumber, String errorMessage) {
-    this(errorMessage);
+  public ValidationError(Class validatorClass,
+                         String errorMessage, int errorLineNumber) {
+    this(validatorClass, errorMessage);
     this.lineNumber = errorLineNumber;
-    this.fileName = "";
   }
 
   /**
    * Constructor.
    *
-   * @param errorMessage error message
+   * @param validatorClass    validator class
+   * @param errorMessage      error message
    * @param sentenceWithError sentence containing validation error
    */
-  public ValidationError(String errorMessage,
+  public ValidationError(Class validatorClass,
+                         String errorMessage,
                          Sentence sentenceWithError) {
-    this(sentenceWithError.position, errorMessage);
+    this(validatorClass, errorMessage, sentenceWithError.position);
     this.sentence = sentenceWithError;
   }
 
   /**
    * Constructor.
    *
-   * @param errorLineNumber error position (line number)
+   * @param validatorClass  validator class
    * @param errorMessage    error message
+   * @param errorLineNumber error position (line number)
    * @param errorFileName   file name in which the error occurs
    */
-  public ValidationError(int errorLineNumber, String errorMessage,
+  public ValidationError(Class validatorClass,
+                         String errorMessage, int errorLineNumber,
                          String errorFileName) {
-    this(errorLineNumber, errorMessage);
+    this(validatorClass, errorMessage, errorLineNumber);
     this.fileName = errorFileName;
   }
 
   /**
    * Constructor.
    *
-   * @param errorMessage  error message
+   * @param validatorClass    validator class
+   * @param errorMessage      error message
    * @param sentenceWithError sentence containing validation error
-   * @param errorFileName file name in which the error occurs
+   * @param errorFileName     file name in which the error occurs
    */
-  public ValidationError(String errorMessage,
+  public ValidationError(Class validatorClass, String errorMessage,
                          Sentence sentenceWithError, String errorFileName) {
-    this(sentenceWithError.position, errorMessage);
+    this(validatorClass, errorMessage, sentenceWithError.position);
     this.sentence = sentenceWithError;
     this.fileName = errorFileName;
   }
@@ -160,14 +168,30 @@ public class ValidationError {
     this.sentence = sentenceWithError;
   }
 
+  /**
+   * Get validator name.
+   *
+   * @return validator name
+   */
+  public String getValidatorName() {
+    if (validatorName.endsWith("Validator")) {
+      return validatorName
+          .substring(0, validatorName.length() - "Validator".length());
+    } else {
+      return validatorName;
+    }
+  }
+
   @Override
   public String toString() {
-    return "ValidationError{" +
-        "lineNumber=" + lineNumber +
-        ", message='" + message + '\'' +
-        ", fileName='" + fileName + '\'' +
-        ", sentence=" + sentence +
-        '}';
+    final StringBuilder sb = new StringBuilder("ValidationError{");
+    sb.append("lineNumber=").append(lineNumber);
+    sb.append(", message='").append(message).append('\'');
+    sb.append(", fileName='").append(fileName).append('\'');
+    sb.append(", sentence=").append(sentence);
+    sb.append(", validatorName='").append(validatorName).append('\'');
+    sb.append('}');
+    return sb.toString();
   }
 
   private int lineNumber;
@@ -177,4 +201,6 @@ public class ValidationError {
   private String fileName;
 
   private Sentence sentence;
+
+  private final String validatorName;
 }

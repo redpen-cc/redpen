@@ -64,6 +64,7 @@ public class CommaNumberValidator implements SentenceValidator {
     }
     if (maxCommaNum < commaCount) {
       result.add(new ValidationError(
+          this.getClass(),
           "The number of comma is exceeds the maximum \""
           + String.valueOf(commaCount) + "\".", line));
     }

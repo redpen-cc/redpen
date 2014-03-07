@@ -52,6 +52,7 @@ public class SuggestExpressionValidator implements SentenceValidator {
     for (String w : invalidWords) {
       if (str.contains(w)) {
         result.add(new ValidationError(
+            this.getClass(),
             "Found invalid word, \"" + w + "\". "
                 + "Use the synonym of the word \""
                 + synonyms.get(w) + "\" instead.", line));

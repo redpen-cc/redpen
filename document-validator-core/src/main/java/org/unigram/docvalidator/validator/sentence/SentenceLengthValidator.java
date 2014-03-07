@@ -43,6 +43,7 @@ public class SentenceLengthValidator implements SentenceValidator {
     List<ValidationError> result = new ArrayList<ValidationError>();
     if (line.content.length() > maxLength) {
       result.add(new ValidationError(
+          this.getClass(),
           "The length of the line exceeds the maximum "
               + String.valueOf(line.content.length()) + ".",
               line));

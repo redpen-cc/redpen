@@ -63,6 +63,7 @@ public class InvalidCharacterValidator implements SentenceValidator {
     for (String invalidChar : invalidCharsList) {
       if (sentenceStr.contains(invalidChar)) {
         return new ValidationError(
+            this.getClass(),
             "Invalid symbol found: \"" + invalidChar + "\"",
             sentence);
       }

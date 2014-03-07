@@ -43,6 +43,7 @@ public class ParagraphNumberValidator extends SectionValidator {
     int paragraphNumber = section.getNumberOfParagraphs();
     if (maxParagraphs < paragraphNumber) {
       validationErrors.add(new ValidationError(
+          this.getClass(),
           "The number of the paragraphs exceeds the maximum "
               + String.valueOf(paragraphNumber), section.getHeaderContent(0)));
       return validationErrors;

@@ -49,7 +49,7 @@ class DummyValidator implements SentenceValidator {
     }
     sentenceStrings.add(sentence.content);
     List<ValidationError> errors = new ArrayList<ValidationError>();
-    errors.add(new ValidationError("Error occurs", sentence));
+    errors.add(new ValidationError(this.getClass(), "Error occurs", sentence));
     return errors;
   }
 

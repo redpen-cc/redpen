@@ -50,6 +50,7 @@ public class InvalidExpressionValidator implements SentenceValidator {
     for (String w : invalidExpressions) {
       if (str.contains(w)) {
         result.add(new ValidationError(
+            this.getClass(),
             "Found invalid expression: \"" + w + "\"", line));
       }
     }

@@ -25,7 +25,10 @@ public class PlainFormatter implements Formatter {
   @Override
   public String convertError(ValidationError error) {
     StringBuilder str = new StringBuilder();
+
     str.append("ValidationError[");
+    str.append(error.getValidatorName());
+    str.append("][");
     if (error.getFileName() != null && !"".equals(error.getFileName())) {
       str.append(error.getFileName()).append(" : ");
     }

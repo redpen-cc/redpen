@@ -70,6 +70,7 @@ public class SymbolWithSpaceValidator  implements SentenceValidator {
       if (position > 0 && character.isNeedBeforeSpace()
           && !Character.isWhitespace(sentenceStr.charAt(position - 1))) {
         return new ValidationError(
+            this.getClass(),
             "Need white space before symbol (" +  character.getName()
             + "): " + sentenceStr.charAt(position) + ".",
             sentence);
@@ -77,6 +78,7 @@ public class SymbolWithSpaceValidator  implements SentenceValidator {
           && character.isNeedAfterSpace()
           && !Character.isWhitespace(sentenceStr.charAt(position + 1))) {
         return new ValidationError(
+            this.getClass(),
             "Need white space after symbol (" + character.getName()
             + "): " + sentenceStr.charAt(position), sentence);
       }

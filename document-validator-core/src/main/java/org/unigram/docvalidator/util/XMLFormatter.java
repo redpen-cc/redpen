@@ -63,6 +63,12 @@ public class XMLFormatter implements Formatter {
     Element errorElement = doc.createElement("error");
     doc.appendChild(errorElement);
 
+
+    Element validatorElement = doc.createElement("validator");
+    errorElement.appendChild(validatorElement);
+    Text validator = doc.createTextNode(error.getValidatorName());
+    validatorElement.appendChild(validator);
+
     if (error.getMessage() != null && !error.getMessage().equals("")) {
       Element contentElement = doc.createElement("message");
       errorElement.appendChild(contentElement);

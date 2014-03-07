@@ -39,6 +39,7 @@ public class SpaceBeginningOfSentenceValidator implements SentenceValidator {
     if (!sentence.isFirstSentence && content.length() > 0
         && !String.valueOf(content.charAt(0)).equals(" ")) {
       result.add(new ValidationError(
+          this.getClass(),
           "Space not exist the beginning of sentence.",
           sentence));
     }

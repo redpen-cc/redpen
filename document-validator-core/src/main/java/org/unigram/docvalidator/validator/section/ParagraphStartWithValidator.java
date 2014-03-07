@@ -58,6 +58,7 @@ public class ParagraphStartWithValidator extends SectionValidator {
       Sentence firstSentence = currentParagraph.getSentence(0);
       if (firstSentence.content.indexOf(this.beginningOfParagraph) != 0) {
         validationErrors.add(new ValidationError(
+            this.getClass(),
             "Found invalid beginning of paragraph: \"",
             firstSentence));
       }
