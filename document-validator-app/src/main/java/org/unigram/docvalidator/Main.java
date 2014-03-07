@@ -19,9 +19,8 @@ package org.unigram.docvalidator;
 
 import org.unigram.docvalidator.store.Document;
 import org.unigram.docvalidator.util.DVResource;
+import org.unigram.docvalidator.util.DefaultResultDistributor;
 import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.util.ResultDistributor;
-import org.unigram.docvalidator.util.ResultDistributorFactory;
 import org.unigram.docvalidator.validator.DocumentValidator;
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLineParser;
@@ -35,7 +34,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Class containing main method called from command line.
-  */
+ */
 public final class Main {
   public static void main(String[] args) throws DocumentValidatorException {
     Options options = new Options();
@@ -73,9 +72,9 @@ public final class Main {
     try {
       commandLine = parser.parse(options, args);
     } catch (ParseException e) {
-        LOG.error("Error occurred in parsing command line options ");
-        printHelp(options);
-        return;
+      LOG.error("Error occurred in parsing command line options ");
+      printHelp(options);
+      return;
     }
 
     String inputFormat = "plain";
@@ -84,12 +83,12 @@ public final class Main {
     String resultFormat = "plain";
 
     if (commandLine.hasOption("h")) {
-        printHelp(options);
-        return;
+      printHelp(options);
+      return;
     }
     if (commandLine.hasOption("v")) {
-        System.out.println("1.0");
-        return;
+      System.out.println("1.0");
+      return;
     }
     if (commandLine.hasOption("f")) {
       inputFormat = commandLine.getOptionValue("f");
@@ -113,15 +112,17 @@ public final class Main {
 
     Document document =
         DocumentGenerator.generate(inputFileNames, conf, inputFormat);
+    
     if (document == null) {
       LOG.error("Failed to create a Document object");
       return;
     }
 
-    // validate document
-    ResultDistributor distributor =
-        ResultDistributorFactory.createDistributor(resultFormat, System.out);
-    DocumentValidator validator = new DocumentValidator(conf, distributor);
+    DocumentValidator validator = new DocumentValidator.Builder()
+        .setResource(conf)
+        .setResultDistributor(new DefaultResultDistributor(System.out))
+        .build();
+
     validator.check(document);
   }
 

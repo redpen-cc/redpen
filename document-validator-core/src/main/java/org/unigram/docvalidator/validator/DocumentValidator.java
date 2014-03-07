@@ -17,6 +17,7 @@
  */
 package org.unigram.docvalidator.validator;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -25,53 +26,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.store.Document;
 import org.unigram.docvalidator.store.FileContent;
-import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.ResultDistributorFactory;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
-import org.unigram.docvalidator.util.DVResource;
-import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.util.ResultDistributor;
-import org.unigram.docvalidator.util.ValidationError;
+import org.unigram.docvalidator.util.*;
 
 /**
  * Validate all input files using appended Validators.
  */
 public class DocumentValidator {
-  /**
-   * Constructor.
-   *
-   * @param resource          configuration settings for DocumentValidator
-   * @param resultDistributor output distributor
-   * @throws DocumentValidatorException when failed to create the instance
-   */
-  public DocumentValidator(DVResource resource,
-                           ResultDistributor resultDistributor)
-      throws DocumentValidatorException {
-    this(resource);
-    if (resultDistributor == null) {
-      throw new DocumentValidatorException("ResultDistributor is null");
-    }
-    this.distributor = resultDistributor;
-  }
 
-  /**
-   * Constructor.
-   *
-   * @param resource configuration settings for DocumentValidator
-   * @throws DocumentValidatorException when failed to create the instance
-   */
-  public DocumentValidator(DVResource resource)
-      throws DocumentValidatorException {
-    super();
-    this.distributor = ResultDistributorFactory.createDistributor("plain",
-        System.out);
-    this.validators = new ArrayList<Validator>();
+  private DocumentValidator(Builder builder) throws DocumentValidatorException {
+    DVResource resource = builder.resource;
+    this.distributor = builder.distributor;
     this.conf = resource.getConfiguration();
     this.charTable = resource.getCharacterTable();
-    if (!loadValidators()) {
-      throw new DocumentValidatorException(
-          "Failed to create DocumentValidator");
-    }
+    this.validators = loadValidators(this.conf, this.charTable);
   }
 
   /**
@@ -80,25 +47,19 @@ public class DocumentValidator {
    * @return true when succeeded to load all the validators, false otherwise
    */
   @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-  public boolean loadValidators() {
-    this.validators.clear();
-    for (Iterator<ValidatorConfiguration> confIterator =
-             this.conf.getChildren(); confIterator.hasNext();) {
-      ValidatorConfiguration currentConfiguration = confIterator.next();
-      String confName = currentConfiguration.getConfigurationName();
-      Validator validator;
-      try {
-        validator =
-            ValidatorFactory.createValidator(confName,
-                currentConfiguration, this.charTable);
-      } catch (DocumentValidatorException e) {
-        LOG.error("Failed to create validator \" "
-            + confName + "\" : " + e.getMessage());
-        return false;
-      }
-      this.validators.add(validator);
+  public List<Validator> loadValidators(ValidatorConfiguration rootConfig,
+                                        CharacterTable charTable)
+      throws DocumentValidatorException {
+    List<Validator> validators = new ArrayList<Validator>();
+
+    for (ValidatorConfiguration config : rootConfig.getChildren()) {
+      String confName = config.getConfigurationName();
+      Validator validator =
+          ValidatorFactory.createValidator(confName, config, charTable);
+      validators.add(validator);
     }
-    return true;
+
+    return validators;
   }
 
   /**
@@ -145,6 +106,29 @@ public class DocumentValidator {
    */
   protected void appendValidator(Validator validator) {
     this.validators.add(validator);
+  }
+
+  public static class Builder {
+
+    private DVResource resource;
+
+    private ResultDistributor distributor = new DefaultResultDistributor(
+        new PrintStream(System.out)
+    );
+
+    public Builder setResource(DVResource resource) {
+      this.resource = resource;
+      return this;
+    }
+
+    public Builder setResultDistributor(ResultDistributor distributor) {
+      this.distributor = distributor;
+      return this;
+    }
+
+    public DocumentValidator build() throws DocumentValidatorException {
+      return new DocumentValidator(this);
+    }
   }
 
   private final List<Validator> validators;

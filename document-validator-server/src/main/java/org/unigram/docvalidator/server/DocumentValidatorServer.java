@@ -34,7 +34,7 @@ import org.unigram.docvalidator.validator.DocumentValidator;
 public class DocumentValidatorServer {
 
   private static Logger log = LogManager.getLogger(
-    DocumentValidatorServer.class
+      DocumentValidatorServer.class
   );
 
   private static DocumentValidatorServer documentValidatorServer;
@@ -46,14 +46,17 @@ public class DocumentValidatorServer {
   private DocumentValidatorServer() throws DocumentValidatorException {
     ConfigurationLoader configLoader = new ServerConfigurationLoader();
     documentValidatorResource = configLoader.loadConfiguration(
-      getClass()
-        .getClassLoader()
-        .getResourceAsStream("/conf/dv-conf.xml")
+        getClass()
+            .getClassLoader()
+            .getResourceAsStream("/conf/dv-conf.xml")
     );
 
     ResultDistributor distributor = ResultDistributorFactory
-      .createDistributor("plain", System.out);
-    validator = new DocumentValidator(documentValidatorResource, distributor);
+        .createDistributor("plain", System.out);
+    validator = new DocumentValidator.Builder()
+        .setResource(documentValidatorResource)
+        .setResultDistributor(distributor)
+        .build();
   }
 
   public DocumentValidator getValidator() {
@@ -65,7 +68,7 @@ public class DocumentValidatorServer {
   }
 
   public static DocumentValidatorServer getInstance() throws
-    DocumentValidatorException {
+      DocumentValidatorException {
     if (documentValidatorServer == null) {
       initialize();
     }

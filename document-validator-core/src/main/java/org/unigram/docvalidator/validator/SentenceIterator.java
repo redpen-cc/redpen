@@ -53,18 +53,19 @@ import org.unigram.docvalidator.validator.sentence.lang.ja.KatakanaSpellCheckVal
 public class SentenceIterator implements Validator {
   /**
    * constructor.
+   *
    * @throws DocumentValidatorException
    */
   public SentenceIterator() {
-    this.sentenceValidators = new Vector<SentenceValidator>();
+    this.sentenceValidators = new ArrayList<SentenceValidator>();
   }
 
   public List<ValidationError> check(FileContent file,
-      ResultDistributor distributor) {
+                                     ResultDistributor distributor) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     for (SentenceValidator validator : this.sentenceValidators) {
       for (Iterator<Section> sectionIterator =
-               file.getSections(); sectionIterator.hasNext();) {
+               file.getSections(); sectionIterator.hasNext(); ) {
         Section currentSection = sectionIterator.next();
         checkSection(distributor, errors, validator,
             currentSection, file.getFileName());
@@ -74,10 +75,9 @@ public class SentenceIterator implements Validator {
   }
 
   public boolean loadConfiguration(ValidatorConfiguration conf,
-      CharacterTable charTable) throws DocumentValidatorException {
-    for (Iterator<ValidatorConfiguration> confIterator =  conf.getChildren();
-        confIterator.hasNext();) {
-      ValidatorConfiguration currentConfiguration = confIterator.next();
+                                   CharacterTable charTable)
+      throws DocumentValidatorException {
+    for (ValidatorConfiguration currentConfiguration : conf.getChildren()) {
       String confName = currentConfiguration.getConfigurationName();
       SentenceValidator validator;
       if (confName.equals("SentenceLength")) {
@@ -111,21 +111,21 @@ public class SentenceIterator implements Validator {
   }
 
   private void checkSection(ResultDistributor distributor,
-      List<ValidationError> errors, SentenceValidator validator,
-      Section currentSection, String fileName) {
+                            List<ValidationError> errors, SentenceValidator validator,
+                            Section currentSection, String fileName) {
     checkParagraphs(distributor, errors, validator, currentSection, fileName);
     checkHeaders(distributor, errors, validator, currentSection, fileName);
     checkListElements(distributor, errors, validator, currentSection, fileName);
   }
 
   private void checkParagraphs(ResultDistributor distributor,
-      List<ValidationError> errors, SentenceValidator validator,
-      Section currentSection, String fileName) {
+                               List<ValidationError> errors, SentenceValidator validator,
+                               Section currentSection, String fileName) {
     for (Iterator<Paragraph> paraIterator =
-        currentSection.getParagraphs(); paraIterator.hasNext();) {
+             currentSection.getParagraphs(); paraIterator.hasNext(); ) {
       Paragraph currentParagraph = paraIterator.next();
       for (Iterator<Sentence> lineIterator =
-          currentParagraph.getSentences(); lineIterator.hasNext();) {
+               currentParagraph.getSentences(); lineIterator.hasNext(); ) {
         applyValidator(distributor, errors, validator, fileName,
             lineIterator.next());
       }
@@ -133,25 +133,25 @@ public class SentenceIterator implements Validator {
   }
 
   private void checkHeaders(ResultDistributor distributor,
-      List<ValidationError> errors, SentenceValidator validator,
-      Section currentSection, String fileName) {
+                            List<ValidationError> errors, SentenceValidator validator,
+                            Section currentSection, String fileName) {
     for (Iterator<Sentence> iterator = currentSection.getHeaderContents();
-        iterator.hasNext();) {
+         iterator.hasNext(); ) {
       applyValidator(distributor, errors, validator, fileName, iterator.next());
     }
   }
 
   private void checkListElements(ResultDistributor distributor,
-      List<ValidationError> errors, SentenceValidator validator,
-      Section currentSection, String fileName) {
+                                 List<ValidationError> errors, SentenceValidator validator,
+                                 Section currentSection, String fileName) {
     for (Iterator<ListBlock> listBlockIterator = currentSection.getListBlocks();
-        listBlockIterator.hasNext();) {
+         listBlockIterator.hasNext(); ) {
       ListBlock listBlock = listBlockIterator.next();
       for (Iterator<ListElement> listElementIterator =
-          listBlock.getListElements(); listElementIterator.hasNext();) {
+               listBlock.getListElements(); listElementIterator.hasNext(); ) {
         ListElement listElemnt = listElementIterator.next();
         for (Iterator<Sentence> sentenceIterator = listElemnt.getSentences();
-            sentenceIterator.hasNext();) {
+             sentenceIterator.hasNext(); ) {
           applyValidator(distributor, errors, validator, fileName,
               sentenceIterator.next());
         }
@@ -160,15 +160,15 @@ public class SentenceIterator implements Validator {
   }
 
   private void applyValidator(ResultDistributor distributor,
-      List<ValidationError> errors, SentenceValidator validator,
-      String fileName, Sentence sentence) {
+                              List<ValidationError> errors, SentenceValidator validator,
+                              String fileName, Sentence sentence) {
     List<ValidationError> validationErrors;
     try {
       validationErrors =
           validator.check(sentence);
     } catch (Throwable e) {
       //TODO add validator type info
-      LOG.error("Error in checking sentence: \"" + sentence.content +  "\"");
+      LOG.error("Error in checking sentence: \"" + sentence.content + "\"");
       return;
     }
     for (ValidationError validationError : validationErrors) {
@@ -176,13 +176,12 @@ public class SentenceIterator implements Validator {
     }
   }
 
-  protected void addSentenceValidator(
-      SentenceValidator sentenceValidator) {
+  protected void addSentenceValidator(SentenceValidator sentenceValidator) {
     this.sentenceValidators.add(sentenceValidator);
   }
 
   private void appendError(ResultDistributor distributor,
-      List<ValidationError> errors, String fileName, ValidationError e) {
+                           List<ValidationError> errors, String fileName, ValidationError e) {
     if (e != null) {
       //NOTE: fileName is not specified in validators to reduce the task of them
       e.setFileName(fileName);
@@ -191,7 +190,7 @@ public class SentenceIterator implements Validator {
     }
   }
 
-  private final Vector<SentenceValidator> sentenceValidators;
+  private final List<SentenceValidator> sentenceValidators;
 
   private static final Logger LOG =
       LoggerFactory.getLogger(SentenceIterator.class);

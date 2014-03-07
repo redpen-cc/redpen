@@ -17,10 +17,7 @@
  */
 package org.unigram.docvalidator.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Configuration for Validators.
@@ -34,7 +31,7 @@ public final class ValidatorConfiguration {
   public ValidatorConfiguration(String name) {
     this.configurationName = name;
     this.attributes = new HashMap<String, String>();
-    this.childConfigurations = new ArrayList<ValidatorConfiguration>(0);
+    this.childConfigurations = new ArrayList<ValidatorConfiguration>();
     this.parentConfiguration = null;
   }
 
@@ -47,7 +44,7 @@ public final class ValidatorConfiguration {
   public ValidatorConfiguration(String name, ValidatorConfiguration parent) {
     this.configurationName = name;
     this.attributes = new HashMap<String, String>();
-    this.childConfigurations = new ArrayList<ValidatorConfiguration>(0);
+    this.childConfigurations = new ArrayList<ValidatorConfiguration>();
     this.parentConfiguration = parent;
   }
 
@@ -120,8 +117,8 @@ public final class ValidatorConfiguration {
    *
    * @return sub-configuration list
    */
-  public Iterator<ValidatorConfiguration> getChildren() {
-    return childConfigurations.iterator();
+  public List<ValidatorConfiguration> getChildren() {
+    return childConfigurations;
   }
 
   /**
