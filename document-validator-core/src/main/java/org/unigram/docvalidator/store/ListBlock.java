@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Represent List in semi-structured format such as wiki.
  */
-public final class ListBlock implements Block {
+public final class ListBlock {
   /**
    * Constructor.
    */
@@ -58,10 +58,6 @@ public final class ListBlock implements Block {
    */
   public ListElement getListElement(int id) {
     return listElements.get(id);
-  }
-
-  public int getBlockID() {
-    return BlockTypes.LIST;
   }
 
   /**

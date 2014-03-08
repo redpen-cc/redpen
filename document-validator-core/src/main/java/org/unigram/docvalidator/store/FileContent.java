@@ -25,7 +25,7 @@ import java.util.List;
  * FileContent represents a file with many elements
  * such as sentences, lists and headers.
  */
-public final class FileContent implements Block {
+public final class FileContent {
   /**
    * Constructor.
    */
@@ -83,16 +83,6 @@ public final class FileContent implements Block {
    */
   public Section getSection(int id) {
     return sections.get(id);
-  }
-
-
-  /**
-   * Get block id of Section class.
-   *
-   * @return block id
-   */
-  public int getBlockID() {
-    return BlockTypes.DOCUMENT;
   }
 
   /**
