@@ -396,6 +396,38 @@ public class MarkdownParserTest {
   }
 
   @Test
+  public void testDocumentWithUnderlineSections()
+      throws UnsupportedEncodingException {
+    String sampleText = "Prefectures in Japan.\n";
+    sampleText += "====\n";
+    sampleText += "There are 47 prefectures in Japan.\n";
+    sampleText += "\n";
+    sampleText += "Each prefectures has its features.\n";
+    sampleText += "Gunma\n";
+    sampleText += "----\n";
+    sampleText += "Gumma is very beautiful";
+
+    FileContent doc = createFileContent(sampleText);
+    assertEquals(3, doc.getNumberOfSections());
+    Section rootSection = doc.getSection(0);
+    Section h1Section = doc.getSection(1);
+    Section h2Section = doc.getSection(2);
+
+    assertEquals(0, rootSection.getLevel());
+    assertEquals(1, h1Section.getLevel());
+    assertEquals(2, h2Section.getLevel());
+
+    assertEquals(rootSection.getSubSection(0), h1Section);
+    assertEquals(h1Section.getParentSection(), rootSection);
+    assertEquals(h2Section.getParentSection(), h1Section);
+    assertEquals(rootSection.getParentSection(), null);
+
+    assertEquals(0, rootSection.getHeaderContent(0).position);
+    assertEquals(0, h1Section.getHeaderContent(0).position);
+    assertEquals(5, h2Section.getHeaderContent(0).position);
+  }
+
+  @Test
   public void testGenerateJapaneseDocument() {
     String japaneseConfiguraitonStr = new String(
         "<?xml version=\"1.0\"?>" +
