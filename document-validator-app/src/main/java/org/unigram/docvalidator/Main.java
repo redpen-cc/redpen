@@ -67,14 +67,14 @@ public final class Main {
         "print the version information and exit");
 
     CommandLineParser parser = new BasicParser();
-    CommandLine commandLine;
+    CommandLine commandLine = null;
 
     try {
       commandLine = parser.parse(options, args);
     } catch (ParseException e) {
       LOG.error("Error occurred in parsing command line options ");
       printHelp(options);
-      return;
+      System.exit(-1);
     }
 
     String inputFormat = "plain";
@@ -84,11 +84,11 @@ public final class Main {
 
     if (commandLine.hasOption("h")) {
       printHelp(options);
-      return;
+      System.exit(0);
     }
     if (commandLine.hasOption("v")) {
       System.out.println("1.0");
-      return;
+      System.exit(0);
     }
     if (commandLine.hasOption("f")) {
       inputFormat = commandLine.getOptionValue("f");
@@ -107,7 +107,7 @@ public final class Main {
     DVResource conf = configLoader.loadConfiguration(configFileName);
     if (conf == null) {
       LOG.error("Failed to initialize the DocumentValidator resource.");
-      return;
+      System.exit(-1);
     }
 
     Document document =
@@ -115,7 +115,7 @@ public final class Main {
     
     if (document == null) {
       LOG.error("Failed to create a Document object");
-      return;
+      System.exit(-1);
     }
 
     DocumentValidator validator = new DocumentValidator.Builder()
@@ -124,6 +124,8 @@ public final class Main {
         .build();
 
     validator.check(document);
+
+    System.exit(0);
   }
 
   private static void printHelp(Options opt) {
