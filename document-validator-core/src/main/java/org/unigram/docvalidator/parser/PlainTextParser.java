@@ -39,7 +39,7 @@ public final class PlainTextParser extends BasicDocumentParser {
   /**
    * Constructor.
    */
-  public PlainTextParser() {
+  PlainTextParser() {
     super();
   }
 

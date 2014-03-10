@@ -48,6 +48,9 @@ public class MarkdownParser extends BasicDocumentParser {
           + Extensions.AUTOLINKS
           + Extensions.FENCED_CODE_BLOCKS);
 
+  MarkdownParser() {
+    super();
+  }
 
   @Override
   public FileContent generateDocument(String fileName)

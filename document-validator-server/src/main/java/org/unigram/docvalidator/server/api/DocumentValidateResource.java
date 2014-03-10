@@ -23,7 +23,8 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.unigram.docvalidator.parser.PlainTextParser;
+import org.unigram.docvalidator.parser.DocumentParserFactory;
+import org.unigram.docvalidator.parser.Parser;
 import org.unigram.docvalidator.server.DocumentValidatorServer;
 import org.unigram.docvalidator.store.Document;
 import org.unigram.docvalidator.store.FileContent;
@@ -47,7 +48,7 @@ import java.util.List;
 @Path("/document")
 public class DocumentValidateResource {
 
-  private static final Logger log = LogManager.getLogger(
+  private static final Logger LOG = LogManager.getLogger(
     DocumentValidateResource.class
   );
 
@@ -58,15 +59,15 @@ public class DocumentValidateResource {
                                      String document) throws
     JSONException, DocumentValidatorException, UnsupportedEncodingException {
 
-    log.info("Validating document");
+    LOG.info("Validating document");
 
     DocumentValidatorServer server = DocumentValidatorServer.getInstance();
     JSONObject json = new JSONObject();
 
     json.put("document", document);
 
-    PlainTextParser parser = new PlainTextParser();
-    parser.initialize(server.getDocumentValidatorResource());
+    Parser parser = DocumentParserFactory.generate(
+        "plain", server.getDocumentValidatorResource());
     FileContent fileContent = parser.generateDocument(new
       ByteArrayInputStream(document.getBytes("UTF-8")));
 
