@@ -55,7 +55,7 @@ public final class WikiParser extends BasicDocumentParser {
   }
 
   public FileContent generateDocument(InputStream is)
-  throws DocumentValidatorException{
+      throws DocumentValidatorException{
     BufferedReader br = null;
 
     FileContent fileContent = new FileContent();
