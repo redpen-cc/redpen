@@ -53,6 +53,15 @@ public class MarkdownParserTest {
     }
   }
 
+  @Test(expected = DocumentValidatorException.class)
+  public void testNullFileName() throws Exception {
+
+    ValidatorConfiguration conf = new ValidatorConfiguration("dummy");
+    Parser parser = loadParser(new DVResource(conf));
+    String fileName = null;
+    parser.generateDocument(fileName);
+  }
+
   @Test
   public void testBasicDocument() throws UnsupportedEncodingException {
     String sampleText = "";

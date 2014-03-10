@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.symbol.DefaultSymbols;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.DVResource;
+import org.unigram.docvalidator.util.DocumentValidatorException;
 
 /**
  * Abstract Parser class containing common procedures to
@@ -42,14 +43,14 @@ public abstract class BasicDocumentParser implements Parser {
    *
    * @param resource object containing configuration settings
    */
-  public final boolean initialize(DVResource resource) {
+  public final void initialize(DVResource resource) throws
+      DocumentValidatorException {
     if (resource == null) {
-      LOG.error("Given resource is null");
-      return false;
+      throw new DocumentValidatorException("Given resource is null");
     }
     if (resource.getCharacterTable() == null) {
-      LOG.error("Character table in the given resource is null");
-      return false;
+      throw new DocumentValidatorException(
+          "Character table in the given resource is null");
     }
 
     CharacterTable characterTable = resource.getCharacterTable();
@@ -84,30 +85,37 @@ public abstract class BasicDocumentParser implements Parser {
     }
 
     this.sentenceExtractor = new SentenceExtractor(this.periods);
-    return true;
   }
 
-  protected BufferedReader createReader(InputStream is) {
+  /**
+   * create BufferedReader from InputStream is.
+   * @param is InputStream using to parse
+   * @return BufferedReader created from InputStream
+   * @throws DocumentValidatorException if InputStream is not
+   * supported UTF-8 encoding
+   */
+  protected BufferedReader createReader(InputStream is)
+      throws DocumentValidatorException {
     BufferedReader br;
     try {
       br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
     } catch (UnsupportedEncodingException e) {
-      LOG.error(e.getMessage());
-      return null;
+      throw new DocumentValidatorException(
+          "does not support UTF-8 encoding", e);
     }
     return br;
   }
 
-  protected final InputStream loadStream(String fileName) {
-    InputStream inputStream = null;
+  protected final InputStream loadStream(String fileName)
+      throws DocumentValidatorException {
+    InputStream inputStream;
     if (fileName == null || fileName.equals("")) {
-      LOG.error("input file was not specified.");
-      return null;
+      throw new DocumentValidatorException("input file was not specified.");
     } else {
       try {
         inputStream = new FileInputStream(fileName);
       } catch (FileNotFoundException e) {
-        LOG.error("Input file is not found: " + e.getMessage());
+        throw new DocumentValidatorException("Input file is not found", e);
       }
     }
     return inputStream;

@@ -64,20 +64,16 @@ public class MarkdownParser extends BasicDocumentParser {
   public FileContent generateDocument(InputStream inputStream)
       throws DocumentValidatorException {
     assert inputStream != null;
-    BufferedReader br = createReader(inputStream);
-    //TODO similar process in WikiParser, not exist PlainTextParser
-    if (br == null) {
-      LOG.error("Failed to create reader");
-      return null;
-    }
     FileContent fileContent = null;
 
     StringBuilder sb = new StringBuilder();
-    String line = null;
+    String line;
     int charCount = 0;
     List<Integer> lineList = new ArrayList<Integer>();
+    BufferedReader br = null;
 
     try {
+      br = createReader(inputStream);
       while ((line = br.readLine()) != null) {
         sb.append(line);
         sb.append("\n");
