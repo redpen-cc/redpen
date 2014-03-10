@@ -25,7 +25,7 @@ import java.util.List;
  * Document class represent input document, which consists
  * of more than one files.
  */
-public final class Document implements Block {
+public final class Document {
 
   public Document() {
     super();
@@ -80,10 +80,6 @@ public final class Document implements Block {
    */
   public int getNumberOfFiles() {
     return files.size();
-  }
-
-  public int getBlockID() {
-    return BlockTypes.DOCUMENT;
   }
 
   private final List<FileContent> files;

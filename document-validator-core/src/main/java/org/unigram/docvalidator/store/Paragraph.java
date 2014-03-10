@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Represent a paragraph of text.
  */
-public final class Paragraph implements Block {
+public final class Paragraph {
   /**
    * Constructor.
    */
@@ -78,10 +78,6 @@ public final class Paragraph implements Block {
    */
   public int getNumberOfSentences() {
     return sentences.size();
-  }
-
-  public int getBlockID() {
-    return BlockTypes.PARAGRAPH;
   }
 
   private final List<Sentence> sentences;

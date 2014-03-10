@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Sentence block in a Document.
  */
-public final class Sentence implements Block {
+public final class Sentence {
   /**
    * Constructor.
    *
@@ -36,10 +36,6 @@ public final class Sentence implements Block {
     this.position = sentencePosition;
     this.isFirstSentence = false;
     this.links = new ArrayList<String>();
-  }
-
-  public int getBlockID() {
-    return 0;
   }
 
   /**

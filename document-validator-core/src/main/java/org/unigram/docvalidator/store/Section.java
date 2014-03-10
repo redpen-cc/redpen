@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Represent a section in semi-structured text format such as wiki.
  */
-public final class Section implements Block {
+public final class Section {
   /**
    * Constructor.
    *
@@ -255,15 +255,6 @@ public final class Section implements Block {
     if (currentBlock.getNumberOfSentences() == 1) {
       currentBlock.getSentence(0).isFirstSentence = true;
     }
-  }
-
-  /**
-   * Get block id.
-   *
-   * @return block id of section
-   */
-  public int getBlockID() {
-    return BlockTypes.SECTION;
   }
 
   /**
