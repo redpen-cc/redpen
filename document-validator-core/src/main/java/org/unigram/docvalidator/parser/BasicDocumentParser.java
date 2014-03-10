@@ -96,6 +96,9 @@ public abstract class BasicDocumentParser implements Parser {
    */
   protected BufferedReader createReader(InputStream is)
       throws DocumentValidatorException {
+    if (is == null) {
+      throw new DocumentValidatorException("input stream is null");
+    }
     BufferedReader br;
     try {
       br = new BufferedReader(new InputStreamReader(is, "UTF-8"));

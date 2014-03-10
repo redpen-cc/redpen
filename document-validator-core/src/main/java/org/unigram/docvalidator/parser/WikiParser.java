@@ -106,8 +106,7 @@ public final class WikiParser extends BasicDocumentParser {
         lineNum++;
       }
     } catch (IOException e) {
-      LOG.error("Failed to parse input document: " + e.getMessage());
-      return null;
+      throw new DocumentValidatorException("Failed to parse input document: " + e.getMessage());
     } finally {
       IOUtils.closeQuietly(br);
     }

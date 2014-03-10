@@ -63,7 +63,6 @@ public class MarkdownParser extends BasicDocumentParser {
   @Override
   public FileContent generateDocument(InputStream inputStream)
       throws DocumentValidatorException {
-    assert inputStream != null;
     FileContent fileContent = null;
 
     StringBuilder sb = new StringBuilder();
@@ -96,11 +95,9 @@ public class MarkdownParser extends BasicDocumentParser {
               lineList, this.getSentenceExtractor());
       fileContent = serializer.toFileContent(rootNode);
     } catch (ParsingTimeoutException e) {
-      LOG.error("Failed to parse timeout");
-      return null;
+      throw new DocumentValidatorException("Failed to parse timeout");
     } catch (IOException e) {
-      LOG.error("Failed to read lines");
-      return null;
+      throw new DocumentValidatorException("Failed to read lines");
     } finally {
       IOUtils.closeQuietly(br);
     }
