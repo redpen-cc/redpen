@@ -106,6 +106,7 @@ public class KatakanaSpellCheckValidator implements SentenceValidator {
       if (LevenshteinDistance.getDistance(key, katakana) <= minLsDistance) {
         found = true;
         errors.add(new ValidationError(
+            this.getClass(),
           "Found a Katakana word: \"" + katakana + "\""
           + ", which is similar to \"" + key + "\""
           + " at postion " + dic.get(key).toString() + ".",
@@ -125,9 +126,9 @@ public class KatakanaSpellCheckValidator implements SentenceValidator {
   public boolean initialize(ValidatorConfiguration conf,
       CharacterTable characterTable)
       throws DocumentValidatorException {
-    //TODO: support the exception word list.
-    //TODO: configurable SIMILARITY_RATIO.
-    //TODO: configurable MAX_IGNORE_KATAKANA_LENGTH.
+    //TODO : support the exception word list.
+    //TODO : configurable SIMILARITY_RATIO.
+    //TODO : configurable MAX_IGNORE_KATAKANA_LENGTH.
     return true;
   }
 

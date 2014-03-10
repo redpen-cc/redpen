@@ -24,7 +24,20 @@ public class PlainFormatter implements Formatter {
 
   @Override
   public String convertError(ValidationError error) {
-    return error.toString();
+    StringBuilder str = new StringBuilder();
+
+    str.append("ValidationError[");
+    str.append(error.getValidatorName());
+    str.append("][");
+    if (error.getFileName() != null && !"".equals(error.getFileName())) {
+      str.append(error.getFileName()).append(" : ");
+    }
+    str.append(error.getLineNumber()).append(" (")
+        .append(error.getMessage()).append(")]");
+    if (error.getSentence() != null) {
+      str.append(" at line: ").append(error.getSentence().content);
+    }
+    return str.toString();
   }
 
   @Override

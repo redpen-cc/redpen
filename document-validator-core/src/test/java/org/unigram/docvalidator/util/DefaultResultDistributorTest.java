@@ -64,7 +64,7 @@ public class DefaultResultDistributorTest {
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     DefaultResultDistributor distributor = new DefaultResultDistributor(os);
     distributor.setFormatter(new PlainFormatter());
-    ValidationError error = new ValidationError("foobar");
+    ValidationError error = new ValidationError(this.getClass(), "foobar");
     distributor.flushResult(error);
     String result = null;
     try {

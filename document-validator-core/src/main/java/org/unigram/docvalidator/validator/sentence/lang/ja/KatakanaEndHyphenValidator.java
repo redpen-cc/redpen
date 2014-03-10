@@ -91,6 +91,7 @@ public class KatakanaEndHyphenValidator implements SentenceValidator {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     if (isKatakanaEndHyphen(katakana)) {
       errors.add(new ValidationError(
+          this.getClass(),
           "Invalid Katakana end hypen found \"" + katakana.toString() + "\"",
           sentence));
     }

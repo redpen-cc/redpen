@@ -167,6 +167,7 @@ public class QuotationValidator implements SentenceValidator {
       // check if left and right quote pair exists
       if (leftPosition >= 0 && rightPosition < 0) {
         errors.add(new ValidationError(
+            this.getClass(),
             "Right Quotation mark does not exist."
             + String.valueOf(sentence.content.length()),
             sentence));
@@ -175,6 +176,7 @@ public class QuotationValidator implements SentenceValidator {
 
       if (leftPosition < 0 && rightPosition >= 0) {
         errors.add(new ValidationError(
+            this.getClass(),
             "left Quotation mark does not exist."
             + String.valueOf(sentence.content.length()),
             sentence));
@@ -192,12 +194,14 @@ public class QuotationValidator implements SentenceValidator {
 
       if (nextLeftPosition < rightPosition && nextLeftPosition > 0) {
         errors.add(new ValidationError(
+            this.getClass(),
             "Twice Right Quotation marks in succession.",
             sentence));
       }
 
       if (nextRightPosition < leftPosition && nextRightPosition > 0) {
         errors.add(new ValidationError(
+            this.getClass(),
             "Twice Left Quotation marks in succession.",
             sentence));
       }
@@ -206,6 +210,7 @@ public class QuotationValidator implements SentenceValidator {
       if (leftPosition > 0 && leftQuotation.isNeedBeforeSpace()
           && (sentenceString.charAt(leftPosition - 1) != ' ')) {
         errors.add(new ValidationError(
+            this.getClass(),
             "Left quotation does not have space.",
             sentence));
       }
@@ -215,6 +220,7 @@ public class QuotationValidator implements SentenceValidator {
           && (sentenceString.charAt(rightPosition + 1) != ' '
           && sentenceString.charAt(rightPosition + 1) != this.period)) {
         errors.add(new ValidationError(
+            this.getClass(),
             "Right quotation does not have space",
             sentence));
       }
