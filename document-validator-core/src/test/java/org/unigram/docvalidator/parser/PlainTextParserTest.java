@@ -172,7 +172,7 @@ public class PlainTextParserTest {
 
   @Test(expected = DocumentValidatorException.class)
   public void testNullInitialize() throws Exception {
-    DocumentParserFactory.generate("plain", null);
+    DocumentParserFactory.generate(Parser.Type.PLAIN, null);
   }
 
   @Test(expected = DocumentValidatorException.class)
