@@ -54,4 +54,20 @@ public interface Parser {
    * @throws DocumentValidatorException if the configurations loading failed
    */
   void initialize(DVResource resource) throws DocumentValidatorException;
+
+  /**
+   * the type of parser using DocumentParserFactory.
+   */
+  enum Type {
+
+    /** plain text parser. */
+    PLAIN,
+
+    /** wiki parser. */
+    WIKI,
+
+    /** markdown parser. */
+    MARKDOWN
+
+  }
 }
