@@ -43,7 +43,7 @@ public final class WikiParser extends BasicDocumentParser {
   /**
    * Constructor.
    */
-  public WikiParser() {
+  WikiParser() {
     super();
   }
 
