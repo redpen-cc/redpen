@@ -17,6 +17,7 @@
  */
 package org.unigram.docvalidator;
 
+import org.unigram.docvalidator.parser.Parser;
 import org.unigram.docvalidator.store.Document;
 import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.DefaultResultDistributor;
@@ -81,6 +82,7 @@ public final class Main {
     String[] inputFileNames = null;
     String configFileName = "";
     String resultFormat = "plain";
+    Parser.Type parserType = null;
 
     if (commandLine.hasOption("h")) {
       printHelp(options);
@@ -110,9 +112,11 @@ public final class Main {
       System.exit(-1);
     }
 
+    parserType = Parser.Type.valueOf(inputFormat.toUpperCase());
+
     Document document =
-        DocumentGenerator.generate(inputFileNames, conf, inputFormat);
-    
+        DocumentGenerator.generate(inputFileNames, conf, parserType);
+
     if (document == null) {
       LOG.error("Failed to create a Document object");
       System.exit(-1);

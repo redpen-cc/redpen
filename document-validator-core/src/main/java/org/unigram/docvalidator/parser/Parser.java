@@ -54,4 +54,20 @@ public interface Parser {
    * @return true if the configurations are loaded, false otherwise
    */
   boolean initialize(DVResource resource);
+
+  /**
+   * the type of parser using DocumentParserFactory.
+   */
+  enum Type {
+
+    /** plain text parser. */
+    PLAIN,
+
+    /** wiki parser. */
+    WIKI,
+
+    /** markdown parser. */
+    MARKDOWN
+
+  }
 }

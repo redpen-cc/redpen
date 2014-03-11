@@ -36,6 +36,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
 import static org.junit.Assert.*;
+import static org.unigram.docvalidator.parser.Parser.Type.MARKDOWN;
 
 public class MarkdownParserTest {
 
@@ -461,7 +462,7 @@ public class MarkdownParserTest {
   private Parser loadParser(DVResource resource) {
     Parser parser = null;
     try {
-      parser = DocumentParserFactory.generate("markdown", resource);
+      parser = DocumentParserFactory.generate(MARKDOWN, resource);
     } catch (DocumentValidatorException e1) {
       fail();
       e1.printStackTrace();

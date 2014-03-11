@@ -95,7 +95,7 @@ public class PlainTextParserTest {
       fail();
     }
     try {
-      parser = DocumentParserFactory.generate("plain", resource);
+      parser = DocumentParserFactory.generate(Parser.Type.PLAIN, resource);
     } catch (DocumentValidatorException e1) {
       fail();
       e1.printStackTrace();

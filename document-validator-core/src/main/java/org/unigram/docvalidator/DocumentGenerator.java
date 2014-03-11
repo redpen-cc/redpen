@@ -39,7 +39,7 @@ public final class DocumentGenerator {
    */
   static Document generate(String[] inputFileNames,
                            DVResource resource,
-                           String format) {
+                           Parser.Type format) {
     Parser docparser;
     try {
       docparser = DocumentParserFactory.generate(format, resource);
