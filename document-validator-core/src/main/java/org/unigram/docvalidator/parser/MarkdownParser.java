@@ -66,21 +66,16 @@ public class MarkdownParser extends BasicDocumentParser {
   @Override
   public FileContent generateDocument(InputStream inputStream)
       throws DocumentValidatorException {
-    assert inputStream != null;
-    BufferedReader br = createReader(inputStream);
-    //TODO similar process in WikiParser, not exist PlainTextParser
-    if (br == null) {
-      LOG.error("Failed to create reader");
-      return null;
-    }
     FileContent fileContent = null;
 
     StringBuilder sb = new StringBuilder();
-    String line = null;
+    String line;
     int charCount = 0;
     List<Integer> lineList = new ArrayList<Integer>();
+    BufferedReader br = null;
 
     try {
+      br = createReader(inputStream);
       while ((line = br.readLine()) != null) {
         sb.append(line);
         sb.append("\n");
@@ -103,11 +98,9 @@ public class MarkdownParser extends BasicDocumentParser {
               lineList, this.getSentenceExtractor());
       fileContent = serializer.toFileContent(rootNode);
     } catch (ParsingTimeoutException e) {
-      LOG.error("Failed to parse timeout");
-      return null;
+      throw new DocumentValidatorException("Failed to parse timeout");
     } catch (IOException e) {
-      LOG.error("Failed to read lines");
-      return null;
+      throw new DocumentValidatorException("Failed to read lines");
     } finally {
       IOUtils.closeQuietly(br);
     }

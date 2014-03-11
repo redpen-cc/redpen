@@ -43,14 +43,21 @@ public class MarkdownParserTest {
   public void setup() {
   }
 
-  @Test
-  public void testNullDocument() {
-    try {
-      createFileContentFromInputStream(null);
-      fail("no error");
-    } catch (AssertionError as) {
+  @Test(expected = DocumentValidatorException.class)
+  public void testNullDocument() throws Exception {
+    ValidatorConfiguration conf = new ValidatorConfiguration("dummy");
+    Parser parser = loadParser(new DVResource(conf));
+    InputStream is = null;
+    parser.generateDocument(is);
+  }
 
-    }
+  @Test(expected = DocumentValidatorException.class)
+  public void testNullFileName() throws Exception {
+
+    ValidatorConfiguration conf = new ValidatorConfiguration("dummy");
+    Parser parser = loadParser(new DVResource(conf));
+    String fileName = null;
+    parser.generateDocument(fileName);
   }
 
   @Test

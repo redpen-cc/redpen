@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.store.FileContent;
@@ -51,8 +52,9 @@ public final class PlainTextParser extends BasicDocumentParser {
     return content;
   }
 
-  public FileContent generateDocument(InputStream is) {
-    BufferedReader br = createReader(is);
+  public FileContent generateDocument(InputStream is)
+      throws DocumentValidatorException {
+    BufferedReader br = null;
     FileContent fileContent = new FileContent();
     List<Sentence> headers = new ArrayList<Sentence>();
     headers.add(new Sentence("", 0));
@@ -61,6 +63,7 @@ public final class PlainTextParser extends BasicDocumentParser {
     Section currentSection = fileContent.getLastSection();
     currentSection.appendParagraph(new Paragraph());
     try {
+      br = createReader(is);
       String remain = "";
       String line;
       int lineNum = 0;
@@ -83,7 +86,10 @@ public final class PlainTextParser extends BasicDocumentParser {
     } catch (IOException e) {
       LOG.error("Failed to parse: " + e.getMessage());
       return null;
+    } finally {
+      IOUtils.closeQuietly(br);
     }
+
     return fileContent;
   }
 

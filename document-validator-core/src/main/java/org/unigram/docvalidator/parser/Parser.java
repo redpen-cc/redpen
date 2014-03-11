@@ -51,7 +51,7 @@ public interface Parser {
    * Initialize parser.
    *
    * @param resource configuration resources
-   * @return true if the configurations are loaded, false otherwise
+   * @throws DocumentValidatorException if the configurations loading failed
    */
-  boolean initialize(DVResource resource);
+  void initialize(DVResource resource) throws DocumentValidatorException;
 }

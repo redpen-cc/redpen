@@ -21,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.commons.io.IOUtils;
 import org.unigram.docvalidator.store.FileContent;
 import org.unigram.docvalidator.store.Paragraph;
 import org.unigram.docvalidator.store.Section;
@@ -53,12 +54,9 @@ public final class WikiParser extends BasicDocumentParser {
     return this.generateDocument(inputStream);
   }
 
-  public FileContent generateDocument(InputStream is) {
-    BufferedReader br = createReader(is);
-    if (br == null) {
-      LOG.error("Failed to create reader");
-      return null;
-    }
+  public FileContent generateDocument(InputStream is)
+      throws DocumentValidatorException{
+    BufferedReader br = null;
 
     FileContent fileContent = new FileContent();
     // for sentences right below the beginning of document
@@ -73,6 +71,7 @@ public final class WikiParser extends BasicDocumentParser {
     int lineNum = 0;
     StringBuilder remain = new StringBuilder();
     try {
+      br = createReader(is);
       while ((line = br.readLine()) != null) {
         prevPattern = currentPattern;
         List<String> head = new ArrayList<String>();
@@ -107,9 +106,11 @@ public final class WikiParser extends BasicDocumentParser {
         lineNum++;
       }
     } catch (IOException e) {
-      LOG.error("Failed to parse input document: " + e.getMessage());
-      return null;
+      throw new DocumentValidatorException("Failed to parse input document: " + e.getMessage());
+    } finally {
+      IOUtils.closeQuietly(br);
     }
+
     if (remain.length() > 0) {
       appendLastSentence(fileContent, lineNum, remain.toString());
     }

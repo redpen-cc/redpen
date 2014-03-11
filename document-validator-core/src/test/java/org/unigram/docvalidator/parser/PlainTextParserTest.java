@@ -169,4 +169,14 @@ public class PlainTextParserTest {
     assertEquals(1, paragraphs.size());
     assertEquals(0 ,calcLineNum(section));
   }
+
+  @Test(expected = DocumentValidatorException.class)
+  public void testNullInitialize() throws Exception {
+    DocumentParserFactory.generate("plain", null);
+  }
+
+  @Test(expected = DocumentValidatorException.class)
+  public void testNullFileName() throws Exception {
+    parser.generateDocument("no_exist_files");
+  }
 }
