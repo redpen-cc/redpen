@@ -92,7 +92,8 @@ public class DocumentValidator {
    * Constructor only for testing.
    */
   protected DocumentValidator() {
-    this.distributor = ResultDistributorFactory.createDistributor("plain",
+    this.distributor = ResultDistributorFactory.createDistributor(
+        Formatter.Type.PLAIN,
         System.out);
     this.validators = new ArrayList<Validator>();
     this.conf = null;
