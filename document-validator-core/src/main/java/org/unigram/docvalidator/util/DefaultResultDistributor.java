@@ -31,7 +31,7 @@ public class DefaultResultDistributor implements ResultDistributor {
    *
    * @param os output stream
    */
-  public DefaultResultDistributor(OutputStream os) {
+  DefaultResultDistributor(OutputStream os) {
     super();
     if (os == null) {
       throw new IllegalArgumentException("argument OutputStream is null");
