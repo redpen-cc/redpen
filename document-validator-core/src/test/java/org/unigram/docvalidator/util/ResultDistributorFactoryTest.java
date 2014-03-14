@@ -25,20 +25,16 @@ public class ResultDistributorFactoryTest {
 
   @Test
   public void testCreatePlainDistributor() {
-    ResultDistributor distributor = ResultDistributorFactory.createDistributor("plain", System.out);
+    ResultDistributor distributor = ResultDistributorFactory.createDistributor(
+        Formatter.Type.PLAIN, System.out);
     assertNotNull(distributor);
   }
 
   @Test
   public void testCreateXMLDistributor() {
-    ResultDistributor distributor = ResultDistributorFactory.createDistributor("xml", System.out);
+    ResultDistributor distributor = ResultDistributorFactory.createDistributor(
+        Formatter.Type.XML, System.out);
     assertNotNull(distributor);
-  }
-
-  @Test
-  public void testUnsupportedDistributor() {
-    ResultDistributor distributor = ResultDistributorFactory.createDistributor("foobar", null);
-    assertNull(distributor);
   }
 
   @Test
@@ -49,7 +45,7 @@ public class ResultDistributorFactoryTest {
 
   @Test
   public void testNullOutputDistributor() {
-    ResultDistributor distributor = ResultDistributorFactory.createDistributor("plain", null);
+    ResultDistributor distributor = ResultDistributorFactory.createDistributor(Formatter.Type.PLAIN, null);
     assertNull(distributor);
   }
 

@@ -22,13 +22,15 @@ import org.unigram.docvalidator.store.Document;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 
 import static org.junit.Assert.*;
+import static org.unigram.docvalidator.parser.Parser.Type.*;
 
 public class SampleDocumentGeneratorTest {
   @Test
   public void testGenerateSimplePlainDocument() throws DocumentValidatorException {
     String sampleText = "";
     sampleText += "Gekioko pun pun maru means very very angry.\n";
-    Document doc = SampleDocumentGenerator.generateOneFileDocument(sampleText, "wiki");
+    Document doc = SampleDocumentGenerator.generateOneFileDocument(sampleText,
+        WIKI);
     assertNotNull(doc);
     assertEquals(1, doc.getNumberOfFiles());
     assertEquals(1, doc.getFile(0).getNumberOfSections());
@@ -44,7 +46,8 @@ public class SampleDocumentGeneratorTest {
     String sampleText = "";
     sampleText += "h1. About Gekioko.\n";
     sampleText += "Gekioko pun pun maru means very very angry.\n";
-    Document doc = SampleDocumentGenerator.generateOneFileDocument(sampleText, "wiki");
+    Document doc = SampleDocumentGenerator.generateOneFileDocument(sampleText,
+        WIKI);
     assertNotNull(doc);
     assertEquals(1, doc.getNumberOfFiles());
     assertEquals(2, doc.getFile(0).getNumberOfSections());
@@ -61,7 +64,8 @@ public class SampleDocumentGeneratorTest {
     String sampleText = "";
     sampleText += "# About Gekioko.\n";
     sampleText += "Gekioko pun pun maru means very very angry.\n";
-    Document doc = SampleDocumentGenerator.generateOneFileDocument(sampleText, "markdown");
+    Document doc = SampleDocumentGenerator.generateOneFileDocument(sampleText,
+        MARKDOWN);
     assertNotNull(doc);
     assertEquals(1, doc.getNumberOfFiles());
     assertEquals(2, doc.getFile(0).getNumberOfSections());
@@ -75,6 +79,6 @@ public class SampleDocumentGeneratorTest {
 
   @Test(expected=NullPointerException.class)
   public void testInputNullDocument() throws DocumentValidatorException {
-    SampleDocumentGenerator.generateOneFileDocument(null, "markdown");
+    SampleDocumentGenerator.generateOneFileDocument(null, MARKDOWN);
   }
 }

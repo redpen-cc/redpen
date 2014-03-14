@@ -43,4 +43,13 @@ public interface Formatter {
    * @return
    */
   String footer();
+
+  /**
+   * the type of formatter using ResultDistributorFactory.
+   */
+  enum Type {
+    PLAIN,
+
+    XML
+  }
 }

@@ -17,20 +17,23 @@
  */
 package org.unigram.docvalidator;
 
-import org.unigram.docvalidator.store.Document;
-import org.unigram.docvalidator.util.DVResource;
-import org.unigram.docvalidator.util.DefaultResultDistributor;
-import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.validator.DocumentValidator;
 import org.apache.commons.cli.BasicParser;
+import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
-import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.unigram.docvalidator.parser.Parser;
+import org.unigram.docvalidator.store.Document;
+import org.unigram.docvalidator.util.DVResource;
+import org.unigram.docvalidator.util.DocumentValidatorException;
+import org.unigram.docvalidator.util.Formatter;
+import org.unigram.docvalidator.util.ResultDistributor;
+import org.unigram.docvalidator.util.ResultDistributorFactory;
+import org.unigram.docvalidator.validator.DocumentValidator;
 
 /**
  * Class containing main method called from command line.
@@ -81,6 +84,8 @@ public final class Main {
     String[] inputFileNames = null;
     String configFileName = "";
     String resultFormat = "plain";
+    Parser.Type parserType;
+    Formatter.Type outputFormat;
 
     if (commandLine.hasOption("h")) {
       printHelp(options);
@@ -110,17 +115,22 @@ public final class Main {
       System.exit(-1);
     }
 
+    parserType = Parser.Type.valueOf(inputFormat.toUpperCase());
+    outputFormat = Formatter.Type.valueOf(resultFormat.toUpperCase());
+
     Document document =
-        DocumentGenerator.generate(inputFileNames, conf, inputFormat);
-    
+        DocumentGenerator.generate(inputFileNames, conf, parserType);
+
     if (document == null) {
       LOG.error("Failed to create a Document object");
       System.exit(-1);
     }
+    ResultDistributor distributor =
+        ResultDistributorFactory.createDistributor(outputFormat, System.out);
 
     DocumentValidator validator = new DocumentValidator.Builder()
         .setResource(conf)
-        .setResultDistributor(new DefaultResultDistributor(System.out))
+        .setResultDistributor(distributor)
         .build();
 
     validator.check(document);

@@ -38,6 +38,8 @@ import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 
+import static org.unigram.docvalidator.parser.Parser.Type.WIKI;
+
 public class WikiParserTest {
 
   @Before
@@ -581,7 +583,7 @@ public class WikiParserTest {
   private Parser loadParser(DVResource resource) {
     Parser parser = null;
     try {
-      parser = DocumentParserFactory.generate("wiki", resource);
+      parser = DocumentParserFactory.generate(WIKI, resource);
     } catch (DocumentValidatorException e1) {
       fail();
       e1.printStackTrace();
