@@ -17,16 +17,23 @@
  */
 package org.unigram.docvalidator.validator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.unigram.docvalidator.model.Document;
+import org.unigram.docvalidator.model.DocumentCollection;
+import org.unigram.docvalidator.util.CharacterTable;
+import org.unigram.docvalidator.util.DVResource;
+import org.unigram.docvalidator.util.DefaultResultDistributor;
+import org.unigram.docvalidator.util.DocumentValidatorException;
+import org.unigram.docvalidator.util.ResultDistributor;
+import org.unigram.docvalidator.util.ResultDistributorFactory;
+import org.unigram.docvalidator.util.ValidationError;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
+
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.unigram.docvalidator.model.DocumentCollection;
-import org.unigram.docvalidator.model.Document;
-import org.unigram.docvalidator.util.*;
 
 /**
  * Validate all input files using appended Validators.
@@ -76,7 +83,7 @@ public class DocumentValidator {
       while (fileIterator.hasNext()) {
         try {
           List<ValidationError> currentErrors =
-              validator.validate(fileIterator.next(), distributor);
+              validator.validate(fileIterator.next());
           errors.addAll(currentErrors);
         } catch (Throwable e) {
           LOG.error("Error occurs in validation: " + e.getMessage());

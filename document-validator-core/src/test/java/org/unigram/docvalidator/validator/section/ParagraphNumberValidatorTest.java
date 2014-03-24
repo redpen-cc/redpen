@@ -52,9 +52,7 @@ public class ParagraphNumberValidatorTest {
     Document document = new Document();
     document.appendSection(section);
 
-    ResultDistributor distributor = new FakeResultDistributor();
-    List<ValidationError> errors = validator.validate(document,
-        distributor);
+    List<ValidationError> errors = validator.validate(document);
     assertEquals(1, errors.size());
   }
 
@@ -69,9 +67,7 @@ public class ParagraphNumberValidatorTest {
     Document document = new Document();
     document.appendSection(section);
 
-    ResultDistributor distributor = new FakeResultDistributor();
-    List<ValidationError> errors = validator.validate(document,
-        distributor);
+    List<ValidationError> errors = validator.validate(document);
     assertEquals(0, errors.size());
   }
 

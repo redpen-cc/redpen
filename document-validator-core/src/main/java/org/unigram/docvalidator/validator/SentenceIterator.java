@@ -60,8 +60,11 @@ public class SentenceIterator implements Validator {
     this.sentenceValidators = new ArrayList<SentenceValidator>();
   }
 
-  public List<ValidationError> validate(Document file,
-                                        ResultDistributor distributor) {
+  public void setResultDistributor(ResultDistributor distributor) {
+    this.distributor = distributor; 
+  }
+  
+  public List<ValidationError> validate(Document file) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     for (SentenceValidator validator : this.sentenceValidators) {
       for (Iterator<Section> sectionIterator =
@@ -193,6 +196,8 @@ public class SentenceIterator implements Validator {
 
   private final List<SentenceValidator> sentenceValidators;
 
+  private ResultDistributor distributor;
+  
   private static final Logger LOG =
       LoggerFactory.getLogger(SentenceIterator.class);
 }

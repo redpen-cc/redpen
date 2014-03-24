@@ -17,17 +17,21 @@
  */
 package org.unigram.docvalidator.validator;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
+import org.unigram.docvalidator.model.Document;
+import org.unigram.docvalidator.model.Paragraph;
+import org.unigram.docvalidator.model.Section;
+import org.unigram.docvalidator.model.Sentence;
+import org.unigram.docvalidator.util.CharacterTable;
+import org.unigram.docvalidator.util.FakeResultDistributor;
+import org.unigram.docvalidator.util.ValidationError;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
-import org.unigram.docvalidator.model.*;
-import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.FakeResultDistributor;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
-import org.unigram.docvalidator.util.ValidationError;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 class SentenceIteratorForTest extends SentenceIterator {
   public SentenceIteratorForTest() {
@@ -80,8 +84,9 @@ public class SentenceIteratorTest {
 
     DummyValidator validator = new DummyValidator();
     SentenceIterator sentenceIterator = generateSentenceIterator(validator);
-    List<ValidationError> errors =
-        sentenceIterator.validate(document, new FakeResultDistributor());
+    sentenceIterator.setResultDistributor(new FakeResultDistributor());
+    
+    List<ValidationError> errors = sentenceIterator.validate(document);
 
     // validate the iterated sentences
     assertEquals(2, validator.getSentenceStrings().size());
@@ -89,7 +94,7 @@ public class SentenceIteratorTest {
         validator.getSentenceStrings().get(0));
     assertEquals("that is also a piece of a cake.",
         validator.getSentenceStrings().get(1));
-
+    
     // validate the errors
     assertEquals(2, errors.size());
     for (ValidationError error : errors) {
@@ -108,8 +113,10 @@ public class SentenceIteratorTest {
 
     DummyValidator validator = new DummyValidator();
     SentenceIterator sentenceIterator = generateSentenceIterator(validator);
+    sentenceIterator.setResultDistributor(new FakeResultDistributor());
+
     List<ValidationError> errors =
-        sentenceIterator.validate(document, new FakeResultDistributor());
+        sentenceIterator.validate(document);
 
     assertEquals(3, validator.getSentenceStrings().size());
     assertEquals("it is a piece of a cake.",
@@ -138,8 +145,9 @@ public class SentenceIteratorTest {
 
     DummyValidator validator = new DummyValidator();
     SentenceIterator sentenceIterator = generateSentenceIterator(validator);
+    sentenceIterator.setResultDistributor(new FakeResultDistributor());
     List<ValidationError> errors =
-        sentenceIterator.validate(document, new FakeResultDistributor());
+        sentenceIterator.validate(document);
 
     assertEquals(4, validator.getSentenceStrings().size());
     assertEquals("it is a piece of a cake.",
@@ -166,7 +174,8 @@ public class SentenceIteratorTest {
 
     DummyValidator validator = new DummyValidator();
     SentenceIterator sentenceIterator = generateSentenceIterator(validator);
-    sentenceIterator.validate(document, new FakeResultDistributor());
+    sentenceIterator.setResultDistributor(new FakeResultDistributor());
+    sentenceIterator.validate(document);
 
     assertEquals(0, validator.getSentenceStrings().size());
   }
@@ -179,8 +188,9 @@ public class SentenceIteratorTest {
 
     DummyValidator validator = new DummyValidator();
     SentenceIterator sentenceIterator = generateSentenceIterator(validator);
+    sentenceIterator.setResultDistributor(new FakeResultDistributor());
     try {
-      sentenceIterator.validate(document, new FakeResultDistributor());
+      sentenceIterator.validate(document);
     } catch (Throwable e) {
       fail();
     }

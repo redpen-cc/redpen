@@ -31,9 +31,11 @@ public interface Validator {
   /**
    * validate the input document and returns the invalid points.
    * @param document input
-   * @param distributor flush output
    * @return List of ValidationError
    */
-  List<ValidationError> validate(Document document,
-                                 ResultDistributor distributor);
+  List<ValidationError> validate(Document document);
+
+//  List<ValidationError> validate(Document document,
+//                                 ResultDistributor distributor);
+
 }

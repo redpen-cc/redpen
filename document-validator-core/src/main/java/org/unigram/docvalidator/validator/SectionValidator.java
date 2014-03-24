@@ -17,16 +17,16 @@
  */
 package org.unigram.docvalidator.validator;
 
+import org.unigram.docvalidator.model.Document;
+import org.unigram.docvalidator.model.Section;
+import org.unigram.docvalidator.util.CharacterTable;
+import org.unigram.docvalidator.util.ValidationError;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.unigram.docvalidator.model.Document;
-import org.unigram.docvalidator.model.Section;
-import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
-import org.unigram.docvalidator.util.ResultDistributor;
-import org.unigram.docvalidator.util.ValidationError;
 /**
  * Validate sections in documents.
  */
@@ -35,8 +35,7 @@ public abstract class SectionValidator implements Validator {
   public abstract boolean loadConfiguration(ValidatorConfiguration conf,
       CharacterTable characterTable);
 
-  public List<ValidationError> validate(Document file,
-                                        ResultDistributor distributor) {
+  public List<ValidationError> validate(Document file) {
     List<ValidationError> validationErrors = new ArrayList<ValidationError>();
     for (Iterator<Section> sectionIterator =
         file.getSections(); sectionIterator.hasNext();) {

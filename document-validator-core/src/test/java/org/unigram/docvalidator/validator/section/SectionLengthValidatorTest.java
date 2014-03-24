@@ -17,17 +17,15 @@
  */
 package org.unigram.docvalidator.validator.section;
 
-import static org.junit.Assert.*;
-
-import java.util.List;
-
 import org.junit.Test;
 import org.unigram.docvalidator.model.Document;
 import org.unigram.docvalidator.model.Paragraph;
 import org.unigram.docvalidator.model.Section;
-import org.unigram.docvalidator.util.FakeResultDistributor;
-import org.unigram.docvalidator.util.ResultDistributor;
 import org.unigram.docvalidator.util.ValidationError;
+
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 class SectionLengthValidatorForTest extends SectionLengthValidator {
   void setMaxLength() {
@@ -48,8 +46,7 @@ public class SectionLengthValidatorTest {
     section.appendParagraph(paragraph);
     Document document = new Document();
     document.appendSection(section);
-    ResultDistributor distributor = new FakeResultDistributor();
-    List<ValidationError> errors = validator.validate(document, distributor);
+    List<ValidationError> errors = validator.validate(document);
     assertEquals(1, errors.size());
   }
 
