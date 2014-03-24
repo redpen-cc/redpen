@@ -22,18 +22,18 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Document class represent input document, which consists
+ * DocumentCollection class represent input document, which consists
  * of more than one files.
  */
-public final class Document {
+public final class DocumentCollection {
 
-  public Document() {
+  public DocumentCollection() {
     super();
     files = new ArrayList<FileContent>();
   }
 
   /**
-   * Get files contained by Document.
+   * Get files contained by DocumentCollection.
    *
    * @return iterator of file
    */
@@ -42,9 +42,9 @@ public final class Document {
   }
 
   /**
-   * Add a file to Document.
+   * Add a file to DocumentCollection.
    *
-   * @param file a file to be added to Document
+   * @param file a file to be added to DocumentCollection
    */
   public void appendFile(FileContent file) {
     files.add(file);
@@ -61,7 +61,7 @@ public final class Document {
   }
 
   /**
-   * Get last file in Document.
+   * Get last file in DocumentCollection.
    *
    * @return a file added in the last
    */
@@ -74,7 +74,7 @@ public final class Document {
   }
 
   /**
-   * Return the file number in Document.
+   * Return the file number in DocumentCollection.
    *
    * @return the number of files
    */

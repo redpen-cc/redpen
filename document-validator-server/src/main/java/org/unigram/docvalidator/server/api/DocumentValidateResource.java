@@ -26,7 +26,7 @@ import org.json.JSONObject;
 import org.unigram.docvalidator.parser.DocumentParserFactory;
 import org.unigram.docvalidator.parser.Parser;
 import org.unigram.docvalidator.server.DocumentValidatorServer;
-import org.unigram.docvalidator.store.Document;
+import org.unigram.docvalidator.store.DocumentCollection;
 import org.unigram.docvalidator.store.FileContent;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.util.ValidationError;
@@ -71,7 +71,7 @@ public class DocumentValidateResource {
     FileContent fileContent = parser.generateDocument(new
       ByteArrayInputStream(document.getBytes("UTF-8")));
 
-    Document d = new Document();
+    DocumentCollection d = new DocumentCollection();
     d.appendFile(fileContent);
 
     List<ValidationError> errors = server.getValidator().check(d);

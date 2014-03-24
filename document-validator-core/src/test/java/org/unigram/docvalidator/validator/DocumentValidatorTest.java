@@ -103,36 +103,36 @@ class ValidatorReturnsNull extends SectionValidator {
 public class DocumentValidatorTest {
   @Test
   public void testRunValidators() {
-    Document document = createDocument(2);
+    DocumentCollection documentCollection = createDocument(2);
     DocumentValidatorForTest documentValidator;
     documentValidator = new DocumentValidatorForTest();
     ValidatorForTest validator = new ValidatorForTest();
     documentValidator.addValidator(validator);
-    documentValidator.check(document);
+    documentValidator.check(documentCollection);
     // Check if two sections in the input files are iterated
     assertEquals(2, validator.getProcessedSentenceNum());
   }
 
   @Test
   public void testRunValidatorsWithoutFile() {
-    Document document = createDocument(0);
+    DocumentCollection documentCollection = createDocument(0);
     DocumentValidatorForTest documentValidator;
     documentValidator = new DocumentValidatorForTest();
     ValidatorForTest validator = new ValidatorForTest();
     documentValidator.addValidator(validator);
-    documentValidator.check(document);
+    documentValidator.check(documentCollection);
     assertEquals(0, validator.getProcessedSentenceNum());
   }
 
   @Test
   public void testRunValidatorsThrowExceptionInCheck() {
-    Document document = createDocument(1);
+    DocumentCollection documentCollection = createDocument(1);
     DocumentValidatorForTest documentValidator;
     documentValidator = new DocumentValidatorForTest();
     ValidatorThrowExceptionInCheck validator = new ValidatorThrowExceptionInCheck();
     documentValidator.addValidator(validator);
     try {
-      documentValidator.check(document);
+      documentValidator.check(documentCollection);
     } catch (Throwable e) {
       fail();
     }
@@ -140,23 +140,23 @@ public class DocumentValidatorTest {
 
   @Test
   public void testRunValidatorsReturnNull() {
-    Document document = createDocument(1);
+    DocumentCollection documentCollection = createDocument(1);
     DocumentValidatorForTest documentValidator;
     documentValidator = new DocumentValidatorForTest();
     ValidatorReturnsNull validator = new ValidatorReturnsNull();
     documentValidator.addValidator(validator);
-    List<ValidationError> errors = documentValidator.check(document);
+    List<ValidationError> errors = documentValidator.check(documentCollection);
     assertNotNull(errors);
     assertEquals(0, errors.size());
   }
 
-  private Document createDocument(int fileNum) {
-    Document document = new Document();
+  private DocumentCollection createDocument(int fileNum) {
+    DocumentCollection documentCollection = new DocumentCollection();
     for (int i = 0; i < fileNum; i++) {
-      document.appendFile(createFileContent("title" + String.valueOf(i),
+      documentCollection.appendFile(createFileContent("title" + String.valueOf(i),
           "content" + String.valueOf(i)));
    }
-    return document;
+    return documentCollection;
   }
 
   private FileContent createFileContent(String title, String content) {

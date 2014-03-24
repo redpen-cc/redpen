@@ -17,7 +17,7 @@
  */
 package org.unigram.docvalidator;
 
-import org.unigram.docvalidator.store.Document;
+import org.unigram.docvalidator.store.DocumentCollection;
 import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.DefaultResultDistributor;
 import org.unigram.docvalidator.util.DocumentValidatorException;
@@ -110,11 +110,11 @@ public final class Main {
       System.exit(-1);
     }
 
-    Document document =
+    DocumentCollection documentCollection =
         DocumentGenerator.generate(inputFileNames, conf, inputFormat);
     
-    if (document == null) {
-      LOG.error("Failed to create a Document object");
+    if (documentCollection == null) {
+      LOG.error("Failed to create a DocumentCollection object");
       System.exit(-1);
     }
 
@@ -123,7 +123,7 @@ public final class Main {
         .setResultDistributor(new DefaultResultDistributor(System.out))
         .build();
 
-    validator.check(document);
+    validator.check(documentCollection);
 
     System.exit(0);
   }

@@ -18,7 +18,7 @@
 package org.unigram.docvalidator;
 
 import org.junit.Test;
-import org.unigram.docvalidator.store.Document;
+import org.unigram.docvalidator.store.DocumentCollection;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 
 import static org.junit.Assert.*;
@@ -28,7 +28,7 @@ public class SampleDocumentGeneratorTest {
   public void testGenerateSimplePlainDocument() throws DocumentValidatorException {
     String sampleText = "";
     sampleText += "Gekioko pun pun maru means very very angry.\n";
-    Document doc = SampleDocumentGenerator.generateOneFileDocument(sampleText, "wiki");
+    DocumentCollection doc = SampleDocumentGenerator.generateOneFileDocument(sampleText, "wiki");
     assertNotNull(doc);
     assertEquals(1, doc.getNumberOfFiles());
     assertEquals(1, doc.getFile(0).getNumberOfSections());
@@ -44,7 +44,7 @@ public class SampleDocumentGeneratorTest {
     String sampleText = "";
     sampleText += "h1. About Gekioko.\n";
     sampleText += "Gekioko pun pun maru means very very angry.\n";
-    Document doc = SampleDocumentGenerator.generateOneFileDocument(sampleText, "wiki");
+    DocumentCollection doc = SampleDocumentGenerator.generateOneFileDocument(sampleText, "wiki");
     assertNotNull(doc);
     assertEquals(1, doc.getNumberOfFiles());
     assertEquals(2, doc.getFile(0).getNumberOfSections());
@@ -61,7 +61,7 @@ public class SampleDocumentGeneratorTest {
     String sampleText = "";
     sampleText += "# About Gekioko.\n";
     sampleText += "Gekioko pun pun maru means very very angry.\n";
-    Document doc = SampleDocumentGenerator.generateOneFileDocument(sampleText, "markdown");
+    DocumentCollection doc = SampleDocumentGenerator.generateOneFileDocument(sampleText, "markdown");
     assertNotNull(doc);
     assertEquals(1, doc.getNumberOfFiles());
     assertEquals(2, doc.getFile(0).getNumberOfSections());
