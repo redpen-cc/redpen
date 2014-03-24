@@ -25,6 +25,7 @@ import java.util.List;
 import org.junit.Test;
 import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.util.ValidationError;
+import org.unigram.docvalidator.validator.sentence.KatakanaSpellCheckValidator;
 
 public class KatakanaSpellCheckValidatorTest {
   @Test

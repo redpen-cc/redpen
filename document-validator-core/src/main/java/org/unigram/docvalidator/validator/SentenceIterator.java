@@ -42,8 +42,8 @@ import org.unigram.docvalidator.validator.sentence.SpaceBeginningOfSentenceValid
 import org.unigram.docvalidator.validator.sentence.SuggestExpressionValidator;
 import org.unigram.docvalidator.validator.sentence.SymbolWithSpaceValidator;
 import org.unigram.docvalidator.validator.sentence.WordNumberValidator;
-import org.unigram.docvalidator.validator.sentence.lang.ja.KatakanaEndHyphenValidator;
-import org.unigram.docvalidator.validator.sentence.lang.ja.KatakanaSpellCheckValidator;
+import org.unigram.docvalidator.validator.sentence.KatakanaEndHyphenValidator;
+import org.unigram.docvalidator.validator.sentence.KatakanaSpellCheckValidator;
 
 /**
  * Validator for input sentences. Sentence iterator calls appended

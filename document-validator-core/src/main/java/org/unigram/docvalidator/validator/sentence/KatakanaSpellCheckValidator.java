@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.unigram.docvalidator.validator.sentence.lang.ja;
+package org.unigram.docvalidator.validator.sentence;
 
 import java.util.ArrayList;
 import java.util.List;
