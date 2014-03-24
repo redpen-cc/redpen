@@ -17,23 +17,22 @@
  */
 package org.unigram.docvalidator.validator;
 
+import org.unigram.docvalidator.util.CharacterTable;
+import org.unigram.docvalidator.util.DocumentValidatorException;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
 
-import org.unigram.docvalidator.model.Document;
-import org.unigram.docvalidator.util.ResultDistributor;
-import org.unigram.docvalidator.util.ValidationError;
+public interface ConfigurationLoader {
 
-import java.util.List;
-
-/**
- * Validate input document.
- */
-public interface Validator {
   /**
-   * validate the input document and returns the invalid points.
-   * @param document input
-   * @param distributor flush output
-   * @return List of ValidationError
+   * load configuration files.
+   *
+   * @param conf      validator configuration
+   * @param charTable character configuration
+   * @return true succeeded, otherwise false
+   * @throws org.unigram.docvalidator.util.DocumentValidatorException
    */
-  List<ValidationError> validate(Document document,
-                                 ResultDistributor distributor);
+  boolean loadConfiguration(ValidatorConfiguration conf,
+                            CharacterTable charTable)
+      throws DocumentValidatorException;
+
 }

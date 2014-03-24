@@ -55,7 +55,9 @@ public final class ValidatorFactory {
       throw new DocumentValidatorException(
           "There is no Validator like " + validatorType);
     }
-    validator.loadConfiguration(conf, charTable);
+
+    // FIXME: Should be removed as refactoring progresses
+    ((ConfigurationLoader) validator).loadConfiguration(conf, charTable);
     return validator;
   }
 
