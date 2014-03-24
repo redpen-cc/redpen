@@ -22,10 +22,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
-import org.unigram.docvalidator.store.Document;
-import org.unigram.docvalidator.store.Paragraph;
-import org.unigram.docvalidator.store.Section;
-import org.unigram.docvalidator.store.Sentence;
+import org.unigram.docvalidator.model.Document;
+import org.unigram.docvalidator.model.Paragraph;
+import org.unigram.docvalidator.model.Section;
+import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 
 import java.util.ArrayList;

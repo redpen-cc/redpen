@@ -17,7 +17,7 @@
  */
 package org.unigram.docvalidator;
 
-import org.unigram.docvalidator.store.DocumentCollection;
+import org.unigram.docvalidator.model.DocumentCollection;
 import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.DefaultResultDistributor;
 import org.unigram.docvalidator.util.DocumentValidatorException;

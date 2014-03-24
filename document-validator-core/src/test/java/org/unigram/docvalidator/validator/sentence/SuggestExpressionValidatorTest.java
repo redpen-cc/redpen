@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
-import org.unigram.docvalidator.store.Sentence;
+import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.util.ValidationError;
 
 

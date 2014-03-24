@@ -19,7 +19,7 @@ package org.unigram.docvalidator.parser;
 
 import java.io.InputStream;
 
-import org.unigram.docvalidator.store.Document;
+import org.unigram.docvalidator.model.Document;
 import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 

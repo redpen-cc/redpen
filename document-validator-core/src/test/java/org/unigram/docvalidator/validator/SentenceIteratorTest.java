@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
-import org.unigram.docvalidator.store.*;
+import org.unigram.docvalidator.model.*;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.FakeResultDistributor;
 import org.unigram.docvalidator.util.ValidatorConfiguration;

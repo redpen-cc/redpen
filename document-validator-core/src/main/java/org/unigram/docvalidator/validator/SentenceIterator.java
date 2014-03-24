@@ -23,12 +23,12 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.unigram.docvalidator.store.Document;
-import org.unigram.docvalidator.store.ListBlock;
-import org.unigram.docvalidator.store.ListElement;
-import org.unigram.docvalidator.store.Paragraph;
-import org.unigram.docvalidator.store.Sentence;
-import org.unigram.docvalidator.store.Section;
+import org.unigram.docvalidator.model.Document;
+import org.unigram.docvalidator.model.ListBlock;
+import org.unigram.docvalidator.model.ListElement;
+import org.unigram.docvalidator.model.Paragraph;
+import org.unigram.docvalidator.model.Sentence;
+import org.unigram.docvalidator.model.Section;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.ResultDistributor;
 import org.unigram.docvalidator.util.ValidationError;

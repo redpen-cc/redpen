@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.unigram.docvalidator.store;
+package org.unigram.docvalidator.model;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,22 +23,22 @@ import java.util.List;
 
 /**
  * DocumentCollection class represent input document, which consists
- * of more than one files.
+ * of more than one documents.
  */
 public final class DocumentCollection {
 
   public DocumentCollection() {
     super();
-    files = new ArrayList<Document>();
+    documents = new ArrayList<Document>();
   }
 
   /**
-   * Get files contained by DocumentCollection.
+   * Get documents contained by DocumentCollection.
    *
    * @return iterator of file
    */
-  public Iterator<Document> getFiles() {
-    return files.iterator();
+  public Iterator<Document> getDocuments() {
+    return documents.iterator();
   }
 
   /**
@@ -46,8 +46,8 @@ public final class DocumentCollection {
    *
    * @param file a file to be added to DocumentCollection
    */
-  public void appendFile(Document file) {
-    files.add(file);
+  public void addDocument(Document file) {
+    documents.add(file);
   }
 
   /**
@@ -57,30 +57,17 @@ public final class DocumentCollection {
    * @return a file
    */
   public Document getFile(int id) {
-    return files.get(id);
+    return documents.get(id);
   }
 
   /**
-   * Get last file in DocumentCollection.
+   * Returns the size of the DocumentCollection.
    *
-   * @return a file added in the last
+   * @return the number of documents
    */
-  public Document getLastFile() {
-    Document document = null;
-    if (files.size() > 0) {
-      document = files.get(files.size() - 1);
-    }
-    return document;
+  public int size() {
+    return documents.size();
   }
 
-  /**
-   * Return the file number in DocumentCollection.
-   *
-   * @return the number of files
-   */
-  public int getNumberOfFiles() {
-    return files.size();
-  }
-
-  private final List<Document> files;
+  private final List<Document> documents;
 }

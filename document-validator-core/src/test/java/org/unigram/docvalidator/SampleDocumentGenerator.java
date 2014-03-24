@@ -20,7 +20,7 @@ package org.unigram.docvalidator;
 import org.apache.commons.io.IOUtils;
 import org.unigram.docvalidator.parser.DocumentParserFactory;
 import org.unigram.docvalidator.parser.Parser;
-import org.unigram.docvalidator.store.DocumentCollection;
+import org.unigram.docvalidator.model.DocumentCollection;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.DocumentValidatorException;
@@ -51,7 +51,7 @@ public class SampleDocumentGenerator {
 
     InputStream stream = IOUtils.toInputStream(docString);
     DocumentCollection documentCollection = new DocumentCollection();
-    documentCollection.appendFile(parser.generateDocument(stream));
+    documentCollection.addDocument(parser.generateDocument(stream));
     return documentCollection;
   }
 }

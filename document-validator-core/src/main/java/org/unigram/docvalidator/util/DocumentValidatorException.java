@@ -18,7 +18,7 @@
 package org.unigram.docvalidator.util;
 
 /**
- * Error used to store the failure of Validators.
+ * Error used to model the failure of Validators.
  */
 @SuppressWarnings("serial")
 public class DocumentValidatorException extends Exception {

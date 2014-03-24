@@ -6,7 +6,7 @@
   <version>0.1</version>
   <artifactId>document-validator</artifactId>
   <url>http://document-validator.org</url>
-  <name>DocumentValidator</name>
+  <name>document-validator</name>
   <packaging>pom</packaging>
 
   <properties>

@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.unigram.docvalidator.store.Document;
-import org.unigram.docvalidator.store.Section;
+import org.unigram.docvalidator.model.Document;
+import org.unigram.docvalidator.model.Section;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.ResultDistributor;

@@ -27,10 +27,10 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.unigram.docvalidator.store.Document;
-import org.unigram.docvalidator.store.Paragraph;
-import org.unigram.docvalidator.store.Section;
-import org.unigram.docvalidator.store.Sentence;
+import org.unigram.docvalidator.model.Document;
+import org.unigram.docvalidator.model.Paragraph;
+import org.unigram.docvalidator.model.Section;
+import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 
 /**

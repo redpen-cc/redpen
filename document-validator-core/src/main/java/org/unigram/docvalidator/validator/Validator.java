@@ -20,7 +20,7 @@ package org.unigram.docvalidator.validator;
 
 import java.util.List;
 
-import org.unigram.docvalidator.store.Document;
+import org.unigram.docvalidator.model.Document;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.ResultDistributor;
 import org.unigram.docvalidator.util.ValidatorConfiguration;

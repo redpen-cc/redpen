@@ -21,7 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.parser.Parser;
 import org.unigram.docvalidator.parser.DocumentParserFactory;
-import org.unigram.docvalidator.store.DocumentCollection;
+import org.unigram.docvalidator.model.DocumentCollection;
 import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 
@@ -51,7 +51,7 @@ public final class DocumentGenerator {
     DocumentCollection documentCollection = new DocumentCollection();
     for (String inputFileName : inputFileNames) {
       try {
-        documentCollection.appendFile(docparser.generateDocument(inputFileName));
+        documentCollection.addDocument(docparser.generateDocument(inputFileName));
       } catch (DocumentValidatorException e) {
         e.printStackTrace();
         return null;

@@ -19,7 +19,7 @@ package org.unigram.docvalidator.validator;
 
 import java.util.List;
 
-import org.unigram.docvalidator.store.Sentence;
+import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.ValidationError;
 import org.unigram.docvalidator.util.ValidatorConfiguration;

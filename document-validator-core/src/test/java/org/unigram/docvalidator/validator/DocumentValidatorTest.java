@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
-import org.unigram.docvalidator.store.*;
+import org.unigram.docvalidator.model.*;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.ValidationError;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
@@ -153,7 +153,7 @@ public class DocumentValidatorTest {
   private DocumentCollection createDocument(int fileNum) {
     DocumentCollection documentCollection = new DocumentCollection();
     for (int i = 0; i < fileNum; i++) {
-      documentCollection.appendFile(createFileContent("title" + String.valueOf(i),
+      documentCollection.addDocument(createFileContent("title" + String.valueOf(i),
           "content" + String.valueOf(i)));
    }
     return documentCollection;

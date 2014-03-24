@@ -24,11 +24,10 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
-import org.unigram.docvalidator.store.Sentence;
+import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.CharacterTableLoader;
 import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.validator.sentence.SymbolWithSpaceValidator;
 
 class SpaceWithSymbolValidatorForTest extends SymbolWithSpaceValidator {
   void loadCharacterTable (CharacterTable characterTable) {

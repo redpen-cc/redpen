@@ -22,9 +22,9 @@ import static org.junit.Assert.*;
 import java.util.List;
 
 import org.junit.Test;
-import org.unigram.docvalidator.store.Document;
-import org.unigram.docvalidator.store.Paragraph;
-import org.unigram.docvalidator.store.Section;
+import org.unigram.docvalidator.model.Document;
+import org.unigram.docvalidator.model.Paragraph;
+import org.unigram.docvalidator.model.Section;
 import org.unigram.docvalidator.util.FakeResultDistributor;
 import org.unigram.docvalidator.util.ResultDistributor;
 import org.unigram.docvalidator.util.ValidationError;

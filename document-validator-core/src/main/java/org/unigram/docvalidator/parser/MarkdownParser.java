@@ -25,9 +25,9 @@ import org.pegdown.ast.RootNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.parser.markdown.ToFileContentSerializer;
-import org.unigram.docvalidator.store.Document;
-import org.unigram.docvalidator.store.Section;
-import org.unigram.docvalidator.store.Sentence;
+import org.unigram.docvalidator.model.Document;
+import org.unigram.docvalidator.model.Section;
+import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 
 import java.io.BufferedReader;

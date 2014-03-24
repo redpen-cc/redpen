@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.unigram.docvalidator.store.Sentence;
+import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.symbol.DVSymbols;
 import org.unigram.docvalidator.symbol.DefaultSymbols;
 import org.unigram.docvalidator.util.StringUtils;
