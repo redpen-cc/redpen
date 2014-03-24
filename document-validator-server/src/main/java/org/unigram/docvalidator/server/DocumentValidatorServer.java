@@ -51,11 +51,11 @@ public class DocumentValidatorServer {
             .getResourceAsStream("/conf/dv-conf.xml")
     );
 
-    ResultDistributor distributor = ResultDistributorFactory
-        .createDistributor("plain", System.out);
+//    ResultDistributor distributor = ResultDistributorFactory
+//        .createDistributor("plain", System.out);
     validator = new DocumentValidator.Builder()
         .setResource(documentValidatorResource)
-        .setResultDistributor(distributor)
+//        .setResultDistributor(distributor)
         .build();
   }
 
