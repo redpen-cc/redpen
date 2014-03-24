@@ -20,11 +20,10 @@ package org.unigram.docvalidator.validator;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.unigram.docvalidator.store.FileContent;
+import org.unigram.docvalidator.store.Document;
 import org.unigram.docvalidator.store.ListBlock;
 import org.unigram.docvalidator.store.ListElement;
 import org.unigram.docvalidator.store.Paragraph;
@@ -60,7 +59,7 @@ public class SentenceIterator implements Validator {
     this.sentenceValidators = new ArrayList<SentenceValidator>();
   }
 
-  public List<ValidationError> check(FileContent file,
+  public List<ValidationError> check(Document file,
                                      ResultDistributor distributor) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     for (SentenceValidator validator : this.sentenceValidators) {

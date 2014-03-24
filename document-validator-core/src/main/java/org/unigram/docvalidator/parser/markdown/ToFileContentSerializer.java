@@ -60,7 +60,7 @@ import org.pegdown.ast.WikiLinkNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.parser.SentenceExtractor;
-import org.unigram.docvalidator.store.FileContent;
+import org.unigram.docvalidator.store.Document;
 import org.unigram.docvalidator.store.Paragraph;
 import org.unigram.docvalidator.store.Section;
 import org.unigram.docvalidator.store.Sentence;
@@ -83,7 +83,7 @@ public class ToFileContentSerializer implements Visitor {
   private static final Logger LOG =
       LoggerFactory.getLogger(ToFileContentSerializer.class);
 
-  private FileContent fileContent = null;
+  private Document document = null;
 
   private SentenceExtractor sentenceExtractor;
 
@@ -114,17 +114,17 @@ public class ToFileContentSerializer implements Visitor {
   /**
    * Constructor.
    *
-   * @param content          FileContent
+   * @param content          Document
    * @param listOfLineNumber the list of line number
    * @param extractor        utility object to extract a sentence list
    */
-  public ToFileContentSerializer(FileContent content,
+  public ToFileContentSerializer(Document content,
                                  List<Integer> listOfLineNumber,
                                  SentenceExtractor extractor) {
-    this.fileContent = content;
+    this.document = content;
     this.lineList = listOfLineNumber;
     this.sentenceExtractor = extractor;
-    currentSection = fileContent.getLastSection();
+    currentSection = document.getLastSection();
   }
 
   /**
@@ -136,7 +136,7 @@ public class ToFileContentSerializer implements Visitor {
    * @throws org.unigram.docvalidator.util.DocumentValidatorException
    * Fail to traverse markdown tree
    */
-  public FileContent toFileContent(RootNode astRoot)
+  public Document toFileContent(RootNode astRoot)
       throws DocumentValidatorException {
     try {
       checkArgNotNull(astRoot, "astRoot");
@@ -145,7 +145,7 @@ public class ToFileContentSerializer implements Visitor {
       LOG.error("Fail to traverse RootNode.");
       throw new DocumentValidatorException("Fail to traverse RootNode.", e);
     }
-    return fileContent;
+    return document;
   }
 
   private void fixSentence() {
@@ -263,7 +263,7 @@ public class ToFileContentSerializer implements Visitor {
 
     // 3. create new Section
     Section newSection = new Section(headerNode.getLevel(), headerContents);
-    fileContent.appendSection(newSection);
+    document.appendSection(newSection);
     //FIXME move this check process to addChild
     if (!addChild(currentSection, newSection)) {
       LOG.warn("Failed to add parent for a Section: "

@@ -22,21 +22,21 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * FileContent represents a file with many elements
+ * Document represents a file with many elements
  * such as sentences, lists and headers.
  */
-public final class FileContent {
+public final class Document {
   /**
    * Constructor.
    */
-  public FileContent() {
+  public Document() {
     super();
     sections = new ArrayList<Section>();
     fileName = "";
   }
 
   /**
-   * Get Iterator for Section in the FileContent.
+   * Get Iterator for Section in the Document.
    *
    * @return Iterator of Section list
    */
@@ -56,7 +56,7 @@ public final class FileContent {
   /**
    * Get last Section.
    *
-   * @return last section in the FileContent
+   * @return last section in the Document
    */
   public Section getLastSection() {
     Section section = null;

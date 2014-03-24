@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.unigram.docvalidator.store.FileContent;
+import org.unigram.docvalidator.store.Document;
 import org.unigram.docvalidator.store.Section;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
@@ -35,7 +35,7 @@ public abstract class SectionValidator implements Validator {
   public abstract boolean loadConfiguration(ValidatorConfiguration conf,
       CharacterTable characterTable);
 
-  public List<ValidationError> check(FileContent file,
+  public List<ValidationError> check(Document file,
       ResultDistributor distributor) {
     List<ValidationError> validationErrors = new ArrayList<ValidationError>();
     for (Iterator<Section> sectionIterator =
@@ -57,7 +57,7 @@ public abstract class SectionValidator implements Validator {
   protected abstract List<ValidationError> check(Section section);
 
   private void addFileInformation(List<ValidationError> errors,
-                                  FileContent file, Section section) {
+                                  Document file, Section section) {
     for (ValidationError error : errors) {
       error.setFileName(file.getFileName());
       error.setLineNumber(section.getHeaderContent(0).position);

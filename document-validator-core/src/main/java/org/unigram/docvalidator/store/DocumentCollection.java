@@ -29,7 +29,7 @@ public final class DocumentCollection {
 
   public DocumentCollection() {
     super();
-    files = new ArrayList<FileContent>();
+    files = new ArrayList<Document>();
   }
 
   /**
@@ -37,7 +37,7 @@ public final class DocumentCollection {
    *
    * @return iterator of file
    */
-  public Iterator<FileContent> getFiles() {
+  public Iterator<Document> getFiles() {
     return files.iterator();
   }
 
@@ -46,7 +46,7 @@ public final class DocumentCollection {
    *
    * @param file a file to be added to DocumentCollection
    */
-  public void appendFile(FileContent file) {
+  public void appendFile(Document file) {
     files.add(file);
   }
 
@@ -56,7 +56,7 @@ public final class DocumentCollection {
    * @param id id of file
    * @return a file
    */
-  public FileContent getFile(int id) {
+  public Document getFile(int id) {
     return files.get(id);
   }
 
@@ -65,12 +65,12 @@ public final class DocumentCollection {
    *
    * @return a file added in the last
    */
-  public FileContent getLastFile() {
-    FileContent fileContent = null;
+  public Document getLastFile() {
+    Document document = null;
     if (files.size() > 0) {
-      fileContent = files.get(files.size() - 1);
+      document = files.get(files.size() - 1);
     }
-    return fileContent;
+    return document;
   }
 
   /**
@@ -82,5 +82,5 @@ public final class DocumentCollection {
     return files.size();
   }
 
-  private final List<FileContent> files;
+  private final List<Document> files;
 }

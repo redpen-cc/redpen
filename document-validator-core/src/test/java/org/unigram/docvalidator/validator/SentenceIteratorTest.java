@@ -73,15 +73,15 @@ class DummyValidator implements SentenceValidator {
 public class SentenceIteratorTest {
   @Test
   public void testSimpleFileContent() {
-    FileContent fileContent = generateFileContent("tested file");
+    Document document = generateFileContent("tested file");
     String [] sentences = {"it is a piece of a cake.",
         "that is also a piece of a cake."};
-    addSentences(fileContent, sentences);
+    addSentences(document, sentences);
 
     DummyValidator validator = new DummyValidator();
     SentenceIterator sentenceIterator = generateSentenceIterator(validator);
     List<ValidationError> errors =
-        sentenceIterator.check(fileContent, new FakeResultDistributor());
+        sentenceIterator.check(document, new FakeResultDistributor());
 
     // check the iterated sentences
     assertEquals(2, validator.getSentenceStrings().size());
@@ -100,16 +100,16 @@ public class SentenceIteratorTest {
 
   @Test
   public void testFileContentWithHeader() {
-    FileContent fileContent = generateFileContent("tested file");
+    Document document = generateFileContent("tested file");
     String [] sentences = {"it is a piece of a cake.",
         "that is also a piece of a cake."};
-    addSentences(fileContent, sentences);
-    addHeader(fileContent, "this is it");
+    addSentences(document, sentences);
+    addHeader(document, "this is it");
 
     DummyValidator validator = new DummyValidator();
     SentenceIterator sentenceIterator = generateSentenceIterator(validator);
     List<ValidationError> errors =
-        sentenceIterator.check(fileContent, new FakeResultDistributor());
+        sentenceIterator.check(document, new FakeResultDistributor());
 
     assertEquals(3, validator.getSentenceStrings().size());
     assertEquals("it is a piece of a cake.",
@@ -128,18 +128,18 @@ public class SentenceIteratorTest {
 
   @Test
   public void testFileContentWithList() {
-    FileContent fileContent = generateFileContent("tested file");
+    Document document = generateFileContent("tested file");
     String [] sentences = {"it is a piece of a cake.",
         "that is also a piece of a cake."};
-    addSentences(fileContent, sentences);
-    addHeader(fileContent, "this is it");
+    addSentences(document, sentences);
+    addHeader(document, "this is it");
     String [] lists = {"this is a list."};
-    addList(fileContent, lists);
+    addList(document, lists);
 
     DummyValidator validator = new DummyValidator();
     SentenceIterator sentenceIterator = generateSentenceIterator(validator);
     List<ValidationError> errors =
-        sentenceIterator.check(fileContent, new FakeResultDistributor());
+        sentenceIterator.check(document, new FakeResultDistributor());
 
     assertEquals(4, validator.getSentenceStrings().size());
     assertEquals("it is a piece of a cake.",
@@ -160,27 +160,27 @@ public class SentenceIteratorTest {
 
   @Test
   public void testFileContentWithoutContent() {
-    FileContent fileContent = generateFileContent("tested file");
+    Document document = generateFileContent("tested file");
     String [] sentences = {};
-    addSentences(fileContent, sentences);
+    addSentences(document, sentences);
 
     DummyValidator validator = new DummyValidator();
     SentenceIterator sentenceIterator = generateSentenceIterator(validator);
-    sentenceIterator.check(fileContent, new FakeResultDistributor());
+    sentenceIterator.check(document, new FakeResultDistributor());
 
     assertEquals(0, validator.getSentenceStrings().size());
   }
 
   @Test
   public void testNoExceptionFromSentenceValidator() {
-    FileContent fileContent = generateFileContent("tested file");
+    Document document = generateFileContent("tested file");
     String [] sentences = {""};
-    addSentences(fileContent, sentences);
+    addSentences(document, sentences);
 
     DummyValidator validator = new DummyValidator();
     SentenceIterator sentenceIterator = generateSentenceIterator(validator);
     try {
-      sentenceIterator.check(fileContent, new FakeResultDistributor());
+      sentenceIterator.check(document, new FakeResultDistributor());
     } catch (Throwable e) {
       fail();
     }
@@ -195,11 +195,11 @@ public class SentenceIteratorTest {
     return sentenceIterator;
   }
 
-  private void addSentences(FileContent fileContent, String[] sentences) {
-    if (fileContent.getNumberOfSections() == 0) {
-      fileContent.appendSection(new Section(0));
+  private void addSentences(Document document, String[] sentences) {
+    if (document.getNumberOfSections() == 0) {
+      document.appendSection(new Section(0));
     }
-    Section section = fileContent.getSection(0);
+    Section section = document.getSection(0);
     Paragraph paragraph = new Paragraph();
     for (int i = 0; i < sentences.length; i++) {
       paragraph.appendSentence(sentences[i], i);
@@ -207,21 +207,21 @@ public class SentenceIteratorTest {
     section.appendParagraph(paragraph);
   }
 
-  private void addHeader(FileContent fileContent, String header) {
-    if (fileContent.getNumberOfSections() == 0) {
-      fileContent.appendSection(new Section(0));
+  private void addHeader(Document document, String header) {
+    if (document.getNumberOfSections() == 0) {
+      document.appendSection(new Section(0));
     }
-    Section section = fileContent.getSection(0);
+    Section section = document.getSection(0);
     List<Sentence> headers = new ArrayList<Sentence>();
     headers.add(new Sentence(header, 0));
     section.appendHeaderContent(headers);
   }
 
-  private void addList(FileContent fileContent, String[] listElements) {
-    if (fileContent.getNumberOfSections() == 0) {
-      fileContent.appendSection(new Section(0));
+  private void addList(Document document, String[] listElements) {
+    if (document.getNumberOfSections() == 0) {
+      document.appendSection(new Section(0));
     }
-    Section section = fileContent.getSection(0);
+    Section section = document.getSection(0);
     List<Sentence> listContents = new ArrayList<Sentence>();
     for (int i = 0; i < listElements.length; i++) {
       listContents.add(new Sentence(listElements[i],i));
@@ -230,9 +230,9 @@ public class SentenceIteratorTest {
     section.appendListElement(0, listContents);
   }
 
-  private FileContent generateFileContent(String fileName) {
-    FileContent fileContent = new FileContent();
-    fileContent.setFileName(fileName);
-    return fileContent;
+  private Document generateFileContent(String fileName) {
+    Document document = new Document();
+    document.setFileName(fileName);
+    return document;
   }
 }

@@ -20,7 +20,7 @@ package org.unigram.docvalidator.validator;
 
 import java.util.List;
 
-import org.unigram.docvalidator.store.FileContent;
+import org.unigram.docvalidator.store.Document;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.ResultDistributor;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
@@ -37,7 +37,7 @@ public interface Validator {
    * @param distributor flush output
    * @return List of ValidationError
    */
-  List<ValidationError> check(FileContent document,
+  List<ValidationError> check(Document document,
       ResultDistributor distributor);
 
   /**

@@ -25,7 +25,7 @@ import org.pegdown.ast.RootNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.parser.markdown.ToFileContentSerializer;
-import org.unigram.docvalidator.store.FileContent;
+import org.unigram.docvalidator.store.Document;
 import org.unigram.docvalidator.store.Section;
 import org.unigram.docvalidator.store.Sentence;
 import org.unigram.docvalidator.util.DocumentValidatorException;
@@ -53,20 +53,20 @@ public class MarkdownParser extends BasicDocumentParser {
   }
 
   @Override
-  public FileContent generateDocument(String fileName)
+  public Document generateDocument(String fileName)
       throws DocumentValidatorException {
     InputStream inputStream = this.loadStream(fileName);
-    FileContent fileContent = this.generateDocument(inputStream);
-    if (fileContent != null) {
-      fileContent.setFileName(fileName);
+    Document document = this.generateDocument(inputStream);
+    if (document != null) {
+      document.setFileName(fileName);
     }
-    return fileContent;
+    return document;
   }
 
   @Override
-  public FileContent generateDocument(InputStream inputStream)
+  public Document generateDocument(InputStream inputStream)
       throws DocumentValidatorException {
-    FileContent fileContent = null;
+    Document document = null;
 
     StringBuilder sb = new StringBuilder();
     String line;
@@ -84,19 +84,19 @@ public class MarkdownParser extends BasicDocumentParser {
         lineList.add(charCount);
       }
 
-      fileContent = new FileContent();
+      document = new Document();
       List<Sentence> headers = new ArrayList<Sentence>();
       headers.add(new Sentence("", 0));
       Section currentSection = new Section(0, headers);
-      fileContent.appendSection(currentSection);
+      document.appendSection(currentSection);
 
-      // TODO create fileContent after parsing... overhead...
+      // TODO create document after parsing... overhead...
       RootNode rootNode =
           pegDownProcessor.parseMarkdown(sb.toString().toCharArray());
       ToFileContentSerializer serializer =
-          new ToFileContentSerializer(fileContent,
+          new ToFileContentSerializer(document,
               lineList, this.getSentenceExtractor());
-      fileContent = serializer.toFileContent(rootNode);
+      document = serializer.toFileContent(rootNode);
     } catch (ParsingTimeoutException e) {
       throw new DocumentValidatorException("Failed to parse timeout");
     } catch (IOException e) {
@@ -104,7 +104,7 @@ public class MarkdownParser extends BasicDocumentParser {
     } finally {
       IOUtils.closeQuietly(br);
     }
-    return fileContent;
+    return document;
   }
 
 

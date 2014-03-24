@@ -31,7 +31,7 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 
 import org.unigram.docvalidator.util.ValidationConfigurationLoader;
-import org.unigram.docvalidator.store.FileContent;
+import org.unigram.docvalidator.store.Document;
 import org.unigram.docvalidator.store.Paragraph;
 import org.unigram.docvalidator.store.Section;
 import org.unigram.docvalidator.util.DVResource;
@@ -61,14 +61,14 @@ public class PlainTextParserTest {
     return lineNum;
   }
 
-  private FileContent generateDocument(String sampleText) {
+  private Document generateDocument(String sampleText) {
     InputStream is = null;
     try {
       is = new ByteArrayInputStream(sampleText.getBytes("utf-8"));
     } catch (UnsupportedEncodingException e1) {
       fail();
     }
-    FileContent doc = null;
+    Document doc = null;
     try {
       doc = parser.generateDocument(is);
     } catch (DocumentValidatorException e) {
@@ -114,7 +114,7 @@ public class PlainTextParserTest {
     sampleText += "Happ life.\n";
     sampleText += "Happy home.\n";
     sampleText += "Tama Home.\n";
-    FileContent doc = generateDocument(sampleText);
+    Document doc = generateDocument(sampleText);
     Section section = doc.getLastSection();
     assertEquals(7 ,calcLineNum(section));
     assertEquals(3, extractParagraphs(section).size());
@@ -128,7 +128,7 @@ public class PlainTextParserTest {
     String[] expectedResult = {"Tokyu is a good railway company.",
         " The company is reliable.", " In addition it is rich.",
         " I like the company.", " Howerver someone does not like it."};
-    FileContent doc = generateDocument(sampleText);
+    Document doc = generateDocument(sampleText);
     Section section = doc.getLastSection();
     List<Paragraph> paragraphs = extractParagraphs(section);
     assertEquals(1, paragraphs.size());
@@ -147,7 +147,7 @@ public class PlainTextParserTest {
     sampleText += "Yes it is. In addition it is rich!";
     String[] expectedResult = {"Is Tokyu a good railway company?",
         " Yes it is.", " In addition it is rich!"};
-    FileContent doc = generateDocument(sampleText);
+    Document doc = generateDocument(sampleText);
     Section section = doc.getLastSection();
     List<Paragraph> paragraphs = extractParagraphs(section);
     assertEquals(1, paragraphs.size());
@@ -163,7 +163,7 @@ public class PlainTextParserTest {
   @Test
   public void testGenerateDocumentWithNoContent() {
     String sampleText = "";
-    FileContent doc = generateDocument(sampleText);
+    Document doc = generateDocument(sampleText);
     Section section = doc.getLastSection();
     List<Paragraph> paragraphs = extractParagraphs(section);
     assertEquals(1, paragraphs.size());

@@ -159,11 +159,11 @@ public class DocumentValidatorTest {
     return documentCollection;
   }
 
-  private FileContent createFileContent(String title, String content) {
-    FileContent fileContent = new FileContent();
-    fileContent.setFileName(title);
-    fileContent.appendSection(appendSection(content));
-    return fileContent;
+  private Document createFileContent(String title, String content) {
+    Document document = new Document();
+    document.setFileName(title);
+    document.appendSection(appendSection(content));
+    return document;
   }
 
   private Section appendSection(String content) {

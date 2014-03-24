@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 import java.util.List;
 
 import org.junit.Test;
-import org.unigram.docvalidator.store.FileContent;
+import org.unigram.docvalidator.store.Document;
 import org.unigram.docvalidator.store.Paragraph;
 import org.unigram.docvalidator.store.Section;
 import org.unigram.docvalidator.util.FakeResultDistributor;
@@ -38,10 +38,10 @@ public class ParagraphStartWithValidatorTest {
     Paragraph paragraph = new Paragraph();
     paragraph.appendSentence("it like a piece of a cake.", 0);
     section.appendParagraph(paragraph);
-    FileContent fileContent = new FileContent();
-    fileContent.appendSection(section);
+    Document document = new Document();
+    document.appendSection(section);
     ResultDistributor distributor = new FakeResultDistributor();
-    List<ValidationError> errors = validator.check(fileContent, distributor);
+    List<ValidationError> errors = validator.check(document, distributor);
     assertEquals(1, errors.size());
   }
 
@@ -52,10 +52,10 @@ public class ParagraphStartWithValidatorTest {
     Paragraph paragraph = new Paragraph();
     paragraph.appendSentence(" it like a piece of a cake.", 0);
     section.appendParagraph(paragraph);
-    FileContent fileContent = new FileContent();
-    fileContent.appendSection(section);
+    Document document = new Document();
+    document.appendSection(section);
     ResultDistributor distributor = new FakeResultDistributor();
-    List<ValidationError> errors = validator.check(fileContent, distributor);
+    List<ValidationError> errors = validator.check(document, distributor);
     assertEquals(0, errors.size());
   }
 
