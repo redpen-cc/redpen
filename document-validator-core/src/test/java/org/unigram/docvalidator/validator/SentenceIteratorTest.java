@@ -42,7 +42,7 @@ class SentenceIteratorForTest extends SentenceIterator {
 }
 
 class DummyValidator implements SentenceValidator {
-  public List<ValidationError> check(Sentence sentence) {
+  public List<ValidationError> validate(Sentence sentence) {
     // NOTE: throw a exception when input sentence when sentence is zero length.
     if ("".equals(sentence.content)) {
       throw new RuntimeException("The content of input sentence is null");
@@ -81,16 +81,16 @@ public class SentenceIteratorTest {
     DummyValidator validator = new DummyValidator();
     SentenceIterator sentenceIterator = generateSentenceIterator(validator);
     List<ValidationError> errors =
-        sentenceIterator.check(document, new FakeResultDistributor());
+        sentenceIterator.validate(document, new FakeResultDistributor());
 
-    // check the iterated sentences
+    // validate the iterated sentences
     assertEquals(2, validator.getSentenceStrings().size());
     assertEquals("it is a piece of a cake.",
         validator.getSentenceStrings().get(0));
     assertEquals("that is also a piece of a cake.",
         validator.getSentenceStrings().get(1));
 
-    // check the errors
+    // validate the errors
     assertEquals(2, errors.size());
     for (ValidationError error : errors) {
       assertEquals("tested file", error.getFileName());
@@ -109,7 +109,7 @@ public class SentenceIteratorTest {
     DummyValidator validator = new DummyValidator();
     SentenceIterator sentenceIterator = generateSentenceIterator(validator);
     List<ValidationError> errors =
-        sentenceIterator.check(document, new FakeResultDistributor());
+        sentenceIterator.validate(document, new FakeResultDistributor());
 
     assertEquals(3, validator.getSentenceStrings().size());
     assertEquals("it is a piece of a cake.",
@@ -139,7 +139,7 @@ public class SentenceIteratorTest {
     DummyValidator validator = new DummyValidator();
     SentenceIterator sentenceIterator = generateSentenceIterator(validator);
     List<ValidationError> errors =
-        sentenceIterator.check(document, new FakeResultDistributor());
+        sentenceIterator.validate(document, new FakeResultDistributor());
 
     assertEquals(4, validator.getSentenceStrings().size());
     assertEquals("it is a piece of a cake.",
@@ -166,7 +166,7 @@ public class SentenceIteratorTest {
 
     DummyValidator validator = new DummyValidator();
     SentenceIterator sentenceIterator = generateSentenceIterator(validator);
-    sentenceIterator.check(document, new FakeResultDistributor());
+    sentenceIterator.validate(document, new FakeResultDistributor());
 
     assertEquals(0, validator.getSentenceStrings().size());
   }
@@ -180,7 +180,7 @@ public class SentenceIteratorTest {
     DummyValidator validator = new DummyValidator();
     SentenceIterator sentenceIterator = generateSentenceIterator(validator);
     try {
-      sentenceIterator.check(document, new FakeResultDistributor());
+      sentenceIterator.validate(document, new FakeResultDistributor());
     } catch (Throwable e) {
       fail();
     }

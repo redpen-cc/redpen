@@ -35,7 +35,7 @@ import org.unigram.docvalidator.validator.SentenceValidator;
  * Japanese Katakana words have variations in end hyphen.
  * For example, "computer" is written in Katakana by
  * "コンピュータ (without hyphen) ", and "コンピューター (with hypen) ".
- * This validator check if Katakana words ending format is match
+ * This validator validate if Katakana words ending format is match
  * the predefined standard. See JIS Z8301, G.6.2.2 b) G.3.
  *
  * The rules in JIS Z8301 are as follows:
@@ -49,7 +49,7 @@ import org.unigram.docvalidator.validator.SentenceValidator;
  *
  * Note that KatakanaEndHyphenValidator only checks the rules a) and b).
  */
-public class KatakanaEndHyphenValidator implements SentenceValidator {
+public class KatakanaEndHyphenValidator implements SentenceValidator, SentenceValidatorInitializer {
   /**
    * Default Katakana limit length without hypen.
    */
@@ -63,7 +63,7 @@ public class KatakanaEndHyphenValidator implements SentenceValidator {
    */
   private static final char KATAKANA_MIDDLE_DOT = '・';
 
-  public List<ValidationError> check(Sentence sentence) {
+  public List<ValidationError> validate(Sentence sentence) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     List<ValidationError> result;
     StringBuffer katakana = new StringBuffer("");

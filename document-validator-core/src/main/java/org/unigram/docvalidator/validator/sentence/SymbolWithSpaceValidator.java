@@ -29,8 +29,9 @@ import org.unigram.docvalidator.validator.SentenceValidator;
  * Validate symbol has before and after symbols. Needed spaces is depend on
  * the symbol and defined in DVCharacterTable.
  */
-public class SymbolWithSpaceValidator  implements SentenceValidator {
-  public List<ValidationError> check(Sentence sentence) {
+public class SymbolWithSpaceValidator 
+    implements SentenceValidator, SentenceValidatorInitializer {
+  public List<ValidationError> validate(Sentence sentence) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     Set<String> names = characterTable.getNames();
     for (String name : names) {

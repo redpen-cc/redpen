@@ -31,9 +31,10 @@ import org.unigram.docvalidator.validator.SentenceValidator;
  * Validate input sentences except for first sentence of a paragraph start with
  * a space.
  */
-public class SpaceBeginningOfSentenceValidator implements SentenceValidator {
+public class SpaceBeginningOfSentenceValidator
+    implements SentenceValidator, SentenceValidatorInitializer {
 
-  public List<ValidationError> check(Sentence sentence) {
+  public List<ValidationError> validate(Sentence sentence) {
     List<ValidationError> result = new ArrayList<ValidationError>();
     String content = sentence.content;
     if (!sentence.isFirstSentence && content.length() > 0

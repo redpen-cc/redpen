@@ -38,14 +38,15 @@ import org.unigram.docvalidator.validator.SentenceValidator;
  * If input sentences contain invalid expressions, this validator
  * returns the errors with corrected expressions.
  */
-public class SuggestExpressionValidator implements SentenceValidator {
+public class SuggestExpressionValidator
+    implements SentenceValidator, SentenceValidatorInitializer {
 
   public SuggestExpressionValidator() {
     super();
     synonyms = new HashMap<String, String>();
   }
 
-  public List<ValidationError> check(Sentence line) {
+  public List<ValidationError> validate(Sentence line) {
     List<ValidationError> result = new ArrayList<ValidationError>();
     String str = line.content;
     Set<String> invalidWords = synonyms.keySet();
@@ -55,7 +56,8 @@ public class SuggestExpressionValidator implements SentenceValidator {
             this.getClass(),
             "Found invalid word, \"" + w + "\". "
                 + "Use the synonym of the word \""
-                + synonyms.get(w) + "\" instead.", line));
+                + synonyms.get(w) + "\" instead.", line
+        ));
       }
     }
     return result;

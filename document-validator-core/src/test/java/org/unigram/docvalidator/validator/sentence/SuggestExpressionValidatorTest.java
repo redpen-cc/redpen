@@ -43,7 +43,7 @@ public class SuggestExpressionValidatorTest {
     SuggestExpressionValidatorForTest synonymValidator = new SuggestExpressionValidatorForTest();
     synonymValidator.loadSynonyms();
     Sentence str = new Sentence("it like a piece of a cake.",0);
-    List<ValidationError> error = synonymValidator.check(str);
+    List<ValidationError> error = synonymValidator.validate(str);
     assertNotNull(error);
     assertEquals(1, error.size());
   }
@@ -53,7 +53,7 @@ public class SuggestExpressionValidatorTest {
     SuggestExpressionValidatorForTest synonymValidator = new SuggestExpressionValidatorForTest();
     synonymValidator.loadSynonyms();
     Sentence str = new Sentence("it love a piece of a cake.",0);
-    List<ValidationError> error = synonymValidator.check(str);
+    List<ValidationError> error = synonymValidator.validate(str);
     assertNotNull(error);
     assertEquals(0, error.size());
   }
@@ -63,7 +63,7 @@ public class SuggestExpressionValidatorTest {
     SuggestExpressionValidatorForTest synonymValidator = new SuggestExpressionValidatorForTest();
     synonymValidator.loadSynonyms();
     Sentence str = new Sentence("it like a the info.",0);
-    List<ValidationError> error = synonymValidator.check(str);
+    List<ValidationError> error = synonymValidator.validate(str);
     assertNotNull(error);
     assertEquals(2, error.size());
   }
@@ -73,7 +73,7 @@ public class SuggestExpressionValidatorTest {
     SuggestExpressionValidatorForTest synonymValidator = new SuggestExpressionValidatorForTest();
     synonymValidator.loadSynonyms();
     Sentence str = new Sentence("",0);
-    List<ValidationError> error = synonymValidator.check(str);
+    List<ValidationError> error = synonymValidator.validate(str);
     assertNotNull(error);
     assertEquals(0, error.size());
   }

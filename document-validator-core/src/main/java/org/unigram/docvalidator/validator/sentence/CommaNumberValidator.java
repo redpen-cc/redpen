@@ -32,7 +32,7 @@ import org.unigram.docvalidator.validator.SentenceValidator;
 /**
  * Validate the number of commas in one sentence.
  */
-public class CommaNumberValidator implements SentenceValidator {
+public class CommaNumberValidator implements SentenceValidator, SentenceValidatorInitializer {
   /**
    * Default maximum number of comma.
    */
@@ -52,7 +52,7 @@ public class CommaNumberValidator implements SentenceValidator {
     comma = DEFAULT_COMMA;
   }
 
-  public List<ValidationError> check(Sentence line) {
+  public List<ValidationError> validate(Sentence line) {
     List<ValidationError> result = new ArrayList<ValidationError>();
     String content = line.content;
     int commaCount =  0;

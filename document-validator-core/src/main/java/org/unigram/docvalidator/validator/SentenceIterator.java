@@ -38,6 +38,7 @@ import org.unigram.docvalidator.validator.sentence.CommaNumberValidator;
 import org.unigram.docvalidator.validator.sentence.InvalidCharacterValidator;
 import org.unigram.docvalidator.validator.sentence.InvalidExpressionValidator;
 import org.unigram.docvalidator.validator.sentence.SentenceLengthValidator;
+import org.unigram.docvalidator.validator.sentence.SentenceValidatorInitializer;
 import org.unigram.docvalidator.validator.sentence.SpaceBeginningOfSentenceValidator;
 import org.unigram.docvalidator.validator.sentence.SuggestExpressionValidator;
 import org.unigram.docvalidator.validator.sentence.SymbolWithSpaceValidator;
@@ -47,7 +48,7 @@ import org.unigram.docvalidator.validator.sentence.KatakanaSpellCheckValidator;
 
 /**
  * Validator for input sentences. Sentence iterator calls appended
- * SentenceValidators and check the input using the validators.
+ * SentenceValidators and validate the input using the validators.
  */
 public class SentenceIterator implements Validator {
   /**
@@ -59,8 +60,8 @@ public class SentenceIterator implements Validator {
     this.sentenceValidators = new ArrayList<SentenceValidator>();
   }
 
-  public List<ValidationError> check(Document file,
-                                     ResultDistributor distributor) {
+  public List<ValidationError> validate(Document file,
+                                        ResultDistributor distributor) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     for (SentenceValidator validator : this.sentenceValidators) {
       for (Iterator<Section> sectionIterator =
@@ -78,7 +79,7 @@ public class SentenceIterator implements Validator {
       throws DocumentValidatorException {
     for (ValidatorConfiguration currentConfiguration : conf.getChildren()) {
       String confName = currentConfiguration.getConfigurationName();
-      SentenceValidator validator;
+      SentenceValidatorInitializer validator;
       if (confName.equals("SentenceLength")) {
         validator = new SentenceLengthValidator();
       } else if (confName.equals("InvalidExpression")) {
@@ -104,7 +105,8 @@ public class SentenceIterator implements Validator {
             "There is no validator like " + confName);
       }
       validator.initialize(currentConfiguration, charTable);
-      this.sentenceValidators.add(validator);
+      // FIXME: Rewrite this temporary cast
+      this.sentenceValidators.add( (SentenceValidator) validator);
     }
     return true;
   }
@@ -164,7 +166,7 @@ public class SentenceIterator implements Validator {
     List<ValidationError> validationErrors;
     try {
       validationErrors =
-          validator.check(sentence);
+          validator.validate(sentence);
     } catch (Throwable e) {
       //TODO add validator type info
       LOG.error("Error in checking sentence: \"" + sentence.content + "\"");

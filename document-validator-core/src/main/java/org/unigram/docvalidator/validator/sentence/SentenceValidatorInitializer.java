@@ -15,21 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.unigram.docvalidator.validator;
+package org.unigram.docvalidator.validator.sentence;
 
-import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.util.ValidationError;
+import org.unigram.docvalidator.util.CharacterTable;
+import org.unigram.docvalidator.util.DocumentValidatorException;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
 
-import java.util.List;
+public interface SentenceValidatorInitializer {
 
-/**
- * Validate input sentences.
- */
-public interface SentenceValidator {
   /**
-   * Check input sentences and returns the invalid points.
-   * @param sentence input
-   * @return list of invalid points
+   * initialize SentenceValidator.
+   *
+   * @param conf      validator configuration
+   * @param charTable character configuration
+   * @return true when initialization succeeded, otherwise false
+   * @throws org.unigram.docvalidator.util.DocumentValidatorException
    */
-  List<ValidationError> validate(Sentence sentence);
+  boolean initialize(ValidatorConfiguration conf, CharacterTable charTable)
+      throws DocumentValidatorException;
 }

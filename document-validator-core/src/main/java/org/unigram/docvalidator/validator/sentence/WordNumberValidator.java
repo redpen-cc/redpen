@@ -32,7 +32,8 @@ import org.unigram.docvalidator.validator.SentenceValidator;
 /**
  * Validate input sentences have more words than specified.
  */
-public class WordNumberValidator implements SentenceValidator {
+public class WordNumberValidator
+    implements SentenceValidator, SentenceValidatorInitializer {
   /**
    * Default maximum number of words in one sentence.
    */
@@ -44,7 +45,7 @@ public class WordNumberValidator implements SentenceValidator {
     this.maxWordNumber = DEFAULT_MAXIMUM_WORDS_IN_A_SENTENCE;
   }
 
-  public List<ValidationError> check(Sentence sentence) {
+  public List<ValidationError> validate(Sentence sentence) {
     List<ValidationError> result = new ArrayList<ValidationError>();
     String content = sentence.content;
     String[] wordList = content.split(" ");
@@ -53,7 +54,8 @@ public class WordNumberValidator implements SentenceValidator {
       result.add(new ValidationError(
           this.getClass(),
           "The number of the words exceeds the maximum "
-          + String.valueOf(wordNum), sentence));
+              + String.valueOf(wordNum), sentence
+      ));
     }
     return result;
   }
@@ -70,6 +72,7 @@ public class WordNumberValidator implements SentenceValidator {
     }
     return true;
   }
+
   private static final Logger LOG =
       LoggerFactory.getLogger(WordNumberValidator.class);
 

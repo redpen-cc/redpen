@@ -33,7 +33,7 @@ public class CommaNumberValidatorTest {
     String content = "is it true, not true, but it should be ture, right, or not right.";
     Sentence str = new Sentence(
         content ,0);
-    List<ValidationError> errors = commaNumberValidator.check(str);
+    List<ValidationError> errors = commaNumberValidator.validate(str);
     assertNotNull(errors);
     assertEquals(1, errors.size());
     assertEquals(content, errors.get(0).getSentence().content);
@@ -45,7 +45,7 @@ public class CommaNumberValidatorTest {
     String content = "is it true.";
     Sentence str = new Sentence(
         content ,0);
-    List<ValidationError> errors = commaNumberValidator.check(str);
+    List<ValidationError> errors = commaNumberValidator.validate(str);
     assertNotNull(errors);
     assertEquals(0, errors.size());
   }
@@ -56,7 +56,7 @@ public class CommaNumberValidatorTest {
     String content = "";
     Sentence str = new Sentence(
         content ,0);
-    List<ValidationError> errors = commaNumberValidator.check(str);
+    List<ValidationError> errors = commaNumberValidator.validate(str);
     assertNotNull(errors);
     assertEquals(0, errors.size());
   }

@@ -32,14 +32,14 @@ import org.unigram.docvalidator.validator.SentenceValidator;
 /**
  * Validate input sentences contain more characters more than specified.
  */
-public class SentenceLengthValidator implements SentenceValidator {
+public class SentenceLengthValidator implements SentenceValidator, SentenceValidatorInitializer {
   /**
    * Default maximum length of sentences.
    */
   @SuppressWarnings("WeakerAccess")
   public static final int DEFAULT_MAX_LENGTH = 30;
 
-  public List<ValidationError> check(Sentence line) {
+  public List<ValidationError> validate(Sentence line) {
     List<ValidationError> result = new ArrayList<ValidationError>();
     if (line.content.length() > maxLength) {
       result.add(new ValidationError(

@@ -35,8 +35,8 @@ public abstract class SectionValidator implements Validator {
   public abstract boolean loadConfiguration(ValidatorConfiguration conf,
       CharacterTable characterTable);
 
-  public List<ValidationError> check(Document file,
-      ResultDistributor distributor) {
+  public List<ValidationError> validate(Document file,
+                                        ResultDistributor distributor) {
     List<ValidationError> validationErrors = new ArrayList<ValidationError>();
     for (Iterator<Section> sectionIterator =
         file.getSections(); sectionIterator.hasNext();) {

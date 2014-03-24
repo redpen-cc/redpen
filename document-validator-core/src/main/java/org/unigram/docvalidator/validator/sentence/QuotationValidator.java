@@ -27,9 +27,10 @@ import org.unigram.docvalidator.util.Character;
 import org.unigram.docvalidator.validator.SentenceValidator;
 
 /**
- * Validator to check quotation characters.
+ * Validator to validate quotation characters.
  */
-public class QuotationValidator implements SentenceValidator {
+public class QuotationValidator
+    implements SentenceValidator, SentenceValidatorInitializer {
 
   /**
    * Constructor.
@@ -82,16 +83,16 @@ public class QuotationValidator implements SentenceValidator {
   }
 
   @Override
-  public List<ValidationError> check(Sentence sentence) {
+  public List<ValidationError> validate(Sentence sentence) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
-    // check single quotation
+    // validate single quotation
     List<ValidationError> result = this.checkQuotation(sentence,
         leftSingleQuotationMark, rightSingleQuotationMark);
     if (result != null) {
       errors.addAll(result);
     }
 
-    // check double quotation
+    // validate double quotation
     errors.addAll(this.checkQuotation(sentence,
         leftDoubleQuotationMark, rightDoubleQuotationMark));
     return errors;
@@ -161,7 +162,7 @@ public class QuotationValidator implements SentenceValidator {
             leftPosition + 1);
       }
 
-      // check if left and right quote pair exists
+      // validate if left and right quote pair exists
       if (leftPosition >= 0 && rightPosition < 0) {
         errors.add(new ValidationError(
             this.getClass(),
@@ -180,7 +181,7 @@ public class QuotationValidator implements SentenceValidator {
         break;
       }
 
-      // check inconsistent quotation marks
+      // validate inconsistent quotation marks
       int nextLeftPosition  = this.getQuotePosition(sentenceString,
           leftQuotation.getValue(),
           leftPosition + 1);
@@ -203,7 +204,7 @@ public class QuotationValidator implements SentenceValidator {
             sentence));
       }
 
-      // check if quotes have white spaces
+      // validate if quotes have white spaces
       if (leftPosition > 0 && leftQuotation.isNeedBeforeSpace()
           && (sentenceString.charAt(leftPosition - 1) != ' ')) {
         errors.add(new ValidationError(

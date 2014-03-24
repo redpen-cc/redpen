@@ -76,7 +76,7 @@ public class DocumentValidator {
       while (fileIterator.hasNext()) {
         try {
           List<ValidationError> currentErrors =
-              validator.check(fileIterator.next(), distributor);
+              validator.validate(fileIterator.next(), distributor);
           errors.addAll(currentErrors);
         } catch (Throwable e) {
           LOG.error("Error occurs in validation: " + e.getMessage());

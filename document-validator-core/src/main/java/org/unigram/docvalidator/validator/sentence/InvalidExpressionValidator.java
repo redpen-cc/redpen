@@ -36,7 +36,7 @@ import org.unigram.docvalidator.validator.SentenceValidator;
 /**
  * Validate input sentences contain invalid expression.
  */
-public class InvalidExpressionValidator implements SentenceValidator {
+public class InvalidExpressionValidator implements SentenceValidator, SentenceValidatorInitializer {
   /**
    * Constructor.
    */
@@ -44,7 +44,7 @@ public class InvalidExpressionValidator implements SentenceValidator {
     invalidExpressions = new HashSet<String>();
   }
 
-  public List<ValidationError> check(Sentence line) {
+  public List<ValidationError> validate(Sentence line) {
     List<ValidationError> result = new ArrayList<ValidationError>();
     String str = line.content;
     for (String w : invalidExpressions) {

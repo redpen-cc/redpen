@@ -52,7 +52,7 @@ import org.unigram.docvalidator.validator.SentenceValidator;
  * word is smaller than the threshold, we do not detect
  * the similarity.
  */
-public class KatakanaSpellCheckValidator implements SentenceValidator {
+public class KatakanaSpellCheckValidator implements SentenceValidator, SentenceValidatorInitializer {
   /**
    * The default similarity ratio between the length and the distance.
    */
@@ -67,7 +67,7 @@ public class KatakanaSpellCheckValidator implements SentenceValidator {
    */
   private HashMap<String, Integer> dic = new HashMap<String, Integer>();
 
-  public List<ValidationError> check(Sentence sentence) {
+  public List<ValidationError> validate(Sentence sentence) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     List<ValidationError> result;
     StringBuilder katakana = new StringBuilder("");

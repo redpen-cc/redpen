@@ -28,8 +28,9 @@ import org.unigram.docvalidator.validator.SentenceValidator;
 /**
  * Validate if there is invalid characters in sentences.
  */
-public class InvalidCharacterValidator implements SentenceValidator {
-  public List<ValidationError> check(Sentence sentence) {
+public class InvalidCharacterValidator
+    implements SentenceValidator, SentenceValidatorInitializer {
+  public List<ValidationError> validate(Sentence sentence) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     Set<String> names = characterTable.getNames();
     for (String name : names) {
@@ -42,7 +43,7 @@ public class InvalidCharacterValidator implements SentenceValidator {
   }
 
   public boolean initialize(ValidatorConfiguration conf,
-      CharacterTable characters)
+                            CharacterTable characters)
       throws DocumentValidatorException {
     this.characterTable = characters;
     return true;

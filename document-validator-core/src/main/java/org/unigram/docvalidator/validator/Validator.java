@@ -32,13 +32,13 @@ import org.unigram.docvalidator.util.ValidationError;
  */
 public interface Validator {
   /**
-   * check the input document and returns the invalid points.
+   * validate the input document and returns the invalid points.
    * @param document input
    * @param distributor flush output
    * @return List of ValidationError
    */
-  List<ValidationError> check(Document document,
-      ResultDistributor distributor);
+  List<ValidationError> validate(Document document,
+                                 ResultDistributor distributor);
 
   /**
    * load configuration files.

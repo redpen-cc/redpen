@@ -31,7 +31,7 @@ public class QuotationValidatorTest {
     QuotationValidator validator =
         new QuotationValidator();
     Sentence str = new Sentence("I said “That is true”.",0);
-    List<ValidationError> errors = validator.check(str);
+    List<ValidationError> errors = validator.validate(str);
     assertNotNull(errors);
     assertEquals(0, errors.size());
   }
@@ -41,7 +41,7 @@ public class QuotationValidatorTest {
     QuotationValidator validator =
         new QuotationValidator();
     Sentence str = new Sentence("I said ‘that is true’.",0);
-    List<ValidationError> errors = validator.check(str);
+    List<ValidationError> errors = validator.validate(str);
     assertNotNull(errors);
     assertEquals(0, errors.size());
   }
@@ -51,7 +51,7 @@ public class QuotationValidatorTest {
     QuotationValidator validator =
         new QuotationValidator();
     Sentence str = new Sentence("I said “That is true.",0);
-    List<ValidationError> errors = validator.check(str);
+    List<ValidationError> errors = validator.validate(str);
     assertNotNull(errors);
     assertEquals(1, errors.size());
   }
@@ -61,7 +61,7 @@ public class QuotationValidatorTest {
     QuotationValidator validator =
         new QuotationValidator();
     Sentence str = new Sentence("I said ‘that is true.",0);
-    List<ValidationError> errors = validator.check(str);
+    List<ValidationError> errors = validator.validate(str);
     assertNotNull(errors);
     assertEquals(1, errors.size());
   }
@@ -71,7 +71,7 @@ public class QuotationValidatorTest {
     QuotationValidator validator =
         new QuotationValidator();
     Sentence str = new Sentence("I said That is true”.",0);
-    List<ValidationError> errors = validator.check(str);
+    List<ValidationError> errors = validator.validate(str);
     assertNotNull(errors);
     assertEquals(1, errors.size());
   }
@@ -81,7 +81,7 @@ public class QuotationValidatorTest {
     QuotationValidator validator =
         new QuotationValidator();
     Sentence str = new Sentence("I said that is true’.",0);
-    List<ValidationError> errors = validator.check(str);
+    List<ValidationError> errors = validator.validate(str);
     assertNotNull(errors);
     assertEquals(1, errors.size());
   }
@@ -91,7 +91,7 @@ public class QuotationValidatorTest {
     QuotationValidator validator =
         new QuotationValidator();
     Sentence str = new Sentence("I’m a jedi knight.",0);
-    List<ValidationError> errors = validator.check(str);
+    List<ValidationError> errors = validator.validate(str);
     assertNotNull(errors);
     assertEquals(0, errors.size());
   }
@@ -101,7 +101,7 @@ public class QuotationValidatorTest {
     QuotationValidator validator =
         new QuotationValidator();
     Sentence str = new Sentence("he said ‘I’m a jedi knight’.",0);
-    List<ValidationError> errors = validator.check(str);
+    List<ValidationError> errors = validator.validate(str);
     assertNotNull(errors);
     assertEquals(0, errors.size());
   }
@@ -111,7 +111,7 @@ public class QuotationValidatorTest {
     QuotationValidator validator =
         new QuotationValidator();
     Sentence str = new Sentence("I said ‘that is true‘.",0);
-    List<ValidationError> errors = validator.check(str);
+    List<ValidationError> errors = validator.validate(str);
     assertNotNull(errors);
     assertEquals(1, errors.size());
   }
@@ -121,7 +121,7 @@ public class QuotationValidatorTest {
     QuotationValidator validator =
         new QuotationValidator();
     Sentence str = new Sentence("I said “that is true.“",0);
-    List<ValidationError> errors = validator.check(str);
+    List<ValidationError> errors = validator.validate(str);
     assertNotNull(errors);
     assertEquals(1, errors.size());
   }
@@ -131,7 +131,7 @@ public class QuotationValidatorTest {
     QuotationValidator validator =
         new QuotationValidator();
     Sentence str = new Sentence("I said ’that is true’.",0);
-    List<ValidationError> errors = validator.check(str);
+    List<ValidationError> errors = validator.validate(str);
     assertNotNull(errors);
     assertEquals(1, errors.size());
   }
@@ -141,7 +141,7 @@ public class QuotationValidatorTest {
     QuotationValidator validator =
         new QuotationValidator();
     Sentence str = new Sentence("I said ”that is true”.",0);
-    List<ValidationError> errors = validator.check(str);
+    List<ValidationError> errors = validator.validate(str);
     assertNotNull(errors);
     assertEquals(1, errors.size());
   }
@@ -151,7 +151,7 @@ public class QuotationValidatorTest {
     QuotationValidator validator =
         new QuotationValidator(true);
     Sentence str = new Sentence("I'm a jedi knight.",0);
-    List<ValidationError> errors = validator.check(str);
+    List<ValidationError> errors = validator.validate(str);
     assertNotNull(errors);
     assertEquals(0, errors.size());
   }
@@ -161,7 +161,7 @@ public class QuotationValidatorTest {
     QuotationValidator validator =
         new QuotationValidator(true);
     Sentence str = new Sentence("I said \"that is true\".",0);
-    List<ValidationError> errors = validator.check(str);
+    List<ValidationError> errors = validator.validate(str);
     assertNotNull(errors);
     assertEquals(0, errors.size());
   }
@@ -171,7 +171,7 @@ public class QuotationValidatorTest {
     QuotationValidator validator =
         new QuotationValidator(true);
     Sentence str = new Sentence("I said that is true.",0);
-    List<ValidationError> errors = validator.check(str);
+    List<ValidationError> errors = validator.validate(str);
     assertNotNull(errors);
     assertEquals(0, errors.size());
   }
@@ -181,7 +181,7 @@ public class QuotationValidatorTest {
     QuotationValidator validator =
         new QuotationValidator(true);
     Sentence str = new Sentence("",0);
-    List<ValidationError> errors = validator.check(str);
+    List<ValidationError> errors = validator.validate(str);
     assertNotNull(errors);
     assertEquals(0, errors.size());
   }
@@ -191,7 +191,7 @@ public class QuotationValidatorTest {
     QuotationValidator validator =
         new QuotationValidator();
     Sentence str = new Sentence("I said ‘that is true’ and not said ‘that is false’",0);
-    List<ValidationError> errors = validator.check(str);
+    List<ValidationError> errors = validator.validate(str);
     assertNotNull(errors);
     assertEquals(0, errors.size());
   }
@@ -201,7 +201,7 @@ public class QuotationValidatorTest {
     QuotationValidator validator =
         new QuotationValidator();
     Sentence str = new Sentence("I said ‘that is true and not said ‘that is false’",0);
-    List<ValidationError> errors = validator.check(str);
+    List<ValidationError> errors = validator.validate(str);
     assertNotNull(errors);
     assertEquals(1, errors.size());
   }
@@ -211,7 +211,7 @@ public class QuotationValidatorTest {
     QuotationValidator validator =
         new QuotationValidator();
     Sentence str = new Sentence("I said“that is true”.",0);
-    List<ValidationError> errors = validator.check(str);
+    List<ValidationError> errors = validator.validate(str);
     assertNotNull(errors);
     assertEquals(1, errors.size());
   }
@@ -221,7 +221,7 @@ public class QuotationValidatorTest {
     QuotationValidator validator =
         new QuotationValidator(true);
     Sentence str = new Sentence("I said\"that is true\".",0);
-    List<ValidationError> errors = validator.check(str);
+    List<ValidationError> errors = validator.validate(str);
     assertNotNull(errors);
     assertEquals(1, errors.size());
   }
@@ -231,7 +231,7 @@ public class QuotationValidatorTest {
     QuotationValidator validator =
         new QuotationValidator();
     Sentence str = new Sentence("I said “that is true”is true.",0);
-    List<ValidationError> errors = validator.check(str);
+    List<ValidationError> errors = validator.validate(str);
     assertNotNull(errors);
     assertEquals(1, errors.size());
   }
@@ -241,7 +241,7 @@ public class QuotationValidatorTest {
     QuotationValidator validator =
         new QuotationValidator(true);
     Sentence str = new Sentence("I said \"that is true\"is true.",0);
-    List<ValidationError> errors = validator.check(str);
+    List<ValidationError> errors = validator.validate(str);
     assertNotNull(errors);
     assertEquals(1, errors.size());
   }
@@ -251,7 +251,7 @@ public class QuotationValidatorTest {
     QuotationValidator validator =
         new QuotationValidator(true, '。');
     Sentence str = new Sentence("I said \"that is true\"。",0);
-    List<ValidationError> errors = validator.check(str);
+    List<ValidationError> errors = validator.validate(str);
     assertNotNull(errors);
     assertEquals(0, errors.size());
   }

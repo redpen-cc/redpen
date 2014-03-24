@@ -99,7 +99,7 @@ public class MarkdownParserTest {
     assertEquals(2, secondSection.getNumberOfParagraphs());
     assertEquals(1, secondSection.getNumberOfSubsections());
     assertEquals(firstSection, secondSection.getParentSection());
-    // check paragraph in 2nd section
+    // validate paragraph in 2nd section
     assertEquals(1, secondSection.getParagraph(0).getNumberOfSentences());
     assertEquals(true, secondSection.getParagraph(0).getSentence(0).isFirstSentence);
     assertEquals(1, secondSection.getParagraph(0).getSentence(0).position);
@@ -116,7 +116,7 @@ public class MarkdownParserTest {
     assertEquals("About Gunma.", lastSection.getHeaderContent(0).content);
     assertEquals(secondSection, lastSection.getParentSection());
 
-    // check paragraph in last section
+    // validate paragraph in last section
     assertEquals(1, lastSection.getParagraph(0).getNumberOfSentences());
     assertEquals(true, lastSection.getParagraph(0).getSentence(0).isFirstSentence);
     assertEquals(6, lastSection.getParagraph(0).getSentence(0).position);

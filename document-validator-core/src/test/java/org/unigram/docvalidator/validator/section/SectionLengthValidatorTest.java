@@ -49,7 +49,7 @@ public class SectionLengthValidatorTest {
     Document document = new Document();
     document.appendSection(section);
     ResultDistributor distributor = new FakeResultDistributor();
-    List<ValidationError> errors = validator.check(document, distributor);
+    List<ValidationError> errors = validator.validate(document, distributor);
     assertEquals(1, errors.size());
   }
 

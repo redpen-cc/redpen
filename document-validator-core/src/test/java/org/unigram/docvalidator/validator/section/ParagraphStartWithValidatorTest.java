@@ -41,7 +41,7 @@ public class ParagraphStartWithValidatorTest {
     Document document = new Document();
     document.appendSection(section);
     ResultDistributor distributor = new FakeResultDistributor();
-    List<ValidationError> errors = validator.check(document, distributor);
+    List<ValidationError> errors = validator.validate(document, distributor);
     assertEquals(1, errors.size());
   }
 
@@ -55,7 +55,7 @@ public class ParagraphStartWithValidatorTest {
     Document document = new Document();
     document.appendSection(section);
     ResultDistributor distributor = new FakeResultDistributor();
-    List<ValidationError> errors = validator.check(document, distributor);
+    List<ValidationError> errors = validator.validate(document, distributor);
     assertEquals(0, errors.size());
   }
 

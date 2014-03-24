@@ -180,7 +180,7 @@ public class ToFileContentSerializer implements Visitor {
   private Printer printer = new Printer();
 
   private String printChildrenToString(SuperNode node) {
-    // FIXME check usecase
+    // FIXME validate usecase
     Printer priorPrinter = printer;
     printer = new Printer();
     visitChildren(node);
@@ -209,7 +209,7 @@ public class ToFileContentSerializer implements Visitor {
               candidateSentence.getLineNum());
           newSentences.add(currentSentence);
         }
-        // FIXME check: pegdown extract 1 candidate sentence to 1 link?
+        // FIXME validate: pegdown extract 1 candidate sentence to 1 link?
         if (candidateSentence.getLink() != null) {
           currentSentence.links.add(candidateSentence.getLink());
         }
@@ -264,7 +264,7 @@ public class ToFileContentSerializer implements Visitor {
     // 3. create new Section
     Section newSection = new Section(headerNode.getLevel(), headerContents);
     document.appendSection(newSection);
-    //FIXME move this check process to addChild
+    //FIXME move this validate process to addChild
     if (!addChild(currentSection, newSection)) {
       LOG.warn("Failed to add parent for a Section: "
           + newSection.getHeaderContents().next());
@@ -321,7 +321,7 @@ public class ToFileContentSerializer implements Visitor {
   // list part
   @Override
   public void visit(BulletListNode bulletListNode) {
-    //FIXME test and check
+    //FIXME test and validate
     // TODO handle bulletListNode and orderdListNode
     if (itemDepth == 0) {
       fixSentence();
@@ -386,7 +386,7 @@ public class ToFileContentSerializer implements Visitor {
 
   @Override
   public void visit(SimpleNode simpleNode) {
-    //TODO check detail
+    //TODO validate detail
     switch (simpleNode.getType()) {
       case Linebreak:
         break;
