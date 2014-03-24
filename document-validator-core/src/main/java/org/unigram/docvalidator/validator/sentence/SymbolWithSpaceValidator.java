@@ -22,11 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
-import org.unigram.docvalidator.util.DVCharacter;
-import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.util.ValidationError;
+import org.unigram.docvalidator.util.*;
 import org.unigram.docvalidator.validator.SentenceValidator;
 
 /**
@@ -59,7 +55,7 @@ public class SymbolWithSpaceValidator  implements SentenceValidator {
 
   private ValidationError validateCharacter(Sentence sentence, String name) {
     String sentenceStr = sentence.content;
-    DVCharacter character = characterTable.getCharacter(name);
+    org.unigram.docvalidator.util.Character character = characterTable.getCharacter(name);
     if (!character.isNeedAfterSpace() && !character.isNeedBeforeSpace()) {
         return null;
     }
@@ -68,7 +64,7 @@ public class SymbolWithSpaceValidator  implements SentenceValidator {
     int position = sentenceStr.indexOf(target);
     if (position != -1) {
       if (position > 0 && character.isNeedBeforeSpace()
-          && !Character.isWhitespace(sentenceStr.charAt(position - 1))) {
+          && !java.lang.Character.isWhitespace(sentenceStr.charAt(position - 1))) {
         return new ValidationError(
             this.getClass(),
             "Need white space before symbol (" +  character.getName()
@@ -76,7 +72,7 @@ public class SymbolWithSpaceValidator  implements SentenceValidator {
             sentence);
       } else if (position < sentenceStr.length() - 1
           && character.isNeedAfterSpace()
-          && !Character.isWhitespace(sentenceStr.charAt(position + 1))) {
+          && !java.lang.Character.isWhitespace(sentenceStr.charAt(position + 1))) {
         return new ValidationError(
             this.getClass(),
             "Need white space after symbol (" + character.getName()

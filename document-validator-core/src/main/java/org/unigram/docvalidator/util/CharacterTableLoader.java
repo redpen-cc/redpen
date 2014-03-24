@@ -30,9 +30,9 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.unigram.docvalidator.symbol.DVSymbols;
+import org.unigram.docvalidator.symbol.AbstractSymbols;
 import org.unigram.docvalidator.symbol.DefaultSymbols;
-import org.unigram.docvalidator.symbol.JaDefaultSymbols;
+import org.unigram.docvalidator.symbol.JapaneseSymbols;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -106,7 +106,7 @@ public final class CharacterTableLoader {
    */
   public static CharacterTable load(InputStream stream, String lang) {
     CharacterTable characterTable = new CharacterTable();
-    Map<String, DVCharacter> characterDictionary =
+    Map<String, Character> characterDictionary =
         characterTable.getCharacterDictionary();
     loadDefaultCharacterTable(characterDictionary, lang);
     if (loadTable(stream, characterDictionary)) {
@@ -124,7 +124,7 @@ public final class CharacterTableLoader {
    * @return true when the table is successfully loaded, false otherwise
    */
   private static boolean loadTable(InputStream stream,
-                                   Map<String, DVCharacter> characterTable) {
+                                   Map<String, Character> characterTable) {
     Document document = parseCharTableString(stream);
     if (document == null) {
       LOG.error("Failed to parse character table");
@@ -147,7 +147,7 @@ public final class CharacterTableLoader {
       if (nNode.getNodeType() == Node.ELEMENT_NODE) {
         Element element = (Element) nNode;
         if (element.getNodeName().equals("character")) {
-          DVCharacter currentChar = createCharacter(element);
+          Character currentChar = createCharacter(element);
           if (currentChar == null) {
             LOG.warn("Found a invalid character setting element.");
             LOG.warn("Skip this element...");
@@ -190,12 +190,12 @@ public final class CharacterTableLoader {
     return doc;
   }
 
-  private static DVCharacter createCharacter(Element element) {
+  private static Character createCharacter(Element element) {
     if (!element.hasAttribute("name") || !element.hasAttribute("value")) {
       LOG.warn("Found element does not have name and value attribute...");
       return null;
     }
-    return new DVCharacter(
+    return new Character(
         element.getAttribute("name"),
         element.getAttribute("value"),
         element.getAttribute("invalid-chars"),
@@ -204,10 +204,10 @@ public final class CharacterTableLoader {
   }
 
   private static void loadDefaultCharacterTable(
-      Map<String, DVCharacter> characterTable, String lang) {
-    DVSymbols symbolSettings;
+      Map<String, Character> characterTable, String lang) {
+    AbstractSymbols symbolSettings;
     if (lang.equals("ja")) {
-      symbolSettings = JaDefaultSymbols.getInstance();
+      symbolSettings = JapaneseSymbols.getInstance();
     } else {
       symbolSettings = DefaultSymbols.getInstance();
     }
@@ -215,7 +215,7 @@ public final class CharacterTableLoader {
     Iterator<String> characterNames = symbolSettings.getAllCharacterNames();
     while (characterNames.hasNext()) {
       String charName = characterNames.next();
-      DVCharacter character = symbolSettings.get(charName);
+      Character character = symbolSettings.get(charName);
       characterTable.put(charName, character);
     }
   }

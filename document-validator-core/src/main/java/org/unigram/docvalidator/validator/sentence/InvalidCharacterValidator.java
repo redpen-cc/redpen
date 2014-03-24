@@ -22,11 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
-import org.unigram.docvalidator.util.DVCharacter;
-import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.util.ValidationError;
+import org.unigram.docvalidator.util.*;
 import org.unigram.docvalidator.validator.SentenceValidator;
 
 /**
@@ -58,7 +54,7 @@ public class InvalidCharacterValidator implements SentenceValidator {
 
   private ValidationError validateCharacter(Sentence sentence, String name) {
     String sentenceStr = sentence.content;
-    DVCharacter character = characterTable.getCharacter(name);
+    org.unigram.docvalidator.util.Character character = characterTable.getCharacter(name);
     List<String> invalidCharsList = character.getInvalidChars();
     for (String invalidChar : invalidCharsList) {
       if (sentenceStr.contains(invalidChar)) {

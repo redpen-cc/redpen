@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.symbol.DVSymbols;
+import org.unigram.docvalidator.symbol.AbstractSymbols;
 import org.unigram.docvalidator.symbol.DefaultSymbols;
 import org.unigram.docvalidator.util.StringUtils;
 
@@ -34,7 +34,7 @@ public final class SentenceExtractor {
    * Default Constructor.
    */
   public SentenceExtractor() {
-    DVSymbols symbols = DefaultSymbols.getInstance();
+    AbstractSymbols symbols = DefaultSymbols.getInstance();
     List<String> fullStopList = new ArrayList<String>();
     fullStopList.add(symbols.get("FULL_STOP").getValue());
     fullStopList.add(symbols.get("QUESTION_MARK").getValue());
