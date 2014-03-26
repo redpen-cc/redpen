@@ -35,7 +35,4 @@ public interface Validator {
    */
   List<ValidationError> validate(Document document);
 
-//  List<ValidationError> validate(Document document,
-//                                 ResultDistributor distributor);
-
 }

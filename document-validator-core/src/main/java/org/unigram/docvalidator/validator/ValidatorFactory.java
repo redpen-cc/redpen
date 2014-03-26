@@ -20,9 +20,6 @@ package org.unigram.docvalidator.validator;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.validator.section.ParagraphNumberValidator;
-import org.unigram.docvalidator.validator.section.ParagraphStartWithValidator;
-import org.unigram.docvalidator.validator.section.SectionLengthValidator;
 
 /**
  * Create Validator objects.

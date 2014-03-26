@@ -24,6 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
+import org.unigram.docvalidator.DocumentValidator;
 import org.unigram.docvalidator.model.*;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.ValidationError;
@@ -34,7 +35,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-class DocumentValidatorForTest extends RedPenCore {
+class DocumentValidatorForTest extends DocumentValidator {
   public DocumentValidatorForTest() {
     super();
   }

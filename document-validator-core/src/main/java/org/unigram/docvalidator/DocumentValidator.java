@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.unigram.docvalidator.validator;
+package org.unigram.docvalidator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +29,8 @@ import org.unigram.docvalidator.util.ResultDistributor;
 import org.unigram.docvalidator.util.ResultDistributorFactory;
 import org.unigram.docvalidator.util.ValidationError;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
+import org.unigram.docvalidator.validator.Validator;
+import org.unigram.docvalidator.validator.ValidatorFactory;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -38,9 +40,9 @@ import java.util.List;
 /**
  * Validate all input files using appended Validators.
  */
-public class RedPenCore {
+public class DocumentValidator {
 
-  private RedPenCore(Builder builder) throws DocumentValidatorException {
+  private DocumentValidator(Builder builder) {
     DVResource resource = builder.resource;
     this.distributor = builder.distributor;
     this.conf = resource.getConfiguration();
@@ -56,14 +58,14 @@ public class RedPenCore {
   @SuppressWarnings("BooleanMethodIsAlwaysInverted")
   public List<Validator> loadValidators(ValidatorConfiguration rootConfig,
                                         CharacterTable charTable)
-      throws DocumentValidatorException {
+       {
     List<Validator> validators = new ArrayList<Validator>();
 
     for (ValidatorConfiguration config : rootConfig.getChildren()) {
       String confName = config.getConfigurationName();
-      Validator validator =
-          ValidatorFactory.createValidator(confName, config, charTable);
-      validators.add(validator);
+//      Validator validator =
+//          ValidatorFactory.createValidator(confName, config, charTable);
+//      validators.add(validator);
     }
 
     return validators;
@@ -98,7 +100,7 @@ public class RedPenCore {
   /**
    * Constructor only for testing.
    */
-  protected RedPenCore() {
+  protected DocumentValidator() {
     this.distributor = ResultDistributorFactory.createDistributor("plain",
         System.out);
     this.validators = new ArrayList<Validator>();
@@ -133,8 +135,8 @@ public class RedPenCore {
       return this;
     }
 
-    public RedPenCore build() throws DocumentValidatorException {
-      return new RedPenCore(this);
+    public DocumentValidator build() throws DocumentValidatorException {
+      return new DocumentValidator(this);
     }
   }
 
@@ -147,5 +149,5 @@ public class RedPenCore {
   private ResultDistributor distributor;
 
   private static final Logger LOG =
-      LoggerFactory.getLogger(RedPenCore.class);
+      LoggerFactory.getLogger(DocumentValidator.class);
 }

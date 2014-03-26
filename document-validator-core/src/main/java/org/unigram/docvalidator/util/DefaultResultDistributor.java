@@ -60,6 +60,7 @@ public class DefaultResultDistributor implements ResultDistributor {
       throw new IllegalStateException("Specified output stream is illegal: "
           + e.getMessage());
     }
+    myFormatter = new PlainFormatter();
   }
 
   /**
