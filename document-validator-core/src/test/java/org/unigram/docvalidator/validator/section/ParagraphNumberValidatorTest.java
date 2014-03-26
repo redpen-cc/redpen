@@ -17,7 +17,7 @@
  */
 package org.unigram.docvalidator.validator.section;
 
-import org.junit.Ignore;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.unigram.docvalidator.model.Document;
 import org.unigram.docvalidator.model.Paragraph;
@@ -28,20 +28,18 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-class ParagraphNumberValidatorForTest extends ParagraphNumberValidator {
-  public void setMaxNumber() {
-    this.setMaxParagraphNumber(3);
-  }
-}
-
-
 public class ParagraphNumberValidatorTest {
-
-  @Ignore("This is a document level validator test - not a SectionValidator test")
+  
+  private static ParagraphNumberValidator validator;
+  
+  @BeforeClass
+  public static void setUp() {
+    validator = new ParagraphNumberValidator();
+    validator.setMaxParagraphNumber(3);
+  }
+  
   @Test
   public void testSectionWithManySection() {
-    ParagraphNumberValidatorForTest validator = new ParagraphNumberValidatorForTest();
-    validator.setMaxNumber();
     Section section = new Section(0, "header");
 
     section.appendParagraph(new Paragraph());
@@ -49,18 +47,12 @@ public class ParagraphNumberValidatorTest {
     section.appendParagraph(new Paragraph());
     section.appendParagraph(new Paragraph());
 
-    Document document = new Document();
-    document.appendSection(section);
-
-//    List<ValidationError> errors = validator.validate(document);
-//    assertEquals(1, errors.size());
+    List<ValidationError> errors = validator.validate(section);
+    assertEquals(1, errors.size());
   }
 
-  @Ignore("This is a document level validator test - not a SectionValidator test")
   @Test
   public void testSectionWithOnlyOneSection() {
-    ParagraphNumberValidatorForTest validator = new ParagraphNumberValidatorForTest();
-    validator.setMaxNumber();
 
     Section section = new Section(0);
     section.appendParagraph(new Paragraph());
@@ -68,8 +60,8 @@ public class ParagraphNumberValidatorTest {
     Document document = new Document();
     document.appendSection(section);
 
-//    List<ValidationError> errors = validator.validate(document);
-//    assertEquals(0, errors.size());
+    List<ValidationError> errors = validator.validate(section);
+    assertEquals(0, errors.size());
   }
 
 }

@@ -17,9 +17,8 @@
  */
 package org.unigram.docvalidator.validator.section;
 
-import org.junit.Ignore;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.unigram.docvalidator.model.Document;
 import org.unigram.docvalidator.model.Paragraph;
 import org.unigram.docvalidator.model.Section;
 import org.unigram.docvalidator.util.ValidationError;
@@ -28,27 +27,23 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-class SectionLengthValidatorForTest extends SectionLengthValidator {
-  void setMaxLength() {
-    this.setMaxSectionLength(10);
-  }
-}
-
 public class SectionLengthValidatorTest {
 
+  private static SectionLengthValidator validator;
+  
+  @BeforeClass
+  public static void setUp() {
+    validator = new SectionLengthValidator();
+    validator.setMaxSectionLength(10);
+  }
+  
   @Test
   public void testSectionLength() {
-    SectionLengthValidatorForTest validator = new SectionLengthValidatorForTest();
-    validator.setMaxLength();
-
     Section section = new Section(0, "header");
     Paragraph paragraph = new Paragraph();
     paragraph.appendSentence("it like a piece of a cake.", 0);
     section.appendParagraph(paragraph);
-//    Document document = new Document();
-//    document.appendSection(section);
     List<ValidationError> errors = validator.validate(section);
     assertEquals(1, errors.size());
   }
-
 }
