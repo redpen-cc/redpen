@@ -23,7 +23,6 @@ import java.util.Set;
 
 import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.util.*;
-import org.unigram.docvalidator.validator.SentenceValidator;
 
 /**
  * Validate if there is invalid characters in sentences.

@@ -38,9 +38,9 @@ import java.util.List;
 /**
  * Validate all input files using appended Validators.
  */
-public class DocumentValidator {
+public class RedPenCore {
 
-  private DocumentValidator(Builder builder) throws DocumentValidatorException {
+  private RedPenCore(Builder builder) throws DocumentValidatorException {
     DVResource resource = builder.resource;
     this.distributor = builder.distributor;
     this.conf = resource.getConfiguration();
@@ -98,7 +98,7 @@ public class DocumentValidator {
   /**
    * Constructor only for testing.
    */
-  protected DocumentValidator() {
+  protected RedPenCore() {
     this.distributor = ResultDistributorFactory.createDistributor("plain",
         System.out);
     this.validators = new ArrayList<Validator>();
@@ -133,8 +133,8 @@ public class DocumentValidator {
       return this;
     }
 
-    public DocumentValidator build() throws DocumentValidatorException {
-      return new DocumentValidator(this);
+    public RedPenCore build() throws DocumentValidatorException {
+      return new RedPenCore(this);
     }
   }
 
@@ -147,5 +147,5 @@ public class DocumentValidator {
   private ResultDistributor distributor;
 
   private static final Logger LOG =
-      LoggerFactory.getLogger(DocumentValidator.class);
+      LoggerFactory.getLogger(RedPenCore.class);
 }

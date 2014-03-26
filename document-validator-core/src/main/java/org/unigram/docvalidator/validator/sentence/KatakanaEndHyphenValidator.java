@@ -28,7 +28,6 @@ import org.unigram.docvalidator.util.StringUtils;
 import org.unigram.docvalidator.util.ValidationError;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.validator.SentenceValidator;
 
 /**
  * Validate the end hyphens of Katakana words in Japanese documents.

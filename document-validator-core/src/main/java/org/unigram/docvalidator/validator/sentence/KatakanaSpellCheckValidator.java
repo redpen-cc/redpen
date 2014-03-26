@@ -30,7 +30,6 @@ import org.unigram.docvalidator.util.LevenshteinDistance;
 import org.unigram.docvalidator.util.ValidationError;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.validator.SentenceValidator;
 
 /**
  * Validate the correctness of Katakana word spelling.

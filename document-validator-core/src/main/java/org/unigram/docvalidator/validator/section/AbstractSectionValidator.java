@@ -15,13 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.unigram.docvalidator.validator;
+package org.unigram.docvalidator.validator.section;
 
 import org.unigram.docvalidator.model.Document;
 import org.unigram.docvalidator.model.Section;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.ValidationError;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
+import org.unigram.docvalidator.validator.Validator;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -30,22 +31,26 @@ import java.util.List;
 /**
  * Validate sections in documents.
  */
-public abstract class SectionValidator implements Validator {
+public abstract class AbstractSectionValidator implements SectionValidator {
 
   public abstract boolean loadConfiguration(ValidatorConfiguration conf,
       CharacterTable characterTable);
 
-  public List<ValidationError> validate(Document file) {
-    List<ValidationError> validationErrors = new ArrayList<ValidationError>();
-    for (Iterator<Section> sectionIterator =
-        file.getSections(); sectionIterator.hasNext();) {
-      Section currentSection = sectionIterator.next();
-      List<ValidationError> errors = this.check(currentSection);
-      addFileInformation(errors, file, currentSection);
-      validationErrors.addAll(errors);
-    }
-    return validationErrors;
-  }
+  // FIXME: This is a wrong level of abstraction - A section validator shouldn't care about a Document  
+//  public List<ValidationError> validate(Document file) {
+//    List<ValidationError> validationErrors = new ArrayList<ValidationError>();
+//    for (Iterator<Section> sectionIterator =
+//        file.getSections(); sectionIterator.hasNext();) {
+//      
+//      Section currentSection = sectionIterator.next();
+//
+//      List<ValidationError> errors = this.validate(currentSection);
+//      addFileInformation(errors, file, currentSection);
+//      validationErrors.addAll(errors);
+//
+//    }
+//    return validationErrors;
+//  }
 
   /**
    * To append a new Validator which use section or paragraph information, we
@@ -53,7 +58,7 @@ public abstract class SectionValidator implements Validator {
    * @param section input section
    * @return list of errors
    */
-  protected abstract List<ValidationError> check(Section section);
+//  protected abstract List<ValidationError> validate(Section section);
 
   private void addFileInformation(List<ValidationError> errors,
                                   Document file, Section section) {

@@ -21,7 +21,7 @@ import org.unigram.docvalidator.model.DocumentCollection;
 import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.DefaultResultDistributor;
 import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.validator.DocumentValidator;
+import org.unigram.docvalidator.validator.RedPenCore;
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -118,7 +118,7 @@ public final class Main {
       System.exit(-1);
     }
 
-    DocumentValidator validator = new DocumentValidator.Builder()
+    RedPenCore validator = new RedPenCore.Builder()
         .setResource(conf)
         .setResultDistributor(new DefaultResultDistributor(System.out))
         .build();

@@ -18,7 +18,6 @@
 package org.unigram.docvalidator.validator.section;
 
 import org.junit.Test;
-import org.unigram.docvalidator.model.Document;
 import org.unigram.docvalidator.model.Paragraph;
 import org.unigram.docvalidator.model.Section;
 import org.unigram.docvalidator.util.ValidationError;
@@ -36,9 +35,7 @@ public class ParagraphStartWithValidatorTest {
     Paragraph paragraph = new Paragraph();
     paragraph.appendSentence("it like a piece of a cake.", 0);
     section.appendParagraph(paragraph);
-    Document document = new Document();
-    document.appendSection(section);
-    List<ValidationError> errors = validator.validate(document);
+    List<ValidationError> errors = validator.validate(section);
     assertEquals(1, errors.size());
   }
 
@@ -49,9 +46,7 @@ public class ParagraphStartWithValidatorTest {
     Paragraph paragraph = new Paragraph();
     paragraph.appendSentence(" it like a piece of a cake.", 0);
     section.appendParagraph(paragraph);
-    Document document = new Document();
-    document.appendSection(section);
-    List<ValidationError> errors = validator.validate(document);
+    List<ValidationError> errors = validator.validate(section);
     assertEquals(0, errors.size());
   }
 

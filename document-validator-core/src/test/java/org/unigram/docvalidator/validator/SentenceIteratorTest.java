@@ -26,6 +26,7 @@ import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.FakeResultDistributor;
 import org.unigram.docvalidator.util.ValidationError;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
+import org.unigram.docvalidator.validator.sentence.SentenceValidator;
 
 import java.util.ArrayList;
 import java.util.List;

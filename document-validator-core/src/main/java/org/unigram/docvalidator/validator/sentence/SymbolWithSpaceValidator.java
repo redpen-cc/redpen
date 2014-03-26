@@ -23,7 +23,6 @@ import java.util.Set;
 
 import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.util.*;
-import org.unigram.docvalidator.validator.SentenceValidator;
 
 /**
  * Validate symbol has before and after symbols. Needed spaces is depend on

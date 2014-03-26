@@ -31,7 +31,6 @@ import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.util.FileLoader;
 import org.unigram.docvalidator.util.WordListExtractor;
-import org.unigram.docvalidator.validator.SentenceValidator;
 
 /**
  * Validate input sentences contain invalid expression.

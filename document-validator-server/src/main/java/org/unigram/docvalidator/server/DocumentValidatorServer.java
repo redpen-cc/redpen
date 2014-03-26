@@ -24,9 +24,7 @@ import org.unigram.docvalidator.ConfigurationLoader;
 import org.unigram.docvalidator.server.util.ServerConfigurationLoader;
 import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.util.ResultDistributor;
-import org.unigram.docvalidator.util.ResultDistributorFactory;
-import org.unigram.docvalidator.validator.DocumentValidator;
+import org.unigram.docvalidator.validator.RedPenCore;
 
 /**
  * Document validator server.
@@ -39,7 +37,7 @@ public class DocumentValidatorServer {
 
   private static DocumentValidatorServer documentValidatorServer;
 
-  private DocumentValidator validator;
+  private RedPenCore validator;
 
   private DVResource documentValidatorResource;
 
@@ -53,13 +51,13 @@ public class DocumentValidatorServer {
 
 //    ResultDistributor distributor = ResultDistributorFactory
 //        .createDistributor("plain", System.out);
-    validator = new DocumentValidator.Builder()
+    validator = new RedPenCore.Builder()
         .setResource(documentValidatorResource)
 //        .setResultDistributor(distributor)
         .build();
   }
 
-  public DocumentValidator getValidator() {
+  public RedPenCore getValidator() {
     return validator;
   }
 

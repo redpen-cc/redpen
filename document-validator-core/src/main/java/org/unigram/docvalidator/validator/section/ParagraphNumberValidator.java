@@ -24,13 +24,12 @@ import org.unigram.docvalidator.model.Section;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.validator.SectionValidator;
 
 /**
  * Validate paragraph number. If a section has paragraphs more than specified,
  * This validator reports it.
  */
-public class ParagraphNumberValidator extends SectionValidator {
+public class ParagraphNumberValidator extends AbstractSectionValidator {
   /**
    * Default maximum number of paragraphs in a section.
    */
@@ -38,7 +37,7 @@ public class ParagraphNumberValidator extends SectionValidator {
   public static final int DEFAULT_MAX_PARAGRAPHS_IN_A_SECTION = 100;
 
   @Override
-  protected List<ValidationError> check(Section section) {
+  public List<ValidationError> validate(Section section) {
     List<ValidationError> validationErrors = new ArrayList<ValidationError>();
     int paragraphNumber = section.getNumberOfParagraphs();
     if (maxParagraphs < paragraphNumber) {

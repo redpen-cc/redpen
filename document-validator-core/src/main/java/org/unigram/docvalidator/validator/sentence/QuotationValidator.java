@@ -24,7 +24,6 @@ import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.symbol.DefaultSymbols;
 import org.unigram.docvalidator.util.*;
 import org.unigram.docvalidator.util.Character;
-import org.unigram.docvalidator.validator.SentenceValidator;
 
 /**
  * Validator to validate quotation characters.

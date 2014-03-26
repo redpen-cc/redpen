@@ -29,12 +29,11 @@ import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.validator.SectionValidator;
 
 /**
  * Validate whether paragraph start as specified.
  */
-public class ParagraphStartWithValidator extends SectionValidator {
+public class ParagraphStartWithValidator extends AbstractSectionValidator {
   /**
    * Default matter paragraph start with.
    */
@@ -50,7 +49,7 @@ public class ParagraphStartWithValidator extends SectionValidator {
   }
 
   @Override
-  protected List<ValidationError> check(Section section) {
+  public List<ValidationError> validate(Section section) {
     List<ValidationError> validationErrors = new ArrayList<ValidationError>();
     for (Iterator<Paragraph> paraIterator =
         section.getParagraphs(); paraIterator.hasNext();) {

@@ -38,6 +38,7 @@ import org.unigram.docvalidator.validator.sentence.CommaNumberValidator;
 import org.unigram.docvalidator.validator.sentence.InvalidCharacterValidator;
 import org.unigram.docvalidator.validator.sentence.InvalidExpressionValidator;
 import org.unigram.docvalidator.validator.sentence.SentenceLengthValidator;
+import org.unigram.docvalidator.validator.sentence.SentenceValidator;
 import org.unigram.docvalidator.validator.sentence.SentenceValidatorInitializer;
 import org.unigram.docvalidator.validator.sentence.SpaceBeginningOfSentenceValidator;
 import org.unigram.docvalidator.validator.sentence.SuggestExpressionValidator;

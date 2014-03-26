@@ -29,12 +29,11 @@ import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.ValidationError;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
-import org.unigram.docvalidator.validator.SectionValidator;
 
 /**
  * Validate the length of one section.
  */
-public class SectionLengthValidator extends SectionValidator {
+public class SectionLengthValidator extends AbstractSectionValidator {
   /**
    * Constructor.
    */
@@ -43,7 +42,7 @@ public class SectionLengthValidator extends SectionValidator {
   }
 
   @Override
-  protected List<ValidationError> check(Section section) {
+  public List<ValidationError> validate(Section section) {
     List<ValidationError> validationErrors = new ArrayList<ValidationError>();
     int sectionCharNumber = 0;
     for (Iterator<Paragraph> paraIterator =
