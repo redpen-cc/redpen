@@ -42,6 +42,7 @@
     <module name="UnusedImports"/>
     <module name="LineLength">
       <property name="ignorePattern" value="^import "/>
+      <property name="max" value="100"/>
     </module>
     <module name="MethodLength"/>
     <module name="ParameterNumber"/>
