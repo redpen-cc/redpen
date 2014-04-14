@@ -57,7 +57,7 @@ public abstract class AbstractSymbols {
   }
 
   private final Map<String, Character> symbolTable
-      = new HashMap<String, org.unigram.docvalidator.util.Character>();
+      = new HashMap<String, Character>();
 
   private static final Logger LOG = LoggerFactory.getLogger(AbstractSymbols.class);
 }

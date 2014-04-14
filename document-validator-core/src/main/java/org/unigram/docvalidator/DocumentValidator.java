@@ -40,7 +40,7 @@ import java.util.List;
 /**
  * Validate all input files using appended Validators.
  */
-public class DocumentValidator {
+public class DocumentValidator implements Validator {
 
   private DocumentValidator(Builder builder) {
     DVResource resource = builder.resource;
@@ -115,6 +115,11 @@ public class DocumentValidator {
    */
   protected void appendValidator(Validator validator) {
     this.validators.add(validator);
+  }
+
+  @Override
+  public List<ValidationError> validate(Document document) {
+    return null;
   }
 
   public static class Builder {
