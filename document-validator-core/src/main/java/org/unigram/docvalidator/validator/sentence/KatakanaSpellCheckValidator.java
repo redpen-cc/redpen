@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.util.CharacterTable;
+import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.StringUtils;
 import org.unigram.docvalidator.util.LevenshteinDistance;
 import org.unigram.docvalidator.util.ValidationError;
@@ -51,7 +52,7 @@ import org.unigram.docvalidator.util.DocumentValidatorException;
  * word is smaller than the threshold, we do not detect
  * the similarity.
  */
-public class KatakanaSpellCheckValidator implements SentenceValidator, SentenceValidatorInitializer {
+public class KatakanaSpellCheckValidator implements SentenceValidator {
   /**
    * The default similarity ratio between the length and the distance.
    */
@@ -65,6 +66,12 @@ public class KatakanaSpellCheckValidator implements SentenceValidator, SentenceV
    * Katakana word dic with line number.
    */
   private HashMap<String, Integer> dic = new HashMap<String, Integer>();
+
+  public KatakanaSpellCheckValidator(DVResource resource) throws DocumentValidatorException {
+    ValidatorConfiguration conf = resource.getConfiguration();
+    CharacterTable ct = resource.getCharacterTable();
+    initialize(conf, ct);
+  }
 
   public List<ValidationError> validate(Sentence sentence) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
@@ -113,7 +120,7 @@ public class KatakanaSpellCheckValidator implements SentenceValidator, SentenceV
       }
     }
     if (!found) {
-      dic.put(katakana, Integer.valueOf(sentence.position));
+      dic.put(katakana, sentence.position);
     }
     return errors;
   }
@@ -122,8 +129,8 @@ public class KatakanaSpellCheckValidator implements SentenceValidator, SentenceV
     super();
   }
 
-  public boolean initialize(ValidatorConfiguration conf,
-      CharacterTable characterTable)
+  private boolean initialize(ValidatorConfiguration conf,
+                             CharacterTable characterTable)
       throws DocumentValidatorException {
     //TODO : support the exception word list.
     //TODO : configurable SIMILARITY_RATIO.

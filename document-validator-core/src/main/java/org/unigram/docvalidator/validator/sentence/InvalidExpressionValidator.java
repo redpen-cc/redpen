@@ -17,30 +17,35 @@
  */
 package org.unigram.docvalidator.validator.sentence;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.unigram.docvalidator.model.Sentence;
+import org.unigram.docvalidator.util.DVResource;
+import org.unigram.docvalidator.util.DocumentValidatorException;
+import org.unigram.docvalidator.util.FileLoader;
+import org.unigram.docvalidator.util.ValidationError;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
+import org.unigram.docvalidator.util.WordListExtractor;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
-import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.util.FileLoader;
-import org.unigram.docvalidator.util.WordListExtractor;
-
 /**
  * Validate input sentences contain invalid expression.
  */
-public class InvalidExpressionValidator implements SentenceValidator, SentenceValidatorInitializer {
+public class InvalidExpressionValidator implements SentenceValidator {
   /**
    * Constructor.
    */
   public InvalidExpressionValidator() {
     invalidExpressions = new HashSet<String>();
+  }
+
+  public InvalidExpressionValidator(DVResource resource) throws DocumentValidatorException {
+    ValidatorConfiguration conf = resource.getConfiguration();
+    initialize(conf);
   }
 
   public List<ValidationError> validate(Sentence line) {
@@ -56,8 +61,7 @@ public class InvalidExpressionValidator implements SentenceValidator, SentenceVa
     return result;
   }
 
-  public boolean initialize(ValidatorConfiguration conf,
-      CharacterTable characterTable)
+  private boolean initialize(ValidatorConfiguration conf)
       throws DocumentValidatorException {
     String confFile = conf.getAttribute("dictionary");
     LOG.info("dictionary file is " + confFile);

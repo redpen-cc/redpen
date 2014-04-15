@@ -17,32 +17,36 @@
  */
 package org.unigram.docvalidator.validator.sentence;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.unigram.docvalidator.model.Sentence;
+import org.unigram.docvalidator.util.DVResource;
+import org.unigram.docvalidator.util.DocumentValidatorException;
+import org.unigram.docvalidator.util.FileLoader;
+import org.unigram.docvalidator.util.KeyValueDictionaryExtractor;
+import org.unigram.docvalidator.util.ValidationError;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
-import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.util.FileLoader;
-import org.unigram.docvalidator.util.KeyValueDictionaryExtractor;
-
 /**
  * If input sentences contain invalid expressions, this validator
  * returns the errors with corrected expressions.
  */
-public class SuggestExpressionValidator
-    implements SentenceValidator, SentenceValidatorInitializer {
+public class SuggestExpressionValidator implements SentenceValidator {
 
   public SuggestExpressionValidator() {
     super();
     synonyms = new HashMap<String, String>();
+  }
+
+  public SuggestExpressionValidator(DVResource resource) throws DocumentValidatorException {
+    ValidatorConfiguration conf = resource.getConfiguration();
+    initialize(conf);
   }
 
   public List<ValidationError> validate(Sentence line) {
@@ -62,8 +66,8 @@ public class SuggestExpressionValidator
     return result;
   }
 
-  public boolean initialize(
-      ValidatorConfiguration conf, CharacterTable characterTable)
+  private boolean initialize(
+    ValidatorConfiguration conf)
       throws DocumentValidatorException {
     String confFile = conf.getAttribute("invalid_word_file");
     LOG.info("dictionary file is " + confFile);

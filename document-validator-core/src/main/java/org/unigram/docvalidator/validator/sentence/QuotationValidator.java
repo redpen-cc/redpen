@@ -28,8 +28,7 @@ import org.unigram.docvalidator.util.Character;
 /**
  * Validator to validate quotation characters.
  */
-public class QuotationValidator
-    implements SentenceValidator, SentenceValidatorInitializer {
+public class QuotationValidator implements SentenceValidator {
 
   /**
    * Constructor.
@@ -97,7 +96,6 @@ public class QuotationValidator
     return errors;
   }
 
-  @Override
   public boolean initialize(
       ValidatorConfiguration conf, CharacterTable charTable)
       throws DocumentValidatorException {

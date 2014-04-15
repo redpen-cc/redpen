@@ -17,22 +17,21 @@
  */
 package org.unigram.docvalidator.validator.sentence;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
+import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.util.ValidationError;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Validate input sentences have more words than specified.
  */
-public class WordNumberValidator
-    implements SentenceValidator, SentenceValidatorInitializer {
+public class WordNumberValidator implements SentenceValidator {
   /**
    * Default maximum number of words in one sentence.
    */
@@ -42,6 +41,11 @@ public class WordNumberValidator
   public WordNumberValidator() {
     super();
     this.maxWordNumber = DEFAULT_MAXIMUM_WORDS_IN_A_SENTENCE;
+  }
+
+  public WordNumberValidator(DVResource resource) throws DocumentValidatorException {
+    ValidatorConfiguration conf = resource.getConfiguration();
+    initialize(conf);
   }
 
   public List<ValidationError> validate(Sentence sentence) {
@@ -59,8 +63,8 @@ public class WordNumberValidator
     return result;
   }
 
-  public boolean initialize(
-      ValidatorConfiguration conf, CharacterTable characterTable)
+  private boolean initialize(
+    ValidatorConfiguration conf)
       throws DocumentValidatorException {
     if (conf.getAttribute("max_word_num") == null) {
       this.maxWordNumber = DEFAULT_MAXIMUM_WORDS_IN_A_SENTENCE;

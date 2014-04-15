@@ -17,46 +17,42 @@
  */
 package org.unigram.docvalidator.parser;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
-import org.junit.Before;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.apache.commons.io.IOUtils;
-
-import org.unigram.docvalidator.util.ValidationConfigurationLoader;
+import org.junit.Before;
+import org.junit.Test;
 import org.unigram.docvalidator.model.Document;
 import org.unigram.docvalidator.model.Paragraph;
 import org.unigram.docvalidator.model.Section;
 import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.DocumentValidatorException;
+import org.unigram.docvalidator.util.ValidationConfigurationLoader;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class PlainTextParserTest {
 
   private Parser parser = null;
 
     private List<Paragraph> extractParagraphs(Section section) {
-    Iterator<Paragraph> paragraph = section.getParagraphs();
     List<Paragraph> paragraphs = new ArrayList<Paragraph>();
-    while(paragraph.hasNext()) {
-      Paragraph p = paragraph.next();
-      paragraphs.add(p);
-    }
+      for (Paragraph paragraph1 : section.getParagraphs()) {
+        paragraphs.add(paragraph1);
+      }
     return paragraphs;
   }
 
   private int calcLineNum(Section section) {
-    Iterator<Paragraph> paragraph = section.getParagraphs();
     int lineNum = 0;
-    while(paragraph.hasNext()) {
-      Paragraph p = paragraph.next();
-      lineNum += p.getNumberOfSentences();
+
+    for (Paragraph paragraph : section.getParagraphs()) {
+      lineNum += paragraph.getNumberOfSentences();
     }
     return lineNum;
   }
@@ -77,23 +73,21 @@ public class PlainTextParserTest {
     return doc;
   }
 
-  private String sampleConfiguraitonStr = new String(
-      "<?xml version=\"1.0\"?>" +
-      "<component name=\"Validator\">" +
-      "  <component name=\"SentenceIterator\">" +
-      "    <component name=\"LineLength\">"+
-      "      <property name=\"max_length\" value=\"10\"/>" +
-      "    </component>" +
-      "  </component>" +
-      "</component>");
+  private String sampleConfiguraitonStr = "" +
+    "<?xml version=\"1.0\"?>" +
+    "<component name=\"Validator\">" +
+    "  <component name=\"SentenceIterator\">" +
+    "    <component name=\"LineLength\">" +
+    "      <property name=\"max_length\" value=\"10\"/>" +
+    "    </component>" +
+    "  </component>" +
+    "</component>";
 
   @Before
   public void setup() {
     InputStream stream = IOUtils.toInputStream(this.sampleConfiguraitonStr);
       DVResource resource = new DVResource(ValidationConfigurationLoader.loadConfiguration(stream));
-    if (resource == null) {
-      fail();
-    }
+
     try {
       parser = DocumentParserFactory.generate("plain", resource);
     } catch (DocumentValidatorException e1) {

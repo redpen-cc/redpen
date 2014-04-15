@@ -28,8 +28,16 @@ import org.unigram.docvalidator.util.*;
  * Validate symbol has before and after symbols. Needed spaces is depend on
  * the symbol and defined in DVCharacterTable.
  */
-public class SymbolWithSpaceValidator 
-    implements SentenceValidator, SentenceValidatorInitializer {
+public class SymbolWithSpaceValidator implements SentenceValidator {
+
+  public SymbolWithSpaceValidator() {
+  }
+
+  public SymbolWithSpaceValidator(DVResource resource) throws DocumentValidatorException {
+    CharacterTable ct = resource.getCharacterTable();
+    initialize(ct);
+  }
+
   public List<ValidationError> validate(Sentence sentence) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     Set<String> names = characterTable.getNames();
@@ -42,8 +50,7 @@ public class SymbolWithSpaceValidator
     return errors;
   }
 
-  public boolean initialize(ValidatorConfiguration validatorConf,
-      CharacterTable characterConf)
+  private boolean initialize(CharacterTable characterConf)
       throws DocumentValidatorException {
     this.characterTable = characterConf;
     return true;

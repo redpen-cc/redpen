@@ -18,7 +18,6 @@
 package org.unigram.docvalidator.model;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -38,8 +37,8 @@ public final class Paragraph {
    *
    * @return sentences in the paragraph
    */
-  public Iterator<Sentence> getSentences() {
-    return sentences.iterator();
+  public List<Sentence> getSentences() {
+    return sentences;
   }
 
   /**

@@ -17,23 +17,22 @@
  */
 package org.unigram.docvalidator.validator;
 
-import org.junit.Ignore;
 import org.junit.Test;
+import org.unigram.docvalidator.DocumentValidator;
+import org.unigram.docvalidator.model.Document;
+import org.unigram.docvalidator.model.DocumentCollection;
+import org.unigram.docvalidator.model.Paragraph;
+import org.unigram.docvalidator.model.Section;
+import org.unigram.docvalidator.model.Sentence;
+import org.unigram.docvalidator.util.ValidationError;
+import org.unigram.docvalidator.validator.section.AbstractSectionValidator;
+import org.unigram.docvalidator.validator.section.SectionValidator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-
-import org.unigram.docvalidator.DocumentValidator;
-import org.unigram.docvalidator.model.*;
-import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
-import org.unigram.docvalidator.validator.section.AbstractSectionValidator;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 class DocumentValidatorForTest extends DocumentValidator {
   public DocumentValidatorForTest() {
@@ -43,6 +42,10 @@ class DocumentValidatorForTest extends DocumentValidator {
   public void addValidator(Validator validator) {
     this.appendValidator(validator);
   }
+
+  public void addSectionValidator(SectionValidator validator) {
+    this.appendSectionValidator(validator);
+  }
 }
 
 class ValidatorForTest extends AbstractSectionValidator {
@@ -51,16 +54,9 @@ class ValidatorForTest extends AbstractSectionValidator {
   }
 
   @Override
-  public boolean loadConfiguration(ValidatorConfiguration conf,
-                                   CharacterTable characterTable) {
-    return false;
-  }
-
-  @Override
   public List<ValidationError> validate(Section section) {
-    Iterator<Paragraph> paragraphs = section.getParagraphs();
-    while(paragraphs.hasNext()) {
-      Paragraph paragraph = paragraphs.next();
+
+    for (Paragraph paragraph : section.getParagraphs()) {
       sentenceNum += paragraph.getNumberOfSentences();
     }
     return new ArrayList<ValidationError>();
@@ -74,12 +70,7 @@ class ValidatorForTest extends AbstractSectionValidator {
 }
 
 class ValidatorThrowExceptionInCheck extends AbstractSectionValidator {
-  public ValidatorThrowExceptionInCheck() {}
-
-  @Override
-  public boolean loadConfiguration(ValidatorConfiguration conf,
-                                   CharacterTable characterTable) {
-    return false;
+  public ValidatorThrowExceptionInCheck() {
   }
 
   @Override
@@ -89,70 +80,59 @@ class ValidatorThrowExceptionInCheck extends AbstractSectionValidator {
 }
 
 class ValidatorReturnsNull extends AbstractSectionValidator {
-  public ValidatorReturnsNull() {}
-
-  @Override
-  public boolean loadConfiguration(ValidatorConfiguration conf,
-                                   CharacterTable characterTable) {
-    return false;
+  public ValidatorReturnsNull() {
   }
 
   @Override
   public List<ValidationError> validate(Section section) {
-    return null;
+    return new ArrayList<ValidationError>();
   }
 }
 
 public class DocumentValidatorTest {
 
-  @Ignore("Disable while refactoring")
   @Test
   public void testRunValidators() {
     DocumentCollection documentCollection = createDocument(2);
     DocumentValidatorForTest documentValidator;
     documentValidator = new DocumentValidatorForTest();
     ValidatorForTest validator = new ValidatorForTest();
-//    documentValidator.addValidator(validator);
+    documentValidator.addSectionValidator(validator);
     documentValidator.check(documentCollection);
     // Check if two sections in the input files are iterated
     assertEquals(2, validator.getProcessedSentenceNum());
   }
 
-  @Ignore("Disable while refactoring")
   @Test
   public void testRunValidatorsWithoutFile() {
     DocumentCollection documentCollection = createDocument(0);
     DocumentValidatorForTest documentValidator;
     documentValidator = new DocumentValidatorForTest();
     ValidatorForTest validator = new ValidatorForTest();
-//    documentValidator.addValidator(validator);
+    documentValidator.addSectionValidator(validator);
     documentValidator.check(documentCollection);
     assertEquals(0, validator.getProcessedSentenceNum());
   }
 
-  @Ignore("Disable while refactoring")
-  @Test
+
+  @Test(expected = RuntimeException.class)
   public void testRunValidatorsThrowExceptionInCheck() {
     DocumentCollection documentCollection = createDocument(1);
     DocumentValidatorForTest documentValidator;
     documentValidator = new DocumentValidatorForTest();
-    ValidatorThrowExceptionInCheck validator = new ValidatorThrowExceptionInCheck();
-//    documentValidator.addValidator(validator);
-    try {
-      documentValidator.check(documentCollection);
-    } catch (Throwable e) {
-      fail();
-    }
+    ValidatorThrowExceptionInCheck validator = new
+      ValidatorThrowExceptionInCheck();
+    documentValidator.addSectionValidator(validator);
+    documentValidator.check(documentCollection);
   }
 
-  @Ignore("Disable while refactoring")
   @Test
   public void testRunValidatorsReturnNull() {
     DocumentCollection documentCollection = createDocument(1);
     DocumentValidatorForTest documentValidator;
     documentValidator = new DocumentValidatorForTest();
     ValidatorReturnsNull validator = new ValidatorReturnsNull();
-//    documentValidator.addValidator(validator);
+    documentValidator.addSectionValidator(validator);
     List<ValidationError> errors = documentValidator.check(documentCollection);
     assertNotNull(errors);
     assertEquals(0, errors.size());
@@ -177,7 +157,7 @@ public class DocumentValidatorTest {
   private Section appendSection(String content) {
     Section section = new Section(0, "header");
     Paragraph paragraph = new Paragraph();
-    paragraph.appendSentence(new Sentence(content,0));
+    paragraph.appendSentence(new Sentence(content, 0));
     section.appendParagraph(paragraph);
     return section;
   }

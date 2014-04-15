@@ -25,7 +25,7 @@ import java.util.List;
  * DocumentCollection class represent input document, which consists
  * of more than one documents.
  */
-public final class DocumentCollection {
+public final class DocumentCollection implements Iterable<Document> {
 
   public DocumentCollection() {
     super();
@@ -70,4 +70,9 @@ public final class DocumentCollection {
   }
 
   private final List<Document> documents;
+
+  @Override
+  public Iterator<Document> iterator() {
+    return documents.iterator();
+  }
 }

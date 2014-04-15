@@ -22,10 +22,9 @@ import org.unigram.docvalidator.model.Document;
 import org.unigram.docvalidator.model.Paragraph;
 import org.unigram.docvalidator.model.Section;
 import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.util.CharacterTable;
+import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.util.FakeResultDistributor;
 import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.validator.sentence.SentenceValidator;
 
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 class SentenceIteratorForTest extends SentenceIterator {
-  public SentenceIteratorForTest() {
+  public SentenceIteratorForTest() throws DocumentValidatorException {
     super();
   }
 
@@ -63,11 +62,6 @@ class DummyValidator implements SentenceValidator {
     sentenceStrings = new ArrayList<String>();
   }
 
-  public boolean initialize(ValidatorConfiguration conf,
-      CharacterTable characterTable) {
-    return true;
-  }
-
   public List<String> getSentenceStrings() {
     return sentenceStrings;
   }
@@ -77,7 +71,7 @@ class DummyValidator implements SentenceValidator {
 
 public class SentenceIteratorTest {
   @Test
-  public void testSimpleFileContent() {
+  public void testSimpleFileContent() throws DocumentValidatorException {
     Document document = generateFileContent("tested file");
     String [] sentences = {"it is a piece of a cake.",
         "that is also a piece of a cake."};
@@ -105,7 +99,7 @@ public class SentenceIteratorTest {
   }
 
   @Test
-  public void testFileContentWithHeader() {
+  public void testFileContentWithHeader() throws DocumentValidatorException {
     Document document = generateFileContent("tested file");
     String [] sentences = {"it is a piece of a cake.",
         "that is also a piece of a cake."};
@@ -135,7 +129,7 @@ public class SentenceIteratorTest {
   }
 
   @Test
-  public void testFileContentWithList() {
+  public void testFileContentWithList() throws DocumentValidatorException {
     Document document = generateFileContent("tested file");
     String [] sentences = {"it is a piece of a cake.",
         "that is also a piece of a cake."};
@@ -168,7 +162,7 @@ public class SentenceIteratorTest {
   }
 
   @Test
-  public void testFileContentWithoutContent() {
+  public void testFileContentWithoutContent() throws DocumentValidatorException {
     Document document = generateFileContent("tested file");
     String [] sentences = {};
     addSentences(document, sentences);
@@ -182,7 +176,7 @@ public class SentenceIteratorTest {
   }
 
   @Test
-  public void testNoExceptionFromSentenceValidator() {
+  public void testNoExceptionFromSentenceValidator() throws DocumentValidatorException {
     Document document = generateFileContent("tested file");
     String [] sentences = {""};
     addSentences(document, sentences);
@@ -198,7 +192,7 @@ public class SentenceIteratorTest {
     assertEquals(0, validator.getSentenceStrings().size());
   }
 
-  private SentenceIterator generateSentenceIterator(SentenceValidator validator) {
+  private SentenceIterator generateSentenceIterator(SentenceValidator validator) throws DocumentValidatorException {
     SentenceIteratorForTest sentenceIterator = new SentenceIteratorForTest();
     List<SentenceValidator> validatorList = new ArrayList<SentenceValidator>();
     validatorList.add(validator);

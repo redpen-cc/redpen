@@ -193,7 +193,8 @@ public class MarkdownParserTest {
     String sampleText = "";
     Document doc = createFileContent(sampleText);
     Section firstSections = doc.getSection(0);
-    assertEquals(false, firstSections.getParagraphs().hasNext());
+    assertEquals(0, firstSections.getParagraphs().size());
+//    assertEquals(false, firstSections.getParagraphs().hasNext());
   }
 
   @Test
@@ -436,16 +437,16 @@ public class MarkdownParserTest {
 
   @Test
   public void testGenerateJapaneseDocument() {
-    String japaneseConfiguraitonStr = new String(
-        "<?xml version=\"1.0\"?>" +
-            "<component name=\"Validator\">" +
-            "</component>");
+    String japaneseConfiguraitonStr = "" +
+      "<?xml version=\"1.0\"?>" +
+      "<component name=\"Validator\">" +
+      "</component>";
 
-    String japaneseCharTableStr = new String(
-        "<?xml version=\"1.0\"?>" +
-            "<character-table>" +
-            "<character name=\"FULL_STOP\" value=\"。\" />" +
-            "</character-table>");
+    String japaneseCharTableStr = "" +
+      "<?xml version=\"1.0\"?>" +
+      "<character-table>" +
+      "<character name=\"FULL_STOP\" value=\"。\" />" +
+      "</character-table>";
 
     String sampleText = "埼玉は東京の北に存在する。";
     sampleText += "大きなベッドタウンであり、多くの人が住んでいる。";

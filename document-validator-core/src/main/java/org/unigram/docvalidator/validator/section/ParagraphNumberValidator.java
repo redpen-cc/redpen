@@ -36,6 +36,16 @@ public class ParagraphNumberValidator extends AbstractSectionValidator {
   @SuppressWarnings("WeakerAccess")
   public static final int DEFAULT_MAX_PARAGRAPHS_IN_A_SECTION = 100;
 
+  public ParagraphNumberValidator() {
+    super();
+  }
+
+  public ParagraphNumberValidator(ValidatorConfiguration conf, CharacterTable
+    charTable) {
+    this();
+    loadConfiguration(conf);
+  }
+
   @Override
   public List<ValidationError> validate(Section section) {
     List<ValidationError> validationErrors = new ArrayList<ValidationError>();
@@ -50,9 +60,7 @@ public class ParagraphNumberValidator extends AbstractSectionValidator {
     return validationErrors;
   }
 
-  @Override
-  public boolean loadConfiguration(ValidatorConfiguration conf,
-                                   CharacterTable characterTable) {
+  private boolean loadConfiguration(ValidatorConfiguration conf) {
     if (conf.getAttribute("max_char_number") == null) {
       this.maxParagraphs = DEFAULT_MAX_PARAGRAPHS_IN_A_SECTION;
     } else {

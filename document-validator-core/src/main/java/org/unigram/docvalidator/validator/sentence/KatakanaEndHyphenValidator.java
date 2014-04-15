@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.util.CharacterTable;
+import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.StringUtils;
 import org.unigram.docvalidator.util.ValidationError;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
@@ -48,7 +49,7 @@ import org.unigram.docvalidator.util.DocumentValidatorException;
  *
  * Note that KatakanaEndHyphenValidator only checks the rules a) and b).
  */
-public class KatakanaEndHyphenValidator implements SentenceValidator, SentenceValidatorInitializer {
+public class KatakanaEndHyphenValidator implements SentenceValidator {
   /**
    * Default Katakana limit length without hypen.
    */
@@ -61,6 +62,12 @@ public class KatakanaEndHyphenValidator implements SentenceValidator, SentenceVa
    * Katakana middle dot character.
    */
   private static final char KATAKANA_MIDDLE_DOT = '・';
+
+  public KatakanaEndHyphenValidator(DVResource resource) throws DocumentValidatorException {
+    ValidatorConfiguration conf = resource.getConfiguration();
+    CharacterTable ct = resource.getCharacterTable();
+    initialize(conf, ct);
+  }
 
   public List<ValidationError> validate(Sentence sentence) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
@@ -105,8 +112,8 @@ public class KatakanaEndHyphenValidator implements SentenceValidator, SentenceVa
     super();
   }
 
-  public boolean initialize(
-      ValidatorConfiguration conf, CharacterTable characterTable)
+  private boolean initialize(
+    ValidatorConfiguration conf, CharacterTable characterTable)
         throws DocumentValidatorException {
     //TODO support exception word list.
     return true;

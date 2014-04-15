@@ -19,9 +19,7 @@ package org.unigram.docvalidator.validator.section;
 
 import org.unigram.docvalidator.model.Document;
 import org.unigram.docvalidator.model.Section;
-import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
 
 import java.util.List;
 
@@ -30,30 +28,13 @@ import java.util.List;
  */
 public abstract class AbstractSectionValidator implements SectionValidator {
 
-  public abstract boolean loadConfiguration(ValidatorConfiguration conf,
-      CharacterTable characterTable);
-
-  // FIXME: This is a wrong level of abstraction - A section validator shouldn't care about a Document  
-//  public List<ValidationError> validate(Document file) {
-//    List<ValidationError> validationErrors = new ArrayList<ValidationError>();
-//    for (Iterator<Section> sectionIterator =
-//        file.getSections(); sectionIterator.hasNext();) {
-//      
-//      Section currentSection = sectionIterator.next();
-//
-//      List<ValidationError> errors = this.validate(currentSection);
-//      addFileInformation(errors, file, currentSection);
-//      validationErrors.addAll(errors);
-//
-//    }
-//    return validationErrors;
-//  }
+//  public abstract boolean loadConfiguration(ValidatorConfiguration conf,
+//      CharacterTable characterTable);
 
   /**
    * To append a new Validator which use section or paragraph information, we
    * make a new class implementing this method.
    * @param section input section
-   * @return list of errors
    */
 //  protected abstract List<ValidationError> validate(Section section);
 

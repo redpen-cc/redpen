@@ -18,7 +18,6 @@
 package org.unigram.docvalidator.model;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -38,8 +37,8 @@ public final class ListBlock {
    *
    * @return Iterator of ListElement
    */
-  public Iterator<ListElement> getListElements() {
-    return listElements.iterator();
+  public List<ListElement> getListElements() {
+    return listElements;
   }
 
   /**

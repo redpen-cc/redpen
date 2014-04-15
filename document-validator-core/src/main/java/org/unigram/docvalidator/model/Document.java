@@ -25,7 +25,7 @@ import java.util.List;
  * Document represents a file with many elements
  * such as sentences, lists and headers.
  */
-public final class Document {
+public final class Document implements Iterable<Section> {
   /**
    * Constructor.
    */
@@ -106,4 +106,9 @@ public final class Document {
   private final List<Section> sections;
 
   private String fileName;
+
+  @Override
+  public Iterator<Section> iterator() {
+    return sections.iterator();
+  }
 }
