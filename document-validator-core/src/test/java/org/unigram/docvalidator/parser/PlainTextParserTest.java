@@ -23,9 +23,9 @@ import org.junit.Test;
 import org.unigram.docvalidator.model.Document;
 import org.unigram.docvalidator.model.Paragraph;
 import org.unigram.docvalidator.model.Section;
-import org.unigram.docvalidator.util.DVResource;
+import org.unigram.docvalidator.config.DVResource;
 import org.unigram.docvalidator.DocumentValidatorException;
-import org.unigram.docvalidator.util.ValidationConfigurationLoader;
+import org.unigram.docvalidator.config.ValidationConfigurationLoader;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

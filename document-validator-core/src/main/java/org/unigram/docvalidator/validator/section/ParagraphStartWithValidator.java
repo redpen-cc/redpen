@@ -25,8 +25,8 @@ import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.model.Paragraph;
 import org.unigram.docvalidator.model.Section;
 import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
+import org.unigram.docvalidator.config.CharacterTable;
+import org.unigram.docvalidator.config.ValidatorConfiguration;
 import org.unigram.docvalidator.ValidationError;
 
 /**

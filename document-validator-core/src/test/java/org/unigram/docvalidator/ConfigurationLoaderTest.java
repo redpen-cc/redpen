@@ -24,10 +24,10 @@ import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
-import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.CharacterTableLoader;
-import org.unigram.docvalidator.util.DVResource;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
+import org.unigram.docvalidator.config.CharacterTable;
+import org.unigram.docvalidator.config.CharacterTableLoader;
+import org.unigram.docvalidator.config.DVResource;
+import org.unigram.docvalidator.config.ValidatorConfiguration;
 import org.w3c.dom.Element;
 
 class ConfigurationLoaderForTest extends ConfigurationLoader {

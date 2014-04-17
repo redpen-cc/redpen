@@ -17,7 +17,7 @@
  */
 package org.unigram.docvalidator.parser;
 
-import org.unigram.docvalidator.util.DVResource;
+import org.unigram.docvalidator.config.DVResource;
 import org.unigram.docvalidator.DocumentValidatorException;
 
 /**

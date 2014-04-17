@@ -29,8 +29,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.symbol.DefaultSymbols;
-import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.DVResource;
+import org.unigram.docvalidator.config.CharacterTable;
+import org.unigram.docvalidator.config.DVResource;
 import org.unigram.docvalidator.DocumentValidatorException;
 
 /**

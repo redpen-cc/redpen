@@ -17,7 +17,7 @@
  */
 package org.unigram.docvalidator.symbol;
 
-import org.unigram.docvalidator.util.Character;
+import org.unigram.docvalidator.config.Character;
 
 import java.util.Map;
 
@@ -113,7 +113,7 @@ public final class DefaultSymbols extends AbstractSymbols {
         new Character("7", ",", "", false, false));
     symbols.put("DIGIT_EIGHT",
         new Character("8", ",", "", false, false));
-    symbols.put("DIGIT_NINE", new org.unigram.docvalidator.util.Character("9", ",", "", false, false));
+    symbols.put("DIGIT_NINE", new Character("9", ",", "", false, false));
 
     // not create instance
     INSTANCE = null;

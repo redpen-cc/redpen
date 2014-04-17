@@ -23,8 +23,8 @@ import java.util.Set;
 
 import org.unigram.docvalidator.DocumentValidatorException;
 import org.unigram.docvalidator.ValidationError;
+import org.unigram.docvalidator.config.*;
 import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.util.*;
 
 /**
  * Validate if there is invalid characters in sentences.
@@ -63,7 +63,7 @@ public class InvalidCharacterValidator implements SentenceValidator {
 
   private ValidationError validateCharacter(Sentence sentence, String name) {
     String sentenceStr = sentence.content;
-    org.unigram.docvalidator.util.Character character = characterTable.getCharacter(name);
+    org.unigram.docvalidator.config.Character character = characterTable.getCharacter(name);
     List<String> invalidCharsList = character.getInvalidChars();
     for (String invalidChar : invalidCharsList) {
       if (sentenceStr.contains(invalidChar)) {

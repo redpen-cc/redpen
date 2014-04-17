@@ -21,9 +21,9 @@ import org.apache.commons.io.IOUtils;
 import org.unigram.docvalidator.parser.DocumentParserFactory;
 import org.unigram.docvalidator.parser.Parser;
 import org.unigram.docvalidator.model.DocumentCollection;
-import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.DVResource;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
+import org.unigram.docvalidator.config.CharacterTable;
+import org.unigram.docvalidator.config.DVResource;
+import org.unigram.docvalidator.config.ValidatorConfiguration;
 
 import java.io.InputStream;
 

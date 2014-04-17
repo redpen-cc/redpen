@@ -19,6 +19,9 @@ package org.unigram.docvalidator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.unigram.docvalidator.config.CharacterTable;
+import org.unigram.docvalidator.config.DVResource;
+import org.unigram.docvalidator.config.ValidatorConfiguration;
 import org.unigram.docvalidator.formatter.Formatter;
 import org.unigram.docvalidator.model.Document;
 import org.unigram.docvalidator.model.DocumentCollection;

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.unigram.docvalidator.util;
+package org.unigram.docvalidator.config;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -28,6 +28,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.unigram.docvalidator.util.SAXErrorHandler;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

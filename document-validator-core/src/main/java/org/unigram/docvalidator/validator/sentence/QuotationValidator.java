@@ -22,10 +22,11 @@ import java.util.List;
 
 import org.unigram.docvalidator.DocumentValidatorException;
 import org.unigram.docvalidator.ValidationError;
+import org.unigram.docvalidator.config.CharacterTable;
+import org.unigram.docvalidator.config.ValidatorConfiguration;
 import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.symbol.DefaultSymbols;
-import org.unigram.docvalidator.util.*;
-import org.unigram.docvalidator.util.Character;
+import org.unigram.docvalidator.config.Character;
 
 /**
  * Validator to validate quotation characters.
@@ -270,7 +271,7 @@ public class QuotationValidator implements SentenceValidator {
 
   private Character leftDoubleQuotationMark;
 
-  private org.unigram.docvalidator.util.Character rightDoubleQuotationMark;
+  private Character rightDoubleQuotationMark;
 
   private final List<String> exceptionSuffixes;
 

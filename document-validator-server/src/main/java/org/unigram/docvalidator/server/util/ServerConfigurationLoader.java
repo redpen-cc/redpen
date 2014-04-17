@@ -19,11 +19,11 @@
 package org.unigram.docvalidator.server.util;
 
 import org.unigram.docvalidator.ConfigurationLoader;
-import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.CharacterTableLoader;
-import org.unigram.docvalidator.util.DVResource;
-import org.unigram.docvalidator.util.ValidationConfigurationLoader;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
+import org.unigram.docvalidator.config.CharacterTable;
+import org.unigram.docvalidator.config.CharacterTableLoader;
+import org.unigram.docvalidator.config.DVResource;
+import org.unigram.docvalidator.config.ValidationConfigurationLoader;
+import org.unigram.docvalidator.config.ValidatorConfiguration;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;

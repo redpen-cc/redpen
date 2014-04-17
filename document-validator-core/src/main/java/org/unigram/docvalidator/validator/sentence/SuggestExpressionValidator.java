@@ -20,12 +20,12 @@ package org.unigram.docvalidator.validator.sentence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.util.DVResource;
+import org.unigram.docvalidator.config.DVResource;
 import org.unigram.docvalidator.DocumentValidatorException;
 import org.unigram.docvalidator.util.FileLoader;
 import org.unigram.docvalidator.util.KeyValueDictionaryExtractor;
 import org.unigram.docvalidator.ValidationError;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
+import org.unigram.docvalidator.config.ValidatorConfiguration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
