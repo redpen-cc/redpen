@@ -19,6 +19,7 @@ package org.unigram.docvalidator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.unigram.docvalidator.formatter.Formatter;
 import org.unigram.docvalidator.model.Document;
 import org.unigram.docvalidator.model.DocumentCollection;
 import org.unigram.docvalidator.model.Paragraph;

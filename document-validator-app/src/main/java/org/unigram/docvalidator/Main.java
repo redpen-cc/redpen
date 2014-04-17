@@ -29,7 +29,7 @@ import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.parser.Parser;
-import org.unigram.docvalidator.util.Formatter;
+import org.unigram.docvalidator.formatter.Formatter;
 import org.unigram.docvalidator.util.ResultDistributor;
 import org.unigram.docvalidator.util.ResultDistributorFactory;
 

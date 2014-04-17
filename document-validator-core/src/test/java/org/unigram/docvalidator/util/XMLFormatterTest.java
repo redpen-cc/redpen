@@ -29,6 +29,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Test;
 import org.unigram.docvalidator.DocumentValidatorException;
 import org.unigram.docvalidator.ValidationError;
+import org.unigram.docvalidator.formatter.XMLFormatter;
 import org.unigram.docvalidator.model.Sentence;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;

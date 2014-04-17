@@ -18,6 +18,7 @@
 package org.unigram.docvalidator.util;
 
 import org.unigram.docvalidator.ValidationError;
+import org.unigram.docvalidator.formatter.Formatter;
 
 /**
  * ResultDistributor flush the errors reported from Validators.

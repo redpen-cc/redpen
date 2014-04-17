@@ -20,6 +20,7 @@ package org.unigram.docvalidator.util;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.unigram.docvalidator.formatter.Formatter;
 
 public class ResultDistributorFactoryTest {
 

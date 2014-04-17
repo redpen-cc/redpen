@@ -18,6 +18,8 @@
 package org.unigram.docvalidator.util;
 
 import org.unigram.docvalidator.ValidationError;
+import org.unigram.docvalidator.formatter.Formatter;
+import org.unigram.docvalidator.formatter.PlainFormatter;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
