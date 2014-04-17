@@ -44,7 +44,7 @@ public class SampleDocumentGenerator {
    * @return DocumentCollection object
    */
   public static DocumentCollection generateOneFileDocument(String docString,
-      String type) throws DocumentValidatorException {
+      Parser.Type type) throws DocumentValidatorException {
     DVResource resource = new DVResource(
         new ValidatorConfiguration("dummy"), new CharacterTable());
     Parser parser = DocumentParserFactory.generate(type, resource);

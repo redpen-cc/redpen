@@ -25,13 +25,7 @@ import org.unigram.docvalidator.model.ListElement;
 import org.unigram.docvalidator.model.Paragraph;
 import org.unigram.docvalidator.model.Section;
 import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.DVResource;
-import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.util.FakeResultDistributor;
-import org.unigram.docvalidator.util.ResultDistributor;
-import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
+import org.unigram.docvalidator.util.*;
 import org.unigram.docvalidator.validator.sentence.CommaNumberValidator;
 import org.unigram.docvalidator.validator.sentence.InvalidCharacterValidator;
 import org.unigram.docvalidator.validator.sentence.InvalidExpressionValidator;
@@ -61,7 +55,7 @@ public class SentenceIterator implements Validator {
    */
   public SentenceIterator() throws DocumentValidatorException{
     this.sentenceValidators = new ArrayList<SentenceValidator>();
-    distributor = new FakeResultDistributor();
+    this.distributor = new FakeResultDistributor();
   }
 
   public SentenceIterator(ValidatorConfiguration conf, CharacterTable

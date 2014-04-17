@@ -89,7 +89,7 @@ public class PlainTextParserTest {
       DVResource resource = new DVResource(ValidationConfigurationLoader.loadConfiguration(stream));
 
     try {
-      parser = DocumentParserFactory.generate("plain", resource);
+      parser = DocumentParserFactory.generate(Parser.Type.PLAIN, resource);
     } catch (DocumentValidatorException e1) {
       fail();
       e1.printStackTrace();
@@ -166,7 +166,7 @@ public class PlainTextParserTest {
 
   @Test(expected = DocumentValidatorException.class)
   public void testNullInitialize() throws Exception {
-    DocumentParserFactory.generate("plain", null);
+    DocumentParserFactory.generate(Parser.Type.PLAIN, null);
   }
 
   @Test(expected = DocumentValidatorException.class)

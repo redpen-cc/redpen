@@ -33,7 +33,7 @@ public final class ResultDistributorFactory {
    * @param output       output stream
    * @return ResultDistributor object when succeeded to create, null otherwise
    */
-  public static ResultDistributor createDistributor(String outputFormat,
+  public static ResultDistributor createDistributor(Formatter.Type outputFormat,
                                                     OutputStream output) {
     if (outputFormat == null) {
       LOG.error("Specified output format is null...");
@@ -48,13 +48,16 @@ public final class ResultDistributorFactory {
 
     LOG.info("Creating Distributor...");
     try {
-      if (outputFormat.equals("plain")) {
-        distributor.setFormatter(new PlainFormatter());
-      } else if (outputFormat.equals("xml")) {
-        distributor.setFormatter(new XMLFormatter());
-      } else {
-        LOG.error("No specified distributor...");
-        return null;
+      switch (outputFormat) {
+        case PLAIN:
+          distributor.setFormatter(new PlainFormatter());
+          break;
+        case XML:
+          distributor.setFormatter(new XMLFormatter());
+          break;
+        default :
+          LOG.error("No specified distributor...");
+          return null;
       }
     } catch (DocumentValidatorException e) {
       LOG.error(e.getMessage());

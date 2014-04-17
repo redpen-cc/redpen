@@ -24,14 +24,7 @@ import org.unigram.docvalidator.model.DocumentCollection;
 import org.unigram.docvalidator.model.Paragraph;
 import org.unigram.docvalidator.model.Section;
 import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.DVResource;
-import org.unigram.docvalidator.util.DefaultResultDistributor;
-import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.util.ResultDistributor;
-import org.unigram.docvalidator.util.ResultDistributorFactory;
-import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
+import org.unigram.docvalidator.util.*;
 import org.unigram.docvalidator.validator.SentenceIterator;
 import org.unigram.docvalidator.validator.Validator;
 import org.unigram.docvalidator.validator.section.ParagraphNumberValidator;
@@ -169,7 +162,7 @@ public class DocumentValidator implements Validator {
    * Constructor only for testing.
    */
   protected DocumentValidator() {
-    this.distributor = ResultDistributorFactory.createDistributor("plain",
+    this.distributor = ResultDistributorFactory.createDistributor(Formatter.Type.PLAIN,
       System.out);
     this.validators = new ArrayList<Validator>();
     sectionValidators = new ArrayList<SectionValidator>();
