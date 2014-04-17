@@ -24,10 +24,7 @@ import org.unigram.docvalidator.ConfigurationLoader;
 import org.unigram.docvalidator.server.util.ServerConfigurationLoader;
 import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.util.Formatter;
-import org.unigram.docvalidator.util.ResultDistributor;
-import org.unigram.docvalidator.util.ResultDistributorFactory;
-import org.unigram.docvalidator.validator.DocumentValidator;
+import org.unigram.docvalidator.DocumentValidator;
 
 /**
  * Document validator server.
@@ -52,11 +49,11 @@ public class DocumentValidatorServer {
             .getResourceAsStream("/conf/dv-conf.xml")
     );
 
-    ResultDistributor distributor = ResultDistributorFactory
-        .createDistributor(Formatter.Type.PLAIN, System.out);
+//    ResultDistributor distributor = ResultDistributorFactory
+//        .createDistributor("plain", System.out);
     validator = new DocumentValidator.Builder()
         .setResource(documentValidatorResource)
-        .setResultDistributor(distributor)
+//        .setResultDistributor(distributor)
         .build();
   }
 

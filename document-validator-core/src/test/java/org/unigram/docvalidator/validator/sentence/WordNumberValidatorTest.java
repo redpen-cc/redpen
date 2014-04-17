@@ -22,9 +22,8 @@ import static org.junit.Assert.*;
 import java.util.List;
 
 import org.junit.Test;
-import org.unigram.docvalidator.store.Sentence;
+import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.validator.sentence.WordNumberValidator;
 
 public class WordNumberValidatorTest {
 
@@ -33,7 +32,7 @@ public class WordNumberValidatorTest {
     WordNumberValidator maxWordNumberValidator = new WordNumberValidator();
     Sentence str = new Sentence(
         "this sentence is short.",0);
-    List<ValidationError> errors = maxWordNumberValidator.check(str);
+    List<ValidationError> errors = maxWordNumberValidator.validate(str);
     assertNotNull(errors);
     assertEquals(0, errors.size());
   }
@@ -44,7 +43,7 @@ public class WordNumberValidatorTest {
     Sentence str = new Sentence(
         "this sentence is very very very very very very very very very very" +
         " very very very very very very very very very very very very very very long",0);
-    List<ValidationError> errors = maxWordNumberValidator.check(str);
+    List<ValidationError> errors = maxWordNumberValidator.validate(str);
     assertNotNull(errors);
     assertEquals(0, errors.size());
   }
@@ -53,7 +52,7 @@ public class WordNumberValidatorTest {
   public void testWithZeroLengthSentence() {
     WordNumberValidator maxWordNumberValidator = new WordNumberValidator();
     Sentence str = new Sentence("", 0);
-    List<ValidationError> errors = maxWordNumberValidator.check(str);
+    List<ValidationError> errors = maxWordNumberValidator.validate(str);
     assertNotNull(errors);
     assertEquals(0, errors.size());
   }

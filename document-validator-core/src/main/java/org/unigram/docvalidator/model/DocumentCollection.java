@@ -15,39 +15,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.unigram.docvalidator.store;
+package org.unigram.docvalidator.model;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * Document class represent input document, which consists
- * of more than one files.
+ * DocumentCollection class represent input document, which consists
+ * of more than one documents.
  */
-public final class Document {
+public final class DocumentCollection implements Iterable<Document> {
 
-  public Document() {
+  public DocumentCollection() {
     super();
-    files = new ArrayList<FileContent>();
+    documents = new ArrayList<Document>();
   }
 
   /**
-   * Get files contained by Document.
+   * Get documents contained by DocumentCollection.
    *
    * @return iterator of file
    */
-  public Iterator<FileContent> getFiles() {
-    return files.iterator();
+  public Iterator<Document> getDocuments() {
+    return documents.iterator();
   }
 
   /**
-   * Add a file to Document.
+   * Add a file to DocumentCollection.
    *
-   * @param file a file to be added to Document
+   * @param file a file to be added to DocumentCollection
    */
-  public void appendFile(FileContent file) {
-    files.add(file);
+  public void addDocument(Document file) {
+    documents.add(file);
   }
 
   /**
@@ -56,31 +56,23 @@ public final class Document {
    * @param id id of file
    * @return a file
    */
-  public FileContent getFile(int id) {
-    return files.get(id);
+  public Document getFile(int id) {
+    return documents.get(id);
   }
 
   /**
-   * Get last file in Document.
+   * Returns the size of the DocumentCollection.
    *
-   * @return a file added in the last
+   * @return the number of documents
    */
-  public FileContent getLastFile() {
-    FileContent fileContent = null;
-    if (files.size() > 0) {
-      fileContent = files.get(files.size() - 1);
-    }
-    return fileContent;
+  public int size() {
+    return documents.size();
   }
 
-  /**
-   * Return the file number in Document.
-   *
-   * @return the number of files
-   */
-  public int getNumberOfFiles() {
-    return files.size();
-  }
+  private final List<Document> documents;
 
-  private final List<FileContent> files;
+  @Override
+  public Iterator<Document> iterator() {
+    return documents.iterator();
+  }
 }

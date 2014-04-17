@@ -15,9 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.unigram.docvalidator.store;
+package org.unigram.docvalidator.model;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -41,8 +40,8 @@ public final class ListElement {
    *
    * @return all contents of list element
    */
-  public Iterator<Sentence> getSentences() {
-    return contents.iterator();
+  public List<Sentence> getSentences() {
+    return contents;
   }
 
   /**

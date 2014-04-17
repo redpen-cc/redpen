@@ -15,36 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.unigram.docvalidator.util;
+package org.unigram.docvalidator.validator.section;
 
-/**
- * Error used to model the failure of Validators.
- */
-@SuppressWarnings("serial")
-public class DocumentValidatorException extends Exception {
-  /**
-   * Constructor.
-   */
-  public DocumentValidatorException() {
-    super();
-  }
+import org.unigram.docvalidator.model.Section;
+import org.unigram.docvalidator.util.ValidationError;
 
-  /**
-   * Constructor.
-   *
-   * @param message error message
-   */
-  public DocumentValidatorException(String message) {
-    super(message);
-  }
+import java.util.List;
 
-  /**
-   * Constructor.
-   *
-   * @param message error message
-   * @param cause   error cause
-   */
-  public DocumentValidatorException(String message, Throwable cause) {
-    super(message, cause);
-  }
+public interface SectionValidator {
+
+  List<ValidationError> validate(Section section);
+
 }

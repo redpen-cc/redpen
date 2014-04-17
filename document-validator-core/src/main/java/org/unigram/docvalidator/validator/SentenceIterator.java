@@ -17,38 +17,35 @@
  */
 package org.unigram.docvalidator.validator;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.unigram.docvalidator.store.FileContent;
-import org.unigram.docvalidator.store.ListBlock;
-import org.unigram.docvalidator.store.ListElement;
-import org.unigram.docvalidator.store.Paragraph;
-import org.unigram.docvalidator.store.Sentence;
-import org.unigram.docvalidator.store.Section;
-import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.ResultDistributor;
-import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
-import org.unigram.docvalidator.util.DocumentValidatorException;
+import org.unigram.docvalidator.model.Document;
+import org.unigram.docvalidator.model.ListBlock;
+import org.unigram.docvalidator.model.ListElement;
+import org.unigram.docvalidator.model.Paragraph;
+import org.unigram.docvalidator.model.Section;
+import org.unigram.docvalidator.model.Sentence;
+import org.unigram.docvalidator.util.*;
 import org.unigram.docvalidator.validator.sentence.CommaNumberValidator;
 import org.unigram.docvalidator.validator.sentence.InvalidCharacterValidator;
 import org.unigram.docvalidator.validator.sentence.InvalidExpressionValidator;
+import org.unigram.docvalidator.validator.sentence.KatakanaEndHyphenValidator;
+import org.unigram.docvalidator.validator.sentence.KatakanaSpellCheckValidator;
 import org.unigram.docvalidator.validator.sentence.SentenceLengthValidator;
-import org.unigram.docvalidator.validator.sentence.SpaceBeginningOfSentenceValidator;
+import org.unigram.docvalidator.validator.sentence.SentenceValidator;
+import org.unigram.docvalidator.validator.sentence
+  .SpaceBeginningOfSentenceValidator;
 import org.unigram.docvalidator.validator.sentence.SuggestExpressionValidator;
 import org.unigram.docvalidator.validator.sentence.SymbolWithSpaceValidator;
 import org.unigram.docvalidator.validator.sentence.WordNumberValidator;
-import org.unigram.docvalidator.validator.sentence.lang.ja.KatakanaEndHyphenValidator;
-import org.unigram.docvalidator.validator.sentence.lang.ja.KatakanaSpellCheckValidator;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Validator for input sentences. Sentence iterator calls appended
- * SentenceValidators and check the input using the validators.
+ * SentenceValidators and validate the input using the validators.
  */
 public class SentenceIterator implements Validator {
   /**
@@ -56,62 +53,80 @@ public class SentenceIterator implements Validator {
    *
    * @throws DocumentValidatorException
    */
-  public SentenceIterator() {
+  public SentenceIterator() throws DocumentValidatorException{
     this.sentenceValidators = new ArrayList<SentenceValidator>();
+    this.distributor = new FakeResultDistributor();
   }
 
-  public List<ValidationError> check(FileContent file,
-                                     ResultDistributor distributor) {
+  public SentenceIterator(ValidatorConfiguration conf, CharacterTable
+    charTable) throws DocumentValidatorException {
+    this();
+    loadConfiguration(conf, charTable);
+  }
+
+  public void setResultDistributor(ResultDistributor distributor) {
+    this.distributor = distributor;
+  }
+
+  public List<ValidationError> validate(Document file) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     for (SentenceValidator validator : this.sentenceValidators) {
-      for (Iterator<Section> sectionIterator =
-               file.getSections(); sectionIterator.hasNext(); ) {
-        Section currentSection = sectionIterator.next();
-        checkSection(distributor, errors, validator,
-            currentSection, file.getFileName());
+      for (Section section : file) {
+        checkSection(distributor, errors, validator, section, file.getFileName());
       }
     }
     return errors;
   }
 
-  public boolean loadConfiguration(ValidatorConfiguration conf,
-                                   CharacterTable charTable)
-      throws DocumentValidatorException {
+  private boolean loadConfiguration(ValidatorConfiguration conf,
+                                    CharacterTable charTable)
+    throws DocumentValidatorException {
     for (ValidatorConfiguration currentConfiguration : conf.getChildren()) {
-      String confName = currentConfiguration.getConfigurationName();
-      SentenceValidator validator;
-      if (confName.equals("SentenceLength")) {
-        validator = new SentenceLengthValidator();
-      } else if (confName.equals("InvalidExpression")) {
-        validator = new InvalidExpressionValidator();
-      } else if (confName.equals("SpaceAfterPeriod")) {
-        validator = new SpaceBeginningOfSentenceValidator();
-      } else if (confName.equals("CommaNumber")) {
-        validator = new CommaNumberValidator();
-      } else if (confName.equals("WordNumber")) {
-        validator = new WordNumberValidator();
-      } else if (confName.equals("SuggestExpression")) {
-        validator = new SuggestExpressionValidator();
-      } else if (confName.equals("InvalidCharacter")) {
-        validator = new InvalidCharacterValidator();
-      } else if (confName.equals("SpaceWithSymbol")) {
-        validator = new SymbolWithSpaceValidator();
-      } else if (confName.equals("KatakanaEndHyphen")) {
-        validator = new KatakanaEndHyphenValidator();
-      } else if (confName.equals("KatakanaSpellCheckValidator")) {
-        validator = new KatakanaSpellCheckValidator();
-      } else {
-        throw new DocumentValidatorException(
-            "There is no validator like " + confName);
-      }
-      validator.initialize(currentConfiguration, charTable);
+      SentenceValidator validator = loadValidator(charTable, currentConfiguration);
       this.sentenceValidators.add(validator);
     }
     return true;
   }
 
+  private SentenceValidator loadValidator(CharacterTable charTable,
+                                          ValidatorConfiguration
+                                            currentConfiguration) throws
+    DocumentValidatorException {
+    String confName = currentConfiguration.getConfigurationName();
+
+    DVResource resource = new DVResource(currentConfiguration, charTable);
+    SentenceValidator validator;
+    if (confName.equals("SentenceLength")) {
+      validator = new SentenceLengthValidator(resource);
+    } else if (confName.equals("InvalidExpression")) {
+      validator = new InvalidExpressionValidator(resource);
+    } else if (confName.equals("SpaceAfterPeriod")) {
+      validator = new SpaceBeginningOfSentenceValidator(resource);
+    } else if (confName.equals("CommaNumber")) {
+      validator = new CommaNumberValidator(resource);
+    } else if (confName.equals("WordNumber")) {
+      validator = new WordNumberValidator(resource);
+    } else if (confName.equals("SuggestExpression")) {
+      validator = new SuggestExpressionValidator(resource);
+    } else if (confName.equals("InvalidCharacter")) {
+      validator = new InvalidCharacterValidator(resource);
+    } else if (confName.equals("SpaceWithSymbol")) {
+      validator = new SymbolWithSpaceValidator(resource);
+    } else if (confName.equals("KatakanaEndHyphen")) {
+      validator = new KatakanaEndHyphenValidator(resource);
+    } else if (confName.equals("KatakanaSpellCheckValidator")) {
+      validator = new KatakanaSpellCheckValidator(resource);
+    } else {
+      throw new DocumentValidatorException(
+        "There is no validator like " + confName);
+    }
+
+    return validator;
+  }
+
   private void checkSection(ResultDistributor distributor,
-                            List<ValidationError> errors, SentenceValidator validator,
+                            List<ValidationError> errors,
+                            SentenceValidator validator,
                             Section currentSection, String fileName) {
     checkParagraphs(distributor, errors, validator, currentSection, fileName);
     checkHeaders(distributor, errors, validator, currentSection, fileName);
@@ -119,21 +134,19 @@ public class SentenceIterator implements Validator {
   }
 
   private void checkParagraphs(ResultDistributor distributor,
-                               List<ValidationError> errors, SentenceValidator validator,
+                               List<ValidationError> errors,
+                               SentenceValidator validator,
                                Section currentSection, String fileName) {
-    for (Iterator<Paragraph> paraIterator =
-             currentSection.getParagraphs(); paraIterator.hasNext(); ) {
-      Paragraph currentParagraph = paraIterator.next();
-      for (Iterator<Sentence> lineIterator =
-               currentParagraph.getSentences(); lineIterator.hasNext(); ) {
-        applyValidator(distributor, errors, validator, fileName,
-            lineIterator.next());
+    for (Paragraph paragraph : currentSection.getParagraphs()) {
+      for (Sentence sentence : paragraph.getSentences()) {
+        applyValidator(distributor, errors, validator, fileName, sentence);
       }
     }
   }
 
   private void checkHeaders(ResultDistributor distributor,
-                            List<ValidationError> errors, SentenceValidator validator,
+                            List<ValidationError> errors,
+                            SentenceValidator validator,
                             Section currentSection, String fileName) {
     for (Iterator<Sentence> iterator = currentSection.getHeaderContents();
          iterator.hasNext(); ) {
@@ -142,30 +155,27 @@ public class SentenceIterator implements Validator {
   }
 
   private void checkListElements(ResultDistributor distributor,
-                                 List<ValidationError> errors, SentenceValidator validator,
+                                 List<ValidationError> errors,
+                                 SentenceValidator validator,
                                  Section currentSection, String fileName) {
-    for (Iterator<ListBlock> listBlockIterator = currentSection.getListBlocks();
-         listBlockIterator.hasNext(); ) {
-      ListBlock listBlock = listBlockIterator.next();
-      for (Iterator<ListElement> listElementIterator =
-               listBlock.getListElements(); listElementIterator.hasNext(); ) {
-        ListElement listElemnt = listElementIterator.next();
-        for (Iterator<Sentence> sentenceIterator = listElemnt.getSentences();
-             sentenceIterator.hasNext(); ) {
-          applyValidator(distributor, errors, validator, fileName,
-              sentenceIterator.next());
+
+    for (ListBlock listBlock : currentSection.getListBlocks()) {
+      for (ListElement listElement : listBlock.getListElements()) {
+        for (Sentence sentence : listElement.getSentences()) {
+          applyValidator(distributor, errors, validator, fileName, sentence);
         }
       }
     }
   }
 
   private void applyValidator(ResultDistributor distributor,
-                              List<ValidationError> errors, SentenceValidator validator,
+                              List<ValidationError> errors,
+                              SentenceValidator validator,
                               String fileName, Sentence sentence) {
     List<ValidationError> validationErrors;
     try {
       validationErrors =
-          validator.check(sentence);
+        validator.validate(sentence);
     } catch (Throwable e) {
       //TODO add validator type info
       LOG.error("Error in checking sentence: \"" + sentence.content + "\"");
@@ -181,7 +191,8 @@ public class SentenceIterator implements Validator {
   }
 
   private void appendError(ResultDistributor distributor,
-                           List<ValidationError> errors, String fileName, ValidationError e) {
+                           List<ValidationError> errors, String fileName,
+                           ValidationError e) {
     if (e != null) {
       //NOTE: fileName is not specified in validators to reduce the task of them
       e.setFileName(fileName);
@@ -192,6 +203,8 @@ public class SentenceIterator implements Validator {
 
   private final List<SentenceValidator> sentenceValidators;
 
+  private ResultDistributor distributor;
+
   private static final Logger LOG =
-      LoggerFactory.getLogger(SentenceIterator.class);
+    LoggerFactory.getLogger(SentenceIterator.class);
 }

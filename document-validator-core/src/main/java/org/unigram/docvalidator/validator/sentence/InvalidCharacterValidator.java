@@ -21,19 +21,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.unigram.docvalidator.store.Sentence;
-import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
-import org.unigram.docvalidator.util.DVCharacter;
-import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.validator.SentenceValidator;
+import org.unigram.docvalidator.model.Sentence;
+import org.unigram.docvalidator.util.*;
 
 /**
  * Validate if there is invalid characters in sentences.
  */
 public class InvalidCharacterValidator implements SentenceValidator {
-  public List<ValidationError> check(Sentence sentence) {
+  public InvalidCharacterValidator(DVResource resource) throws DocumentValidatorException {
+    CharacterTable ct = resource.getCharacterTable();
+    initialize(ct);
+  }
+
+  public InvalidCharacterValidator() {
+  }
+
+  public List<ValidationError> validate(Sentence sentence) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     Set<String> names = characterTable.getNames();
     for (String name : names) {
@@ -45,8 +48,7 @@ public class InvalidCharacterValidator implements SentenceValidator {
     return errors;
   }
 
-  public boolean initialize(ValidatorConfiguration conf,
-      CharacterTable characters)
+  private boolean initialize(CharacterTable characters)
       throws DocumentValidatorException {
     this.characterTable = characters;
     return true;
@@ -58,7 +60,7 @@ public class InvalidCharacterValidator implements SentenceValidator {
 
   private ValidationError validateCharacter(Sentence sentence, String name) {
     String sentenceStr = sentence.content;
-    DVCharacter character = characterTable.getCharacter(name);
+    org.unigram.docvalidator.util.Character character = characterTable.getCharacter(name);
     List<String> invalidCharsList = character.getInvalidChars();
     for (String invalidChar : invalidCharsList) {
       if (sentenceStr.contains(invalidChar)) {

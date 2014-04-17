@@ -19,7 +19,7 @@ package org.unigram.docvalidator.symbol;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.unigram.docvalidator.util.DVCharacter;
+import org.unigram.docvalidator.util.Character;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -28,14 +28,14 @@ import java.util.Map;
 /**
  * Base class of the symbol settings.
  */
-public abstract class DVSymbols {
+public abstract class AbstractSymbols {
   /**
    * Get the specified character or symbol.
    *
    * @param name name of symbol
    * @return specified character
    */
-  public DVCharacter get(String name) {
+  public Character get(String name) {
     if (!symbolTable.containsKey(name)) {
       LOG.info(name + " is not defined in DefaultSymbols.");
       return null;
@@ -52,12 +52,12 @@ public abstract class DVSymbols {
     return symbolTable.keySet().iterator();
   }
 
-  protected Map<String, DVCharacter> getSymbolTable() {
+  protected Map<String, Character> getSymbolTable() {
     return symbolTable;
   }
 
-  private final Map<String, DVCharacter> symbolTable
-      = new HashMap<String, DVCharacter>();
+  private final Map<String, Character> symbolTable
+      = new HashMap<String, Character>();
 
-  private static final Logger LOG = LoggerFactory.getLogger(DVSymbols.class);
+  private static final Logger LOG = LoggerFactory.getLogger(AbstractSymbols.class);
 }

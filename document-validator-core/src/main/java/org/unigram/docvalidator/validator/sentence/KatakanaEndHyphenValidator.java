@@ -15,27 +15,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.unigram.docvalidator.validator.sentence.lang.ja;
+package org.unigram.docvalidator.validator.sentence;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.unigram.docvalidator.store.Sentence;
+import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.util.CharacterTable;
+import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.StringUtils;
 import org.unigram.docvalidator.util.ValidationError;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.validator.SentenceValidator;
 
 /**
  * Validate the end hyphens of Katakana words in Japanese documents.
  * Japanese Katakana words have variations in end hyphen.
  * For example, "computer" is written in Katakana by
  * "コンピュータ (without hyphen) ", and "コンピューター (with hypen) ".
- * This validator check if Katakana words ending format is match
+ * This validator validate if Katakana words ending format is match
  * the predefined standard. See JIS Z8301, G.6.2.2 b) G.3.
  *
  * The rules in JIS Z8301 are as follows:
@@ -63,7 +63,13 @@ public class KatakanaEndHyphenValidator implements SentenceValidator {
    */
   private static final char KATAKANA_MIDDLE_DOT = '・';
 
-  public List<ValidationError> check(Sentence sentence) {
+  public KatakanaEndHyphenValidator(DVResource resource) throws DocumentValidatorException {
+    ValidatorConfiguration conf = resource.getConfiguration();
+    CharacterTable ct = resource.getCharacterTable();
+    initialize(conf, ct);
+  }
+
+  public List<ValidationError> validate(Sentence sentence) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     List<ValidationError> result;
     StringBuffer katakana = new StringBuffer("");
@@ -106,8 +112,8 @@ public class KatakanaEndHyphenValidator implements SentenceValidator {
     super();
   }
 
-  public boolean initialize(
-      ValidatorConfiguration conf, CharacterTable characterTable)
+  private boolean initialize(
+    ValidatorConfiguration conf, CharacterTable characterTable)
         throws DocumentValidatorException {
     //TODO support exception word list.
     return true;

@@ -17,31 +17,29 @@
  */
 package org.unigram.docvalidator.validator.section;
 
-import static org.junit.Assert.*;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.unigram.docvalidator.model.Document;
+import org.unigram.docvalidator.model.Paragraph;
+import org.unigram.docvalidator.model.Section;
+import org.unigram.docvalidator.util.ValidationError;
 
 import java.util.List;
 
-import org.junit.Test;
-import org.unigram.docvalidator.store.FileContent;
-import org.unigram.docvalidator.store.Paragraph;
-import org.unigram.docvalidator.store.Section;
-import org.unigram.docvalidator.util.FakeResultDistributor;
-import org.unigram.docvalidator.util.ResultDistributor;
-import org.unigram.docvalidator.util.ValidationError;
-
-class ParagraphNumberValidatorForTest extends ParagraphNumberValidator {
-  public void setMaxNumber() {
-    this.setMaxParagraphNumber(3);
-  }
-}
-
+import static org.junit.Assert.assertEquals;
 
 public class ParagraphNumberValidatorTest {
-
+  
+  private static ParagraphNumberValidator validator;
+  
+  @BeforeClass
+  public static void setUp() {
+    validator = new ParagraphNumberValidator();
+    validator.setMaxParagraphNumber(3);
+  }
+  
   @Test
   public void testSectionWithManySection() {
-    ParagraphNumberValidatorForTest validator = new ParagraphNumberValidatorForTest();
-    validator.setMaxNumber();
     Section section = new Section(0, "header");
 
     section.appendParagraph(new Paragraph());
@@ -49,29 +47,20 @@ public class ParagraphNumberValidatorTest {
     section.appendParagraph(new Paragraph());
     section.appendParagraph(new Paragraph());
 
-    FileContent fileContent = new FileContent();
-    fileContent.appendSection(section);
-
-    ResultDistributor distributor = new FakeResultDistributor();
-    List<ValidationError> errors = validator.check(fileContent,
-        distributor);
+    List<ValidationError> errors = validator.validate(section);
     assertEquals(1, errors.size());
   }
 
   @Test
   public void testSectionWithOnlyOneSection() {
-    ParagraphNumberValidatorForTest validator = new ParagraphNumberValidatorForTest();
-    validator.setMaxNumber();
 
     Section section = new Section(0);
     section.appendParagraph(new Paragraph());
 
-    FileContent fileContent = new FileContent();
-    fileContent.appendSection(section);
+    Document document = new Document();
+    document.appendSection(section);
 
-    ResultDistributor distributor = new FakeResultDistributor();
-    List<ValidationError> errors = validator.check(fileContent,
-        distributor);
+    List<ValidationError> errors = validator.validate(section);
     assertEquals(0, errors.size());
   }
 

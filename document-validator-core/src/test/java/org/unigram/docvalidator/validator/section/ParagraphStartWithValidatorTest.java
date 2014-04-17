@@ -17,17 +17,14 @@
  */
 package org.unigram.docvalidator.validator.section;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
+import org.unigram.docvalidator.model.Paragraph;
+import org.unigram.docvalidator.model.Section;
+import org.unigram.docvalidator.util.ValidationError;
 
 import java.util.List;
 
-import org.junit.Test;
-import org.unigram.docvalidator.store.FileContent;
-import org.unigram.docvalidator.store.Paragraph;
-import org.unigram.docvalidator.store.Section;
-import org.unigram.docvalidator.util.FakeResultDistributor;
-import org.unigram.docvalidator.util.ResultDistributor;
-import org.unigram.docvalidator.util.ValidationError;
+import static org.junit.Assert.assertEquals;
 
 public class ParagraphStartWithValidatorTest {
 
@@ -38,10 +35,7 @@ public class ParagraphStartWithValidatorTest {
     Paragraph paragraph = new Paragraph();
     paragraph.appendSentence("it like a piece of a cake.", 0);
     section.appendParagraph(paragraph);
-    FileContent fileContent = new FileContent();
-    fileContent.appendSection(section);
-    ResultDistributor distributor = new FakeResultDistributor();
-    List<ValidationError> errors = validator.check(fileContent, distributor);
+    List<ValidationError> errors = validator.validate(section);
     assertEquals(1, errors.size());
   }
 
@@ -52,10 +46,7 @@ public class ParagraphStartWithValidatorTest {
     Paragraph paragraph = new Paragraph();
     paragraph.appendSentence(" it like a piece of a cake.", 0);
     section.appendParagraph(paragraph);
-    FileContent fileContent = new FileContent();
-    fileContent.appendSection(section);
-    ResultDistributor distributor = new FakeResultDistributor();
-    List<ValidationError> errors = validator.check(fileContent, distributor);
+    List<ValidationError> errors = validator.validate(section);
     assertEquals(0, errors.size());
   }
 

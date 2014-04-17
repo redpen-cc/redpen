@@ -27,10 +27,10 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.unigram.docvalidator.store.FileContent;
-import org.unigram.docvalidator.store.Paragraph;
-import org.unigram.docvalidator.store.Section;
-import org.unigram.docvalidator.store.Sentence;
+import org.unigram.docvalidator.model.Document;
+import org.unigram.docvalidator.model.Paragraph;
+import org.unigram.docvalidator.model.Section;
+import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 
 /**
@@ -44,23 +44,23 @@ public final class PlainTextParser extends BasicDocumentParser {
     super();
   }
 
-  public FileContent generateDocument(String fileName)
+  public Document generateDocument(String fileName)
       throws DocumentValidatorException {
     InputStream iStream = this.loadStream(fileName);
-    FileContent content = this.generateDocument(iStream);
+    Document content = this.generateDocument(iStream);
     content.setFileName(fileName);
     return content;
   }
 
-  public FileContent generateDocument(InputStream is)
+  public Document generateDocument(InputStream is)
       throws DocumentValidatorException {
     BufferedReader br = null;
-    FileContent fileContent = new FileContent();
+    Document document = new Document();
     List<Sentence> headers = new ArrayList<Sentence>();
     headers.add(new Sentence("", 0));
 
-    fileContent.appendSection(new Section(0, headers));
-    Section currentSection = fileContent.getLastSection();
+    document.appendSection(new Section(0, headers));
+    Section currentSection = document.getLastSection();
     currentSection.appendParagraph(new Paragraph());
     try {
       br = createReader(is);
@@ -90,7 +90,7 @@ public final class PlainTextParser extends BasicDocumentParser {
       IOUtils.closeQuietly(br);
     }
 
-    return fileContent;
+    return document;
   }
 
   private String extractSentences(int lineNum, String line,

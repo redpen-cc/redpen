@@ -17,15 +17,13 @@
  */
 package org.unigram.docvalidator.validator.sentence;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.unigram.docvalidator.store.Sentence;
-import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
+import org.unigram.docvalidator.model.Sentence;
+import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.validator.SentenceValidator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Validate input sentences except for first sentence of a paragraph start with
@@ -33,7 +31,13 @@ import org.unigram.docvalidator.validator.SentenceValidator;
  */
 public class SpaceBeginningOfSentenceValidator implements SentenceValidator {
 
-  public List<ValidationError> check(Sentence sentence) {
+  public SpaceBeginningOfSentenceValidator() {
+  }
+
+  public SpaceBeginningOfSentenceValidator(DVResource resource) throws DocumentValidatorException {
+  }
+
+  public List<ValidationError> validate(Sentence sentence) {
     List<ValidationError> result = new ArrayList<ValidationError>();
     String content = sentence.content;
     if (!sentence.isFirstSentence && content.length() > 0
@@ -44,11 +48,5 @@ public class SpaceBeginningOfSentenceValidator implements SentenceValidator {
           sentence));
     }
     return result;
-  }
-
-  public boolean initialize(
-      ValidatorConfiguration conf, CharacterTable characterTable)
-      throws DocumentValidatorException {
-    return true;
   }
 }

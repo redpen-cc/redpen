@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 import java.util.List;
 
 import org.junit.Test;
-import org.unigram.docvalidator.store.Sentence;
+import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.util.ValidationError;
 
 public class SpaceBeginningOfSpenceValidatorTest {
@@ -32,7 +32,7 @@ public class SpaceBeginningOfSpenceValidatorTest {
     SpaceBeginningOfSentenceValidator spaceValidator =
         new SpaceBeginningOfSentenceValidator();
     Sentence str = new Sentence("That is true.",0);
-    List<ValidationError> errors = spaceValidator.check(str);
+    List<ValidationError> errors = spaceValidator.validate(str);
     assertNotNull(errors);
     assertEquals(1, errors.size());
   }
@@ -42,7 +42,7 @@ public class SpaceBeginningOfSpenceValidatorTest {
     SpaceBeginningOfSentenceValidator spaceValidator =
         new SpaceBeginningOfSentenceValidator();
     Sentence str = new Sentence(" That is true.",0);
-    List<ValidationError> errors = spaceValidator.check(str);
+    List<ValidationError> errors = spaceValidator.validate(str);
     assertNotNull(errors);
     assertEquals(0, errors.size());
   }
@@ -53,7 +53,7 @@ public class SpaceBeginningOfSpenceValidatorTest {
         new SpaceBeginningOfSentenceValidator();
     Sentence str = new Sentence("That is true.",0);
     str.isFirstSentence = true;
-    List<ValidationError> errors = spaceValidator.check(str);
+    List<ValidationError> errors = spaceValidator.validate(str);
     assertNotNull(errors);
     assertEquals(0, errors.size());
   }
@@ -64,7 +64,7 @@ public class SpaceBeginningOfSpenceValidatorTest {
         new SpaceBeginningOfSentenceValidator();
     Sentence str = new Sentence("",0);
     str.isFirstSentence = true;
-    List<ValidationError> errors = spaceValidator.check(str);
+    List<ValidationError> errors = spaceValidator.validate(str);
     assertNotNull(errors);
     assertEquals(0, errors.size());
   }

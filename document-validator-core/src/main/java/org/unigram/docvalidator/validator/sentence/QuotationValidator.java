@@ -20,17 +20,13 @@ package org.unigram.docvalidator.validator.sentence;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.unigram.docvalidator.store.Sentence;
+import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.symbol.DefaultSymbols;
-import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
-import org.unigram.docvalidator.util.DVCharacter;
-import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.validator.SentenceValidator;
+import org.unigram.docvalidator.util.*;
+import org.unigram.docvalidator.util.Character;
 
 /**
- * Validator to check quotation characters.
+ * Validator to validate quotation characters.
  */
 public class QuotationValidator implements SentenceValidator {
 
@@ -43,13 +39,13 @@ public class QuotationValidator implements SentenceValidator {
     this.period = DefaultSymbols.getInstance().get(
         "FULL_STOP").getValue().charAt(0);
     leftSingleQuotationMark =
-        new DVCharacter("LEFT_SINGLE_QUOTATION_MARK", "‘", "", true, false);
+        new Character("LEFT_SINGLE_QUOTATION_MARK", "‘", "", true, false);
     rightSingleQuotationMark =
-        new DVCharacter("RIGHT_SINGLE_QUOTATION_MARK", "’", "", false, true);
+        new Character("RIGHT_SINGLE_QUOTATION_MARK", "’", "", false, true);
     leftDoubleQuotationMark =
-        new DVCharacter("LEFT_DOUBLE_QUOTATION_MARK", "“", "", true, false);
+        new Character("LEFT_DOUBLE_QUOTATION_MARK", "“", "", true, false);
     rightDoubleQuotationMark =
-        new DVCharacter("RIGHT_DOUBLE_QUOTATION_MARK", "”", "", false, true);
+        new Character("RIGHT_DOUBLE_QUOTATION_MARK", "”", "", false, true);
     exceptionSuffixes = DEFAULT_EXCEPTION_SUFFIXES;
   }
 
@@ -63,13 +59,13 @@ public class QuotationValidator implements SentenceValidator {
     this.useAscii = isUseAscii;
     if (useAscii) {
       leftSingleQuotationMark =
-          new DVCharacter("LEFT_SINGLE_QUOTATION_MARK", "'", "", true, false);
+          new Character("LEFT_SINGLE_QUOTATION_MARK", "'", "", true, false);
       rightSingleQuotationMark =
-          new DVCharacter("RIGHT_SINGLE_QUOTATION_MARK", "'", "", false, true);
+          new Character("RIGHT_SINGLE_QUOTATION_MARK", "'", "", false, true);
       leftDoubleQuotationMark =
-          new DVCharacter("LEFT_DOUBLE_QUOTATION_MARK", "\"", "", true, false);
+          new Character("LEFT_DOUBLE_QUOTATION_MARK", "\"", "", true, false);
       rightDoubleQuotationMark =
-          new DVCharacter("RIGHT_DOUBLE_QUOTATION_MARK", "\"", "", false, true);
+          new Character("RIGHT_DOUBLE_QUOTATION_MARK", "\"", "", false, true);
     }
   }
 
@@ -79,28 +75,27 @@ public class QuotationValidator implements SentenceValidator {
    *                   false uses the user-defined character settings
    * @param fullStop period character
    */
-  public QuotationValidator(boolean isUseAscii, Character fullStop) {
+  public QuotationValidator(boolean isUseAscii, java.lang.Character fullStop) {
     this(isUseAscii);
     this.period = fullStop;
   }
 
   @Override
-  public List<ValidationError> check(Sentence sentence) {
+  public List<ValidationError> validate(Sentence sentence) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
-    // check single quotation
+    // validate single quotation
     List<ValidationError> result = this.checkQuotation(sentence,
         leftSingleQuotationMark, rightSingleQuotationMark);
     if (result != null) {
       errors.addAll(result);
     }
 
-    // check double quotation
+    // validate double quotation
     errors.addAll(this.checkQuotation(sentence,
         leftDoubleQuotationMark, rightDoubleQuotationMark));
     return errors;
   }
 
-  @Override
   public boolean initialize(
       ValidatorConfiguration conf, CharacterTable charTable)
       throws DocumentValidatorException {
@@ -111,13 +106,13 @@ public class QuotationValidator implements SentenceValidator {
     if (conf.getAttribute("use_ascii").equals("true")) {
       useAscii = true;
       leftSingleQuotationMark =
-          new DVCharacter("LEFT_SINGLE_QUOTATION_MARK", "'", "", true, false);
+          new Character("LEFT_SINGLE_QUOTATION_MARK", "'", "", true, false);
       rightSingleQuotationMark =
-          new DVCharacter("RIGHT_SINGLE_QUOTATION_MARK", "'", "", false, true);
+          new Character("RIGHT_SINGLE_QUOTATION_MARK", "'", "", false, true);
       leftDoubleQuotationMark =
-          new DVCharacter("LEFT_DOUBLE_QUOTATION_MARK", "\"", "", true, false);
+          new Character("LEFT_DOUBLE_QUOTATION_MARK", "\"", "", true, false);
       rightDoubleQuotationMark =
-          new DVCharacter("RIGHT_DOUBLE_QUOTATION_MARK", "\"", "", false, true);
+          new Character("RIGHT_DOUBLE_QUOTATION_MARK", "\"", "", false, true);
     } else {
       // single quotes
       if (charTable.isContainCharacter("LEFT_SINGLE_QUOTATION_MARK")) {
@@ -143,8 +138,8 @@ public class QuotationValidator implements SentenceValidator {
   }
 
   private List<ValidationError> checkQuotation(Sentence sentence,
-      DVCharacter leftQuotation,
-      DVCharacter rightQuotation) {
+      Character leftQuotation,
+      Character rightQuotation) {
     String sentenceString = sentence.content;
     List<ValidationError> errors = new ArrayList<ValidationError>();
     int leftPosition = 0;
@@ -164,7 +159,7 @@ public class QuotationValidator implements SentenceValidator {
             leftPosition + 1);
       }
 
-      // check if left and right quote pair exists
+      // validate if left and right quote pair exists
       if (leftPosition >= 0 && rightPosition < 0) {
         errors.add(new ValidationError(
             this.getClass(),
@@ -183,7 +178,7 @@ public class QuotationValidator implements SentenceValidator {
         break;
       }
 
-      // check inconsistent quotation marks
+      // validate inconsistent quotation marks
       int nextLeftPosition  = this.getQuotePosition(sentenceString,
           leftQuotation.getValue(),
           leftPosition + 1);
@@ -206,7 +201,7 @@ public class QuotationValidator implements SentenceValidator {
             sentence));
       }
 
-      // check if quotes have white spaces
+      // validate if quotes have white spaces
       if (leftPosition > 0 && leftQuotation.isNeedBeforeSpace()
           && (sentenceString.charAt(leftPosition - 1) != ' ')) {
         errors.add(new ValidationError(
@@ -267,17 +262,17 @@ public class QuotationValidator implements SentenceValidator {
     DEFAULT_EXCEPTION_SUFFIXES.add("m "); // I'm
   }
 
-  private DVCharacter leftSingleQuotationMark;
+  private Character leftSingleQuotationMark;
 
-  private DVCharacter rightSingleQuotationMark;
+  private Character rightSingleQuotationMark;
 
-  private DVCharacter leftDoubleQuotationMark;
+  private Character leftDoubleQuotationMark;
 
-  private DVCharacter rightDoubleQuotationMark;
+  private org.unigram.docvalidator.util.Character rightDoubleQuotationMark;
 
   private final List<String> exceptionSuffixes;
 
   private boolean useAscii;
 
-  private Character period;
+  private java.lang.Character period;
 }

@@ -24,11 +24,10 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
-import org.unigram.docvalidator.store.Sentence;
+import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.CharacterTableLoader;
 import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.validator.sentence.SymbolWithSpaceValidator;
 
 class SpaceWithSymbolValidatorForTest extends SymbolWithSpaceValidator {
   void loadCharacterTable (CharacterTable characterTable) {
@@ -49,7 +48,7 @@ public class SpaceWithSymbolValidatorTest {
     CharacterTable characterTable = CharacterTableLoader.load(stream);
     validator.loadCharacterTable(characterTable);
     Sentence str = new Sentence("I like apple/orange",0);
-    List<ValidationError> errors = validator.check(str);
+    List<ValidationError> errors = validator.validate(str);
     assertEquals(0, errors.size());
   }
 
@@ -65,7 +64,7 @@ public class SpaceWithSymbolValidatorTest {
     CharacterTable characterTable = CharacterTableLoader.load(stream);
     validator.loadCharacterTable(characterTable);
     Sentence str = new Sentence("I like her:yes it is.",0);
-    List<ValidationError> errors = validator.check(str);
+    List<ValidationError> errors = validator.validate(str);
     assertEquals(1, errors.size());
   }
 
@@ -81,7 +80,7 @@ public class SpaceWithSymbolValidatorTest {
     CharacterTable characterTable = CharacterTableLoader.load(stream);
     validator.loadCharacterTable(characterTable);
     Sentence str = new Sentence("I like her(Nancy)very much.",0);
-    List<ValidationError> errors = validator.check(str);
+    List<ValidationError> errors = validator.validate(str);
     assertEquals(1, errors.size());
   }
 
@@ -98,7 +97,7 @@ public class SpaceWithSymbolValidatorTest {
     CharacterTable characterTable = CharacterTableLoader.load(stream);
     validator.loadCharacterTable(characterTable);
     Sentence str = new Sentence("I like her(Nancy)very much.",0);
-    List<ValidationError> errors = validator.check(str);
+    List<ValidationError> errors = validator.validate(str);
     assertEquals(2, errors.size());
   }
 
@@ -114,7 +113,7 @@ public class SpaceWithSymbolValidatorTest {
     CharacterTable characterTable = CharacterTableLoader.load(stream);
     validator.loadCharacterTable(characterTable);
     Sentence str = new Sentence("I like 1*10",0);
-    List<ValidationError> errors = validator.check(str);
+    List<ValidationError> errors = validator.validate(str);
     assertEquals(1, errors.size());
   }
 }

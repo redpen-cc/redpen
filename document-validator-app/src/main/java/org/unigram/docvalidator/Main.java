@@ -17,6 +17,11 @@
  */
 package org.unigram.docvalidator;
 
+import org.unigram.docvalidator.model.DocumentCollection;
+import org.unigram.docvalidator.util.DVResource;
+import org.unigram.docvalidator.util.DefaultResultDistributor;
+import org.unigram.docvalidator.util.DocumentValidatorException;
+import org.unigram.docvalidator.DocumentValidator;
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -27,13 +32,9 @@ import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.parser.Parser;
-import org.unigram.docvalidator.store.Document;
-import org.unigram.docvalidator.util.DVResource;
-import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.util.Formatter;
 import org.unigram.docvalidator.util.ResultDistributor;
 import org.unigram.docvalidator.util.ResultDistributorFactory;
-import org.unigram.docvalidator.validator.DocumentValidator;
 
 /**
  * Class containing main method called from command line.
@@ -118,11 +119,11 @@ public final class Main {
     parserType = Parser.Type.valueOf(inputFormat.toUpperCase());
     outputFormat = Formatter.Type.valueOf(resultFormat.toUpperCase());
 
-    Document document =
+    DocumentCollection documentCollection =
         DocumentGenerator.generate(inputFileNames, conf, parserType);
 
-    if (document == null) {
-      LOG.error("Failed to create a Document object");
+    if (documentCollection == null) {
+      LOG.error("Failed to create a DocumentCollection object");
       System.exit(-1);
     }
     ResultDistributor distributor =
@@ -133,7 +134,7 @@ public final class Main {
         .setResultDistributor(distributor)
         .build();
 
-    validator.check(document);
+    validator.check(documentCollection);
 
     System.exit(0);
   }

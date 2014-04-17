@@ -17,17 +17,16 @@
  */
 package org.unigram.docvalidator.validator.sentence;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.unigram.docvalidator.store.Sentence;
-import org.unigram.docvalidator.util.CharacterTable;
+import org.unigram.docvalidator.model.Sentence;
+import org.unigram.docvalidator.util.DVResource;
+import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.util.ValidationError;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
-import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.validator.SentenceValidator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Validate input sentences contain more characters more than specified.
@@ -39,7 +38,17 @@ public class SentenceLengthValidator implements SentenceValidator {
   @SuppressWarnings("WeakerAccess")
   public static final int DEFAULT_MAX_LENGTH = 30;
 
-  public List<ValidationError> check(Sentence line) {
+  public SentenceLengthValidator(DVResource resource) throws DocumentValidatorException {
+    ValidatorConfiguration conf = resource.getConfiguration();
+    initialize(conf);
+  }
+
+  public SentenceLengthValidator() {
+    super();
+    this.maxLength = DEFAULT_MAX_LENGTH;
+  }
+
+  public List<ValidationError> validate(Sentence line) {
     List<ValidationError> result = new ArrayList<ValidationError>();
     if (line.content.length() > maxLength) {
       result.add(new ValidationError(
@@ -51,13 +60,8 @@ public class SentenceLengthValidator implements SentenceValidator {
     return result;
   }
 
-  public SentenceLengthValidator() {
-    super();
-    this.maxLength = DEFAULT_MAX_LENGTH;
-  }
-
-  public boolean initialize(
-      ValidatorConfiguration conf, CharacterTable characterTable)
+  private boolean initialize(
+    ValidatorConfiguration conf)
         throws DocumentValidatorException {
     if (conf.getAttribute("max_length") == null) {
       this.maxLength = DEFAULT_MAX_LENGTH;

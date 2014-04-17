@@ -15,28 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.unigram.docvalidator.store;
+package org.unigram.docvalidator.model;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * FileContent represents a file with many elements
+ * Document represents a file with many elements
  * such as sentences, lists and headers.
  */
-public final class FileContent {
+public final class Document implements Iterable<Section> {
   /**
    * Constructor.
    */
-  public FileContent() {
+  public Document() {
     super();
     sections = new ArrayList<Section>();
     fileName = "";
   }
 
   /**
-   * Get Iterator for Section in the FileContent.
+   * Get Iterator for Section in the Document.
    *
    * @return Iterator of Section list
    */
@@ -56,7 +56,7 @@ public final class FileContent {
   /**
    * Get last Section.
    *
-   * @return last section in the FileContent
+   * @return last section in the Document
    */
   public Section getLastSection() {
     Section section = null;
@@ -106,4 +106,9 @@ public final class FileContent {
   private final List<Section> sections;
 
   private String fileName;
+
+  @Override
+  public Iterator<Section> iterator() {
+    return sections.iterator();
+  }
 }

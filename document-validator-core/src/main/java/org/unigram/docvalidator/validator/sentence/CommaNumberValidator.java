@@ -23,12 +23,13 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.unigram.docvalidator.store.Sentence;
+import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.util.CharacterTable;
+import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.ValidationError;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.validator.SentenceValidator;
+
 /**
  * Validate the number of commas in one sentence.
  */
@@ -52,7 +53,13 @@ public class CommaNumberValidator implements SentenceValidator {
     comma = DEFAULT_COMMA;
   }
 
-  public List<ValidationError> check(Sentence line) {
+  public CommaNumberValidator(DVResource resource) throws DocumentValidatorException {
+    ValidatorConfiguration conf = resource.getConfiguration();
+    CharacterTable ct = resource.getCharacterTable();
+    initialize(conf, ct);
+  }
+
+  public List<ValidationError> validate(Sentence line) {
     List<ValidationError> result = new ArrayList<ValidationError>();
     String content = line.content;
     int commaCount =  0;
@@ -71,8 +78,8 @@ public class CommaNumberValidator implements SentenceValidator {
     return result;
   }
 
-  public boolean initialize(ValidatorConfiguration conf,
-      CharacterTable characterTable)
+  private boolean initialize(ValidatorConfiguration conf,
+                             CharacterTable characterTable)
       throws DocumentValidatorException {
     //TODO search parent configurations to get comma settings...
     this.maxCommaNum = DEFAULT_MAX_COMMA_NUMBER;

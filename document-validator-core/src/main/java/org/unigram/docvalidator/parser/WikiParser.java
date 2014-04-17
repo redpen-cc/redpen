@@ -22,10 +22,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
-import org.unigram.docvalidator.store.FileContent;
-import org.unigram.docvalidator.store.Paragraph;
-import org.unigram.docvalidator.store.Section;
-import org.unigram.docvalidator.store.Sentence;
+import org.unigram.docvalidator.model.Document;
+import org.unigram.docvalidator.model.Paragraph;
+import org.unigram.docvalidator.model.Section;
+import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 
 import java.util.ArrayList;
@@ -48,22 +48,22 @@ public final class WikiParser extends BasicDocumentParser {
     super();
   }
 
-  public FileContent generateDocument(String fileName)
+  public Document generateDocument(String fileName)
       throws DocumentValidatorException {
     InputStream inputStream = this.loadStream(fileName);
     return this.generateDocument(inputStream);
   }
 
-  public FileContent generateDocument(InputStream is)
+  public Document generateDocument(InputStream is)
       throws DocumentValidatorException{
     BufferedReader br = null;
 
-    FileContent fileContent = new FileContent();
+    Document document = new Document();
     // for sentences right below the beginning of document
     List<Sentence> headers = new ArrayList<Sentence>();
     headers.add(new Sentence("", 0));
     Section currentSection = new Section(0, headers);
-    fileContent.appendSection(currentSection);
+    document.appendSection(currentSection);
 
     // begin parsing
     LinePattern prevPattern, currentPattern = LinePattern.VOID;
@@ -81,7 +81,7 @@ public final class WikiParser extends BasicDocumentParser {
           }
         } else if (check(HEADER_PATTERN, line, head)) {
           currentPattern = LinePattern.HEADER;
-          currentSection = appendSection(fileContent, currentSection, head,
+          currentSection = appendSection(document, currentSection, head,
               lineNum);
         } else if (check(LIST_PATTERN, line, head)) {
           currentPattern = LinePattern.LIST;
@@ -112,9 +112,9 @@ public final class WikiParser extends BasicDocumentParser {
     }
 
     if (remain.length() > 0) {
-      appendLastSentence(fileContent, lineNum, remain.toString());
+      appendLastSentence(document, lineNum, remain.toString());
     }
-    return fileContent;
+    return document;
   }
 
   private void appendListElement(Section currentSection,
@@ -132,7 +132,7 @@ public final class WikiParser extends BasicDocumentParser {
     }
   }
 
-  private Section appendSection(FileContent fileContent,
+  private Section appendSection(Document document,
       Section currentSection, List<String> head, int lineNum) {
     Integer level = Integer.valueOf(head.get(0));
     List<Sentence> outputSentences = new ArrayList<Sentence>();
@@ -149,7 +149,7 @@ public final class WikiParser extends BasicDocumentParser {
     }
 
     Section tmpSection =  new Section(level, outputSentences);
-    fileContent.appendSection(tmpSection);
+    document.appendSection(tmpSection);
     if (!addChild(currentSection, tmpSection)) {
       LOG.warn("Failed to add parent for a Seciotn: "
           + tmpSection.getHeaderContents().next());
@@ -158,7 +158,7 @@ public final class WikiParser extends BasicDocumentParser {
     return currentSection;
   }
 
-  private void appendLastSentence(FileContent doc, int lineNum, String remain) {
+  private void appendLastSentence(Document doc, int lineNum, String remain) {
     Sentence sentence = new Sentence(remain, lineNum);
     parseSentence(sentence); // extract inline elements
     doc.getLastSection().appendSentence(sentence);

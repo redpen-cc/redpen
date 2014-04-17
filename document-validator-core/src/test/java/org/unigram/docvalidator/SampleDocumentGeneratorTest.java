@@ -18,7 +18,8 @@
 package org.unigram.docvalidator;
 
 import org.junit.Test;
-import org.unigram.docvalidator.store.Document;
+import org.unigram.docvalidator.model.Document;
+import org.unigram.docvalidator.model.DocumentCollection;
 import org.unigram.docvalidator.util.DocumentValidatorException;
 
 import static org.junit.Assert.*;
@@ -29,10 +30,10 @@ public class SampleDocumentGeneratorTest {
   public void testGenerateSimplePlainDocument() throws DocumentValidatorException {
     String sampleText = "";
     sampleText += "Gekioko pun pun maru means very very angry.\n";
-    Document doc = SampleDocumentGenerator.generateOneFileDocument(sampleText,
+    DocumentCollection doc = SampleDocumentGenerator.generateOneFileDocument(sampleText,
         WIKI);
     assertNotNull(doc);
-    assertEquals(1, doc.getNumberOfFiles());
+    assertEquals(1, doc.size());
     assertEquals(1, doc.getFile(0).getNumberOfSections());
     assertEquals(1, doc.getFile(0).getSection(0).getNumberOfParagraphs());
     assertEquals(1, doc.getFile(0).getSection(0).getParagraph(0)
@@ -46,10 +47,10 @@ public class SampleDocumentGeneratorTest {
     String sampleText = "";
     sampleText += "h1. About Gekioko.\n";
     sampleText += "Gekioko pun pun maru means very very angry.\n";
-    Document doc = SampleDocumentGenerator.generateOneFileDocument(sampleText,
+    DocumentCollection doc = SampleDocumentGenerator.generateOneFileDocument(sampleText,
         WIKI);
     assertNotNull(doc);
-    assertEquals(1, doc.getNumberOfFiles());
+    assertEquals(1, doc.size());
     assertEquals(2, doc.getFile(0).getNumberOfSections());
     assertEquals("About Gekioko.", doc.getFile(0).getSection(1).getHeaderContent(0).content);
     assertEquals(1, doc.getFile(0).getSection(1).getNumberOfParagraphs());
@@ -64,10 +65,10 @@ public class SampleDocumentGeneratorTest {
     String sampleText = "";
     sampleText += "# About Gekioko.\n";
     sampleText += "Gekioko pun pun maru means very very angry.\n";
-    Document doc = SampleDocumentGenerator.generateOneFileDocument(sampleText,
+    DocumentCollection doc = SampleDocumentGenerator.generateOneFileDocument(sampleText,
         MARKDOWN);
     assertNotNull(doc);
-    assertEquals(1, doc.getNumberOfFiles());
+    assertEquals(1, doc.size());
     assertEquals(2, doc.getFile(0).getNumberOfSections());
     assertEquals("About Gekioko.", doc.getFile(0).getSection(1).getHeaderContent(0).content);
     assertEquals(1, doc.getFile(0).getSection(1).getNumberOfParagraphs());

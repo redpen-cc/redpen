@@ -15,36 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.unigram.docvalidator.util;
+package org.unigram.docvalidator.validator;
 
-/**
- * Error used to model the failure of Validators.
- */
-@SuppressWarnings("serial")
-public class DocumentValidatorException extends Exception {
-  /**
-   * Constructor.
-   */
-  public DocumentValidatorException() {
-    super();
-  }
+import org.unigram.docvalidator.util.CharacterTable;
+import org.unigram.docvalidator.util.DocumentValidatorException;
+import org.unigram.docvalidator.util.ValidatorConfiguration;
+
+public interface ConfigurationLoader {
 
   /**
-   * Constructor.
+   * load configuration files.
    *
-   * @param message error message
+   * @param conf      validator configuration
+   * @param charTable character configuration
+   * @return true succeeded, otherwise false
+   * @throws org.unigram.docvalidator.util.DocumentValidatorException
    */
-  public DocumentValidatorException(String message) {
-    super(message);
-  }
+  boolean loadConfiguration(ValidatorConfiguration conf,
+                            CharacterTable charTable)
+      throws DocumentValidatorException;
 
-  /**
-   * Constructor.
-   *
-   * @param message error message
-   * @param cause   error cause
-   */
-  public DocumentValidatorException(String message, Throwable cause) {
-    super(message, cause);
-  }
 }

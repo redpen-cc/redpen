@@ -30,7 +30,7 @@ public final class CharacterTable {
    */
   public CharacterTable() {
     super();
-    characterDictionary = new HashMap<String, DVCharacter>();
+    characterDictionary = new HashMap<String, Character>();
   }
 
   /**
@@ -57,7 +57,7 @@ public final class CharacterTable {
    * @param name character name
    * @return character containing the settings
    */
-  public DVCharacter getCharacter(String name) {
+  public Character getCharacter(String name) {
     return this.characterDictionary.get(name);
   }
 
@@ -66,7 +66,7 @@ public final class CharacterTable {
    *
    * @return character dictionary
    */
-  public Map<String, DVCharacter> getCharacterDictionary() {
+  public Map<String, Character> getCharacterDictionary() {
     return characterDictionary;
   }
 
@@ -81,6 +81,6 @@ public final class CharacterTable {
     return this.characterDictionary.get(name) != null;
   }
 
-  private final Map<String, DVCharacter> characterDictionary;
+  private final Map<String, Character> characterDictionary;
 
 }

@@ -21,20 +21,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.unigram.docvalidator.store.Sentence;
-import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
-import org.unigram.docvalidator.util.DVCharacter;
-import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.validator.SentenceValidator;
+import org.unigram.docvalidator.model.Sentence;
+import org.unigram.docvalidator.util.*;
 
 /**
  * Validate symbol has before and after symbols. Needed spaces is depend on
  * the symbol and defined in DVCharacterTable.
  */
-public class SymbolWithSpaceValidator  implements SentenceValidator {
-  public List<ValidationError> check(Sentence sentence) {
+public class SymbolWithSpaceValidator implements SentenceValidator {
+
+  public SymbolWithSpaceValidator() {
+  }
+
+  public SymbolWithSpaceValidator(DVResource resource) throws DocumentValidatorException {
+    CharacterTable ct = resource.getCharacterTable();
+    initialize(ct);
+  }
+
+  public List<ValidationError> validate(Sentence sentence) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     Set<String> names = characterTable.getNames();
     for (String name : names) {
@@ -46,8 +50,7 @@ public class SymbolWithSpaceValidator  implements SentenceValidator {
     return errors;
   }
 
-  public boolean initialize(ValidatorConfiguration validatorConf,
-      CharacterTable characterConf)
+  private boolean initialize(CharacterTable characterConf)
       throws DocumentValidatorException {
     this.characterTable = characterConf;
     return true;
@@ -59,7 +62,7 @@ public class SymbolWithSpaceValidator  implements SentenceValidator {
 
   private ValidationError validateCharacter(Sentence sentence, String name) {
     String sentenceStr = sentence.content;
-    DVCharacter character = characterTable.getCharacter(name);
+    org.unigram.docvalidator.util.Character character = characterTable.getCharacter(name);
     if (!character.isNeedAfterSpace() && !character.isNeedBeforeSpace()) {
         return null;
     }
@@ -68,7 +71,7 @@ public class SymbolWithSpaceValidator  implements SentenceValidator {
     int position = sentenceStr.indexOf(target);
     if (position != -1) {
       if (position > 0 && character.isNeedBeforeSpace()
-          && !Character.isWhitespace(sentenceStr.charAt(position - 1))) {
+          && !java.lang.Character.isWhitespace(sentenceStr.charAt(position - 1))) {
         return new ValidationError(
             this.getClass(),
             "Need white space before symbol (" +  character.getName()
@@ -76,7 +79,7 @@ public class SymbolWithSpaceValidator  implements SentenceValidator {
             sentence);
       } else if (position < sentenceStr.length() - 1
           && character.isNeedAfterSpace()
-          && !Character.isWhitespace(sentenceStr.charAt(position + 1))) {
+          && !java.lang.Character.isWhitespace(sentenceStr.charAt(position + 1))) {
         return new ValidationError(
             this.getClass(),
             "Need white space after symbol (" + character.getName()

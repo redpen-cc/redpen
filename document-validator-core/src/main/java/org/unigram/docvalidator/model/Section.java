@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.unigram.docvalidator.store;
+package org.unigram.docvalidator.model;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -201,8 +201,8 @@ public final class Section {
    *
    * @return Iterator of Paragraph
    */
-  public Iterator<Paragraph> getParagraphs() {
-    return paragraphs.iterator();
+  public List<Paragraph> getParagraphs() {
+    return paragraphs;
   }
 
   /**
@@ -307,8 +307,8 @@ public final class Section {
    *
    * @return number of list block
    */
-  public Iterator<ListBlock> getListBlocks() {
-    return lists.iterator();
+  public List<ListBlock> getListBlocks() {
+    return lists;
   }
 
   /**

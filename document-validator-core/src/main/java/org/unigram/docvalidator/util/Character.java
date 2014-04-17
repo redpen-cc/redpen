@@ -24,14 +24,14 @@ import java.util.List;
 /**
  * Represent a character settings.
  */
-public final class DVCharacter {
+public final class Character {
   /**
    * Constructor.
    *
    * @param charName  name of target character
    * @param charValue character
    */
-  public DVCharacter(String charName, String charValue) {
+  public Character(String charName, String charValue) {
     this.name = charName;
     this.value = charValue;
     this.invalidChars = new ArrayList<String>();
@@ -46,8 +46,8 @@ public final class DVCharacter {
    * @param charValue       character
    * @param invalidCharsStr list of invalid characters
    */
-  public DVCharacter(String charName, String charValue,
-                     String invalidCharsStr) {
+  public Character(String charName, String charValue,
+                   String invalidCharsStr) {
     this(charName, charValue);
     if (invalidCharsStr.length() > 0) {
       this.invalidChars = Arrays.asList(invalidCharsStr.split("(?!^)"));
@@ -63,8 +63,8 @@ public final class DVCharacter {
    * @param haveBeforeSpace flag to have a space before the character
    * @param haveAfterSpace  flag to have a pace after the character
    */
-  public DVCharacter(String charName, String charValue, String invalidCharsStr,
-                     boolean haveBeforeSpace, boolean haveAfterSpace) {
+  public Character(String charName, String charValue, String invalidCharsStr,
+                   boolean haveBeforeSpace, boolean haveAfterSpace) {
     this(charName, charValue, invalidCharsStr);
     this.needBeforeSpace = haveBeforeSpace;
     this.needAfterSpace = haveAfterSpace;

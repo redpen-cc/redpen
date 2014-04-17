@@ -17,7 +17,7 @@
  */
 package org.unigram.docvalidator.util;
 
-import org.unigram.docvalidator.store.Sentence;
+import org.unigram.docvalidator.model.Sentence;
 
 /**
  * Error to report invalid point from Validators.

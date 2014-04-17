@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.unigram.docvalidator.validator.sentence.lang.ja;
+package org.unigram.docvalidator.validator.sentence;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +23,14 @@ import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.unigram.docvalidator.store.Sentence;
+import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.util.CharacterTable;
+import org.unigram.docvalidator.util.DVResource;
 import org.unigram.docvalidator.util.StringUtils;
 import org.unigram.docvalidator.util.LevenshteinDistance;
 import org.unigram.docvalidator.util.ValidationError;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
 import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.validator.SentenceValidator;
 
 /**
  * Validate the correctness of Katakana word spelling.
@@ -67,7 +67,13 @@ public class KatakanaSpellCheckValidator implements SentenceValidator {
    */
   private HashMap<String, Integer> dic = new HashMap<String, Integer>();
 
-  public List<ValidationError> check(Sentence sentence) {
+  public KatakanaSpellCheckValidator(DVResource resource) throws DocumentValidatorException {
+    ValidatorConfiguration conf = resource.getConfiguration();
+    CharacterTable ct = resource.getCharacterTable();
+    initialize(conf, ct);
+  }
+
+  public List<ValidationError> validate(Sentence sentence) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     List<ValidationError> result;
     StringBuilder katakana = new StringBuilder("");
@@ -114,7 +120,7 @@ public class KatakanaSpellCheckValidator implements SentenceValidator {
       }
     }
     if (!found) {
-      dic.put(katakana, Integer.valueOf(sentence.position));
+      dic.put(katakana, sentence.position);
     }
     return errors;
   }
@@ -123,8 +129,8 @@ public class KatakanaSpellCheckValidator implements SentenceValidator {
     super();
   }
 
-  public boolean initialize(ValidatorConfiguration conf,
-      CharacterTable characterTable)
+  private boolean initialize(ValidatorConfiguration conf,
+                             CharacterTable characterTable)
       throws DocumentValidatorException {
     //TODO : support the exception word list.
     //TODO : configurable SIMILARITY_RATIO.

@@ -91,11 +91,11 @@ public final class StringUtils {
   }
 
   public static boolean isKatakana(char c) {
-    return Character.UnicodeBlock.of(c) == Character.UnicodeBlock.KATAKANA;
+    return java.lang.Character.UnicodeBlock.of(c) == java.lang.Character.UnicodeBlock.KATAKANA;
   }
 
   public static boolean isBasicLatin(char c) {
-    return Character.UnicodeBlock.of(c) == Character.UnicodeBlock.BASIC_LATIN;
+    return java.lang.Character.UnicodeBlock.of(c) == java.lang.Character.UnicodeBlock.BASIC_LATIN;
   }
 
   private StringUtils() {

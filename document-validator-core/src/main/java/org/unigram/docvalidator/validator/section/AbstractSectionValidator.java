@@ -17,33 +17,32 @@
  */
 package org.unigram.docvalidator.validator.section;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.unigram.docvalidator.model.Paragraph;
+import org.unigram.docvalidator.model.Document;
 import org.unigram.docvalidator.model.Section;
 import org.unigram.docvalidator.util.ValidationError;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+/**
+ * Validate sections in documents.
+ */
+public abstract class AbstractSectionValidator implements SectionValidator {
 
-public class SectionLengthValidatorTest {
+//  public abstract boolean loadConfiguration(ValidatorConfiguration conf,
+//      CharacterTable characterTable);
 
-  private static SectionLengthValidator validator;
-  
-  @BeforeClass
-  public static void setUp() {
-    validator = new SectionLengthValidator();
-    validator.setMaxSectionLength(10);
-  }
-  
-  @Test
-  public void testSectionLength() {
-    Section section = new Section(0, "header");
-    Paragraph paragraph = new Paragraph();
-    paragraph.appendSentence("it like a piece of a cake.", 0);
-    section.appendParagraph(paragraph);
-    List<ValidationError> errors = validator.validate(section);
-    assertEquals(1, errors.size());
+  /**
+   * To append a new Validator which use section or paragraph information, we
+   * make a new class implementing this method.
+   * @param section input section
+   */
+//  protected abstract List<ValidationError> validate(Section section);
+
+  private void addFileInformation(List<ValidationError> errors,
+                                  Document file, Section section) {
+    for (ValidationError error : errors) {
+      error.setFileName(file.getFileName());
+      error.setLineNumber(section.getHeaderContent(0).position);
+    }
   }
 }
