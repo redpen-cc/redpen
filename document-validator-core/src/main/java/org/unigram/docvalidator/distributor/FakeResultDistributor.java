@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.unigram.docvalidator.util;
+package org.unigram.docvalidator.distributor;
 
 import org.unigram.docvalidator.ValidationError;
 import org.unigram.docvalidator.formatter.Formatter;

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.unigram.docvalidator.util;
+package org.unigram.docvalidator.distributor;
 
 import static org.junit.Assert.*;
 
@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
 
 import org.junit.Test;
 import org.unigram.docvalidator.ValidationError;
+import org.unigram.docvalidator.distributor.DefaultResultDistributor;
 import org.unigram.docvalidator.formatter.PlainFormatter;
 
 public class DefaultResultDistributorTest {

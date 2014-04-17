@@ -30,8 +30,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.parser.Parser;
 import org.unigram.docvalidator.formatter.Formatter;
-import org.unigram.docvalidator.util.ResultDistributor;
-import org.unigram.docvalidator.util.ResultDistributorFactory;
+import org.unigram.docvalidator.distributor.ResultDistributor;
+import org.unigram.docvalidator.distributor.ResultDistributorFactory;
 
 /**
  * Class containing main method called from command line.

@@ -23,7 +23,7 @@ import org.unigram.docvalidator.model.Paragraph;
 import org.unigram.docvalidator.model.Section;
 import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.DocumentValidatorException;
-import org.unigram.docvalidator.util.FakeResultDistributor;
+import org.unigram.docvalidator.distributor.FakeResultDistributor;
 import org.unigram.docvalidator.ValidationError;
 import org.unigram.docvalidator.validator.sentence.SentenceValidator;
 
