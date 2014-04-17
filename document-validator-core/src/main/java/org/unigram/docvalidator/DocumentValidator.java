@@ -19,12 +19,18 @@ package org.unigram.docvalidator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.unigram.docvalidator.config.CharacterTable;
+import org.unigram.docvalidator.config.DVResource;
+import org.unigram.docvalidator.config.ValidatorConfiguration;
+import org.unigram.docvalidator.distributor.DefaultResultDistributor;
+import org.unigram.docvalidator.distributor.ResultDistributor;
+import org.unigram.docvalidator.distributor.ResultDistributorFactory;
+import org.unigram.docvalidator.formatter.Formatter;
 import org.unigram.docvalidator.model.Document;
 import org.unigram.docvalidator.model.DocumentCollection;
 import org.unigram.docvalidator.model.Paragraph;
 import org.unigram.docvalidator.model.Section;
 import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.util.*;
 import org.unigram.docvalidator.validator.SentenceIterator;
 import org.unigram.docvalidator.validator.Validator;
 import org.unigram.docvalidator.validator.section.ParagraphNumberValidator;
@@ -162,8 +168,9 @@ public class DocumentValidator implements Validator {
    * Constructor only for testing.
    */
   protected DocumentValidator() {
-    this.distributor = ResultDistributorFactory.createDistributor(Formatter.Type.PLAIN,
-      System.out);
+    this.distributor = ResultDistributorFactory
+        .createDistributor(Formatter.Type.PLAIN,
+            System.out);
     this.validators = new ArrayList<Validator>();
     sectionValidators = new ArrayList<SectionValidator>();
     sentenceValidators = new ArrayList<SentenceValidator>();

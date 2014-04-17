@@ -15,29 +15,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.unigram.docvalidator.util;
+package org.unigram.docvalidator;
+
 /**
- * FakeResultDistributor does nothing. this class is just for testing.
+ * Error used to model the failure of Validators.
  */
-public class FakeResultDistributor implements ResultDistributor {
+@SuppressWarnings("serial")
+public class DocumentValidatorException extends Exception {
   /**
    * Constructor.
    */
-  public FakeResultDistributor() {
+  public DocumentValidatorException() {
     super();
   }
 
-  @Override
-  public int flushResult(ValidationError err) {
-    return 0;
+  /**
+   * Constructor.
+   *
+   * @param message error message
+   */
+  public DocumentValidatorException(String message) {
+    super(message);
   }
 
-  @Override
-  public void setFormatter(Formatter formatter) { }
-
-  @Override
-  public void flushHeader() { }
-
-  @Override
-  public void flushFooter() { }
+  /**
+   * Constructor.
+   *
+   * @param message error message
+   * @param cause   error cause
+   */
+  public DocumentValidatorException(String message, Throwable cause) {
+    super(message, cause);
+  }
 }

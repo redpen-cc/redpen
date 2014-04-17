@@ -28,15 +28,15 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.unigram.docvalidator.model.Document;
-import org.unigram.docvalidator.util.ValidationConfigurationLoader;
+import org.unigram.docvalidator.config.ValidationConfigurationLoader;
 import org.unigram.docvalidator.model.ListBlock;
 import org.unigram.docvalidator.model.Paragraph;
 import org.unigram.docvalidator.model.Section;
-import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.CharacterTableLoader;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
-import org.unigram.docvalidator.util.DVResource;
-import org.unigram.docvalidator.util.DocumentValidatorException;
+import org.unigram.docvalidator.config.CharacterTable;
+import org.unigram.docvalidator.config.CharacterTableLoader;
+import org.unigram.docvalidator.config.ValidatorConfiguration;
+import org.unigram.docvalidator.config.DVResource;
+import org.unigram.docvalidator.DocumentValidatorException;
 
 import static org.unigram.docvalidator.parser.Parser.Type.WIKI;
 

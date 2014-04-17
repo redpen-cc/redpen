@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.unigram.docvalidator.util;
+package org.unigram.docvalidator.config;
 
 import static org.junit.Assert.*;
 
@@ -23,6 +23,8 @@ import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
+import org.unigram.docvalidator.config.ValidationConfigurationLoader;
+import org.unigram.docvalidator.config.ValidatorConfiguration;
 
 public class ValidationConfigurationLoaderTest {
 

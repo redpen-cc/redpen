@@ -20,7 +20,7 @@ package org.unigram.docvalidator.validator.section;
 import org.junit.Test;
 import org.unigram.docvalidator.model.Paragraph;
 import org.unigram.docvalidator.model.Section;
-import org.unigram.docvalidator.util.ValidationError;
+import org.unigram.docvalidator.ValidationError;
 
 import java.util.List;
 

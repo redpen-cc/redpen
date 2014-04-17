@@ -19,8 +19,7 @@ package org.unigram.docvalidator.validator;
 
 
 import org.unigram.docvalidator.model.Document;
-import org.unigram.docvalidator.util.ResultDistributor;
-import org.unigram.docvalidator.util.ValidationError;
+import org.unigram.docvalidator.ValidationError;
 
 import java.util.List;
 

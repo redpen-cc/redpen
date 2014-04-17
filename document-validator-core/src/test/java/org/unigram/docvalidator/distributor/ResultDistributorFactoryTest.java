@@ -15,11 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.unigram.docvalidator.util;
+package org.unigram.docvalidator.distributor;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.unigram.docvalidator.distributor.ResultDistributor;
+import org.unigram.docvalidator.distributor.ResultDistributorFactory;
+import org.unigram.docvalidator.formatter.Formatter;
 
 public class ResultDistributorFactoryTest {
 

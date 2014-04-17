@@ -18,10 +18,7 @@
 package org.unigram.docvalidator;
 
 import org.unigram.docvalidator.model.DocumentCollection;
-import org.unigram.docvalidator.util.DVResource;
-import org.unigram.docvalidator.util.DefaultResultDistributor;
-import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.DocumentValidator;
+import org.unigram.docvalidator.config.DVResource;
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -32,9 +29,9 @@ import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.parser.Parser;
-import org.unigram.docvalidator.util.Formatter;
-import org.unigram.docvalidator.util.ResultDistributor;
-import org.unigram.docvalidator.util.ResultDistributorFactory;
+import org.unigram.docvalidator.formatter.Formatter;
+import org.unigram.docvalidator.distributor.ResultDistributor;
+import org.unigram.docvalidator.distributor.ResultDistributorFactory;
 
 /**
  * Class containing main method called from command line.

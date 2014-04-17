@@ -15,41 +15,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.unigram.docvalidator.util;
+package org.unigram.docvalidator.distributor;
+
+import org.unigram.docvalidator.ValidationError;
+import org.unigram.docvalidator.formatter.Formatter;
 
 /**
- * This interface is for classes to define output format of
- * reported ValidationError objects.
+ * ResultDistributor flush the errors reported from Validators.
  */
-public interface Formatter {
-  /**
-   * Convert ValidationError into a string to flush a error message.
-   *
-   * @param error object containing file and line number information.
-   * @return error message
-   */
-  String convertError(ValidationError error);
+public interface ResultDistributor {
 
   /**
-   * Return the header block of semi-structured format.
-   *
-   * @return header block
+   * Flush header block of semi-structured format.
    */
-  String header();
+  void flushHeader();
 
   /**
-   * Return the footer block of semi-structured format.
-   *
-   * @return
+   * Flush footer block of semi-structured format.
    */
-  String footer();
+  void flushFooter();
 
   /**
-   * the type of formatter using ResultDistributorFactory.
+   * Flush given ValidationError.
+   * @param err error reported from a Validator
+   * @return 0 succeeded, otherwise 1
    */
-  enum Type {
-    PLAIN,
+  int flushResult(ValidationError err);
 
-    XML
-  }
+  /**
+   * Set Formatter object.
+   * @param formatter
+   */
+  void setFormatter(Formatter formatter);
 }

@@ -20,8 +20,8 @@ package org.unigram.docvalidator.parser;
 import java.io.InputStream;
 
 import org.unigram.docvalidator.model.Document;
-import org.unigram.docvalidator.util.DVResource;
-import org.unigram.docvalidator.util.DocumentValidatorException;
+import org.unigram.docvalidator.config.DVResource;
+import org.unigram.docvalidator.DocumentValidatorException;
 
 /**
  * Parser generates Document from input.

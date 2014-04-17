@@ -22,8 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.parser.Parser;
 import org.unigram.docvalidator.parser.DocumentParserFactory;
 import org.unigram.docvalidator.model.DocumentCollection;
-import org.unigram.docvalidator.util.DVResource;
-import org.unigram.docvalidator.util.DocumentValidatorException;
+import org.unigram.docvalidator.config.DVResource;
 
 /**
  * Generate DocumentCollection object loading input file.

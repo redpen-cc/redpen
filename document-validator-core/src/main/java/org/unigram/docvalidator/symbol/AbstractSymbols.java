@@ -19,7 +19,7 @@ package org.unigram.docvalidator.symbol;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.unigram.docvalidator.util.Character;
+import org.unigram.docvalidator.config.Character;
 
 import java.util.HashMap;
 import java.util.Iterator;

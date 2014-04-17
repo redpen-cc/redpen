@@ -22,8 +22,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.unigram.docvalidator.ConfigurationLoader;
 import org.unigram.docvalidator.server.util.ServerConfigurationLoader;
-import org.unigram.docvalidator.util.DVResource;
-import org.unigram.docvalidator.util.DocumentValidatorException;
+import org.unigram.docvalidator.config.DVResource;
+import org.unigram.docvalidator.DocumentValidatorException;
 import org.unigram.docvalidator.DocumentValidator;
 
 /**

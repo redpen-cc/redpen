@@ -64,7 +64,7 @@ import org.unigram.docvalidator.model.Document;
 import org.unigram.docvalidator.model.Paragraph;
 import org.unigram.docvalidator.model.Section;
 import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.util.DocumentValidatorException;
+import org.unigram.docvalidator.DocumentValidatorException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -133,7 +133,7 @@ public class ToFileContentSerializer implements Visitor {
    * @param astRoot Pegdown RootNode
    *                (markdown tree that is parsed pegdown parser)
    * @return file content that re-parse Pegdown RootNode.
-   * @throws org.unigram.docvalidator.util.DocumentValidatorException
+   * @throws org.unigram.docvalidator.DocumentValidatorException
    * Fail to traverse markdown tree
    */
   public Document toFileContent(RootNode astRoot)

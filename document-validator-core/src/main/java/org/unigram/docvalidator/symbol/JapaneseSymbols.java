@@ -17,7 +17,7 @@
  */
 package org.unigram.docvalidator.symbol;
 
-import org.unigram.docvalidator.util.Character;
+import org.unigram.docvalidator.config.Character;
 
 import java.util.Map;
 
@@ -111,7 +111,7 @@ public class JapaneseSymbols extends AbstractSymbols {
         new Character("７", "7", "", false, false));
     symbols.put("DIGIT_EIGHT",
         new Character("８", "8", "", false, false));
-    symbols.put("DIGIT_NINE", new org.unigram.docvalidator.util.Character("９", "9", "", false, false));
+    symbols.put("DIGIT_NINE", new Character("９", "9", "", false, false));
   }
 
   private static AbstractSymbols INSTANCE = new JapaneseSymbols();

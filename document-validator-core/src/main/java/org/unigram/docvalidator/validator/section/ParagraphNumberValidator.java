@@ -21,9 +21,9 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.unigram.docvalidator.model.Section;
-import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
-import org.unigram.docvalidator.util.ValidationError;
+import org.unigram.docvalidator.config.CharacterTable;
+import org.unigram.docvalidator.config.ValidatorConfiguration;
+import org.unigram.docvalidator.ValidationError;
 
 /**
  * Validate paragraph number. If a section has paragraphs more than specified,

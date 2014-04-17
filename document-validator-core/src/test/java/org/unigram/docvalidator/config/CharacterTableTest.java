@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.unigram.docvalidator.util;
+package org.unigram.docvalidator.config;
 
 import static org.junit.Assert.*;
 
@@ -23,6 +23,8 @@ import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
+import org.unigram.docvalidator.config.*;
+import org.unigram.docvalidator.config.Character;
 
 public class CharacterTableTest {
 
@@ -35,7 +37,7 @@ public class CharacterTableTest {
         "</character-table>");
     InputStream stream = IOUtils.toInputStream(sampleCharTable);
     CharacterTable characterTable = CharacterTableLoader.load(stream);
-    Character ch= characterTable.getCharacter("EXCLAMATION_MARK");
+    org.unigram.docvalidator.config.Character ch= characterTable.getCharacter("EXCLAMATION_MARK");
     assertNotNull(ch);
     assertEquals("!", ch.getValue());
     assertEquals(1, ch.getInvalidChars().size());

@@ -19,13 +19,19 @@ package org.unigram.docvalidator.validator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.unigram.docvalidator.DocumentValidatorException;
+import org.unigram.docvalidator.ValidationError;
+import org.unigram.docvalidator.config.CharacterTable;
+import org.unigram.docvalidator.config.DVResource;
+import org.unigram.docvalidator.config.ValidatorConfiguration;
+import org.unigram.docvalidator.distributor.FakeResultDistributor;
+import org.unigram.docvalidator.distributor.ResultDistributor;
 import org.unigram.docvalidator.model.Document;
 import org.unigram.docvalidator.model.ListBlock;
 import org.unigram.docvalidator.model.ListElement;
 import org.unigram.docvalidator.model.Paragraph;
 import org.unigram.docvalidator.model.Section;
 import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.util.*;
 import org.unigram.docvalidator.validator.sentence.CommaNumberValidator;
 import org.unigram.docvalidator.validator.sentence.InvalidCharacterValidator;
 import org.unigram.docvalidator.validator.sentence.InvalidExpressionValidator;
@@ -51,9 +57,9 @@ public class SentenceIterator implements Validator {
   /**
    * constructor.
    *
-   * @throws DocumentValidatorException
+   * @throws org.unigram.docvalidator.DocumentValidatorException
    */
-  public SentenceIterator() throws DocumentValidatorException{
+  public SentenceIterator() throws DocumentValidatorException {
     this.sentenceValidators = new ArrayList<SentenceValidator>();
     this.distributor = new FakeResultDistributor();
   }

@@ -15,7 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.unigram.docvalidator.util;
+package org.unigram.docvalidator.formatter;
+
+import org.unigram.docvalidator.ValidationError;
 
 /**
  * Format input error into a string message.

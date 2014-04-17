@@ -15,12 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.unigram.docvalidator.util;
+package org.unigram.docvalidator.config;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.unigram.docvalidator.config.ValidationConfigurationLoader;
+import org.unigram.docvalidator.config.ValidatorConfiguration;
 
 import java.io.InputStream;
 

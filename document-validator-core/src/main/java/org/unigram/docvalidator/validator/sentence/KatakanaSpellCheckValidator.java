@@ -24,13 +24,13 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.DVResource;
+import org.unigram.docvalidator.config.CharacterTable;
+import org.unigram.docvalidator.config.DVResource;
 import org.unigram.docvalidator.util.StringUtils;
 import org.unigram.docvalidator.util.LevenshteinDistance;
-import org.unigram.docvalidator.util.ValidationError;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
-import org.unigram.docvalidator.util.DocumentValidatorException;
+import org.unigram.docvalidator.ValidationError;
+import org.unigram.docvalidator.config.ValidatorConfiguration;
+import org.unigram.docvalidator.DocumentValidatorException;
 
 /**
  * Validate the correctness of Katakana word spelling.

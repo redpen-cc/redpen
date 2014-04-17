@@ -17,9 +17,9 @@
  */
 package org.unigram.docvalidator.validator;
 
-import org.unigram.docvalidator.util.CharacterTable;
-import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.util.ValidatorConfiguration;
+import org.unigram.docvalidator.config.CharacterTable;
+import org.unigram.docvalidator.DocumentValidatorException;
+import org.unigram.docvalidator.config.ValidatorConfiguration;
 
 public interface ConfigurationLoader {
 
@@ -29,7 +29,7 @@ public interface ConfigurationLoader {
    * @param conf      validator configuration
    * @param charTable character configuration
    * @return true succeeded, otherwise false
-   * @throws org.unigram.docvalidator.util.DocumentValidatorException
+   * @throws org.unigram.docvalidator.DocumentValidatorException
    */
   boolean loadConfiguration(ValidatorConfiguration conf,
                             CharacterTable charTable)

@@ -15,12 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.unigram.docvalidator.util;
+package org.unigram.docvalidator.distributor;
 
 import java.io.OutputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.unigram.docvalidator.DocumentValidatorException;
+import org.unigram.docvalidator.formatter.Formatter;
+import org.unigram.docvalidator.formatter.PlainFormatter;
+import org.unigram.docvalidator.formatter.XMLFormatter;
 
 /**
  * Factory class of ResultDistributor.

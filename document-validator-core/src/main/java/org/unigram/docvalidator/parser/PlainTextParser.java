@@ -31,7 +31,7 @@ import org.unigram.docvalidator.model.Document;
 import org.unigram.docvalidator.model.Paragraph;
 import org.unigram.docvalidator.model.Section;
 import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.util.DocumentValidatorException;
+import org.unigram.docvalidator.DocumentValidatorException;
 
 /**
  * Parser for plain text file.
