@@ -19,6 +19,8 @@ package org.unigram.docvalidator.validator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.unigram.docvalidator.DocumentValidatorException;
+import org.unigram.docvalidator.ValidationError;
 import org.unigram.docvalidator.model.Document;
 import org.unigram.docvalidator.model.ListBlock;
 import org.unigram.docvalidator.model.ListElement;
@@ -51,9 +53,9 @@ public class SentenceIterator implements Validator {
   /**
    * constructor.
    *
-   * @throws DocumentValidatorException
+   * @throws org.unigram.docvalidator.DocumentValidatorException
    */
-  public SentenceIterator() throws DocumentValidatorException{
+  public SentenceIterator() throws DocumentValidatorException {
     this.sentenceValidators = new ArrayList<SentenceValidator>();
     this.distributor = new FakeResultDistributor();
   }

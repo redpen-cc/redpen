@@ -17,6 +17,8 @@
  */
 package org.unigram.docvalidator.util;
 
+import org.unigram.docvalidator.ValidationError;
+
 /**
  * This interface is for classes to define output format of
  * reported ValidationError objects.

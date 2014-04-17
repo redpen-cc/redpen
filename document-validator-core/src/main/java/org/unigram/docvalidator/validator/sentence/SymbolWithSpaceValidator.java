@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.unigram.docvalidator.DocumentValidatorException;
+import org.unigram.docvalidator.ValidationError;
 import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.util.*;
 
@@ -33,7 +35,8 @@ public class SymbolWithSpaceValidator implements SentenceValidator {
   public SymbolWithSpaceValidator() {
   }
 
-  public SymbolWithSpaceValidator(DVResource resource) throws DocumentValidatorException {
+  public SymbolWithSpaceValidator(DVResource resource) throws
+      DocumentValidatorException {
     CharacterTable ct = resource.getCharacterTable();
     initialize(ct);
   }

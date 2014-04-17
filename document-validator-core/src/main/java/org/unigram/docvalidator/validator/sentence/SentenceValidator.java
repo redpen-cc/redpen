@@ -18,7 +18,7 @@
 package org.unigram.docvalidator.validator.sentence;
 
 import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.util.ValidationError;
+import org.unigram.docvalidator.ValidationError;
 
 import java.util.List;
 

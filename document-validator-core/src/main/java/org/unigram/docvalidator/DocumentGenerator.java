@@ -23,7 +23,6 @@ import org.unigram.docvalidator.parser.Parser;
 import org.unigram.docvalidator.parser.DocumentParserFactory;
 import org.unigram.docvalidator.model.DocumentCollection;
 import org.unigram.docvalidator.util.DVResource;
-import org.unigram.docvalidator.util.DocumentValidatorException;
 
 /**
  * Generate DocumentCollection object loading input file.

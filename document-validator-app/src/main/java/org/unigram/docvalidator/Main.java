@@ -19,9 +19,6 @@ package org.unigram.docvalidator;
 
 import org.unigram.docvalidator.model.DocumentCollection;
 import org.unigram.docvalidator.util.DVResource;
-import org.unigram.docvalidator.util.DefaultResultDistributor;
-import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.DocumentValidator;
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;

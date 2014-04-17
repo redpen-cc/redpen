@@ -18,7 +18,7 @@
 package org.unigram.docvalidator.validator.section;
 
 import org.unigram.docvalidator.model.Section;
-import org.unigram.docvalidator.util.ValidationError;
+import org.unigram.docvalidator.ValidationError;
 
 import java.util.List;
 

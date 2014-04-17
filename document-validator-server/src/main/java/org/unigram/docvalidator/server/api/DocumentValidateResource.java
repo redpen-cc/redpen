@@ -28,8 +28,8 @@ import org.unigram.docvalidator.parser.Parser;
 import org.unigram.docvalidator.server.DocumentValidatorServer;
 import org.unigram.docvalidator.model.Document;
 import org.unigram.docvalidator.model.DocumentCollection;
-import org.unigram.docvalidator.util.DocumentValidatorException;
-import org.unigram.docvalidator.util.ValidationError;
+import org.unigram.docvalidator.DocumentValidatorException;
+import org.unigram.docvalidator.ValidationError;
 
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;

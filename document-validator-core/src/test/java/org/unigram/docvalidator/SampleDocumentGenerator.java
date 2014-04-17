@@ -23,7 +23,6 @@ import org.unigram.docvalidator.parser.Parser;
 import org.unigram.docvalidator.model.DocumentCollection;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.DVResource;
-import org.unigram.docvalidator.util.DocumentValidatorException;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
 
 import java.io.InputStream;

@@ -25,6 +25,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.junit.Test;
+import org.unigram.docvalidator.ValidationError;
 
 public class DefaultResultDistributorTest {
   @Test

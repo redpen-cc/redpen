@@ -16,6 +16,9 @@
  * limitations under the License.
  */
 package org.unigram.docvalidator.util;
+
+import org.unigram.docvalidator.ValidationError;
+
 /**
  * FakeResultDistributor does nothing. this class is just for testing.
  */

@@ -17,6 +17,8 @@
  */
 package org.unigram.docvalidator.util;
 
+import org.unigram.docvalidator.ValidationError;
+
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;

@@ -27,7 +27,7 @@ import org.unigram.docvalidator.model.Section;
 import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.ValidatorConfiguration;
-import org.unigram.docvalidator.util.ValidationError;
+import org.unigram.docvalidator.ValidationError;
 
 /**
  * Validate whether paragraph start as specified.

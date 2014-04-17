@@ -25,7 +25,7 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.util.ValidationError;
+import org.unigram.docvalidator.ValidationError;
 
 
 class SuggestExpressionValidatorForTest extends SuggestExpressionValidator {

@@ -32,6 +32,8 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.unigram.docvalidator.DocumentValidatorException;
+import org.unigram.docvalidator.ValidationError;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
@@ -44,7 +46,7 @@ public class XMLFormatter implements Formatter {
   /**
    * Constructor.
    *
-   * @throws DocumentValidatorException when failed to create Formatter
+   * @throws org.unigram.docvalidator.DocumentValidatorException when failed to create Formatter
    */
   public XMLFormatter() throws DocumentValidatorException {
     super();

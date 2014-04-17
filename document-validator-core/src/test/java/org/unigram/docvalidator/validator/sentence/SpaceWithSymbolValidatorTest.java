@@ -27,7 +27,7 @@ import org.junit.Test;
 import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.util.CharacterTable;
 import org.unigram.docvalidator.util.CharacterTableLoader;
-import org.unigram.docvalidator.util.ValidationError;
+import org.unigram.docvalidator.ValidationError;
 
 class SpaceWithSymbolValidatorForTest extends SymbolWithSpaceValidator {
   void loadCharacterTable (CharacterTable characterTable) {

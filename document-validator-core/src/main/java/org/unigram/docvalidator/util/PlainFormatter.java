@@ -17,6 +17,8 @@
  */
 package org.unigram.docvalidator.util;
 
+import org.unigram.docvalidator.ValidationError;
+
 /**
  * Format input error into a string message.
  */

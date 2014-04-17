@@ -18,9 +18,7 @@
 package org.unigram.docvalidator;
 
 import org.junit.Test;
-import org.unigram.docvalidator.model.Document;
 import org.unigram.docvalidator.model.DocumentCollection;
-import org.unigram.docvalidator.util.DocumentValidatorException;
 
 import static org.junit.Assert.*;
 import static org.unigram.docvalidator.parser.Parser.Type.*;

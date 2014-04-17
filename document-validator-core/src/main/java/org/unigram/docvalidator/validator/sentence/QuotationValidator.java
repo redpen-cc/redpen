@@ -20,6 +20,8 @@ package org.unigram.docvalidator.validator.sentence;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.unigram.docvalidator.DocumentValidatorException;
+import org.unigram.docvalidator.ValidationError;
 import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.symbol.DefaultSymbols;
 import org.unigram.docvalidator.util.*;

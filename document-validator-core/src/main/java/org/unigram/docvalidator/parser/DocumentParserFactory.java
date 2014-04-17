@@ -18,7 +18,7 @@
 package org.unigram.docvalidator.parser;
 
 import org.unigram.docvalidator.util.DVResource;
-import org.unigram.docvalidator.util.DocumentValidatorException;
+import org.unigram.docvalidator.DocumentValidatorException;
 
 /**
  * Factory class of DocumentParser.
