@@ -5,14 +5,14 @@
 
   <parent>
     <groupId>org.unigram</groupId>
-    <artifactId>document-validator</artifactId>
+    <artifactId>redpen</artifactId>
     <version>0.1</version>
   </parent>
 
   <groupId>org.unigram</groupId>
-  <artifactId>document-validator-app</artifactId>
+  <artifactId>redpen-app</artifactId>
   <version>0.1</version>
-  <name>document-validator-app</name>
+  <name>redpen-app</name>
   <url>http://document-validator.org</url>
 
   <properties>
@@ -58,7 +58,7 @@
   <dependencies>
     <dependency>
       <groupId>org.unigram</groupId>
-      <artifactId>document-validator-core</artifactId>
+      <artifactId>redpen-core</artifactId>
       <version>0.1</version>
     </dependency>
   </dependencies>

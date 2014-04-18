@@ -4,9 +4,9 @@
 
   <groupId>org.unigram</groupId>
   <version>0.1</version>
-  <artifactId>document-validator</artifactId>
+  <artifactId>redpen</artifactId>
   <url>http://document-validator.org</url>
-  <name>document-validator</name>
+  <name>redpen</name>
   <packaging>pom</packaging>
 
   <properties>
@@ -14,9 +14,9 @@
   </properties>
 
   <modules>
-    <module>document-validator-core</module>
-    <module>document-validator-app</module>
-    <module>document-validator-server</module>
+    <module>redpen-core</module>
+    <module>redpen-app</module>
+    <module>redpen-server</module>
   </modules>
 
   <build>
@@ -59,12 +59,12 @@
     <dependencies>
       <dependency>
         <groupId>org.unigram</groupId>
-        <artifactId>document-validator-core</artifactId>
+        <artifactId>redpen-core</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.unigram</groupId>
-        <artifactId>document-validator-app</artifactId>
+        <artifactId>redpen-app</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>
