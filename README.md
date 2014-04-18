@@ -1,4 +1,4 @@
-Redpen
+RedPen
 =======
 
 A document inspection tool.
