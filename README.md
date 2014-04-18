@@ -1,7 +1,7 @@
-DocumentValidator
-==================
+Redpen
+=======
 
-An inspection tool of technical documents.
+A document inspection tool.
 
-See the detail usage in the DocumentValidator [home page](http://document-validator.org/).
+See the detail usage in the RedPen [home page](http://document-validator.org/).
 
