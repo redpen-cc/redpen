@@ -30,9 +30,9 @@ import org.unigram.docvalidator.model.Sentence;
  * Validate if there is invalid characters in sentences.
  */
 public class InvalidCharacterValidator implements SentenceValidator {
-  public InvalidCharacterValidator(DVResource resource) throws
+  public InvalidCharacterValidator(Configuration configuration) throws
       DocumentValidatorException {
-    CharacterTable ct = resource.getCharacterTable();
+    CharacterTable ct = configuration.getCharacterTable();
     initialize(ct);
   }
 

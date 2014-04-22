@@ -18,7 +18,7 @@
 package org.unigram.docvalidator.validator.sentence;
 
 import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.config.DVResource;
+import org.unigram.docvalidator.config.Configuration;
 import org.unigram.docvalidator.DocumentValidatorException;
 import org.unigram.docvalidator.ValidationError;
 
@@ -34,7 +34,8 @@ public class SpaceBeginningOfSentenceValidator implements SentenceValidator {
   public SpaceBeginningOfSentenceValidator() {
   }
 
-  public SpaceBeginningOfSentenceValidator(DVResource resource) throws DocumentValidatorException {
+  public SpaceBeginningOfSentenceValidator(Configuration configuration)
+      throws DocumentValidatorException {
   }
 
   public List<ValidationError> validate(Sentence sentence) {

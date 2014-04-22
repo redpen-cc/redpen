@@ -20,7 +20,7 @@ package org.unigram.docvalidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.config.CharacterTable;
-import org.unigram.docvalidator.config.DVResource;
+import org.unigram.docvalidator.config.Configuration;
 import org.unigram.docvalidator.config.ValidatorConfiguration;
 import org.unigram.docvalidator.distributor.DefaultResultDistributor;
 import org.unigram.docvalidator.distributor.ResultDistributor;
@@ -53,16 +53,16 @@ public class DocumentValidator implements Validator {
   private final List<SentenceValidator> sentenceValidators;
 
   private DocumentValidator(Builder builder) throws DocumentValidatorException {
-    DVResource resource = builder.resource;
+    Configuration configuration = builder.configuration;
     this.distributor = builder.distributor;
-    this.conf = resource.getConfiguration();
-    this.charTable = resource.getCharacterTable();
+    this.validatorConfig = configuration.getValidatorConfig();
+    this.charTable = configuration.getCharacterTable();
 
     validators = new ArrayList<Validator>();
     sectionValidators = new ArrayList<SectionValidator>();
     sentenceValidators = new ArrayList<SentenceValidator>();
 
-    loadValidators(this.conf, this.charTable);
+    loadValidators(this.validatorConfig, this.charTable);
   }
 
   /**
@@ -174,7 +174,7 @@ public class DocumentValidator implements Validator {
     this.validators = new ArrayList<Validator>();
     sectionValidators = new ArrayList<SectionValidator>();
     sentenceValidators = new ArrayList<SentenceValidator>();
-    this.conf = null;
+    this.validatorConfig = null;
     this.charTable = null;
   }
 
@@ -198,14 +198,14 @@ public class DocumentValidator implements Validator {
 
   public static class Builder {
 
-    private DVResource resource;
+    private Configuration configuration;
 
     private ResultDistributor distributor = new DefaultResultDistributor(
       new PrintStream(System.out)
     );
 
-    public Builder setResource(DVResource resource) {
-      this.resource = resource;
+    public Builder setConfiguration(Configuration configuration) {
+      this.configuration = configuration;
       return this;
     }
 
@@ -221,7 +221,7 @@ public class DocumentValidator implements Validator {
 
   private final List<Validator> validators;
 
-  private final ValidatorConfiguration conf;
+  private final ValidatorConfiguration validatorConfig;
 
   private final CharacterTable charTable;
 

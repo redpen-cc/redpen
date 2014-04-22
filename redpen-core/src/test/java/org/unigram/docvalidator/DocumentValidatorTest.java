@@ -18,12 +18,12 @@
 package org.unigram.docvalidator;
 
 import org.junit.Test;
+import org.unigram.docvalidator.config.Configuration;
 import org.unigram.docvalidator.model.Document;
 import org.unigram.docvalidator.model.DocumentCollection;
 import org.unigram.docvalidator.model.Paragraph;
 import org.unigram.docvalidator.model.Section;
 import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.config.DVResource;
 import org.unigram.docvalidator.config.ValidatorConfiguration;
 
 import java.util.List;
@@ -77,14 +77,14 @@ public class DocumentValidatorTest {
     documents.addDocument(document);
 
 
-    ValidatorConfiguration config = new ValidatorConfiguration(
+    ValidatorConfiguration validatorConfig = new ValidatorConfiguration(
         "<?xml version=\"1.0\"?>\n" +
             "<character-table></character-table>"
     );
-    DVResource resource = new DVResource(config); // = ValidatorConfiguration + CharacterTable
+    Configuration configuration = new Configuration(validatorConfig); // = ValidatorConfiguration + CharacterTable
 
     DocumentValidator validator = new DocumentValidator.Builder()
-        .setResource(resource)
+        .setConfiguration(configuration)
 //        .setConfig(...)
 //        .setCharacterTable()
         .build();

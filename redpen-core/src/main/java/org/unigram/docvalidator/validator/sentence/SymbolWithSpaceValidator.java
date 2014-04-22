@@ -35,9 +35,9 @@ public class SymbolWithSpaceValidator implements SentenceValidator {
   public SymbolWithSpaceValidator() {
   }
 
-  public SymbolWithSpaceValidator(DVResource resource) throws
+  public SymbolWithSpaceValidator(Configuration configuration) throws
       DocumentValidatorException {
-    CharacterTable ct = resource.getCharacterTable();
+    CharacterTable ct = configuration.getCharacterTable();
     initialize(ct);
   }
 

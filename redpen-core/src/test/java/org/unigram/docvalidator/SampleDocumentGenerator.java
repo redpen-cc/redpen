@@ -22,7 +22,7 @@ import org.unigram.docvalidator.parser.DocumentParserFactory;
 import org.unigram.docvalidator.parser.Parser;
 import org.unigram.docvalidator.model.DocumentCollection;
 import org.unigram.docvalidator.config.CharacterTable;
-import org.unigram.docvalidator.config.DVResource;
+import org.unigram.docvalidator.config.Configuration;
 import org.unigram.docvalidator.config.ValidatorConfiguration;
 
 import java.io.InputStream;
@@ -44,9 +44,9 @@ public class SampleDocumentGenerator {
    */
   public static DocumentCollection generateOneFileDocument(String docString,
       Parser.Type type) throws DocumentValidatorException {
-    DVResource resource = new DVResource(
+    Configuration configuration = new Configuration(
         new ValidatorConfiguration("dummy"), new CharacterTable());
-    Parser parser = DocumentParserFactory.generate(type, resource);
+    Parser parser = DocumentParserFactory.generate(type, configuration);
 
     InputStream stream = IOUtils.toInputStream(docString);
     DocumentCollection documentCollection = new DocumentCollection();

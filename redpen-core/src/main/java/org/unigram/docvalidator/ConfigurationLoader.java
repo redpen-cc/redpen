@@ -31,7 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.config.CharacterTable;
 import org.unigram.docvalidator.config.CharacterTableLoader;
-import org.unigram.docvalidator.config.DVResource;
+import org.unigram.docvalidator.config.Configuration;
 import org.unigram.docvalidator.util.SAXErrorHandler;
 import org.unigram.docvalidator.config.ValidationConfigurationLoader;
 import org.unigram.docvalidator.config.ValidatorConfiguration;
@@ -51,25 +51,25 @@ public class ConfigurationLoader {
    * @param configFileName input configuration settings
    * @return Validator configuration resources
    */
-  public DVResource loadConfiguration(String configFileName) {
+  public Configuration loadConfiguration(String configFileName) {
     InputStream fis = null;
     try {
       fis = new FileInputStream(configFileName);
     } catch (FileNotFoundException e) {
       LOG.error(e.getMessage());
     }
-    DVResource resource = this.loadConfiguration(fis);
+    Configuration configuration = this.loadConfiguration(fis);
     IOUtils.closeQuietly(fis);
-    return resource;
+    return configuration;
   }
 
   /**
    * load DocumentValidator settings.
    * @param stream input configuration settings
    * @return Configuration loaded from input stream
-   * NOTE: return null when failed to create DVResource
+   * NOTE: return null when failed to create Configuration
    */
-  public DVResource loadConfiguration(InputStream stream) {
+  public Configuration loadConfiguration(InputStream stream) {
     Document doc = parseConfigurationString(stream);
     if (doc == null) {
       LOG.error("Failed to parse configuration string");
@@ -140,8 +140,8 @@ public class ConfigurationLoader {
 
     // TODO load other configurations
 
-    // Create DVResource
-    return new DVResource(validatorConfiguration, characterTable);
+    // Create Configuration
+    return new Configuration(validatorConfiguration, characterTable);
   }
 
   protected CharacterTable extractCharacterTable(

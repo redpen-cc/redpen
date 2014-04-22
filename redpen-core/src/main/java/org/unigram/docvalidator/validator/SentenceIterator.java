@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.DocumentValidatorException;
 import org.unigram.docvalidator.ValidationError;
 import org.unigram.docvalidator.config.CharacterTable;
-import org.unigram.docvalidator.config.DVResource;
+import org.unigram.docvalidator.config.Configuration;
 import org.unigram.docvalidator.config.ValidatorConfiguration;
 import org.unigram.docvalidator.distributor.FakeResultDistributor;
 import org.unigram.docvalidator.distributor.ResultDistributor;
@@ -100,28 +100,28 @@ public class SentenceIterator implements Validator {
     DocumentValidatorException {
     String confName = currentConfiguration.getConfigurationName();
 
-    DVResource resource = new DVResource(currentConfiguration, charTable);
+    Configuration configuration = new Configuration(currentConfiguration, charTable);
     SentenceValidator validator;
     if (confName.equals("SentenceLength")) {
-      validator = new SentenceLengthValidator(resource);
+      validator = new SentenceLengthValidator(configuration);
     } else if (confName.equals("InvalidExpression")) {
-      validator = new InvalidExpressionValidator(resource);
+      validator = new InvalidExpressionValidator(configuration);
     } else if (confName.equals("SpaceAfterPeriod")) {
-      validator = new SpaceBeginningOfSentenceValidator(resource);
+      validator = new SpaceBeginningOfSentenceValidator(configuration);
     } else if (confName.equals("CommaNumber")) {
-      validator = new CommaNumberValidator(resource);
+      validator = new CommaNumberValidator(configuration);
     } else if (confName.equals("WordNumber")) {
-      validator = new WordNumberValidator(resource);
+      validator = new WordNumberValidator(configuration);
     } else if (confName.equals("SuggestExpression")) {
-      validator = new SuggestExpressionValidator(resource);
+      validator = new SuggestExpressionValidator(configuration);
     } else if (confName.equals("InvalidCharacter")) {
-      validator = new InvalidCharacterValidator(resource);
+      validator = new InvalidCharacterValidator(configuration);
     } else if (confName.equals("SpaceWithSymbol")) {
-      validator = new SymbolWithSpaceValidator(resource);
+      validator = new SymbolWithSpaceValidator(configuration);
     } else if (confName.equals("KatakanaEndHyphen")) {
-      validator = new KatakanaEndHyphenValidator(resource);
+      validator = new KatakanaEndHyphenValidator(configuration);
     } else if (confName.equals("KatakanaSpellCheckValidator")) {
-      validator = new KatakanaSpellCheckValidator(resource);
+      validator = new KatakanaSpellCheckValidator(configuration);
     } else {
       throw new DocumentValidatorException(
         "There is no validator like " + confName);
@@ -155,7 +155,7 @@ public class SentenceIterator implements Validator {
                             SentenceValidator validator,
                             Section currentSection, String fileName) {
     for (Iterator<Sentence> iterator = currentSection.getHeaderContents();
-         iterator.hasNext(); ) {
+         iterator.hasNext();) {
       applyValidator(distributor, errors, validator, fileName, iterator.next());
     }
   }

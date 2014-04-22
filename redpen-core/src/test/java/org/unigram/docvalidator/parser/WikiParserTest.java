@@ -27,6 +27,7 @@ import java.io.UnsupportedEncodingException;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.unigram.docvalidator.config.Configuration;
 import org.unigram.docvalidator.model.Document;
 import org.unigram.docvalidator.config.ValidationConfigurationLoader;
 import org.unigram.docvalidator.model.ListBlock;
@@ -35,7 +36,6 @@ import org.unigram.docvalidator.model.Section;
 import org.unigram.docvalidator.config.CharacterTable;
 import org.unigram.docvalidator.config.CharacterTableLoader;
 import org.unigram.docvalidator.config.ValidatorConfiguration;
-import org.unigram.docvalidator.config.DVResource;
 import org.unigram.docvalidator.DocumentValidatorException;
 
 import static org.unigram.docvalidator.parser.Parser.Type.WIKI;
@@ -581,10 +581,10 @@ public class WikiParserTest {
     assertEquals(2, firstParagraph.getNumberOfSentences());
   }
 
-  private Parser loadParser(DVResource resource) {
+  private Parser loadParser(Configuration configuration) {
     Parser parser = null;
     try {
-      parser = DocumentParserFactory.generate(WIKI, resource);
+      parser = DocumentParserFactory.generate(WIKI, configuration);
     } catch (DocumentValidatorException e1) {
       fail();
       e1.printStackTrace();
@@ -621,9 +621,9 @@ public class WikiParserTest {
 
     Parser parser = null;
     if (characterTable != null) {
-      parser = loadParser(new DVResource(conf, characterTable));
+      parser = loadParser(new Configuration(conf, characterTable));
     } else {
-      parser = loadParser(new DVResource(conf));
+      parser = loadParser(new Configuration(conf));
     }
 
     try {
@@ -637,7 +637,7 @@ public class WikiParserTest {
   private Document createFileContent(
       String inputDocumentString) {
     ValidatorConfiguration conf = new ValidatorConfiguration("dummy");
-    Parser parser = loadParser(new DVResource(conf));
+    Parser parser = loadParser(new Configuration(conf));
     InputStream is;
     try {
       is = new ByteArrayInputStream(inputDocumentString.getBytes("utf-8"));

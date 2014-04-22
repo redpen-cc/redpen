@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.config.CharacterTable;
-import org.unigram.docvalidator.config.DVResource;
+import org.unigram.docvalidator.config.Configuration;
 import org.unigram.docvalidator.ValidationError;
 import org.unigram.docvalidator.config.ValidatorConfiguration;
 import org.unigram.docvalidator.DocumentValidatorException;
@@ -53,9 +53,9 @@ public class CommaNumberValidator implements SentenceValidator {
     comma = DEFAULT_COMMA;
   }
 
-  public CommaNumberValidator(DVResource resource) throws DocumentValidatorException {
-    ValidatorConfiguration conf = resource.getConfiguration();
-    CharacterTable ct = resource.getCharacterTable();
+  public CommaNumberValidator(Configuration configuration) throws DocumentValidatorException {
+    ValidatorConfiguration conf = configuration.getValidatorConfig();
+    CharacterTable ct = configuration.getCharacterTable();
     initialize(conf, ct);
   }
 

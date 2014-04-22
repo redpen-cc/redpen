@@ -17,8 +17,8 @@
  */
 package org.unigram.docvalidator;
 
+import org.unigram.docvalidator.config.Configuration;
 import org.unigram.docvalidator.model.DocumentCollection;
-import org.unigram.docvalidator.config.DVResource;
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -107,9 +107,9 @@ public final class Main {
     }
 
     ConfigurationLoader configLoader = new ConfigurationLoader();
-    DVResource conf = configLoader.loadConfiguration(configFileName);
+    Configuration conf = configLoader.loadConfiguration(configFileName);
     if (conf == null) {
-      LOG.error("Failed to initialize the DocumentValidator resource.");
+      LOG.error("Failed to initialize the DocumentValidator configuration.");
       System.exit(-1);
     }
 
@@ -127,7 +127,7 @@ public final class Main {
         ResultDistributorFactory.createDistributor(outputFormat, System.out);
 
     DocumentValidator validator = new DocumentValidator.Builder()
-        .setResource(conf)
+        .setConfiguration(conf)
         .setResultDistributor(distributor)
         .build();
 

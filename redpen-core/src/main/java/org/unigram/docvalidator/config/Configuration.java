@@ -20,15 +20,15 @@ package org.unigram.docvalidator.config;
 /**
  * Contains Settings used throughout DocumentValidator.
  */
-public final class DVResource {
+public final class Configuration {
   /**
    * Constructor.
    *
    * @param validatorConf settings of Validators
    */
-  public DVResource(ValidatorConfiguration validatorConf) {
+  public Configuration(ValidatorConfiguration validatorConf) {
     super();
-    this.configuration = validatorConf;
+    this.validatorConfig = validatorConf;
     this.characterTable = new CharacterTable();
   }
 
@@ -38,10 +38,10 @@ public final class DVResource {
    * @param validatorConf settings of Validators.
    * @param characterConf settings of characters and symbols
    */
-  public DVResource(ValidatorConfiguration validatorConf,
-                    CharacterTable characterConf) {
+  public Configuration(ValidatorConfiguration validatorConf,
+                       CharacterTable characterConf) {
     super();
-    this.configuration = validatorConf;
+    this.validatorConfig = validatorConf;
     this.characterTable = characterConf;
   }
 
@@ -50,8 +50,8 @@ public final class DVResource {
    *
    * @return Configuration
    */
-  public ValidatorConfiguration getConfiguration() {
-    return configuration;
+  public ValidatorConfiguration getValidatorConfig() {
+    return validatorConfig;
   }
 
   /**
@@ -63,7 +63,7 @@ public final class DVResource {
     return characterTable;
   }
 
-  private final ValidatorConfiguration configuration;
+  private final ValidatorConfiguration validatorConfig;
 
   private final CharacterTable characterTable;
 }

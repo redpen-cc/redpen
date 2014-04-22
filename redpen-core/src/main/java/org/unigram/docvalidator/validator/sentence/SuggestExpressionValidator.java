@@ -20,7 +20,7 @@ package org.unigram.docvalidator.validator.sentence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.config.DVResource;
+import org.unigram.docvalidator.config.Configuration;
 import org.unigram.docvalidator.DocumentValidatorException;
 import org.unigram.docvalidator.util.FileLoader;
 import org.unigram.docvalidator.util.KeyValueDictionaryExtractor;
@@ -44,8 +44,8 @@ public class SuggestExpressionValidator implements SentenceValidator {
     synonyms = new HashMap<String, String>();
   }
 
-  public SuggestExpressionValidator(DVResource resource) throws DocumentValidatorException {
-    ValidatorConfiguration conf = resource.getConfiguration();
+  public SuggestExpressionValidator(Configuration configuration) throws DocumentValidatorException {
+    ValidatorConfiguration conf = configuration.getValidatorConfig();
     initialize(conf);
   }
 

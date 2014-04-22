@@ -21,7 +21,7 @@ package org.unigram.docvalidator.server.util;
 import org.unigram.docvalidator.ConfigurationLoader;
 import org.unigram.docvalidator.config.CharacterTable;
 import org.unigram.docvalidator.config.CharacterTableLoader;
-import org.unigram.docvalidator.config.DVResource;
+import org.unigram.docvalidator.config.Configuration;
 import org.unigram.docvalidator.config.ValidationConfigurationLoader;
 import org.unigram.docvalidator.config.ValidatorConfiguration;
 import org.w3c.dom.Document;
@@ -38,7 +38,7 @@ import java.io.InputStream;
 public class ServerConfigurationLoader extends ConfigurationLoader {
 
   @Override
-  public DVResource loadConfiguration(InputStream stream) {
+  public Configuration loadConfiguration(InputStream stream) {
     Document doc = parseConfigurationString(stream);
 
     doc.getDocumentElement().normalize();
@@ -66,6 +66,6 @@ public class ServerConfigurationLoader extends ConfigurationLoader {
         .getResourceAsStream("/" + characterTablePath),
       language);
 
-    return new DVResource(vc, characterTable);
+    return new Configuration(vc, characterTable);
   }
 }

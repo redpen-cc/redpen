@@ -28,9 +28,9 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.unigram.docvalidator.config.Configuration;
 import org.unigram.docvalidator.symbol.DefaultSymbols;
 import org.unigram.docvalidator.config.CharacterTable;
-import org.unigram.docvalidator.config.DVResource;
 import org.unigram.docvalidator.DocumentValidatorException;
 
 /**
@@ -39,21 +39,21 @@ import org.unigram.docvalidator.DocumentValidatorException;
  */
 public abstract class BasicDocumentParser implements Parser {
   /**
-   * Given configuration resource, return basic configuration settings.
+   * Given configuration , return basic configuration settings.
    *
-   * @param resource object containing configuration settings
+   * @param configuration object containing configuration settings
    */
-  public final void initialize(DVResource resource) throws
+  public final void initialize(Configuration configuration) throws
       DocumentValidatorException {
-    if (resource == null) {
-      throw new DocumentValidatorException("Given resource is null");
+    if (configuration == null) {
+      throw new DocumentValidatorException("Given configuration is null");
     }
-    if (resource.getCharacterTable() == null) {
+    if (configuration.getCharacterTable() == null) {
       throw new DocumentValidatorException(
-          "Character table in the given resource is null");
+          "Character table in the given configuration is null");
     }
 
-    CharacterTable characterTable = resource.getCharacterTable();
+    CharacterTable characterTable = configuration.getCharacterTable();
 
     // set full stop characters
     if (characterTable.isContainCharacter("FULL_STOP")) {

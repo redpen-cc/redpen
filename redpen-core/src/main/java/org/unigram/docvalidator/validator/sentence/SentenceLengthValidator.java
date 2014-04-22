@@ -19,8 +19,8 @@ package org.unigram.docvalidator.validator.sentence;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.unigram.docvalidator.config.Configuration;
 import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.config.DVResource;
 import org.unigram.docvalidator.DocumentValidatorException;
 import org.unigram.docvalidator.ValidationError;
 import org.unigram.docvalidator.config.ValidatorConfiguration;
@@ -38,8 +38,8 @@ public class SentenceLengthValidator implements SentenceValidator {
   @SuppressWarnings("WeakerAccess")
   public static final int DEFAULT_MAX_LENGTH = 30;
 
-  public SentenceLengthValidator(DVResource resource) throws DocumentValidatorException {
-    ValidatorConfiguration conf = resource.getConfiguration();
+  public SentenceLengthValidator(Configuration configuration) throws DocumentValidatorException {
+    ValidatorConfiguration conf = configuration.getValidatorConfig();
     initialize(conf);
   }
 

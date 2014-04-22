@@ -67,7 +67,7 @@ public class DocumentValidateResource {
     json.put("document", document);
 
     Parser parser = DocumentParserFactory.generate(
-        Parser.Type.PLAIN, server.getDocumentValidatorResource());
+        Parser.Type.PLAIN, server.getDocumentValidatorConfig());
     Document fileContent = parser.generateDocument(new
         ByteArrayInputStream(document.getBytes("UTF-8")));
 
