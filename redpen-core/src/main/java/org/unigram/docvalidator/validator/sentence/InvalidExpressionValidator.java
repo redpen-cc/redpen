@@ -19,8 +19,8 @@ package org.unigram.docvalidator.validator.sentence;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.unigram.docvalidator.config.CharacterTable;
 import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.config.Configuration;
 import org.unigram.docvalidator.DocumentValidatorException;
 import org.unigram.docvalidator.util.FileLoader;
 import org.unigram.docvalidator.ValidationError;
@@ -43,9 +43,8 @@ public class InvalidExpressionValidator implements SentenceValidator {
     invalidExpressions = new HashSet<String>();
   }
 
-  public InvalidExpressionValidator(Configuration configuration) throws DocumentValidatorException {
-    ValidatorConfiguration conf = configuration.getValidatorConfig();
-    initialize(conf);
+  public InvalidExpressionValidator(ValidatorConfiguration config, CharacterTable characterTable) throws DocumentValidatorException {
+    initialize(config);
   }
 
   public List<ValidationError> validate(Sentence line) {

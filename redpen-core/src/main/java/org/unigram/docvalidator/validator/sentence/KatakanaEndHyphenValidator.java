@@ -17,18 +17,17 @@
  */
 package org.unigram.docvalidator.validator.sentence;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.config.CharacterTable;
-import org.unigram.docvalidator.config.Configuration;
-import org.unigram.docvalidator.util.StringUtils;
-import org.unigram.docvalidator.ValidationError;
-import org.unigram.docvalidator.config.ValidatorConfiguration;
 import org.unigram.docvalidator.DocumentValidatorException;
+import org.unigram.docvalidator.ValidationError;
+import org.unigram.docvalidator.config.CharacterTable;
+import org.unigram.docvalidator.config.ValidatorConfiguration;
+import org.unigram.docvalidator.model.Sentence;
+import org.unigram.docvalidator.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Validate the end hyphens of Katakana words in Japanese documents.
@@ -63,10 +62,8 @@ public class KatakanaEndHyphenValidator implements SentenceValidator {
    */
   private static final char KATAKANA_MIDDLE_DOT = '・';
 
-  public KatakanaEndHyphenValidator(Configuration configuration) throws DocumentValidatorException {
-    ValidatorConfiguration conf = configuration.getValidatorConfig();
-    CharacterTable ct = configuration.getCharacterTable();
-    initialize(conf, ct);
+  public KatakanaEndHyphenValidator(ValidatorConfiguration config, CharacterTable characterTable) throws DocumentValidatorException {
+    initialize(config, characterTable);
   }
 
   public List<ValidationError> validate(Sentence sentence) {

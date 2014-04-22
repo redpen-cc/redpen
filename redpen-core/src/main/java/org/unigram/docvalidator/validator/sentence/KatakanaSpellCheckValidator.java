@@ -25,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.config.CharacterTable;
-import org.unigram.docvalidator.config.Configuration;
 import org.unigram.docvalidator.util.StringUtils;
 import org.unigram.docvalidator.util.LevenshteinDistance;
 import org.unigram.docvalidator.ValidationError;
@@ -67,11 +66,10 @@ public class KatakanaSpellCheckValidator implements SentenceValidator {
    */
   private HashMap<String, Integer> dic = new HashMap<String, Integer>();
 
-  public KatakanaSpellCheckValidator(Configuration configuration)
+  public KatakanaSpellCheckValidator(ValidatorConfiguration config,
+                                     CharacterTable characterTable)
       throws DocumentValidatorException {
-    ValidatorConfiguration conf = configuration.getValidatorConfig();
-    CharacterTable ct = configuration.getCharacterTable();
-    initialize(conf, ct);
+    initialize(config, characterTable);
   }
 
   public List<ValidationError> validate(Sentence sentence) {

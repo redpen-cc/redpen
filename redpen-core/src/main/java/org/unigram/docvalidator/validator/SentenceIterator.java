@@ -100,28 +100,27 @@ public class SentenceIterator implements Validator {
     DocumentValidatorException {
     String confName = currentConfiguration.getConfigurationName();
 
-    Configuration configuration = new Configuration(currentConfiguration, charTable);
     SentenceValidator validator;
     if (confName.equals("SentenceLength")) {
-      validator = new SentenceLengthValidator(configuration);
+      validator = new SentenceLengthValidator(currentConfiguration, charTable);
     } else if (confName.equals("InvalidExpression")) {
-      validator = new InvalidExpressionValidator(configuration);
+      validator = new InvalidExpressionValidator(currentConfiguration, charTable);
     } else if (confName.equals("SpaceAfterPeriod")) {
-      validator = new SpaceBeginningOfSentenceValidator(configuration);
+      validator = new SpaceBeginningOfSentenceValidator(currentConfiguration, charTable);
     } else if (confName.equals("CommaNumber")) {
-      validator = new CommaNumberValidator(configuration);
+      validator = new CommaNumberValidator(currentConfiguration, charTable);
     } else if (confName.equals("WordNumber")) {
-      validator = new WordNumberValidator(configuration);
+      validator = new WordNumberValidator(currentConfiguration, charTable);
     } else if (confName.equals("SuggestExpression")) {
-      validator = new SuggestExpressionValidator(configuration);
+      validator = new SuggestExpressionValidator(currentConfiguration, charTable);
     } else if (confName.equals("InvalidCharacter")) {
-      validator = new InvalidCharacterValidator(configuration);
+      validator = new InvalidCharacterValidator(currentConfiguration, charTable);
     } else if (confName.equals("SpaceWithSymbol")) {
-      validator = new SymbolWithSpaceValidator(configuration);
+      validator = new SymbolWithSpaceValidator(currentConfiguration, charTable);
     } else if (confName.equals("KatakanaEndHyphen")) {
-      validator = new KatakanaEndHyphenValidator(configuration);
+      validator = new KatakanaEndHyphenValidator(currentConfiguration, charTable);
     } else if (confName.equals("KatakanaSpellCheckValidator")) {
-      validator = new KatakanaSpellCheckValidator(configuration);
+      validator = new KatakanaSpellCheckValidator(currentConfiguration, charTable);
     } else {
       throw new DocumentValidatorException(
         "There is no validator like " + confName);

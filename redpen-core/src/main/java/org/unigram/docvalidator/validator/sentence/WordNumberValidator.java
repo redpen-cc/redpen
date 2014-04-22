@@ -19,6 +19,7 @@ package org.unigram.docvalidator.validator.sentence;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.unigram.docvalidator.config.CharacterTable;
 import org.unigram.docvalidator.config.Configuration;
 import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.DocumentValidatorException;
@@ -43,9 +44,9 @@ public class WordNumberValidator implements SentenceValidator {
     this.maxWordNumber = DEFAULT_MAXIMUM_WORDS_IN_A_SENTENCE;
   }
 
-  public WordNumberValidator(Configuration configuration) throws DocumentValidatorException {
-    ValidatorConfiguration conf = configuration.getValidatorConfig();
-    initialize(conf);
+  public WordNumberValidator(ValidatorConfiguration config,
+                             CharacterTable characterTable) throws DocumentValidatorException {
+    initialize(config);
   }
 
   public List<ValidationError> validate(Sentence sentence) {

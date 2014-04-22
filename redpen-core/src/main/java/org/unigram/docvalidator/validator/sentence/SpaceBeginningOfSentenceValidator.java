@@ -17,10 +17,11 @@
  */
 package org.unigram.docvalidator.validator.sentence;
 
-import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.config.Configuration;
 import org.unigram.docvalidator.DocumentValidatorException;
 import org.unigram.docvalidator.ValidationError;
+import org.unigram.docvalidator.config.CharacterTable;
+import org.unigram.docvalidator.config.ValidatorConfiguration;
+import org.unigram.docvalidator.model.Sentence;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class SpaceBeginningOfSentenceValidator implements SentenceValidator {
   public SpaceBeginningOfSentenceValidator() {
   }
 
-  public SpaceBeginningOfSentenceValidator(Configuration configuration)
+  public SpaceBeginningOfSentenceValidator(ValidatorConfiguration config, CharacterTable characterTable)
       throws DocumentValidatorException {
   }
 
