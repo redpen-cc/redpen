@@ -28,16 +28,16 @@ import org.unigram.docvalidator.distributor.ResultDistributorFactory;
 import org.unigram.docvalidator.formatter.Formatter;
 import org.unigram.docvalidator.model.Document;
 import org.unigram.docvalidator.model.DocumentCollection;
+import org.unigram.docvalidator.model.ListBlock;
+import org.unigram.docvalidator.model.ListElement;
 import org.unigram.docvalidator.model.Paragraph;
 import org.unigram.docvalidator.model.Section;
 import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.validator.SentenceIterator;
 import org.unigram.docvalidator.validator.Validator;
-import org.unigram.docvalidator.validator.section.ParagraphNumberValidator;
-import org.unigram.docvalidator.validator.section.ParagraphStartWithValidator;
-import org.unigram.docvalidator.validator.section.SectionLengthValidator;
 import org.unigram.docvalidator.validator.section.SectionValidator;
+import org.unigram.docvalidator.validator.section.SectionValidatorFactory;
 import org.unigram.docvalidator.validator.sentence.SentenceValidator;
+import org.unigram.docvalidator.validator.sentence.SentenceValidatorFactory;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -55,14 +55,12 @@ public class DocumentValidator implements Validator {
   private DocumentValidator(Builder builder) throws DocumentValidatorException {
     Configuration configuration = builder.configuration;
     this.distributor = builder.distributor;
-    this.validatorConfig = configuration.getValidatorConfig();
-    this.charTable = configuration.getCharacterTable();
 
     validators = new ArrayList<Validator>();
     sectionValidators = new ArrayList<SectionValidator>();
     sentenceValidators = new ArrayList<SentenceValidator>();
 
-    loadValidators(this.validatorConfig, this.charTable);
+    loadValidators(configuration);
   }
 
   /**
@@ -70,31 +68,22 @@ public class DocumentValidator implements Validator {
    *
    */
   @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-  private void loadValidators(ValidatorConfiguration rootConfig,
-                              CharacterTable charTable) throws
-    DocumentValidatorException {
+  private void loadValidators(Configuration configuration)
+      throws DocumentValidatorException {
 
-    for (ValidatorConfiguration config : rootConfig.getChildren()) {
-      loadValidator(charTable, config);
+    //TODO duplicate code...
+    for (ValidatorConfiguration config : configuration.getSectionValidatorConfigs()){
+      sectionValidators.add(SectionValidatorFactory.getInstance(config, configuration.getCharacterTable()));
     }
-  }
 
-  private void loadValidator(CharacterTable charTable, ValidatorConfiguration
-    config) throws DocumentValidatorException {
-    String confName = config.getConfigurationName();
-
-    if (confName.equals("SentenceIterator")) {
-      validators.add(new SentenceIterator(config, charTable));
-    } else if (confName.equals("SectionLength")) {
-      sectionValidators.add(new SectionLengthValidator(config, charTable));
-    } else if (confName.equals("MaxParagraphNumber")) {
-      sectionValidators.add(new ParagraphNumberValidator(config, charTable));
-    } else if (confName.equals("ParagraphStartWith")) {
-      sectionValidators.add(new ParagraphStartWithValidator(config, charTable));
-    } else {
-      throw new DocumentValidatorException(
-        "There is no Validator like " + confName);
+    for (ValidatorConfiguration config : configuration.getSentenceValidatorConfigs()){
+      sentenceValidators.add(SentenceValidatorFactory.getInstance(config, configuration.getCharacterTable()));
     }
+
+    //TODO execute document validator
+    //TODO execute paragraph validator
+
+
   }
 
   /**
@@ -151,13 +140,29 @@ public class DocumentValidator implements Validator {
     for (Paragraph paragraph : section.getParagraphs()) {
       errors.addAll(validateParagraph(paragraph));
     }
+
+
+    errors.addAll(validateSentences(section.getHeaderContents()));
+
+    for (ListBlock listBlock : section.getListBlocks()) {
+      for (ListElement listElement : listBlock.getListElements()) {
+        errors.addAll(validateSentences(listElement.getSentences()));
+      }
+
+    }
     return errors;
   }
 
   private List<ValidationError> validateParagraph(Paragraph paragraph) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
+    validateSentences(paragraph.getSentences());
+    return errors;
+  }
+
+  private List<ValidationError> validateSentences(List<Sentence> sentences) {
+    List<ValidationError> errors = new ArrayList<ValidationError>();
     for (SentenceValidator sentenceValidator : sentenceValidators) {
-      for (Sentence sentence : paragraph.getSentences()) {
+      for (Sentence sentence : sentences) {
         errors.addAll(sentenceValidator.validate(sentence));
       }
     }
@@ -174,8 +179,6 @@ public class DocumentValidator implements Validator {
     this.validators = new ArrayList<Validator>();
     sectionValidators = new ArrayList<SectionValidator>();
     sentenceValidators = new ArrayList<SentenceValidator>();
-    this.validatorConfig = null;
-    this.charTable = null;
   }
 
   /**
@@ -220,10 +223,6 @@ public class DocumentValidator implements Validator {
   }
 
   private final List<Validator> validators;
-
-  private final ValidatorConfiguration validatorConfig;
-
-  private final CharacterTable charTable;
 
   private ResultDistributor distributor;
 

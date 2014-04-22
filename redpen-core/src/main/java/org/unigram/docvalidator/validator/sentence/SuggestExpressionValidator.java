@@ -45,7 +45,8 @@ public class SuggestExpressionValidator implements SentenceValidator {
   }
 
   public SuggestExpressionValidator(ValidatorConfiguration config,
-                                    CharacterTable characterTable) throws DocumentValidatorException {
+                                    CharacterTable characterTable)
+      throws DocumentValidatorException {
     initialize(config);
   }
 

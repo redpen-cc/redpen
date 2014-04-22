@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.DocumentValidatorException;
 import org.unigram.docvalidator.ValidationError;
 import org.unigram.docvalidator.config.CharacterTable;
-import org.unigram.docvalidator.config.Configuration;
 import org.unigram.docvalidator.config.ValidatorConfiguration;
 import org.unigram.docvalidator.distributor.FakeResultDistributor;
 import org.unigram.docvalidator.distributor.ResultDistributor;
@@ -46,7 +45,6 @@ import org.unigram.docvalidator.validator.sentence.SymbolWithSpaceValidator;
 import org.unigram.docvalidator.validator.sentence.WordNumberValidator;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -153,9 +151,8 @@ public class SentenceIterator implements Validator {
                             List<ValidationError> errors,
                             SentenceValidator validator,
                             Section currentSection, String fileName) {
-    for (Iterator<Sentence> iterator = currentSection.getHeaderContents();
-         iterator.hasNext();) {
-      applyValidator(distributor, errors, validator, fileName, iterator.next());
+    for (Sentence header : currentSection.getHeaderContents()) {
+      applyValidator(distributor, errors, validator, fileName, header);
     }
   }
 

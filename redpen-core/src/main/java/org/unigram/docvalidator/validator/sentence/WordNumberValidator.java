@@ -20,7 +20,6 @@ package org.unigram.docvalidator.validator.sentence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.config.CharacterTable;
-import org.unigram.docvalidator.config.Configuration;
 import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.DocumentValidatorException;
 import org.unigram.docvalidator.ValidationError;
@@ -45,7 +44,8 @@ public class WordNumberValidator implements SentenceValidator {
   }
 
   public WordNumberValidator(ValidatorConfiguration config,
-                             CharacterTable characterTable) throws DocumentValidatorException {
+                             CharacterTable characterTable)
+      throws DocumentValidatorException {
     initialize(config);
   }
 

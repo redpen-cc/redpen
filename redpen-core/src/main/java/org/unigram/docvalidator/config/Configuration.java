@@ -17,6 +17,9 @@
  */
 package org.unigram.docvalidator.config;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Contains Settings used throughout DocumentValidator.
  */
@@ -24,34 +27,34 @@ public final class Configuration {
   /**
    * Constructor.
    *
-   * @param validatorConf settings of Validators
    */
-  public Configuration(ValidatorConfiguration validatorConf) {
-    super();
-    this.validatorConfig = validatorConf;
-    this.characterTable = new CharacterTable();
+  public Configuration(ValidatorConfiguration validatorConfig) {
+    this(validatorConfig, new CharacterTable());
   }
 
   /**
    * Constructor.
    *
-   * @param validatorConf settings of Validators.
+   * @param validatorConfig settings of validators
    * @param characterConf settings of characters and symbols
    */
-  public Configuration(ValidatorConfiguration validatorConf,
-                       CharacterTable characterConf) {
+  public Configuration(ValidatorConfiguration validatorConfig, CharacterTable characterConf) {
     super();
-    this.validatorConfig = validatorConf;
     this.characterTable = characterConf;
-  }
 
-  /**
-   * Get Configuration.
-   *
-   * @return Configuration
-   */
-  public ValidatorConfiguration getValidatorConfig() {
-    return validatorConfig;
+    // TODO tricky implementation. this code is need to refactor with ConfigurationLoader.
+    for (ValidatorConfiguration config : validatorConfig.getChildren()) {
+      if ("SentenceIterator".equals(config.getConfigurationName())) {
+        this.sentenceValidatorConfigs.addAll(config.getChildren());
+      } else if ("SectionLength".equals(config.getConfigurationName())) {
+        this.sectionValidatorConfigs.add(config);
+      } else if ("MaxParagraphNumber".equals(config.getConfigurationName())) {
+        this.sectionValidatorConfigs.add(config);
+      } else if ("ParagraphStartWith".equals(config.getConfigurationName())) {
+        this.sectionValidatorConfigs.add(config);
+      }
+    }
+
   }
 
   /**
@@ -63,7 +66,41 @@ public final class Configuration {
     return characterTable;
   }
 
-  private final ValidatorConfiguration validatorConfig;
+  /**
+   * Get document validator configurations
+   * @return list of configurations
+   */
+  public List<ValidatorConfiguration> getDocumentValidatorConfigs() {
+    return documentValidatorConfigs;
+  }
+
+  /**
+   * Get section validator configurations
+   * @return list of configurations
+   */
+  public List<ValidatorConfiguration> getSectionValidatorConfigs() {
+    return sectionValidatorConfigs;
+  }
+
+  /**
+   * Get paragraph validator configurations
+   * @return list of configurations
+   */
+  public List<ValidatorConfiguration> getParagraphValidatorConfigs() {
+    return paragraphValidatorConfigs;
+  }
+  /**
+   * Get sentence validator configurations
+   * @return list of configurations
+   */
+  public List<ValidatorConfiguration> getSentenceValidatorConfigs() {
+    return sentenceValidatorConfigs;
+  }
 
   private final CharacterTable characterTable;
+
+  private final List<ValidatorConfiguration> documentValidatorConfigs = new ArrayList<ValidatorConfiguration>();
+  private final List<ValidatorConfiguration> sectionValidatorConfigs  = new ArrayList<ValidatorConfiguration>();
+  private final List<ValidatorConfiguration> paragraphValidatorConfigs = new ArrayList<ValidatorConfiguration>();
+  private final List<ValidatorConfiguration> sentenceValidatorConfigs = new ArrayList<ValidatorConfiguration>();
 }

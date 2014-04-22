@@ -43,7 +43,9 @@ public class InvalidExpressionValidator implements SentenceValidator {
     invalidExpressions = new HashSet<String>();
   }
 
-  public InvalidExpressionValidator(ValidatorConfiguration config, CharacterTable characterTable) throws DocumentValidatorException {
+  public InvalidExpressionValidator(ValidatorConfiguration config,
+                                    CharacterTable characterTable)
+      throws DocumentValidatorException {
     initialize(config);
   }
 

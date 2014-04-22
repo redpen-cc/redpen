@@ -32,8 +32,8 @@ import org.unigram.docvalidator.model.Sentence;
  */
 public class InvalidCharacterValidator implements SentenceValidator {
   public InvalidCharacterValidator(ValidatorConfiguration config,
-                                   CharacterTable characterTable) throws
-      DocumentValidatorException {
+                                   CharacterTable characterTable)
+      throws DocumentValidatorException {
     initialize(characterTable);
   }
 

@@ -152,7 +152,7 @@ public final class WikiParser extends BasicDocumentParser {
     document.appendSection(tmpSection);
     if (!addChild(currentSection, tmpSection)) {
       LOG.warn("Failed to add parent for a Seciotn: "
-          + tmpSection.getHeaderContents().next());
+          + tmpSection.getHeaderContents().get(0));
     }
     currentSection = tmpSection;
     return currentSection;

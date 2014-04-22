@@ -18,6 +18,7 @@
 package org.unigram.docvalidator.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -159,8 +160,8 @@ public final class Section {
    * @return contents of header.
    * NOTE: header can contain more than one header sentences.
    */
-  public Iterator<Sentence> getHeaderContents() {
-    return headerContent.iterator();
+  public List<Sentence> getHeaderContents() {
+    return Collections.unmodifiableList(headerContent);
   }
 
   /**

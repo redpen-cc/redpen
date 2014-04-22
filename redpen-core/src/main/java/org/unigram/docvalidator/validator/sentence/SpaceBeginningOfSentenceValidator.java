@@ -35,7 +35,8 @@ public class SpaceBeginningOfSentenceValidator implements SentenceValidator {
   public SpaceBeginningOfSentenceValidator() {
   }
 
-  public SpaceBeginningOfSentenceValidator(ValidatorConfiguration config, CharacterTable characterTable)
+  public SpaceBeginningOfSentenceValidator(ValidatorConfiguration config,
+                                           CharacterTable characterTable)
       throws DocumentValidatorException {
   }
 

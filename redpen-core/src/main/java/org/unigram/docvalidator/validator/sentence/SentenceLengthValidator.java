@@ -20,7 +20,6 @@ package org.unigram.docvalidator.validator.sentence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unigram.docvalidator.config.CharacterTable;
-import org.unigram.docvalidator.config.Configuration;
 import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.DocumentValidatorException;
 import org.unigram.docvalidator.ValidationError;
@@ -39,7 +38,9 @@ public class SentenceLengthValidator implements SentenceValidator {
   @SuppressWarnings("WeakerAccess")
   public static final int DEFAULT_MAX_LENGTH = 30;
 
-  public SentenceLengthValidator(ValidatorConfiguration config, CharacterTable characterTable) throws DocumentValidatorException {
+  public SentenceLengthValidator(ValidatorConfiguration config,
+                                 CharacterTable characterTable)
+      throws DocumentValidatorException {
     initialize(config);
   }
 
