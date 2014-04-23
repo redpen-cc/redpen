@@ -21,14 +21,12 @@ import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.unigram.docvalidator.config.ValidationConfigurationLoader;
-import org.unigram.docvalidator.config.ValidatorConfiguration;
 
 import java.io.InputStream;
 
 import static org.junit.Assert.*;
 
-public class ConfigurationTest {
+public class ValidatorConfigurationTest {
 
   @Before
   public void setUp() {
