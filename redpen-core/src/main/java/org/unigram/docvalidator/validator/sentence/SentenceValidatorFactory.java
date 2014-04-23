@@ -34,23 +34,24 @@ public final class SentenceValidatorFactory {
 
     if ("SentenceLength".equals(config.getConfigurationName())) {
       return new SentenceLengthValidator(config, characterTable);
-    } else if (config.getConfigurationName().equals("InvalidExpression")) {
+    } else if ("InvalidExpression".equals(config.getConfigurationName())) {
       return new InvalidExpressionValidator(config, characterTable);
-    } else if (config.getConfigurationName().equals("SpaceAfterPeriod")) {
+    } else if ("SpaceAfterPeriod".equals(config.getConfigurationName())) {
       return new SpaceBeginningOfSentenceValidator(config, characterTable);
-    } else if (config.getConfigurationName().equals("CommaNumber")) {
+    } else if ("CommaNumber".equals(config.getConfigurationName())) {
       return new CommaNumberValidator(config, characterTable);
-    } else if (config.getConfigurationName().equals("WordNumber")) {
+    } else if ("WordNumber".equals(config.getConfigurationName())) {
       return new WordNumberValidator(config, characterTable);
-    } else if (config.getConfigurationName().equals("SuggestExpression")) {
+    } else if ("SuggestExpression".equals(config.getConfigurationName())) {
       return new SuggestExpressionValidator(config, characterTable);
-    } else if (config.getConfigurationName().equals("InvalidCharacter")) {
+    } else if ("InvalidCharacter".equals(config.getConfigurationName())) {
       return new InvalidCharacterValidator(config, characterTable);
-    } else if (config.getConfigurationName().equals("SpaceWithSymbol")) {
+    } else if ("SpaceWithSymbol".equals(config.getConfigurationName())) {
       return new SymbolWithSpaceValidator(config, characterTable);
-    } else if (config.getConfigurationName().equals("KatakanaEndHyphen")) {
+    } else if ("KatakanaEndHyphen".equals(config.getConfigurationName())) {
       return new KatakanaEndHyphenValidator(config, characterTable);
-    } else if (config.getConfigurationName().equals("KatakanaSpellCheckValidator")) {
+    } else if ("KatakanaSpellCheckValidator"
+        .equals(config.getConfigurationName())) {
       return new KatakanaSpellCheckValidator(config, characterTable);
     } else {
       throw new DocumentValidatorException(

@@ -47,10 +47,6 @@ import java.util.List;
  */
 public class DocumentValidator implements Validator {
 
-  private final List<SectionValidator> sectionValidators;
-
-  private final List<SentenceValidator> sentenceValidators;
-
   private DocumentValidator(Builder builder) throws DocumentValidatorException {
     Configuration configuration = builder.configuration;
     this.distributor = builder.distributor;
@@ -202,7 +198,7 @@ public class DocumentValidator implements Validator {
   }
 
   /**
-   * Builder for DocumentValidator
+   * Builder for DocumentValidator.
    */
   public static class Builder {
 
@@ -228,6 +224,10 @@ public class DocumentValidator implements Validator {
   }
 
   private final List<Validator> validators;
+
+  private final List<SectionValidator> sectionValidators;
+
+  private final List<SentenceValidator> sentenceValidators;
 
   private ResultDistributor distributor;
 
