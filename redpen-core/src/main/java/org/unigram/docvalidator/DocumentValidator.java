@@ -19,7 +19,6 @@ package org.unigram.docvalidator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.unigram.docvalidator.config.CharacterTable;
 import org.unigram.docvalidator.config.Configuration;
 import org.unigram.docvalidator.config.ValidatorConfiguration;
 import org.unigram.docvalidator.distributor.DefaultResultDistributor;
@@ -65,19 +64,22 @@ public class DocumentValidator implements Validator {
 
   /**
    * Load validators written in the configuration file.
-   *
    */
   @SuppressWarnings("BooleanMethodIsAlwaysInverted")
   private void loadValidators(Configuration configuration)
       throws DocumentValidatorException {
 
     //TODO duplicate code...
-    for (ValidatorConfiguration config : configuration.getSectionValidatorConfigs()){
-      sectionValidators.add(SectionValidatorFactory.getInstance(config, configuration.getCharacterTable()));
+    for (ValidatorConfiguration config : configuration
+        .getSectionValidatorConfigs()) {
+      sectionValidators.add(SectionValidatorFactory
+          .getInstance(config, configuration.getCharacterTable()));
     }
 
-    for (ValidatorConfiguration config : configuration.getSentenceValidatorConfigs()){
-      sentenceValidators.add(SentenceValidatorFactory.getInstance(config, configuration.getCharacterTable()));
+    for (ValidatorConfiguration config : configuration
+        .getSentenceValidatorConfigs()) {
+      sentenceValidators.add(SentenceValidatorFactory
+          .getInstance(config, configuration.getCharacterTable()));
     }
 
     //TODO execute document validator
@@ -155,7 +157,7 @@ public class DocumentValidator implements Validator {
 
   private List<ValidationError> validateParagraph(Paragraph paragraph) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
-    validateSentences(paragraph.getSentences());
+    errors.addAll(validateSentences(paragraph.getSentences()));
     return errors;
   }
 
@@ -199,12 +201,15 @@ public class DocumentValidator implements Validator {
     sectionValidators.add(validator);
   }
 
+  /**
+   * Builder for DocumentValidator
+   */
   public static class Builder {
 
     private Configuration configuration;
 
     private ResultDistributor distributor = new DefaultResultDistributor(
-      new PrintStream(System.out)
+        new PrintStream(System.out)
     );
 
     public Builder setConfiguration(Configuration configuration) {
@@ -227,5 +232,5 @@ public class DocumentValidator implements Validator {
   private ResultDistributor distributor;
 
   private static final Logger LOG =
-    LoggerFactory.getLogger(DocumentValidator.class);
+      LoggerFactory.getLogger(DocumentValidator.class);
 }
