@@ -51,13 +51,18 @@ public class SectionValidatorFactoryTest {
         .getInstance(configParagraphStartWith, characterTable);
     assertEquals(validator.getClass(), ParagraphStartWithValidator.class);
 
+  }
+
+
+  @Test
+  public void testIllegalArgumentConfiguration() {
+    CharacterTable characterTable = new CharacterTable();
     ValidatorConfiguration configError = new ValidatorConfiguration("notExist");
     try {
-          SectionValidatorFactory.getInstance(configError, characterTable);
+      SectionValidatorFactory.getInstance(configError, characterTable);
       fail("Not occur Exception");
     } catch (Exception e) {
       assertEquals(e.getClass(), DocumentValidatorException.class);
     }
-
   }
 }

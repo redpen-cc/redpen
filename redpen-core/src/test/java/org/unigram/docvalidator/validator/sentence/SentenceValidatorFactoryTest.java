@@ -93,14 +93,19 @@ public class SentenceValidatorFactoryTest {
         .getInstance(configKatakanaSpellCheckValidator, characterTable);
     assertEquals(validator.getClass(), KatakanaSpellCheckValidator.class);
 
+  }
+
+  @Test
+  public void testIllegalArgumentConfiguration() {
+    CharacterTable characterTable = new CharacterTable();
+
     ValidatorConfiguration configError = new ValidatorConfiguration("notExist");
     try {
-          SentenceValidatorFactory.getInstance(configError, characterTable);
+      SentenceValidatorFactory.getInstance(configError, characterTable);
       fail("Not occur Exception");
     } catch (Exception e) {
       assertEquals(e.getClass(), DocumentValidatorException.class);
     }
-
 
   }
 }
