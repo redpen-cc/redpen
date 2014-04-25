@@ -29,17 +29,17 @@ public final class LevenshteinDistance {
   /**
    * A constant holding the default insertion cost.
    */
-  public static int DEFAULT_INSERTION_COST = 1;
+  public static final int DEFAULT_INSERTION_COST = 1;
 
   /**
    * A constant holding the default deletion cost.
    */
-  public static int DEFAULT_DELETION_COST = 1;
+  public static final int DEFAULT_DELETION_COST = 1;
 
   /**
    * A constant holding the default substitution cost.
    */
-  public static int DEFAULT_SUBSTITUTION_COST = 1;
+  public static final int DEFAULT_SUBSTITUTION_COST = 1;
 
   private static int INSERTION_COST;
   private static int DELETION_COST;
@@ -53,7 +53,7 @@ public final class LevenshteinDistance {
 
   /**
    * Set the cost for "insertion".
-   * @param const a cost for "insertion"
+   * @param cost a cost for "insertion"
    */
   public static synchronized void setInsertionCost(int cost) {
     INSERTION_COST = cost;
@@ -61,7 +61,7 @@ public final class LevenshteinDistance {
 
   /**
    * Set the cost for "deletion".
-   * @param const a cost for "deletio"
+   * @param cost a cost for "deletio"
    */
   public static synchronized void setDeletionCost(int cost) {
     DELETION_COST = cost;
@@ -69,7 +69,7 @@ public final class LevenshteinDistance {
 
   /**
    * Set the cost for "substitution".
-   * @param const a cost for "substitution"
+   * @param cost a cost for "substitution"
    */
   public static synchronized void setSubstitutionCost(int cost) {
     SUBSTITUTION_COST = cost;

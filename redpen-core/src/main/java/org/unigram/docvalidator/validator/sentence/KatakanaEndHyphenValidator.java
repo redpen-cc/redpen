@@ -62,7 +62,9 @@ public class KatakanaEndHyphenValidator implements SentenceValidator {
    */
   private static final char KATAKANA_MIDDLE_DOT = '・';
 
-  public KatakanaEndHyphenValidator(ValidatorConfiguration config, CharacterTable characterTable) throws DocumentValidatorException {
+  public KatakanaEndHyphenValidator(ValidatorConfiguration config,
+                                    CharacterTable characterTable)
+      throws DocumentValidatorException {
     initialize(config, characterTable);
   }
 

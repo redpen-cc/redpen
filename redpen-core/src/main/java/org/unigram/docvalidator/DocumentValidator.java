@@ -112,7 +112,7 @@ public class DocumentValidator implements Validator {
     for (Document document : documentCollection) {
       errors = validateDocument(document);
 
-      for (ValidationError error : errors){
+      for (ValidationError error : errors) {
         error.setFileName(document.getFileName());
         distributor.flushResult(error);
       }
