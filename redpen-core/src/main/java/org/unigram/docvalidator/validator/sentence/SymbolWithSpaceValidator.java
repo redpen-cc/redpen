@@ -17,14 +17,15 @@
  */
 package org.unigram.docvalidator.validator.sentence;
 
+import org.unigram.docvalidator.DocumentValidatorException;
+import org.unigram.docvalidator.ValidationError;
+import org.unigram.docvalidator.config.CharacterTable;
+import org.unigram.docvalidator.config.ValidatorConfiguration;
+import org.unigram.docvalidator.model.Sentence;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import org.unigram.docvalidator.DocumentValidatorException;
-import org.unigram.docvalidator.ValidationError;
-import org.unigram.docvalidator.config.*;
-import org.unigram.docvalidator.model.Sentence;
 
 /**
  * Validate symbol has before and after symbols. Needed spaces is depend on
@@ -35,10 +36,10 @@ public class SymbolWithSpaceValidator implements SentenceValidator {
   public SymbolWithSpaceValidator() {
   }
 
-  public SymbolWithSpaceValidator(DVResource resource) throws
+  public SymbolWithSpaceValidator(ValidatorConfiguration config,
+                                  CharacterTable characterTable) throws
       DocumentValidatorException {
-    CharacterTable ct = resource.getCharacterTable();
-    initialize(ct);
+    initialize(characterTable);
   }
 
   public List<ValidationError> validate(Sentence sentence) {

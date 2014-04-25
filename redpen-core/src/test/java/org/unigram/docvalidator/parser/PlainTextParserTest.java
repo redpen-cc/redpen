@@ -20,10 +20,10 @@ package org.unigram.docvalidator.parser;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.unigram.docvalidator.config.Configuration;
 import org.unigram.docvalidator.model.Document;
 import org.unigram.docvalidator.model.Paragraph;
 import org.unigram.docvalidator.model.Section;
-import org.unigram.docvalidator.config.DVResource;
 import org.unigram.docvalidator.DocumentValidatorException;
 import org.unigram.docvalidator.config.ValidationConfigurationLoader;
 
@@ -86,10 +86,10 @@ public class PlainTextParserTest {
   @Before
   public void setup() {
     InputStream stream = IOUtils.toInputStream(this.sampleConfiguraitonStr);
-      DVResource resource = new DVResource(ValidationConfigurationLoader.loadConfiguration(stream));
+      Configuration configuration = new Configuration(ValidationConfigurationLoader.loadConfiguration(stream));
 
     try {
-      parser = DocumentParserFactory.generate(Parser.Type.PLAIN, resource);
+      parser = DocumentParserFactory.generate(Parser.Type.PLAIN, configuration);
     } catch (DocumentValidatorException e1) {
       fail();
       e1.printStackTrace();

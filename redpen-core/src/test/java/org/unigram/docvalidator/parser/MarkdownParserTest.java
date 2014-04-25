@@ -26,7 +26,7 @@ import org.unigram.docvalidator.model.Paragraph;
 import org.unigram.docvalidator.model.Section;
 import org.unigram.docvalidator.config.CharacterTable;
 import org.unigram.docvalidator.config.CharacterTableLoader;
-import org.unigram.docvalidator.config.DVResource;
+import org.unigram.docvalidator.config.Configuration;
 import org.unigram.docvalidator.DocumentValidatorException;
 import org.unigram.docvalidator.config.ValidationConfigurationLoader;
 import org.unigram.docvalidator.config.ValidatorConfiguration;
@@ -47,7 +47,7 @@ public class MarkdownParserTest {
   @Test(expected = DocumentValidatorException.class)
   public void testNullDocument() throws Exception {
     ValidatorConfiguration conf = new ValidatorConfiguration("dummy");
-    Parser parser = loadParser(new DVResource(conf));
+    Parser parser = loadParser(new Configuration(conf));
     InputStream is = null;
     parser.generateDocument(is);
   }
@@ -56,7 +56,7 @@ public class MarkdownParserTest {
   public void testNullFileName() throws Exception {
 
     ValidatorConfiguration conf = new ValidatorConfiguration("dummy");
-    Parser parser = loadParser(new DVResource(conf));
+    Parser parser = loadParser(new Configuration(conf));
     String fileName = null;
     parser.generateDocument(fileName);
   }
@@ -467,10 +467,10 @@ public class MarkdownParserTest {
   }
 
 
-  private Parser loadParser(DVResource resource) {
+  private Parser loadParser(Configuration configuration) {
     Parser parser = null;
     try {
-      parser = DocumentParserFactory.generate(MARKDOWN, resource);
+      parser = DocumentParserFactory.generate(MARKDOWN, configuration);
     } catch (DocumentValidatorException e1) {
       fail();
       e1.printStackTrace();
@@ -517,9 +517,9 @@ public class MarkdownParserTest {
 
     Parser parser = null;
     if (characterTable != null) {
-      parser = loadParser(new DVResource(conf, characterTable));
+      parser = loadParser(new Configuration(conf, characterTable));
     } else {
-      parser = loadParser(new DVResource(conf));
+      parser = loadParser(new Configuration(conf));
     }
 
     try {
@@ -533,7 +533,7 @@ public class MarkdownParserTest {
   private Document createFileContentFromInputStream(
       InputStream inputStream) {
     ValidatorConfiguration conf = new ValidatorConfiguration("dummy");
-    Parser parser = loadParser(new DVResource(conf));
+    Parser parser = loadParser(new Configuration(conf));
     Document doc = null;
     try {
       doc = parser.generateDocument(inputStream);
@@ -547,7 +547,7 @@ public class MarkdownParserTest {
   private Document createFileContent(
       String inputDocumentString) {
     ValidatorConfiguration conf = new ValidatorConfiguration("dummy");
-    Parser parser = loadParser(new DVResource(conf));
+    Parser parser = loadParser(new Configuration(conf));
     InputStream is;
     try {
       is = new ByteArrayInputStream(inputDocumentString.getBytes("utf-8"));

@@ -20,7 +20,7 @@ package org.unigram.docvalidator.parser;
 import java.io.InputStream;
 
 import org.unigram.docvalidator.model.Document;
-import org.unigram.docvalidator.config.DVResource;
+import org.unigram.docvalidator.config.Configuration;
 import org.unigram.docvalidator.DocumentValidatorException;
 
 /**
@@ -50,10 +50,10 @@ public interface Parser {
   /**
    * Initialize parser.
    *
-   * @param resource configuration resources
+   * @param configuration configuration
    * @throws DocumentValidatorException if the configurations loading failed
    */
-  void initialize(DVResource resource) throws DocumentValidatorException;
+  void initialize(Configuration configuration) throws DocumentValidatorException;
 
   /**
    * the type of parser using DocumentParserFactory.

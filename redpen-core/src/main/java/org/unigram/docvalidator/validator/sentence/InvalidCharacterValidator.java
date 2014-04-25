@@ -23,17 +23,18 @@ import java.util.Set;
 
 import org.unigram.docvalidator.DocumentValidatorException;
 import org.unigram.docvalidator.ValidationError;
-import org.unigram.docvalidator.config.*;
+import org.unigram.docvalidator.config.CharacterTable;
+import org.unigram.docvalidator.config.ValidatorConfiguration;
 import org.unigram.docvalidator.model.Sentence;
 
 /**
  * Validate if there is invalid characters in sentences.
  */
 public class InvalidCharacterValidator implements SentenceValidator {
-  public InvalidCharacterValidator(DVResource resource) throws
-      DocumentValidatorException {
-    CharacterTable ct = resource.getCharacterTable();
-    initialize(ct);
+  public InvalidCharacterValidator(ValidatorConfiguration config,
+                                   CharacterTable characterTable)
+      throws DocumentValidatorException {
+    initialize(characterTable);
   }
 
   public InvalidCharacterValidator() {

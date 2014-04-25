@@ -19,13 +19,13 @@ package org.unigram.docvalidator.validator.sentence;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.config.DVResource;
 import org.unigram.docvalidator.DocumentValidatorException;
+import org.unigram.docvalidator.ValidationError;
+import org.unigram.docvalidator.config.CharacterTable;
+import org.unigram.docvalidator.config.ValidatorConfiguration;
+import org.unigram.docvalidator.model.Sentence;
 import org.unigram.docvalidator.util.FileLoader;
 import org.unigram.docvalidator.util.KeyValueDictionaryExtractor;
-import org.unigram.docvalidator.ValidationError;
-import org.unigram.docvalidator.config.ValidatorConfiguration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,9 +44,10 @@ public class SuggestExpressionValidator implements SentenceValidator {
     synonyms = new HashMap<String, String>();
   }
 
-  public SuggestExpressionValidator(DVResource resource) throws DocumentValidatorException {
-    ValidatorConfiguration conf = resource.getConfiguration();
-    initialize(conf);
+  public SuggestExpressionValidator(ValidatorConfiguration config,
+                                    CharacterTable characterTable)
+      throws DocumentValidatorException {
+    initialize(config);
   }
 
   public List<ValidationError> validate(Sentence line) {

@@ -26,7 +26,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.unigram.docvalidator.config.CharacterTable;
 import org.unigram.docvalidator.config.CharacterTableLoader;
-import org.unigram.docvalidator.config.DVResource;
+import org.unigram.docvalidator.config.Configuration;
 import org.unigram.docvalidator.config.ValidatorConfiguration;
 import org.w3c.dom.Element;
 
@@ -57,10 +57,10 @@ public class ConfigurationLoaderTest {
             "</configuration>";
     ConfigurationLoader configurationLoader = new ConfigurationLoaderForTest();
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
-    DVResource resource = configurationLoader.loadConfiguration(stream);
+    Configuration configuration = configurationLoader.loadConfiguration(stream);
     IOUtils.closeQuietly(stream);
-    assertNotNull(resource);
-    assertEquals(".", resource.getCharacterTable().getCharacter("FULL_STOP").getValue());
+    assertNotNull(configuration);
+    assertEquals(".", configuration.getCharacterTable().getCharacter("FULL_STOP").getValue());
   }
 
   @Test
@@ -72,10 +72,10 @@ public class ConfigurationLoaderTest {
             "</configuration>";
     ConfigurationLoader configurationLoader = new ConfigurationLoaderForTest();
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
-    DVResource resource = configurationLoader.loadConfiguration(stream);
+    Configuration configuration = configurationLoader.loadConfiguration(stream);
     IOUtils.closeQuietly(stream);
-    assertNotNull(resource);
-    assertEquals("。", resource.getCharacterTable().getCharacter("FULL_STOP").getValue());
+    assertNotNull(configuration);
+    assertEquals("。", configuration.getCharacterTable().getCharacter("FULL_STOP").getValue());
   }
 
   @Test
@@ -86,9 +86,9 @@ public class ConfigurationLoaderTest {
         "</configuration>";
     ConfigurationLoader configurationLoader = new ConfigurationLoaderForTest();
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
-    DVResource resource = configurationLoader.loadConfiguration(stream);
+    Configuration configuration = configurationLoader.loadConfiguration(stream);
     IOUtils.closeQuietly(stream);
-    assertNull(resource);
+    assertNull(configuration);
   }
 
   @Test
@@ -100,9 +100,9 @@ public class ConfigurationLoaderTest {
         "</configuration>";
     ConfigurationLoader configurationLoader = new ConfigurationLoaderForTest();
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
-    DVResource resource = configurationLoader.loadConfiguration(stream);
+    Configuration configuration = configurationLoader.loadConfiguration(stream);
     IOUtils.closeQuietly(stream);
-    assertNull(resource);
+    assertNull(configuration);
   }
 
   @Test
@@ -113,9 +113,9 @@ public class ConfigurationLoaderTest {
         "</configuration>";
     ConfigurationLoader configurationLoader = new ConfigurationLoaderForTest();
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
-    DVResource resource = configurationLoader.loadConfiguration(stream);
+    Configuration configuration = configurationLoader.loadConfiguration(stream);
     IOUtils.closeQuietly(stream);
-    assertNull(resource);
+    assertNull(configuration);
   }
 
   @Test
@@ -127,9 +127,9 @@ public class ConfigurationLoaderTest {
         "</dummy>";
     ConfigurationLoader configurationLoader = new ConfigurationLoaderForTest();
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
-    DVResource resource = configurationLoader.loadConfiguration(stream);
+    Configuration configuration = configurationLoader.loadConfiguration(stream);
     IOUtils.closeQuietly(stream);
-    assertNull(resource);
+    assertNull(configuration);
   }
 
   @Test
@@ -137,17 +137,17 @@ public class ConfigurationLoaderTest {
     String sampleConfigString = "";
     ConfigurationLoader configurationLoader = new ConfigurationLoaderForTest();
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
-    DVResource resource = configurationLoader.loadConfiguration(stream);
+    Configuration configuration = configurationLoader.loadConfiguration(stream);
     IOUtils.closeQuietly(stream);
-    assertNull(resource);
+    assertNull(configuration);
   }
 
   @Test
   public void testLoadNullConfiguration() {
     ConfigurationLoader configurationLoader = new ConfigurationLoaderForTest();
     InputStream stream = null;
-    DVResource resource = configurationLoader.loadConfiguration(stream);
-    assertNull(resource);
+    Configuration configuration = configurationLoader.loadConfiguration(stream);
+    assertNull(configuration);
   }
 
   @Test
@@ -159,8 +159,8 @@ public class ConfigurationLoaderTest {
         "<configuration>"; // NOTE: no slash
     ConfigurationLoader configurationLoader = new ConfigurationLoaderForTest();
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
-    DVResource resource = configurationLoader.loadConfiguration(stream);
+    Configuration configuration = configurationLoader.loadConfiguration(stream);
     IOUtils.closeQuietly(stream);
-    assertNull(resource);
+    assertNull(configuration);
   }
 }

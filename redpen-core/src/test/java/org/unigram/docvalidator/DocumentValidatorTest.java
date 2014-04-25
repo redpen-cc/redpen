@@ -17,18 +17,25 @@
  */
 package org.unigram.docvalidator;
 
+import org.apache.commons.io.input.ReaderInputStream;
 import org.junit.Test;
+import org.unigram.docvalidator.config.Configuration;
+import org.unigram.docvalidator.config.ValidationConfigurationLoader;
+import org.unigram.docvalidator.config.ValidatorConfiguration;
 import org.unigram.docvalidator.model.Document;
 import org.unigram.docvalidator.model.DocumentCollection;
 import org.unigram.docvalidator.model.Paragraph;
 import org.unigram.docvalidator.model.Section;
 import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.config.DVResource;
-import org.unigram.docvalidator.config.ValidatorConfiguration;
 
+import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.matchers.JUnitMatchers.containsString;
 
 public class DocumentValidatorTest {
 
@@ -77,14 +84,15 @@ public class DocumentValidatorTest {
     documents.addDocument(document);
 
 
-    ValidatorConfiguration config = new ValidatorConfiguration(
+    ValidatorConfiguration validatorConfig = new ValidatorConfiguration(
         "<?xml version=\"1.0\"?>\n" +
             "<character-table></character-table>"
     );
-    DVResource resource = new DVResource(config); // = ValidatorConfiguration + CharacterTable
+    Configuration configuration = new Configuration(
+        validatorConfig); // = ValidatorConfiguration + CharacterTable
 
     DocumentValidator validator = new DocumentValidator.Builder()
-        .setResource(resource)
+        .setConfiguration(configuration)
 //        .setConfig(...)
 //        .setCharacterTable()
         .build();
@@ -92,5 +100,153 @@ public class DocumentValidatorTest {
     List<ValidationError> errors = validator.check(documents);
 
     assertEquals(0, errors.size());
+  }
+
+
+  @Test
+  public void testSimpleDocument() throws DocumentValidatorException {
+
+    DocumentCollection documents = new DocumentCollection();
+
+    Document document = new Document();
+    document.setFileName("tested file");
+    Section section0 = new Section(0);
+    Paragraph paragraph0 = new Paragraph();
+    paragraph0.appendSentence(
+        new Sentence("it is a piece of a cake.", 0)
+    );
+    paragraph0.appendSentence(
+        new Sentence("that is also a piece of a cake.", 1)
+    );
+    section0.appendParagraph(paragraph0);
+    document.appendSection(section0);
+    documents.addDocument(document);
+
+    DocumentValidator validator = getDocumentValidator();
+
+    List<ValidationError> errors = validator.check(documents);
+
+    // validate the errors
+    assertEquals(2, errors.size());
+    for (ValidationError error : errors) {
+      assertThat(error.getValidatorName(), is("SentenceLength"));
+      assertThat(error.getMessage(),
+          containsString("The length of the line exceeds the maximum "));
+    }
+  }
+
+  private DocumentValidator getDocumentValidator() throws
+      DocumentValidatorException {
+    ValidatorConfiguration validatorConfig =
+        ValidationConfigurationLoader.loadConfiguration(
+            new ReaderInputStream(new StringReader("<?xml version=\"1.0\"?>\n" +
+                "<component name=\"Validator\">" +
+                "  <component name=\"SentenceIterator\">" +
+                "    <component name=\"SentenceLength\">\n" +
+                "      <property name=\"max_length\" value=\"5\"/>\n" +
+                "    </component>" +
+                "  </component>" +
+                "</component>"
+            ))
+        );
+
+    Configuration configuration = new Configuration(validatorConfig);
+
+    return new DocumentValidator.Builder()
+        .setConfiguration(configuration)
+        .build();
+  }
+
+  @Test
+  public void testDocumentWithHeader() throws DocumentValidatorException {
+
+    DocumentCollection documents = new DocumentCollection();
+
+    Document document = new Document();
+    document.setFileName("tested file");
+    Section section0 = new Section(0);
+    Paragraph paragraph0 = new Paragraph();
+    paragraph0.appendSentence(
+        new Sentence("it is a piece of a cake.", 0)
+    );
+    paragraph0.appendSentence(
+        new Sentence("that is also a piece of a cake.", 1)
+    );
+    section0.appendParagraph(paragraph0);
+    List<Sentence> headers = new ArrayList<Sentence>(1);
+    headers.add(new Sentence("this is it", 0));
+    section0.appendHeaderContent(headers);
+    document.appendSection(section0);
+    documents.addDocument(document);
+
+    DocumentValidator validator = getDocumentValidator();
+
+    List<ValidationError> errors = validator.check(documents);
+
+    // validate the errors
+    assertEquals(3, errors.size());
+    for (ValidationError error : errors) {
+      assertThat(error.getValidatorName(), is("SentenceLength"));
+      assertThat(error.getMessage(),
+          containsString("The length of the line exceeds the maximum "));
+    }
+  }
+
+  @Test
+  public void testDocumentWithList() throws DocumentValidatorException {
+    DocumentCollection documents = new DocumentCollection();
+
+    Document document = new Document();
+    document.setFileName("tested file");
+    Section section0 = new Section(0);
+    Paragraph paragraph0 = new Paragraph();
+    paragraph0.appendSentence(
+        new Sentence("it is a piece of a cake.", 0)
+    );
+    paragraph0.appendSentence(
+        new Sentence("that is also a piece of a cake.", 1)
+    );
+    section0.appendParagraph(paragraph0);
+
+    List<Sentence> headers = new ArrayList<Sentence>(1);
+    headers.add(new Sentence("this is it", 0));
+    section0.appendHeaderContent(headers);
+
+    List<Sentence> listElements = new ArrayList<Sentence>(1);
+    listElements.add(new Sentence("this is a list.", 0));
+    section0.appendListBlock();
+    section0.appendListElement(0, listElements);
+
+    document.appendSection(section0);
+    documents.addDocument(document);
+
+    DocumentValidator validator = getDocumentValidator();
+
+    List<ValidationError> errors = validator.check(documents);
+
+    // validate the errors
+    assertEquals(4, errors.size());
+    for (ValidationError error : errors) {
+      assertThat(error.getValidatorName(), is("SentenceLength"));
+      assertThat(error.getMessage(),
+          containsString("The length of the line exceeds the maximum "));
+    }
+  }
+
+  @Test
+  public void testDocumentWithoutContent() throws DocumentValidatorException {
+    DocumentCollection documents = new DocumentCollection();
+
+    Document document = new Document();
+    document.setFileName("tested file");
+    documents.addDocument(document);
+
+    DocumentValidator validator = getDocumentValidator();
+
+    List<ValidationError> errors = validator.check(documents);
+
+    // validate the errors
+    assertEquals(0, errors.size());
+
   }
 }

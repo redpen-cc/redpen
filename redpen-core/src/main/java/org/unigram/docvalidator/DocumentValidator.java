@@ -19,8 +19,7 @@ package org.unigram.docvalidator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.unigram.docvalidator.config.CharacterTable;
-import org.unigram.docvalidator.config.DVResource;
+import org.unigram.docvalidator.config.Configuration;
 import org.unigram.docvalidator.config.ValidatorConfiguration;
 import org.unigram.docvalidator.distributor.DefaultResultDistributor;
 import org.unigram.docvalidator.distributor.ResultDistributor;
@@ -28,16 +27,16 @@ import org.unigram.docvalidator.distributor.ResultDistributorFactory;
 import org.unigram.docvalidator.formatter.Formatter;
 import org.unigram.docvalidator.model.Document;
 import org.unigram.docvalidator.model.DocumentCollection;
+import org.unigram.docvalidator.model.ListBlock;
+import org.unigram.docvalidator.model.ListElement;
 import org.unigram.docvalidator.model.Paragraph;
 import org.unigram.docvalidator.model.Section;
 import org.unigram.docvalidator.model.Sentence;
-import org.unigram.docvalidator.validator.SentenceIterator;
 import org.unigram.docvalidator.validator.Validator;
-import org.unigram.docvalidator.validator.section.ParagraphNumberValidator;
-import org.unigram.docvalidator.validator.section.ParagraphStartWithValidator;
-import org.unigram.docvalidator.validator.section.SectionLengthValidator;
 import org.unigram.docvalidator.validator.section.SectionValidator;
+import org.unigram.docvalidator.validator.section.SectionValidatorFactory;
 import org.unigram.docvalidator.validator.sentence.SentenceValidator;
+import org.unigram.docvalidator.validator.sentence.SentenceValidatorFactory;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -48,53 +47,41 @@ import java.util.List;
  */
 public class DocumentValidator implements Validator {
 
-  private final List<SectionValidator> sectionValidators;
-
-  private final List<SentenceValidator> sentenceValidators;
-
   private DocumentValidator(Builder builder) throws DocumentValidatorException {
-    DVResource resource = builder.resource;
+    Configuration configuration = builder.configuration;
     this.distributor = builder.distributor;
-    this.conf = resource.getConfiguration();
-    this.charTable = resource.getCharacterTable();
 
     validators = new ArrayList<Validator>();
     sectionValidators = new ArrayList<SectionValidator>();
     sentenceValidators = new ArrayList<SentenceValidator>();
 
-    loadValidators(this.conf, this.charTable);
+    loadValidators(configuration);
   }
 
   /**
    * Load validators written in the configuration file.
-   *
    */
   @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-  private void loadValidators(ValidatorConfiguration rootConfig,
-                              CharacterTable charTable) throws
-    DocumentValidatorException {
+  private void loadValidators(Configuration configuration)
+      throws DocumentValidatorException {
 
-    for (ValidatorConfiguration config : rootConfig.getChildren()) {
-      loadValidator(charTable, config);
+    //TODO duplicate code...
+    for (ValidatorConfiguration config : configuration
+        .getSectionValidatorConfigs()) {
+      sectionValidators.add(SectionValidatorFactory
+          .getInstance(config, configuration.getCharacterTable()));
     }
-  }
 
-  private void loadValidator(CharacterTable charTable, ValidatorConfiguration
-    config) throws DocumentValidatorException {
-    String confName = config.getConfigurationName();
-
-    if (confName.equals("SentenceIterator")) {
-      validators.add(new SentenceIterator(config, charTable));
-    } else if (confName.equals("SectionLength")) {
-      sectionValidators.add(new SectionLengthValidator(config, charTable));
-    } else if (confName.equals("MaxParagraphNumber")) {
-      sectionValidators.add(new ParagraphNumberValidator(config, charTable));
-    } else if (confName.equals("ParagraphStartWith")) {
-      sectionValidators.add(new ParagraphStartWithValidator(config, charTable));
-    } else {
-      throw new DocumentValidatorException(
-        "There is no Validator like " + confName);
+    for (ValidatorConfiguration config : configuration
+        .getSentenceValidatorConfigs()) {
+      sentenceValidators.add(SentenceValidatorFactory
+          .getInstance(config, configuration.getCharacterTable()));
     }
+
+    //TODO execute document validator
+    //TODO execute paragraph validator
+
+
   }
 
   /**
@@ -156,13 +143,29 @@ public class DocumentValidator implements Validator {
     for (Paragraph paragraph : section.getParagraphs()) {
       errors.addAll(validateParagraph(paragraph));
     }
+
+
+    errors.addAll(validateSentences(section.getHeaderContents()));
+
+    for (ListBlock listBlock : section.getListBlocks()) {
+      for (ListElement listElement : listBlock.getListElements()) {
+        errors.addAll(validateSentences(listElement.getSentences()));
+      }
+
+    }
     return errors;
   }
 
   private List<ValidationError> validateParagraph(Paragraph paragraph) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
+    errors.addAll(validateSentences(paragraph.getSentences()));
+    return errors;
+  }
+
+  private List<ValidationError> validateSentences(List<Sentence> sentences) {
+    List<ValidationError> errors = new ArrayList<ValidationError>();
     for (SentenceValidator sentenceValidator : sentenceValidators) {
-      for (Sentence sentence : paragraph.getSentences()) {
+      for (Sentence sentence : sentences) {
         errors.addAll(sentenceValidator.validate(sentence));
       }
     }
@@ -179,8 +182,6 @@ public class DocumentValidator implements Validator {
     this.validators = new ArrayList<Validator>();
     sectionValidators = new ArrayList<SectionValidator>();
     sentenceValidators = new ArrayList<SentenceValidator>();
-    this.conf = null;
-    this.charTable = null;
   }
 
   /**
@@ -201,16 +202,19 @@ public class DocumentValidator implements Validator {
     sectionValidators.add(validator);
   }
 
+  /**
+   * Builder for DocumentValidator.
+   */
   public static class Builder {
 
-    private DVResource resource;
+    private Configuration configuration;
 
     private ResultDistributor distributor = new DefaultResultDistributor(
-      new PrintStream(System.out)
+        new PrintStream(System.out)
     );
 
-    public Builder setResource(DVResource resource) {
-      this.resource = resource;
+    public Builder setConfiguration(Configuration configuration) {
+      this.configuration = configuration;
       return this;
     }
 
@@ -226,12 +230,12 @@ public class DocumentValidator implements Validator {
 
   private final List<Validator> validators;
 
-  private final ValidatorConfiguration conf;
+  private final List<SectionValidator> sectionValidators;
 
-  private final CharacterTable charTable;
+  private final List<SentenceValidator> sentenceValidators;
 
   private ResultDistributor distributor;
 
   private static final Logger LOG =
-    LoggerFactory.getLogger(DocumentValidator.class);
+      LoggerFactory.getLogger(DocumentValidator.class);
 }

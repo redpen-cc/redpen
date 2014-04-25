@@ -1,4 +1,4 @@
-/**
+/*
  * redpen: a text inspection tool
  * Copyright (C) 2014 Recruit Technologies Co., Ltd. and contributors
  * (see CONTRIBUTORS.md)
@@ -15,103 +15,103 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.unigram.docvalidator.config;
 
-import org.apache.commons.io.IOUtils;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.unigram.docvalidator.config.ValidationConfigurationLoader;
-import org.unigram.docvalidator.config.ValidatorConfiguration;
-
-import java.io.InputStream;
 
 import static org.junit.Assert.*;
 
+/**
+ * Test for Configuration Structure
+ */
 public class ConfigurationTest {
 
-  @Before
-  public void setUp() {
-    String sampleConfiguraiton = new String(
-        "<?xml version=\"1.0\"?>" +
-            "<component name=\"Validator\">" +
-            "<property name=\"unit\" value=\"character\" />" +
-            "<property name=\"period\" value=\".\" />" +
-            "<property name=\"comma\" value=\", \" />" +
-            "<property name=\"comment\" value=\"#\" />" +
-            "<component name=\"SentenceLength\">" +
-            "<property name=\"max_length\" value=\"30\" />" +
-            "</component>" +
-            "<component name=\"CommaMaxNum\">" +
-            "<property name=\"max_comma_num\" value=\"3\" />" +
-            "</component>" +
-            "<component name=\"SentenceComma\" />" +
-            "<component name=\"InvalidSuffix\" />" +
-            "</component>");
-
-    InputStream stream = IOUtils.toInputStream(sampleConfiguraiton);
-    this.conf = ValidationConfigurationLoader.loadConfiguration(stream);
-    if (this.conf == null) {
-      fail();
-    }
-  }
-
-  @After
-  public void tearDown() {
-    this.conf = null;
-  }
-
   @Test
-  public void testChildrenSize() {
-    assertEquals(4, conf.getChildrenNumber());
+  public void testSentenceIteratorConfiguration() throws Exception {
+    ValidatorConfiguration rootConfig = new ValidatorConfiguration("top");
+    ValidatorConfiguration sentenceIteratorConfig = new ValidatorConfiguration("SentenceIterator");
+
+    ValidatorConfiguration configSentenceLength = new ValidatorConfiguration("SentenceLength");
+    ValidatorConfiguration configInvalidExpression = new ValidatorConfiguration("InvalidExpression");
+    ValidatorConfiguration configSpaceAfterPeriod = new ValidatorConfiguration("SpaceAfterPeriod");
+    ValidatorConfiguration configCommaNumber = new ValidatorConfiguration("CommaNumber");
+    ValidatorConfiguration configWordNumber = new ValidatorConfiguration("WordNumber");
+    ValidatorConfiguration configSuggestExpression = new ValidatorConfiguration("SuggestExpression");
+    ValidatorConfiguration configInvalidCharacter = new ValidatorConfiguration("InvalidCharacter");
+    ValidatorConfiguration configSpaceWithSymbol = new ValidatorConfiguration("SpaceWithSymbol");
+    ValidatorConfiguration configKatakanaEndHyphen = new ValidatorConfiguration("KatakanaEndHyphen");
+    ValidatorConfiguration configKatakanaSpellCheckValidator = new ValidatorConfiguration("KatakanaSpellCheckValidator");
+
+    sentenceIteratorConfig.addChild(configSentenceLength);
+    sentenceIteratorConfig.addChild(configInvalidExpression);
+    sentenceIteratorConfig.addChild(configSpaceAfterPeriod);
+    sentenceIteratorConfig.addChild(configCommaNumber);
+    sentenceIteratorConfig.addChild(configWordNumber);
+    sentenceIteratorConfig.addChild(configSuggestExpression);
+    sentenceIteratorConfig.addChild(configInvalidCharacter);
+    sentenceIteratorConfig.addChild(configSpaceWithSymbol);
+    sentenceIteratorConfig.addChild(configKatakanaEndHyphen);
+    sentenceIteratorConfig.addChild(configKatakanaSpellCheckValidator);
+
+    rootConfig.addChild(sentenceIteratorConfig);
+
+    Configuration configuration = new Configuration(rootConfig);
+    assertEquals(10, configuration.getSentenceValidatorConfigs().size());
 
   }
 
   @Test
-  public void testProperties() {
-    assertTrue(".".equals(conf.getAttribute("period")));
-    assertNull(conf.getAttribute("dummy"));
+  public void testInvalidNestedSentenceValidatorConfiguration() throws Exception{
+    ValidatorConfiguration rootConfig = new ValidatorConfiguration("top");
+
+    ValidatorConfiguration sentenceIteratorConfig = new ValidatorConfiguration("NotSentenceIterator");
+
+    ValidatorConfiguration configSentenceLength = new ValidatorConfiguration("SentenceLength");
+    ValidatorConfiguration configInvalidExpression = new ValidatorConfiguration("InvalidExpression");
+    ValidatorConfiguration configSpaceAfterPeriod = new ValidatorConfiguration("SpaceAfterPeriod");
+    ValidatorConfiguration configCommaNumber = new ValidatorConfiguration("CommaNumber");
+    ValidatorConfiguration configWordNumber = new ValidatorConfiguration("WordNumber");
+    ValidatorConfiguration configSuggestExpression = new ValidatorConfiguration("SuggestExpression");
+    ValidatorConfiguration configInvalidCharacter = new ValidatorConfiguration("InvalidCharacter");
+    ValidatorConfiguration configSpaceWithSymbol = new ValidatorConfiguration("SpaceWithSymbol");
+    ValidatorConfiguration configKatakanaEndHyphen = new ValidatorConfiguration("KatakanaEndHyphen");
+    ValidatorConfiguration configKatakanaSpellCheckValidator = new ValidatorConfiguration("KatakanaSpellCheckValidator");
+
+
+    sentenceIteratorConfig.addChild(configSentenceLength);
+    sentenceIteratorConfig.addChild(configInvalidExpression);
+    sentenceIteratorConfig.addChild(configSpaceAfterPeriod);
+    sentenceIteratorConfig.addChild(configCommaNumber);
+    sentenceIteratorConfig.addChild(configWordNumber);
+    sentenceIteratorConfig.addChild(configSuggestExpression);
+    sentenceIteratorConfig.addChild(configInvalidCharacter);
+    sentenceIteratorConfig.addChild(configSpaceWithSymbol);
+    sentenceIteratorConfig.addChild(configKatakanaEndHyphen);
+    sentenceIteratorConfig.addChild(configKatakanaSpellCheckValidator);
+    rootConfig.addChild(sentenceIteratorConfig);
+
+    Configuration configuration = new Configuration(rootConfig);
+    assertEquals(0, configuration.getSentenceValidatorConfigs().size());
+
   }
 
   @Test
-  public void testChildProperties() {
+  public void testConfiguration() throws Exception{
+    ValidatorConfiguration rootConfig = new ValidatorConfiguration("top");
 
-    for (ValidatorConfiguration childConfiguration : conf.getChildren()) {
-      if ("SentenceLength".equals(childConfiguration.getConfigurationName())) {
-        assertEquals("30", childConfiguration.getAttribute("max_length"));
-      }
-    }
+    ValidatorConfiguration configSectionLength = new ValidatorConfiguration("SectionLength");
+    ValidatorConfiguration configMaxParagraphNumber = new ValidatorConfiguration("MaxParagraphNumber");
+    ValidatorConfiguration configParagraphStartWith = new ValidatorConfiguration("ParagraphStartWith");
+
+    rootConfig.addChild(configSectionLength);
+    rootConfig.addChild(configMaxParagraphNumber);
+    rootConfig.addChild(configParagraphStartWith);
+
+    Configuration configuration = new Configuration(rootConfig);
+    assertEquals(3, configuration.getSectionValidatorConfigs().size());
+
   }
 
-  @Test
-  public void testPropertyInParent() {
-    for (ValidatorConfiguration childConfiguration : conf.getChildren()) {
-      if ("SentenceLength".equals(childConfiguration.getConfigurationName())) {
-        assertNotNull(childConfiguration.getParent());
-        assertEquals(".", childConfiguration.getAttribute("period"));
-      }
-    }
-  }
 
-  @Test
-  public void testPropertyNotInParent() {
-    for (ValidatorConfiguration childConfiguration : conf.getChildren()) {
-      if ("SentenceLength".equals(childConfiguration.getConfigurationName())) {
-        assertNotNull(childConfiguration.getParent());
-        assertEquals(null, childConfiguration.getAttribute("foobar"));
-      }
-    }
-  }
-
-  @Test
-  public void testPropertyInBrother() {
-    for (ValidatorConfiguration childConfiguration : conf.getChildren()) {
-      if ("SentenceLength".equals(childConfiguration.getConfigurationName())) {
-        assertNotNull(childConfiguration.getParent());
-        assertEquals(null, childConfiguration.getAttribute("max_comma_num"));
-      }
-    }
-  }
-
-  private ValidatorConfiguration conf = null;
 }

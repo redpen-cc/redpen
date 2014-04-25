@@ -17,7 +17,7 @@
  */
 package org.unigram.docvalidator.parser;
 
-import org.unigram.docvalidator.config.DVResource;
+import org.unigram.docvalidator.config.Configuration;
 import org.unigram.docvalidator.DocumentValidatorException;
 
 /**
@@ -29,12 +29,12 @@ public final class DocumentParserFactory {
    *
    *
    * @param parserType type of parser (plain or wiki etc.)
-   * @param resource   configuration settings
+   * @param configuration   configuration settings
    * @return Parser implementation object
    * @throws DocumentValidatorException when failed to generate Parser instance
    *                                    or no specified parser implementation.
    */
-  public static Parser generate(Parser.Type parserType, DVResource resource)
+  public static Parser generate(Parser.Type parserType, Configuration configuration)
       throws DocumentValidatorException {
     Parser docparser;
     switch (parserType) {
@@ -51,7 +51,7 @@ public final class DocumentParserFactory {
         throw new DocumentValidatorException("Specified parser type not exist: "
             + parserType);
     }
-    docparser.initialize(resource);
+    docparser.initialize(configuration);
     return docparser;
   }
 

@@ -21,8 +21,8 @@ package org.unigram.docvalidator.server;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.unigram.docvalidator.ConfigurationLoader;
+import org.unigram.docvalidator.config.Configuration;
 import org.unigram.docvalidator.server.util.ServerConfigurationLoader;
-import org.unigram.docvalidator.config.DVResource;
 import org.unigram.docvalidator.DocumentValidatorException;
 import org.unigram.docvalidator.DocumentValidator;
 
@@ -39,11 +39,11 @@ public class DocumentValidatorServer {
 
   private DocumentValidator validator;
 
-  private DVResource documentValidatorResource;
+  private Configuration documentValidatorConfig;
 
   private DocumentValidatorServer() throws DocumentValidatorException {
     ConfigurationLoader configLoader = new ServerConfigurationLoader();
-    documentValidatorResource = configLoader.loadConfiguration(
+    documentValidatorConfig = configLoader.loadConfiguration(
         getClass()
             .getClassLoader()
             .getResourceAsStream("/conf/dv-conf.xml")
@@ -52,7 +52,7 @@ public class DocumentValidatorServer {
 //    ResultDistributor distributor = ResultDistributorFactory
 //        .createDistributor("plain", System.out);
     validator = new DocumentValidator.Builder()
-        .setResource(documentValidatorResource)
+        .setConfiguration(documentValidatorConfig)
 //        .setResultDistributor(distributor)
         .build();
   }
@@ -61,8 +61,8 @@ public class DocumentValidatorServer {
     return validator;
   }
 
-  public DVResource getDocumentValidatorResource() {
-    return documentValidatorResource;
+  public Configuration getDocumentValidatorConfig() {
+    return documentValidatorConfig;
   }
 
   public static DocumentValidatorServer getInstance() throws
