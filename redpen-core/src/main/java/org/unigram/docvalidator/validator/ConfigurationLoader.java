@@ -21,6 +21,9 @@ import org.unigram.docvalidator.config.CharacterTable;
 import org.unigram.docvalidator.DocumentValidatorException;
 import org.unigram.docvalidator.config.ValidatorConfiguration;
 
+/**
+ * Loader for Validator Configuration.
+ */
 public interface ConfigurationLoader {
 
   /**

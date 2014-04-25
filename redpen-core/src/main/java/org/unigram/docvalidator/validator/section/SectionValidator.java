@@ -22,6 +22,9 @@ import org.unigram.docvalidator.ValidationError;
 
 import java.util.List;
 
+/**
+ * Validate input section.
+ */
 public interface SectionValidator {
 
   List<ValidationError> validate(Section section);

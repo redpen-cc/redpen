@@ -67,7 +67,7 @@ public final class Configuration {
   }
 
   /**
-   * Get document validator configurations
+   * Get document validator configurations.
    * @return list of configurations
    */
   public List<ValidatorConfiguration> getDocumentValidatorConfigs() {
@@ -75,7 +75,7 @@ public final class Configuration {
   }
 
   /**
-   * Get section validator configurations
+   * Get section validator configurations.
    * @return list of configurations
    */
   public List<ValidatorConfiguration> getSectionValidatorConfigs() {
@@ -83,14 +83,14 @@ public final class Configuration {
   }
 
   /**
-   * Get paragraph validator configurations
+   * Get paragraph validator configurations.
    * @return list of configurations
    */
   public List<ValidatorConfiguration> getParagraphValidatorConfigs() {
     return paragraphValidatorConfigs;
   }
   /**
-   * Get sentence validator configurations
+   * Get sentence validator configurations.
    * @return list of configurations
    */
   public List<ValidatorConfiguration> getSentenceValidatorConfigs() {
@@ -99,8 +99,12 @@ public final class Configuration {
 
   private final CharacterTable characterTable;
 
-  private final List<ValidatorConfiguration> documentValidatorConfigs = new ArrayList<ValidatorConfiguration>();
-  private final List<ValidatorConfiguration> sectionValidatorConfigs  = new ArrayList<ValidatorConfiguration>();
-  private final List<ValidatorConfiguration> paragraphValidatorConfigs = new ArrayList<ValidatorConfiguration>();
-  private final List<ValidatorConfiguration> sentenceValidatorConfigs = new ArrayList<ValidatorConfiguration>();
+  private final List<ValidatorConfiguration> documentValidatorConfigs =
+      new ArrayList<ValidatorConfiguration>();
+  private final List<ValidatorConfiguration> sectionValidatorConfigs =
+      new ArrayList<ValidatorConfiguration>();
+  private final List<ValidatorConfiguration> paragraphValidatorConfigs =
+      new ArrayList<ValidatorConfiguration>();
+  private final List<ValidatorConfiguration> sentenceValidatorConfigs =
+      new ArrayList<ValidatorConfiguration>();
 }

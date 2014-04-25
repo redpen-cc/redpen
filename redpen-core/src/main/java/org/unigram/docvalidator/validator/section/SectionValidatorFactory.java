@@ -27,11 +27,11 @@ import org.unigram.docvalidator.config.ValidatorConfiguration;
  */
 public final class SectionValidatorFactory {
 
-  private SectionValidatorFactory(){ }
+  private SectionValidatorFactory() { }
 
   public static SectionValidator getInstance(ValidatorConfiguration config,
                                              CharacterTable characterTable)
-      throws DocumentValidatorException{
+      throws DocumentValidatorException {
 
     if ("SectionLength".equals(config.getConfigurationName())) {
       return new SectionLengthValidator(config, characterTable);
