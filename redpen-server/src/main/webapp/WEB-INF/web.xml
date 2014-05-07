@@ -9,7 +9,7 @@
   <servlet>
     <servlet-name>initServlet</servlet-name>
     <servlet-class>
-      org.unigram.docvalidator.server.DocumentValidatorInitServlet
+        org.bigram.docvalidator.server.DocumentValidatorInitServlet
     </servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
