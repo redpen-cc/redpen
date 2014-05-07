@@ -23,6 +23,13 @@
         </configuration>
         <version>7.0.0.pre5</version>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <warSourceDirectory>${basedir}/src/main/webapp</warSourceDirectory>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
