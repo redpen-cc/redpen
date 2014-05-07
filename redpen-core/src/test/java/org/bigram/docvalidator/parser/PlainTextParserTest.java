@@ -117,6 +117,25 @@ public class PlainTextParserTest {
   }
 
   @Test
+  public void testGenerateDocumentWithTailingReturns() {
+    String sampleText = "";
+    sampleText += "This is a pen.\n";
+    sampleText += "That is a orange.\n";
+    sampleText += "\n";
+    sampleText += "However, pen is not oranges.\n";
+    sampleText += "We need to be peisient.\n";
+    sampleText += "\n";
+    sampleText += "\n";
+    Document doc = generateDocument(sampleText);
+    Section section = doc.getLastSection();
+    assertEquals(4, extractParagraphs(section).size());
+    assertEquals(2, extractParagraphs(section).get(0).getNumberOfSentences());
+    assertEquals(2, extractParagraphs(section).get(1).getNumberOfSentences());
+    assertEquals(0, extractParagraphs(section).get(2).getNumberOfSentences());
+    assertEquals(0, extractParagraphs(section).get(3).getNumberOfSentences());
+  }
+
+  @Test
   public void testGenerateDocumentWithMultipleSentenceInOneLine() {
     String sampleText = "Tokyu is a good railway company. ";
     sampleText += "The company is reliable. In addition it is rich. ";

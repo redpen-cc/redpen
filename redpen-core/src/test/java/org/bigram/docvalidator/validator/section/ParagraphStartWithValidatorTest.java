@@ -51,4 +51,13 @@ public class ParagraphStartWithValidatorTest {
     assertEquals(0, errors.size());
   }
 
+  @Test
+  public void testVoidParagraph() {
+    ParagraphStartWithValidator validator = new ParagraphStartWithValidator();
+    Section section = new Section(0);
+    Paragraph paragraph = new Paragraph();
+    section.appendParagraph(paragraph);
+    List<ValidationError> errors = validator.validate(section);
+    assertEquals(0, errors.size());
+  }
 }

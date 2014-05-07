@@ -56,8 +56,10 @@ public class ParagraphStartWithValidator extends AbstractSectionValidator {
   @Override
   public List<ValidationError> validate(Section section) {
     List<ValidationError> validationErrors = new ArrayList<ValidationError>();
-
     for (Paragraph currentParagraph : section.getParagraphs()) {
+      if (currentParagraph.getNumberOfSentences() == 0) {
+        continue;
+      }
       Sentence firstSentence = currentParagraph.getSentence(0);
       if (firstSentence.content.indexOf(this.beginningOfParagraph) != 0) {
         validationErrors.add(new ValidationError(
