@@ -1,0 +1,4 @@
+<configuration>
+    <validator>conf/validation-conf-en.xml</validator>
+    <lang char-conf="conf/symbol-conf-en.xml">en</lang>
+</configuration>
