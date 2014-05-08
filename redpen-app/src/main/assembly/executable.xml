@@ -12,8 +12,15 @@
       </includes>
     </fileSet>
     <fileSet>
-      <directory>sample</directory>
-      <outputDirectory>/sample</outputDirectory>
+      <directory>sample/conf</directory>
+      <outputDirectory>/conf</outputDirectory>
+      <includes>
+        <include>**/*</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>sample/doc</directory>
+      <outputDirectory>/doc</outputDirectory>
       <includes>
         <include>**/*</include>
       </includes>
