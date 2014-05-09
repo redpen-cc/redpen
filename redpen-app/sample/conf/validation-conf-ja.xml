@@ -9,7 +9,7 @@
     <component name="InvalidCharacter" />
     <component name="SpaceWithSymbol" />
     <component name="KatakanaEndHyphen"/>
-    <component name="KatakanaSpellCheckValidator" />
+    <component name="KatakanaSpellCheck" />
   </component>
 
   <component name="SectionLength">

@@ -89,7 +89,7 @@ public class SentenceValidatorFactoryTest {
     assertEquals(validator.getClass(), KatakanaEndHyphenValidator.class);
 
     ValidatorConfiguration configKatakanaSpellCheckValidator =
-        new ValidatorConfiguration("KatakanaSpellCheckValidator");
+        new ValidatorConfiguration("KatakanaSpellCheck");
     validator = SentenceValidatorFactory
         .getInstance(configKatakanaSpellCheckValidator, characterTable);
     assertEquals(validator.getClass(), KatakanaSpellCheckValidator.class);
