@@ -50,7 +50,7 @@ public final class SentenceValidatorFactory {
       return new SymbolWithSpaceValidator(config, characterTable);
     } else if ("KatakanaEndHyphen".equals(config.getConfigurationName())) {
       return new KatakanaEndHyphenValidator(config, characterTable);
-    } else if ("KatakanaSpellCheckValidator"
+    } else if ("KatakanaSpellCheck"
         .equals(config.getConfigurationName())) {
       return new KatakanaSpellCheckValidator(config, characterTable);
     } else {
