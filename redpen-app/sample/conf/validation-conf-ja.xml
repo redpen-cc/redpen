@@ -3,17 +3,15 @@
 
   <component name="SentenceIterator">
     <component name="SentenceLength">
-      <property name="max_length" value="150"/>
+      <property name="max_length" value="100"/>
     </component>
-    <component name="SpaceAfterPeriod" />
     <component name="InvalidCharacter" />
-    <component name="SpaceWithSymbol" />
     <component name="KatakanaEndHyphen"/>
     <component name="KatakanaSpellCheck" />
   </component>
 
   <component name="SectionLength">
-    <property name="max_char_number" value="250"/>
+    <property name="max_char_number" value="1500"/>
   </component>
   <component name="MaxParagraphNumber" />
 </component>
