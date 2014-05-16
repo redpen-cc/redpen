@@ -18,9 +18,7 @@
 package org.bigram.docvalidator;
 
 import org.apache.commons.io.input.ReaderInputStream;
-import org.bigram.docvalidator.DocumentValidator;
-import org.bigram.docvalidator.DocumentValidatorException;
-import org.bigram.docvalidator.ValidationError;
+import org.bigram.docvalidator.distributor.FakeResultDistributor;
 import org.junit.Test;
 import org.bigram.docvalidator.config.Configuration;
 import org.bigram.docvalidator.config.ValidationConfigurationLoader;
@@ -98,6 +96,7 @@ public class DocumentValidatorTest {
         .setConfiguration(configuration)
 //        .setConfig(...)
 //        .setCharacterTable()
+        .setResultDistributor(new FakeResultDistributor())
         .build();
 
     List<ValidationError> errors = validator.check(documents);
@@ -157,6 +156,7 @@ public class DocumentValidatorTest {
 
     return new DocumentValidator.Builder()
         .setConfiguration(configuration)
+        .setResultDistributor(new FakeResultDistributor())
         .build();
   }
 
