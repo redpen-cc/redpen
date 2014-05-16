@@ -69,7 +69,7 @@ public class SectionLengthValidator extends AbstractSectionValidator {
   }
 
   private boolean loadConfiguration(ValidatorConfiguration conf) {
-    if (conf.getAttribute("max_char_number") == null) {
+    if (conf.getAttribute("max_char_num") == null) {
       this.maxSectionCharNumber = DEFAULT_MAXIMUM_CHAR_NUMBER_IN_A_SECTION;
       LOG.info("max_char_number was not set.");
       LOG.info("Using the default value of max_char_number.");

@@ -34,7 +34,7 @@ public class ParagraphNumberValidator extends AbstractSectionValidator {
    * Default maximum number of paragraphs in a section.
    */
   @SuppressWarnings("WeakerAccess")
-  public static final int DEFAULT_MAX_PARAGRAPHS_IN_A_SECTION = 100;
+  public static final int DEFAULT_MAX_PARAGRAPHS_IN_A_SECTION = 5;
 
   public ParagraphNumberValidator() {
     super();
@@ -61,10 +61,10 @@ public class ParagraphNumberValidator extends AbstractSectionValidator {
   }
 
   private boolean loadConfiguration(ValidatorConfiguration conf) {
-    if (conf.getAttribute("max_char_number") == null) {
+    if (conf.getAttribute("max_paragraph_num") == null) {
       this.maxParagraphs = DEFAULT_MAX_PARAGRAPHS_IN_A_SECTION;
     } else {
-      this.maxParagraphs = Integer.valueOf(conf.getAttribute("max_paragraphs"));
+      this.maxParagraphs = Integer.valueOf(conf.getAttribute("max_paragraph_num"));
     }
     return true;
   }
