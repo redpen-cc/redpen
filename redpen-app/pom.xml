@@ -6,12 +6,12 @@
   <parent>
     <groupId>org.unigram</groupId>
     <artifactId>redpen</artifactId>
-    <version>0.1</version>
+    <version>0.6</version>
   </parent>
 
   <groupId>org.unigram</groupId>
   <artifactId>redpen-app</artifactId>
-  <version>0.1</version>
+  <version>0.6</version>
   <name>redpen-app</name>
   <url>http://document-validator.org</url>
 
@@ -59,7 +59,7 @@
     <dependency>
       <groupId>org.unigram</groupId>
       <artifactId>redpen-core</artifactId>
-      <version>0.1</version>
+      <version>0.6</version>
     </dependency>
   </dependencies>
 </project>
