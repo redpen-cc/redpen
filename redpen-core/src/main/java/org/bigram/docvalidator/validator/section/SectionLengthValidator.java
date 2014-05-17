@@ -75,7 +75,7 @@ public class SectionLengthValidator extends AbstractSectionValidator {
       LOG.info("Using the default value of max_char_number.");
     } else {
       this.maxSectionCharNumber = Integer.valueOf(
-        conf.getAttribute("max_char_number"));
+        conf.getAttribute("max_char_num"));
     }
     return true;
   }
