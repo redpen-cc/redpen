@@ -161,7 +161,7 @@ public final class Section {
    * NOTE: header can contain more than one header sentences.
    */
   public List<Sentence> getHeaderContents() {
-    return Collections.unmodifiableList(headerContent);
+    return headerContent;
   }
 
   /**

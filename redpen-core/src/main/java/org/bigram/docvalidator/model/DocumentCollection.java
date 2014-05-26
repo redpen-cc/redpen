@@ -75,4 +75,88 @@ public final class DocumentCollection implements Iterable<Document> {
   public Iterator<Document> iterator() {
     return documents.iterator();
   }
+
+  /**
+   * Builder for DocumentCollection.
+   */
+  public static class Builder {
+    public Builder() {
+      this.collection = new DocumentCollection();
+    }
+
+    public DocumentCollection build() {
+      return collection;
+    }
+
+    public Builder addDocument(String fileName) {
+      Document document = new Document();
+      document.setFileName(fileName);
+      collection.addDocument(document);
+      return this;
+    }
+
+    public Builder addSection(int level, List<Sentence> header) {
+      Document lastDocument = collection.getFile(collection.size()-1);
+      lastDocument.appendSection(new Section(level, header));
+      return this;
+    }
+
+    public Builder addSection(int level) {
+      Document lastDocument = collection.getFile(collection.size()-1);
+      lastDocument.appendSection(new Section(level, new ArrayList<Sentence>()));
+      return this;
+    }
+
+    public Builder addSectionHeader(String header) {
+      Document lastDocument = collection.getFile(collection.size()-1);
+      List<Sentence> headers = lastDocument.getLastSection().getHeaderContents();
+      headers.add(new Sentence(header, headers.size()));
+      return this;
+    }
+
+    public Builder addParagraph() {
+      Document lastDocument = collection.getFile(collection.size()-1);
+      Section lastSection = lastDocument.getSection(
+          lastDocument.getNumberOfSections()-1);
+      lastSection.appendParagraph(new Paragraph());
+      return this;
+    }
+
+    public Builder addSentence(String content, int lineNumber) {
+      Document lastDocument = collection.getFile(collection.size()-1);
+      Section lastSection = lastDocument.getSection(
+          lastDocument.getNumberOfSections()-1);
+      Paragraph lastParagraph = lastSection.getParagraph(
+          lastSection.getNumberOfParagraphs()-1);
+      lastParagraph.appendSentence(content, lineNumber);
+      return this;
+    }
+
+    public Builder addListBlock() {
+      Document lastDocument = collection.getFile(collection.size()-1);
+      Section lastSection = lastDocument.getSection(
+          lastDocument.getNumberOfSections()-1);
+      lastSection.appendListBlock();
+      return this;
+    }
+
+    public Builder addListElement(int level, List<Sentence> contents) {
+      Document lastDocument = collection.getFile(collection.size()-1);
+      Section lastSection = lastDocument.getSection(
+          lastDocument.getNumberOfSections()-1);
+      lastSection.appendListElement(level, contents);
+      return this;
+    }
+
+    public Builder addListElement(int level, String str) {
+      List<Sentence> elementSentence = new ArrayList<Sentence>();
+      elementSentence.add(new Sentence(str, 0));
+      this.addListElement(level, elementSentence);
+      return this;
+    }
+
+    private DocumentCollection collection;
+
+
+  }
 }
