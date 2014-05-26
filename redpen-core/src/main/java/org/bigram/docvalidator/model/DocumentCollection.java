@@ -101,6 +101,11 @@ public final class DocumentCollection implements Iterable<Document> {
      return collection.getFile(collection.size()-1);
     }
 
+    public Section getLastSection() {
+      Document lastDocument = collection.getFile(collection.size()-1);
+      return lastDocument.getSection(lastDocument.getNumberOfSections()-1);
+    }
+
     public Builder addDocument(String fileName) {
       Document document = new Document();
       document.setFileName(fileName);
@@ -139,6 +144,9 @@ public final class DocumentCollection implements Iterable<Document> {
       Document lastDocument = collection.getFile(collection.size()-1);
       Section lastSection = lastDocument.getSection(
           lastDocument.getNumberOfSections()-1);
+      if (lastSection.getNumberOfParagraphs() == 0) {
+        addParagraph();
+      }
       Paragraph lastParagraph = lastSection.getParagraph(
           lastSection.getNumberOfParagraphs()-1);
       lastParagraph.appendSentence(content, lineNumber);

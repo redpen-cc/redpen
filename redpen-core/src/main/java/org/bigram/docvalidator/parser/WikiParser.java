@@ -39,7 +39,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Parser for wiki formatted file.
  */
-@SuppressWarnings("ALL")
 public final class WikiParser extends BasicDocumentParser {
   /**
    * Constructor.
@@ -50,7 +49,6 @@ public final class WikiParser extends BasicDocumentParser {
 
   public Document generateDocument(String fileName)
       throws DocumentValidatorException {
-    builder.addDocument(fileName);
     InputStream inputStream = this.loadStream(fileName);
     Document document = this.generateDocument(inputStream);
     if (document != null) {
@@ -63,12 +61,12 @@ public final class WikiParser extends BasicDocumentParser {
       throws DocumentValidatorException {
     builder.addDocument("");
     BufferedReader br = null;
-    Document document = builder.getLastDocument();
+
     // for sentences right below the beginning of document
     List<Sentence> headers = new ArrayList<Sentence>();
     headers.add(new Sentence("", 0));
-    Section currentSection = new Section(0, headers);
-    document.appendSection(currentSection);
+    builder.addSection(0, headers);
+    Section currentSection = builder.getLastSection();
 
     // begin parsing
     LinePattern prevPattern, currentPattern = LinePattern.VOID;
@@ -86,7 +84,7 @@ public final class WikiParser extends BasicDocumentParser {
           }
         } else if (check(HEADER_PATTERN, line, head)) {
           currentPattern = LinePattern.HEADER;
-          currentSection = appendSection(document, currentSection, head,
+          currentSection = appendSection(currentSection, head,
               lineNum);
         } else if (check(LIST_PATTERN, line, head)) {
           currentPattern = LinePattern.LIST;
@@ -117,9 +115,9 @@ public final class WikiParser extends BasicDocumentParser {
     }
 
     if (remain.length() > 0) {
-      appendLastSentence(document, lineNum, remain.toString());
+      appendLastSentence(lineNum, remain.toString());
     }
-    return document;
+    return builder.getLastDocument();
   }
 
   private void appendListElement(Section currentSection,
@@ -137,8 +135,8 @@ public final class WikiParser extends BasicDocumentParser {
     }
   }
 
-  private Section appendSection(Document document,
-      Section currentSection, List<String> head, int lineNum) {
+  private Section appendSection(Section currentSection,
+      List<String> head, int lineNum) {
     Integer level = Integer.valueOf(head.get(0));
     List<Sentence> outputSentences = new ArrayList<Sentence>();
     String remainHeader =
@@ -153,20 +151,20 @@ public final class WikiParser extends BasicDocumentParser {
       outputSentences.get(0).isFirstSentence = true;
     }
 
-    Section tmpSection =  new Section(level, outputSentences);
-    document.appendSection(tmpSection);
+    builder.addSection(level, outputSentences);
+    Section tmpSection = builder.getLastSection();
     if (!addChild(currentSection, tmpSection)) {
-      LOG.warn("Failed to add parent for a Seciotn: "
+      LOG.warn("Failed to add parent for a Section: "
           + tmpSection.getHeaderContents().get(0));
     }
     currentSection = tmpSection;
     return currentSection;
   }
 
-  private void appendLastSentence(Document doc, int lineNum, String remain) {
+  private void appendLastSentence(int lineNum, String remain) {
     Sentence sentence = new Sentence(remain, lineNum);
     parseSentence(sentence); // extract inline elements
-    doc.getLastSection().appendSentence(sentence);
+    builder.addSentence(sentence.content, sentence.position);
   }
 
   private void parseSentence(Sentence sentence) {
