@@ -26,7 +26,6 @@ import org.bigram.docvalidator.DocumentValidatorException;
 import org.bigram.docvalidator.model.Document;
 import org.bigram.docvalidator.model.Section;
 import org.bigram.docvalidator.model.Sentence;
-import org.bigram.docvalidator.model.Paragraph;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +65,6 @@ public final class WikiParser extends BasicDocumentParser {
     List<Sentence> headers = new ArrayList<Sentence>();
     headers.add(new Sentence("", 0));
     builder.addSection(0, headers);
-    Section currentSection = builder.getLastSection();
 
     // begin parsing
     LinePattern prevPattern, currentPattern = LinePattern.VOID;
@@ -84,25 +82,23 @@ public final class WikiParser extends BasicDocumentParser {
           }
         } else if (check(HEADER_PATTERN, line, head)) {
           currentPattern = LinePattern.HEADER;
-          currentSection = appendSection(currentSection, head,
-              lineNum);
+          appendSection(head, lineNum);
         } else if (check(LIST_PATTERN, line, head)) {
           currentPattern = LinePattern.LIST;
-          appendListElement(currentSection, prevPattern, head, lineNum);
+          appendListElement(prevPattern, head, lineNum);
         } else if (check(NUMBERED_LIST_PATTERN, line, head)) {
           currentPattern = LinePattern.LIST;
-          appendListElement(currentSection, prevPattern, head, lineNum);
+          appendListElement(prevPattern, head, lineNum);
         } else if (check(BEGIN_COMMENT_PATTERN, line, head)) {
           if (!check(END_COMMENT_PATTERN, line, head)) { // skip comment
             currentPattern = LinePattern.COMMENT;
           }
         } else if (line.equals("")) { // new paragraph content
-          currentSection.appendParagraph(new Paragraph());
+          builder.addParagraph();
         } else { // usual sentence.
           currentPattern = LinePattern.SENTENCE;
           String remainStr = appendSentencesIntoSection(lineNum,
-              remain.append(line).toString(),
-              currentSection);
+              remain.append(line).toString());
           remain.delete(0, remain.length());
           remain.append(remainStr);
         }
@@ -120,14 +116,14 @@ public final class WikiParser extends BasicDocumentParser {
     return builder.getLastDocument();
   }
 
-  private void appendListElement(Section currentSection,
-      LinePattern prevPattern, List<String> head, int lineNum) {
+  private void appendListElement(LinePattern prevPattern,
+      List<String> head, int lineNum) {
     if (prevPattern != LinePattern.LIST) {
-      currentSection.appendListBlock();
+      builder.addListBlock();
     }
     List<Sentence> outputSentences = new ArrayList<Sentence>();
     String remainSentence = obtainSentences(0, head.get(1), outputSentences);
-    currentSection.appendListElement(extractListLevel(head.get(0)),
+    builder.addListElement(extractListLevel(head.get(0)),
         outputSentences);
     // NOTE: for list content without period
     if (remainSentence != null && remainSentence.length() > 0) {
@@ -135,8 +131,7 @@ public final class WikiParser extends BasicDocumentParser {
     }
   }
 
-  private Section appendSection(Section currentSection,
-      List<String> head, int lineNum) {
+  private Section appendSection(List<String> head, int lineNum) {
     Integer level = Integer.valueOf(head.get(0));
     List<Sentence> outputSentences = new ArrayList<Sentence>();
     String remainHeader =
@@ -150,7 +145,7 @@ public final class WikiParser extends BasicDocumentParser {
     if (outputSentences.size() > 0) {
       outputSentences.get(0).isFirstSentence = true;
     }
-
+    Section currentSection = builder.getLastSection();
     builder.addSection(level, outputSentences);
     Section tmpSection = builder.getLastSection();
     if (!addChild(currentSection, tmpSection)) {
@@ -164,7 +159,7 @@ public final class WikiParser extends BasicDocumentParser {
   private void appendLastSentence(int lineNum, String remain) {
     Sentence sentence = new Sentence(remain, lineNum);
     parseSentence(sentence); // extract inline elements
-    builder.addSentence(sentence.content, sentence.position);
+    builder.addSentence(sentence);
   }
 
   private void parseSentence(Sentence sentence) {
@@ -250,13 +245,12 @@ public final class WikiParser extends BasicDocumentParser {
     return remain;
   }
 
-  private String appendSentencesIntoSection(int lineNum, String line,
-      Section currentSection) {
+  private String appendSentencesIntoSection(int lineNum, String line) {
   List<Sentence> outputSentences = new ArrayList<Sentence>();
   String remain = obtainSentences(lineNum, line, outputSentences);
 
   for (Sentence sentence : outputSentences) {
-    currentSection.appendSentence(sentence);
+    builder.addSentence(sentence);
   }
   return remain;
 }

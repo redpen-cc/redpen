@@ -141,15 +141,28 @@ public final class DocumentCollection implements Iterable<Document> {
     }
 
     public Builder addSentence(String content, int lineNumber) {
-      Document lastDocument = collection.getFile(collection.size()-1);
+      addSentence(new Sentence(content, lineNumber));
+      return this;
+    }
+
+    public Builder addSentence(Sentence sentence) {
+      Document lastDocument = collection.getFile(
+          collection.size()-1);
+      if (lastDocument.getNumberOfSections() == 0) {
+        throw new IllegalStateException("There is no section to add a sentence");
+      }
       Section lastSection = lastDocument.getSection(
           lastDocument.getNumberOfSections()-1);
+
       if (lastSection.getNumberOfParagraphs() == 0) {
         addParagraph();
       }
       Paragraph lastParagraph = lastSection.getParagraph(
           lastSection.getNumberOfParagraphs()-1);
-      lastParagraph.appendSentence(content, lineNumber);
+      lastParagraph.appendSentence(sentence);
+      if (lastParagraph.getNumberOfSentences() == 1) {
+        sentence.isFirstSentence = true;
+      }
       return this;
     }
 
