@@ -17,9 +17,7 @@
 package org.bigram.docvalidator.parser.markdown;
 
 import org.bigram.docvalidator.DocumentValidatorException;
-import org.bigram.docvalidator.model.Document;
-import org.bigram.docvalidator.model.Section;
-import org.bigram.docvalidator.model.Sentence;
+import org.bigram.docvalidator.model.*;
 import org.bigram.docvalidator.parser.SentenceExtractor;
 import org.parboiled.common.StringUtils;
 import org.pegdown.Printer;
@@ -64,7 +62,6 @@ import org.pegdown.ast.Visitor;
 import org.pegdown.ast.WikiLinkNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.bigram.docvalidator.model.Paragraph;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -114,14 +111,14 @@ public class ToFileContentSerializer implements Visitor {
   /**
    * Constructor.
    *
-   * @param content          Document
+   * @param builder          DocumentBuilder
    * @param listOfLineNumber the list of line number
    * @param extractor        utility object to extract a sentence list
    */
-  public ToFileContentSerializer(Document content,
+  public ToFileContentSerializer(DocumentCollection.Builder builder,
                                  List<Integer> listOfLineNumber,
                                  SentenceExtractor extractor) {
-    this.document = content;
+    this.document = builder.getLastDocument();
     this.lineList = listOfLineNumber;
     this.sentenceExtractor = extractor;
     currentSection = document.getLastSection();
