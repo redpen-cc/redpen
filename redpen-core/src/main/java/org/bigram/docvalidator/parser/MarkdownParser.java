@@ -67,7 +67,6 @@ public class MarkdownParser extends BasicDocumentParser {
   public Document generateDocument(InputStream inputStream)
       throws DocumentValidatorException {
     builder.addDocument("");
-    Document document = null;
 
     StringBuilder sb = new StringBuilder();
     String line;
@@ -85,19 +84,17 @@ public class MarkdownParser extends BasicDocumentParser {
         lineList.add(charCount);
       }
 
-      document = builder.getLastDocument();
       List<Sentence> headers = new ArrayList<Sentence>();
       headers.add(new Sentence("", 0));
-      Section currentSection = new Section(0, headers);
-      document.appendSection(currentSection);
+      builder.addSection(0, headers);
 
       // TODO create document after parsing... overhead...
       RootNode rootNode =
           pegDownProcessor.parseMarkdown(sb.toString().toCharArray());
       ToFileContentSerializer serializer =
-          new ToFileContentSerializer(document,
+          new ToFileContentSerializer(builder.getLastDocument(),
               lineList, this.getSentenceExtractor());
-      document = serializer.toFileContent(rootNode);
+      serializer.toFileContent(rootNode);
     } catch (ParsingTimeoutException e) {
       throw new DocumentValidatorException("Failed to parse timeout");
     } catch (IOException e) {
@@ -105,7 +102,7 @@ public class MarkdownParser extends BasicDocumentParser {
     } finally {
       IOUtils.closeQuietly(br);
     }
-    return document;
+    return builder.getLastDocument();
   }
 
 
