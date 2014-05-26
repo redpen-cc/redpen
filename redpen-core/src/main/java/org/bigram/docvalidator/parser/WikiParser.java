@@ -50,15 +50,20 @@ public final class WikiParser extends BasicDocumentParser {
 
   public Document generateDocument(String fileName)
       throws DocumentValidatorException {
+    builder.addDocument(fileName);
     InputStream inputStream = this.loadStream(fileName);
-    return this.generateDocument(inputStream);
+    Document document = this.generateDocument(inputStream);
+    if (document != null) {
+      document.setFileName(fileName);
+    }
+    return document;
   }
 
   public Document generateDocument(InputStream is)
       throws DocumentValidatorException {
+    builder.addDocument("");
     BufferedReader br = null;
-
-    Document document = new Document();
+    Document document = builder.getLastDocument();
     // for sentences right below the beginning of document
     List<Sentence> headers = new ArrayList<Sentence>();
     headers.add(new Sentence("", 0));

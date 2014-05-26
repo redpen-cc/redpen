@@ -22,6 +22,7 @@ import java.io.InputStream;
 import org.bigram.docvalidator.DocumentValidatorException;
 import org.bigram.docvalidator.model.Document;
 import org.bigram.docvalidator.config.Configuration;
+import org.bigram.docvalidator.model.DocumentCollection;
 
 /**
  * Parser generates Document from input.
@@ -50,10 +51,12 @@ public interface Parser {
   /**
    * Initialize parser.
    *
+   *
    * @param configuration configuration
+   * @param documentBuilder
    * @throws DocumentValidatorException if the configurations loading failed
    */
-  void initialize(Configuration configuration) throws DocumentValidatorException;
+  void initialize(Configuration configuration, DocumentCollection.Builder documentBuilder) throws DocumentValidatorException;
 
   /**
    * the type of parser using DocumentParserFactory.

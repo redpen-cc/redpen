@@ -77,7 +77,7 @@ public final class DocumentCollection implements Iterable<Document> {
   }
 
   /**
-   * Builder for DocumentCollection.
+   * Builder for DocumentCollection. This class is used mainly in the testing purpose.
    */
   public static class Builder {
     public Builder() {
@@ -86,6 +86,19 @@ public final class DocumentCollection implements Iterable<Document> {
 
     public DocumentCollection build() {
       return collection;
+    }
+
+    /**
+     * Return last Document object.
+     * NOTE: This method is created to follow the Parser class api.
+     * Maybe this should be removed...
+     * @return Last Document object in the document collection.
+     */
+    public Document getLastDocument() {
+      if (collection.size() == 0) {
+        return null;
+      }
+     return collection.getFile(collection.size()-1);
     }
 
     public Builder addDocument(String fileName) {
@@ -156,7 +169,6 @@ public final class DocumentCollection implements Iterable<Document> {
     }
 
     private DocumentCollection collection;
-
 
   }
 }

@@ -27,8 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bigram.docvalidator.DocumentValidatorException;
-import org.bigram.docvalidator.config.Character;
 import org.bigram.docvalidator.config.CharacterTable;
+import org.bigram.docvalidator.model.DocumentCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.bigram.docvalidator.config.Configuration;
@@ -43,8 +43,10 @@ public abstract class BasicDocumentParser implements Parser {
    * Given configuration , return basic configuration settings.
    *
    * @param configuration object containing configuration settings
+   * @param documentBuilder Builder object of DocumentCollection
    */
-  public final void initialize(Configuration configuration) throws
+  public final void initialize(Configuration configuration,
+      DocumentCollection.Builder documentBuilder) throws
       DocumentValidatorException {
     if (configuration == null) {
       throw new DocumentValidatorException("Given configuration is null");
@@ -86,6 +88,7 @@ public abstract class BasicDocumentParser implements Parser {
     }
 
     this.sentenceExtractor = new SentenceExtractor(this.periods);
+    this.builder = documentBuilder;
   }
 
   /**
@@ -134,11 +137,14 @@ public abstract class BasicDocumentParser implements Parser {
     return sentenceExtractor;
   }
 
+  protected DocumentCollection.Builder builder;
+
   private SentenceExtractor sentenceExtractor;
 
   private List<String> periods = new ArrayList<String>();
 
   private static final Logger LOG = LoggerFactory.getLogger(
       BasicDocumentParser.class);
+
 
 }

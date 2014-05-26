@@ -19,6 +19,7 @@ package org.bigram.docvalidator.parser;
 
 import org.bigram.docvalidator.DocumentValidatorException;
 import org.bigram.docvalidator.config.Configuration;
+import org.bigram.docvalidator.model.DocumentCollection;
 
 /**
  * Factory class of DocumentParser.
@@ -28,13 +29,17 @@ public final class DocumentParserFactory {
    * Create DocumentParser object following specified input file type.
    *
    *
+   *
    * @param parserType type of parser (plain or wiki etc.)
    * @param configuration   configuration settings
+   * @param documentBuilder Builder object of DocumentCollection
    * @return Parser implementation object
    * @throws org.bigram.docvalidator.DocumentValidatorException when failed to generate Parser instance
    *                                    or no specified parser implementation.
    */
-  public static Parser generate(Parser.Type parserType, Configuration configuration)
+  public static Parser generate(Parser.Type parserType,
+      Configuration configuration,
+      DocumentCollection.Builder documentBuilder)
       throws DocumentValidatorException {
     Parser docparser;
     switch (parserType) {
@@ -51,7 +56,7 @@ public final class DocumentParserFactory {
         throw new DocumentValidatorException("Specified parser type not exist: "
             + parserType);
     }
-    docparser.initialize(configuration);
+    docparser.initialize(configuration, documentBuilder);
     return docparser;
   }
 

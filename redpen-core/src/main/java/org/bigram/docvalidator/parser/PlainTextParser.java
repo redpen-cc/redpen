@@ -27,11 +27,9 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.bigram.docvalidator.DocumentValidatorException;
 import org.bigram.docvalidator.model.Document;
-import org.bigram.docvalidator.model.Section;
 import org.bigram.docvalidator.model.Sentence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.bigram.docvalidator.model.Paragraph;
 
 /**
  * Parser for plain text file.
@@ -47,21 +45,21 @@ public final class PlainTextParser extends BasicDocumentParser {
   public Document generateDocument(String fileName)
       throws DocumentValidatorException {
     InputStream iStream = this.loadStream(fileName);
-    Document content = this.generateDocument(iStream);
-    content.setFileName(fileName);
-    return content;
+    Document document = this.generateDocument(iStream);
+    if (document != null) {
+      document.setFileName(fileName);
+    }
+    return document;
   }
 
   public Document generateDocument(InputStream is)
       throws DocumentValidatorException {
+    builder.addDocument("");
     BufferedReader br = null;
-    Document document = new Document();
     List<Sentence> headers = new ArrayList<Sentence>();
     headers.add(new Sentence("", 0));
-
-    document.appendSection(new Section(0, headers));
-    Section currentSection = document.getLastSection();
-    currentSection.appendParagraph(new Paragraph());
+    builder.addSection(0, headers);
+    builder.addParagraph();
     try {
       br = createReader(is);
       String remain = "";
@@ -71,36 +69,34 @@ public final class PlainTextParser extends BasicDocumentParser {
         int periodPosition =
             this.getSentenceExtractor().getSentenceEndPosition(line);
         if (line.equals("")) {
-          currentSection.appendParagraph(new Paragraph());
+          builder.addParagraph();
         } else if (periodPosition == -1) {
           remain = remain + line;
         } else {
           remain =
-              this.extractSentences(lineNum, remain + line, currentSection);
+              this.extractSentences(lineNum, remain + line);
         }
         lineNum++;
       }
       if (remain.length() > 0) {
-        currentSection.appendSentence(remain, lineNum);
+        builder.addSentence(remain, lineNum);
       }
     } catch (IOException e) {
-      LOG.error("Failed to parse: " + e.getMessage());
-      return null;
+      throw new DocumentValidatorException( "Failed to parse", e);
     } finally {
       IOUtils.closeQuietly(br);
     }
 
-    return document;
+    return builder.getLastDocument();
   }
 
-  private String extractSentences(int lineNum, String line,
-      Section currentSection) {
+  private String extractSentences(int lineNum, String line) {
     int periodPosition = getSentenceExtractor().getSentenceEndPosition(line);
     if (periodPosition == -1) {
       return line;
     } else {
       while (true) {
-        currentSection.appendSentence(
+        builder.addSentence(
             line.substring(0, periodPosition + 1), lineNum);
         line = line.substring(periodPosition + 1, line.length());
         periodPosition = getSentenceExtractor().getSentenceEndPosition(line);

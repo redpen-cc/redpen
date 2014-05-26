@@ -66,6 +66,7 @@ public class MarkdownParser extends BasicDocumentParser {
   @Override
   public Document generateDocument(InputStream inputStream)
       throws DocumentValidatorException {
+    builder.addDocument("");
     Document document = null;
 
     StringBuilder sb = new StringBuilder();
@@ -84,7 +85,7 @@ public class MarkdownParser extends BasicDocumentParser {
         lineList.add(charCount);
       }
 
-      document = new Document();
+      document = builder.getLastDocument();
       List<Sentence> headers = new ArrayList<Sentence>();
       headers.add(new Sentence("", 0));
       Section currentSection = new Section(0, headers);
