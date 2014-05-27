@@ -92,8 +92,6 @@ public class ToFileContentSerializer implements Visitor {
 
   private int itemDepth = 0;
 
-  private Section currentSection = null;
-
   protected void visitChildren(SuperNode node) {
     for (Node child : node.getChildren()) {
       child.accept(this);
@@ -121,7 +119,6 @@ public class ToFileContentSerializer implements Visitor {
     this.builder = docBuilder;
     this.lineList = listOfLineNumber;
     this.sentenceExtractor = extractor;
-    currentSection = builder.getLastSection();
   }
 
   /**
@@ -150,7 +147,7 @@ public class ToFileContentSerializer implements Visitor {
     //TODO need line number
     List<Sentence> sentences = createSentenceList();
     for (Sentence sentence : sentences) {
-      currentSection.appendSentence(sentence);
+      builder.addSentence(sentence);
     }
   }
 
@@ -259,13 +256,13 @@ public class ToFileContentSerializer implements Visitor {
     }
 
     // 3. create new Section
+    Section currentSection = builder.getLastSection();
     builder.addSection(headerNode.getLevel(), headerContents);
     //FIXME move this validate process to addChild
     if (!addChild(currentSection, builder.getLastSection())) {
       LOG.warn("Failed to add parent for a Section: "
           + builder.getLastSection().getHeaderContents().get(0));
     }
-    currentSection = builder.getLastSection();
   }
 
   @Override
@@ -321,10 +318,10 @@ public class ToFileContentSerializer implements Visitor {
     // TODO handle bulletListNode and orderdListNode
     if (itemDepth == 0) {
       fixSentence();
-      currentSection.appendListBlock();
+      builder.addListBlock();
     } else {
       List<Sentence> sentences = createSentenceList();
-      currentSection.appendListElement(itemDepth, sentences);
+      builder.addListElement(itemDepth, sentences);
     }
     itemDepth++;
     visitChildren(bulletListNode);
@@ -336,10 +333,10 @@ public class ToFileContentSerializer implements Visitor {
     // TODO handle bulletListNode and orderdListNode
     if (itemDepth == 0) {
       fixSentence();
-      currentSection.appendListBlock();
+      builder.addListBlock();
     } else {
       List<Sentence> sentences = createSentenceList();
-      currentSection.appendListElement(itemDepth, sentences);
+      builder.addListElement(itemDepth, sentences);
     }
     itemDepth++;
     visitChildren(orderedListNode);
@@ -353,14 +350,14 @@ public class ToFileContentSerializer implements Visitor {
     List<Sentence> sentences = createSentenceList();
     // TODO for nested ListNode process
     if (sentences != null && sentences.size() > 0) {
-      currentSection.appendListElement(itemDepth, sentences);
+      builder.addListElement(itemDepth, sentences);
     }
   }
 
 
   @Override
   public void visit(ParaNode paraNode) {
-    currentSection.appendParagraph(new Paragraph());
+    builder.addParagraph();
     visitChildren(paraNode);
     fixSentence();
   }
