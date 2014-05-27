@@ -46,16 +46,6 @@ public final class WikiParser extends BasicDocumentParser {
     super();
   }
 
-  public Document generateDocument(String fileName)
-      throws DocumentValidatorException {
-    InputStream inputStream = this.loadStream(fileName);
-    Document document = this.generateDocument(inputStream);
-    if (document != null) {
-      document.setFileName(fileName);
-    }
-    return document;
-  }
-
   public Document generateDocument(InputStream is)
       throws DocumentValidatorException {
     builder.addDocument("");

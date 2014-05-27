@@ -56,7 +56,8 @@ public interface Parser {
    * @param documentBuilder
    * @throws DocumentValidatorException if the configurations loading failed
    */
-  void initialize(Configuration configuration, DocumentCollection.Builder documentBuilder) throws DocumentValidatorException;
+  void initialize(Configuration configuration,
+      DocumentCollection.Builder documentBuilder) throws DocumentValidatorException;
 
   /**
    * the type of parser using DocumentParserFactory.

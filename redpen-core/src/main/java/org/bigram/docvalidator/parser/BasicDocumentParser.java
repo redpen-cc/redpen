@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.bigram.docvalidator.DocumentValidatorException;
 import org.bigram.docvalidator.config.CharacterTable;
+import org.bigram.docvalidator.model.Document;
 import org.bigram.docvalidator.model.DocumentCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +40,17 @@ import org.bigram.docvalidator.symbol.DefaultSymbols;
  * implements the concrete Parser classes.
  */
 public abstract class BasicDocumentParser implements Parser {
+  @Override
+  public Document generateDocument(String fileName)
+      throws DocumentValidatorException {
+    InputStream inputStream = this.loadStream(fileName);
+    Document document = this.generateDocument(inputStream);
+    if (document != null) {
+      document.setFileName(fileName);
+    }
+    return document;
+  }
+
   /**
    * Given configuration , return basic configuration settings.
    *

@@ -98,12 +98,12 @@ public final class DocumentCollection implements Iterable<Document> {
       if (collection.size() == 0) {
         return null;
       }
-     return collection.getFile(collection.size()-1);
+     return collection.getFile(collection.size() - 1);
     }
 
     public Section getLastSection() {
-      Document lastDocument = collection.getFile(collection.size()-1);
-      return lastDocument.getSection(lastDocument.getNumberOfSections()-1);
+      Document lastDocument = collection.getFile(collection.size() - 1);
+      return lastDocument.getSection(lastDocument.getNumberOfSections() - 1);
     }
 
     public Builder addDocument(String fileName) {
@@ -114,28 +114,28 @@ public final class DocumentCollection implements Iterable<Document> {
     }
 
     public Builder addSection(int level, List<Sentence> header) {
-      Document lastDocument = collection.getFile(collection.size()-1);
+      Document lastDocument = collection.getFile(collection.size() - 1);
       lastDocument.appendSection(new Section(level, header));
       return this;
     }
 
     public Builder addSection(int level) {
-      Document lastDocument = collection.getFile(collection.size()-1);
+      Document lastDocument = collection.getFile(collection.size() - 1);
       lastDocument.appendSection(new Section(level, new ArrayList<Sentence>()));
       return this;
     }
 
     public Builder addSectionHeader(String header) {
-      Document lastDocument = collection.getFile(collection.size()-1);
+      Document lastDocument = collection.getFile(collection.size() - 1);
       List<Sentence> headers = lastDocument.getLastSection().getHeaderContents();
       headers.add(new Sentence(header, headers.size()));
       return this;
     }
 
     public Builder addParagraph() {
-      Document lastDocument = collection.getFile(collection.size()-1);
+      Document lastDocument = collection.getFile(collection.size() - 1);
       Section lastSection = lastDocument.getSection(
-          lastDocument.getNumberOfSections()-1);
+          lastDocument.getNumberOfSections() - 1);
       lastSection.appendParagraph(new Paragraph());
       return this;
     }
@@ -147,18 +147,18 @@ public final class DocumentCollection implements Iterable<Document> {
 
     public Builder addSentence(Sentence sentence) {
       Document lastDocument = collection.getFile(
-          collection.size()-1);
+          collection.size() - 1);
       if (lastDocument.getNumberOfSections() == 0) {
         throw new IllegalStateException("There is no section to add a sentence");
       }
       Section lastSection = lastDocument.getSection(
-          lastDocument.getNumberOfSections()-1);
+          lastDocument.getNumberOfSections() - 1);
 
       if (lastSection.getNumberOfParagraphs() == 0) {
         addParagraph();
       }
       Paragraph lastParagraph = lastSection.getParagraph(
-          lastSection.getNumberOfParagraphs()-1);
+          lastSection.getNumberOfParagraphs() - 1);
       lastParagraph.appendSentence(sentence);
       if (lastParagraph.getNumberOfSentences() == 1) {
         sentence.isFirstSentence = true;
@@ -167,17 +167,17 @@ public final class DocumentCollection implements Iterable<Document> {
     }
 
     public Builder addListBlock() {
-      Document lastDocument = collection.getFile(collection.size()-1);
+      Document lastDocument = collection.getFile(collection.size() - 1);
       Section lastSection = lastDocument.getSection(
-          lastDocument.getNumberOfSections()-1);
+          lastDocument.getNumberOfSections() - 1);
       lastSection.appendListBlock();
       return this;
     }
 
     public Builder addListElement(int level, List<Sentence> contents) {
-      Document lastDocument = collection.getFile(collection.size()-1);
+      Document lastDocument = collection.getFile(collection.size() - 1);
       Section lastSection = lastDocument.getSection(
-          lastDocument.getNumberOfSections()-1);
+          lastDocument.getNumberOfSections() - 1);
       lastSection.appendListElement(level, contents);
       return this;
     }

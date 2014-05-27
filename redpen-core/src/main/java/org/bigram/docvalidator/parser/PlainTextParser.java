@@ -42,16 +42,6 @@ public final class PlainTextParser extends BasicDocumentParser {
     super();
   }
 
-  public Document generateDocument(String fileName)
-      throws DocumentValidatorException {
-    InputStream iStream = this.loadStream(fileName);
-    Document document = this.generateDocument(iStream);
-    if (document != null) {
-      document.setFileName(fileName);
-    }
-    return document;
-  }
-
   public Document generateDocument(InputStream is)
       throws DocumentValidatorException {
     builder.addDocument("");
@@ -82,7 +72,7 @@ public final class PlainTextParser extends BasicDocumentParser {
         builder.addSentence(remain, lineNum);
       }
     } catch (IOException e) {
-      throw new DocumentValidatorException( "Failed to parse", e);
+      throw new DocumentValidatorException("Failed to parse", e);
     } finally {
       IOUtils.closeQuietly(br);
     }

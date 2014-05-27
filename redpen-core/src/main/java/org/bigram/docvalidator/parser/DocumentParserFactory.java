@@ -34,8 +34,8 @@ public final class DocumentParserFactory {
    * @param configuration   configuration settings
    * @param documentBuilder Builder object of DocumentCollection
    * @return Parser implementation object
-   * @throws org.bigram.docvalidator.DocumentValidatorException when failed to generate Parser instance
-   *                                    or no specified parser implementation.
+   * @throws org.bigram.docvalidator.DocumentValidatorException
+   * when failed to generate Parser instance or no specified parser implementation.
    */
   public static Parser generate(Parser.Type parserType,
       Configuration configuration,

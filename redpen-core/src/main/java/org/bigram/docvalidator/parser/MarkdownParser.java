@@ -20,7 +20,6 @@ package org.bigram.docvalidator.parser;
 import org.apache.commons.io.IOUtils;
 import org.bigram.docvalidator.DocumentValidatorException;
 import org.bigram.docvalidator.model.Document;
-import org.bigram.docvalidator.model.Section;
 import org.bigram.docvalidator.model.Sentence;
 import org.pegdown.Extensions;
 import org.pegdown.ParsingTimeoutException;
@@ -50,17 +49,6 @@ public class MarkdownParser extends BasicDocumentParser {
 
   MarkdownParser() {
     super();
-  }
-
-  @Override
-  public Document generateDocument(String fileName)
-      throws DocumentValidatorException {
-    InputStream inputStream = this.loadStream(fileName);
-    Document document = this.generateDocument(inputStream);
-    if (document != null) {
-      document.setFileName(fileName);
-    }
-    return document;
   }
 
   @Override
