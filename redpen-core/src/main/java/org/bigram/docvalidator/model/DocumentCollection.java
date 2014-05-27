@@ -76,6 +76,10 @@ public final class DocumentCollection implements Iterable<Document> {
     return documents.iterator();
   }
 
+  public int getNumberOfDocuments() {
+    return documents.size();
+  }
+
   /**
    * Builder for DocumentCollection. This class is used to create a document in
    * not only testing but also implementing parsers.
@@ -111,7 +115,14 @@ public final class DocumentCollection implements Iterable<Document> {
      * @return last section
      */
     public Section getLastSection() {
+      if (collection.size() == 0)  {
+        return null;
+      }
       Document lastDocument = collection.getFile(collection.size() - 1);
+
+      if (lastDocument.getNumberOfSections() == 0) {
+        return null;
+      }
       return lastDocument.getSection(lastDocument.getNumberOfSections() - 1);
     }
 
@@ -134,6 +145,9 @@ public final class DocumentCollection implements Iterable<Document> {
      * @return builder
      */
     public Builder addSection(int level, List<Sentence> header) {
+      if (collection.size() == 0) {
+        throw new IllegalStateException("DocumentCollection does no have any document");
+      }
       Document lastDocument = collection.getFile(collection.size() - 1);
       lastDocument.appendSection(new Section(level, header));
       return this;
@@ -145,8 +159,7 @@ public final class DocumentCollection implements Iterable<Document> {
      * @return builder
      */
     public Builder addSection(int level) {
-      Document lastDocument = collection.getFile(collection.size() - 1);
-      lastDocument.appendSection(new Section(level, new ArrayList<Sentence>()));
+      addSection(level, new ArrayList<Sentence>());
       return this;
     }
 
@@ -157,8 +170,15 @@ public final class DocumentCollection implements Iterable<Document> {
      * NOTE: parameter header is not split into more than one Sentence object.
      */
     public Builder addSectionHeader(String header) {
+      if (collection.size() == 0) {
+        throw new IllegalStateException("DocumentCollection does no have any document");
+      }
       Document lastDocument = collection.getFile(collection.size() - 1);
-      List<Sentence> headers = lastDocument.getLastSection().getHeaderContents();
+      Section lastSection = lastDocument.getLastSection();
+      if (null == lastSection) {
+        throw new IllegalStateException("Document does not have any section");
+      }
+      List<Sentence> headers = lastSection.getHeaderContents();
       headers.add(new Sentence(header, headers.size()));
       return this;
     }
@@ -168,7 +188,13 @@ public final class DocumentCollection implements Iterable<Document> {
      * @return builder
      */
     public Builder addParagraph() {
+      if (collection.size() == 0) {
+        throw new IllegalStateException("DocumentCollection does no have any document");
+      }
       Document lastDocument = collection.getFile(collection.size() - 1);
+      if (lastDocument.getNumberOfSections() == 0) {
+        throw new IllegalStateException("No section to add paragraph");
+      }
       Section lastSection = lastDocument.getSection(
           lastDocument.getNumberOfSections() - 1);
       lastSection.appendParagraph(new Paragraph());
@@ -190,18 +216,22 @@ public final class DocumentCollection implements Iterable<Document> {
      * Add sentence to document.
      * @param sentence sentence
      * @return builder
+     * NOTE: this method assign isFirstSentence to true when the sentence
+     * is the first sentence of a paragraph.
      */
     public Builder addSentence(Sentence sentence) {
-      Document lastDocument = collection.getFile(
-          collection.size() - 1);
+      if (collection.size() == 0) {
+        throw new IllegalStateException("DocumentCollection does no have any document");
+      }
+      Document lastDocument = collection.getFile(collection.size() - 1);
       if (lastDocument.getNumberOfSections() == 0) {
-        throw new IllegalStateException("There is no section to add a sentence");
+        throw new IllegalStateException("No section to add a sentence");
       }
       Section lastSection = lastDocument.getSection(
           lastDocument.getNumberOfSections() - 1);
 
       if (lastSection.getNumberOfParagraphs() == 0) {
-        addParagraph();
+        addParagraph(); // Note: add paragraph automatically
       }
       Paragraph lastParagraph = lastSection.getParagraph(
           lastSection.getNumberOfParagraphs() - 1);
@@ -217,7 +247,14 @@ public final class DocumentCollection implements Iterable<Document> {
      * @return builder
      */
     public Builder addListBlock() {
+      if (collection.size() == 0) {
+        throw new IllegalStateException("DocumentCollection does no have any document");
+      }
       Document lastDocument = collection.getFile(collection.size() - 1);
+
+      if (lastDocument.getNumberOfSections() == 0) {
+        throw new IllegalStateException("No section to add a sentence");
+      }
       Section lastSection = lastDocument.getSection(
           lastDocument.getNumberOfSections() - 1);
       lastSection.appendListBlock();
@@ -231,7 +268,14 @@ public final class DocumentCollection implements Iterable<Document> {
      * @return builder
      */
     public Builder addListElement(int level, List<Sentence> contents) {
+      if (collection.size() == 0) {
+        throw new IllegalStateException("DocumentCollection does no have any document");
+      }
       Document lastDocument = collection.getFile(collection.size() - 1);
+
+      if (lastDocument.getNumberOfSections() == 0) {
+        throw new IllegalStateException("No section to add a sentence");
+      }
       Section lastSection = lastDocument.getSection(
           lastDocument.getNumberOfSections() - 1);
       lastSection.appendListElement(level, contents);
