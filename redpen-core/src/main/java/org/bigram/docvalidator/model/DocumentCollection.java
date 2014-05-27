@@ -77,13 +77,18 @@ public final class DocumentCollection implements Iterable<Document> {
   }
 
   /**
-   * Builder for DocumentCollection. This class is used mainly in the testing purpose.
+   * Builder for DocumentCollection. This class is used to create a document in
+   * not only testing but also implementing parsers.
    */
   public static class Builder {
     public Builder() {
       this.collection = new DocumentCollection();
     }
 
+    /**
+     * Return the built DocumentCollection object.
+     * @return built document
+     */
     public DocumentCollection build() {
       return collection;
     }
@@ -101,11 +106,20 @@ public final class DocumentCollection implements Iterable<Document> {
      return collection.getFile(collection.size() - 1);
     }
 
+    /**
+     * Return the last section in the document under construction.
+     * @return last section
+     */
     public Section getLastSection() {
       Document lastDocument = collection.getFile(collection.size() - 1);
       return lastDocument.getSection(lastDocument.getNumberOfSections() - 1);
     }
 
+    /**
+     * Add a document in document collection.
+     * @param fileName input file name
+     * @return builder
+     */
     public Builder addDocument(String fileName) {
       Document document = new Document();
       document.setFileName(fileName);
@@ -113,18 +127,35 @@ public final class DocumentCollection implements Iterable<Document> {
       return this;
     }
 
+    /**
+     * Add a section to the document.
+     * @param level section level
+     * @param header header contents
+     * @return builder
+     */
     public Builder addSection(int level, List<Sentence> header) {
       Document lastDocument = collection.getFile(collection.size() - 1);
       lastDocument.appendSection(new Section(level, header));
       return this;
     }
 
+    /**
+     * Add a section without header content.
+     * @param level section level
+     * @return builder
+     */
     public Builder addSection(int level) {
       Document lastDocument = collection.getFile(collection.size() - 1);
       lastDocument.appendSection(new Section(level, new ArrayList<Sentence>()));
       return this;
     }
 
+    /**
+     * Add section header content to the last section.
+     * @param header header content
+     * @return builder
+     * NOTE: parameter header is not split into more than one Sentence object.
+     */
     public Builder addSectionHeader(String header) {
       Document lastDocument = collection.getFile(collection.size() - 1);
       List<Sentence> headers = lastDocument.getLastSection().getHeaderContents();
@@ -132,6 +163,10 @@ public final class DocumentCollection implements Iterable<Document> {
       return this;
     }
 
+    /**
+     * Add paragraph to document.
+     * @return builder
+     */
     public Builder addParagraph() {
       Document lastDocument = collection.getFile(collection.size() - 1);
       Section lastSection = lastDocument.getSection(
@@ -140,11 +175,22 @@ public final class DocumentCollection implements Iterable<Document> {
       return this;
     }
 
+    /**
+     * Add sentence to document.
+     * @param content sentence content
+     * @param lineNumber line number
+     * @return builder
+     */
     public Builder addSentence(String content, int lineNumber) {
       addSentence(new Sentence(content, lineNumber));
       return this;
     }
 
+    /**
+     * Add sentence to document.
+     * @param sentence sentence
+     * @return builder
+     */
     public Builder addSentence(Sentence sentence) {
       Document lastDocument = collection.getFile(
           collection.size() - 1);
@@ -166,6 +212,10 @@ public final class DocumentCollection implements Iterable<Document> {
       return this;
     }
 
+    /**
+     * Add a new list block.
+     * @return builder
+     */
     public Builder addListBlock() {
       Document lastDocument = collection.getFile(collection.size() - 1);
       Section lastSection = lastDocument.getSection(
@@ -174,6 +224,12 @@ public final class DocumentCollection implements Iterable<Document> {
       return this;
     }
 
+    /**
+     * Add list element to the last list block.
+     * @param level indentation level
+     * @param contents content of list element
+     * @return builder
+     */
     public Builder addListElement(int level, List<Sentence> contents) {
       Document lastDocument = collection.getFile(collection.size() - 1);
       Section lastSection = lastDocument.getSection(
@@ -182,6 +238,13 @@ public final class DocumentCollection implements Iterable<Document> {
       return this;
     }
 
+    /**
+     * Add list element to the last list block.
+     * @param level indentation level
+     * @param str content of list element
+     * @return builder
+     * NOTE: parameter str is not split into more than one Sentence object.
+     */
     public Builder addListElement(int level, String str) {
       List<Sentence> elementSentence = new ArrayList<Sentence>();
       elementSentence.add(new Sentence(str, 0));
@@ -190,6 +253,5 @@ public final class DocumentCollection implements Iterable<Document> {
     }
 
     private DocumentCollection collection;
-
   }
 }
