@@ -80,7 +80,7 @@ public class ToFileContentSerializer implements Visitor {
   private static final Logger LOG =
       LoggerFactory.getLogger(ToFileContentSerializer.class);
 
-  private Document document = null;
+  private DocumentCollection.Builder builder = null;
 
   private SentenceExtractor sentenceExtractor;
 
@@ -111,17 +111,17 @@ public class ToFileContentSerializer implements Visitor {
   /**
    * Constructor.
    *
-   * @param builder          DocumentBuilder
+   * @param docBuilder       DocumentBuilder
    * @param listOfLineNumber the list of line number
    * @param extractor        utility object to extract a sentence list
    */
-  public ToFileContentSerializer(DocumentCollection.Builder builder,
+  public ToFileContentSerializer(DocumentCollection.Builder docBuilder,
                                  List<Integer> listOfLineNumber,
                                  SentenceExtractor extractor) {
-    this.document = builder.getLastDocument();
+    this.builder = docBuilder;
     this.lineList = listOfLineNumber;
     this.sentenceExtractor = extractor;
-    currentSection = document.getLastSection();
+    currentSection = builder.getLastSection();
   }
 
   /**
@@ -142,7 +142,7 @@ public class ToFileContentSerializer implements Visitor {
       LOG.error("Fail to traverse RootNode.");
       throw new DocumentValidatorException("Fail to traverse RootNode.", e);
     }
-    return document;
+    return builder.getLastDocument();
   }
 
   private void fixSentence() {
@@ -259,14 +259,13 @@ public class ToFileContentSerializer implements Visitor {
     }
 
     // 3. create new Section
-    Section newSection = new Section(headerNode.getLevel(), headerContents);
-    document.appendSection(newSection);
+    builder.addSection(headerNode.getLevel(), headerContents);
     //FIXME move this validate process to addChild
-    if (!addChild(currentSection, newSection)) {
+    if (!addChild(currentSection, builder.getLastSection())) {
       LOG.warn("Failed to add parent for a Section: "
-          + newSection.getHeaderContents().get(0));
+          + builder.getLastSection().getHeaderContents().get(0));
     }
-    currentSection = newSection;
+    currentSection = builder.getLastSection();
   }
 
   @Override
