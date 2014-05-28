@@ -78,10 +78,8 @@ public class PlainTextParserTest {
   private String sampleConfiguraitonStr = "" +
     "<?xml version=\"1.0\"?>" +
     "<component name=\"Validator\">" +
-    "  <component name=\"SentenceIterator\">" +
-    "    <component name=\"LineLength\">" +
-    "      <property name=\"max_length\" value=\"10\"/>" +
-    "    </component>" +
+    "  <component name=\"SentenceLength\">" +
+    "    <property name=\"max_length\" value=\"10\"/>" +
     "  </component>" +
     "</component>";
 

@@ -143,10 +143,8 @@ public class DocumentValidatorTest {
         ValidationConfigurationLoader.loadConfiguration(
             new ReaderInputStream(new StringReader("<?xml version=\"1.0\"?>\n" +
                 "<component name=\"Validator\">" +
-                "  <component name=\"SentenceIterator\">" +
-                "    <component name=\"SentenceLength\">\n" +
-                "      <property name=\"max_length\" value=\"5\"/>\n" +
-                "    </component>" +
+                "  <component name=\"SentenceLength\">\n" +
+                "    <property name=\"max_length\" value=\"5\"/>\n" +
                 "  </component>" +
                 "</component>"
             ))

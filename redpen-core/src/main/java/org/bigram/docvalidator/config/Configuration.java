@@ -40,14 +40,33 @@ public final class Configuration {
    * @param validatorConfig settings of validators
    * @param characterConf settings of characters and symbols
    */
-  public Configuration(ValidatorConfiguration validatorConfig, CharacterTable characterConf) {
+  public Configuration(ValidatorConfiguration validatorConfig,
+      CharacterTable characterConf) {
     super();
     this.characterTable = characterConf;
 
     // TODO tricky implementation. this code is need to refactor with ConfigurationLoader.
     for (ValidatorConfiguration config : validatorConfig.getChildren()) {
-      if ("SentenceIterator".equals(config.getConfigurationName())) {
-        this.sentenceValidatorConfigs.addAll(config.getChildren());
+      if ("SentenceLength".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("InvalidExpression".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("SpaceAfterPeriod".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("CommaNumber".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("WordNumber".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("SuggestExpression".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("InvalidCharacter".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("SpaceWithSymbol".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("KatakanaEndHyphen".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("KatakanaSpellCheck".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
       } else if ("SectionLength".equals(config.getConfigurationName())) {
         this.sectionValidatorConfigs.add(config);
       } else if ("MaxParagraphNumber".equals(config.getConfigurationName())) {
@@ -55,7 +74,8 @@ public final class Configuration {
       } else if ("ParagraphStartWith".equals(config.getConfigurationName())) {
         this.sectionValidatorConfigs.add(config);
       } else {
-        LOG.warn("No validator such as '" +config.getConfigurationName() + "'");
+        throw new IllegalStateException("No Validator such as '"
+            + config.getConfigurationName() + "'");
       }
     }
   }
