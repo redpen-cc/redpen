@@ -19,6 +19,8 @@ package org.bigram.docvalidator.config;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Contains Settings used throughout DocumentValidator.
@@ -52,9 +54,10 @@ public final class Configuration {
         this.sectionValidatorConfigs.add(config);
       } else if ("ParagraphStartWith".equals(config.getConfigurationName())) {
         this.sectionValidatorConfigs.add(config);
+      } else {
+        LOG.warn("No validator such as '" +config.getConfigurationName() + "'");
       }
     }
-
   }
 
   /**
@@ -107,4 +110,7 @@ public final class Configuration {
       new ArrayList<ValidatorConfiguration>();
   private final List<ValidatorConfiguration> sentenceValidatorConfigs =
       new ArrayList<ValidatorConfiguration>();
+
+  private static final Logger LOG =
+      LoggerFactory.getLogger(Configuration.class);
 }
