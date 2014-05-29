@@ -80,8 +80,6 @@ public class DocumentValidator implements Validator {
 
     //TODO execute document validator
     //TODO execute paragraph validator
-
-
   }
 
   /**
@@ -93,6 +91,16 @@ public class DocumentValidator implements Validator {
   public List<ValidationError> check(DocumentCollection documentCollection) {
     distributor.flushHeader();
     List<ValidationError> errors = new ArrayList<ValidationError>();
+    runDocumentValidators(documentCollection, errors);
+    runSectionValidators(documentCollection, errors);
+    runSentenceValidators(documentCollection, errors);
+    distributor.flushFooter();
+    return errors;
+  }
+
+  private List<ValidationError> runDocumentValidators(
+      DocumentCollection documentCollection,
+      List<ValidationError> errors) {
     for (Document document : documentCollection) {
       errors = validateDocument(document);
       for (ValidationError error : errors) {
@@ -100,19 +108,66 @@ public class DocumentValidator implements Validator {
         distributor.flushResult(error);
       }
     }
-
-    distributor.flushFooter();
     return errors;
+  }
+
+  private List<ValidationError> runSectionValidators(
+      DocumentCollection documentCollection,
+      List<ValidationError> errors) {
+    for (Document document : documentCollection) {
+      for (Section section : document) {
+        List<ValidationError> newErrors = validateSection(section);
+        for (ValidationError error : newErrors) {
+          error.setFileName(document.getFileName());
+          distributor.flushResult(error);
+        }
+        errors.addAll(newErrors);
+      }
+    }
+    return errors;
+  }
+
+  private List<ValidationError> runSentenceValidators(
+      DocumentCollection documentCollection,
+      List<ValidationError> errors) {
+    for (Document document : documentCollection) {
+      for (Section section : document) {
+        List<ValidationError> newErrors =
+            applySentenceValidationsToSection(document, section);
+        errors.addAll(newErrors);
+      }
+    }
+    return errors;
+  }
+
+  private List<ValidationError> applySentenceValidationsToSection(
+      Document document, Section section) {
+    List<ValidationError> newErrors = new ArrayList<ValidationError>();
+    // apply paragraphs
+    for (Paragraph paragraph : section.getParagraphs()) {
+      newErrors.addAll(validateParagraph(paragraph));
+    }
+
+    // apply to section header
+    newErrors.addAll(validateSentences(section.getHeaderContents()));
+
+    // apply to lists
+    for (ListBlock listBlock : section.getListBlocks()) {
+      for (ListElement listElement : listBlock.getListElements()) {
+        newErrors.addAll(validateSentences(listElement.getSentences()));
+      }
+    }
+    for (ValidationError error : newErrors) {
+      error.setFileName(document.getFileName());
+      distributor.flushResult(error);
+    }
+    return newErrors;
   }
 
   private List<ValidationError> validateDocument(Document document) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     for (Validator validator : validators) {
       errors.addAll(validator.validate(document));
-    }
-
-    for (Section section : document) {
-      errors.addAll(validateSection(section));
     }
     return errors;
   }
@@ -121,20 +176,6 @@ public class DocumentValidator implements Validator {
     List<ValidationError> errors = new ArrayList<ValidationError>();
     for (SectionValidator sectionValidator : sectionValidators) {
       errors.addAll(sectionValidator.validate(section));
-    }
-
-    for (Paragraph paragraph : section.getParagraphs()) {
-      errors.addAll(validateParagraph(paragraph));
-    }
-
-
-    errors.addAll(validateSentences(section.getHeaderContents()));
-
-    for (ListBlock listBlock : section.getListBlocks()) {
-      for (ListElement listElement : listBlock.getListElements()) {
-        errors.addAll(validateSentences(listElement.getSentences()));
-      }
-
     }
     return errors;
   }
