@@ -17,8 +17,6 @@
  */
 package org.bigram.docvalidator;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.bigram.docvalidator.config.Configuration;
 import org.bigram.docvalidator.parser.Parser;
 import org.bigram.docvalidator.parser.DocumentParserFactory;
@@ -38,30 +36,18 @@ public final class DocumentGenerator {
    */
   static DocumentCollection generate(String[] inputFileNames,
                            Configuration configuration,
-                           Parser.Type format) {
-    Parser docparser;
-    try {
-      docparser = DocumentParserFactory.generate(format, configuration);
-    } catch (DocumentValidatorException e) {
-      LOG.error("Failed to create documentCollection parser: " + e.getMessage());
-      return null;
-    }
+                           Parser.Type format) throws DocumentValidatorException {
+    DocumentCollection.Builder documentBuilder =
+        new DocumentCollection.Builder();
+    Parser parser = DocumentParserFactory.generate(format,
+          configuration, documentBuilder);
 
-    DocumentCollection documentCollection = new DocumentCollection();
     for (String inputFileName : inputFileNames) {
-      try {
-        documentCollection.addDocument(docparser.generateDocument(inputFileName));
-      } catch (DocumentValidatorException e) {
-        e.printStackTrace();
-        return null;
-      }
+        parser.generateDocument(inputFileName);
     }
     // @TODO extract summary information to validate documentCollection effectively
-    return documentCollection;
+    return documentBuilder.build();
   }
-
-  private static final Logger LOG =
-      LoggerFactory.getLogger(DocumentGenerator.class);
 
   private DocumentGenerator() {
     super();

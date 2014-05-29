@@ -29,7 +29,7 @@ public class SampleDocumentGeneratorTest {
     String sampleText = "";
     sampleText += "Gekioko pun pun maru means very very angry.\n";
     DocumentCollection doc = SampleDocumentGenerator.generateOneFileDocument(sampleText,
-        WIKI);
+        PLAIN);
     assertNotNull(doc);
     assertEquals(1, doc.size());
     assertEquals(1, doc.getFile(0).getNumberOfSections());

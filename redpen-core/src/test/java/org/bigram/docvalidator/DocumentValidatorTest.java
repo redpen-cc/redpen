@@ -43,49 +43,25 @@ public class DocumentValidatorTest {
   @Test
   public void testEmptyValidator() throws DocumentValidatorException {
 
-    DocumentCollection documents = new DocumentCollection();
-
-    Document document = new Document();
-
-    Section section1 = new Section(1);
-
-    Paragraph paragraph1 = new Paragraph();
-    paragraph1.appendSentence(
-        new Sentence(
+    DocumentCollection documents = new DocumentCollection.Builder()
+        .addDocument("")
+        .addSection(1, new ArrayList<Sentence>())
+        .addParagraph()
+        .addSentence(
             "In a land far away, there once was as a hungry programmer.",
-            1
-        )
-    );
-    paragraph1.appendSentence(
-        new Sentence("He was hungry for programming and programmed all day - "
-            + " - in Java, Python, C++, etc.",
-            2
-        )
-    );
+            1)
+        .addSentence(
+            "He was hungry for programming and programmed all day - "
+            + " - in Java, Python, C++, etc.", 2)
+        .addSentence(
+            "Whe he wasn't programming, he was eating noodles.",
+            3)
+        .addParagraph()
+        .addSentence(
+            "One day while programming, he got a new idea.", 4)
+        .build();
 
-    paragraph1.appendSentence(
-        new Sentence("Whe he wasn't programming, he was eating noodles.",
-            3
-        )
-    );
-
-    Paragraph paragraph2 = new Paragraph();
-    paragraph1.appendSentence(
-        new Sentence("One day while programming, he got a new idea.",
-            4
-        )
-    );
-
-    section1.appendParagraph(paragraph1);
-    section1.appendParagraph(paragraph2);
-
-
-    document.appendSection(section1);
-
-    documents.addDocument(document);
-
-
-    ValidatorConfiguration validatorConfig = new ValidatorConfiguration(
+   ValidatorConfiguration validatorConfig = new ValidatorConfiguration(
         "<?xml version=\"1.0\"?>\n" +
             "<character-table></character-table>"
     );
@@ -94,8 +70,6 @@ public class DocumentValidatorTest {
 
     DocumentValidator validator = new DocumentValidator.Builder()
         .setConfiguration(configuration)
-//        .setConfig(...)
-//        .setCharacterTable()
         .setResultDistributor(new FakeResultDistributor())
         .build();
 
@@ -108,21 +82,13 @@ public class DocumentValidatorTest {
   @Test
   public void testSimpleDocument() throws DocumentValidatorException {
 
-    DocumentCollection documents = new DocumentCollection();
-
-    Document document = new Document();
-    document.setFileName("tested file");
-    Section section0 = new Section(0);
-    Paragraph paragraph0 = new Paragraph();
-    paragraph0.appendSentence(
-        new Sentence("it is a piece of a cake.", 0)
-    );
-    paragraph0.appendSentence(
-        new Sentence("that is also a piece of a cake.", 1)
-    );
-    section0.appendParagraph(paragraph0);
-    document.appendSection(section0);
-    documents.addDocument(document);
+    DocumentCollection documents = new DocumentCollection.Builder()
+        .addDocument("tested file")
+        .addSection(0, new ArrayList<Sentence>())
+        .addParagraph()
+        .addSentence("it is a piece of a cake.", 0)
+        .addSentence("that is also a piece of a cake.", 1)
+        .build();
 
     DocumentValidator validator = getDocumentValidator();
 
@@ -162,28 +128,16 @@ public class DocumentValidatorTest {
 
   @Test
   public void testDocumentWithHeader() throws DocumentValidatorException {
-
-    DocumentCollection documents = new DocumentCollection();
-
-    Document document = new Document();
-    document.setFileName("tested file");
-    Section section0 = new Section(0);
-    Paragraph paragraph0 = new Paragraph();
-    paragraph0.appendSentence(
-        new Sentence("it is a piece of a cake.", 0)
-    );
-    paragraph0.appendSentence(
-        new Sentence("that is also a piece of a cake.", 1)
-    );
-    section0.appendParagraph(paragraph0);
-    List<Sentence> headers = new ArrayList<Sentence>(1);
-    headers.add(new Sentence("this is it", 0));
-    section0.appendHeaderContent(headers);
-    document.appendSection(section0);
-    documents.addDocument(document);
+    DocumentCollection documents = new DocumentCollection.Builder()
+        .addDocument("tested file")
+        .addSection(0)
+        .addSectionHeader("this is it.")
+        .addParagraph()
+        .addSentence("it is a piece of a cake.", 0)
+        .addSentence("that is also a piece of a cake.", 1)
+        .build();
 
     DocumentValidator validator = getDocumentValidator();
-
     List<ValidationError> errors = validator.check(documents);
 
     // validate the errors
@@ -197,34 +151,18 @@ public class DocumentValidatorTest {
 
   @Test
   public void testDocumentWithList() throws DocumentValidatorException {
-    DocumentCollection documents = new DocumentCollection();
-
-    Document document = new Document();
-    document.setFileName("tested file");
-    Section section0 = new Section(0);
-    Paragraph paragraph0 = new Paragraph();
-    paragraph0.appendSentence(
-        new Sentence("it is a piece of a cake.", 0)
-    );
-    paragraph0.appendSentence(
-        new Sentence("that is also a piece of a cake.", 1)
-    );
-    section0.appendParagraph(paragraph0);
-
-    List<Sentence> headers = new ArrayList<Sentence>(1);
-    headers.add(new Sentence("this is it", 0));
-    section0.appendHeaderContent(headers);
-
-    List<Sentence> listElements = new ArrayList<Sentence>(1);
-    listElements.add(new Sentence("this is a list.", 0));
-    section0.appendListBlock();
-    section0.appendListElement(0, listElements);
-
-    document.appendSection(section0);
-    documents.addDocument(document);
+    DocumentCollection documents = new DocumentCollection.Builder()
+        .addDocument("tested file")
+        .addSection(0, new ArrayList<Sentence>())
+        .addSectionHeader("this is it")
+        .addParagraph()
+        .addSentence("it is a piece of a cake.", 0)
+        .addSentence("that is also a piece of a cake.", 1)
+        .addListBlock()
+        .addListElement(0, "this is a list.")
+        .build();
 
     DocumentValidator validator = getDocumentValidator();
-
     List<ValidationError> errors = validator.check(documents);
 
     // validate the errors
@@ -238,14 +176,11 @@ public class DocumentValidatorTest {
 
   @Test
   public void testDocumentWithoutContent() throws DocumentValidatorException {
-    DocumentCollection documents = new DocumentCollection();
-
-    Document document = new Document();
-    document.setFileName("tested file");
-    documents.addDocument(document);
+    DocumentCollection documents = new DocumentCollection.Builder()
+        .addDocument("tested file")
+        .build();
 
     DocumentValidator validator = getDocumentValidator();
-
     List<ValidationError> errors = validator.check(documents);
 
     // validate the errors

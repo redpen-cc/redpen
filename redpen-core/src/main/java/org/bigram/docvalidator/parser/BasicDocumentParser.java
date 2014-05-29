@@ -27,8 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bigram.docvalidator.DocumentValidatorException;
-import org.bigram.docvalidator.config.Character;
 import org.bigram.docvalidator.config.CharacterTable;
+import org.bigram.docvalidator.model.Document;
+import org.bigram.docvalidator.model.DocumentCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.bigram.docvalidator.config.Configuration;
@@ -39,12 +40,25 @@ import org.bigram.docvalidator.symbol.DefaultSymbols;
  * implements the concrete Parser classes.
  */
 public abstract class BasicDocumentParser implements Parser {
+  @Override
+  public Document generateDocument(String fileName)
+      throws DocumentValidatorException {
+    InputStream inputStream = this.loadStream(fileName);
+    Document document = this.generateDocument(inputStream);
+    if (document != null) {
+      document.setFileName(fileName);
+    }
+    return document;
+  }
+
   /**
    * Given configuration , return basic configuration settings.
    *
    * @param configuration object containing configuration settings
+   * @param documentBuilder Builder object of DocumentCollection
    */
-  public final void initialize(Configuration configuration) throws
+  public final void initialize(Configuration configuration,
+      DocumentCollection.Builder documentBuilder) throws
       DocumentValidatorException {
     if (configuration == null) {
       throw new DocumentValidatorException("Given configuration is null");
@@ -86,6 +100,7 @@ public abstract class BasicDocumentParser implements Parser {
     }
 
     this.sentenceExtractor = new SentenceExtractor(this.periods);
+    this.builder = documentBuilder;
   }
 
   /**
@@ -134,11 +149,14 @@ public abstract class BasicDocumentParser implements Parser {
     return sentenceExtractor;
   }
 
+  protected DocumentCollection.Builder builder;
+
   private SentenceExtractor sentenceExtractor;
 
   private List<String> periods = new ArrayList<String>();
 
   private static final Logger LOG = LoggerFactory.getLogger(
       BasicDocumentParser.class);
+
 
 }

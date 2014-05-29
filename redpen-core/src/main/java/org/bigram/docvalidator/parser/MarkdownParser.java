@@ -20,7 +20,6 @@ package org.bigram.docvalidator.parser;
 import org.apache.commons.io.IOUtils;
 import org.bigram.docvalidator.DocumentValidatorException;
 import org.bigram.docvalidator.model.Document;
-import org.bigram.docvalidator.model.Section;
 import org.bigram.docvalidator.model.Sentence;
 import org.pegdown.Extensions;
 import org.pegdown.ParsingTimeoutException;
@@ -53,20 +52,9 @@ public class MarkdownParser extends BasicDocumentParser {
   }
 
   @Override
-  public Document generateDocument(String fileName)
-      throws DocumentValidatorException {
-    InputStream inputStream = this.loadStream(fileName);
-    Document document = this.generateDocument(inputStream);
-    if (document != null) {
-      document.setFileName(fileName);
-    }
-    return document;
-  }
-
-  @Override
   public Document generateDocument(InputStream inputStream)
       throws DocumentValidatorException {
-    Document document = null;
+    builder.addDocument("");
 
     StringBuilder sb = new StringBuilder();
     String line;
@@ -84,19 +72,17 @@ public class MarkdownParser extends BasicDocumentParser {
         lineList.add(charCount);
       }
 
-      document = new Document();
       List<Sentence> headers = new ArrayList<Sentence>();
       headers.add(new Sentence("", 0));
-      Section currentSection = new Section(0, headers);
-      document.appendSection(currentSection);
+      builder.addSection(0, headers);
 
       // TODO create document after parsing... overhead...
       RootNode rootNode =
           pegDownProcessor.parseMarkdown(sb.toString().toCharArray());
       ToFileContentSerializer serializer =
-          new ToFileContentSerializer(document,
+          new ToFileContentSerializer(builder,
               lineList, this.getSentenceExtractor());
-      document = serializer.toFileContent(rootNode);
+      serializer.toFileContent(rootNode);
     } catch (ParsingTimeoutException e) {
       throw new DocumentValidatorException("Failed to parse timeout");
     } catch (IOException e) {
@@ -104,7 +90,7 @@ public class MarkdownParser extends BasicDocumentParser {
     } finally {
       IOUtils.closeQuietly(br);
     }
-    return document;
+    return builder.getLastDocument();
   }
 
 

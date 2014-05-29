@@ -17,9 +17,7 @@
 package org.bigram.docvalidator.parser.markdown;
 
 import org.bigram.docvalidator.DocumentValidatorException;
-import org.bigram.docvalidator.model.Document;
-import org.bigram.docvalidator.model.Section;
-import org.bigram.docvalidator.model.Sentence;
+import org.bigram.docvalidator.model.*;
 import org.bigram.docvalidator.parser.SentenceExtractor;
 import org.parboiled.common.StringUtils;
 import org.pegdown.Printer;
@@ -64,7 +62,6 @@ import org.pegdown.ast.Visitor;
 import org.pegdown.ast.WikiLinkNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.bigram.docvalidator.model.Paragraph;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -83,7 +80,7 @@ public class ToFileContentSerializer implements Visitor {
   private static final Logger LOG =
       LoggerFactory.getLogger(ToFileContentSerializer.class);
 
-  private Document document = null;
+  private DocumentCollection.Builder builder = null;
 
   private SentenceExtractor sentenceExtractor;
 
@@ -94,8 +91,6 @@ public class ToFileContentSerializer implements Visitor {
       new HashMap<String, String>();
 
   private int itemDepth = 0;
-
-  private Section currentSection = null;
 
   protected void visitChildren(SuperNode node) {
     for (Node child : node.getChildren()) {
@@ -114,17 +109,16 @@ public class ToFileContentSerializer implements Visitor {
   /**
    * Constructor.
    *
-   * @param content          Document
+   * @param docBuilder       DocumentBuilder
    * @param listOfLineNumber the list of line number
    * @param extractor        utility object to extract a sentence list
    */
-  public ToFileContentSerializer(Document content,
+  public ToFileContentSerializer(DocumentCollection.Builder docBuilder,
                                  List<Integer> listOfLineNumber,
                                  SentenceExtractor extractor) {
-    this.document = content;
+    this.builder = docBuilder;
     this.lineList = listOfLineNumber;
     this.sentenceExtractor = extractor;
-    currentSection = document.getLastSection();
   }
 
   /**
@@ -145,7 +139,7 @@ public class ToFileContentSerializer implements Visitor {
       LOG.error("Fail to traverse RootNode.");
       throw new DocumentValidatorException("Fail to traverse RootNode.", e);
     }
-    return document;
+    return builder.getLastDocument();
   }
 
   private void fixSentence() {
@@ -153,7 +147,7 @@ public class ToFileContentSerializer implements Visitor {
     //TODO need line number
     List<Sentence> sentences = createSentenceList();
     for (Sentence sentence : sentences) {
-      currentSection.appendSentence(sentence);
+      builder.addSentence(sentence);
     }
   }
 
@@ -262,14 +256,13 @@ public class ToFileContentSerializer implements Visitor {
     }
 
     // 3. create new Section
-    Section newSection = new Section(headerNode.getLevel(), headerContents);
-    document.appendSection(newSection);
+    Section currentSection = builder.getLastSection();
+    builder.addSection(headerNode.getLevel(), headerContents);
     //FIXME move this validate process to addChild
-    if (!addChild(currentSection, newSection)) {
+    if (!addChild(currentSection, builder.getLastSection())) {
       LOG.warn("Failed to add parent for a Section: "
-          + newSection.getHeaderContents().get(0));
+          + builder.getLastSection().getHeaderContents().get(0));
     }
-    currentSection = newSection;
   }
 
   @Override
@@ -325,10 +318,10 @@ public class ToFileContentSerializer implements Visitor {
     // TODO handle bulletListNode and orderdListNode
     if (itemDepth == 0) {
       fixSentence();
-      currentSection.appendListBlock();
+      builder.addListBlock();
     } else {
       List<Sentence> sentences = createSentenceList();
-      currentSection.appendListElement(itemDepth, sentences);
+      builder.addListElement(itemDepth, sentences);
     }
     itemDepth++;
     visitChildren(bulletListNode);
@@ -340,10 +333,10 @@ public class ToFileContentSerializer implements Visitor {
     // TODO handle bulletListNode and orderdListNode
     if (itemDepth == 0) {
       fixSentence();
-      currentSection.appendListBlock();
+      builder.addListBlock();
     } else {
       List<Sentence> sentences = createSentenceList();
-      currentSection.appendListElement(itemDepth, sentences);
+      builder.addListElement(itemDepth, sentences);
     }
     itemDepth++;
     visitChildren(orderedListNode);
@@ -357,14 +350,14 @@ public class ToFileContentSerializer implements Visitor {
     List<Sentence> sentences = createSentenceList();
     // TODO for nested ListNode process
     if (sentences != null && sentences.size() > 0) {
-      currentSection.appendListElement(itemDepth, sentences);
+      builder.addListElement(itemDepth, sentences);
     }
   }
 
 
   @Override
   public void visit(ParaNode paraNode) {
-    currentSection.appendParagraph(new Paragraph());
+    builder.addParagraph();
     visitChildren(paraNode);
     fixSentence();
   }

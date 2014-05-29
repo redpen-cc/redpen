@@ -18,7 +18,6 @@
 package org.bigram.docvalidator;
 
 import org.apache.commons.io.IOUtils;
-import org.bigram.docvalidator.DocumentValidatorException;
 import org.bigram.docvalidator.parser.DocumentParserFactory;
 import org.bigram.docvalidator.parser.Parser;
 import org.bigram.docvalidator.model.DocumentCollection;
@@ -47,11 +46,10 @@ public class SampleDocumentGenerator {
       Parser.Type type) throws DocumentValidatorException {
     Configuration configuration = new Configuration(
         new ValidatorConfiguration("dummy"), new CharacterTable());
-    Parser parser = DocumentParserFactory.generate(type, configuration);
-
+    DocumentCollection.Builder builder = new DocumentCollection.Builder();
+    Parser parser = DocumentParserFactory.generate(type, configuration, builder);
     InputStream stream = IOUtils.toInputStream(docString);
-    DocumentCollection documentCollection = new DocumentCollection();
-    documentCollection.addDocument(parser.generateDocument(stream));
-    return documentCollection;
+    parser.generateDocument(stream);
+    return builder.build();
   }
 }

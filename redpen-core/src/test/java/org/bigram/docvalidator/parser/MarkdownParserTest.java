@@ -18,14 +18,9 @@
 package org.bigram.docvalidator.parser;
 
 import org.apache.commons.io.IOUtils;
-import org.bigram.docvalidator.parser.DocumentParserFactory;
-import org.bigram.docvalidator.parser.Parser;
+import org.bigram.docvalidator.model.*;
 import org.junit.Before;
 import org.junit.Test;
-import org.bigram.docvalidator.model.Document;
-import org.bigram.docvalidator.model.ListBlock;
-import org.bigram.docvalidator.model.Paragraph;
-import org.bigram.docvalidator.model.Section;
 import org.bigram.docvalidator.config.CharacterTable;
 import org.bigram.docvalidator.config.CharacterTableLoader;
 import org.bigram.docvalidator.config.Configuration;
@@ -472,7 +467,8 @@ public class MarkdownParserTest {
   private Parser loadParser(Configuration configuration) {
     Parser parser = null;
     try {
-      parser = DocumentParserFactory.generate(MARKDOWN, configuration);
+      parser = DocumentParserFactory.generate(MARKDOWN, configuration,
+          new DocumentCollection.Builder());
     } catch (DocumentValidatorException e1) {
       fail();
       e1.printStackTrace();
