@@ -93,25 +93,8 @@ public class DocumentValidator implements Validator {
   public List<ValidationError> check(DocumentCollection documentCollection) {
     distributor.flushHeader();
     List<ValidationError> errors = new ArrayList<ValidationError>();
-//    for (Validator validator : this.validators) {
-
-
-//      Iterator<Document> fileIterator = documentCollection.getDocuments();
-//      while (fileIterator.hasNext()) {
-//        try {
-//          List<ValidationError> currentErrors =
-//            validator.validate(fileIterator.next());
-//          errors.addAll(currentErrors);
-//        } catch (Throwable e) {
-//          LOG.error("Error occurs in validation: " + e.getMessage());
-//          LOG.error("Validator class: " + validator.getClass());
-//        }
-//      }
-//    }
-
     for (Document document : documentCollection) {
       errors = validateDocument(document);
-
       for (ValidationError error : errors) {
         error.setFileName(document.getFileName());
         distributor.flushResult(error);
