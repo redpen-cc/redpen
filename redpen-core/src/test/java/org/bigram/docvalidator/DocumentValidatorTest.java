@@ -23,10 +23,7 @@ import org.junit.Test;
 import org.bigram.docvalidator.config.Configuration;
 import org.bigram.docvalidator.config.ValidationConfigurationLoader;
 import org.bigram.docvalidator.config.ValidatorConfiguration;
-import org.bigram.docvalidator.model.Document;
 import org.bigram.docvalidator.model.DocumentCollection;
-import org.bigram.docvalidator.model.Paragraph;
-import org.bigram.docvalidator.model.Section;
 import org.bigram.docvalidator.model.Sentence;
 
 import java.io.StringReader;
@@ -80,8 +77,8 @@ public class DocumentValidatorTest {
 
 
   @Test
-  public void testSimpleDocument() throws DocumentValidatorException {
-
+  public void testSentenceValidatorWithSimpleDocument()
+      throws DocumentValidatorException {
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("tested file")
         .addSection(0, new ArrayList<Sentence>())
@@ -90,7 +87,7 @@ public class DocumentValidatorTest {
         .addSentence("that is also a piece of a cake.", 1)
         .build();
 
-    DocumentValidator validator = getDocumentValidator();
+    DocumentValidator validator = getValidaorWithSentenceValidator();
 
     List<ValidationError> errors = validator.check(documents);
 
@@ -103,25 +100,28 @@ public class DocumentValidatorTest {
     }
   }
 
-  private DocumentValidator getDocumentValidator() throws
-      DocumentValidatorException {
-    ValidatorConfiguration validatorConfig =
-        ValidationConfigurationLoader.loadConfiguration(
-            new ReaderInputStream(new StringReader("<?xml version=\"1.0\"?>\n" +
-                "<component name=\"Validator\">" +
-                "  <component name=\"SentenceLength\">\n" +
-                "    <property name=\"max_length\" value=\"5\"/>\n" +
-                "  </component>" +
-                "</component>"
-            ))
-        );
-
-    Configuration configuration = new Configuration(validatorConfig);
-
-    return new DocumentValidator.Builder()
-        .setConfiguration(configuration)
-        .setResultDistributor(new FakeResultDistributor())
+  @Test
+  public void testSectionValidatorWithSimpleDocument()
+      throws DocumentValidatorException {
+    DocumentCollection documents = new DocumentCollection.Builder()
+        .addDocument("tested file")
+        .addSection(0, new ArrayList<Sentence>())
+        .addSectionHeader("foobar")
+        .addParagraph()
+        .addSentence("it is a piece of a cake.", 0)
+        .addSentence("that is also a piece of a cake.", 1)
         .build();
+
+    DocumentValidator validator = getValidaorWithSectionValidator();
+    List<ValidationError> errors = validator.check(documents);
+
+    // validate the errors
+    assertEquals(1, errors.size());
+    for (ValidationError error : errors) {
+      assertThat(error.getValidatorName(), is("SectionLength"));
+      assertThat(error.getMessage(),
+          containsString("The number of the character exceeds the maximum"));
+    }
   }
 
   @Test
@@ -135,7 +135,7 @@ public class DocumentValidatorTest {
         .addSentence("that is also a piece of a cake.", 1)
         .build();
 
-    DocumentValidator validator = getDocumentValidator();
+    DocumentValidator validator = getValidaorWithSentenceValidator();
     List<ValidationError> errors = validator.check(documents);
 
     // validate the errors
@@ -160,7 +160,7 @@ public class DocumentValidatorTest {
         .addListElement(0, "this is a list.")
         .build();
 
-    DocumentValidator validator = getDocumentValidator();
+    DocumentValidator validator = getValidaorWithSentenceValidator();
     List<ValidationError> errors = validator.check(documents);
 
     // validate the errors
@@ -178,11 +178,51 @@ public class DocumentValidatorTest {
         .addDocument("tested file")
         .build();
 
-    DocumentValidator validator = getDocumentValidator();
+    DocumentValidator validator = getValidaorWithSentenceValidator();
     List<ValidationError> errors = validator.check(documents);
 
     // validate the errors
     assertEquals(0, errors.size());
 
+  }
+
+  private DocumentValidator getValidaorWithSentenceValidator() throws
+      DocumentValidatorException {
+    ValidatorConfiguration validatorConfig =
+        ValidationConfigurationLoader.loadConfiguration(
+            new ReaderInputStream(new StringReader(
+                "<?xml version=\"1.0\"?>\n" +
+                    "<component name=\"Validator\">" +
+                    "  <component name=\"SentenceLength\">\n" +
+                    "    <property name=\"max_length\" value=\"5\"/>\n" +
+                    "  </component>" +
+                    "</component>"
+            ))
+        );
+    Configuration configuration = new Configuration(validatorConfig);
+    return new DocumentValidator.Builder()
+        .setConfiguration(configuration)
+        .setResultDistributor(new FakeResultDistributor())
+        .build();
+  }
+
+  private DocumentValidator getValidaorWithSectionValidator() throws
+      DocumentValidatorException {
+    ValidatorConfiguration validatorConfig =
+        ValidationConfigurationLoader.loadConfiguration(
+            new ReaderInputStream(new StringReader(
+                "<?xml version=\"1.0\"?>\n" +
+                    "<component name=\"Validator\">" +
+                    "  <component name=\"SectionLength\">\n" +
+                    "    <property name=\"max_char_num\" value=\"5\"/>\n" +
+                    "  </component>" +
+                    "</component>"
+            ))
+        );
+    Configuration configuration = new Configuration(validatorConfig);
+    return new DocumentValidator.Builder()
+        .setConfiguration(configuration)
+        .setResultDistributor(new FakeResultDistributor())
+        .build();
   }
 }
