@@ -47,7 +47,7 @@
             <configuration>
               <target>
                 <move todir="${project.build.directory}/${project.artifactId}/">
-                  <fileset dir="${project.build.directory}/classes">
+                  <fileset dir="${project.build.directory}/classes/">
                     <include name="DocumentValidatorRunner.class" />
                   </fileset>
                 </move>
@@ -56,6 +56,29 @@
             <goals>
               <goal>run</goal>
             </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.5.1</version>
+        <executions>
+          <execution>
+            <id>jetty-classpath</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>unpack-dependencies</goal>
+            </goals>
+            <configuration>
+              <includeGroupIds>org.mortbay.jetty</includeGroupIds>
+              <includeScope>provided</includeScope>
+              <!-- remove some files in order to decrease size -->
+              <excludes>*, about_files/*, META-INF/*</excludes>
+              <outputDirectory>
+                ${project.build.directory}/${project.artifactId}
+              </outputDirectory>
+            </configuration>
           </execution>
         </executions>
       </plugin>
