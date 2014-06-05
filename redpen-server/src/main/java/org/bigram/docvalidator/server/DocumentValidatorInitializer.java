@@ -22,20 +22,20 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bigram.docvalidator.DocumentValidatorException;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
 /**
  * Initiation of the document validator server.
  */
-public class DocumentValidatorInitServlet extends HttpServlet {
+public class DocumentValidatorInitializer implements ServletContextListener {
 
   private static Logger log = LogManager.getLogger(
-    DocumentValidatorInitServlet.class
+    DocumentValidatorInitializer.class
   );
 
   @Override
-  public void init() throws ServletException {
+  public void contextInitialized(ServletContextEvent servletContextEvent) {
     log.info("Starting Document Validator Server.");
     try {
       DocumentValidatorServer.initialize();
@@ -46,7 +46,7 @@ public class DocumentValidatorInitServlet extends HttpServlet {
   }
 
   @Override
-  public void destroy() {
+  public void contextDestroyed(ServletContextEvent servletContextEvent) {
     log.info("Stopping Document Validator Server.");
   }
 }

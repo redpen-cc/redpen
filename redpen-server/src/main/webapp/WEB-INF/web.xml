@@ -6,13 +6,11 @@
   <display-name>RedPen Server</display-name>
   <description>RedPen Server</description>
 
-  <servlet>
-    <servlet-name>initServlet</servlet-name>
-    <servlet-class>
-        org.bigram.docvalidator.server.DocumentValidatorInitServlet
-    </servlet-class>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
+  <listener>
+    <listener-class>
+        org.bigram.docvalidator.server.DocumentValidatorInitializer
+    </listener-class>
+  </listener>
 
   <!-- Wink SDK servlet configuration. This servlet handles HTTP requests of
   SDK web service on application server. -->
