@@ -28,6 +28,18 @@ import org.slf4j.LoggerFactory;
 public final class Configuration {
   /**
    * Constructor.
+   * @param builder Configuration builder
+   */
+  public Configuration(Builder builder) {
+    this.characterTable = builder.characterTable;
+    this.sentenceValidatorConfigs.addAll(builder.sentenceValidatorConfigs);
+    this.paragraphValidatorConfigs.addAll(builder.paragraphValidatorConfigs);
+    this.sectionValidatorConfigs.addAll(builder.sectionValidatorConfigs);
+    this.documentValidatorConfigs.addAll(builder.documentValidatorConfigs);
+  }
+
+  /**
+   * Constructor.
    *
    */
   public Configuration(ValidatorConfiguration validatorConfig) {
@@ -118,6 +130,46 @@ public final class Configuration {
    */
   public List<ValidatorConfiguration> getSentenceValidatorConfigs() {
     return sentenceValidatorConfigs;
+  }
+
+  /**
+   * Builder class of Configuration.
+   */
+  public static class Builder {
+    private CharacterTable characterTable;
+
+    private final List<ValidatorConfiguration> documentValidatorConfigs =
+        new ArrayList<ValidatorConfiguration>();
+    private final List<ValidatorConfiguration> sectionValidatorConfigs =
+        new ArrayList<ValidatorConfiguration>();
+    private final List<ValidatorConfiguration> paragraphValidatorConfigs =
+        new ArrayList<ValidatorConfiguration>();
+    private final List<ValidatorConfiguration> sentenceValidatorConfigs =
+        new ArrayList<ValidatorConfiguration>();
+
+    public Builder setCharacterTable(CharacterTable characterTable) {
+      this.characterTable = characterTable;
+      return this;
+    }
+
+    public Builder addSentenceValidatorConfig(ValidatorConfiguration config) {
+      sentenceValidatorConfigs.add(config);
+      return this;
+    }
+
+    public Builder addSectionValidatorConfig(ValidatorConfiguration config) {
+      sectionValidatorConfigs.add(config);
+      return this;
+    }
+
+    public Builder addParagraphValidatorConfig(ValidatorConfiguration config) {
+      paragraphValidatorConfigs.add(config);
+      return this;
+    }
+
+    public Configuration build() {
+      return new Configuration(this);
+    }
   }
 
   private final CharacterTable characterTable;
