@@ -41,4 +41,27 @@ public class ConfigurationBuilderTest {
     assertEquals("SentenceLength", config.getSentenceValidatorConfigs()
         .get(0).getConfigurationName());
   }
+
+  @Test
+  public void testBuildConfigurationAddingProperties() {
+    Configuration config = new Configuration.Builder()
+        .addSectionValidatorConfig(new ValidatorConfiguration("InvalidExpression")
+            .addAttribute("dict", "./foobar.dict"))
+        .addSentenceValidatorConfig(new ValidatorConfiguration("SentenceLength")
+                .addAttribute("max_length", "10")).build();
+
+    assertEquals(1, config.getSentenceValidatorConfigs().size());
+    assertEquals(1, config.getSectionValidatorConfigs().size());
+    assertEquals(0, config.getParagraphValidatorConfigs().size());
+    assertEquals(0, config.getDocumentValidatorConfigs().size());
+    assertNull(config.getCharacterTable());
+    assertEquals("InvalidExpression", config.getSectionValidatorConfigs()
+        .get(0).getConfigurationName());
+    assertEquals("./foobar.dict",
+        config.getSectionValidatorConfigs().get(0).getAttribute("dict"));
+    assertEquals("SentenceLength", config.getSentenceValidatorConfigs()
+        .get(0).getConfigurationName());
+    assertEquals("10",
+        config.getSentenceValidatorConfigs().get(0).getAttribute("max_length"));
+  }
 }
