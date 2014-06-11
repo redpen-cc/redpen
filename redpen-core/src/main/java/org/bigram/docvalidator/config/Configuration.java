@@ -19,6 +19,7 @@ package org.bigram.docvalidator.config;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +29,7 @@ import org.slf4j.LoggerFactory;
 public final class Configuration {
   /**
    * Constructor.
+   *
    * @param builder Configuration builder
    */
   public Configuration(Builder builder) {
@@ -40,7 +42,6 @@ public final class Configuration {
 
   /**
    * Constructor.
-   *
    */
   public Configuration(ValidatorConfiguration validatorConfig) {
     this(validatorConfig, new CharacterTable());
@@ -50,13 +51,16 @@ public final class Configuration {
    * Constructor.
    *
    * @param validatorConfig settings of validators
-   * @param characterConf settings of characters and symbols
+   * @param characterConf   settings of characters and symbols
    */
   public Configuration(ValidatorConfiguration validatorConfig,
       CharacterTable characterConf) {
     super();
     this.characterTable = characterConf;
+    extractChildValidators(validatorConfig);
+  }
 
+  private void extractChildValidators(ValidatorConfiguration validatorConfig) {
     // TODO tricky implementation. this code is need to refactor with ConfigurationLoader.
     for (ValidatorConfiguration config : validatorConfig.getChildren()) {
       if ("SentenceLength".equals(config.getConfigurationName())) {
@@ -103,6 +107,7 @@ public final class Configuration {
 
   /**
    * Get document validator configurations.
+   *
    * @return list of configurations
    */
   public List<ValidatorConfiguration> getDocumentValidatorConfigs() {
@@ -111,6 +116,7 @@ public final class Configuration {
 
   /**
    * Get section validator configurations.
+   *
    * @return list of configurations
    */
   public List<ValidatorConfiguration> getSectionValidatorConfigs() {
@@ -119,13 +125,16 @@ public final class Configuration {
 
   /**
    * Get paragraph validator configurations.
+   *
    * @return list of configurations
    */
   public List<ValidatorConfiguration> getParagraphValidatorConfigs() {
     return paragraphValidatorConfigs;
   }
+
   /**
    * Get sentence validator configurations.
+   *
    * @return list of configurations
    */
   public List<ValidatorConfiguration> getSentenceValidatorConfigs() {
@@ -165,6 +174,50 @@ public final class Configuration {
     public Builder addParagraphValidatorConfig(ValidatorConfiguration config) {
       paragraphValidatorConfigs.add(config);
       return this;
+    }
+
+    public Builder addRootValidatorConfig(ValidatorConfiguration config) {
+      this.extractChildValidators(config);
+      return this;
+    }
+
+    private void extractChildValidators(ValidatorConfiguration validatorConfig) {
+      if (validatorConfig == null) {
+        return;
+      }
+      // TODO tricky implementation. this code is need to refactor with ConfigurationLoader.
+      for (ValidatorConfiguration config : validatorConfig.getChildren()) {
+        if ("SentenceLength".equals(config.getConfigurationName())) {
+          sentenceValidatorConfigs.add(config);
+        } else if ("InvalidExpression".equals(config.getConfigurationName())) {
+          sentenceValidatorConfigs.add(config);
+        } else if ("SpaceAfterPeriod".equals(config.getConfigurationName())) {
+          sentenceValidatorConfigs.add(config);
+        } else if ("CommaNumber".equals(config.getConfigurationName())) {
+          sentenceValidatorConfigs.add(config);
+        } else if ("WordNumber".equals(config.getConfigurationName())) {
+          sentenceValidatorConfigs.add(config);
+        } else if ("SuggestExpression".equals(config.getConfigurationName())) {
+          sentenceValidatorConfigs.add(config);
+        } else if ("InvalidCharacter".equals(config.getConfigurationName())) {
+          sentenceValidatorConfigs.add(config);
+        } else if ("SpaceWithSymbol".equals(config.getConfigurationName())) {
+          sentenceValidatorConfigs.add(config);
+        } else if ("KatakanaEndHyphen".equals(config.getConfigurationName())) {
+          sentenceValidatorConfigs.add(config);
+        } else if ("KatakanaSpellCheck".equals(config.getConfigurationName())) {
+          sentenceValidatorConfigs.add(config);
+        } else if ("SectionLength".equals(config.getConfigurationName())) {
+          this.sectionValidatorConfigs.add(config);
+        } else if ("MaxParagraphNumber".equals(config.getConfigurationName())) {
+          this.sectionValidatorConfigs.add(config);
+        } else if ("ParagraphStartWith".equals(config.getConfigurationName())) {
+          this.sectionValidatorConfigs.add(config);
+        } else {
+          throw new IllegalStateException("No Validator such as '"
+              + config.getConfigurationName() + "'");
+        }
+      }
     }
 
     public Configuration build() {
