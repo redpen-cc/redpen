@@ -35,7 +35,7 @@ public class ConfigurationBuilderTest {
     assertEquals(1, config.getSectionValidatorConfigs().size());
     assertEquals(0, config.getParagraphValidatorConfigs().size());
     assertEquals(0, config.getDocumentValidatorConfigs().size());
-    assertNull(config.getCharacterTable());
+    assertNotNull(config.getCharacterTable());
     assertEquals("InvalidExpression", config.getSectionValidatorConfigs()
         .get(0).getConfigurationName());
     assertEquals("SentenceLength", config.getSentenceValidatorConfigs()
@@ -48,13 +48,13 @@ public class ConfigurationBuilderTest {
         .addSectionValidatorConfig(new ValidatorConfiguration("InvalidExpression")
             .addAttribute("dict", "./foobar.dict"))
         .addSentenceValidatorConfig(new ValidatorConfiguration("SentenceLength")
-                .addAttribute("max_length", "10")).build();
+            .addAttribute("max_length", "10")).build();
 
     assertEquals(1, config.getSentenceValidatorConfigs().size());
     assertEquals(1, config.getSectionValidatorConfigs().size());
     assertEquals(0, config.getParagraphValidatorConfigs().size());
     assertEquals(0, config.getDocumentValidatorConfigs().size());
-    assertNull(config.getCharacterTable());
+    assertNotNull(config.getCharacterTable());
     assertEquals("InvalidExpression", config.getSectionValidatorConfigs()
         .get(0).getConfigurationName());
     assertEquals("./foobar.dict",
@@ -63,5 +63,16 @@ public class ConfigurationBuilderTest {
         .get(0).getConfigurationName());
     assertEquals("10",
         config.getSentenceValidatorConfigs().get(0).getAttribute("max_length"));
+  }
+
+  @Test
+  public void testBuildConfigurationWithRootConfiguraiton() {
+    ValidatorConfiguration rootConfig = new ValidatorConfiguration("dummy");
+    rootConfig.addChild(new ValidatorConfiguration("InvalidExpression"));
+    Configuration config = new Configuration.Builder()
+        .addRootValidatorConfig(rootConfig).build();
+
+    assertEquals(1, config.getSentenceValidatorConfigs().size());
+    assertEquals(0, config.getSectionValidatorConfigs().size());
   }
 }

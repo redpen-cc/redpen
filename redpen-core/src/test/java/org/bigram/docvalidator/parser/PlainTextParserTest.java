@@ -18,6 +18,7 @@
 package org.bigram.docvalidator.parser;
 
 import org.apache.commons.io.IOUtils;
+import org.bigram.docvalidator.config.ValidatorConfiguration;
 import org.bigram.docvalidator.model.DocumentCollection;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 public class PlainTextParserTest {
@@ -85,12 +87,16 @@ public class PlainTextParserTest {
   @Before
   public void setup() {
     InputStream stream = IOUtils.toInputStream(this.sampleConfiguraitonStr);
-      Configuration configuration = new Configuration(ValidationConfigurationLoader.loadConfiguration(stream));
+    ValidatorConfiguration rootConfig = ValidationConfigurationLoader
+        .loadConfiguration(stream);
+    assertNotNull(rootConfig);
+    Configuration configuration = new Configuration.Builder()
+        .addRootValidatorConfig(rootConfig).build();
     try {
       parser = DocumentParserFactory.generate(Parser.Type.PLAIN, configuration, new DocumentCollection.Builder());
     } catch (DocumentValidatorException e1) {
-      fail();
       e1.printStackTrace();
+      fail();
     }
   }
 

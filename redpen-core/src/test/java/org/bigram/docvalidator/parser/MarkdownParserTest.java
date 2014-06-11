@@ -44,7 +44,8 @@ public class MarkdownParserTest {
   @Test(expected = DocumentValidatorException.class)
   public void testNullDocument() throws Exception {
     ValidatorConfiguration conf = new ValidatorConfiguration("dummy");
-    Parser parser = loadParser(new Configuration(conf));
+    Parser parser = loadParser(new Configuration.Builder()
+        .addRootValidatorConfig(conf).build());
     InputStream is = null;
     parser.generateDocument(is);
   }
@@ -53,7 +54,8 @@ public class MarkdownParserTest {
   public void testNullFileName() throws Exception {
 
     ValidatorConfiguration conf = new ValidatorConfiguration("dummy");
-    Parser parser = loadParser(new Configuration(conf));
+    Parser parser = loadParser(new Configuration.Builder()
+        .addRootValidatorConfig(conf).build());
     String fileName = null;
     parser.generateDocument(fileName);
   }
@@ -515,9 +517,12 @@ public class MarkdownParserTest {
 
     Parser parser = null;
     if (characterTable != null) {
-      parser = loadParser(new Configuration(conf, characterTable));
+      parser = loadParser(new Configuration.Builder()
+          .addRootValidatorConfig(conf)
+          .setCharacterTable(characterTable).build());
     } else {
-      parser = loadParser(new Configuration(conf));
+      parser = loadParser(new Configuration
+          .Builder().addRootValidatorConfig(conf).build());
     }
 
     try {
@@ -531,7 +536,8 @@ public class MarkdownParserTest {
   private Document createFileContentFromInputStream(
       InputStream inputStream) {
     ValidatorConfiguration conf = new ValidatorConfiguration("dummy");
-    Parser parser = loadParser(new Configuration(conf));
+    Parser parser = loadParser(new Configuration.Builder()
+        .addRootValidatorConfig(conf).build());
     Document doc = null;
     try {
       doc = parser.generateDocument(inputStream);
@@ -545,7 +551,8 @@ public class MarkdownParserTest {
   private Document createFileContent(
       String inputDocumentString) {
     ValidatorConfiguration conf = new ValidatorConfiguration("dummy");
-    Parser parser = loadParser(new Configuration(conf));
+    Parser parser = loadParser(new Configuration.Builder()
+        .addRootValidatorConfig(conf).build());
     InputStream is;
     try {
       is = new ByteArrayInputStream(inputDocumentString.getBytes("utf-8"));

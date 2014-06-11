@@ -66,6 +66,8 @@ public class ServerConfigurationLoader extends ConfigurationLoader {
         .getResourceAsStream("/" + characterTablePath),
       language);
 
-    return new Configuration(vc, characterTable);
+    return new Configuration.Builder()
+        .addRootValidatorConfig(vc)
+        .setCharacterTable(characterTable).build();
   }
 }
