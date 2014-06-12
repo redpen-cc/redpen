@@ -106,11 +106,9 @@ public final class CharacterTableLoader {
    * @return generated character table or null if loading was failed.
    */
   public static CharacterTable load(InputStream stream, String lang) {
-    CharacterTable characterTable = new CharacterTable();
-    Map<String, Character> characterDictionary =
-        characterTable.getCharacterDictionary();
-    loadDefaultCharacterTable(characterDictionary, lang);
-    if (loadTable(stream, characterDictionary)) {
+    characterTable = new CharacterTable();
+    loadDefaultCharacterTable(lang);
+    if (loadTable(stream)) {
       return characterTable;
     } else {
       return null;
@@ -118,14 +116,22 @@ public final class CharacterTableLoader {
   }
 
   /**
+   * Replace the current character setting.
+   * @param character symbol configuration
+   */
+  public static void override(Character character) {
+    Map<String, Character> characterDictionary
+        = characterTable.getCharacterDictionary();
+    characterDictionary.put(character.getName(), character);
+  }
+
+  /**
    * Load input character configuration.
    *
    * @param stream         input configuration
-   * @param characterTable character settings
    * @return true when the table is successfully loaded, false otherwise
    */
-  private static boolean loadTable(InputStream stream,
-                                   Map<String, Character> characterTable) {
+  private static boolean loadTable(InputStream stream) {
     Document document = parseCharTableString(stream);
     if (document == null) {
       LOG.error("Failed to parse character table");
@@ -153,7 +159,7 @@ public final class CharacterTableLoader {
             LOG.warn("Found a invalid character setting element.");
             LOG.warn("Skip this element...");
           } else {
-            characterTable.put(currentChar.getName(), currentChar);
+            override(currentChar);
           }
         } else {
           LOG.error("Invalid Node Name \""
@@ -177,7 +183,6 @@ public final class CharacterTableLoader {
     }
 
     dBuilder.setErrorHandler(new SAXErrorHandler());
-
     Document doc = null;
     try {
       doc = dBuilder.parse(input);
@@ -205,7 +210,9 @@ public final class CharacterTableLoader {
   }
 
   private static void loadDefaultCharacterTable(
-      Map<String, Character> characterTable, String lang) {
+      String lang) {
+    Map<String, Character> dictionary
+        = characterTable.getCharacterDictionary();
     AbstractSymbols symbolSettings;
     if (lang.equals("ja")) {
       symbolSettings = JapaneseSymbols.getInstance();
@@ -217,13 +224,15 @@ public final class CharacterTableLoader {
     while (characterNames.hasNext()) {
       String charName = characterNames.next();
       Character character = symbolSettings.get(charName);
-      characterTable.put(charName, character);
+      dictionary.put(charName, character);
     }
   }
 
   private CharacterTableLoader() {
     // for safe
   }
+
+  private static CharacterTable characterTable;
 
   private static final Logger LOG =
       LoggerFactory.getLogger(CharacterTableLoader.class);
