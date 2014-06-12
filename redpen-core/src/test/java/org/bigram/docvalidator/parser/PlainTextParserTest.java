@@ -17,7 +17,6 @@
  */
 package org.bigram.docvalidator.parser;
 
-import org.apache.commons.io.IOUtils;
 import org.bigram.docvalidator.config.ValidatorConfiguration;
 import org.bigram.docvalidator.model.DocumentCollection;
 import org.junit.Before;
@@ -76,22 +75,12 @@ public class PlainTextParserTest {
     return doc;
   }
 
-  private String sampleConfiguraitonStr = "" +
-    "<?xml version=\"1.0\"?>" +
-    "<component name=\"Validator\">" +
-    "  <component name=\"SentenceLength\">" +
-    "    <property name=\"max_length\" value=\"10\"/>" +
-    "  </component>" +
-    "</component>";
-
   @Before
   public void setup() {
-    InputStream stream = IOUtils.toInputStream(this.sampleConfiguraitonStr);
-    ValidatorConfiguration rootConfig = ValidationConfigurationLoader
-        .loadConfiguration(stream);
-    assertNotNull(rootConfig);
     Configuration configuration = new Configuration.Builder()
-        .addRootValidatorConfig(rootConfig).build();
+        .addSentenceValidatorConfig(
+            new ValidatorConfiguration("SentenceLength").addAttribute("max_length", "10"))
+        .build();
     try {
       parser = DocumentParserFactory.generate(Parser.Type.PLAIN, configuration, new DocumentCollection.Builder());
     } catch (DocumentValidatorException e1) {

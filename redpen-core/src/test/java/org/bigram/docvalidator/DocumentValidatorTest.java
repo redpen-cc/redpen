@@ -58,13 +58,7 @@ public class DocumentValidatorTest {
             "One day while programming, he got a new idea.", 4)
         .build();
 
-   ValidatorConfiguration validatorConfig = new ValidatorConfiguration(
-        "<?xml version=\"1.0\"?>\n" +
-            "<character-table></character-table>"
-    );
-    Configuration configuration = new Configuration.Builder().addRootValidatorConfig(
-        validatorConfig).build(); // = ValidatorConfiguration + CharacterTable
-
+    Configuration configuration = new Configuration.Builder().build();
     DocumentValidator validator = new DocumentValidator.Builder()
         .setConfiguration(configuration)
         .setResultDistributor(new FakeResultDistributor())
@@ -188,20 +182,11 @@ public class DocumentValidatorTest {
 
   private DocumentValidator getValidaorWithSentenceValidator() throws
       DocumentValidatorException {
-    ValidatorConfiguration validatorConfig =
-        ValidationConfigurationLoader.loadConfiguration(
-            new ReaderInputStream(new StringReader(
-                "<?xml version=\"1.0\"?>\n" +
-                    "<component name=\"Validator\">" +
-                    "  <component name=\"SentenceLength\">\n" +
-                    "    <property name=\"max_length\" value=\"5\"/>\n" +
-                    "  </component>" +
-                    "</component>"
-            ))
-        );
 
     Configuration configuration = new Configuration.Builder()
-        .addRootValidatorConfig(validatorConfig).build();
+        .addSentenceValidatorConfig(
+            new ValidatorConfiguration("SentenceLength").addAttribute("max_length", "5"))
+        .build();
     return new DocumentValidator.Builder()
         .setConfiguration(configuration)
         .setResultDistributor(new FakeResultDistributor())
@@ -210,19 +195,10 @@ public class DocumentValidatorTest {
 
   private DocumentValidator getValidaorWithSectionValidator() throws
       DocumentValidatorException {
-    ValidatorConfiguration validatorConfig =
-        ValidationConfigurationLoader.loadConfiguration(
-            new ReaderInputStream(new StringReader(
-                "<?xml version=\"1.0\"?>\n" +
-                    "<component name=\"Validator\">" +
-                    "  <component name=\"SectionLength\">\n" +
-                    "    <property name=\"max_char_num\" value=\"5\"/>\n" +
-                    "  </component>" +
-                    "</component>"
-            ))
-        );
     Configuration configuration = new Configuration.Builder()
-        .addRootValidatorConfig(validatorConfig).build();
+        .addSectionValidatorConfig(
+            new ValidatorConfiguration("SectionLength").addAttribute("max_char_num", "5"))
+        .build();
     return new DocumentValidator.Builder()
         .setConfiguration(configuration)
         .setResultDistributor(new FakeResultDistributor())
