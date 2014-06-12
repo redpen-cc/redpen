@@ -53,7 +53,8 @@ public class ConfigurationTest {
     rootConfig.addChild(configKatakanaEndHyphen);
     rootConfig.addChild(configKatakanaSpellCheckValidator);
 
-    Configuration configuration = new Configuration(rootConfig);
+    Configuration configuration = new Configuration
+        .Builder().addRootValidatorConfig(rootConfig).build();
     assertEquals(10, configuration.getSentenceValidatorConfigs().size());
   }
 
@@ -62,7 +63,8 @@ public class ConfigurationTest {
     ValidatorConfiguration rootConfig = new ValidatorConfiguration("top");
     ValidatorConfiguration configInvalid = new ValidatorConfiguration("ThereIsNo");
     rootConfig.addChild(configInvalid);
-    Configuration configuration = new Configuration(rootConfig);
+    Configuration configuration = new Configuration.Builder()
+        .addRootValidatorConfig(rootConfig).build();
   }
 
   @Test
@@ -77,7 +79,8 @@ public class ConfigurationTest {
     rootConfig.addChild(configMaxParagraphNumber);
     rootConfig.addChild(configParagraphStartWith);
 
-    Configuration configuration = new Configuration(rootConfig);
+    Configuration configuration = new Configuration.Builder()
+        .addRootValidatorConfig(rootConfig).build();
     assertEquals(3, configuration.getSectionValidatorConfigs().size());
   }
 }

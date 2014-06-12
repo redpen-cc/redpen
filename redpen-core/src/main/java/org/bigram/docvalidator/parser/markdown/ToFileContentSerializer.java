@@ -73,7 +73,7 @@ import static org.parboiled.common.Preconditions.checkArgNotNull;
 /**
  * Using Pegdown Parser. <br/>
  *
- * @see https://github.com/sirthias/pegdown
+ * @see <a herf="https://github.com/sirthias/pegdown">pegdown</a>
  */
 public class ToFileContentSerializer implements Visitor {
 

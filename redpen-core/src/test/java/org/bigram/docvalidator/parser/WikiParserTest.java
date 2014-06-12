@@ -618,10 +618,12 @@ public class WikiParserTest {
     }
 
     Parser parser = null;
+    Configuration.Builder builder = new Configuration.Builder().addRootValidatorConfig(conf);
     if (characterTable != null) {
-      parser = loadParser(new Configuration(conf, characterTable));
+      builder.setCharacterTable(characterTable);
+      parser = loadParser(builder.build());
     } else {
-      parser = loadParser(new Configuration(conf));
+      parser = loadParser(builder.build());
     }
 
     try {
@@ -635,7 +637,8 @@ public class WikiParserTest {
   private Document createFileContent(
       String inputDocumentString) {
     ValidatorConfiguration conf = new ValidatorConfiguration("dummy");
-    Parser parser = loadParser(new Configuration(conf));
+    Configuration.Builder builder = new Configuration.Builder().addRootValidatorConfig(conf);
+    Parser parser = loadParser(builder.build());
     InputStream is;
     try {
       is = new ByteArrayInputStream(inputDocumentString.getBytes("utf-8"));

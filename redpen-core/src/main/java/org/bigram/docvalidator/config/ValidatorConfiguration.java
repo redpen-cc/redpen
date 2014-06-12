@@ -111,9 +111,11 @@ public final class ValidatorConfiguration {
    *
    * @param name  attribute name
    * @param value attribute value
+   * @retrun this object
    */
-  public void addAttribute(String name, String value) {
+  public ValidatorConfiguration addAttribute(String name, String value) {
     attributes.put(name, value);
+    return this;
   }
 
   /**

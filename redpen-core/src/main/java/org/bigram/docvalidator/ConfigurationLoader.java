@@ -42,6 +42,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import static org.bigram.docvalidator.config.Configuration.Builder;
+
 /**
  * Load the central configuration of DocumentValidator.
  */
@@ -99,12 +101,10 @@ public class ConfigurationLoader {
     } else if (validatorConfigElementList.getLength() > 1) {
       LOG.warn("More than one \"validator\" blocks in the configuration");
     }
-    ValidatorConfiguration validatorConfiguration =
-        extractValidatorConfiguration(
-            (Element) validatorConfigElementList.item(0));
-    if (validatorConfiguration == null) {
-      LOG.error("Failed to create Validator Configuration Object.");
-    }
+
+    configBuilder.addRootValidatorConfig(extractValidatorConfiguration(
+            (Element) validatorConfigElementList.item(0)));
+
     LOG.info("Succeeded to load validator configuration setting");
 
     // Load lang
@@ -129,19 +129,18 @@ public class ConfigurationLoader {
 
     // Load CharacterTable
     // FIXME dv should work without character settings
-    CharacterTable characterTable;
     if (charTableFilePath == null || charTableFilePath.equals("")) {
       LOG.error("No \"char-conf\" attribute found in the configuration");
       return null;
     }
-    characterTable = extractCharacterTable(charTableFilePath, lang);
+    configBuilder.setCharacterTable(extractCharacterTable(charTableFilePath, lang));
 
     LOG.info("Succeeded to load character configuration setting");
 
     // TODO load other configurations
 
     // Create Configuration
-    return new Configuration(validatorConfiguration, characterTable);
+    return configBuilder.build();
   }
 
   protected CharacterTable extractCharacterTable(
@@ -176,6 +175,8 @@ public class ConfigurationLoader {
     }
     return doc;
   }
+
+  private Builder configBuilder = new Builder();
 
   private static final Logger LOG =
       LoggerFactory.getLogger(ConfigurationLoader.class);

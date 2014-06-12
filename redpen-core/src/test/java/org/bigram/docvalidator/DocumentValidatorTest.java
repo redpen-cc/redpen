@@ -62,8 +62,8 @@ public class DocumentValidatorTest {
         "<?xml version=\"1.0\"?>\n" +
             "<character-table></character-table>"
     );
-    Configuration configuration = new Configuration(
-        validatorConfig); // = ValidatorConfiguration + CharacterTable
+    Configuration configuration = new Configuration.Builder().addRootValidatorConfig(
+        validatorConfig).build(); // = ValidatorConfiguration + CharacterTable
 
     DocumentValidator validator = new DocumentValidator.Builder()
         .setConfiguration(configuration)
@@ -199,7 +199,9 @@ public class DocumentValidatorTest {
                     "</component>"
             ))
         );
-    Configuration configuration = new Configuration(validatorConfig);
+
+    Configuration configuration = new Configuration.Builder()
+        .addRootValidatorConfig(validatorConfig).build();
     return new DocumentValidator.Builder()
         .setConfiguration(configuration)
         .setResultDistributor(new FakeResultDistributor())
@@ -219,7 +221,8 @@ public class DocumentValidatorTest {
                     "</component>"
             ))
         );
-    Configuration configuration = new Configuration(validatorConfig);
+    Configuration configuration = new Configuration.Builder()
+        .addRootValidatorConfig(validatorConfig).build();
     return new DocumentValidator.Builder()
         .setConfiguration(configuration)
         .setResultDistributor(new FakeResultDistributor())
