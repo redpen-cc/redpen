@@ -66,7 +66,7 @@ public class ConfigurationBuilderTest {
   }
 
   @Test
-  public void testBuildConfigurationWithRootConfiguraiton() {
+  public void testBuildConfigurationWithRootConfiguratiton() {
     ValidatorConfiguration rootConfig = new ValidatorConfiguration("dummy");
     rootConfig.addChild(new ValidatorConfiguration("InvalidExpression"));
     Configuration config = new Configuration.Builder()
@@ -74,5 +74,45 @@ public class ConfigurationBuilderTest {
 
     assertEquals(1, config.getSentenceValidatorConfigs().size());
     assertEquals(0, config.getSectionValidatorConfigs().size());
+  }
+
+  @Test
+  public void testBuildConfigurationSpecifyingLanguage() {
+    Configuration config = new Configuration.Builder()
+        .addSectionValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
+        .setCharacterTable("ja")
+        .build();
+
+    assertNotNull(config.getCharacterTable());
+    assertNotNull(config.getCharacterTable().getCharacter("FULL_STOP"));
+    assertEquals("。", config.getCharacterTable().getCharacter("FULL_STOP").getValue());
+  }
+
+  @Test
+  public void testBuildConfigurationOverrideCharacterSetting() {
+    Configuration config = new Configuration.Builder()
+        .addSectionValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
+        .setCharacterTable("ja")
+        .setCharacter("FULL_STOP", ".")
+        .build();
+
+    assertNotNull(config.getCharacterTable());
+    assertNotNull(config.getCharacterTable().getCharacter("FULL_STOP"));
+    assertEquals(".", config.getCharacterTable().getCharacter("FULL_STOP").getValue());
+  }
+
+  @Test
+  public void testBuildConfigurationOverrideAddInvalidCharacterSetting() {
+    Configuration config = new Configuration.Builder()
+        .addSectionValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
+        .setCharacterTable("ja")
+        .setInvalidPattern("FULL_STOP", "●")
+        .build();
+
+    assertNotNull(config.getCharacterTable());
+    assertNotNull(config.getCharacterTable().getCharacter("FULL_STOP"));
+    assertEquals("。", config.getCharacterTable().getCharacter("FULL_STOP").getValue());
+    assertTrue(config.getCharacterTable()
+        .getCharacter("FULL_STOP").getInvalidChars().contains("●"));
   }
 }

@@ -50,7 +50,8 @@ public final class Character {
                    String invalidCharsStr) {
     this(charName, charValue);
     if (invalidCharsStr.length() > 0) {
-      this.invalidChars = Arrays.asList(invalidCharsStr.split("(?!^)"));
+      this.invalidChars.addAll
+          (Arrays.asList(invalidCharsStr.split("(?!^)")));
     }
   }
 
@@ -160,9 +161,14 @@ public final class Character {
     this.needAfterSpace = afterSpace;
   }
 
+  public void addInvalid(String invalid) {
+    this.invalidChars.add(invalid);
+  }
+
   private String name;
   private String value;
   private List<String> invalidChars;
   private boolean needBeforeSpace;
   private boolean needAfterSpace;
+
 }

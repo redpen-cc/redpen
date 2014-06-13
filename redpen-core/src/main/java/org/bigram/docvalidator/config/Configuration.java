@@ -20,6 +20,7 @@ package org.bigram.docvalidator.config;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -109,6 +110,27 @@ public final class Configuration {
       return this;
     }
 
+    public Builder setCharacterTable(String lang) {
+      this.characterTable = CharacterTableLoader.loadWithLanguage(lang);
+      return this;
+    }
+
+    public Builder setCharacter(String name, String value) {
+      this.characterTable.override(new Character(name, value));
+      return this;
+    }
+
+    public Builder setCharacter(Character character) {
+      this.characterTable.override(character);
+      return this;
+    }
+
+    public Builder setInvalidPattern(String name, String invalid) {
+      Character character = this.characterTable.getCharacter(name);
+      character.addInvalid(invalid);
+      return this;
+    }
+
     public Builder addSentenceValidatorConfig(ValidatorConfiguration config) {
       sentenceValidatorConfigs.add(config);
       return this;
@@ -183,7 +205,4 @@ public final class Configuration {
       new ArrayList<ValidatorConfiguration>();
   private final List<ValidatorConfiguration> sentenceValidatorConfigs =
       new ArrayList<ValidatorConfiguration>();
-
-  private static final Logger LOG =
-      LoggerFactory.getLogger(Configuration.class);
 }

@@ -116,6 +116,18 @@ public final class CharacterTableLoader {
   }
 
   /**
+   * Load CharacterTable from a given file.
+   *
+   * @param lang target language
+   * @return generated character table or null if loading was failed.
+   */
+  public static CharacterTable loadWithLanguage(String lang) {
+    characterTable = new CharacterTable();
+    loadDefaultCharacterTable(lang);
+    return characterTable;
+  }
+
+  /**
    * Replace the current character setting.
    * @param character symbol configuration
    */
