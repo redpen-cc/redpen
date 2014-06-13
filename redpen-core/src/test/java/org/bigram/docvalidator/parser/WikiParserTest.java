@@ -549,19 +549,11 @@ public class WikiParserTest {
 
   @Test
   public void testGenerateJapaneseDocument() {
-    String japaneseCharTableStr = "" +
-      "<?xml version=\"1.0\"?>" +
-      "<character-table>" +
-      "<character name=\"FULL_STOP\" value=\"。\" />" +
-      "</character-table>";
-
     String sampleText = "埼玉は東京の北に存在する。";
     sampleText += "大きなベッドタウンであり、多くの人が住んでいる。";
 
-    CharacterTable charTable = CharacterTableLoader.load(
-        IOUtils.toInputStream(japaneseCharTableStr));
     Configuration config =
-        new Configuration.Builder().setCharacterTable(charTable).build();
+        new Configuration.Builder().setCharacterTable("ja").build();
     Document doc = createFileContent(sampleText, config);
 
     Section firstSections = doc.getSection(0);
