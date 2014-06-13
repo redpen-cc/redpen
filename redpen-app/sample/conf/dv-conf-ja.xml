@@ -1,4 +1,22 @@
-<configuration>
-  <validator>conf/validation-conf-ja.xml</validator>
-  <lang char-conf="conf/symbol-conf-ja.xml">en</lang>
-</configuration>
+<redpen-conf>
+    <validator-list>
+        <validator name="SentenceLength">
+            <property name="max_length" value="100"/>
+        </validator>
+        <validator name="InvalidCharacter" />
+        <validator name="KatakanaEndHyphen"/>
+        <validator name="KatakanaSpellCheck" />
+        <validator name="SectionLength">
+            <property name="max_char_number" value="1500"/>
+        </validator>
+        <validator name="MaxParagraphNumber" />
+    </validator-list>
+    <character-table lang="ja">
+        <character name="EXCLAMATION_MARK" value="!" invalid-chars="！" after-space="true" />
+        <character name="LEFT_QUOTATION_MARK" value="\'"  invalid-chars="“" before-space="true" />
+        <character name="RIGHT_QUOTATION_MARK" value="\'"  invalid-chars="”" after-space="true" />
+        <character name="NUMBER_SIGN" value="#" invalid-chars="＃" after-space="true" />
+        <character name="FULL_STOP" value="。" invalid-chars="．." after-space="true" />
+        <character name="COMMA" value="、" invalid-chars="," after-space="true" />
+    </character-table>
+</redpen-conf>

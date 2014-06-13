@@ -187,6 +187,8 @@ public class ConfigurationLoaderTest {
     assertEquals(1, configuration.getSentenceValidatorConfigs().size());
     assertEquals("SentenceLength",
         configuration.getSentenceValidatorConfigs().get(0).getConfigurationName());
+    assertEquals("200",
+        configuration.getSentenceValidatorConfigs().get(0).getAttribute("max_length"));
     assertEquals(1, configuration.getSectionValidatorConfigs().size());
     assertEquals("MaxParagraphNumber",
         configuration.getSectionValidatorConfigs().get(0).getConfigurationName());
@@ -289,7 +291,7 @@ public class ConfigurationLoaderTest {
     ConfigurationLoader configurationLoader = new ConfigurationLoader();
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
     Configuration configuration = configurationLoader.loadNewConfiguration(stream);
-    assertNull(configuration);
+    assertNotNull(configuration);
     IOUtils.closeQuietly(stream);
   }
 

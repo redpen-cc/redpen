@@ -61,7 +61,7 @@ public class ConfigurationLoader {
     } catch (FileNotFoundException e) {
       LOG.error(e.getMessage());
     }
-    Configuration configuration = this.loadConfiguration(fis);
+    Configuration configuration = this.loadNewConfiguration(fis);
     IOUtils.closeQuietly(fis);
     return configuration;
   }
@@ -92,9 +92,7 @@ public class ConfigurationLoader {
       return null;
     }
     NodeList validatorElementList =
-        getSpecifiedNodeList((Element)
-            validatorConfigElementList.item(0), "validator");
-
+        validatorConfigElementList.item(0).getChildNodes();
     if (validatorElementList == null) {
       LOG.error("There is no validator block");
       return null;
@@ -109,11 +107,21 @@ public class ConfigurationLoader {
           currentConfiguration =
               new ValidatorConfiguration(element.getAttribute("name"), null);
           configBuilder.addValidationConfig(currentConfiguration);
-        } else if (element.getNodeName().equals("property")
-            && currentConfiguration != null) {
-          currentConfiguration.addAttribute(
-              element.getAttribute("name"),
-              element.getAttribute("value"));
+
+          NodeList propertyElementList =nNode.getChildNodes();
+          for (int j = 0; j < propertyElementList.getLength(); j++) {
+            Node pNode = propertyElementList.item(j);
+            if (pNode.getNodeType() == Node.ELEMENT_NODE) {
+              Element propertyElement = (Element) pNode;
+              if (propertyElement.getNodeName().equals("property")
+                  && currentConfiguration != null) {
+                currentConfiguration.addAttribute(
+                    propertyElement.getAttribute("name"),
+                    propertyElement.getAttribute("value"));
+              }
+            }
+          }
+
         } else {
           LOG.warn("Invalid block: \"" + element.getNodeName() + "\"");
           LOG.warn("Skip this block ...");
