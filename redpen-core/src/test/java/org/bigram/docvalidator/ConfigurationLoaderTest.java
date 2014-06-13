@@ -78,7 +78,7 @@ public class ConfigurationLoaderTest {
     assertEquals("。", configuration.getCharacterTable().getCharacter("FULL_STOP").getValue());
   }
 
-  @Test
+  @Test(expected = IllegalStateException.class)
   public void testLoadConfigurationWithoutValidatorConfig() {
     String sampleConfigString =
         "<configuration> " +
@@ -88,7 +88,6 @@ public class ConfigurationLoaderTest {
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
     Configuration configuration = configurationLoader.loadConfiguration(stream);
     IOUtils.closeQuietly(stream);
-    assertNull(configuration);
   }
 
   @Test
@@ -118,7 +117,7 @@ public class ConfigurationLoaderTest {
     assertNull(configuration);
   }
 
-  @Test
+  @Test(expected = IllegalStateException.class)
   public void testLoadConfigurationWithoutRootConfigBlock() {
     String sampleConfigString =
         "<dummy> " +
@@ -129,7 +128,6 @@ public class ConfigurationLoaderTest {
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
     Configuration configuration = configurationLoader.loadConfiguration(stream);
     IOUtils.closeQuietly(stream);
-    assertNull(configuration);
   }
 
   @Test
@@ -163,4 +161,27 @@ public class ConfigurationLoaderTest {
     IOUtils.closeQuietly(stream);
     assertNull(configuration);
   }
+
+
+  @Test
+  public void testNewLoadConfiguration() {
+    String sampleConfigString =
+        "<redpen-conf>" +
+           "<validator-list>" +
+              "<validator name=\"SentenceLength\">" +
+                 "<property name=\"max_length\" value=\"200\" />" +
+              "</validator>" +
+              "<validator name=\"MaxParagraphNumber\" />" +
+           "</validator-list>" +
+           "<character-table lang=\"en\">" +
+           "</character-table>" +
+        "</redpen-conf>";
+
+    ConfigurationLoader configurationLoader = new ConfigurationLoader();
+    InputStream stream = IOUtils.toInputStream(sampleConfigString);
+    Configuration configuration = configurationLoader.loadNewConfiguration(stream);
+    IOUtils.closeQuietly(stream);
+    assertNotNull(configuration);
+  }
+
 }

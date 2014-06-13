@@ -65,8 +65,24 @@ public class ConfigurationLoader {
     return configuration;
   }
 
+
   /**
-   * load DocumentValidator settings.
+   * load DocumentValidator configuration.
+   * @param stream input configuration settings
+   * @return Configuration loaded from input stream
+   * NOTE: return null when failed to create Configuration
+   */
+  public Configuration loadNewConfiguration(InputStream stream) {
+    Document doc = parseConfigurationString(stream);
+    if (doc == null) {
+      LOG.error("Failed to parse configuration string");
+      return null;
+    }
+    return new Configuration.Builder().build();
+  }
+
+  /**
+   * load DocumentValidator for old format.
    * @param stream input configuration settings
    * @return Configuration loaded from input stream
    * NOTE: return null when failed to create Configuration
@@ -78,29 +94,9 @@ public class ConfigurationLoader {
       return null;
     }
 
-    // Get root node
-    doc.getDocumentElement().normalize();
-    NodeList rootConfigElementList =
-        doc.getElementsByTagName("configuration");
-    if (rootConfigElementList.getLength() == 0) {
-      LOG.error("No \"configuration\" block found in the configuration");
-      return null;
-    } else if (rootConfigElementList.getLength() > 1) {
-      LOG.warn("More than one \"configuration\" blocks in the configuration");
-    }
-    Node root = rootConfigElementList.item(0);
-    Element rootElement = (Element) root;
-    LOG.info("Succeeded to load configuration file");
-
-    // Load ValidatorConfiguration
+    Element rootElement = getRootNode(doc, "configuration");
     NodeList validatorConfigElementList =
-        rootElement.getElementsByTagName("validator");
-    if (validatorConfigElementList.getLength() == 0) {
-      LOG.error("No \"validator\" block found in the configuration");
-      return null;
-    } else if (validatorConfigElementList.getLength() > 1) {
-      LOG.warn("More than one \"validator\" blocks in the configuration");
-    }
+        getSpecifiedNodeList(rootElement, "validator");
 
     configBuilder.addRootValidatorConfig(extractValidatorConfiguration(
             (Element) validatorConfigElementList.item(0)));
@@ -141,6 +137,35 @@ public class ConfigurationLoader {
 
     // Create Configuration
     return configBuilder.build();
+  }
+
+  private NodeList getSpecifiedNodeList(Element rootElement, String elementName) {
+    NodeList elementList =
+        rootElement.getElementsByTagName(elementName);
+    if (elementList.getLength() == 0) {
+      throw new IllegalStateException("No \"" +
+          elementName + "\" block found in the configuration");
+    } else if (elementList.getLength() > 1) {
+      LOG.info("More than one \"" + elementName + " \" blocks in the configuration");
+    }
+    return elementList;
+  }
+
+  private Element getRootNode(Document doc, String rootTag) {
+    doc.getDocumentElement().normalize();
+    NodeList rootConfigElementList =
+        doc.getElementsByTagName(rootTag);
+    if (rootConfigElementList.getLength() == 0) {
+      throw new IllegalStateException("No \"" + rootTag
+          + "\" block found in the configuration");
+    } else if (rootConfigElementList.getLength() > 1) {
+      LOG.warn("More than one \"" +
+          rootTag + "\" blocks in the configuration");
+    }
+    Node root = rootConfigElementList.item(0);
+    Element rootElement = (Element) root;
+    LOG.info("Succeeded to load configuration file");
+    return rootElement;
   }
 
   protected CharacterTable extractCharacterTable(
