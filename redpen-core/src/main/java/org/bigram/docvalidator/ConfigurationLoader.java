@@ -29,6 +29,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.bigram.docvalidator.config.Character;
 import org.bigram.docvalidator.config.CharacterTable;
 import org.bigram.docvalidator.config.CharacterTableLoader;
 import org.bigram.docvalidator.config.Configuration;
@@ -82,6 +83,9 @@ public class ConfigurationLoader {
     configBuilder = new Configuration.Builder();
 
     Element rootElement = getRootNode(doc, "redpen-conf");
+
+
+    // extract validator configurations
     NodeList validatorListConfigElementList =
         getSpecifiedNodeList(rootElement, "validator-list");
     NodeList validatorConfigElementList =
@@ -97,8 +101,10 @@ public class ConfigurationLoader {
           currentConfiguration =
               new ValidatorConfiguration(element.getAttribute("name"), null);
           configBuilder.addValidationConfig(currentConfiguration);
-        } else if (element.getNodeName().equals("property")) {
-          currentConfiguration.addAttribute(element.getAttribute("name"),
+        } else if (element.getNodeName().equals("property")
+            && currentConfiguration != null) {
+          currentConfiguration.addAttribute(
+              element.getAttribute("name"),
               element.getAttribute("value"));
         } else {
           LOG.warn("Invalid block: \"" + element.getNodeName() + "\"");
@@ -106,7 +112,39 @@ public class ConfigurationLoader {
         }
       }
     }
+
+    // extract character configurations
+    NodeList characterTableConfigElementList =
+        getSpecifiedNodeList(rootElement, "character-table");
+    String language
+        = characterTableConfigElementList.item(0).
+        getAttributes().getNamedItem("lang").getNodeValue();
+    configBuilder.setCharacterTable(language);
+
+    NodeList characterTableElementList =
+        getSpecifiedNodeList((Element)
+            characterTableConfigElementList.item(0), "character");
+    for (int temp = 0; temp < characterTableElementList.getLength(); temp++) {
+      Node nNode = characterTableElementList.item(temp);
+      if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+        Element element = (Element) nNode;
+        Character currentChar = createCharacter(element);
+        configBuilder.setCharacter(currentChar);
+      }
+    }
     return configBuilder.build();
+  }
+
+  private static Character createCharacter(Element element) {
+    if (!element.hasAttribute("name") || !element.hasAttribute("value")) {
+      throw new IllegalStateException("Found element does not have name and value attribute...");
+    }
+    return new Character(
+        element.getAttribute("name"),
+        element.getAttribute("value"),
+        element.getAttribute("invalid-chars"),
+        Boolean.parseBoolean(element.getAttribute("before-space")),
+        Boolean.parseBoolean(element.getAttribute("after-space")));
   }
 
   /**

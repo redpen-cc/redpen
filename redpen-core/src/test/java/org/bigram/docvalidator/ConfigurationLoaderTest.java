@@ -174,6 +174,7 @@ public class ConfigurationLoaderTest {
               "<validator name=\"MaxParagraphNumber\" />" +
            "</validator-list>" +
            "<character-table lang=\"en\">" +
+              "<character name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\" after-space=\"true\" />" +
            "</character-table>" +
         "</redpen-conf>";
 
@@ -181,6 +182,7 @@ public class ConfigurationLoaderTest {
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
     Configuration configuration = configurationLoader.loadNewConfiguration(stream);
     IOUtils.closeQuietly(stream);
+
     assertNotNull(configuration);
     assertEquals(1, configuration.getSentenceValidatorConfigs().size());
     assertEquals("SentenceLength",
@@ -188,6 +190,13 @@ public class ConfigurationLoaderTest {
     assertEquals(1, configuration.getSectionValidatorConfigs().size());
     assertEquals("MaxParagraphNumber",
         configuration.getSectionValidatorConfigs().get(0).getConfigurationName());
+    assertNotNull(configuration.getCharacterTable());
+    assertEquals("!", configuration.getCharacterTable()
+        .getCharacter("EXCLAMATION_MARK").getValue());
+    assertEquals(1, configuration.getCharacterTable()
+        .getCharacter("EXCLAMATION_MARK").getInvalidChars().size());
+    assertEquals("！", configuration.getCharacterTable()
+        .getCharacter("EXCLAMATION_MARK").getInvalidChars().get(0));
   }
 
 }
