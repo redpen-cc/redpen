@@ -78,7 +78,35 @@ public class ConfigurationLoader {
       LOG.error("Failed to parse configuration string");
       return null;
     }
-    return new Configuration.Builder().build();
+
+    configBuilder = new Configuration.Builder();
+
+    Element rootElement = getRootNode(doc, "redpen-conf");
+    NodeList validatorListConfigElementList =
+        getSpecifiedNodeList(rootElement, "validator-list");
+    NodeList validatorConfigElementList =
+        getSpecifiedNodeList((Element)
+            validatorListConfigElementList.item(0), "validator");
+
+    ValidatorConfiguration currentConfiguration = null;
+    for (int i = 0; i < validatorConfigElementList.getLength(); i++) {
+      Node nNode = validatorConfigElementList.item(i);
+      if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+        Element element = (Element) nNode;
+        if (element.getNodeName().equals("validator")) {
+          currentConfiguration =
+              new ValidatorConfiguration(element.getAttribute("name"), null);
+          configBuilder.addValidationConfig(currentConfiguration);
+        } else if (element.getNodeName().equals("property")) {
+          currentConfiguration.addAttribute(element.getAttribute("name"),
+              element.getAttribute("value"));
+        } else {
+          LOG.warn("Invalid block: \"" + element.getNodeName() + "\"");
+          LOG.warn("Skip this block ...");
+        }
+      }
+    }
+    return configBuilder.build();
   }
 
   /**

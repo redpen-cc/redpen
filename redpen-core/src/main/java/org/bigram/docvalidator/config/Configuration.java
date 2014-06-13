@@ -151,42 +151,46 @@ public final class Configuration {
       return this;
     }
 
+    public void addValidationConfig(ValidatorConfiguration config) {
+      if ("SentenceLength".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("InvalidExpression".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("SpaceAfterPeriod".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("CommaNumber".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("WordNumber".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("SuggestExpression".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("InvalidCharacter".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("SpaceWithSymbol".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("KatakanaEndHyphen".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("KatakanaSpellCheck".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("SectionLength".equals(config.getConfigurationName())) {
+        this.sectionValidatorConfigs.add(config);
+      } else if ("MaxParagraphNumber".equals(config.getConfigurationName())) {
+        this.sectionValidatorConfigs.add(config);
+      } else if ("ParagraphStartWith".equals(config.getConfigurationName())) {
+        this.sectionValidatorConfigs.add(config);
+      } else {
+        throw new IllegalStateException("No Validator such as '"
+            + config.getConfigurationName() + "'");
+      }
+    }
+
     private void extractChildValidators(ValidatorConfiguration validatorConfig) {
       if (validatorConfig == null) {
         return;
       }
       // TODO tricky implementation. this code is need to refactor with ConfigurationLoader.
       for (ValidatorConfiguration config : validatorConfig.getChildren()) {
-        if ("SentenceLength".equals(config.getConfigurationName())) {
-          sentenceValidatorConfigs.add(config);
-        } else if ("InvalidExpression".equals(config.getConfigurationName())) {
-          sentenceValidatorConfigs.add(config);
-        } else if ("SpaceAfterPeriod".equals(config.getConfigurationName())) {
-          sentenceValidatorConfigs.add(config);
-        } else if ("CommaNumber".equals(config.getConfigurationName())) {
-          sentenceValidatorConfigs.add(config);
-        } else if ("WordNumber".equals(config.getConfigurationName())) {
-          sentenceValidatorConfigs.add(config);
-        } else if ("SuggestExpression".equals(config.getConfigurationName())) {
-          sentenceValidatorConfigs.add(config);
-        } else if ("InvalidCharacter".equals(config.getConfigurationName())) {
-          sentenceValidatorConfigs.add(config);
-        } else if ("SpaceWithSymbol".equals(config.getConfigurationName())) {
-          sentenceValidatorConfigs.add(config);
-        } else if ("KatakanaEndHyphen".equals(config.getConfigurationName())) {
-          sentenceValidatorConfigs.add(config);
-        } else if ("KatakanaSpellCheck".equals(config.getConfigurationName())) {
-          sentenceValidatorConfigs.add(config);
-        } else if ("SectionLength".equals(config.getConfigurationName())) {
-          this.sectionValidatorConfigs.add(config);
-        } else if ("MaxParagraphNumber".equals(config.getConfigurationName())) {
-          this.sectionValidatorConfigs.add(config);
-        } else if ("ParagraphStartWith".equals(config.getConfigurationName())) {
-          this.sectionValidatorConfigs.add(config);
-        } else {
-          throw new IllegalStateException("No Validator such as '"
-              + config.getConfigurationName() + "'");
-        }
+        addValidationConfig(config);
       }
     }
 
