@@ -84,17 +84,25 @@ public class ConfigurationLoader {
 
     Element rootElement = getRootNode(doc, "redpen-conf");
 
-
     // extract validator configurations
-    NodeList validatorListConfigElementList =
-        getSpecifiedNodeList(rootElement, "validator-list");
     NodeList validatorConfigElementList =
+        getSpecifiedNodeList(rootElement, "validator-list");
+    if (validatorConfigElementList == null) {
+      LOG.error("There is no validator-list block");
+      return null;
+    }
+    NodeList validatorElementList =
         getSpecifiedNodeList((Element)
-            validatorListConfigElementList.item(0), "validator");
+            validatorConfigElementList.item(0), "validator");
+
+    if (validatorElementList == null) {
+      LOG.error("There is no validator block");
+      return null;
+    }
 
     ValidatorConfiguration currentConfiguration = null;
-    for (int i = 0; i < validatorConfigElementList.getLength(); i++) {
-      Node nNode = validatorConfigElementList.item(i);
+    for (int i = 0; i < validatorElementList.getLength(); i++) {
+      Node nNode = validatorElementList.item(i);
       if (nNode.getNodeType() == Node.ELEMENT_NODE) {
         Element element = (Element) nNode;
         if (element.getNodeName().equals("validator")) {
@@ -116,6 +124,16 @@ public class ConfigurationLoader {
     // extract character configurations
     NodeList characterTableConfigElementList =
         getSpecifiedNodeList(rootElement, "character-table");
+
+    if (characterTableConfigElementList == null) {
+      configBuilder.setCharacterTable("en");
+    } else {
+      extractCharacterConfig(characterTableConfigElementList);
+    }
+    return configBuilder.build();
+  }
+
+  private void extractCharacterConfig(NodeList characterTableConfigElementList) {
     String language
         = characterTableConfigElementList.item(0).
         getAttributes().getNamedItem("lang").getNodeValue();
@@ -124,6 +142,10 @@ public class ConfigurationLoader {
     NodeList characterTableElementList =
         getSpecifiedNodeList((Element)
             characterTableConfigElementList.item(0), "character");
+    if (characterTableElementList == null) {
+      LOG.warn("there is no character block");
+      return;
+    }
     for (int temp = 0; temp < characterTableElementList.getLength(); temp++) {
       Node nNode = characterTableElementList.item(temp);
       if (nNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -132,7 +154,6 @@ public class ConfigurationLoader {
         configBuilder.setCharacter(currentChar);
       }
     }
-    return configBuilder.build();
   }
 
   private static Character createCharacter(Element element) {
@@ -164,6 +185,10 @@ public class ConfigurationLoader {
     NodeList validatorConfigElementList =
         getSpecifiedNodeList(rootElement, "validator");
 
+    if (validatorConfigElementList == null) {
+      LOG.error("There is no validator block");
+      return null;
+    }
     configBuilder.addRootValidatorConfig(extractValidatorConfiguration(
             (Element) validatorConfigElementList.item(0)));
 
@@ -209,8 +234,9 @@ public class ConfigurationLoader {
     NodeList elementList =
         rootElement.getElementsByTagName(elementName);
     if (elementList.getLength() == 0) {
-      throw new IllegalStateException("No \"" +
+      LOG.info("No \"" +
           elementName + "\" block found in the configuration");
+      return null;
     } else if (elementList.getLength() > 1) {
       LOG.info("More than one \"" + elementName + " \" blocks in the configuration");
     }
