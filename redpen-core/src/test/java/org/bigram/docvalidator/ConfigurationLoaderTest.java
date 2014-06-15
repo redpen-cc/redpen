@@ -42,7 +42,7 @@ public class ConfigurationLoaderTest {
 
     ConfigurationLoader configurationLoader = new ConfigurationLoader();
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
-    Configuration configuration = configurationLoader.loadNewConfiguration(stream);
+    Configuration configuration = configurationLoader.loadConfiguration(stream);
     IOUtils.closeQuietly(stream);
 
     assertNotNull(configuration);
@@ -77,7 +77,7 @@ public class ConfigurationLoaderTest {
 
     ConfigurationLoader configurationLoader = new ConfigurationLoader();
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
-    Configuration configuration = configurationLoader.loadNewConfiguration(stream);
+    Configuration configuration = configurationLoader.loadConfiguration(stream);
     IOUtils.closeQuietly(stream);
 
     assertNotNull(configuration);
@@ -108,7 +108,7 @@ public class ConfigurationLoaderTest {
 
     ConfigurationLoader configurationLoader = new ConfigurationLoader();
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
-    Configuration configuration = configurationLoader.loadNewConfiguration(stream);
+    Configuration configuration = configurationLoader.loadConfiguration(stream);
     IOUtils.closeQuietly(stream);
 
     assertNotNull(configuration);
@@ -134,7 +134,7 @@ public class ConfigurationLoaderTest {
 
     ConfigurationLoader configurationLoader = new ConfigurationLoader();
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
-    Configuration configuration = configurationLoader.loadNewConfiguration(stream);
+    Configuration configuration = configurationLoader.loadConfiguration(stream);
     assertNull(configuration);
     IOUtils.closeQuietly(stream);
   }
@@ -152,7 +152,7 @@ public class ConfigurationLoaderTest {
 
     ConfigurationLoader configurationLoader = new ConfigurationLoader();
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
-    Configuration configuration = configurationLoader.loadNewConfiguration(stream);
+    Configuration configuration = configurationLoader.loadConfiguration(stream);
     assertNotNull(configuration);
     IOUtils.closeQuietly(stream);
   }
@@ -163,7 +163,7 @@ public class ConfigurationLoaderTest {
         "<redpen-conf></redpen-conf>";
     ConfigurationLoader configurationLoader = new ConfigurationLoader();
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
-    Configuration configuration = configurationLoader.loadNewConfiguration(stream);
+    Configuration configuration = configurationLoader.loadConfiguration(stream);
     assertNull(configuration);
     IOUtils.closeQuietly(stream);
   }
@@ -185,7 +185,7 @@ public class ConfigurationLoaderTest {
 
     ConfigurationLoader configurationLoader = new ConfigurationLoader();
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
-    Configuration configuration = configurationLoader.loadNewConfiguration(stream);
+    Configuration configuration = configurationLoader.loadConfiguration(stream);
     IOUtils.closeQuietly(stream);
 
     assertNull(configuration);

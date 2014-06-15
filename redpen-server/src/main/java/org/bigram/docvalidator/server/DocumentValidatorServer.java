@@ -42,7 +42,7 @@ public class DocumentValidatorServer {
 
   private DocumentValidatorServer() throws DocumentValidatorException {
     ConfigurationLoader configLoader = new ConfigurationLoader();
-    documentValidatorConfig = configLoader.loadNewConfiguration(
+    documentValidatorConfig = configLoader.loadConfiguration(
         getClass()
             .getClassLoader()
             .getResourceAsStream("/conf/dv-conf.xml")

@@ -30,13 +30,11 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.bigram.docvalidator.config.Character;
-import org.bigram.docvalidator.config.CharacterTable;
 import org.bigram.docvalidator.config.Configuration;
 import org.bigram.docvalidator.util.SAXErrorHandler;
 import org.bigram.docvalidator.config.ValidatorConfiguration;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -59,7 +57,7 @@ public class ConfigurationLoader {
     } catch (FileNotFoundException e) {
       LOG.error(e.getMessage());
     }
-    Configuration configuration = this.loadNewConfiguration(fis);
+    Configuration configuration = this.loadConfiguration(fis);
     IOUtils.closeQuietly(fis);
     return configuration;
   }
@@ -71,7 +69,7 @@ public class ConfigurationLoader {
    * @return Configuration loaded from input stream
    * NOTE: return null when failed to create Configuration
    */
-  public Configuration loadNewConfiguration(InputStream stream) {
+  public Configuration loadConfiguration(InputStream stream) {
     Document doc = parseConfigurationString(stream);
     if (doc == null) {
       LOG.error("Failed to parse configuration string");
