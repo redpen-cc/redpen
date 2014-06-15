@@ -26,7 +26,6 @@ import org.bigram.docvalidator.model.Document;
 import org.bigram.docvalidator.model.Paragraph;
 import org.bigram.docvalidator.model.Section;
 import org.bigram.docvalidator.DocumentValidatorException;
-import org.bigram.docvalidator.config.ValidationConfigurationLoader;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -35,7 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 public class PlainTextParserTest {

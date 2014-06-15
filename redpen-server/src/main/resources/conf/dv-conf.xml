@@ -16,7 +16,24 @@
   ~ limitations under the License.
   -->
 
-<configuration>
-  <validator>conf/validation-conf.xml</validator>
-  <lang char-conf="conf/symbol-conf-en.xml">en</lang>
-</configuration>
+<redpen-conf>
+    <validator-list>
+        <validator name="SentenceLength">
+            <property name="max_length" value="200"/>
+        </validator>
+        <validator name="InvalidCharacter" />
+        <validator name="SpaceWithSymbol" />
+        <validator name="SectionLength">
+            <property name="max_char_num" value="2000"/>
+        </validator>
+        <validator name="MaxParagraphNumber" />
+    </validator-list>
+    <character-table lang="en">
+        <character name="EXCLAMATION_MARK" value="!" invalid-chars="！" after-space="true" />
+        <character name="LEFT_QUOTATION_MARK" value="\'"  invalid-chars="“" before-space="true" />
+        <character name="RIGHT_QUOTATION_MARK" value="\'"  invalid-chars="”" after-space="true" />
+        <character name="NUMBER_SIGN" value="#" invalid-chars="＃" after-space="true" />
+        <character name="FULL_STOP" value="." invalid-chars="．。" after-space="true" />
+        <character name="COMMA" value="," invalid-chars="、，" after-space="true" />
+    </character-table>
+</redpen-conf>

@@ -17,16 +17,13 @@
  */
 package org.bigram.docvalidator;
 
-import org.apache.commons.io.input.ReaderInputStream;
 import org.bigram.docvalidator.distributor.FakeResultDistributor;
 import org.junit.Test;
 import org.bigram.docvalidator.config.Configuration;
-import org.bigram.docvalidator.config.ValidationConfigurationLoader;
 import org.bigram.docvalidator.config.ValidatorConfiguration;
 import org.bigram.docvalidator.model.DocumentCollection;
 import org.bigram.docvalidator.model.Sentence;
 
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 

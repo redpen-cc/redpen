@@ -17,15 +17,11 @@
  */
 package org.bigram.docvalidator.parser;
 
-import org.apache.commons.io.IOUtils;
 import org.bigram.docvalidator.model.*;
 import org.junit.Before;
 import org.junit.Test;
-import org.bigram.docvalidator.config.CharacterTable;
-import org.bigram.docvalidator.config.CharacterTableLoader;
 import org.bigram.docvalidator.config.Configuration;
 import org.bigram.docvalidator.DocumentValidatorException;
-import org.bigram.docvalidator.config.ValidationConfigurationLoader;
 import org.bigram.docvalidator.config.ValidatorConfiguration;
 
 import java.io.ByteArrayInputStream;
