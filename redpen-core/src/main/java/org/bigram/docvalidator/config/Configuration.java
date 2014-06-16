@@ -18,11 +18,12 @@
 package org.bigram.docvalidator.config;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Map;
+import org.bigram.docvalidator.symbol.AbstractSymbols;
+import org.bigram.docvalidator.symbol.JapaneseSymbols;
+import org.bigram.docvalidator.symbol.DefaultSymbols;
 
 /**
  * Contains Settings used throughout DocumentValidator.
@@ -111,7 +112,7 @@ public final class Configuration {
     }
 
     public Builder setCharacterTable(String lang) {
-      this.characterTable = CharacterTableLoader.loadWithLanguage(lang);
+      this.characterTable = loadLanguageDefaultCharacterTable(lang);
       return this;
     }
 
@@ -192,6 +193,28 @@ public final class Configuration {
       for (ValidatorConfiguration config : validatorConfig.getChildren()) {
         addValidationConfig(config);
       }
+    }
+
+    private static CharacterTable loadLanguageDefaultCharacterTable(
+        String lang) {
+      CharacterTable characterTable = new CharacterTable();
+      Map<String, Character> dictionary
+          = characterTable.getCharacterDictionary();
+      AbstractSymbols symbolSettings;
+      if (lang.equals("ja")) {
+        symbolSettings = JapaneseSymbols.getInstance();
+      } else {
+        symbolSettings = DefaultSymbols.getInstance();
+      }
+
+      Iterator<String> characterNames =
+          symbolSettings.getAllCharacterNames();
+      while (characterNames.hasNext()) {
+        String charName = characterNames.next();
+        Character character = symbolSettings.get(charName);
+        dictionary.put(charName, character);
+      }
+      return characterTable;
     }
 
     public Configuration build() {
