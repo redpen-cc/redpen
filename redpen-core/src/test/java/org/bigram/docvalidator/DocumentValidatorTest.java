@@ -62,7 +62,6 @@ public class DocumentValidatorTest {
         .build();
 
     List<ValidationError> errors = validator.check(documents);
-
     assertEquals(0, errors.size());
   }
 

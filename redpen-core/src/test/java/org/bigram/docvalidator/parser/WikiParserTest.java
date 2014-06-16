@@ -24,13 +24,10 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
-import org.apache.commons.io.IOUtils;
 import org.bigram.docvalidator.model.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.bigram.docvalidator.config.Configuration;
-import org.bigram.docvalidator.config.CharacterTable;
-import org.bigram.docvalidator.config.CharacterTableLoader;
 import org.bigram.docvalidator.config.ValidatorConfiguration;
 import org.bigram.docvalidator.DocumentValidatorException;
 

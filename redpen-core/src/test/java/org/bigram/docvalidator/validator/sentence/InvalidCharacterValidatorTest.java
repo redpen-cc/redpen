@@ -19,70 +19,91 @@ package org.bigram.docvalidator.validator.sentence;
 
 import static org.junit.Assert.*;
 
-import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
+import org.bigram.docvalidator.DocumentValidator;
+import org.bigram.docvalidator.DocumentValidatorException;
+import org.bigram.docvalidator.config.*;
+import org.bigram.docvalidator.config.Character;
+import org.bigram.docvalidator.distributor.FakeResultDistributor;
+import org.bigram.docvalidator.model.DocumentCollection;
 import org.junit.Test;
 import org.bigram.docvalidator.model.Sentence;
-import org.bigram.docvalidator.config.CharacterTable;
-import org.bigram.docvalidator.config.CharacterTableLoader;
 import org.bigram.docvalidator.ValidationError;
-
-class InvalidCharacterValidatorForTest extends InvalidCharacterValidator {
-  void loadCharacterTable (CharacterTable characterTable) {
-    this.setCharacterTable(characterTable);
-  }
-}
 
 public class InvalidCharacterValidatorTest {
   @Test
-  public void testWithInvalidCharacter() {
-    InvalidCharacterValidatorForTest validator = new InvalidCharacterValidatorForTest();
-    String sampleCharTable = new String(
-        "<?xml version=\"1.0\"?>"+
-        "<character-table>" +
-        "<character name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\"/>" +
-        "</character-table>");
-    InputStream stream = IOUtils.toInputStream(sampleCharTable);
-    CharacterTable characterTable = CharacterTableLoader.load(stream);
-    validator.loadCharacterTable(characterTable);
-    Sentence str = new Sentence("わたしはカラオケが大好き！",0);
-    List<ValidationError> errors = validator.validate(str);
+  public void testWithInvalidCharacter() throws DocumentValidatorException {
+    DocumentCollection documents = new DocumentCollection.Builder()
+        .addDocument("")
+        .addSection(1, new ArrayList<Sentence>())
+        .addParagraph()
+        .addSentence("わたしはカラオケが大好き！", 1)
+        .build();
+
+    Configuration conf = new Configuration.Builder()
+        .addSentenceValidatorConfig(new ValidatorConfiguration("InvalidCharacter"))
+        .setCharacterTable("en")
+        .setCharacter(new Character("EXCLAMATION_MARK", "!", "！"))
+        .build();
+
+    DocumentValidator validator = new DocumentValidator.Builder()
+        .setConfiguration(conf)
+        .setResultDistributor(new FakeResultDistributor())
+        .build();
+
+    List<ValidationError> errors = validator.check(documents);
     assertEquals(1, errors.size());
   }
 
   @Test
-  public void testWithoutInvalidCharacter() {
-    InvalidCharacterValidatorForTest validator = new InvalidCharacterValidatorForTest();
-    String sampleCharTable = new String(
-        "<?xml version=\"1.0\"?>"+
-        "<character-table>" +
-        "<character name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\"/>" +
-        "</character-table>");
-    InputStream stream = IOUtils.toInputStream(sampleCharTable);
-    CharacterTable characterTable = CharacterTableLoader.load(stream);
-    validator.loadCharacterTable(characterTable);
-    Sentence str = new Sentence("I like karaoke!",0);
-    List<ValidationError> errors = validator.validate(str);
+  public void testWithoutInvalidCharacter() throws DocumentValidatorException {
+    DocumentCollection documents = new DocumentCollection.Builder()
+        .addDocument("")
+        .addSection(1, new ArrayList<Sentence>())
+        .addParagraph()
+        .addSentence("I like Karaoke", 1)
+        .build();
+
+    Configuration conf = new Configuration.Builder()
+        .addSentenceValidatorConfig(new ValidatorConfiguration("InvalidCharacter"))
+        .setCharacterTable("en")
+        .setCharacter(new Character("EXCLAMATION_MARK", "!", "！"))
+        .build();
+
+    DocumentValidator validator = new DocumentValidator.Builder()
+        .setConfiguration(conf)
+        .setResultDistributor(new FakeResultDistributor())
+        .build();
+
+    List<ValidationError> errors = validator.check(documents);
     assertEquals(0, errors.size());
   }
 
   @Test
-  public void testWithoutMultipleInvalidCharacter() {
-    InvalidCharacterValidatorForTest validator = new InvalidCharacterValidatorForTest();
-    String sampleCharTable = new String(
-        "<?xml version=\"1.0\"?>"+
-        "<character-table>" +
-        "<character name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\"/>" +
-        "<character name=\"COMMA\" value=\",\" invalid-chars=\"、\"/>" +
-        "</character-table>");
-    InputStream stream = IOUtils.toInputStream(sampleCharTable);
-    CharacterTable characterTable = CharacterTableLoader.load(stream);
-    validator.loadCharacterTable(characterTable);
-    Sentence str = new Sentence("わたしは、カラオケが好き！",0);
-    List<ValidationError> errors = validator.validate(str);
+  public void testWithoutMultipleInvalidCharacter() throws DocumentValidatorException {
+
+    DocumentCollection documents = new DocumentCollection.Builder()
+        .addDocument("")
+        .addSection(1, new ArrayList<Sentence>())
+        .addParagraph()
+        .addSentence("わたしは、カラオケが大好き！", 1) // NOTE: two invalid characters
+        .build();
+
+    Configuration conf = new Configuration.Builder()
+        .addSentenceValidatorConfig(new ValidatorConfiguration("InvalidCharacter"))
+        .setCharacterTable("en")
+        .setCharacter(new Character("EXCLAMATION_MARK", "!", "！"))
+        .setCharacter(new Character("COMMA", ",", "、"))
+        .build();
+
+    DocumentValidator validator = new DocumentValidator.Builder()
+        .setConfiguration(conf)
+        .setResultDistributor(new FakeResultDistributor())
+        .build();
+
+    List<ValidationError> errors = validator.check(documents);
     assertEquals(2, errors.size());
   }
-
 }
