@@ -18,149 +18,366 @@
 package org.bigram.docvalidator;
 
 import static org.junit.Assert.*;
-
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import org.junit.Test;
 
 import org.apache.commons.io.IOUtils;
-import org.bigram.docvalidator.config.CharacterTable;
-import org.bigram.docvalidator.config.CharacterTableLoader;
 import org.bigram.docvalidator.config.Configuration;
-import org.bigram.docvalidator.config.ValidatorConfiguration;
-import org.w3c.dom.Element;
-
-class ConfigurationLoaderForTest extends ConfigurationLoader {
-  @Override
-  protected CharacterTable extractCharacterTable(String configPath, String lang) {
-    InputStream is;
-    String dummy = "<?xml version=\"1.0\"?>" +
-        "<character-table></character-table>"; // no config override
-    is = new ByteArrayInputStream(dummy.getBytes());
-    return CharacterTableLoader.load(is, lang);
-  }
-
-  @Override
-  protected ValidatorConfiguration extractValidatorConfiguration(
-      Element rootElement) {
-    return new ValidatorConfiguration("dummy");
-  }
-}
+import org.bigram.docvalidator.config.Character;
 
 public class ConfigurationLoaderTest {
   @Test
   public void testLoadConfiguration() {
     String sampleConfigString =
-        "<configuration> " +
-            "  <validator>sample/conf/validation-conf.xml</validator>" +
-            "  <lang char-conf=\"sample/conf/symbol-conf-en.xml\">en</lang>" +
-            "</configuration>";
-    ConfigurationLoader configurationLoader = new ConfigurationLoaderForTest();
+        "<redpen-conf>" +
+            "<validator-list>" +
+            "<validator name=\"SentenceLength\">" +
+            "<property name=\"max_length\" value=\"200\" />" +
+            "</validator>" +
+            "<validator name=\"MaxParagraphNumber\" />" +
+            "</validator-list>" +
+            "<character-table lang=\"en\">" +
+            "<character name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\" after-space=\"true\" />" +
+            "</character-table>" +
+            "</redpen-conf>";
+
+    ConfigurationLoader configurationLoader = new ConfigurationLoader();
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
     Configuration configuration = configurationLoader.loadConfiguration(stream);
     IOUtils.closeQuietly(stream);
+
     assertNotNull(configuration);
-    assertEquals(".", configuration.getCharacterTable().getCharacter("FULL_STOP").getValue());
+    assertEquals(1, configuration.getSentenceValidatorConfigs().size());
+    assertEquals("SentenceLength",
+        configuration.getSentenceValidatorConfigs().get(0).getConfigurationName());
+    assertEquals("200",
+        configuration.getSentenceValidatorConfigs().get(0).getAttribute("max_length"));
+    assertEquals(1, configuration.getSectionValidatorConfigs().size());
+    assertEquals("MaxParagraphNumber",
+        configuration.getSectionValidatorConfigs().get(0).getConfigurationName());
+    assertNotNull(configuration.getCharacterTable());
+    assertEquals("!", configuration.getCharacterTable()
+        .getCharacter("EXCLAMATION_MARK").getValue());
+    assertEquals(1, configuration.getCharacterTable()
+        .getCharacter("EXCLAMATION_MARK").getInvalidChars().size());
+    assertEquals("！", configuration.getCharacterTable()
+        .getCharacter("EXCLAMATION_MARK").getInvalidChars().get(0));
   }
 
   @Test
-  public void testLoadJapaneseConfiguration() {
+  public void testNewLoadConfigurationWithoutCharacterTableConfig() {
     String sampleConfigString =
-        "<configuration> " +
-            "  <validator>sample/conf/validation-conf.xml</validator>" +
-            "  <lang char-conf=\"sample/conf/symbol-conf-ja.xml\">ja</lang>" +
-            "</configuration>";
-    ConfigurationLoader configurationLoader = new ConfigurationLoaderForTest();
+        "<redpen-conf>" +
+            "<validator-list>" +
+            "<validator name=\"SentenceLength\">" +
+            "<property name=\"max_length\" value=\"200\" />" +
+            "</validator>" +
+            "<validator name=\"MaxParagraphNumber\" />" +
+            "</validator-list>" +
+            "</redpen-conf>";
+
+    ConfigurationLoader configurationLoader = new ConfigurationLoader();
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
     Configuration configuration = configurationLoader.loadConfiguration(stream);
     IOUtils.closeQuietly(stream);
+
     assertNotNull(configuration);
-    assertEquals("。", configuration.getCharacterTable().getCharacter("FULL_STOP").getValue());
+    assertEquals(1, configuration.getSentenceValidatorConfigs().size());
+    assertEquals("SentenceLength",
+        configuration.getSentenceValidatorConfigs().get(0).getConfigurationName());
+    assertEquals(1, configuration.getSectionValidatorConfigs().size());
+    assertEquals("MaxParagraphNumber",
+        configuration.getSectionValidatorConfigs().get(0).getConfigurationName());
+    assertNotNull(configuration.getCharacterTable());
+    assertEquals("!", configuration.getCharacterTable()
+        .getCharacter("EXCLAMATION_MARK").getValue());
   }
 
   @Test
-  public void testLoadConfigurationWithoutValidatorConfig() {
+  public void testNewLoadConfigurationWithoutCharacterTableConfigContent() {
     String sampleConfigString =
-        "<configuration> " +
-            "  <lang char-conf=\"sample/conf/symbol-conf-en.xml\">en</lang>" +
-        "</configuration>";
-    ConfigurationLoader configurationLoader = new ConfigurationLoaderForTest();
+        "<redpen-conf>" +
+            "<validator-list>" +
+            "<validator name=\"SentenceLength\">" +
+            "<property name=\"max_length\" value=\"200\" />" +
+            "</validator>" +
+            "<validator name=\"MaxParagraphNumber\" />" +
+            "</validator-list>" +
+            "<character-table lang=\"en\">" +
+            "</character-table>" +
+            "</redpen-conf>";
+
+    ConfigurationLoader configurationLoader = new ConfigurationLoader();
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
     Configuration configuration = configurationLoader.loadConfiguration(stream);
     IOUtils.closeQuietly(stream);
-    assertNull(configuration);
+
+    assertNotNull(configuration);
+    assertEquals(1, configuration.getSentenceValidatorConfigs().size());
+    assertEquals("SentenceLength",
+        configuration.getSentenceValidatorConfigs().get(0).getConfigurationName());
+    assertEquals(1, configuration.getSectionValidatorConfigs().size());
+    assertEquals("MaxParagraphNumber",
+        configuration.getSectionValidatorConfigs().get(0).getConfigurationName());
+    assertNotNull(configuration.getCharacterTable());
+    assertEquals("!", configuration.getCharacterTable()
+        .getCharacter("EXCLAMATION_MARK").getValue());
   }
 
   @Test
-  public void testLoadConfigurationWithoutCharConfig() {
+  public void testNewLoadConfigurationWithoutValidatorConfig() {
     String sampleConfigString =
-        "<configuration> " +
-            "  <validator>sample/conf/validation-conf.xml</validator>" +
-            "  <lang>en</lang>" +
-        "</configuration>";
-    ConfigurationLoader configurationLoader = new ConfigurationLoaderForTest();
+        "<redpen-conf>" +
+            "<character-table lang=\"en\">" +
+            "<character name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\" after-space=\"true\" />" +
+            "</character-table>" +
+            "</redpen-conf>";
+
+    ConfigurationLoader configurationLoader = new ConfigurationLoader();
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
     Configuration configuration = configurationLoader.loadConfiguration(stream);
-    IOUtils.closeQuietly(stream);
     assertNull(configuration);
+    IOUtils.closeQuietly(stream);
   }
 
   @Test
-  public void testLoadConfigurationWithoutLangConfig() {
+  public void testNewLoadConfigurationWithoutValidatorConfigContent() {
     String sampleConfigString =
-        "<configuration> " +
-        "  <validator>sample/conf/validation-conf.xml</validator>" +
-        "</configuration>";
-    ConfigurationLoader configurationLoader = new ConfigurationLoaderForTest();
+        "<redpen-conf>" +
+            "<validator-list>" +
+            "</validator-list>" +
+            "<character-table lang=\"en\">" +
+            "<character name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\" after-space=\"true\" />" +
+            "</character-table>" +
+            "</redpen-conf>";
+
+    ConfigurationLoader configurationLoader = new ConfigurationLoader();
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
     Configuration configuration = configurationLoader.loadConfiguration(stream);
+    assertNotNull(configuration);
     IOUtils.closeQuietly(stream);
-    assertNull(configuration);
   }
 
   @Test
-  public void testLoadConfigurationWithoutRootConfigBlock() {
+  public void testVoidConfig() {
     String sampleConfigString =
-        "<dummy> " +
-            "  <validator>sample/conf/validation-conf.xml</validator>" +
-            "  <lang char-conf=\"sample/conf/symbol-conf-en.xml\">en</lang>" +
-        "</dummy>";
-    ConfigurationLoader configurationLoader = new ConfigurationLoaderForTest();
+        "<redpen-conf></redpen-conf>";
+    ConfigurationLoader configurationLoader = new ConfigurationLoader();
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
     Configuration configuration = configurationLoader.loadConfiguration(stream);
+    assertNull(configuration);
     IOUtils.closeQuietly(stream);
-    assertNull(configuration);
   }
 
   @Test
-  public void testLoadConfigurationWithoutContent() {
-    String sampleConfigString = "";
-    ConfigurationLoader configurationLoader = new ConfigurationLoaderForTest();
-    InputStream stream = IOUtils.toInputStream(sampleConfigString);
-    Configuration configuration = configurationLoader.loadConfiguration(stream);
-    IOUtils.closeQuietly(stream);
-    assertNull(configuration);
-  }
-
-  @Test
-  public void testLoadNullConfiguration() {
-    ConfigurationLoader configurationLoader = new ConfigurationLoaderForTest();
-    InputStream stream = null;
-    Configuration configuration = configurationLoader.loadConfiguration(stream);
-    assertNull(configuration);
-  }
-
-  @Test
-  public void testLoadInvalidConfiguration() {
+  public void testNewLoadInvalidConfiguration() {
     String sampleConfigString =
-        "<configuration> " +
-            "  <validator>sample/conf/validation-conf.xml</validator>" +
-            "  <lang char-conf=\"sample/conf/symbol-conf-en.xml\">en</lang>" +
-        "<configuration>"; // NOTE: no slash
-    ConfigurationLoader configurationLoader = new ConfigurationLoaderForTest();
+        "<redpen-conf>" +
+            "<validator-list>" +
+            "<validator name=\"SentenceLength\">" +
+            "<property name=\"max_length\" value=\"200\" />" +
+            "</validator>" +
+            "<validator name=\"MaxParagraphNumber\" />" +
+            "</validator-list>" +
+            "<character-table lang=\"en\">" +
+            "<character name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\" after-space=\"true\" />" +
+            "</character-table>" +
+            "<redpen-conf>";  // NOTE: Invalid xml since slash should be exist.
+
+    ConfigurationLoader configurationLoader = new ConfigurationLoader();
     InputStream stream = IOUtils.toInputStream(sampleConfigString);
     Configuration configuration = configurationLoader.loadConfiguration(stream);
     IOUtils.closeQuietly(stream);
+
     assertNull(configuration);
   }
+
+  @Test
+  public void testSpaceConfiguration() {
+    String sampleConfigString =
+        "<redpen-conf>" +
+            "<validator-list>" +
+            "<validator name=\"SentenceLength\" />" +
+            "<validator name=\"MaxParagraphNumber\" />" +
+            "</validator-list>" +
+            "<character-table lang=\"en\">" +
+            "<character name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\" after-space=\"true\" />" +
+            "</character-table>" +
+            "</redpen-conf>";
+
+    ConfigurationLoader configurationLoader = new ConfigurationLoader();
+    InputStream stream = IOUtils.toInputStream(sampleConfigString);
+    Configuration configuration = configurationLoader.loadConfiguration(stream);
+    IOUtils.closeQuietly(stream);
+
+    assertNotNull(configuration);
+
+    assertEquals("!", configuration.getCharacterTable()
+        .getCharacter("EXCLAMATION_MARK").getValue());
+    assertEquals(1, configuration.getCharacterTable()
+        .getCharacter("EXCLAMATION_MARK").getInvalidChars().size());
+    assertEquals("！", configuration.getCharacterTable()
+        .getCharacter("EXCLAMATION_MARK").getInvalidChars().get(0));
+    assertEquals(false, configuration.getCharacterTable()
+        .getCharacter("EXCLAMATION_MARK").isNeedBeforeSpace());
+    assertEquals(true, configuration.getCharacterTable()
+        .getCharacter("EXCLAMATION_MARK").isNeedAfterSpace());
+  }
+
+  @Test
+  public void testConfigurationWithoutSpaceSetting() {
+    String sampleConfigString =
+        "<redpen-conf>" +
+            "<validator-list>" +
+            "<validator name=\"SentenceLength\" />" +
+            "<validator name=\"MaxParagraphNumber\" />" +
+            "</validator-list>" +
+            "<character-table lang=\"en\">" +
+            "<character name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\" />" +
+            "</character-table>" +
+            "</redpen-conf>";
+
+    ConfigurationLoader configurationLoader = new ConfigurationLoader();
+    InputStream stream = IOUtils.toInputStream(sampleConfigString);
+    Configuration configuration = configurationLoader.loadConfiguration(stream);
+    IOUtils.closeQuietly(stream);
+
+    assertNotNull(configuration);
+
+    assertEquals("!", configuration.getCharacterTable()
+        .getCharacter("EXCLAMATION_MARK").getValue());
+    assertEquals(1, configuration.getCharacterTable()
+        .getCharacter("EXCLAMATION_MARK").getInvalidChars().size());
+    assertEquals("！", configuration.getCharacterTable()
+        .getCharacter("EXCLAMATION_MARK").getInvalidChars().get(0));
+    assertEquals(false, configuration.getCharacterTable()
+        .getCharacter("EXCLAMATION_MARK").isNeedBeforeSpace());
+    assertEquals(false, configuration.getCharacterTable()
+        .getCharacter("EXCLAMATION_MARK").isNeedAfterSpace());
+  }
+
+
+  @Test
+  public void testConfigurationMultipleInvalids() {
+    String sampleConfigString =
+        "<redpen-conf>" +
+            "<validator-list>" +
+            "<validator name=\"SentenceLength\" />" +
+            "<validator name=\"MaxParagraphNumber\" />" +
+            "</validator-list>" +
+            "<character-table lang=\"en\">" +
+            "<character name=\"LEFT_QUOTATION_MARK\" value=\"\'\" invalid-chars=\"‘’\"/>" +
+            "</character-table>" +
+            "</redpen-conf>";
+
+    ConfigurationLoader configurationLoader = new ConfigurationLoader();
+    InputStream stream = IOUtils.toInputStream(sampleConfigString);
+    Configuration configuration = configurationLoader.loadConfiguration(stream);
+    IOUtils.closeQuietly(stream);
+
+    assertNotNull(configuration);
+
+    assertEquals("\'", configuration.getCharacterTable()
+        .getCharacter("LEFT_QUOTATION_MARK").getValue());
+    assertEquals(2, configuration.getCharacterTable()
+        .getCharacter("LEFT_QUOTATION_MARK").getInvalidChars().size());
+    assertEquals("‘", configuration.getCharacterTable().getCharacter("LEFT_QUOTATION_MARK").getInvalidChars().get(0));
+    assertEquals("’", configuration.getCharacterTable().getCharacter("LEFT_QUOTATION_MARK").getInvalidChars().get(1));
+  }
+
+  @Test
+  public void testCharacterConfigurationWithoutInvalid() {
+    String sampleConfigString =
+        "<redpen-conf>" +
+            "<validator-list>" +
+            "<validator name=\"SentenceLength\" />" +
+            "<validator name=\"MaxParagraphNumber\" />" +
+            "</validator-list>" +
+            "<character-table lang=\"en\">" +
+            "<character name=\"EXCLAMATION_MARK\" value=\"!\" />" +
+            "</character-table>" +
+            "</redpen-conf>";
+
+    ConfigurationLoader configurationLoader = new ConfigurationLoader();
+    InputStream stream = IOUtils.toInputStream(sampleConfigString);
+    Configuration configuration = configurationLoader.loadConfiguration(stream);
+    IOUtils.closeQuietly(stream);
+
+    assertNotNull(configuration);
+
+    assertEquals("!", configuration.getCharacterTable()
+        .getCharacter("EXCLAMATION_MARK").getValue());
+    assertEquals(0, configuration.getCharacterTable()
+        .getCharacter("EXCLAMATION_MARK").getInvalidChars().size());
+    assertEquals(false, configuration.getCharacterTable()
+        .getCharacter("EXCLAMATION_MARK").isNeedBeforeSpace());
+    assertEquals(false, configuration.getCharacterTable()
+        .getCharacter("EXCLAMATION_MARK").isNeedAfterSpace());
+  }
+
+  @Test
+  public void testAccessNotRegisteredCharacter() {
+    String sampleConfigString =
+        "<redpen-conf>" +
+            "<validator-list>" +
+            "<validator name=\"SentenceLength\" />" +
+            "<validator name=\"MaxParagraphNumber\" />" +
+            "</validator-list>" +
+            "<character-table lang=\"en\">" +
+            "<character name=\"EXCLAMATION_MARK\" value=\"!\" />" +
+            "</character-table>" +
+            "</redpen-conf>";
+
+    ConfigurationLoader configurationLoader = new ConfigurationLoader();
+    InputStream stream = IOUtils.toInputStream(sampleConfigString);
+    Configuration configuration = configurationLoader.loadConfiguration(stream);
+    IOUtils.closeQuietly(stream);
+
+    assertNotNull(configuration);
+    // NOTE: HADOOP_CHARACTER does not exist even in default settings
+    Character ch = configuration.getCharacterTable().getCharacter("HADOOP_CHARACTER");
+    assertNull(ch);
+  }
+
+
+  @Test
+  public void testConfigurationWithMisspelledBlock() {
+    String sampleConfigString =
+        "<redpen-conf>" +
+            "<validator-list>" +
+            "<validator name=\"SentenceLength\" />" +
+            "<validator name=\"MaxParagraphNumber\" />" +
+            "</validator-list>" +
+            "<character-table lang=\"en\">" +
+            "<charcc name=\"EXCLAMATION_MARK\" value=\"!\" />" +
+            "</character-table>" +
+            "</redpen-conf>";
+
+    ConfigurationLoader configurationLoader = new ConfigurationLoader();
+    InputStream stream = IOUtils.toInputStream(sampleConfigString);
+    Configuration configuration = configurationLoader.loadConfiguration(stream);
+    IOUtils.closeQuietly(stream);
+    assertNotNull(configuration); //FIXME: should be null or throw a exception. This will be fixed with issue #133.
+    assertNotNull(configuration.getCharacterTable());
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void testCharacterConfigurationWithoutName() {
+    String sampleConfigString =
+        "<redpen-conf>" +
+            "<validator-list>" +
+            "<validator name=\"SentenceLength\" />" +
+            "<validator name=\"MaxParagraphNumber\" />" +
+            "</validator-list>" +
+            "<character-table lang=\"en\">" +
+            "<character value=\"!\" invalid-chars=\"！\"/>" + //NOTE: NO NAME!
+            "</character-table>" +
+            "</redpen-conf>";
+
+    ConfigurationLoader configurationLoader = new ConfigurationLoader();
+    InputStream stream = IOUtils.toInputStream(sampleConfigString);
+    Configuration configuration = configurationLoader.loadConfiguration(stream);
+    IOUtils.closeQuietly(stream);
+  }
+
 }

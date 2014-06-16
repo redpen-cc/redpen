@@ -18,10 +18,12 @@
 package org.bigram.docvalidator.config;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Map;
+import org.bigram.docvalidator.symbol.AbstractSymbols;
+import org.bigram.docvalidator.symbol.JapaneseSymbols;
+import org.bigram.docvalidator.symbol.DefaultSymbols;
 
 /**
  * Contains Settings used throughout DocumentValidator.
@@ -104,8 +106,24 @@ public final class Configuration {
     private final List<ValidatorConfiguration> sentenceValidatorConfigs =
         new ArrayList<ValidatorConfiguration>();
 
-    public Builder setCharacterTable(CharacterTable characterTable) {
-      this.characterTable = characterTable;
+    public Builder setCharacterTable(String lang) {
+      this.characterTable = loadLanguageDefaultCharacterTable(lang);
+      return this;
+    }
+
+    public Builder setCharacter(String name, String value) {
+      this.characterTable.override(new Character(name, value));
+      return this;
+    }
+
+    public Builder setCharacter(Character character) {
+      this.characterTable.override(character);
+      return this;
+    }
+
+    public Builder addInvalidPattern(String name, String invalid) {
+      Character character = this.characterTable.getCharacter(name);
+      character.addInvalid(invalid);
       return this;
     }
 
@@ -124,8 +142,37 @@ public final class Configuration {
       return this;
     }
 
-    public Builder addRootValidatorConfig(ValidatorConfiguration config) {
-      this.extractChildValidators(config);
+    public Builder addValidationConfig(ValidatorConfiguration config) {
+      if ("SentenceLength".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("InvalidExpression".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("SpaceAfterPeriod".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("CommaNumber".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("WordNumber".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("SuggestExpression".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("InvalidCharacter".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("SpaceWithSymbol".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("KatakanaEndHyphen".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("KatakanaSpellCheck".equals(config.getConfigurationName())) {
+        sentenceValidatorConfigs.add(config);
+      } else if ("SectionLength".equals(config.getConfigurationName())) {
+        this.sectionValidatorConfigs.add(config);
+      } else if ("MaxParagraphNumber".equals(config.getConfigurationName())) {
+        this.sectionValidatorConfigs.add(config);
+      } else if ("ParagraphStartWith".equals(config.getConfigurationName())) {
+        this.sectionValidatorConfigs.add(config);
+      } else {
+        throw new IllegalStateException("No Validator such as '"
+            + config.getConfigurationName() + "'");
+      }
       return this;
     }
 
@@ -135,37 +182,30 @@ public final class Configuration {
       }
       // TODO tricky implementation. this code is need to refactor with ConfigurationLoader.
       for (ValidatorConfiguration config : validatorConfig.getChildren()) {
-        if ("SentenceLength".equals(config.getConfigurationName())) {
-          sentenceValidatorConfigs.add(config);
-        } else if ("InvalidExpression".equals(config.getConfigurationName())) {
-          sentenceValidatorConfigs.add(config);
-        } else if ("SpaceAfterPeriod".equals(config.getConfigurationName())) {
-          sentenceValidatorConfigs.add(config);
-        } else if ("CommaNumber".equals(config.getConfigurationName())) {
-          sentenceValidatorConfigs.add(config);
-        } else if ("WordNumber".equals(config.getConfigurationName())) {
-          sentenceValidatorConfigs.add(config);
-        } else if ("SuggestExpression".equals(config.getConfigurationName())) {
-          sentenceValidatorConfigs.add(config);
-        } else if ("InvalidCharacter".equals(config.getConfigurationName())) {
-          sentenceValidatorConfigs.add(config);
-        } else if ("SpaceWithSymbol".equals(config.getConfigurationName())) {
-          sentenceValidatorConfigs.add(config);
-        } else if ("KatakanaEndHyphen".equals(config.getConfigurationName())) {
-          sentenceValidatorConfigs.add(config);
-        } else if ("KatakanaSpellCheck".equals(config.getConfigurationName())) {
-          sentenceValidatorConfigs.add(config);
-        } else if ("SectionLength".equals(config.getConfigurationName())) {
-          this.sectionValidatorConfigs.add(config);
-        } else if ("MaxParagraphNumber".equals(config.getConfigurationName())) {
-          this.sectionValidatorConfigs.add(config);
-        } else if ("ParagraphStartWith".equals(config.getConfigurationName())) {
-          this.sectionValidatorConfigs.add(config);
-        } else {
-          throw new IllegalStateException("No Validator such as '"
-              + config.getConfigurationName() + "'");
-        }
+        addValidationConfig(config);
       }
+    }
+
+    private static CharacterTable loadLanguageDefaultCharacterTable(
+        String lang) {
+      CharacterTable characterTable = new CharacterTable();
+      Map<String, Character> dictionary
+          = characterTable.getCharacterDictionary();
+      AbstractSymbols symbolSettings;
+      if (lang.equals("ja")) {
+        symbolSettings = JapaneseSymbols.getInstance();
+      } else {
+        symbolSettings = DefaultSymbols.getInstance();
+      }
+
+      Iterator<String> characterNames =
+          symbolSettings.getAllCharacterNames();
+      while (characterNames.hasNext()) {
+        String charName = characterNames.next();
+        Character character = symbolSettings.get(charName);
+        dictionary.put(charName, character);
+      }
+      return characterTable;
     }
 
     public Configuration build() {
@@ -183,7 +223,4 @@ public final class Configuration {
       new ArrayList<ValidatorConfiguration>();
   private final List<ValidatorConfiguration> sentenceValidatorConfigs =
       new ArrayList<ValidatorConfiguration>();
-
-  private static final Logger LOG =
-      LoggerFactory.getLogger(Configuration.class);
 }

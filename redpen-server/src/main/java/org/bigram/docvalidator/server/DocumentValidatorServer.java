@@ -22,7 +22,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bigram.docvalidator.ConfigurationLoader;
 import org.bigram.docvalidator.config.Configuration;
-import org.bigram.docvalidator.server.util.ServerConfigurationLoader;
 import org.bigram.docvalidator.DocumentValidatorException;
 import org.bigram.docvalidator.DocumentValidator;
 
@@ -42,18 +41,15 @@ public class DocumentValidatorServer {
   private Configuration documentValidatorConfig;
 
   private DocumentValidatorServer() throws DocumentValidatorException {
-    ConfigurationLoader configLoader = new ServerConfigurationLoader();
+    ConfigurationLoader configLoader = new ConfigurationLoader();
     documentValidatorConfig = configLoader.loadConfiguration(
         getClass()
             .getClassLoader()
             .getResourceAsStream("/conf/dv-conf.xml")
     );
 
-//    ResultDistributor distributor = ResultDistributorFactory
-//        .createDistributor("plain", System.out);
     validator = new DocumentValidator.Builder()
         .setConfiguration(documentValidatorConfig)
-//        .setResultDistributor(distributor)
         .build();
   }
 

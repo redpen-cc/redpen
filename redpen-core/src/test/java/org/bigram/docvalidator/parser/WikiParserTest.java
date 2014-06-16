@@ -24,14 +24,10 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
-import org.apache.commons.io.IOUtils;
 import org.bigram.docvalidator.model.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.bigram.docvalidator.config.Configuration;
-import org.bigram.docvalidator.config.ValidationConfigurationLoader;
-import org.bigram.docvalidator.config.CharacterTable;
-import org.bigram.docvalidator.config.CharacterTableLoader;
 import org.bigram.docvalidator.config.ValidatorConfiguration;
 import org.bigram.docvalidator.DocumentValidatorException;
 
@@ -550,28 +546,12 @@ public class WikiParserTest {
 
   @Test
   public void testGenerateJapaneseDocument() {
-    String japaneseConfiguraitonStr = "" +
-      "<?xml version=\"1.0\"?>" +
-      "<component name=\"Validator\">" +
-      "</component>";
-
-    String japaneseCharTableStr = "" +
-      "<?xml version=\"1.0\"?>" +
-      "<character-table>" +
-      "<character name=\"FULL_STOP\" value=\"。\" />" +
-      "</character-table>";
-
     String sampleText = "埼玉は東京の北に存在する。";
     sampleText += "大きなベッドタウンであり、多くの人が住んでいる。";
-    Document doc = null;
 
-    try {
-      doc = createFileContent(sampleText, japaneseConfiguraitonStr,
-          japaneseCharTableStr);
-    } catch (DocumentValidatorException e1) {
-      e1.printStackTrace();
-      fail();
-    }
+    Configuration config =
+        new Configuration.Builder().setCharacterTable("ja").build();
+    Document doc = createFileContent(sampleText, config);
 
     Section firstSections = doc.getSection(0);
     Paragraph firstParagraph = firstSections.getParagraph(0);
@@ -591,24 +571,7 @@ public class WikiParserTest {
   }
 
   private Document createFileContent(String inputDocumentString,
-      String configurationString,
-      String characterTableString) throws DocumentValidatorException {
-    InputStream configStream = IOUtils.toInputStream(configurationString);
-    ValidatorConfiguration conf =
-        ValidationConfigurationLoader.loadConfiguration(configStream);
-
-    CharacterTable characterTable = null;
-    if (characterTableString.length() > 0) {
-      InputStream characterTableStream =
-          IOUtils.toInputStream(characterTableString);
-      characterTable = CharacterTableLoader.load(characterTableStream);
-    }
-    return createFileContent(inputDocumentString, conf, characterTable);
-  }
-
-  private Document createFileContent(String inputDocumentString,
-      ValidatorConfiguration conf,
-      CharacterTable characterTable) {
+      Configuration conf) {
     InputStream inputDocumentStream = null;
     try {
       inputDocumentStream =
@@ -617,15 +580,7 @@ public class WikiParserTest {
       fail();
     }
 
-    Parser parser = null;
-    Configuration.Builder builder = new Configuration.Builder().addRootValidatorConfig(conf);
-    if (characterTable != null) {
-      builder.setCharacterTable(characterTable);
-      parser = loadParser(builder.build());
-    } else {
-      parser = loadParser(builder.build());
-    }
-
+    Parser parser = loadParser(conf);
     try {
       return parser.generateDocument(inputDocumentStream);
     } catch (DocumentValidatorException e) {
@@ -637,7 +592,7 @@ public class WikiParserTest {
   private Document createFileContent(
       String inputDocumentString) {
     ValidatorConfiguration conf = new ValidatorConfiguration("dummy");
-    Configuration.Builder builder = new Configuration.Builder().addRootValidatorConfig(conf);
+    Configuration.Builder builder = new Configuration.Builder();
     Parser parser = loadParser(builder.build());
     InputStream is;
     try {

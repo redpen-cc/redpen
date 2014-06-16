@@ -17,15 +17,11 @@
  */
 package org.bigram.docvalidator.parser;
 
-import org.apache.commons.io.IOUtils;
 import org.bigram.docvalidator.model.*;
 import org.junit.Before;
 import org.junit.Test;
-import org.bigram.docvalidator.config.CharacterTable;
-import org.bigram.docvalidator.config.CharacterTableLoader;
 import org.bigram.docvalidator.config.Configuration;
 import org.bigram.docvalidator.DocumentValidatorException;
-import org.bigram.docvalidator.config.ValidationConfigurationLoader;
 import org.bigram.docvalidator.config.ValidatorConfiguration;
 
 import java.io.ByteArrayInputStream;
@@ -43,19 +39,14 @@ public class MarkdownParserTest {
 
   @Test(expected = DocumentValidatorException.class)
   public void testNullDocument() throws Exception {
-    ValidatorConfiguration conf = new ValidatorConfiguration("dummy");
-    Parser parser = loadParser(new Configuration.Builder()
-        .addRootValidatorConfig(conf).build());
+    Parser parser = loadParser(new Configuration.Builder().build());
     InputStream is = null;
     parser.generateDocument(is);
   }
 
   @Test(expected = DocumentValidatorException.class)
   public void testNullFileName() throws Exception {
-
-    ValidatorConfiguration conf = new ValidatorConfiguration("dummy");
-    Parser parser = loadParser(new Configuration.Builder()
-        .addRootValidatorConfig(conf).build());
+    Parser parser = loadParser(new Configuration.Builder().build());
     String fileName = null;
     parser.generateDocument(fileName);
   }
@@ -437,29 +428,11 @@ public class MarkdownParserTest {
 
   @Test
   public void testGenerateJapaneseDocument() {
-    String japaneseConfiguraitonStr = "" +
-      "<?xml version=\"1.0\"?>" +
-      "<component name=\"Validator\">" +
-      "</component>";
-
-    String japaneseCharTableStr = "" +
-      "<?xml version=\"1.0\"?>" +
-      "<character-table>" +
-      "<character name=\"FULL_STOP\" value=\"。\" />" +
-      "</character-table>";
-
     String sampleText = "埼玉は東京の北に存在する。";
     sampleText += "大きなベッドタウンであり、多くの人が住んでいる。";
-    Document doc = null;
-
-    try {
-      doc = createFileContent(sampleText, japaneseConfiguraitonStr,
-          japaneseCharTableStr);
-    } catch (DocumentValidatorException e1) {
-      e1.printStackTrace();
-      fail();
-    }
-
+    Configuration conf = new Configuration.Builder()
+        .setCharacterTable("ja").build();
+    Document doc = createFileContent(sampleText, conf);
     Section firstSections = doc.getSection(0);
     Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals(2, firstParagraph.getNumberOfSentences());
@@ -479,34 +452,7 @@ public class MarkdownParserTest {
   }
 
   private Document createFileContent(String inputDocumentString,
-                                        String configurationString,
-                                        String characterTableString)
-      throws DocumentValidatorException {
-
-    InputStream configStream = IOUtils.toInputStream(configurationString);
-
-    ValidatorConfiguration conf =
-        ValidationConfigurationLoader.loadConfiguration(configStream);
-
-    CharacterTable characterTable = null;
-
-    if (characterTableString.length() > 0)
-
-    {
-      InputStream characterTableStream =
-          IOUtils.toInputStream(characterTableString);
-      characterTable = CharacterTableLoader.load(characterTableStream);
-    }
-
-    return
-
-        createFileContent(inputDocumentString, conf, characterTable);
-
-  }
-
-  private Document createFileContent(String inputDocumentString,
-                                        ValidatorConfiguration conf,
-                                        CharacterTable characterTable) {
+      Configuration config) {
     InputStream inputDocumentStream = null;
     try {
       inputDocumentStream =
@@ -515,15 +461,7 @@ public class MarkdownParserTest {
       fail();
     }
 
-    Parser parser = null;
-    if (characterTable != null) {
-      parser = loadParser(new Configuration.Builder()
-          .addRootValidatorConfig(conf)
-          .setCharacterTable(characterTable).build());
-    } else {
-      parser = loadParser(new Configuration
-          .Builder().addRootValidatorConfig(conf).build());
-    }
+    Parser parser = loadParser(config);
 
     try {
       return parser.generateDocument(inputDocumentStream);
@@ -533,26 +471,9 @@ public class MarkdownParserTest {
     }
   }
 
-  private Document createFileContentFromInputStream(
-      InputStream inputStream) {
-    ValidatorConfiguration conf = new ValidatorConfiguration("dummy");
-    Parser parser = loadParser(new Configuration.Builder()
-        .addRootValidatorConfig(conf).build());
-    Document doc = null;
-    try {
-      doc = parser.generateDocument(inputStream);
-    } catch (DocumentValidatorException e) {
-      e.printStackTrace();
-      fail();
-    }
-    return doc;
-  }
-
   private Document createFileContent(
       String inputDocumentString) {
-    ValidatorConfiguration conf = new ValidatorConfiguration("dummy");
-    Parser parser = loadParser(new Configuration.Builder()
-        .addRootValidatorConfig(conf).build());
+    Parser parser = loadParser(new Configuration.Builder().build());
     InputStream is;
     try {
       is = new ByteArrayInputStream(inputDocumentString.getBytes("utf-8"));

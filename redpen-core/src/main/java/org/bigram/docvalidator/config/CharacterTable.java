@@ -82,6 +82,14 @@ public final class CharacterTable {
     return this.characterDictionary.get(name) != null;
   }
 
+  /**
+   * Replace the current character setting.
+   * @param character symbol configuration
+   */
+  public void override(Character character) {
+    characterDictionary.put(character.getName(), character);
+  }
+
   private final Map<String, Character> characterDictionary;
 
 }

@@ -45,8 +45,7 @@ public class SampleDocumentGenerator {
   public static DocumentCollection generateOneFileDocument(String docString,
       Parser.Type type) throws DocumentValidatorException {
     Configuration configuration = new Configuration.Builder()
-        .addRootValidatorConfig(new ValidatorConfiguration("dummy"))
-        .setCharacterTable(new CharacterTable()).build();
+        .setCharacterTable("en").build();
     DocumentCollection.Builder builder = new DocumentCollection.Builder();
     Parser parser = DocumentParserFactory.generate(type, configuration, builder);
     InputStream stream = IOUtils.toInputStream(docString);
