@@ -12,7 +12,7 @@ public class ConfigurationBuilderTest {
     Configuration config = new Configuration.Builder()
         .addSectionValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
         .addSentenceValidatorConfig(new ValidatorConfiguration("SentenceLength"))
-        .setCharacterTable(new CharacterTable()).build();
+        .setCharacterTable("en").build();
 
     assertEquals(1, config.getSentenceValidatorConfigs().size());
     assertEquals(1, config.getSectionValidatorConfigs().size());
@@ -66,17 +66,6 @@ public class ConfigurationBuilderTest {
   }
 
   @Test
-  public void testBuildConfigurationWithRootConfiguratiton() {
-    ValidatorConfiguration rootConfig = new ValidatorConfiguration("dummy");
-    rootConfig.addChild(new ValidatorConfiguration("InvalidExpression"));
-    Configuration config = new Configuration.Builder()
-        .addRootValidatorConfig(rootConfig).build();
-
-    assertEquals(1, config.getSentenceValidatorConfigs().size());
-    assertEquals(0, config.getSectionValidatorConfigs().size());
-  }
-
-  @Test
   public void testBuildConfigurationSpecifyingLanguage() {
     Configuration config = new Configuration.Builder()
         .addSectionValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
@@ -106,7 +95,7 @@ public class ConfigurationBuilderTest {
     Configuration config = new Configuration.Builder()
         .addSectionValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
         .setCharacterTable("ja")
-        .setInvalidPattern("FULL_STOP", "●")
+        .addInvalidPattern("FULL_STOP", "●")
         .build();
 
     assertNotNull(config.getCharacterTable());

@@ -39,19 +39,14 @@ public class MarkdownParserTest {
 
   @Test(expected = DocumentValidatorException.class)
   public void testNullDocument() throws Exception {
-    ValidatorConfiguration conf = new ValidatorConfiguration("dummy");
-    Parser parser = loadParser(new Configuration.Builder()
-        .addRootValidatorConfig(conf).build());
+    Parser parser = loadParser(new Configuration.Builder().build());
     InputStream is = null;
     parser.generateDocument(is);
   }
 
   @Test(expected = DocumentValidatorException.class)
   public void testNullFileName() throws Exception {
-
-    ValidatorConfiguration conf = new ValidatorConfiguration("dummy");
-    Parser parser = loadParser(new Configuration.Builder()
-        .addRootValidatorConfig(conf).build());
+    Parser parser = loadParser(new Configuration.Builder().build());
     String fileName = null;
     parser.generateDocument(fileName);
   }
@@ -478,9 +473,7 @@ public class MarkdownParserTest {
 
   private Document createFileContent(
       String inputDocumentString) {
-    ValidatorConfiguration conf = new ValidatorConfiguration("dummy");
-    Parser parser = loadParser(new Configuration.Builder()
-        .addRootValidatorConfig(conf).build());
+    Parser parser = loadParser(new Configuration.Builder().build());
     InputStream is;
     try {
       is = new ByteArrayInputStream(inputDocumentString.getBytes("utf-8"));

@@ -106,11 +106,6 @@ public final class Configuration {
     private final List<ValidatorConfiguration> sentenceValidatorConfigs =
         new ArrayList<ValidatorConfiguration>();
 
-    public Builder setCharacterTable(CharacterTable characterTable) {
-      this.characterTable = characterTable;
-      return this;
-    }
-
     public Builder setCharacterTable(String lang) {
       this.characterTable = loadLanguageDefaultCharacterTable(lang);
       return this;
@@ -126,7 +121,7 @@ public final class Configuration {
       return this;
     }
 
-    public Builder setInvalidPattern(String name, String invalid) {
+    public Builder addInvalidPattern(String name, String invalid) {
       Character character = this.characterTable.getCharacter(name);
       character.addInvalid(invalid);
       return this;
@@ -147,12 +142,7 @@ public final class Configuration {
       return this;
     }
 
-    public Builder addRootValidatorConfig(ValidatorConfiguration config) {
-      this.extractChildValidators(config);
-      return this;
-    }
-
-    public void addValidationConfig(ValidatorConfiguration config) {
+    public Builder addValidationConfig(ValidatorConfiguration config) {
       if ("SentenceLength".equals(config.getConfigurationName())) {
         sentenceValidatorConfigs.add(config);
       } else if ("InvalidExpression".equals(config.getConfigurationName())) {
@@ -183,6 +173,7 @@ public final class Configuration {
         throw new IllegalStateException("No Validator such as '"
             + config.getConfigurationName() + "'");
       }
+      return this;
     }
 
     private void extractChildValidators(ValidatorConfiguration validatorConfig) {

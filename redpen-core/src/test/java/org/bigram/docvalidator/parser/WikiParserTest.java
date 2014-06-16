@@ -592,8 +592,7 @@ public class WikiParserTest {
   private Document createFileContent(
       String inputDocumentString) {
     ValidatorConfiguration conf = new ValidatorConfiguration("dummy");
-    Configuration.Builder builder = new Configuration.Builder()
-        .addRootValidatorConfig(conf);
+    Configuration.Builder builder = new Configuration.Builder();
     Parser parser = loadParser(builder.build());
     InputStream is;
     try {
