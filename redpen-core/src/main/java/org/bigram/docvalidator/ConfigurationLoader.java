@@ -77,7 +77,6 @@ public class ConfigurationLoader {
     }
 
     configBuilder = new Configuration.Builder();
-
     Element rootElement = getRootNode(doc, "redpen-conf");
 
     // extract validator configurations
@@ -93,48 +92,51 @@ public class ConfigurationLoader {
       LOG.error("There is no validator block");
       return null;
     }
-
-    ValidatorConfiguration currentConfiguration = null;
-    for (int i = 0; i < validatorElementList.getLength(); i++) {
-      Node nNode = validatorElementList.item(i);
-      if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-        Element element = (Element) nNode;
-        if (element.getNodeName().equals("validator")) {
-          currentConfiguration =
-              new ValidatorConfiguration(element.getAttribute("name"), null);
-          configBuilder.addValidationConfig(currentConfiguration);
-
-          NodeList propertyElementList =nNode.getChildNodes();
-          for (int j = 0; j < propertyElementList.getLength(); j++) {
-            Node pNode = propertyElementList.item(j);
-            if (pNode.getNodeType() == Node.ELEMENT_NODE) {
-              Element propertyElement = (Element) pNode;
-              if (propertyElement.getNodeName().equals("property")
-                  && currentConfiguration != null) {
-                currentConfiguration.addAttribute(
-                    propertyElement.getAttribute("name"),
-                    propertyElement.getAttribute("value"));
-              }
-            }
-          }
-
-        } else {
-          LOG.warn("Invalid block: \"" + element.getNodeName() + "\"");
-          LOG.warn("Skip this block ...");
-        }
-      }
-    }
+    extractValidatorConfigurations(validatorElementList);
 
     // extract character configurations
     NodeList characterTableConfigElementList =
         getSpecifiedNodeList(rootElement, "character-table");
-
     if (characterTableConfigElementList == null) {
       configBuilder.setCharacterTable("en");
     } else {
       extractCharacterConfig(characterTableConfigElementList);
     }
     return configBuilder.build();
+  }
+
+  private void extractValidatorConfigurations(NodeList validatorElementList) {
+    ValidatorConfiguration currentConfiguration = null;
+    for (int i = 0; i < validatorElementList.getLength(); i++) {
+      Node nNode = validatorElementList.item(i);
+      if (nNode.getNodeType() != Node.ELEMENT_NODE) { continue; }
+      Element element = (Element) nNode;
+      if (element.getNodeName().equals("validator")) {
+        currentConfiguration =
+            new ValidatorConfiguration(element.getAttribute("name"), null);
+        configBuilder.addValidationConfig(currentConfiguration);
+        NodeList propertyElementList = nNode.getChildNodes();
+        extractProperties(currentConfiguration, propertyElementList);
+      } else {
+        LOG.warn("Invalid block: \"" + element.getNodeName() + "\"");
+        LOG.warn("Skip this block ...");
+      }
+    }
+  }
+
+  private void extractProperties(ValidatorConfiguration currentConfiguration,
+      NodeList propertyElementList) {
+    for (int j = 0; j < propertyElementList.getLength(); j++) {
+      Node pNode = propertyElementList.item(j);
+      if (pNode.getNodeType() != Node.ELEMENT_NODE) { continue; }
+      Element propertyElement = (Element) pNode;
+      if (propertyElement.getNodeName().equals("property")
+          && currentConfiguration != null) {
+        currentConfiguration.addAttribute(
+            propertyElement.getAttribute("name"),
+            propertyElement.getAttribute("value"));
+      }
+    }
   }
 
   private void extractCharacterConfig(NodeList characterTableConfigElementList) {
