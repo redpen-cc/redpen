@@ -31,11 +31,7 @@ import org.bigram.docvalidator.model.DocumentCollection;
 import org.bigram.docvalidator.DocumentValidatorException;
 import org.bigram.docvalidator.ValidationError;
 
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
@@ -53,10 +49,9 @@ public class DocumentValidateResource {
   );
 
   @Path("/validate")
-  @GET
+  @POST
   @Produces(MediaType.APPLICATION_JSON)
-  public Response validateDocument(@QueryParam("doc") @DefaultValue("")
-                                     String document) throws
+  public Response validateDocument(@FormParam("textarea") @DefaultValue("") String document) throws
     JSONException, DocumentValidatorException, UnsupportedEncodingException {
 
     LOG.info("Validating document");
