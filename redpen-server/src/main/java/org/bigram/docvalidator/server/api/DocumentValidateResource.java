@@ -20,8 +20,8 @@ package org.bigram.docvalidator.server.api;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bigram.docvalidator.server.DocumentValidatorServer;
-import org.json.JSONArray;
+  import org.bigram.docvalidator.server.DocumentValidatorServer;
+  import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.bigram.docvalidator.parser.DocumentParserFactory;
