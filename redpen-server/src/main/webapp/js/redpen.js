@@ -1,20 +1,22 @@
-function httpGet(theUrl) {
-  var xmlHttp = new XMLHttpRequest();
-  xmlHttp.open("GET", theUrl, false);
-  xmlHttp.send(null);
 
-  return xmlHttp;
+function httpPost(url, data) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open('POST', url, false);
+    xmlHttp.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded' );
+    xmlHttp.send("textarea=" + data);
+    return xmlHttp;
 }
 
 function getElement(id) {
   return document.getElementById(id);
 }
+
 function validateDocument() {
   var doc = getElement('textarea').value;
-  var xmlHttp = httpGet('rest/document/validate?doc=' + doc);
-  var result = eval("(" + xmlHttp.responseText + ")");
+  var xmlHttp = httpPost('rest/document/validate', doc);
+  var response_data = xmlHttp.responseText;
+  var result = eval('('+response_data+')');
   var errors = result['errors'];
-
   var div = getElement("result");
 
   if (result['document'].length > 0) {
