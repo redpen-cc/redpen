@@ -1,9 +1,10 @@
 import java.net.URL;
 import java.security.ProtectionDomain;
 
-import org.bigram.docvalidator.server.DocumentValidatorInitializer;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.webapp.WebAppContext;
+
+import javax.servlet.ServletContext;
 
 public class DocumentValidatorRunner {
     public static void main(String[] args) throws Exception {
@@ -17,8 +18,9 @@ public class DocumentValidatorRunner {
         WebAppContext webapp = new WebAppContext();
         webapp.setContextPath(contextPath);
         webapp.setWar(location.toExternalForm());
+        ServletContext context = webapp.getServletContext();
+        context.setAttribute("redpen.conf.path", "/conf/dv-conf.xml"); //TODO make path configurable
         server.setHandler(webapp);
-
         server.start();
         server.join();
     }

@@ -42,10 +42,11 @@ public class DocumentValidatorServer {
 
   private DocumentValidatorServer() throws DocumentValidatorException {
     ConfigurationLoader configLoader = new ConfigurationLoader();
+    String confPath = System.getProperty("redpen.conf.path", "/conf/dv-conf.xml");
     documentValidatorConfig = configLoader.loadConfiguration(
         getClass()
             .getClassLoader()
-            .getResourceAsStream("conf/dv-conf.xml")
+            .getResourceAsStream(confPath)
     );
 
     validator = new DocumentValidator.Builder()

@@ -49,6 +49,7 @@ public class DocumentValidateResourceTest extends MockServletInvocationTest {
     request.addHeader("Content-Type", MediaType.APPLICATION_FORM_URLENCODED);
     request.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
     MockServletContext context = new MockServletContext();
+    context.setAttribute("redpen.conf.path", "conf/dv-conf.xml");
     listner.contextInitialized(new ServletContextEvent(context));
     MockHttpServletResponse response = invoke(request);
     assertEquals("HTTP status", HttpStatus.OK.getCode(), response.getStatus());
