@@ -55,7 +55,6 @@ public class DocumentValidateResource {
     JSONException, DocumentValidatorException, UnsupportedEncodingException {
 
     LOG.info("Validating document");
-
     DocumentValidatorServer server = DocumentValidatorServer.getInstance();
     JSONObject json = new JSONObject();
 
