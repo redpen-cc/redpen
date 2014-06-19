@@ -30,6 +30,7 @@ import javax.servlet.ServletContextListener;
  */
 public class DocumentValidatorInitializer implements ServletContextListener {
 
+
   private static Logger log = LogManager.getLogger(
     DocumentValidatorInitializer.class
   );
@@ -37,6 +38,10 @@ public class DocumentValidatorInitializer implements ServletContextListener {
   @Override
   public void contextInitialized(ServletContextEvent servletContextEvent) {
     log.info("Starting Document Validator Server.");
+    String configPath =
+        (String) servletContextEvent.getServletContext().getAttribute("redpen.conf.path");
+    System.setProperty("redpen.conf.path", configPath);
+    log.info("Config Path is set to " + "\"" + configPath + "\"");
     try {
       DocumentValidatorServer.initialize();
       log.info("Document Validator Server is running.");
