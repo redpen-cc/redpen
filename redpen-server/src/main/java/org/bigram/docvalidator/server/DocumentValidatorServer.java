@@ -45,7 +45,7 @@ public class DocumentValidatorServer {
     documentValidatorConfig = configLoader.loadConfiguration(
         getClass()
             .getClassLoader()
-            .getResourceAsStream("/conf/dv-conf.xml")
+            .getResourceAsStream("conf/dv-conf.xml")
     );
 
     validator = new DocumentValidator.Builder()

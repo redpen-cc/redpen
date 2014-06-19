@@ -1,5 +1,7 @@
 import java.net.URL;
 import java.security.ProtectionDomain;
+
+import org.bigram.docvalidator.server.DocumentValidatorInitializer;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.webapp.WebAppContext;
 
@@ -15,8 +17,8 @@ public class DocumentValidatorRunner {
         WebAppContext webapp = new WebAppContext();
         webapp.setContextPath(contextPath);
         webapp.setWar(location.toExternalForm());
-
         server.setHandler(webapp);
+
         server.start();
         server.join();
     }

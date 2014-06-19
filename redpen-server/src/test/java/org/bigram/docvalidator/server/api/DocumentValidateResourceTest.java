@@ -3,16 +3,31 @@ package org.bigram.docvalidator.server.api;
 import org.apache.wink.common.internal.application.ApplicationFileLoader;
 import org.apache.wink.server.internal.servlet.MockServletInvocationTest;
 import org.apache.wink.common.http.HttpStatus;
+import org.bigram.docvalidator.server.DocumentValidatorInitializer;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.io.FileNotFoundException;
 import java.util.Set;
 import org.junit.Test;
+import org.springframework.mock.web.MockServletContext;
 
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import javax.ws.rs.core.MediaType;
 
 public class DocumentValidateResourceTest extends MockServletInvocationTest {
+
+  @Override
+  protected void setUp() throws Exception {
+    super.setUp();
+  }
+
+  @Override
+  protected void tearDown() throws Exception {
+    super.tearDown();
+  }
+
   @Override
   protected Class<?>[] getClasses() {
     try {
@@ -28,9 +43,13 @@ public class DocumentValidateResourceTest extends MockServletInvocationTest {
   public void testRun() throws Exception {
     MockHttpServletRequest request =
         constructMockRequest("POST", "/document/validate", MediaType.WILDCARD);
-    request.setContent(("{\"textarea\" : \"foobar.\"}").getBytes("UTF-8"));
+    request.setContent(("textarea=foobar").getBytes());
     request.addParameter("textarea", "foobar");
     request.setServerPort(8080);
+    request.addHeader("Content-Type", MediaType.APPLICATION_FORM_URLENCODED);
+    request.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+    MockServletContext context = new MockServletContext();
+    listner.contextInitialized(new ServletContextEvent(context));
     MockHttpServletResponse response = invoke(request);
     assertEquals("HTTP status", HttpStatus.OK.getCode(), response.getStatus());
   }
@@ -52,4 +71,6 @@ public class DocumentValidateResourceTest extends MockServletInvocationTest {
     mockRequest.addHeader("Accept", acceptHeader);
     return mockRequest;
   }
+
+  private ServletContextListener listner = new DocumentValidatorInitializer();
 }
