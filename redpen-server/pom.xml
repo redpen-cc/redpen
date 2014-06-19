@@ -98,6 +98,10 @@
               <additionalClasspathElement>${basedir}/src/main/webapp/WEB-INF</additionalClasspathElement>
               <additionalClasspathElement>${basedir}/src/main/resources</additionalClasspathElement>
           </additionalClasspathElements>
+          <forkMode>always</forkMode>
+          <systemPropertyVariables>
+              <log4j.configuration>file:${basedir}/src/test/resources/log4j-silent.properties</log4j.configuration>
+          </systemPropertyVariables>
         </configuration>
       </plugin>
     </plugins>
