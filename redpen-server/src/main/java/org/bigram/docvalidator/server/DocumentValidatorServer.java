@@ -18,21 +18,25 @@
 
 package org.bigram.docvalidator.server;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.bigram.docvalidator.ConfigurationLoader;
 import org.bigram.docvalidator.config.Configuration;
 import org.bigram.docvalidator.DocumentValidatorException;
 import org.bigram.docvalidator.DocumentValidator;
+
+import java.io.InputStream;
 
 /**
  * Document validator server.
  */
 public class DocumentValidatorServer {
 
-  private static Logger log = LogManager.getLogger(
-      DocumentValidatorServer.class
-  );
+  static String DEFAULT_INTERNAL_CONFIG_PATH = "/conf/dv-conf.xml";
+
+  private static final Logger LOG =
+      LoggerFactory.getLogger(DocumentValidatorServer.class);
 
   private static DocumentValidatorServer documentValidatorServer;
 
@@ -42,12 +46,20 @@ public class DocumentValidatorServer {
 
   private DocumentValidatorServer() throws DocumentValidatorException {
     ConfigurationLoader configLoader = new ConfigurationLoader();
-    String confPath = System.getProperty("redpen.conf.path", "/conf/dv-conf.xml");
-    documentValidatorConfig = configLoader.loadConfiguration(
-        getClass()
-            .getClassLoader()
-            .getResourceAsStream(confPath)
-    );
+    String confPath = System.getProperty("redpen.conf.path", DEFAULT_INTERNAL_CONFIG_PATH);
+
+    InputStream inputConfigStream = getClass()
+        .getClassLoader()
+        .getResourceAsStream(confPath);
+
+    if (inputConfigStream == null) {
+      LOG.info("Loading config from specified config file: " +
+          "\"" + confPath + "\"");
+      documentValidatorConfig = configLoader.loadConfiguration(confPath);
+    } else {
+      LOG.info("Loading config from default configuration");
+      documentValidatorConfig = configLoader.loadConfiguration(inputConfigStream);
+    }
 
     validator = new DocumentValidator.Builder()
         .setConfiguration(documentValidatorConfig)
@@ -71,7 +83,7 @@ public class DocumentValidatorServer {
   }
 
   public static void initialize() throws DocumentValidatorException {
-    log.info("Initializing Document Validator");
+    LOG.info("Initializing Document Validator");
     documentValidatorServer = new DocumentValidatorServer();
   }
 }

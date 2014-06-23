@@ -26,8 +26,6 @@ import org.bigram.docvalidator.validator.section.SectionValidator;
 import org.bigram.docvalidator.validator.section.SectionValidatorFactory;
 import org.bigram.docvalidator.validator.sentence.SentenceValidator;
 import org.bigram.docvalidator.validator.sentence.SentenceValidatorFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.bigram.docvalidator.distributor.ResultDistributorFactory;
 import org.bigram.docvalidator.formatter.Formatter;
 import org.bigram.docvalidator.model.Document;
@@ -64,6 +62,9 @@ public class DocumentValidator implements Validator {
   @SuppressWarnings("BooleanMethodIsAlwaysInverted")
   private void loadValidators(Configuration configuration)
       throws DocumentValidatorException {
+    if (configuration == null) {
+      throw new IllegalStateException("Configuration object is null");
+    }
 
     //TODO duplicate code...
     for (ValidatorConfiguration config : configuration
@@ -260,6 +261,4 @@ public class DocumentValidator implements Validator {
 
   private ResultDistributor distributor;
 
-  private static final Logger LOG =
-      LoggerFactory.getLogger(DocumentValidator.class);
 }
