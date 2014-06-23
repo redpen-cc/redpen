@@ -16,7 +16,6 @@ import javax.servlet.ServletContext;
 public class DocumentValidatorRunner {
 
   public static void main(String[] args) throws Exception {
-
     Options options = new Options();
     options.addOption("h", "help", false, "help");
 
@@ -63,6 +62,7 @@ public class DocumentValidatorRunner {
     if (commandLine.hasOption("p")) {
       portNum = Integer.parseInt(commandLine.getOptionValue("p"));
     }
+
     final String contextPath = System.getProperty("redpen.home","/");
 
     Server server = new Server(portNum);
@@ -73,7 +73,7 @@ public class DocumentValidatorRunner {
     webapp.setContextPath(contextPath);
     webapp.setWar(location.toExternalForm());
     ServletContext context = webapp.getServletContext();
-    context.setAttribute("redpen.conf.path", configFileName); //TODO make path configurable
+    context.setAttribute("redpen.conf.path", configFileName);
     server.setHandler(webapp);
     server.start();
     server.join();
@@ -83,5 +83,4 @@ public class DocumentValidatorRunner {
     HelpFormatter formatter = new HelpFormatter();
     formatter.printHelp("ParseArgs", opt);
   }
-
 }
