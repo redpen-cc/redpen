@@ -79,24 +79,10 @@
               <goal>unpack-dependencies</goal>
             </goals>
             <configuration>
-              <includeGroupIds>org.mortbay.jetty</includeGroupIds>
+              <includeGroupIds>org.mortbay.jetty, commons-cli</includeGroupIds>
               <includeScope>provided</includeScope>
               <!-- remove some files in order to decrease size -->
               <excludes>*, about_files/*, META-INF/*</excludes>
-              <outputDirectory>
-                ${project.build.directory}/${project.artifactId}
-              </outputDirectory>
-            </configuration>
-          </execution>
-          <execution>
-            <id>commons-cli-classpath</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>unpack-dependencies</goal>
-            </goals>
-            <configuration>
-              <includeGroupIds>commons-cli</includeGroupIds>
-              <includeScope>provided</includeScope>
               <outputDirectory>
                 ${project.build.directory}/${project.artifactId}
               </outputDirectory>
