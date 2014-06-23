@@ -28,6 +28,7 @@ public class DocumentValidatorRunner {
     OptionBuilder.withLongOpt("conf");
     OptionBuilder.withDescription("configuration file");
     OptionBuilder.hasArg();
+    OptionBuilder.withArgName("CONFFILE");
     options.addOption(OptionBuilder.create("c"));
 
 
@@ -81,6 +82,6 @@ public class DocumentValidatorRunner {
 
   private static void printHelp(Options opt) {
     HelpFormatter formatter = new HelpFormatter();
-    formatter.printHelp("ParseArgs", opt);
+    formatter.printHelp("redpen-server", opt);
   }
 }
