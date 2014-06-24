@@ -148,11 +148,9 @@ public final class SentenceExtractor {
       List<String> endCharacters, StringBuilder patternString) {
     int index = 0;
     for (String endChar : endCharacters) {
-      endChar = handleSpecialCharacter(endChar) + "\"";
-      if (index != 0) {
-        patternString.append("|");
-      }
-      patternString.append(endChar);
+      String pattern;
+      pattern = handleSpecialCharacter(endChar) + "\"";
+      appendPattern(patternString, pattern);
       index++;
     }
   }
@@ -162,9 +160,16 @@ public final class SentenceExtractor {
 
     for (String endChar : endCharacters) {
       endChar = handleSpecialCharacter(endChar);
-      patternString.append("|");
-      patternString.append(endChar);
+      appendPattern(patternString, endChar);
     }
+  }
+
+  private static void appendPattern(StringBuilder patternString,
+      String newPattern) {
+    if (patternString.length() > 0) {
+      patternString.append("|");
+    }
+    patternString.append(newPattern);
   }
 
   private static String handleSpecialCharacter(String endChar) {
