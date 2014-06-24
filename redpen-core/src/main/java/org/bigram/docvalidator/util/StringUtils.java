@@ -37,25 +37,25 @@ public final class StringUtils {
 
   private static int getEndPosition(String str, Pattern pattern, int offset) {
     int position = -1;
-    int length = 1;
+    int endPosition = -1;
     Matcher matcher = pattern.matcher(str);
     if (matcher.find(offset)) {
       position = matcher.start();
-      length = matcher.end() - matcher.start();
+      endPosition = matcher.end();
     }
 
-    if (checkPosition(position + length - 1, str)) {
+    if (checkPosition(endPosition - 1, str)) {
       if ((isBasicLatin(str.charAt(position))
-          && ' ' == str.charAt(position + length))) {
-        return position + length - 1;
+          && ' ' == str.charAt(endPosition))) {
+        return endPosition - 1;
       }
       return handleSuccessivePeriods(str, pattern, position);
     }
 
-    if (position + length == str.length()) {
+    if (endPosition == str.length()) {
       // NOTE: period in end of sentence should be the end of the sentence
       // even if there is NO tailing whitespace.
-      return position + length - 1;
+      return endPosition - 1;
     }
     return -1;
   }
