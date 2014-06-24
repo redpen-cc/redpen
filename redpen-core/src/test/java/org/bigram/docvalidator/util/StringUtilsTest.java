@@ -117,10 +117,18 @@ public class StringUtilsTest {
   }
 
   @Test
-  public void testEndPositionContainingMultipleNonAsciCharacters() {
+  public void testEndPositionContainingMultipleNonAsciiCharacters() {
     Pattern pattern = Pattern.compile("。|？");
     String str = new String ("これは群馬ですか？いいえ埼玉です。");
     assertEquals(8, StringUtils.getSentenceEndPosition(str, pattern));
+  }
+
+  @Test
+  public void testEndPositionOfSentenceWithQuotationMark() {
+    Pattern pattern = Pattern.compile("\\.\"");
+    String input = "\"pen.\"";
+    String str = new String (input);
+    assertEquals(5, StringUtils.getSentenceEndPosition(str, pattern));
   }
 
   @Test

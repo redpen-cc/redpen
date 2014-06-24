@@ -75,6 +75,28 @@ public class SentenceExtractorTest {
   }
 
   @Test
+  public void testEndWithQuotationmark() {
+    SentenceExtractor extractor = new SentenceExtractor();
+    List<Sentence> outputSentences = new ArrayList<Sentence>();
+    String remain = extractor.extract("this is a \"pen.\"",
+        outputSentences);
+    assertEquals(1, outputSentences.size());
+    assertEquals("this is a \"pen.\"", outputSentences.get(0).content);
+    assertEquals("", remain);
+  }
+
+  @Test
+  public void testEndWithQuotationmarkEnglishVersion() {
+    SentenceExtractor extractor = new SentenceExtractor();
+    List<Sentence> outputSentences = new ArrayList<Sentence>();
+    String remain = extractor.extract("this is a \"pen\".",
+        outputSentences);
+    assertEquals(1, outputSentences.size());
+    assertEquals("this is a \"pen\".", outputSentences.get(0).content);
+    assertEquals("", remain);
+  }
+
+  @Test
   public void testJapaneseSimple() {
     List<String> stopChars = new ArrayList<String>();
     stopChars.add("。");
@@ -130,7 +152,7 @@ public class SentenceExtractorTest {
     endCharacters.add("\\.");
     endCharacters.add("?");
     endCharacters.add("!");
-    assertEquals("\\.|\\?|\\!", SentenceExtractor.constructEndSentencePattern(
+    assertEquals("\\.\"|\\?\"|\\!\"|\\.|\\?|\\!", SentenceExtractor.constructEndSentencePattern(
         endCharacters));
   }
 
@@ -140,7 +162,7 @@ public class SentenceExtractorTest {
     endCharacters.add(".");
     endCharacters.add("?");
     endCharacters.add("!");
-    assertEquals("\\.|\\?|\\!", SentenceExtractor.constructEndSentencePattern(
+    assertEquals("\\.\"|\\?\"|\\!\"|\\.|\\?|\\!", SentenceExtractor.constructEndSentencePattern(
         endCharacters));
   }
 
@@ -148,7 +170,7 @@ public class SentenceExtractorTest {
      public void testConstructPatternStringForSingleCharacter() {
     List<String> endCharacters = new ArrayList<String>();
     endCharacters.add("\\.");
-    assertEquals("\\.", SentenceExtractor.constructEndSentencePattern(
+    assertEquals("\\.\"|\\.", SentenceExtractor.constructEndSentencePattern(
         endCharacters));
   }
 

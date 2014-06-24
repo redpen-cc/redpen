@@ -139,16 +139,32 @@ public final class SentenceExtractor {
       throw new IllegalArgumentException("No end character is specified");
     }
     StringBuilder patternString = new StringBuilder();
+    generateQutotationPattern(endCharacters, patternString);
+    generateSimplePattern(endCharacters, patternString);
+    return patternString.toString();
+  }
+
+  private static void generateQutotationPattern(
+      List<String> endCharacters, StringBuilder patternString) {
     int index = 0;
     for (String endChar : endCharacters) {
-      endChar = handleSpecialCharacter(endChar);
+      endChar = handleSpecialCharacter(endChar) + "\"";
       if (index != 0) {
         patternString.append("|");
       }
       patternString.append(endChar);
       index++;
     }
-    return patternString.toString();
+  }
+
+  private static void generateSimplePattern(List<String> endCharacters,
+      StringBuilder patternString) {
+
+    for (String endChar : endCharacters) {
+      endChar = handleSpecialCharacter(endChar);
+      patternString.append("|");
+      patternString.append(endChar);
+    }
   }
 
   private static String handleSpecialCharacter(String endChar) {
