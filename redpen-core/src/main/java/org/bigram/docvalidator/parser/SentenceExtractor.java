@@ -44,7 +44,7 @@ public final class SentenceExtractor {
     rightQuotationList.add(symbols.get("RIGHT_DOUBLE_QUOTATION_MARK").getValue());
 
     this.fullStopPattern = Pattern.compile(
-        this.constructEndSentencePattern(fullStopList));
+        this.constructEndSentencePattern());
   }
 
   /**
@@ -54,8 +54,23 @@ public final class SentenceExtractor {
    */
   public SentenceExtractor(List<String> fullStopList) {
     this();
+    this.fullStopList = fullStopList;
     this.fullStopPattern = Pattern.compile(
-        this.constructEndSentencePattern(fullStopList));
+        this.constructEndSentencePattern());
+  }
+
+  /**
+   * Constructor.
+   *
+   * @param fullStopList set of end of sentence characters
+   * @param rightQuotationList set of right quotation characters
+   */
+  public SentenceExtractor(List<String> fullStopList,
+      List<String> rightQuotationList) {
+    this.fullStopList =fullStopList;
+    this.rightQuotationList = rightQuotationList;
+    this.fullStopPattern = Pattern.compile(
+        this.constructEndSentencePattern());
   }
 
   /**
@@ -134,20 +149,17 @@ public final class SentenceExtractor {
    * regex to detect end sentences.
    * This method is protected permission just for testing.
    *
-   * @param endCharacters characters used in the end of
-   *                      sentences such as period
    * @return regex pattern to detect end sentences
    */
-  protected String constructEndSentencePattern(
-      List<String> endCharacters) {
-    if (endCharacters == null || endCharacters.size() == 0) {
+  protected String constructEndSentencePattern() {
+    if (this.fullStopList == null || this.fullStopList.size() == 0) {
       throw new IllegalArgumentException("No end character is specified");
     }
     StringBuilder patternString = new StringBuilder();
     for (String rightQuotation : rightQuotationList) {
-      generateQutotationPattern(endCharacters, patternString, rightQuotation);
+      generateQutotationPattern(this.fullStopList, patternString, rightQuotation);
     }
-    generateSimplePattern(endCharacters, patternString);
+    generateSimplePattern(this.fullStopList, patternString);
     return patternString.toString();
   }
 
