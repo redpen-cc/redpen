@@ -75,7 +75,7 @@ public class SentenceExtractorTest {
   }
 
   @Test
-  public void testEndWithQuotationmark() {
+  public void testEndWithDoubleQuotation() {
     SentenceExtractor extractor = new SentenceExtractor();
     List<Sentence> outputSentences = new ArrayList<Sentence>();
     String remain = extractor.extract("this is a \"pen.\"",
@@ -86,13 +86,47 @@ public class SentenceExtractorTest {
   }
 
   @Test
-  public void testEndWithQuotationmarkEnglishVersion() {
+  public void testEndWithSingleQuotation() {
+    SentenceExtractor extractor = new SentenceExtractor();
+    List<Sentence> outputSentences = new ArrayList<Sentence>();
+    String remain = extractor.extract("this is a \'pen.\'",
+        outputSentences);
+    assertEquals(1, outputSentences.size());
+    assertEquals("this is a \'pen.\'", outputSentences.get(0).content);
+    assertEquals("", remain);
+  }
+
+  @Test
+  public void testEndWithDoubleQuotationEnglishVersion() {
     SentenceExtractor extractor = new SentenceExtractor();
     List<Sentence> outputSentences = new ArrayList<Sentence>();
     String remain = extractor.extract("this is a \"pen\".",
         outputSentences);
     assertEquals(1, outputSentences.size());
     assertEquals("this is a \"pen\".", outputSentences.get(0).content);
+    assertEquals("", remain);
+  }
+
+  @Test
+  public void testEndWithSingleQuotationEnglishVersion() {
+    SentenceExtractor extractor = new SentenceExtractor();
+    List<Sentence> outputSentences = new ArrayList<Sentence>();
+    String remain = extractor.extract("this is a \'pen\'.",
+        outputSentences);
+    assertEquals(1, outputSentences.size());
+    assertEquals("this is a \'pen\'.", outputSentences.get(0).content);
+    assertEquals("", remain);
+  }
+
+  @Test
+  public void testMultipleSentencesOneOfThemIsEndWithDoubleQuotation() {
+    SentenceExtractor extractor = new SentenceExtractor();
+    List<Sentence> outputSentences = new ArrayList<Sentence>();
+    String remain = extractor.extract("this is a \"pen.\" Another one is not a pen.",
+        outputSentences);
+    assertEquals(2, outputSentences.size());
+    assertEquals("this is a \"pen.\"", outputSentences.get(0).content);
+    assertEquals(" Another one is not a pen.", outputSentences.get(1).content);
     assertEquals("", remain);
   }
 
@@ -148,40 +182,45 @@ public class SentenceExtractorTest {
 
   @Test
   public void testConstructPatternString() {
+    SentenceExtractor extractor = new SentenceExtractor();
     List<String> endCharacters = new ArrayList<String>();
     endCharacters.add("\\.");
     endCharacters.add("?");
     endCharacters.add("!");
-    assertEquals("\\.\"|\\?\"|\\!\"|\\.|\\?|\\!", SentenceExtractor.constructEndSentencePattern(
+    assertEquals("\\.'|\\?'|\\!'|\\.\"|\\?\"|\\!\"|\\.|\\?|\\!", extractor.constructEndSentencePattern(
         endCharacters));
   }
 
   @Test
   public void testConstructPatternStringWithoutEscape() {
+    SentenceExtractor extractor = new SentenceExtractor();
     List<String> endCharacters = new ArrayList<String>();
     endCharacters.add(".");
     endCharacters.add("?");
     endCharacters.add("!");
-    assertEquals("\\.\"|\\?\"|\\!\"|\\.|\\?|\\!", SentenceExtractor.constructEndSentencePattern(
+    assertEquals("\\.'|\\?'|\\!'|\\.\"|\\?\"|\\!\"|\\.|\\?|\\!", extractor.constructEndSentencePattern(
         endCharacters));
   }
 
   @Test
      public void testConstructPatternStringForSingleCharacter() {
+    SentenceExtractor extractor = new SentenceExtractor();
     List<String> endCharacters = new ArrayList<String>();
     endCharacters.add("\\.");
-    assertEquals("\\.\"|\\.", SentenceExtractor.constructEndSentencePattern(
+    assertEquals("\\.\'|\\.\"|\\.", extractor.constructEndSentencePattern(
         endCharacters));
   }
 
   @Test (expected=IllegalArgumentException.class)
   public void testThrowExceptionGivenVoidList() {
+    SentenceExtractor extractor = new SentenceExtractor();
     List<String> endCharacters = new ArrayList<String>();
-    SentenceExtractor.constructEndSentencePattern(endCharacters);
+    extractor.constructEndSentencePattern(endCharacters);
   }
 
   @Test (expected=IllegalArgumentException.class)
   public void testThrowExceptionGivenNull() {
-    SentenceExtractor.constructEndSentencePattern(null);
+    SentenceExtractor extractor = new SentenceExtractor();
+    extractor.constructEndSentencePattern(null);
   }
 }

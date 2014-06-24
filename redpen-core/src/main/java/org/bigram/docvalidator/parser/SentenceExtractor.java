@@ -35,10 +35,14 @@ public final class SentenceExtractor {
    */
   public SentenceExtractor() {
     AbstractSymbols symbols = DefaultSymbols.getInstance();
-    List<String> fullStopList = new ArrayList<String>();
+
     fullStopList.add(symbols.get("FULL_STOP").getValue());
     fullStopList.add(symbols.get("QUESTION_MARK").getValue());
     fullStopList.add(symbols.get("EXCLAMATION_MARK").getValue());
+
+    rightQuotationList.add(symbols.get("RIGHT_SINGLE_QUOTATION_MARK").getValue());
+    rightQuotationList.add(symbols.get("RIGHT_DOUBLE_QUOTATION_MARK").getValue());
+
     this.fullStopPattern = Pattern.compile(
         this.constructEndSentencePattern(fullStopList));
   }
@@ -49,6 +53,7 @@ public final class SentenceExtractor {
    * @param fullStopList set of end of sentence characters
    */
   public SentenceExtractor(List<String> fullStopList) {
+    this();
     this.fullStopPattern = Pattern.compile(
         this.constructEndSentencePattern(fullStopList));
   }
@@ -133,25 +138,25 @@ public final class SentenceExtractor {
    *                      sentences such as period
    * @return regex pattern to detect end sentences
    */
-  protected static String constructEndSentencePattern(
+  protected String constructEndSentencePattern(
       List<String> endCharacters) {
     if (endCharacters == null || endCharacters.size() == 0) {
       throw new IllegalArgumentException("No end character is specified");
     }
     StringBuilder patternString = new StringBuilder();
-    generateQutotationPattern(endCharacters, patternString);
+    for (String rightQuotation : rightQuotationList) {
+      generateQutotationPattern(endCharacters, patternString, rightQuotation);
+    }
     generateSimplePattern(endCharacters, patternString);
     return patternString.toString();
   }
 
   private static void generateQutotationPattern(
-      List<String> endCharacters, StringBuilder patternString) {
-    int index = 0;
+      List<String> endCharacters, StringBuilder patternString, String quotation) {
     for (String endChar : endCharacters) {
       String pattern;
-      pattern = handleSpecialCharacter(endChar) + "\"";
+      pattern = handleSpecialCharacter(endChar) + quotation;
       appendPattern(patternString, pattern);
-      index++;
     }
   }
 
@@ -186,4 +191,8 @@ public final class SentenceExtractor {
   }
 
   private Pattern fullStopPattern;
+
+  private List<String> fullStopList = new ArrayList<String>();
+
+  private List<String> rightQuotationList = new ArrayList<String>();
 }
