@@ -17,6 +17,9 @@
  */
 package org.bigram.docvalidator.util;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,25 +34,44 @@ public final class StringUtils {
    * @param pattern pattern of end of sentence
    * @return position of full stop when there is a full stop, -1 otherwise
    */
-  public static int getSentenceEndPosition(String str, Pattern pattern) {
-    return getEndPosition(str, pattern, 0);
+  public static int getSentenceEndPosition(String str,
+      Pattern pattern) {
+    return getEndPosition(str, pattern, 0, new HashSet<Integer>());
   }
 
-  private static int getEndPosition(String str, Pattern pattern, int offset) {
-    int position = -1;
+  /**
+   * Get sentence end position.
+   *
+   * @param str    input string
+   * @param pattern pattern of end of sentence
+   * @param whiteList words containing fullstops
+   * @return position of full stop when there is a full stop, -1 otherwise
+   */
+  public static int getSentenceEndPosition(String str,
+      Pattern pattern, List<String> whiteList) {
+    Set<Integer> nonEndOfSentencePositions =
+        extractNonEndOfSentencePositions(str, whiteList);
+    return getEndPosition(str, pattern, 0, nonEndOfSentencePositions);
+  }
+
+  private static int getEndPosition(String str, Pattern pattern,
+      int offset, Set<Integer> whitePositions) {
+    int startPosition = -1;
     int endPosition = -1;
     Matcher matcher = pattern.matcher(str);
-    if (matcher.find(offset)) {
-      position = matcher.start();
+    boolean matchResult = getEndPositionSkippingWhiteList(offset,
+        matcher, whitePositions);
+    if (matchResult) {
+      startPosition = matcher.start();
       endPosition = matcher.end();
     }
 
     if (checkPosition(endPosition - 1, str)) {
-      if ((isBasicLatin(str.charAt(position))
+      if ((isBasicLatin(str.charAt(startPosition))
           && ' ' == str.charAt(endPosition))) {
         return endPosition - 1;
       }
-      return handleSuccessivePeriods(str, pattern, position);
+      return handleSuccessivePeriods(str, pattern, startPosition, whitePositions);
     }
 
     if (endPosition == str.length()) {
@@ -60,8 +82,53 @@ public final class StringUtils {
     return -1;
   }
 
+  private static boolean getEndPositionSkippingWhiteList(int offset,
+      Matcher matcher, Set<Integer> whitePositions) {
+    boolean result = matcher.find(offset);
+    while(result) {
+      int startPosition = matcher.start();
+      int endPosition = matcher.end();
+      boolean containsWhite = false;
+      for (int i = startPosition; i < endPosition; i++) {
+        if (whitePositions.contains(i)) {
+          containsWhite = true;
+        }
+      }
+      if (containsWhite) {
+        result = getEndPositionSkippingWhiteList(endPosition,
+            matcher, whitePositions);
+      } else {
+        break;
+      }
+    }
+    return result;
+  }
+
+  private static Set<Integer> extractNonEndOfSentencePositions(
+      String inputString,
+      List<String> whiteList) {
+    Set<Integer> nonEndOfSentencePositions = new HashSet<Integer>();
+    for (String whiteWord : whiteList) {
+      int offset = 0;
+      while(true) {
+        int matchStartPosition = inputString.indexOf(whiteWord, offset);
+        int matchEndPosition = matchStartPosition + whiteWord.length();
+        if (matchStartPosition == -1) {
+          break;
+        }
+        for (int i = matchStartPosition;
+             i < matchEndPosition; i++) {
+          nonEndOfSentencePositions.add(i);
+        }
+        offset = matchEndPosition;
+      }
+    }
+    return nonEndOfSentencePositions;
+  }
+
+
   private static int handleSuccessivePeriods(String str,
-                                             Pattern pattern, int position) {
+      Pattern pattern, int position, Set<Integer> whitePositions) {
     int nextPosition = position + 1;
     Matcher matcher = pattern.matcher(str);
     int matchPosition = -1;
@@ -81,10 +148,10 @@ public final class StringUtils {
       if ((position + 1) == str.length() - 1) {
         return nextPosition;
       } else {
-        return getEndPosition(str, pattern, nextPosition);
+        return getEndPosition(str, pattern, nextPosition, whitePositions);
       }
     } else {
-      return getEndPosition(str, pattern, nextPosition);
+      return getEndPosition(str, pattern, nextPosition, whitePositions);
     }
   }
 

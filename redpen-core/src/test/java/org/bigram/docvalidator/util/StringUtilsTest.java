@@ -19,9 +19,9 @@ package org.bigram.docvalidator.util;
 
 import static org.junit.Assert.*;
 
-import org.bigram.docvalidator.util.StringUtils;
 import org.junit.Test;
 
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class StringUtilsTest {
@@ -132,6 +132,42 @@ public class StringUtilsTest {
   }
 
   @Test
+  public void testEndPositionWithWhiteWord() {
+    Pattern pattern = Pattern.compile("\\.");
+    String str =  "He is Mr. United States.";
+    List<String> whiteList = generateUmList("Mr.");
+    assertEquals(23, StringUtils.getSentenceEndPosition(str,
+        pattern, whiteList));
+  }
+
+  @Test
+  public void testEndPositionWithMultipleWhiteWords() {
+    Pattern pattern = Pattern.compile("\\.");
+    String str =  "This Jun. 10th, he was Mr. United States.";
+    List<String> whiteList = generateUmList("Mr.", "Jun.");
+    assertEquals(40, StringUtils.getSentenceEndPosition(str,
+        pattern, whiteList));
+  }
+
+  @Test
+  public void testEndPositionWithWhiteWordsContainsPeriodInternally() {
+    Pattern pattern = Pattern.compile("\\.");
+    String str =  "At 10 a.m. we had a lunch.";
+    List<String> whiteList = generateUmList("a.m.");
+    assertEquals(25, StringUtils.getSentenceEndPosition(str,
+        pattern, whiteList));
+  }
+
+  @Test
+  public void testEndPositionWithWhiteWordAndWithoutEndPeriod() {
+    Pattern pattern = Pattern.compile("\\.");
+    String str =  "He is Mr. United States";
+    List<String> whiteList = generateUmList("Mr.");
+    assertEquals(-1, StringUtils.getSentenceEndPosition(str,
+        pattern, whiteList));
+  }
+
+  @Test
   public void tesIsKatakanaWithHiraganaA() {
     assertFalse(StringUtils.isKatakana('あ'));
   }
@@ -174,5 +210,10 @@ public class StringUtilsTest {
   @Test
   public void tesIsBasicLatinWithKatakanaMiddleDot() {
     assertFalse(StringUtils.isBasicLatin('・'));
+  }
+
+  private static <E> List<E> generateUmList(E... args){
+    List<E> list = new ArrayList<E>(Arrays.asList(args));
+    return list;
   }
 }
