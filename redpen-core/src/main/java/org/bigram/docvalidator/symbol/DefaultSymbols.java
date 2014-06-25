@@ -96,6 +96,14 @@ public final class DefaultSymbols extends AbstractSymbols {
         new Character("VERTICAL_BAR", "|", "", false, false));
     symbols.put("TILDE",
         new Character("TILDE", "~", "", false, false));
+    symbols.put("LEFT_SINGLE_QUOTATION_MARK",
+        new Character("LEFT_SINGLE_QUOTATION_MARK", "'", "", false, false));
+    symbols.put("RIGHT_SINGLE_QUOTATION_MARK",
+        new Character("LEFT_SINGLE_QUOTATION_MARK", "'", "", false, false));
+    symbols.put("LEFT_DOUBLE_QUOTATION_MARK",
+        new Character("LEFT_SINGLE_QUOTATION_MARK", "\"", "", false, false));
+    symbols.put("RIGHT_DOUBLE_QUOTATION_MARK",
+        new Character("LEFT_SINGLE_QUOTATION_MARK", "\"", "", false, false));
 
     /******************************************************************
      * Digits

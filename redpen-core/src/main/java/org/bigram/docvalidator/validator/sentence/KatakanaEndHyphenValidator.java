@@ -21,6 +21,7 @@ import org.bigram.docvalidator.DocumentValidatorException;
 import org.bigram.docvalidator.config.CharacterTable;
 import org.bigram.docvalidator.config.ValidatorConfiguration;
 import org.bigram.docvalidator.model.Sentence;
+import org.bigram.docvalidator.util.EndOfSentenceDetector;
 import org.bigram.docvalidator.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

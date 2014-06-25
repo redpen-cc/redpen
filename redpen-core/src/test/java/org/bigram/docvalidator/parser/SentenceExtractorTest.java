@@ -22,7 +22,6 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bigram.docvalidator.parser.SentenceExtractor;
 import org.junit.Test;
 import org.bigram.docvalidator.model.Sentence;
 
@@ -75,6 +74,62 @@ public class SentenceExtractorTest {
   }
 
   @Test
+  public void testEndWithDoubleQuotation() {
+    SentenceExtractor extractor = new SentenceExtractor();
+    List<Sentence> outputSentences = new ArrayList<Sentence>();
+    String remain = extractor.extract("this is a \"pen.\"",
+        outputSentences);
+    assertEquals(1, outputSentences.size());
+    assertEquals("this is a \"pen.\"", outputSentences.get(0).content);
+    assertEquals("", remain);
+  }
+
+  @Test
+  public void testEndWithSingleQuotation() {
+    SentenceExtractor extractor = new SentenceExtractor();
+    List<Sentence> outputSentences = new ArrayList<Sentence>();
+    String remain = extractor.extract("this is a \'pen.\'",
+        outputSentences);
+    assertEquals(1, outputSentences.size());
+    assertEquals("this is a \'pen.\'", outputSentences.get(0).content);
+    assertEquals("", remain);
+  }
+
+  @Test
+  public void testEndWithDoubleQuotationEnglishVersion() {
+    SentenceExtractor extractor = new SentenceExtractor();
+    List<Sentence> outputSentences = new ArrayList<Sentence>();
+    String remain = extractor.extract("this is a \"pen\".",
+        outputSentences);
+    assertEquals(1, outputSentences.size());
+    assertEquals("this is a \"pen\".", outputSentences.get(0).content);
+    assertEquals("", remain);
+  }
+
+  @Test
+  public void testEndWithSingleQuotationEnglishVersion() {
+    SentenceExtractor extractor = new SentenceExtractor();
+    List<Sentence> outputSentences = new ArrayList<Sentence>();
+    String remain = extractor.extract("this is a \'pen\'.",
+        outputSentences);
+    assertEquals(1, outputSentences.size());
+    assertEquals("this is a \'pen\'.", outputSentences.get(0).content);
+    assertEquals("", remain);
+  }
+
+  @Test
+  public void testMultipleSentencesOneOfThemIsEndWithDoubleQuotation() {
+    SentenceExtractor extractor = new SentenceExtractor();
+    List<Sentence> outputSentences = new ArrayList<Sentence>();
+    String remain = extractor.extract("this is a \"pen.\" Another one is not a pen.",
+        outputSentences);
+    assertEquals(2, outputSentences.size());
+    assertEquals("this is a \"pen.\"", outputSentences.get(0).content);
+    assertEquals(" Another one is not a pen.", outputSentences.get(1).content);
+    assertEquals("", remain);
+  }
+
+  @Test
   public void testJapaneseSimple() {
     List<String> stopChars = new ArrayList<String>();
     stopChars.add("。");
@@ -105,6 +160,64 @@ public class SentenceExtractorTest {
   }
 
   @Test
+  public void testJapaneseSimpleWithEndQuotations() {
+    List<String> stopChars = new ArrayList<String>();
+    stopChars.add("。");
+    stopChars.add("？");
+    List<String> rightQuotations = new ArrayList<String>();
+    stopChars.add("’");
+    stopChars.add("”");
+    SentenceExtractor extractor = new SentenceExtractor(stopChars, rightQuotations);
+    List<Sentence> outputSentences = new ArrayList<Sentence>();
+    String remain = extractor.extract("これは“群馬。”",
+        outputSentences);
+    assertEquals(1, outputSentences.size());
+    assertEquals("これは“群馬。”", outputSentences.get(0).content);
+    assertEquals("", remain);
+  }
+
+  @Test
+  public void testJapaneseMultipleSentencesWithEndQuotations() {
+    List<String> stopChars = new ArrayList<String>();
+    stopChars.add("。");
+    stopChars.add("？");
+    List<String> rightQuotations = new ArrayList<String>();
+    stopChars.add("’");
+    stopChars.add("”");
+    SentenceExtractor extractor = new SentenceExtractor(stopChars, rightQuotations);
+    List<Sentence> outputSentences = new ArrayList<Sentence>();
+    String remain = extractor.extract("これは“群馬。”あれは群馬ではない。",
+        outputSentences);
+    assertEquals(2, outputSentences.size());
+    assertEquals("これは“群馬。”", outputSentences.get(0).content);
+    assertEquals("あれは群馬ではない。", outputSentences.get(1).content);
+    assertEquals("", remain);
+  }
+
+  @Test
+  public void testSentenceWithWhiteWord() {
+    SentenceExtractor extractor = new SentenceExtractor();
+    List<Sentence> outputSentences = new ArrayList<Sentence>();
+    String remain = extractor.extract("He is a Dr. candidate.",  // NOTE: white word list contains "Dr."
+        outputSentences);
+    assertEquals(1, outputSentences.size());
+    assertEquals("He is a Dr. candidate.", outputSentences.get(0).content);
+    assertEquals("", remain);
+  }
+
+  @Test
+  public void testMultipleSentencesWithWhiteWord() {
+    SentenceExtractor extractor = new SentenceExtractor();
+    List<Sentence> outputSentences = new ArrayList<Sentence>();
+    String remain = extractor.extract("Is he a Dr. candidate? Yes, he is.",  // NOTE: white word list contains "Dr."
+        outputSentences);
+    assertEquals(2, outputSentences.size());
+    assertEquals("Is he a Dr. candidate?", outputSentences.get(0).content);
+    assertEquals(" Yes, he is.", outputSentences.get(1).content);
+    assertEquals("", remain);
+  }
+
+  @Test
   public void testVoidLine() {
     SentenceExtractor extractor = new SentenceExtractor();
     List<Sentence> outputSentences = new ArrayList<Sentence>();
@@ -130,8 +243,8 @@ public class SentenceExtractorTest {
     endCharacters.add("\\.");
     endCharacters.add("?");
     endCharacters.add("!");
-    assertEquals("\\.|\\?|\\!", SentenceExtractor.constructEndSentencePattern(
-        endCharacters));
+    SentenceExtractor extractor = new SentenceExtractor(endCharacters);
+    assertEquals("\\.'|\\?'|\\!'|\\.\"|\\?\"|\\!\"|\\.|\\?|\\!", extractor.constructEndSentencePattern());
   }
 
   @Test
@@ -140,26 +253,28 @@ public class SentenceExtractorTest {
     endCharacters.add(".");
     endCharacters.add("?");
     endCharacters.add("!");
-    assertEquals("\\.|\\?|\\!", SentenceExtractor.constructEndSentencePattern(
-        endCharacters));
+    SentenceExtractor extractor = new SentenceExtractor(endCharacters);
+    assertEquals("\\.'|\\?'|\\!'|\\.\"|\\?\"|\\!\"|\\.|\\?|\\!", extractor.constructEndSentencePattern());
   }
 
   @Test
      public void testConstructPatternStringForSingleCharacter() {
     List<String> endCharacters = new ArrayList<String>();
     endCharacters.add("\\.");
-    assertEquals("\\.", SentenceExtractor.constructEndSentencePattern(
-        endCharacters));
+    SentenceExtractor extractor = new SentenceExtractor(endCharacters);
+    assertEquals("\\.\'|\\.\"|\\.", extractor.constructEndSentencePattern());
   }
 
   @Test (expected=IllegalArgumentException.class)
   public void testThrowExceptionGivenVoidList() {
     List<String> endCharacters = new ArrayList<String>();
-    SentenceExtractor.constructEndSentencePattern(endCharacters);
+    SentenceExtractor extractor = new SentenceExtractor(endCharacters);
+    extractor.constructEndSentencePattern();
   }
 
-  @Test (expected=IllegalArgumentException.class)
+  @Test
   public void testThrowExceptionGivenNull() {
-    SentenceExtractor.constructEndSentencePattern(null);
+    SentenceExtractor extractor = new SentenceExtractor();
+    extractor.constructEndSentencePattern(); // not a throw exception
   }
 }

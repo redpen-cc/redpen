@@ -69,38 +69,65 @@ public abstract class BasicDocumentParser implements Parser {
     }
 
     CharacterTable characterTable = configuration.getCharacterTable();
+    List<String> periods = extractPeriods(characterTable);
+    List<String> rightQuotations = extractRightQuotations(characterTable);
 
-    // set full stop characters
+    this.sentenceExtractor = new SentenceExtractor(periods, rightQuotations);
+    this.builder = documentBuilder;
+  }
+
+  private List<String> extractRightQuotations(CharacterTable characterTable) {
+    List<String> rightQuotations = new ArrayList<String>();
+    if (characterTable.isContainCharacter("RIGHT_SINGLE_QUOTATION_MARK")) {
+      rightQuotations.add(
+          characterTable.getCharacter("RIGHT_SINGLE_QUOTATION_MARK").getValue());
+    } else {
+      rightQuotations.add(
+          DefaultSymbols.getInstance().get("RIGHT_SINGLE_QUOTATION_MARK").getValue());
+    }
+    if (characterTable.isContainCharacter("RIGHT_DOUBLE_QUOTATION_MARK")) {
+      rightQuotations.add(
+          characterTable.getCharacter("RIGHT_DOUBLE_QUOTATION_MARK").getValue());
+    } else {
+      rightQuotations.add(
+          DefaultSymbols.getInstance().get("RIGHT_DOUBLE_QUOTATION_MARK").getValue());
+    }
+    for (String rightQuotation : rightQuotations) {
+      LOG.info("\"" + rightQuotation + "\" is added as a end of right quotation character.");
+    }
+    return rightQuotations;
+  }
+
+  private List<String> extractPeriods(CharacterTable characterTable) {
+    List<String> periods = new ArrayList<String>();
     if (characterTable.isContainCharacter("FULL_STOP")) {
-      this.periods.add(
+      periods.add(
           characterTable.getCharacter("FULL_STOP").getValue());
     } else {
-      this.periods.add(
+      periods.add(
           DefaultSymbols.getInstance().get("FULL_STOP").getValue());
     }
 
     if (characterTable.isContainCharacter("QUESTION_MARK")) {
-      this.periods.add(
+      periods.add(
           characterTable.getCharacter("QUESTION_MARK").getValue());
     } else {
-      this.periods.add(
+      periods.add(
           DefaultSymbols.getInstance().get("QUESTION_MARK").getValue());
     }
 
     if (characterTable.isContainCharacter("EXCLAMATION_MARK")) {
-      this.periods.add(
+      periods.add(
           characterTable.getCharacter("EXCLAMATION_MARK").getValue());
     } else {
-      this.periods.add(
+      periods.add(
           DefaultSymbols.getInstance().get("EXCLAMATION_MARK").getValue());
     }
 
-    for (String period : this.periods) {
+    for (String period : periods) {
       LOG.info("\"" + period + "\" is added as a end of sentence character");
     }
-
-    this.sentenceExtractor = new SentenceExtractor(this.periods);
-    this.builder = documentBuilder;
+    return periods;
   }
 
   /**
@@ -153,10 +180,6 @@ public abstract class BasicDocumentParser implements Parser {
 
   private SentenceExtractor sentenceExtractor;
 
-  private List<String> periods = new ArrayList<String>();
-
   private static final Logger LOG = LoggerFactory.getLogger(
       BasicDocumentParser.class);
-
-
 }

@@ -21,11 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
 
+import org.bigram.docvalidator.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.bigram.docvalidator.model.Sentence;
 import org.bigram.docvalidator.config.CharacterTable;
-import org.bigram.docvalidator.util.StringUtils;
+import org.bigram.docvalidator.util.EndOfSentenceDetector;
 import org.bigram.docvalidator.util.LevenshteinDistance;
 import org.bigram.docvalidator.ValidationError;
 import org.bigram.docvalidator.config.ValidatorConfiguration;
