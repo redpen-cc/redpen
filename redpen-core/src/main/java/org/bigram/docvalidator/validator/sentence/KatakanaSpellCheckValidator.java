@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
 
+import org.bigram.docvalidator.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.bigram.docvalidator.model.Sentence;
@@ -78,7 +79,7 @@ public class KatakanaSpellCheckValidator implements SentenceValidator {
     StringBuilder katakana = new StringBuilder("");
     for (int i = 0; i < sentence.content.length(); i++) {
       char c = sentence.content.charAt(i);
-      if (EndOfSentenceDetector.isKatakana(c)) {
+      if (StringUtils.isKatakana(c)) {
         katakana.append(c);
       } else {
         result = this.checkKatakanaSpell(sentence, katakana.toString());

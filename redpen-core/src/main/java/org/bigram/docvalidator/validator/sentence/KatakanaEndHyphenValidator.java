@@ -22,6 +22,7 @@ import org.bigram.docvalidator.config.CharacterTable;
 import org.bigram.docvalidator.config.ValidatorConfiguration;
 import org.bigram.docvalidator.model.Sentence;
 import org.bigram.docvalidator.util.EndOfSentenceDetector;
+import org.bigram.docvalidator.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.bigram.docvalidator.ValidationError;
@@ -74,7 +75,7 @@ public class KatakanaEndHyphenValidator implements SentenceValidator {
     StringBuffer katakana = new StringBuffer("");
     for (int i = 0; i < sentence.content.length(); i++) {
       char c = sentence.content.charAt(i);
-      if (EndOfSentenceDetector.isKatakana(c) && c != KATAKANA_MIDDLE_DOT) {
+      if (StringUtils.isKatakana(c) && c != KATAKANA_MIDDLE_DOT) {
         katakana.append(c);
       } else {
         result = this.checkKatakanaEndHyphen(sentence, katakana);
