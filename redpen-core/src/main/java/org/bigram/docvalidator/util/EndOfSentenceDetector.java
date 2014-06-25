@@ -81,7 +81,7 @@ public final class EndOfSentenceDetector {
           && ' ' == str.charAt(endPosition))) {
         return endPosition - 1;
       }
-      return handleSuccessivePeriods(str, pattern, startPosition, whitePositions);
+      return handleSuccessivePeriods(str, startPosition, whitePositions);
     }
 
     if (endPosition == str.length()) {
@@ -102,6 +102,7 @@ public final class EndOfSentenceDetector {
       for (int i = startPosition; i < endPosition; i++) {
         if (whitePositions.contains(i)) {
           containsWhite = true;
+          break;
         }
       }
       if (containsWhite) {
@@ -114,6 +115,7 @@ public final class EndOfSentenceDetector {
     return result;
   }
 
+  // TODO: efficient computing with common prefix search.
   private Set<Integer> extractNonEndOfSentencePositions(
       String inputString) {
     Set<Integer> nonEndOfSentencePositions = new HashSet<Integer>();
@@ -137,9 +139,9 @@ public final class EndOfSentenceDetector {
 
 
   private int handleSuccessivePeriods(String str,
-      Pattern pattern, int position, Set<Integer> whitePositions) {
+      int position, Set<Integer> whitePositions) {
     int nextPosition = position + 1;
-    Matcher matcher = pattern.matcher(str);
+    Matcher matcher = this.pattern.matcher(str);
     int matchPosition = -1;
     if (matcher.find(nextPosition)) {
       matchPosition = matcher.start();
