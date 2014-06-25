@@ -34,7 +34,8 @@ public final class EndOfSentenceDetector {
     this.whiteList = new ArrayList<String>();
   }
 
-  public EndOfSentenceDetector(Pattern pattern, List<String> whiteList) {
+  public EndOfSentenceDetector(Pattern pattern,
+      List<String> whiteList) {
     this.pattern = pattern;
     this.whiteList = whiteList;
   }
@@ -47,11 +48,11 @@ public final class EndOfSentenceDetector {
    */
   public int getSentenceEndPosition(String str) {
     Set<Integer> nonEndOfSentencePositions =
-        extractNonEndOfSentencePositions(str, whiteList);
-    return getEndPosition(str, pattern, 0, nonEndOfSentencePositions);
+        extractNonEndOfSentencePositions(str);
+    return getEndPosition(str, 0, nonEndOfSentencePositions);
   }
 
-  private static int getEndPosition(String str, Pattern pattern,
+  private int getEndPosition(String str,
       int offset, Set<Integer> whitePositions) {
     int startPosition = -1;
     int endPosition = -1;
@@ -101,11 +102,10 @@ public final class EndOfSentenceDetector {
     return result;
   }
 
-  private static Set<Integer> extractNonEndOfSentencePositions(
-      String inputString,
-      List<String> whiteList) {
+  private Set<Integer> extractNonEndOfSentencePositions(
+      String inputString) {
     Set<Integer> nonEndOfSentencePositions = new HashSet<Integer>();
-    for (String whiteWord : whiteList) {
+    for (String whiteWord : this.whiteList) {
       int offset = 0;
       while(true) {
         int matchStartPosition = inputString.indexOf(whiteWord, offset);
@@ -124,7 +124,7 @@ public final class EndOfSentenceDetector {
   }
 
 
-  private static int handleSuccessivePeriods(String str,
+  private int handleSuccessivePeriods(String str,
       Pattern pattern, int position, Set<Integer> whitePositions) {
     int nextPosition = position + 1;
     Matcher matcher = pattern.matcher(str);
@@ -145,10 +145,10 @@ public final class EndOfSentenceDetector {
       if ((position + 1) == str.length() - 1) {
         return nextPosition;
       } else {
-        return getEndPosition(str, pattern, nextPosition, whitePositions);
+        return getEndPosition(str, nextPosition, whitePositions);
       }
     } else {
-      return getEndPosition(str, pattern, nextPosition, whitePositions);
+      return getEndPosition(str, nextPosition, whitePositions);
     }
   }
 
