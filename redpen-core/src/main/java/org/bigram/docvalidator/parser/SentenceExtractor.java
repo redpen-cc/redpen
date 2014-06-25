@@ -18,6 +18,7 @@
 package org.bigram.docvalidator.parser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -82,7 +83,7 @@ public final class SentenceExtractor {
    */
   public String extract(String line, List<Sentence> outputSentences) {
     int periodPosition =
-        StringUtils.getSentenceEndPosition(line, fullStopPattern);
+        StringUtils.getSentenceEndPosition(line, fullStopPattern, whiteWords);
     if (periodPosition == -1) {
       return line;
     } else {
@@ -93,7 +94,7 @@ public final class SentenceExtractor {
         line = line.substring(periodPosition + 1,
             line.length());
         periodPosition =
-            StringUtils.getSentenceEndPosition(line, fullStopPattern);
+            StringUtils.getSentenceEndPosition(line, fullStopPattern, whiteWords);
         if (periodPosition == -1) {
           return line;
         }
@@ -113,7 +114,7 @@ public final class SentenceExtractor {
       String line, List<Sentence> outputSentences,
       int position) {
     int periodPosition =
-        StringUtils.getSentenceEndPosition(line, fullStopPattern);
+        StringUtils.getSentenceEndPosition(line, fullStopPattern, whiteWords);
     if (periodPosition == -1) {
       return line;
     } else {
@@ -126,7 +127,7 @@ public final class SentenceExtractor {
         outputSentences.add(sentence);
         line = line.substring(periodPosition + 1, line.length());
         periodPosition =
-            StringUtils.getSentenceEndPosition(line, fullStopPattern);
+            StringUtils.getSentenceEndPosition(line, fullStopPattern, whiteWords);
         if (periodPosition == -1) {
           return line;
         }
@@ -140,8 +141,8 @@ public final class SentenceExtractor {
    * @param str    input string
    * @return position of full stop when there is a full stop, -1 otherwise
    */
-  public int getSentenceEndPosition(String str) {
-    return StringUtils.getSentenceEndPosition(str, fullStopPattern);
+  public int getSentenceEndPosition(String str){
+    return StringUtils.getSentenceEndPosition(str, fullStopPattern, whiteWords);
   }
 
   /**
@@ -202,9 +203,21 @@ public final class SentenceExtractor {
     return endChar;
   }
 
+  private static <E> List<E> generateUmList(E... args){
+    List<E> list = new ArrayList<E>(Arrays.asList(args));
+    return list;
+  }
+
   private Pattern fullStopPattern;
 
   private List<String> fullStopList = new ArrayList<String>();
 
   private List<String> rightQuotationList = new ArrayList<String>();
+
+  // TODO make whitewords configurable.
+  private List<String> whiteWords = generateUmList("Mr.",
+      "Mrs.", "Dr.", "genn.ai", "Co., Ltd." , "Miss.", "a.m.",
+      "U.S.A.", "Jan.", "Feb.", "Mar.", "Apr.",
+      "May.", "Jun.", "Jul.","Aug.", "Sep.", "Oct.",
+      "Nov.", "Dec.", "Feb.", "B.C", "A.D.");
 }

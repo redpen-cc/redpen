@@ -195,6 +195,29 @@ public class SentenceExtractorTest {
   }
 
   @Test
+  public void testSentenceWithWhiteWord() {
+    SentenceExtractor extractor = new SentenceExtractor();
+    List<Sentence> outputSentences = new ArrayList<Sentence>();
+    String remain = extractor.extract("He is a Dr. candidate.",  // NOTE: white word list contains "Dr."
+        outputSentences);
+    assertEquals(1, outputSentences.size());
+    assertEquals("He is a Dr. candidate.", outputSentences.get(0).content);
+    assertEquals("", remain);
+  }
+
+  @Test
+  public void testMultipleSentencesWithWhiteWord() {
+    SentenceExtractor extractor = new SentenceExtractor();
+    List<Sentence> outputSentences = new ArrayList<Sentence>();
+    String remain = extractor.extract("Is he a Dr. candidate? Yes, he is.",  // NOTE: white word list contains "Dr."
+        outputSentences);
+    assertEquals(2, outputSentences.size());
+    assertEquals("Is he a Dr. candidate?", outputSentences.get(0).content);
+    assertEquals(" Yes, he is.", outputSentences.get(1).content);
+    assertEquals("", remain);
+  }
+
+  @Test
   public void testVoidLine() {
     SentenceExtractor extractor = new SentenceExtractor();
     List<Sentence> outputSentences = new ArrayList<Sentence>();
