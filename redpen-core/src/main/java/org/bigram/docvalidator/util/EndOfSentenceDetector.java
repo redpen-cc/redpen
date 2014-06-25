@@ -67,7 +67,7 @@ public final class EndOfSentenceDetector {
     }
 
     if (checkPosition(endPosition - 1, str)) {
-      if ((isBasicLatin(str.charAt(startPosition))
+      if ((StringUtils.isBasicLatin(str.charAt(startPosition))
           && ' ' == str.charAt(endPosition))) {
         return endPosition - 1;
       }
@@ -136,7 +136,7 @@ public final class EndOfSentenceDetector {
       matchPosition = matcher.start();
     }
 
-    if (matchPosition > -1 && (!isBasicLatin(str.charAt(matchPosition)))
+    if (matchPosition > -1 && (!StringUtils.isBasicLatin(str.charAt(matchPosition)))
         && matchPosition != nextPosition) {
       // NOTE: Non Latin languages (especially Asian languages, periods do not
       // have tailing spaces in the end of sentences)
@@ -157,14 +157,6 @@ public final class EndOfSentenceDetector {
 
   private static boolean checkPosition(int position, String str) {
     return -1 < position && position < str.length() - 1;
-  }
-
-  public static boolean isKatakana(char c) {
-    return java.lang.Character.UnicodeBlock.of(c) == java.lang.Character.UnicodeBlock.KATAKANA;
-  }
-
-  public static boolean isBasicLatin(char c) {
-    return java.lang.Character.UnicodeBlock.of(c) == java.lang.Character.UnicodeBlock.BASIC_LATIN;
   }
 
   private EndOfSentenceDetector() {
