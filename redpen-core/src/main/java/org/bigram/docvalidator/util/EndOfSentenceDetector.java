@@ -29,11 +29,23 @@ import java.util.regex.Pattern;
  */
 public final class EndOfSentenceDetector {
 
+
+  /**
+   * Constructor.
+   *
+   * @param pattern end of sentence regex pattern
+   */
   public EndOfSentenceDetector(Pattern pattern) {
     this.pattern = pattern;
     this.whiteList = new ArrayList<String>();
   }
 
+  /**
+   * Constructor.
+   *
+   * @param pattern end of sentence regex pattern
+   * @param whiteList word containing periods
+   */
   public EndOfSentenceDetector(Pattern pattern,
       List<String> whiteList) {
     this.pattern = pattern;
@@ -80,7 +92,7 @@ public final class EndOfSentenceDetector {
     return -1;
   }
 
-  private static boolean getEndPositionSkippingWhiteList(int offset,
+  private boolean getEndPositionSkippingWhiteList(int offset,
       Matcher matcher, Set<Integer> whitePositions) {
     boolean result = matcher.find(offset);
     while(result) {
