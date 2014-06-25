@@ -46,6 +46,9 @@ public final class SentenceExtractor {
 
     this.fullStopPattern = Pattern.compile(
         this.constructEndSentencePattern());
+
+    this.endOfSentenceDetector = new EndOfSentenceDetector(
+        this.fullStopPattern, this.whiteWords);
   }
 
   /**
@@ -58,6 +61,9 @@ public final class SentenceExtractor {
     this.fullStopList = fullStopList;
     this.fullStopPattern = Pattern.compile(
         this.constructEndSentencePattern());
+
+    this.endOfSentenceDetector = new EndOfSentenceDetector(
+        this.fullStopPattern, this.whiteWords);
   }
 
   /**
@@ -72,6 +78,8 @@ public final class SentenceExtractor {
     this.rightQuotationList = rightQuotationList;
     this.fullStopPattern = Pattern.compile(
         this.constructEndSentencePattern());
+    this.endOfSentenceDetector = new EndOfSentenceDetector(
+        this.fullStopPattern, this.whiteWords);
   }
 
   /**
@@ -83,7 +91,7 @@ public final class SentenceExtractor {
    */
   public String extract(String line, List<Sentence> outputSentences) {
     int periodPosition =
-        EndOfSentenceDetector.getSentenceEndPosition(line, fullStopPattern, whiteWords);
+        endOfSentenceDetector.getSentenceEndPosition(line);
     if (periodPosition == -1) {
       return line;
     } else {
@@ -94,8 +102,7 @@ public final class SentenceExtractor {
         line = line.substring(periodPosition + 1,
             line.length());
         periodPosition =
-            EndOfSentenceDetector.getSentenceEndPosition(
-                line, fullStopPattern, whiteWords);
+            endOfSentenceDetector.getSentenceEndPosition(line);
         if (periodPosition == -1) {
           return line;
         }
@@ -115,7 +122,7 @@ public final class SentenceExtractor {
       String line, List<Sentence> outputSentences,
       int position) {
     int periodPosition =
-        EndOfSentenceDetector.getSentenceEndPosition(line, fullStopPattern, whiteWords);
+        endOfSentenceDetector.getSentenceEndPosition(line);
     if (periodPosition == -1) {
       return line;
     } else {
@@ -128,8 +135,7 @@ public final class SentenceExtractor {
         outputSentences.add(sentence);
         line = line.substring(periodPosition + 1, line.length());
         periodPosition =
-            EndOfSentenceDetector.getSentenceEndPosition(
-                line, fullStopPattern, whiteWords);
+            endOfSentenceDetector.getSentenceEndPosition(line);
         if (periodPosition == -1) {
           return line;
         }
@@ -144,7 +150,7 @@ public final class SentenceExtractor {
    * @return position of full stop when there is a full stop, -1 otherwise
    */
   public int getSentenceEndPosition(String str){
-    return EndOfSentenceDetector.getSentenceEndPosition(str, fullStopPattern, whiteWords);
+    return endOfSentenceDetector.getSentenceEndPosition(str);
   }
 
   /**
@@ -216,10 +222,12 @@ public final class SentenceExtractor {
 
   private List<String> rightQuotationList = new ArrayList<String>();
 
-  // TODO make whitewords configurable.
+  // TODO make white words configurable.
   private List<String> whiteWords = generateUmList("Mr.",
       "Mrs.", "Dr.", "genn.ai", "Co., Ltd." , "Miss.", "a.m.",
       "U.S.A.", "Jan.", "Feb.", "Mar.", "Apr.",
       "May.", "Jun.", "Jul.","Aug.", "Sep.", "Oct.",
       "Nov.", "Dec.", "Feb.", "B.C", "A.D.");
+
+  private EndOfSentenceDetector endOfSentenceDetector;
 }

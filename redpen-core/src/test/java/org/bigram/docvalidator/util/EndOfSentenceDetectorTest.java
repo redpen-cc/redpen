@@ -29,98 +29,112 @@ public class EndOfSentenceDetectorTest {
   public void testEndPosition() {
     Pattern pattern = Pattern.compile("\\.");
     String str = new String ("this is a pen.");
-    assertEquals(13, EndOfSentenceDetector.getSentenceEndPosition(str, pattern));
+    EndOfSentenceDetector detector = new EndOfSentenceDetector(pattern);
+    assertEquals(13, detector.getSentenceEndPosition(str));
   }
 
   @Test
   public void testEndPositionWithTailingSpace() {
     Pattern pattern = Pattern.compile("\\.");
     String str = new String ("this is a pen. ");
-    assertEquals(13, EndOfSentenceDetector.getSentenceEndPosition(str, pattern));
+    EndOfSentenceDetector detector = new EndOfSentenceDetector(pattern);
+    assertEquals(13, detector.getSentenceEndPosition(str));
   }
 
   @Test
   public void testEndPositionInMultipleSentence() {
     Pattern pattern = Pattern.compile("\\.");
     String str = new String ("this is a pen. that is not pen.");
-    assertEquals(13, EndOfSentenceDetector.getSentenceEndPosition(str, pattern));
+    EndOfSentenceDetector detector = new EndOfSentenceDetector(pattern);
+    assertEquals(13, detector.getSentenceEndPosition(str));
   }
 
   @Test
   public void testEndPositionInJapanese() {
     Pattern pattern = Pattern.compile("。");
     String str = new String ("私はペンではない。私は人間です。");
-    assertEquals(8, EndOfSentenceDetector.getSentenceEndPosition(str, pattern));
+    EndOfSentenceDetector detector = new EndOfSentenceDetector(pattern);
+    assertEquals(8, detector.getSentenceEndPosition(str));
   }
 
   @Test
   public void testEndPositionInJapaneseWithSpace() {
     Pattern pattern = Pattern.compile("。");
     String str = new String ("私はペンではない。 私は人間です。");
-    assertEquals(8, EndOfSentenceDetector.getSentenceEndPosition(str, pattern));
+    EndOfSentenceDetector detector = new EndOfSentenceDetector(pattern);
+    assertEquals(8, detector.getSentenceEndPosition(str));
   }
 
   @Test
   public void tesEndPositionMultipleDodsWithSpace() {
     Pattern pattern = Pattern.compile("\\.");
     String str = new String ("this is a pen... ");
-    assertEquals(15, EndOfSentenceDetector.getSentenceEndPosition(str, pattern));
+    EndOfSentenceDetector detector = new EndOfSentenceDetector(pattern);
+    assertEquals(15, detector.getSentenceEndPosition(str));
   }
 
   @Test
   public void tesEndPositionDods() {
     Pattern pattern = Pattern.compile("\\.");
     String str = new String ("this is a pen...");
-    assertEquals(15, EndOfSentenceDetector.getSentenceEndPosition(str, pattern));
+    EndOfSentenceDetector detector = new EndOfSentenceDetector(pattern);
+    assertEquals(15, detector.getSentenceEndPosition(str));
   }
 
   @Test
   public void tesEndPositionDodsWithinTwoSencences() {
     Pattern pattern = Pattern.compile("\\.");
     String str = new String ("this is a pen... But that is a pencil.");
-    assertEquals(15, EndOfSentenceDetector.getSentenceEndPosition(str, pattern));
+    EndOfSentenceDetector detector = new EndOfSentenceDetector(pattern);
+    assertEquals(15, detector.getSentenceEndPosition(str));
   }
 
   @Test
   public void tesEndPositionDodsWithinTwoSencencesWithoutSpace() {
     Pattern pattern = Pattern.compile("\\.");
     String str = new String ("this is a pen...But that is a pencil.");
-    assertEquals(36, EndOfSentenceDetector.getSentenceEndPosition(str, pattern));
+    EndOfSentenceDetector detector = new EndOfSentenceDetector(pattern);
+    assertEquals(36, detector.getSentenceEndPosition(str));
   }
 
   @Test
   public void tesEndPositionDodsWithinTwoSencencesWithoutSpace2() {
     Pattern pattern = Pattern.compile("\\.");
     String str = new String ("this is a pen...But that is a pencil. ");
-    assertEquals(36, EndOfSentenceDetector.getSentenceEndPosition(str, pattern));
+    EndOfSentenceDetector detector = new EndOfSentenceDetector(pattern);
+    assertEquals(36, detector.getSentenceEndPosition(str));
   }
 
   @Test
   public void tesEndPositionDodsWithinTwoJapaneseSencences() {
     Pattern pattern = Pattern.compile("。");
     String str = new String ("これは。。。 ペンですか。");
-    assertEquals(5, EndOfSentenceDetector.getSentenceEndPosition(str, pattern));
+    EndOfSentenceDetector detector = new EndOfSentenceDetector(pattern);
+    assertEquals(5, detector.getSentenceEndPosition(str));
   }
 
   @Test
   public void tesEndPositionDodsWithinTwoJapaneseSencencesWithoutSpace() {
     Pattern pattern = Pattern.compile("。");
     String str = new String ("これは。。。ペンですか。");
-    assertEquals(5, EndOfSentenceDetector.getSentenceEndPosition(str, pattern));
+    EndOfSentenceDetector detector = new EndOfSentenceDetector(pattern);
+    assertEquals(5, detector.getSentenceEndPosition(str));
   }
 
   @Test
   public void testEndPositionContainingMultipleCharacters() {
     Pattern pattern = Pattern.compile("\\?|\\.");
     String str = new String ("is this a pen? yes it is.");
-    assertEquals(13, EndOfSentenceDetector.getSentenceEndPosition(str, pattern));
+    EndOfSentenceDetector detector = new EndOfSentenceDetector(pattern);
+    assertEquals(13, detector.getSentenceEndPosition(str));
   }
 
   @Test
   public void testEndPositionContainingMultipleNonAsciiCharacters() {
     Pattern pattern = Pattern.compile("。|？");
     String str = new String ("これは群馬ですか？いいえ埼玉です。");
-    assertEquals(8, EndOfSentenceDetector.getSentenceEndPosition(str, pattern));
+    EndOfSentenceDetector detector = new EndOfSentenceDetector(pattern);
+    assertEquals(8, detector.getSentenceEndPosition(str));
   }
 
   @Test
@@ -128,7 +142,8 @@ public class EndOfSentenceDetectorTest {
     Pattern pattern = Pattern.compile("\\.\"");
     String input = "\"pen.\"";
     String str = new String (input);
-    assertEquals(5, EndOfSentenceDetector.getSentenceEndPosition(str, pattern));
+    EndOfSentenceDetector detector = new EndOfSentenceDetector(pattern);
+    assertEquals(5, detector.getSentenceEndPosition(str));
   }
 
   @Test
@@ -136,8 +151,8 @@ public class EndOfSentenceDetectorTest {
     Pattern pattern = Pattern.compile("\\.");
     String str =  "He is Mr. United States.";
     List<String> whiteList = generateUmList("Mr.");
-    assertEquals(23, EndOfSentenceDetector.getSentenceEndPosition(str,
-        pattern, whiteList));
+    EndOfSentenceDetector detector = new EndOfSentenceDetector(pattern, whiteList);
+    assertEquals(23, detector.getSentenceEndPosition(str));
   }
 
   @Test
@@ -145,8 +160,8 @@ public class EndOfSentenceDetectorTest {
     Pattern pattern = Pattern.compile("\\.");
     String str =  "This Jun. 10th, he was Mr. United States.";
     List<String> whiteList = generateUmList("Mr.", "Jun.");
-    assertEquals(40, EndOfSentenceDetector.getSentenceEndPosition(str,
-        pattern, whiteList));
+    EndOfSentenceDetector detector = new EndOfSentenceDetector(pattern, whiteList);
+    assertEquals(40, detector.getSentenceEndPosition(str));
   }
 
   @Test
@@ -154,8 +169,8 @@ public class EndOfSentenceDetectorTest {
     Pattern pattern = Pattern.compile("\\.");
     String str =  "At 10 a.m. we had a lunch.";
     List<String> whiteList = generateUmList("a.m.");
-    assertEquals(25, EndOfSentenceDetector.getSentenceEndPosition(str,
-        pattern, whiteList));
+    EndOfSentenceDetector detector = new EndOfSentenceDetector(pattern, whiteList);
+    assertEquals(25, detector.getSentenceEndPosition(str));
   }
 
   @Test
@@ -163,8 +178,8 @@ public class EndOfSentenceDetectorTest {
     Pattern pattern = Pattern.compile("\\.");
     String str =  "He is Mr. United States";
     List<String> whiteList = generateUmList("Mr.");
-    assertEquals(-1, EndOfSentenceDetector.getSentenceEndPosition(str,
-        pattern, whiteList));
+    EndOfSentenceDetector detector = new EndOfSentenceDetector(pattern, whiteList);
+    assertEquals(-1, detector.getSentenceEndPosition(str));
   }
 
   private static <E> List<E> generateUmList(E... args){

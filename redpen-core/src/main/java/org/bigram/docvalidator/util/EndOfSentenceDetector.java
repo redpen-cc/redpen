@@ -17,6 +17,7 @@
  */
 package org.bigram.docvalidator.util;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,28 +28,24 @@ import java.util.regex.Pattern;
  * Utility class to handle a string.
  */
 public final class EndOfSentenceDetector {
-  /**
-   * Get sentence end position.
-   *
-   * @param str    input string
-   * @param pattern pattern of end of sentence
-   * @return position of full stop when there is a full stop, -1 otherwise
-   */
-  public static int getSentenceEndPosition(String str,
-      Pattern pattern) {
-    return getEndPosition(str, pattern, 0, new HashSet<Integer>());
+
+  public EndOfSentenceDetector(Pattern pattern) {
+    this.pattern = pattern;
+    this.whiteList = new ArrayList<String>();
+  }
+
+  public EndOfSentenceDetector(Pattern pattern, List<String> whiteList) {
+    this.pattern = pattern;
+    this.whiteList = whiteList;
   }
 
   /**
    * Get sentence end position.
    *
    * @param str    input string
-   * @param pattern pattern of end of sentence
-   * @param whiteList words containing fullstops
    * @return position of full stop when there is a full stop, -1 otherwise
    */
-  public static int getSentenceEndPosition(String str,
-      Pattern pattern, List<String> whiteList) {
+  public int getSentenceEndPosition(String str) {
     Set<Integer> nonEndOfSentencePositions =
         extractNonEndOfSentencePositions(str, whiteList);
     return getEndPosition(str, pattern, 0, nonEndOfSentencePositions);
@@ -159,6 +156,7 @@ public final class EndOfSentenceDetector {
     return -1 < position && position < str.length() - 1;
   }
 
-  private EndOfSentenceDetector() {
-  }
+  private List<String> whiteList;
+
+  private Pattern pattern;
 }
