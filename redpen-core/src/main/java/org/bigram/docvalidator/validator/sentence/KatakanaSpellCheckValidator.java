@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.bigram.docvalidator.model.Sentence;
 import org.bigram.docvalidator.config.CharacterTable;
-import org.bigram.docvalidator.util.StringUtils;
+import org.bigram.docvalidator.util.EndOfSentenceDetector;
 import org.bigram.docvalidator.util.LevenshteinDistance;
 import org.bigram.docvalidator.ValidationError;
 import org.bigram.docvalidator.config.ValidatorConfiguration;
@@ -78,7 +78,7 @@ public class KatakanaSpellCheckValidator implements SentenceValidator {
     StringBuilder katakana = new StringBuilder("");
     for (int i = 0; i < sentence.content.length(); i++) {
       char c = sentence.content.charAt(i);
-      if (StringUtils.isKatakana(c)) {
+      if (EndOfSentenceDetector.isKatakana(c)) {
         katakana.append(c);
       } else {
         result = this.checkKatakanaSpell(sentence, katakana.toString());

@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 import org.bigram.docvalidator.model.Sentence;
 import org.bigram.docvalidator.symbol.AbstractSymbols;
 import org.bigram.docvalidator.symbol.DefaultSymbols;
-import org.bigram.docvalidator.util.StringUtils;
+import org.bigram.docvalidator.util.EndOfSentenceDetector;
 
 /**
  * Utility Class to extract a Sentence list from given String.
@@ -83,7 +83,7 @@ public final class SentenceExtractor {
    */
   public String extract(String line, List<Sentence> outputSentences) {
     int periodPosition =
-        StringUtils.getSentenceEndPosition(line, fullStopPattern, whiteWords);
+        EndOfSentenceDetector.getSentenceEndPosition(line, fullStopPattern, whiteWords);
     if (periodPosition == -1) {
       return line;
     } else {
@@ -94,7 +94,8 @@ public final class SentenceExtractor {
         line = line.substring(periodPosition + 1,
             line.length());
         periodPosition =
-            StringUtils.getSentenceEndPosition(line, fullStopPattern, whiteWords);
+            EndOfSentenceDetector.getSentenceEndPosition(
+                line, fullStopPattern, whiteWords);
         if (periodPosition == -1) {
           return line;
         }
@@ -114,7 +115,7 @@ public final class SentenceExtractor {
       String line, List<Sentence> outputSentences,
       int position) {
     int periodPosition =
-        StringUtils.getSentenceEndPosition(line, fullStopPattern, whiteWords);
+        EndOfSentenceDetector.getSentenceEndPosition(line, fullStopPattern, whiteWords);
     if (periodPosition == -1) {
       return line;
     } else {
@@ -127,7 +128,8 @@ public final class SentenceExtractor {
         outputSentences.add(sentence);
         line = line.substring(periodPosition + 1, line.length());
         periodPosition =
-            StringUtils.getSentenceEndPosition(line, fullStopPattern, whiteWords);
+            EndOfSentenceDetector.getSentenceEndPosition(
+                line, fullStopPattern, whiteWords);
         if (periodPosition == -1) {
           return line;
         }
@@ -142,7 +144,7 @@ public final class SentenceExtractor {
    * @return position of full stop when there is a full stop, -1 otherwise
    */
   public int getSentenceEndPosition(String str){
-    return StringUtils.getSentenceEndPosition(str, fullStopPattern, whiteWords);
+    return EndOfSentenceDetector.getSentenceEndPosition(str, fullStopPattern, whiteWords);
   }
 
   /**

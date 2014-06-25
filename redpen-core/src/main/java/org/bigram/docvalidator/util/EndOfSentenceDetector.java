@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 /**
  * Utility class to handle a string.
  */
-public final class StringUtils {
+public final class EndOfSentenceDetector {
   /**
    * Get sentence end position.
    *
@@ -167,6 +167,6 @@ public final class StringUtils {
     return java.lang.Character.UnicodeBlock.of(c) == java.lang.Character.UnicodeBlock.BASIC_LATIN;
   }
 
-  private StringUtils() {
+  private EndOfSentenceDetector() {
   }
 }
