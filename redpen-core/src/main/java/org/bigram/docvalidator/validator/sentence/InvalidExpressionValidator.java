@@ -72,7 +72,7 @@ public class InvalidExpressionValidator implements SentenceValidator {
   /**
    * Add invalid element. This method is used for testing
    *
-   * @parm invalid invalid expression to be added the list
+   * @param invalid invalid expression to be added the list
    */
   public void addInvalid(String invalid) {
     invalidExpressions.add(invalid);
@@ -86,22 +86,19 @@ public class InvalidExpressionValidator implements SentenceValidator {
     WordListExtractor extractor = new WordListExtractor();
     FileLoader loader = new FileLoader(extractor);
 
-    // load default dictionary
     LOG.info("Loading default invalid expression dictionary for " +
-        "\"" + lang + "\"");
-    String defualtDicitonaryFile = DEFAULT_RESOURCE_PATH + "/invalid-" + lang + ".dat";
-    //String defualtDicitonaryFile = "invalid-en.dat";
+        "\"" + lang + "\".");
+    String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
+        + "/invalid-" + lang + ".dat";
     InputStream inputStream = getClass()
         .getClassLoader()
-        .getResourceAsStream(defualtDicitonaryFile);
-    System.out.println("Default dictionary: " + defualtDicitonaryFile);
+        .getResourceAsStream(defaultDictionaryFile);
     if (loader.loadFile(inputStream) == 0) {
       LOG.info("Succeeded to load default dictionary.");
     } else {
       LOG.info("Failed to load default dictionary.");
     }
 
-    // adding user dictionary element
     String confFile = conf.getAttribute("dictionary");
     if (confFile == null || confFile.equals("")) {
       LOG.error("Dictionary file is not specified.");
@@ -117,7 +114,7 @@ public class InvalidExpressionValidator implements SentenceValidator {
     return true;
   }
 
-  private String DEFAULT_RESOURCE_PATH = "dicts/invalid";
+  private static final String DEFAULT_RESOURCE_PATH = "dicts/invalid";
 
   private Set<String> invalidExpressions;
 
