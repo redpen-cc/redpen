@@ -90,6 +90,16 @@ public final class CharacterTable {
     characterDictionary.put(character.getName(), character);
   }
 
+  public String getLang() {
+    return lang;
+  }
+
+  public void setLang(String lang) {
+    this.lang = lang;
+  }
+
   private final Map<String, Character> characterDictionary;
+
+  private String lang;
 
 }

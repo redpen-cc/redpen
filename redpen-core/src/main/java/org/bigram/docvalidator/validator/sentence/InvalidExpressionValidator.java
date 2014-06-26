@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.bigram.docvalidator.ValidationError;
 import org.bigram.docvalidator.config.ValidatorConfiguration;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -43,10 +44,16 @@ public class InvalidExpressionValidator implements SentenceValidator {
     invalidExpressions = new HashSet<String>();
   }
 
+  /**
+   * Constructor
+   * @param config Configuration object
+   * @param characterTable  Character settings
+   * @throws DocumentValidatorException
+   */
   public InvalidExpressionValidator(ValidatorConfiguration config,
                                     CharacterTable characterTable)
       throws DocumentValidatorException {
-    initialize(config);
+    initialize(config, characterTable);
   }
 
   public List<ValidationError> validate(Sentence line) {
@@ -62,22 +69,55 @@ public class InvalidExpressionValidator implements SentenceValidator {
     return result;
   }
 
-  private boolean initialize(ValidatorConfiguration conf)
+  /**
+   * Add invalid element. This method is used for testing
+   *
+   * @parm invalid invalid expression to be added the list
+   */
+  public void addInvalid(String invalid) {
+    invalidExpressions.add(invalid);
+  }
+
+  private boolean initialize(ValidatorConfiguration conf,
+      CharacterTable characterTable)
       throws DocumentValidatorException {
-    String confFile = conf.getAttribute("dictionary");
-    LOG.info("dictionary file is " + confFile);
-    if (confFile == null || confFile.equals("")) {
-      LOG.error("dictionary file is not specified");
-      return false;
-    }
+    String lang = characterTable.getLang();
+
     WordListExtractor extractor = new WordListExtractor();
     FileLoader loader = new FileLoader(extractor);
-    if (loader.loadFile(confFile) != 0) {
-      return false;
+
+    // load default dictionary
+    LOG.info("Loading default invalid expression dictionary for " +
+        "\"" + lang + "\"");
+    String defualtDicitonaryFile = DEFAULT_RESOURCE_PATH + "/invalid-" + lang + ".dat";
+    //String defualtDicitonaryFile = "invalid-en.dat";
+    InputStream inputStream = getClass()
+        .getClassLoader()
+        .getResourceAsStream(defualtDicitonaryFile);
+    System.out.println("Default dictionary: " + defualtDicitonaryFile);
+    if (loader.loadFile(inputStream) == 0) {
+      LOG.info("Succeeded to load default dictionary.");
+    } else {
+      LOG.info("Failed to load default dictionary.");
+    }
+
+    // adding user dictionary element
+    String confFile = conf.getAttribute("dictionary");
+    if (confFile == null || confFile.equals("")) {
+      LOG.error("Dictionary file is not specified.");
+    } else {
+      LOG.info("user dictionary file is " + confFile);
+      if (loader.loadFile(confFile) != 0) {
+        LOG.info("Succeeded to load specified user dictionary.");
+      } else {
+        LOG.error("Failed to load user dictionary.");
+      }
     }
     invalidExpressions = extractor.get();
     return true;
   }
+
+  private String DEFAULT_RESOURCE_PATH = "dicts/invalid";
 
   private Set<String> invalidExpressions;
 
