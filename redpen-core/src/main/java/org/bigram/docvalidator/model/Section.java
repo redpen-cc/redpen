@@ -18,7 +18,6 @@
 package org.bigram.docvalidator.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -168,6 +167,30 @@ public final class Section {
     } else {
       return null;
     }
+  }
+
+  /**
+   * Get iterator of header sentences. When there is not specified
+   * header in the section, return null otherwise return specified id.
+   *
+   * @return header sentence containing all header contents in the section
+   */
+  public Sentence getJoinedHeaderContents() {
+    StringBuilder joinedHeader = new StringBuilder();
+    int linePosition = 0;
+    if (headerContent.size() > 0) {
+      linePosition = headerContent.get(0).position;
+    }
+    int i = 0;
+    for (Sentence header : headerContent) {
+      if (i != 0) {
+        joinedHeader.append(" ");
+
+      }
+      joinedHeader.append(header.content);
+      i++;
+    }
+    return new Sentence(joinedHeader.toString(), linePosition);
   }
 
   /**
