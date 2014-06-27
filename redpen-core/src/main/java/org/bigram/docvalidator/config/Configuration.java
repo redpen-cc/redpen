@@ -91,6 +91,7 @@ public final class Configuration {
     return sentenceValidatorConfigs;
   }
 
+
   /**
    * Builder class of Configuration.
    */
@@ -105,6 +106,7 @@ public final class Configuration {
         new ArrayList<ValidatorConfiguration>();
     private final List<ValidatorConfiguration> sentenceValidatorConfigs =
         new ArrayList<ValidatorConfiguration>();
+
 
     public Builder setCharacterTable(String lang) {
       this.characterTable = loadLanguageDefaultCharacterTable(lang);
@@ -194,8 +196,10 @@ public final class Configuration {
       AbstractSymbols symbolSettings;
       if (lang.equals("ja")) {
         symbolSettings = JapaneseSymbols.getInstance();
+        characterTable.setLang("ja");
       } else {
         symbolSettings = DefaultSymbols.getInstance();
+        characterTable.setLang("en");
       }
 
       Iterator<String> characterNames =
@@ -223,4 +227,5 @@ public final class Configuration {
       new ArrayList<ValidatorConfiguration>();
   private final List<ValidatorConfiguration> sentenceValidatorConfigs =
       new ArrayList<ValidatorConfiguration>();
+
 }

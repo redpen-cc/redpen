@@ -21,12 +21,15 @@ import org.bigram.docvalidator.DocumentValidatorException;
 import org.bigram.docvalidator.config.CharacterTable;
 import org.bigram.docvalidator.model.Sentence;
 import org.bigram.docvalidator.util.FileLoader;
+import org.bigram.docvalidator.util.ResourceExtractor;
+import org.bigram.docvalidator.util.ResourceLoader;
 import org.bigram.docvalidator.util.WordListExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.bigram.docvalidator.ValidationError;
 import org.bigram.docvalidator.config.ValidatorConfiguration;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -43,10 +46,16 @@ public class InvalidExpressionValidator implements SentenceValidator {
     invalidExpressions = new HashSet<String>();
   }
 
+  /**
+   * Constructor
+   * @param config Configuration object
+   * @param characterTable  Character settings
+   * @throws DocumentValidatorException
+   */
   public InvalidExpressionValidator(ValidatorConfiguration config,
                                     CharacterTable characterTable)
       throws DocumentValidatorException {
-    initialize(config);
+    initialize(config, characterTable);
   }
 
   public List<ValidationError> validate(Sentence line) {
@@ -62,22 +71,49 @@ public class InvalidExpressionValidator implements SentenceValidator {
     return result;
   }
 
-  private boolean initialize(ValidatorConfiguration conf)
+  /**
+   * Add invalid element. This method is used for testing
+   *
+   * @param invalid invalid expression to be added the list
+   */
+  public void addInvalid(String invalid) {
+    invalidExpressions.add(invalid);
+  }
+
+  private boolean initialize(ValidatorConfiguration conf,
+      CharacterTable characterTable)
       throws DocumentValidatorException {
-    String confFile = conf.getAttribute("dictionary");
-    LOG.info("dictionary file is " + confFile);
-    if (confFile == null || confFile.equals("")) {
-      LOG.error("dictionary file is not specified");
-      return false;
-    }
+    String lang = characterTable.getLang();
     WordListExtractor extractor = new WordListExtractor();
-    FileLoader loader = new FileLoader(extractor);
-    if (loader.loadFile(confFile) != 0) {
-      return false;
+    ResourceLoader loader = new ResourceLoader(extractor);
+
+    LOG.info("Loading default invalid expression dictionary for " +
+        "\"" + lang + "\".");
+    String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
+        + "/invalid-" + lang + ".dat";
+    if (loader.loadInternalResource(defaultDictionaryFile)) {
+      LOG.info("Succeeded to load default dictionary.");
+    } else {
+      LOG.info("Failed to load default dictionary.");
     }
+
+    String confFile = conf.getAttribute("dictionary");
+    if (confFile == null || confFile.equals("")) {
+      LOG.error("Dictionary file is not specified.");
+    } else {
+      LOG.info("user dictionary file is " + confFile);
+      if (loader.loadExternalFile(confFile)) {
+        LOG.info("Succeeded to load specified user dictionary.");
+      } else {
+        LOG.error("Failed to load user dictionary.");
+      }
+    }
+
     invalidExpressions = extractor.get();
     return true;
   }
+
+  private static final String DEFAULT_RESOURCE_PATH = "default-resources/invalid";
 
   private Set<String> invalidExpressions;
 
