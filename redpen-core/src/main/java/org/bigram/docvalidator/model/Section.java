@@ -18,7 +18,6 @@
 package org.bigram.docvalidator.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -62,10 +61,10 @@ public final class Section {
    * @param headerString header content string
    */
   public Section(int sectionLevel, String headerString) {
-    this.level = sectionLevel;
     Sentence headerSentence = new Sentence(headerString, 0);
     List<Sentence> headers = new ArrayList<Sentence>();
     headers.add(headerSentence);
+    this.level = sectionLevel;
     this.headerContent = headers;
     this.subsections = new ArrayList<Section>();
     this.paragraphs = new ArrayList<Paragraph>();
@@ -146,15 +145,6 @@ public final class Section {
   }
 
   /**
-   * Append contents of a header.
-   *
-   * @param headerContentList header contents
-   */
-  public void appendHeaderContent(List<Sentence> headerContentList) {
-    this.headerContent.addAll(headerContentList);
-  }
-
-  /**
    * Get iterator of header sentences.
    *
    * @return contents of header.
@@ -169,7 +159,7 @@ public final class Section {
    * header in the section, return null otherwise return specified id.
    *
    * @param id id of sentence in header
-   * @return contents of header.
+   * @return contents of header when there is specified header, otherwise null
    */
   public Sentence getHeaderContent(int id) {
     if (headerContent.size() > id) {
@@ -177,6 +167,30 @@ public final class Section {
     } else {
       return null;
     }
+  }
+
+  /**
+   * Get iterator of header sentences. When there is not specified
+   * header in the section, return null otherwise return specified id.
+   *
+   * @return header sentence containing all header contents in the section
+   */
+  public Sentence getJoinedHeaderContents() {
+    StringBuilder joinedHeader = new StringBuilder();
+    int linePosition = 0;
+    if (headerContent.size() > 0) {
+      linePosition = headerContent.get(0).position;
+    }
+    int i = 0;
+    for (Sentence header : headerContent) {
+      if (i != 0) {
+        joinedHeader.append(" ");
+
+      }
+      joinedHeader.append(header.content);
+      i++;
+    }
+    return new Sentence(joinedHeader.toString(), linePosition);
   }
 
   /**

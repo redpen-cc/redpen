@@ -37,10 +37,20 @@ public class SectionLengthValidatorTest {
     validator = new SectionLengthValidator();
     validator.setMaxSectionLength(10);
   }
-  
+
   @Test
   public void testSectionLength() {
     Section section = new Section(0, "header");
+    Paragraph paragraph = new Paragraph();
+    paragraph.appendSentence("it like a piece of a cake.", 0);
+    section.appendParagraph(paragraph);
+    List<ValidationError> errors = validator.validate(section);
+    assertEquals(1, errors.size());
+  }
+
+  @Test
+  public void testWithSectionWithoutHeader() {
+    Section section = new Section(0);
     Paragraph paragraph = new Paragraph();
     paragraph.appendSentence("it like a piece of a cake.", 0);
     section.appendParagraph(paragraph);

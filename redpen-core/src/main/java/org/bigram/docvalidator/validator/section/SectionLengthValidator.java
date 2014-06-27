@@ -40,8 +40,8 @@ public class SectionLengthValidator extends AbstractSectionValidator {
     super();
   }
 
-  public SectionLengthValidator(ValidatorConfiguration conf, CharacterTable
-    charTable) {
+  public SectionLengthValidator(ValidatorConfiguration conf,
+      CharacterTable charTable) {
     this();
     loadConfiguration(conf);
   }
@@ -55,15 +55,16 @@ public class SectionLengthValidator extends AbstractSectionValidator {
       for (Sentence sentence : currentParagraph.getSentences()) {
         sectionCharNumber += sentence.content.length();
       }
-      if (sectionCharNumber > maxSectionCharNumber) {
-        ValidationError error = new ValidationError(
+    }
+
+    if (sectionCharNumber > maxSectionCharNumber) {
+      ValidationError error = new ValidationError(
           this.getClass(),
-          "The number of the character exceeds the maximum \""
-            + String.valueOf(sectionCharNumber) + "\".",
-          section.getHeaderContent(0)
-        );
-        validationErrors.add(error);
-      }
+          "The number of the character in the section exceeds the maximum \""
+              + String.valueOf(sectionCharNumber) + "\".",
+          section.getJoinedHeaderContents()
+      );
+      validationErrors.add(error);
     }
     return validationErrors;
   }
