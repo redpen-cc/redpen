@@ -62,10 +62,10 @@ public final class Section {
    * @param headerString header content string
    */
   public Section(int sectionLevel, String headerString) {
-    this.level = sectionLevel;
     Sentence headerSentence = new Sentence(headerString, 0);
     List<Sentence> headers = new ArrayList<Sentence>();
     headers.add(headerSentence);
+    this.level = sectionLevel;
     this.headerContent = headers;
     this.subsections = new ArrayList<Section>();
     this.paragraphs = new ArrayList<Paragraph>();
@@ -146,15 +146,6 @@ public final class Section {
   }
 
   /**
-   * Append contents of a header.
-   *
-   * @param headerContentList header contents
-   */
-  public void appendHeaderContent(List<Sentence> headerContentList) {
-    this.headerContent.addAll(headerContentList);
-  }
-
-  /**
    * Get iterator of header sentences.
    *
    * @return contents of header.
@@ -169,7 +160,7 @@ public final class Section {
    * header in the section, return null otherwise return specified id.
    *
    * @param id id of sentence in header
-   * @return contents of header.
+   * @return contents of header when there is specified header, otherwise null
    */
   public Sentence getHeaderContent(int id) {
     if (headerContent.size() > id) {

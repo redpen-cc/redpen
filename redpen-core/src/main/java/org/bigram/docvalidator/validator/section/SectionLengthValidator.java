@@ -56,11 +56,15 @@ public class SectionLengthValidator extends AbstractSectionValidator {
         sectionCharNumber += sentence.content.length();
       }
       if (sectionCharNumber > maxSectionCharNumber) {
+        Sentence header = new Sentence("",0);
+        if (section.getHeaderContentsListSize() > 0) {
+          header = section.getHeaderContent(0);
+        }
         ValidationError error = new ValidationError(
           this.getClass(),
           "The number of the character exceeds the maximum \""
             + String.valueOf(sectionCharNumber) + "\".",
-          section.getHeaderContent(0)
+            header
         );
         validationErrors.add(error);
       }
