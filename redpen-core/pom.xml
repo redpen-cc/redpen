@@ -52,7 +52,7 @@
             <configuration>
               <tasks>
                 <copy todir="${basedir}/target">
-                  <fileset dir="${basedir}/src/main/resources/dicts" includes="**/*" />
+                  <fileset dir="${basedir}/src/main/resources/default-resources" includes="**/*" />
                 </copy>
               </tasks>
             </configuration>

@@ -113,7 +113,7 @@ public class InvalidExpressionValidator implements SentenceValidator {
     return true;
   }
 
-  private static final String DEFAULT_RESOURCE_PATH = "dicts/invalid";
+  private static final String DEFAULT_RESOURCE_PATH = "default-resources/invalid";
 
   private Set<String> invalidExpressions;
 
