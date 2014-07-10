@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 /**
- *
+ * Detect invalid word occurrences.
  */
 public class InvalidWordValidator implements SentenceValidator {
   /**

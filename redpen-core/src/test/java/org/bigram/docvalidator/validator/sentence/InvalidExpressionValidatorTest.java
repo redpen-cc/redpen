@@ -61,7 +61,7 @@ public class InvalidExpressionValidatorTest {
         .addSection(1, new ArrayList<Sentence>())
         .addParagraph()
         .addSentence(
-            "he is like a super man.",
+            "You know. He is a super man.",
             1)
         .build();
 

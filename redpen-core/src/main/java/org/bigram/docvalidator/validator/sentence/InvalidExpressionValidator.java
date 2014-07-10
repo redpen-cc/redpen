@@ -20,8 +20,6 @@ package org.bigram.docvalidator.validator.sentence;
 import org.bigram.docvalidator.DocumentValidatorException;
 import org.bigram.docvalidator.config.CharacterTable;
 import org.bigram.docvalidator.model.Sentence;
-import org.bigram.docvalidator.util.FileLoader;
-import org.bigram.docvalidator.util.ResourceExtractor;
 import org.bigram.docvalidator.util.ResourceLoader;
 import org.bigram.docvalidator.util.WordListExtractor;
 import org.slf4j.Logger;
@@ -29,7 +27,6 @@ import org.slf4j.LoggerFactory;
 import org.bigram.docvalidator.ValidationError;
 import org.bigram.docvalidator.config.ValidatorConfiguration;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -90,7 +87,7 @@ public class InvalidExpressionValidator implements SentenceValidator {
     LOG.info("Loading default invalid expression dictionary for " +
         "\"" + lang + "\".");
     String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
-        + "/invalid-" + lang + ".dat";
+        + "/invalid-expression-" + lang + ".dat";
     if (loader.loadInternalResource(defaultDictionaryFile)) {
       LOG.info("Succeeded to load default dictionary.");
     } else {
@@ -113,7 +110,7 @@ public class InvalidExpressionValidator implements SentenceValidator {
     return true;
   }
 
-  private static final String DEFAULT_RESOURCE_PATH = "default-resources/invalid";
+  private static final String DEFAULT_RESOURCE_PATH = "default-resources/invalid-expression";
 
   private Set<String> invalidExpressions;
 
