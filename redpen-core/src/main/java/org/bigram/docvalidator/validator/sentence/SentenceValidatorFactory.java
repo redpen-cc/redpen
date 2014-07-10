@@ -36,6 +36,8 @@ public final class SentenceValidatorFactory {
       return new SentenceLengthValidator(config, characterTable);
     } else if ("InvalidExpression".equals(config.getConfigurationName())) {
       return new InvalidExpressionValidator(config, characterTable);
+    } else if ("InvalidWord".equals(config.getConfigurationName())) {
+      return new InvalidWordValidator(config, characterTable);
     } else if ("SpaceAfterPeriod".equals(config.getConfigurationName())) {
       return new SpaceBeginningOfSentenceValidator(config, characterTable);
     } else if ("CommaNumber".equals(config.getConfigurationName())) {

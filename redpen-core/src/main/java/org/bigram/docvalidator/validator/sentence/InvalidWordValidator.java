@@ -18,29 +18,26 @@
 package org.bigram.docvalidator.validator.sentence;
 
 import org.bigram.docvalidator.DocumentValidatorException;
+import org.bigram.docvalidator.ValidationError;
 import org.bigram.docvalidator.config.CharacterTable;
+import org.bigram.docvalidator.config.ValidatorConfiguration;
 import org.bigram.docvalidator.model.Sentence;
 import org.bigram.docvalidator.util.ResourceLoader;
 import org.bigram.docvalidator.util.WordListExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.bigram.docvalidator.ValidationError;
-import org.bigram.docvalidator.config.ValidatorConfiguration;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
- * Validate input sentences contain invalid expression.
+ * Detect invalid word occurrences.
  */
-public class InvalidExpressionValidator implements SentenceValidator {
+public class InvalidWordValidator implements SentenceValidator {
   /**
    * Constructor.
    */
-  public InvalidExpressionValidator() {
-    invalidExpressions = new HashSet<String>();
+  public InvalidWordValidator() {
+    invalidWords = new HashSet<String>();
   }
 
   /**
@@ -49,20 +46,22 @@ public class InvalidExpressionValidator implements SentenceValidator {
    * @param characterTable  Character settings
    * @throws DocumentValidatorException
    */
-  public InvalidExpressionValidator(ValidatorConfiguration config,
-                                    CharacterTable characterTable)
+  public InvalidWordValidator(ValidatorConfiguration config,
+      CharacterTable characterTable)
       throws DocumentValidatorException {
     initialize(config, characterTable);
   }
 
   public List<ValidationError> validate(Sentence line) {
     List<ValidationError> result = new ArrayList<ValidationError>();
-    String str = line.content;
-    for (String w : invalidExpressions) {
-      if (str.contains(w)) {
+    String content = line.content;
+    //NOTE: only Ascii white space since this validator works for european languages.
+    List<String> words = Arrays.asList(content.split(" "));
+    for (String invalidWord : invalidWords) {
+      if (words.contains(invalidWord)) {
         result.add(new ValidationError(
             this.getClass(),
-            "Found invalid expression: \"" + w + "\"", line));
+            "Found invalid Word: \"" + invalidWord + "\"", line));
       }
     }
     return result;
@@ -71,10 +70,10 @@ public class InvalidExpressionValidator implements SentenceValidator {
   /**
    * Add invalid element. This method is used for testing
    *
-   * @param invalid invalid expression to be added the list
+   * @param invalid invalid word to be added the list
    */
   public void addInvalid(String invalid) {
-    invalidExpressions.add(invalid);
+    invalidWords.add(invalid);
   }
 
   private boolean initialize(ValidatorConfiguration conf,
@@ -84,10 +83,10 @@ public class InvalidExpressionValidator implements SentenceValidator {
     WordListExtractor extractor = new WordListExtractor();
     ResourceLoader loader = new ResourceLoader(extractor);
 
-    LOG.info("Loading default invalid expression dictionary for " +
+    LOG.info("Loading default invalid word dictionary for " +
         "\"" + lang + "\".");
     String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
-        + "/invalid-expression-" + lang + ".dat";
+        + "/invalid-word-" + lang + ".dat";
     if (loader.loadInternalResource(defaultDictionaryFile)) {
       LOG.info("Succeeded to load default dictionary.");
     } else {
@@ -106,14 +105,15 @@ public class InvalidExpressionValidator implements SentenceValidator {
       }
     }
 
-    invalidExpressions = extractor.get();
+    invalidWords = extractor.get();
     return true;
   }
 
-  private static final String DEFAULT_RESOURCE_PATH = "default-resources/invalid-expression";
+  private static final String DEFAULT_RESOURCE_PATH =
+      "default-resources/invalid-word";
 
-  private Set<String> invalidExpressions;
+  private Set<String> invalidWords;
 
   private static final Logger LOG =
-      LoggerFactory.getLogger(InvalidExpressionValidator.class);
+      LoggerFactory.getLogger(InvalidWordValidator.class);
 }

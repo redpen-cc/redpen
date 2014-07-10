@@ -1,20 +1,3 @@
-/**
- * redpen: a text inspection tool
- * Copyright (C) 2014 Recruit Technologies Co., Ltd. and contributors
- * (see CONTRIBUTORS.md)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.bigram.docvalidator.validator.sentence;
 
 import org.bigram.docvalidator.DocumentValidator;
@@ -32,20 +15,20 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class InvalidExpressionValidatorTest {
+public class InvalidWordValidatorTest {
 
   @Test
   public void testSimpleRun() {
-    InvalidExpressionValidator validator = new InvalidExpressionValidator();
-    validator.addInvalid("may");
-    List<ValidationError> errors = validator.validate(new Sentence("The experiments may be true.", 0));
+    InvalidWordValidator validator = new InvalidWordValidator();
+    validator.addInvalid("foolish");
+    List<ValidationError> errors = validator.validate(new Sentence("He is a foolish guy.", 0));
     assertEquals(1, errors.size());
   }
 
   @Test
   public void testVoid() {
-    InvalidExpressionValidator validator = new InvalidExpressionValidator();
-    validator.addInvalid("may");
+    InvalidWordValidator validator = new InvalidWordValidator();
+    validator.addInvalid("foolish");
     List<ValidationError> errors = validator.validate(new Sentence("", 0));
     assertEquals(0, errors.size());
   }
@@ -53,7 +36,7 @@ public class InvalidExpressionValidatorTest {
   @Test
   public void testLoadDefaultDictionary() throws DocumentValidatorException {
     Configuration config = new Configuration.Builder()
-        .addSentenceValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
+        .addSentenceValidatorConfig(new ValidatorConfiguration("InvalidWord"))
         .setCharacterTable("en").build();
 
     DocumentCollection documents = new DocumentCollection.Builder()
@@ -61,7 +44,7 @@ public class InvalidExpressionValidatorTest {
         .addSection(1, new ArrayList<Sentence>())
         .addParagraph()
         .addSentence(
-            "You know. He is a super man.",
+            "he is a foolish man.",
             1)
         .build();
 
@@ -72,20 +55,26 @@ public class InvalidExpressionValidatorTest {
 
     List<ValidationError> errors = validator.check(documents);
     assertEquals(1, errors.size());
+    assertTrue(errors.get(0).getMessage().contains("foolish"));
   }
 
+  /**
+   * Assert not throw a exception even when there is no default dictionary.
+   *
+   * @throws DocumentValidatorException
+   */
   @Test
-  public void testLoadJapaneseDefaultDictionary() throws DocumentValidatorException {
+  public void testLoadNotExistDefaultDictionary() throws DocumentValidatorException {
     Configuration config = new Configuration.Builder()
-        .addSentenceValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
-        .setCharacterTable("ja").build();
+        .addSentenceValidatorConfig(new ValidatorConfiguration("InvalidWord"))
+        .setCharacterTable("ja").build(); // NOTE: no dictionary for japanese or other languages whose words are not split by white space.
 
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
         .addSection(1, new ArrayList<Sentence>())
         .addParagraph()
         .addSentence(
-            "明日地球が滅亡するってマジですか。",
+            "こんにちは、群馬にきました。",
             1)
         .build();
 
@@ -95,6 +84,6 @@ public class InvalidExpressionValidatorTest {
         .build();
 
     List<ValidationError> errors = validator.check(documents);
-    assertEquals(1, errors.size());
+    assertEquals(0, errors.size());
   }
 }
