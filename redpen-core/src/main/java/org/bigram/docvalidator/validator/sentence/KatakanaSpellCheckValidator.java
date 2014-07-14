@@ -17,20 +17,20 @@
  */
 package org.bigram.docvalidator.validator.sentence;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-
+import org.bigram.docvalidator.DocumentValidatorException;
+import org.bigram.docvalidator.ValidationError;
+import org.bigram.docvalidator.config.CharacterTable;
+import org.bigram.docvalidator.config.ValidatorConfiguration;
+import org.bigram.docvalidator.model.Sentence;
+import org.bigram.docvalidator.util.LevenshteinDistance;
 import org.bigram.docvalidator.util.StringUtils;
+import org.bigram.docvalidator.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.bigram.docvalidator.model.Sentence;
-import org.bigram.docvalidator.config.CharacterTable;
-import org.bigram.docvalidator.util.EndOfSentenceDetector;
-import org.bigram.docvalidator.util.LevenshteinDistance;
-import org.bigram.docvalidator.ValidationError;
-import org.bigram.docvalidator.config.ValidatorConfiguration;
-import org.bigram.docvalidator.DocumentValidatorException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Validate the correctness of Katakana word spelling.
@@ -52,7 +52,7 @@ import org.bigram.docvalidator.DocumentValidatorException;
  * word is smaller than the threshold, we do not detect
  * the similarity.
  */
-public class KatakanaSpellCheckValidator implements SentenceValidator {
+public class KatakanaSpellCheckValidator implements Validator<Sentence> {
   /**
    * The default similarity ratio between the length and the distance.
    */

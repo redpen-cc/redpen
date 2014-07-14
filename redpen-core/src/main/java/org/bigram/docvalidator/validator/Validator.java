@@ -18,7 +18,6 @@
 package org.bigram.docvalidator.validator;
 
 
-import org.bigram.docvalidator.model.Document;
 import org.bigram.docvalidator.ValidationError;
 
 import java.util.List;
@@ -26,12 +25,12 @@ import java.util.List;
 /**
  * Validate input document.
  */
-public interface Validator {
+public interface Validator<E> {
   /**
    * validate the input document and returns the invalid points.
-   * @param document input
+   * @param block input
    * @return List of ValidationError
    */
-  List<ValidationError> validate(Document document);
+  List<ValidationError> validate(E block);
 
 }

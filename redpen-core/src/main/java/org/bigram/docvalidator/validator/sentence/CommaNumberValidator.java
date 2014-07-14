@@ -18,21 +18,22 @@
 package org.bigram.docvalidator.validator.sentence;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bigram.docvalidator.DocumentValidatorException;
+import org.bigram.docvalidator.ValidationError;
 import org.bigram.docvalidator.config.CharacterTable;
+import org.bigram.docvalidator.config.ValidatorConfiguration;
 import org.bigram.docvalidator.model.Sentence;
+import org.bigram.docvalidator.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.bigram.docvalidator.ValidationError;
-import org.bigram.docvalidator.config.ValidatorConfiguration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Validate the number of commas in one sentence.
  */
-public class CommaNumberValidator implements SentenceValidator {
+public class CommaNumberValidator implements Validator<Sentence> {
   /**
    * Default maximum number of comma.
    */

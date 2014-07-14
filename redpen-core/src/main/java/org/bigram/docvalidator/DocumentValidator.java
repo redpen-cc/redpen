@@ -21,20 +21,12 @@ import org.bigram.docvalidator.config.Configuration;
 import org.bigram.docvalidator.config.ValidatorConfiguration;
 import org.bigram.docvalidator.distributor.DefaultResultDistributor;
 import org.bigram.docvalidator.distributor.ResultDistributor;
-import org.bigram.docvalidator.validator.Validator;
-import org.bigram.docvalidator.validator.section.SectionValidator;
-import org.bigram.docvalidator.validator.section.SectionValidatorFactory;
-import org.bigram.docvalidator.validator.sentence.SentenceValidator;
-import org.bigram.docvalidator.validator.sentence.SentenceValidatorFactory;
 import org.bigram.docvalidator.distributor.ResultDistributorFactory;
 import org.bigram.docvalidator.formatter.Formatter;
-import org.bigram.docvalidator.model.Document;
-import org.bigram.docvalidator.model.DocumentCollection;
-import org.bigram.docvalidator.model.ListBlock;
-import org.bigram.docvalidator.model.ListElement;
-import org.bigram.docvalidator.model.Paragraph;
-import org.bigram.docvalidator.model.Section;
-import org.bigram.docvalidator.model.Sentence;
+import org.bigram.docvalidator.model.*;
+import org.bigram.docvalidator.validator.Validator;
+import org.bigram.docvalidator.validator.section.SectionValidatorFactory;
+import org.bigram.docvalidator.validator.sentence.SentenceValidatorFactory;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -43,15 +35,15 @@ import java.util.List;
 /**
  * Validate all input files using appended Validators.
  */
-public class DocumentValidator implements Validator {
+public class DocumentValidator implements Validator<Document> {
 
   private DocumentValidator(Builder builder) throws DocumentValidatorException {
     Configuration configuration = builder.configuration;
     this.distributor = builder.distributor;
 
     validators = new ArrayList<Validator>();
-    sectionValidators = new ArrayList<SectionValidator>();
-    sentenceValidators = new ArrayList<SentenceValidator>();
+    sectionValidators = new ArrayList<Validator<Section>>();
+    sentenceValidators = new ArrayList<Validator<Sentence>>();
 
     loadValidators(configuration);
   }
@@ -175,7 +167,7 @@ public class DocumentValidator implements Validator {
 
   private List<ValidationError> validateSection(Section section) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
-    for (SectionValidator sectionValidator : sectionValidators) {
+    for (Validator<Section> sectionValidator : sectionValidators) {
       errors.addAll(sectionValidator.validate(section));
     }
     return errors;
@@ -189,7 +181,7 @@ public class DocumentValidator implements Validator {
 
   private List<ValidationError> validateSentences(List<Sentence> sentences) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
-    for (SentenceValidator sentenceValidator : sentenceValidators) {
+    for (Validator<Sentence> sentenceValidator : sentenceValidators) {
       for (Sentence sentence : sentences) {
         errors.addAll(sentenceValidator.validate(sentence));
       }
@@ -205,8 +197,8 @@ public class DocumentValidator implements Validator {
         .createDistributor(Formatter.Type.PLAIN,
             System.out);
     this.validators = new ArrayList<Validator>();
-    sectionValidators = new ArrayList<SectionValidator>();
-    sentenceValidators = new ArrayList<SentenceValidator>();
+    sectionValidators = new ArrayList<Validator<Section>>();
+    sentenceValidators = new ArrayList<Validator<Sentence>>();
   }
 
   /**
@@ -218,12 +210,17 @@ public class DocumentValidator implements Validator {
     this.validators.add(validator);
   }
 
+  /**
+   * Validator
+   * @param document
+   * @return
+   */
   @Override
   public List<ValidationError> validate(Document document) {
     return null;
   }
 
-  public void appendSectionValidator(SectionValidator validator) {
+  public void appendSectionValidator(Validator<Section> validator) {
     sectionValidators.add(validator);
   }
 
@@ -255,9 +252,9 @@ public class DocumentValidator implements Validator {
 
   private final List<Validator> validators;
 
-  private final List<SectionValidator> sectionValidators;
+  private final List<Validator<Section>> sectionValidators;
 
-  private final List<SentenceValidator> sentenceValidators;
+  private final List<Validator<Sentence>> sentenceValidators;
 
   private ResultDistributor distributor;
 

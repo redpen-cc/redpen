@@ -17,21 +17,22 @@
  */
 package org.bigram.docvalidator.validator.sentence;
 
+import org.bigram.docvalidator.DocumentValidatorException;
+import org.bigram.docvalidator.ValidationError;
+import org.bigram.docvalidator.config.Character;
+import org.bigram.docvalidator.config.CharacterTable;
+import org.bigram.docvalidator.config.ValidatorConfiguration;
+import org.bigram.docvalidator.model.Sentence;
+import org.bigram.docvalidator.symbol.DefaultSymbols;
+import org.bigram.docvalidator.validator.Validator;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.bigram.docvalidator.DocumentValidatorException;
-import org.bigram.docvalidator.config.CharacterTable;
-import org.bigram.docvalidator.model.Sentence;
-import org.bigram.docvalidator.ValidationError;
-import org.bigram.docvalidator.config.ValidatorConfiguration;
-import org.bigram.docvalidator.symbol.DefaultSymbols;
-import org.bigram.docvalidator.config.Character;
 
 /**
  * Validator to validate quotation characters.
  */
-public class QuotationValidator implements SentenceValidator {
+public class QuotationValidator implements Validator<Sentence> {
 
   /**
    * Constructor.

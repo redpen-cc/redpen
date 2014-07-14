@@ -17,27 +17,25 @@
  */
 package org.bigram.docvalidator.validator.sentence;
 
+import org.bigram.docvalidator.DocumentValidatorException;
+import org.bigram.docvalidator.ValidationError;
+import org.bigram.docvalidator.config.CharacterTable;
+import org.bigram.docvalidator.config.ValidatorConfiguration;
+import org.bigram.docvalidator.model.Sentence;
+import org.bigram.docvalidator.validator.Validator;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.bigram.docvalidator.DocumentValidatorException;
-import org.bigram.docvalidator.model.Sentence;
-import org.bigram.docvalidator.ValidationError;
-import org.bigram.docvalidator.config.CharacterTable;
-import org.bigram.docvalidator.config.ValidatorConfiguration;
-
 /**
  * Validate if there is invalid characters in sentences.
  */
-public class InvalidCharacterValidator implements SentenceValidator {
+public class InvalidCharacterValidator implements Validator<Sentence> {
   public InvalidCharacterValidator(ValidatorConfiguration config,
                                    CharacterTable characterTable)
       throws DocumentValidatorException {
     initialize(characterTable);
-  }
-
-  public InvalidCharacterValidator() {
   }
 
   public List<ValidationError> validate(Sentence sentence) {
