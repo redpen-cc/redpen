@@ -41,7 +41,7 @@ public class DocumentValidator implements Validator<Document> {
     Configuration configuration = builder.configuration;
     this.distributor = builder.distributor;
 
-    validators = new ArrayList<Validator>();
+    validators = new ArrayList<Validator<Document>>();
     sectionValidators = new ArrayList<Validator<Section>>();
     sentenceValidators = new ArrayList<Validator<Sentence>>();
 
@@ -159,7 +159,7 @@ public class DocumentValidator implements Validator<Document> {
 
   private List<ValidationError> validateDocument(Document document) {
     List<ValidationError> errors = new ArrayList<ValidationError>();
-    for (Validator validator : validators) {
+    for (Validator<Document> validator : validators) {
       errors.addAll(validator.validate(document));
     }
     return errors;
@@ -196,7 +196,7 @@ public class DocumentValidator implements Validator<Document> {
     this.distributor = ResultDistributorFactory
         .createDistributor(Formatter.Type.PLAIN,
             System.out);
-    this.validators = new ArrayList<Validator>();
+    this.validators = new ArrayList<Validator<Document>>();
     sectionValidators = new ArrayList<Validator<Section>>();
     sentenceValidators = new ArrayList<Validator<Sentence>>();
   }
@@ -206,14 +206,15 @@ public class DocumentValidator implements Validator<Document> {
    *
    * @param validator Validator used in testing
    */
-  protected void appendValidator(Validator validator) {
+  protected void appendValidator(Validator<Document> validator) {
     this.validators.add(validator);
   }
 
   /**
-   * Validator
-   * @param document
-   * @return
+   * Run validation.
+   *
+   * @param document input
+   * @return set of errors
    */
   @Override
   public List<ValidationError> validate(Document document) {
@@ -250,7 +251,7 @@ public class DocumentValidator implements Validator<Document> {
     }
   }
 
-  private final List<Validator> validators;
+  private final List<Validator<Document>> validators;
 
   private final List<Validator<Section>> sectionValidators;
 

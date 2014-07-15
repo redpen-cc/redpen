@@ -25,8 +25,6 @@ import org.bigram.docvalidator.model.Sentence;
 import org.bigram.docvalidator.util.LevenshteinDistance;
 import org.bigram.docvalidator.util.StringUtils;
 import org.bigram.docvalidator.validator.Validator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -138,6 +136,4 @@ public class KatakanaSpellCheckValidator implements Validator<Sentence> {
     return true;
   }
 
-  private static Logger LOG =
-      LoggerFactory.getLogger(KatakanaSpellCheckValidator.class);
 }

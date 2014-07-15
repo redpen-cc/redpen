@@ -34,9 +34,6 @@ import java.util.Set;
  */
 public class SymbolWithSpaceValidator implements Validator<Sentence> {
 
-  public SymbolWithSpaceValidator() {
-  }
-
   public SymbolWithSpaceValidator(ValidatorConfiguration config,
                                   CharacterTable characterTable) throws
       DocumentValidatorException {
