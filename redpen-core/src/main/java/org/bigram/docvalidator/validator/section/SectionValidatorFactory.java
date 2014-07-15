@@ -18,9 +18,11 @@
 package org.bigram.docvalidator.validator.section;
 
 
-import org.bigram.docvalidator.config.CharacterTable;
 import org.bigram.docvalidator.DocumentValidatorException;
+import org.bigram.docvalidator.config.CharacterTable;
 import org.bigram.docvalidator.config.ValidatorConfiguration;
+import org.bigram.docvalidator.model.Section;
+import org.bigram.docvalidator.validator.Validator;
 
 /**
  *
@@ -29,7 +31,7 @@ public final class SectionValidatorFactory {
 
   private SectionValidatorFactory() { }
 
-  public static SectionValidator getInstance(ValidatorConfiguration config,
+  public static Validator<Section> getInstance(ValidatorConfiguration config,
                                              CharacterTable characterTable)
       throws DocumentValidatorException {
 

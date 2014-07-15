@@ -17,16 +17,10 @@
  */
 package org.bigram.docvalidator.validator;
 
-import org.junit.Test;
 import org.bigram.docvalidator.DocumentValidator;
-import org.bigram.docvalidator.model.Document;
-import org.bigram.docvalidator.model.DocumentCollection;
-import org.bigram.docvalidator.model.Paragraph;
-import org.bigram.docvalidator.model.Section;
-import org.bigram.docvalidator.model.Sentence;
 import org.bigram.docvalidator.ValidationError;
-import org.bigram.docvalidator.validator.section.AbstractSectionValidator;
-import org.bigram.docvalidator.validator.section.SectionValidator;
+import org.bigram.docvalidator.model.*;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,12 +37,12 @@ class DocumentValidatorForTest extends DocumentValidator {
     this.appendValidator(validator);
   }
 
-  public void addSectionValidator(SectionValidator validator) {
+  public void addSectionValidator(Validator<Section> validator) {
     this.appendSectionValidator(validator);
   }
 }
 
-class ValidatorForTest extends AbstractSectionValidator {
+class ValidatorForTest implements Validator<Section> {
   public ValidatorForTest() {
     sentenceNum = 0;
   }
@@ -69,7 +63,7 @@ class ValidatorForTest extends AbstractSectionValidator {
   private int sentenceNum;
 }
 
-class ValidatorThrowExceptionInCheck extends AbstractSectionValidator {
+class ValidatorThrowExceptionInCheck implements Validator<Section> {
   public ValidatorThrowExceptionInCheck() {
   }
 
@@ -79,7 +73,7 @@ class ValidatorThrowExceptionInCheck extends AbstractSectionValidator {
   }
 }
 
-class ValidatorReturnsNull extends AbstractSectionValidator {
+class ValidatorReturnsNull implements Validator<Section> {
   public ValidatorReturnsNull() {
   }
 

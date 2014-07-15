@@ -24,6 +24,7 @@ import org.bigram.docvalidator.config.ValidatorConfiguration;
 import org.bigram.docvalidator.model.Sentence;
 import org.bigram.docvalidator.util.ResourceLoader;
 import org.bigram.docvalidator.util.WordListExtractor;
+import org.bigram.docvalidator.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +33,7 @@ import java.util.*;
 /**
  * Detect invalid word occurrences.
  */
-public class InvalidWordValidator implements SentenceValidator {
+public class InvalidWordValidator implements Validator<Sentence> {
   /**
    * Constructor.
    */

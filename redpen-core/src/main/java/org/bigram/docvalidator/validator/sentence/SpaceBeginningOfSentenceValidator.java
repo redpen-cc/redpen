@@ -22,6 +22,7 @@ import org.bigram.docvalidator.ValidationError;
 import org.bigram.docvalidator.config.CharacterTable;
 import org.bigram.docvalidator.config.ValidatorConfiguration;
 import org.bigram.docvalidator.model.Sentence;
+import org.bigram.docvalidator.validator.Validator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ import java.util.List;
  * Validate input sentences except for first sentence of a paragraph start with
  * a space.
  */
-public class SpaceBeginningOfSentenceValidator implements SentenceValidator {
+public class SpaceBeginningOfSentenceValidator implements Validator<Sentence> {
 
   public SpaceBeginningOfSentenceValidator() {
   }

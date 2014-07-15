@@ -17,22 +17,23 @@
  */
 package org.bigram.docvalidator.validator.section;
 
-import java.util.List;
-import java.util.ArrayList;
-
+import org.bigram.docvalidator.ValidationError;
 import org.bigram.docvalidator.config.CharacterTable;
+import org.bigram.docvalidator.config.ValidatorConfiguration;
+import org.bigram.docvalidator.model.Paragraph;
 import org.bigram.docvalidator.model.Section;
 import org.bigram.docvalidator.model.Sentence;
+import org.bigram.docvalidator.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.bigram.docvalidator.model.Paragraph;
-import org.bigram.docvalidator.config.ValidatorConfiguration;
-import org.bigram.docvalidator.ValidationError;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Validate whether paragraph start as specified.
  */
-public class ParagraphStartWithValidator extends AbstractSectionValidator {
+public class ParagraphStartWithValidator implements Validator<Section> {
   /**
    * Default matter paragraph start with.
    */

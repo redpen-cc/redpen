@@ -18,12 +18,13 @@
 package org.bigram.docvalidator.validator.sentence;
 
 import org.bigram.docvalidator.DocumentValidatorException;
+import org.bigram.docvalidator.ValidationError;
 import org.bigram.docvalidator.config.CharacterTable;
+import org.bigram.docvalidator.config.ValidatorConfiguration;
 import org.bigram.docvalidator.model.Sentence;
+import org.bigram.docvalidator.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.bigram.docvalidator.ValidationError;
-import org.bigram.docvalidator.config.ValidatorConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ import java.util.List;
 /**
  * Validate input sentences have more words than specified.
  */
-public class WordNumberValidator implements SentenceValidator {
+public class WordNumberValidator implements Validator<Sentence> {
   /**
    * Default maximum number of words in one sentence.
    */

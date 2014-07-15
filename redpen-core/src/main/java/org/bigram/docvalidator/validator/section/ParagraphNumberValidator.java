@@ -17,19 +17,20 @@
  */
 package org.bigram.docvalidator.validator.section;
 
-import java.util.List;
-import java.util.ArrayList;
-
-import org.bigram.docvalidator.model.Section;
+import org.bigram.docvalidator.ValidationError;
 import org.bigram.docvalidator.config.CharacterTable;
 import org.bigram.docvalidator.config.ValidatorConfiguration;
-import org.bigram.docvalidator.ValidationError;
+import org.bigram.docvalidator.model.Section;
+import org.bigram.docvalidator.validator.Validator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Validate paragraph number. If a section has paragraphs more than specified,
  * This validator reports it.
  */
-public class ParagraphNumberValidator extends AbstractSectionValidator {
+public class ParagraphNumberValidator implements Validator<Section> {
   /**
    * Default maximum number of paragraphs in a section.
    */

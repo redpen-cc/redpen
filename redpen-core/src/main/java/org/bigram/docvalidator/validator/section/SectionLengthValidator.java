@@ -21,6 +21,7 @@ import org.bigram.docvalidator.config.CharacterTable;
 import org.bigram.docvalidator.config.ValidatorConfiguration;
 import org.bigram.docvalidator.model.Section;
 import org.bigram.docvalidator.model.Sentence;
+import org.bigram.docvalidator.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.bigram.docvalidator.model.Paragraph;
@@ -32,7 +33,7 @@ import java.util.List;
 /**
  * Validate the length of one section.
  */
-public class SectionLengthValidator extends AbstractSectionValidator {
+public class SectionLengthValidator implements Validator<Section> {
   /**
    * Constructor.
    */

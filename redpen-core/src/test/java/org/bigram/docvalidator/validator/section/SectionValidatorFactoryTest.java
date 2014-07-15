@@ -18,11 +18,12 @@
 
 package org.bigram.docvalidator.validator.section;
 
-import org.bigram.docvalidator.validator.section.*;
-import org.junit.Test;
 import org.bigram.docvalidator.DocumentValidatorException;
 import org.bigram.docvalidator.config.CharacterTable;
 import org.bigram.docvalidator.config.ValidatorConfiguration;
+import org.bigram.docvalidator.model.Section;
+import org.bigram.docvalidator.validator.Validator;
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -31,7 +32,7 @@ public class SectionValidatorFactoryTest {
 
   @Test
   public void testGetInstance() throws Exception {
-    SectionValidator validator;
+    Validator<Section> validator;
     CharacterTable characterTable = new CharacterTable();
 
     ValidatorConfiguration configSectionLength =

@@ -17,9 +17,11 @@
  */
 package org.bigram.docvalidator.validator.sentence;
 
-import org.bigram.docvalidator.config.CharacterTable;
 import org.bigram.docvalidator.DocumentValidatorException;
+import org.bigram.docvalidator.config.CharacterTable;
 import org.bigram.docvalidator.config.ValidatorConfiguration;
+import org.bigram.docvalidator.model.Sentence;
+import org.bigram.docvalidator.validator.Validator;
 
 /**
  *
@@ -28,7 +30,7 @@ public final class SentenceValidatorFactory {
 
   private SentenceValidatorFactory() { }
 
-  public static SentenceValidator getInstance(ValidatorConfiguration config,
+  public static Validator<Sentence> getInstance(ValidatorConfiguration config,
                                               CharacterTable characterTable)
       throws DocumentValidatorException {
 
