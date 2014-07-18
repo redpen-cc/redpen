@@ -1,17 +1,15 @@
-import java.net.URL;
-import java.security.ProtectionDomain;
-
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
-
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.webapp.WebAppContext;
 
 import javax.servlet.ServletContext;
+import java.net.URL;
+import java.security.ProtectionDomain;
 
 public class DocumentValidatorRunner {
 
