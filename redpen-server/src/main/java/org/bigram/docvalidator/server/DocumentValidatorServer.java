@@ -38,7 +38,7 @@ public class DocumentValidatorServer {
   private static final Logger LOG =
       LoggerFactory.getLogger(DocumentValidatorServer.class);
 
-  private static DocumentValidatorServer documentValidatorServer;
+  private static DocumentValidatorServer documentValidatorServer = null;
 
   private DocumentValidator validator;
 
@@ -82,8 +82,12 @@ public class DocumentValidatorServer {
     return documentValidatorServer;
   }
 
-  public static void initialize() throws DocumentValidatorException {
-    LOG.info("Initializing Document Validator");
-    documentValidatorServer = new DocumentValidatorServer();
+  public static synchronized void initialize() throws DocumentValidatorException {
+    if(documentValidatorServer == null) {
+      LOG.info("Initializing Document Validator");
+      documentValidatorServer = new DocumentValidatorServer();
+    }else{
+      throw new IllegalStateException("DocumentValidatorServer already initialized.");
+    }
   }
 }
