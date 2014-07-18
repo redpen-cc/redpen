@@ -17,10 +17,9 @@
  */
 package org.bigram.docvalidator.util;
 
-import static org.junit.Assert.*;
-
-import org.bigram.docvalidator.util.LevenshteinDistance;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class LevenshteinDistanceTest {
 
@@ -51,32 +50,32 @@ public class LevenshteinDistanceTest {
     String b = null;
     assertEquals(0, LevenshteinDistance.getDistance(a, b));
 
-    a = new String ("");
-    b = new String ("");
+    a = "";
+    b = "";
     assertEquals(0, LevenshteinDistance.getDistance(a, b));
 
     a = null;
-    b = new String ("");
+    b = "";
     assertEquals(0, LevenshteinDistance.getDistance(a, b));
 
-    a = new String ("");
+    a = "";
     b = null;
     assertEquals(0, LevenshteinDistance.getDistance(a, b));
 
     a = null;
-    b = new String ("x");
+    b = "x";
     assertEquals(1, LevenshteinDistance.getDistance(a, b));
 
-    a = new String ("x");
+    a = "x";
     b = null;
     assertEquals(1, LevenshteinDistance.getDistance(a, b));
 
-    a = new String ("");
-    b = new String ("x");
+    a = "";
+    b = "x";
     assertEquals(1, LevenshteinDistance.getDistance(a, b));
 
-    a = new String ("x");
-    b = new String ("");
+    a = "x";
+    b = "";
     assertEquals(1, LevenshteinDistance.getDistance(a, b));
   }
 
@@ -89,16 +88,16 @@ public class LevenshteinDistanceTest {
     LevenshteinDistance.setDeletionCost(ALTERNATE_COST);
     LevenshteinDistance.setSubstitutionCost(ALTERNATE_COST);
 
-    a = new String ("ab");
-    b = new String ("abc");
+    a = "ab";
+    b = "abc";
     assertEquals(TARGET_COST, LevenshteinDistance.getDistance(a, b));
 
-    a = new String ("bc");
-    b = new String ("abc");
+    a = "bc";
+    b = "abc";
     assertEquals(TARGET_COST, LevenshteinDistance.getDistance(a, b));
 
-    a = new String ("ac");
-    b = new String ("abc");
+    a = "ac";
+    b = "abc";
     assertEquals(TARGET_COST, LevenshteinDistance.getDistance(a, b));
 
     resetCost();
@@ -113,16 +112,16 @@ public class LevenshteinDistanceTest {
     LevenshteinDistance.setDeletionCost(TARGET_COST);
     LevenshteinDistance.setSubstitutionCost(ALTERNATE_COST);
 
-    a = new String ("abc");
-    b = new String ("ab");
+    a = "abc";
+    b = "ab";
     assertEquals(TARGET_COST, LevenshteinDistance.getDistance(a, b));
 
-    a = new String ("abc");
-    b = new String ("bc");
+    a = "abc";
+    b = "bc";
     assertEquals(TARGET_COST, LevenshteinDistance.getDistance(a, b));
 
-    a = new String ("abc");
-    b = new String ("ac");
+    a = "abc";
+    b = "ac";
     assertEquals(TARGET_COST, LevenshteinDistance.getDistance(a, b));
 
     resetCost();
@@ -137,16 +136,16 @@ public class LevenshteinDistanceTest {
     LevenshteinDistance.setDeletionCost(ALTERNATE_COST);
     LevenshteinDistance.setSubstitutionCost(TARGET_COST);
 
-    a = new String ("abc");
-    b = new String ("xbc");
+    a = "abc";
+    b = "xbc";
     assertEquals(TARGET_COST, LevenshteinDistance.getDistance(a, b));
 
-    a = new String ("abc");
-    b = new String ("axc");
+    a = "abc";
+    b = "axc";
     assertEquals(TARGET_COST, LevenshteinDistance.getDistance(a, b));
 
-    a = new String ("abc");
-    b = new String ("abx");
+    a = "abc";
+    b = "abx";
     assertEquals(TARGET_COST, LevenshteinDistance.getDistance(a, b));
 
     resetCost();
@@ -155,8 +154,8 @@ public class LevenshteinDistanceTest {
   @Test
   public void testDistanceMixed() {
     int cost;
-    String a = new String ("kitten");
-    String b = new String ("sitting");
+    String a = "kitten";
+    String b = "sitting";
     cost = 3;
     assertEquals(cost, LevenshteinDistance.getDistance(a, b));
     cost = 5;
