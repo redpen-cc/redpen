@@ -24,7 +24,6 @@ import java.io.InputStream;
  */
 public class ResourceLoader {
 
-  private ResourceExtractor extractor = null;
   private FileLoader loader = null;
 
   /**
@@ -32,8 +31,7 @@ public class ResourceLoader {
    * @param resourceExtractor resource extractor.
    */
   public ResourceLoader(ResourceExtractor resourceExtractor) {
-    this.extractor = resourceExtractor;
-    this.loader = new FileLoader(extractor);
+    this.loader = new FileLoader(resourceExtractor);
   }
 
   /**
@@ -46,11 +44,7 @@ public class ResourceLoader {
     InputStream inputStream = getClass()
         .getClassLoader()
         .getResourceAsStream(inputFile);
-    if (loader.loadFile(inputStream) == 0) {
-      return true;
-    } else {
-      return false;
-    }
+    return loader.loadFile(inputStream) == 0;
   }
 
   /**
@@ -60,12 +54,7 @@ public class ResourceLoader {
    * @return true when succeed to load, false otherwise
    */
   public boolean loadExternalFile(String inputFile) {
-    if (loader.loadFile(inputFile) == 0) {
-      return true;
-    } else {
-      return false;
-    }
+    return loader.loadFile(inputFile) == 0;
   }
 
-  private ResourceLoader() {}
 }
