@@ -38,9 +38,19 @@ public class DocumentValidatorInitializer implements ServletContextListener {
   @Override
   public void contextInitialized(ServletContextEvent servletContextEvent) {
     log.info("Starting Document Validator Server.");
-    String configPath =
-        (String) servletContextEvent.getServletContext().getAttribute("redpen.conf.path");
-    System.setProperty("redpen.conf.path", configPath);
+    String configPath = System.getProperty("redpen.conf.path");
+    // if redpen.conf.path is not set via system property, look into ServletContext attribute, then fallback to web.xml's context-param.
+    if (configPath == null) {
+      configPath = (String) servletContextEvent.getServletContext().getAttribute("redpen.conf.path");
+      if (configPath == null) {
+        configPath = servletContextEvent.getServletContext().getInitParameter("redpen.conf.path");
+      }
+      if (configPath == null) {
+        throw new ExceptionInInitializerError("redpen.conf.path not specified in web.xml");
+      }
+      System.setProperty("redpen.conf.path", configPath);
+    }
+
     log.info("Config Path is set to " + "\"" + configPath + "\"");
     try {
       DocumentValidatorServer.initialize();
