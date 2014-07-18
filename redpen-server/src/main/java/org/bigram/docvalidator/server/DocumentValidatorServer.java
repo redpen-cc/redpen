@@ -83,11 +83,7 @@ public class DocumentValidatorServer {
   }
 
   public static synchronized void initialize() throws DocumentValidatorException {
-    if(documentValidatorServer == null) {
-      LOG.info("Initializing Document Validator");
-      documentValidatorServer = new DocumentValidatorServer();
-    }else{
-      throw new IllegalStateException("DocumentValidatorServer already initialized.");
-    }
+    LOG.info("Initializing Document Validator");
+    documentValidatorServer = new DocumentValidatorServer();
   }
 }
