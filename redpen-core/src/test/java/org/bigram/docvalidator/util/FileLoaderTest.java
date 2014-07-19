@@ -17,22 +17,19 @@
  */
 package org.bigram.docvalidator.util;
 
-import static org.junit.Assert.assertEquals;
+import org.apache.commons.io.IOUtils;
+import org.junit.Test;
 
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.io.IOUtils;
-import org.bigram.docvalidator.util.FileLoader;
-import org.bigram.docvalidator.util.KeyValueDictionaryExtractor;
-import org.bigram.docvalidator.util.WordListExtractor;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 public class FileLoaderTest {
   @Test
   public void testCreateWordList() {
-    String sampleWordSet = new String("Saitama\n");
+    String sampleWordSet = "Saitama\n";
     sampleWordSet += "Gumma\n";
     sampleWordSet += "Gifu\n";
 
@@ -46,7 +43,7 @@ public class FileLoaderTest {
   
   @Test
   public void testCreateVacantWordList() {
-    String sampleWordSet = new String("");
+    String sampleWordSet = "";
 
     InputStream inputStream = IOUtils.toInputStream(sampleWordSet);
     WordListExtractor ex = new WordListExtractor();
@@ -58,7 +55,7 @@ public class FileLoaderTest {
   
   @Test
   public void testCreateKeyValueList() {
-    String sampleWordSet = new String("Saitama\t100\n");
+    String sampleWordSet = "Saitama\t100\n";
     sampleWordSet += "Gumma\t530000\n";
     sampleWordSet += "Gifu\t1200\n";
 
@@ -75,7 +72,7 @@ public class FileLoaderTest {
   
   @Test
   public void testCreateVacantKeyValueList() {
-    String sampleWordSet = new String("");
+    String sampleWordSet = "";
     InputStream inputStream = IOUtils.toInputStream(sampleWordSet);
     KeyValueDictionaryExtractor ex = new KeyValueDictionaryExtractor();
     FileLoader fileLoader = new FileLoader(ex);
