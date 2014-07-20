@@ -31,7 +31,7 @@ public final class CharacterTable {
    */
   public CharacterTable() {
     super();
-    characterDictionary = new HashMap<String, Character>();
+    characterDictionary = new HashMap<>();
   }
 
   /**

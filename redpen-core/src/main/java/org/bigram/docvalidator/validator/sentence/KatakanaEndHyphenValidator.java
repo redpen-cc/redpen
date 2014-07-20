@@ -68,7 +68,7 @@ public class KatakanaEndHyphenValidator implements Validator<Sentence> {
   }
 
   public List<ValidationError> validate(Sentence sentence) {
-    List<ValidationError> errors = new ArrayList<ValidationError>();
+    List<ValidationError> errors = new ArrayList<>();
     List<ValidationError> result;
     StringBuffer katakana = new StringBuffer("");
     for (int i = 0; i < sentence.content.length(); i++) {
@@ -92,7 +92,7 @@ public class KatakanaEndHyphenValidator implements Validator<Sentence> {
 
   private List<ValidationError> checkKatakanaEndHyphen(Sentence sentence,
       StringBuffer katakana) {
-    List<ValidationError> errors = new ArrayList<ValidationError>();
+    List<ValidationError> errors = new ArrayList<>();
     if (isKatakanaEndHyphen(katakana)) {
       errors.add(new ValidationError(
           this.getClass(),

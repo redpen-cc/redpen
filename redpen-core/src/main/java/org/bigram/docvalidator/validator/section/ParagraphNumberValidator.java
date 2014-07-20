@@ -49,7 +49,7 @@ public class ParagraphNumberValidator implements Validator<Section> {
 
   @Override
   public List<ValidationError> validate(Section section) {
-    List<ValidationError> validationErrors = new ArrayList<ValidationError>();
+    List<ValidationError> validationErrors = new ArrayList<>();
     int paragraphNumber = section.getNumberOfParagraphs();
     if (maxParagraphs < paragraphNumber) {
       validationErrors.add(new ValidationError(

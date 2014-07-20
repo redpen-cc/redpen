@@ -39,7 +39,7 @@ public class DocumentValidatorTest {
 
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
-        .addSection(1, new ArrayList<Sentence>())
+        .addSection(1, new ArrayList<>())
         .addParagraph()
         .addSentence(
             "In a land far away, there once was as a hungry programmer.",
@@ -71,7 +71,7 @@ public class DocumentValidatorTest {
       throws DocumentValidatorException {
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("tested file")
-        .addSection(0, new ArrayList<Sentence>())
+        .addSection(0, new ArrayList<>())
         .addParagraph()
         .addSentence("it is a piece of a cake.", 0)
         .addSentence("that is also a piece of a cake.", 1)
@@ -95,7 +95,7 @@ public class DocumentValidatorTest {
       throws DocumentValidatorException {
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("tested file")
-        .addSection(0, new ArrayList<Sentence>())
+        .addSection(0, new ArrayList<>())
         .addSectionHeader("foobar")
         .addParagraph()
         .addSentence("it is a piece of a cake.", 0)
@@ -141,7 +141,7 @@ public class DocumentValidatorTest {
   public void testDocumentWithList() throws DocumentValidatorException {
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("tested file")
-        .addSection(0, new ArrayList<Sentence>())
+        .addSection(0, new ArrayList<>())
         .addSectionHeader("this is it")
         .addParagraph()
         .addSentence("it is a piece of a cake.", 0)

@@ -51,7 +51,7 @@ public class WordNumberValidator implements Validator<Sentence> {
   }
 
   public List<ValidationError> validate(Sentence sentence) {
-    List<ValidationError> result = new ArrayList<ValidationError>();
+    List<ValidationError> result = new ArrayList<>();
     String content = sentence.content;
     String[] wordList = content.split(" ");
     int wordNum = wordList.length;

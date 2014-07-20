@@ -35,7 +35,7 @@ public final class Sentence {
     this.content = sentenceContent;
     this.position = sentencePosition;
     this.isFirstSentence = false;
-    this.links = new ArrayList<String>();
+    this.links = new ArrayList<>();
   }
 
   /**

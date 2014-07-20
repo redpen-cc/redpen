@@ -41,7 +41,7 @@ public class InvalidWordValidatorTest {
 
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
-        .addSection(1, new ArrayList<Sentence>())
+        .addSection(1, new ArrayList<>())
         .addParagraph()
         .addSentence(
             "he is a foolish man.",
@@ -71,7 +71,7 @@ public class InvalidWordValidatorTest {
 
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
-        .addSection(1, new ArrayList<Sentence>())
+        .addSection(1, new ArrayList<>())
         .addParagraph()
         .addSentence(
             "こんにちは、群馬にきました。",

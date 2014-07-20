@@ -49,7 +49,7 @@ public class SectionLengthValidator implements Validator<Section> {
 
   @Override
   public List<ValidationError> validate(Section section) {
-    List<ValidationError> validationErrors = new ArrayList<ValidationError>();
+    List<ValidationError> validationErrors = new ArrayList<>();
     int sectionCharNumber = 0;
 
     for (Paragraph currentParagraph : section.getParagraphs()) {

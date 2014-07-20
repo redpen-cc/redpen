@@ -29,7 +29,7 @@ public class KeyValueDictionaryExtractor implements ResourceExtractor {
    */
   public KeyValueDictionaryExtractor() {
     super();
-    map = new HashMap<String, String>();
+    map = new HashMap<>();
   }
 
   /**

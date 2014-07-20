@@ -45,7 +45,7 @@ public class KatakanaSpellCheckValidatorTest {
   public void testMultiSentence() {
     KatakanaSpellCheckValidator validator
       = new KatakanaSpellCheckValidator();
-    List<ValidationError> errors = new ArrayList<ValidationError>();
+    List<ValidationError> errors = new ArrayList<>();
     Sentence st;
     st = new Sentence("フレーズ・アナライズにバグがある", 0);
     errors.addAll(validator.validate(st));

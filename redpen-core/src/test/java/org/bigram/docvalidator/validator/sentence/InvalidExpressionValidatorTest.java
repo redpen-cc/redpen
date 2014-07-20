@@ -58,7 +58,7 @@ public class InvalidExpressionValidatorTest {
 
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
-        .addSection(1, new ArrayList<Sentence>())
+        .addSection(1, new ArrayList<>())
         .addParagraph()
         .addSentence(
             "You know. He is a super man.",
@@ -82,7 +82,7 @@ public class InvalidExpressionValidatorTest {
 
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
-        .addSection(1, new ArrayList<Sentence>())
+        .addSection(1, new ArrayList<>())
         .addParagraph()
         .addSentence(
             "明日地球が滅亡するってマジですか。",

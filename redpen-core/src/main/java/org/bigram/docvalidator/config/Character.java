@@ -34,7 +34,7 @@ public final class Character {
   public Character(String charName, String charValue) {
     this.name = charName;
     this.value = charValue;
-    this.invalidChars = new ArrayList<String>();
+    this.invalidChars = new ArrayList<>();
     this.needBeforeSpace = false;
     this.needAfterSpace = false;
   }

@@ -29,7 +29,7 @@ public final class ListBlock {
    */
   public ListBlock() {
     super();
-    this.listElements = new ArrayList<ListElement>();
+    this.listElements = new ArrayList<>();
   }
 
   /**

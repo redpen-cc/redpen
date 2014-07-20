@@ -34,8 +34,8 @@ public final class ValidatorConfiguration {
    */
   public ValidatorConfiguration(String name) {
     this.configurationName = name;
-    this.attributes = new HashMap<String, String>();
-    this.childConfigurations = new ArrayList<ValidatorConfiguration>();
+    this.attributes = new HashMap<>();
+    this.childConfigurations = new ArrayList<>();
     this.parentConfiguration = null;
   }
 
@@ -47,8 +47,8 @@ public final class ValidatorConfiguration {
    */
   public ValidatorConfiguration(String name, ValidatorConfiguration parent) {
     this.configurationName = name;
-    this.attributes = new HashMap<String, String>();
-    this.childConfigurations = new ArrayList<ValidatorConfiguration>();
+    this.attributes = new HashMap<>();
+    this.childConfigurations = new ArrayList<>();
     this.parentConfiguration = parent;
   }
 

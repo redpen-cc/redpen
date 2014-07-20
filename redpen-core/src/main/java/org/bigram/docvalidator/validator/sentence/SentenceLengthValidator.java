@@ -51,7 +51,7 @@ public class SentenceLengthValidator implements Validator<Sentence> {
   }
 
   public List<ValidationError> validate(Sentence line) {
-    List<ValidationError> result = new ArrayList<ValidationError>();
+    List<ValidationError> result = new ArrayList<>();
     if (line.content.length() > maxLength) {
       result.add(new ValidationError(
           this.getClass(),

@@ -41,7 +41,7 @@ public class SymbolWithSpaceValidator implements Validator<Sentence> {
   }
 
   public List<ValidationError> validate(Sentence sentence) {
-    List<ValidationError> errors = new ArrayList<ValidationError>();
+    List<ValidationError> errors = new ArrayList<>();
     Set<String> names = characterTable.getNames();
     for (String name : names) {
       ValidationError error = validateCharacter(sentence, name);

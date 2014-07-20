@@ -77,7 +77,7 @@ public abstract class BasicDocumentParser implements Parser {
   }
 
   private List<String> extractRightQuotations(CharacterTable characterTable) {
-    List<String> rightQuotations = new ArrayList<String>();
+    List<String> rightQuotations = new ArrayList<>();
     if (characterTable.isContainCharacter("RIGHT_SINGLE_QUOTATION_MARK")) {
       rightQuotations.add(
           characterTable.getCharacter("RIGHT_SINGLE_QUOTATION_MARK").getValue());
@@ -99,7 +99,7 @@ public abstract class BasicDocumentParser implements Parser {
   }
 
   private List<String> extractPeriods(CharacterTable characterTable) {
-    List<String> periods = new ArrayList<String>();
+    List<String> periods = new ArrayList<>();
     if (characterTable.isContainCharacter("FULL_STOP")) {
       periods.add(
           characterTable.getCharacter("FULL_STOP").getValue());

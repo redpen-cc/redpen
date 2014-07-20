@@ -30,7 +30,7 @@ import org.bigram.docvalidator.ValidationError;
 
 class SuggestExpressionValidatorForTest extends SuggestExpressionValidator {
   void loadSynonyms () {
-    Map<String, String> synonymSamples = new HashMap<String, String>();
+    Map<String, String> synonymSamples = new HashMap<>();
     synonymSamples.put("like", "such as");
     synonymSamples.put("info", "infomation");
     this.setSynonyms(synonymSamples);

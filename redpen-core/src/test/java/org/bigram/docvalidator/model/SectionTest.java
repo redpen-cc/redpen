@@ -34,7 +34,7 @@ public class SectionTest {
 
   @Test
   public void testGetJoinedHeaderFromSectionHasMultipleSentenceHeader() {
-    List<Sentence> headers = new ArrayList<Sentence>();
+    List<Sentence> headers = new ArrayList<>();
     headers.add(new Sentence("header1.",0));
     headers.add(new Sentence("header2.",0));
     Section section = new Section(0, headers);

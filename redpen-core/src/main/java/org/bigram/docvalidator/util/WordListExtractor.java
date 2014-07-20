@@ -31,7 +31,7 @@ public class WordListExtractor implements ResourceExtractor {
    */
   public WordListExtractor() {
     super();
-    wordList = new HashSet<String>();
+    wordList = new HashSet<>();
   }
 
   /**

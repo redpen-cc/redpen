@@ -31,7 +31,7 @@ public final class Document implements Iterable<Section> {
    */
   public Document() {
     super();
-    sections = new ArrayList<Section>();
+    sections = new ArrayList<>();
     fileName = "";
   }
 

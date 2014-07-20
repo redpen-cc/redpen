@@ -38,7 +38,7 @@ public class InvalidWordValidator implements Validator<Sentence> {
    * Constructor.
    */
   public InvalidWordValidator() {
-    invalidWords = new HashSet<String>();
+    invalidWords = new HashSet<>();
   }
 
   /**
@@ -54,7 +54,7 @@ public class InvalidWordValidator implements Validator<Sentence> {
   }
 
   public List<ValidationError> validate(Sentence line) {
-    List<ValidationError> result = new ArrayList<ValidationError>();
+    List<ValidationError> result = new ArrayList<>();
     String content = line.content;
     //NOTE: only Ascii white space since this validator works for european languages.
     List<String> words = Arrays.asList(content.split(" "));

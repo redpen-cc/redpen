@@ -86,7 +86,7 @@ public class QuotationValidator implements Validator<Sentence> {
 
   @Override
   public List<ValidationError> validate(Sentence sentence) {
-    List<ValidationError> errors = new ArrayList<ValidationError>();
+    List<ValidationError> errors = new ArrayList<>();
     // validate single quotation
     List<ValidationError> result = this.checkQuotation(sentence,
         leftSingleQuotationMark, rightSingleQuotationMark);
@@ -145,7 +145,7 @@ public class QuotationValidator implements Validator<Sentence> {
       Character leftQuotation,
       Character rightQuotation) {
     String sentenceString = sentence.content;
-    List<ValidationError> errors = new ArrayList<ValidationError>();
+    List<ValidationError> errors = new ArrayList<>();
     int leftPosition = 0;
     int rightPosition = 0;
     while (leftPosition >= 0 && rightPosition < sentenceString.length()) {
@@ -261,7 +261,7 @@ public class QuotationValidator implements Validator<Sentence> {
   private static final List<String> DEFAULT_EXCEPTION_SUFFIXES;
 
   static {
-    DEFAULT_EXCEPTION_SUFFIXES = new ArrayList<String>();
+    DEFAULT_EXCEPTION_SUFFIXES = new ArrayList<>();
     DEFAULT_EXCEPTION_SUFFIXES.add("s "); // He's
     DEFAULT_EXCEPTION_SUFFIXES.add("m "); // I'm
   }

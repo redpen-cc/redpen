@@ -99,13 +99,13 @@ public final class Configuration {
     private CharacterTable characterTable;
 
     private final List<ValidatorConfiguration> documentValidatorConfigs =
-        new ArrayList<ValidatorConfiguration>();
+        new ArrayList<>();
     private final List<ValidatorConfiguration> sectionValidatorConfigs =
-        new ArrayList<ValidatorConfiguration>();
+        new ArrayList<>();
     private final List<ValidatorConfiguration> paragraphValidatorConfigs =
-        new ArrayList<ValidatorConfiguration>();
+        new ArrayList<>();
     private final List<ValidatorConfiguration> sentenceValidatorConfigs =
-        new ArrayList<ValidatorConfiguration>();
+        new ArrayList<>();
 
 
     public Builder setCharacterTable(String lang) {
@@ -220,12 +220,12 @@ public final class Configuration {
   private final CharacterTable characterTable;
 
   private final List<ValidatorConfiguration> documentValidatorConfigs =
-      new ArrayList<ValidatorConfiguration>();
+      new ArrayList<>();
   private final List<ValidatorConfiguration> sectionValidatorConfigs =
-      new ArrayList<ValidatorConfiguration>();
+      new ArrayList<>();
   private final List<ValidatorConfiguration> paragraphValidatorConfigs =
-      new ArrayList<ValidatorConfiguration>();
+      new ArrayList<>();
   private final List<ValidatorConfiguration> sentenceValidatorConfigs =
-      new ArrayList<ValidatorConfiguration>();
+      new ArrayList<>();
 
 }
