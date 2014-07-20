@@ -44,7 +44,7 @@ public class DocumentValidateResourceTest extends MockServletInvocationTest {
         constructMockRequest("POST", "/document/validate", MediaType.WILDCARD);
     request.setContent(("textarea=foobar").getBytes());
     MockServletContext context = new MockServletContext();
-    context.setAttribute("redpen.conf.path", "conf/dv-conf.xml");
+    context.addInitParameter("redpen.conf.path", "conf/dv-conf.xml");
     listner.contextInitialized(new ServletContextEvent(context));
     MockHttpServletResponse response = invoke(request);
 
@@ -58,7 +58,7 @@ public class DocumentValidateResourceTest extends MockServletInvocationTest {
         constructMockRequest("POST", "/document/validate", MediaType.WILDCARD);
     request.setContent(("textarea=foobar.foobar").getBytes()); //NOTE: need space between periods.
     MockServletContext context = new MockServletContext();
-    context.setAttribute("redpen.conf.path", "conf/dv-conf.xml");
+    context.addInitParameter("redpen.conf.path", "conf/dv-conf.xml");
     listner.contextInitialized(new ServletContextEvent(context));
     MockHttpServletResponse response = invoke(request);
 
@@ -73,7 +73,7 @@ public class DocumentValidateResourceTest extends MockServletInvocationTest {
         constructMockRequest("POST", "/document/validate", MediaType.WILDCARD);
     request.setContent(("").getBytes()); //NOTE: need space between periods.
     MockServletContext context = new MockServletContext();
-    context.setAttribute("redpen.conf.path", "conf/dv-conf.xml");
+    context.addInitParameter("redpen.conf.path", "conf/dv-conf.xml");
     listner.contextInitialized(new ServletContextEvent(context));
     MockHttpServletResponse response = invoke(request);
 
@@ -85,7 +85,7 @@ public class DocumentValidateResourceTest extends MockServletInvocationTest {
         constructMockRequest("POST", "/document/validate", MediaType.WILDCARD);
     request.setContent(("textarea=").getBytes()); //NOTE: need space between periods.
     MockServletContext context = new MockServletContext();
-    context.setAttribute("redpen.conf.path", "conf/dv-conf.xml");
+    context.addInitParameter("redpen.conf.path", "conf/dv-conf.xml");
     listner.contextInitialized(new ServletContextEvent(context));
     MockHttpServletResponse response = invoke(request);
 
