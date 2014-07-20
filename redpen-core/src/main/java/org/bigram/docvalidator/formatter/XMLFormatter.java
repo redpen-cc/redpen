@@ -118,12 +118,7 @@ public class XMLFormatter implements Formatter {
 
   private Transformer createTransformer() {
     TransformerFactory tf;
-    try {
-      tf = TransformerFactory.newInstance();
-    } catch (Throwable e) {
-      LOG.error(e.getMessage());
-      return null;
-    }
+    tf = TransformerFactory.newInstance();
 
     Transformer transformer;
     try {

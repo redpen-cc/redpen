@@ -135,7 +135,7 @@ public class ToFileContentSerializer implements Visitor {
     try {
       checkArgNotNull(astRoot, "astRoot");
       astRoot.accept(this);
-    } catch (Throwable e) {
+    } catch (NullPointerException e) {
       LOG.error("Fail to traverse RootNode.");
       throw new DocumentValidatorException("Fail to traverse RootNode.", e);
     }

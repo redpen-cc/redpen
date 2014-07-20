@@ -44,7 +44,7 @@ public class DocumentValidatorException extends Exception {
    * @param message error message
    * @param cause   error cause
    */
-  public DocumentValidatorException(String message, Throwable cause) {
+  public DocumentValidatorException(String message, Exception cause) {
     super(message, cause);
   }
 }
