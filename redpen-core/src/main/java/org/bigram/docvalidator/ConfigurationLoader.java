@@ -211,13 +211,7 @@ public class ConfigurationLoader {
       DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
       dBuilder.setErrorHandler(new SAXErrorHandler());
       doc = dBuilder.parse(input);
-    } catch (SAXException e) {
-      LOG.error(e.getMessage());
-    } catch (IOException e) {
-      LOG.error(e.getMessage());
-    } catch (ParserConfigurationException e) {
-      LOG.error(e.getMessage());
-    } catch (Throwable e) {
+    } catch (SAXException | IOException | ParserConfigurationException e) {
       LOG.error(e.getMessage());
     }
     return doc;
