@@ -59,7 +59,7 @@ public class CommaNumberValidator implements Validator<Sentence> {
   }
 
   public List<ValidationError> validate(Sentence line) {
-    List<ValidationError> result = new ArrayList<ValidationError>();
+    List<ValidationError> result = new ArrayList<>();
     String content = line.content;
     int commaCount =  0;
     int position = 0;

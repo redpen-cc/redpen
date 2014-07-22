@@ -41,7 +41,7 @@ public class InvalidExpressionValidator implements Validator<Sentence> {
    * Constructor.
    */
   public InvalidExpressionValidator() {
-    invalidExpressions = new HashSet<String>();
+    invalidExpressions = new HashSet<>();
   }
 
   /**
@@ -57,7 +57,7 @@ public class InvalidExpressionValidator implements Validator<Sentence> {
   }
 
   public List<ValidationError> validate(Sentence line) {
-    List<ValidationError> result = new ArrayList<ValidationError>();
+    List<ValidationError> result = new ArrayList<>();
     String str = line.content;
     for (String w : invalidExpressions) {
       if (str.contains(w)) {

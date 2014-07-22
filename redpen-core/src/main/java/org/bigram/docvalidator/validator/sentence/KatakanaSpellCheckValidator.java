@@ -63,7 +63,7 @@ public class KatakanaSpellCheckValidator implements Validator<Sentence> {
   /**
    * Katakana word dic with line number.
    */
-  private HashMap<String, Integer> dic = new HashMap<String, Integer>();
+  private HashMap<String, Integer> dic = new HashMap<>();
 
   public KatakanaSpellCheckValidator(ValidatorConfiguration config,
                                      CharacterTable characterTable)
@@ -72,7 +72,7 @@ public class KatakanaSpellCheckValidator implements Validator<Sentence> {
   }
 
   public List<ValidationError> validate(Sentence sentence) {
-    List<ValidationError> errors = new ArrayList<ValidationError>();
+    List<ValidationError> errors = new ArrayList<>();
     List<ValidationError> result;
     StringBuilder katakana = new StringBuilder("");
     for (int i = 0; i < sentence.content.length(); i++) {
@@ -105,7 +105,7 @@ public class KatakanaSpellCheckValidator implements Validator<Sentence> {
     final int minLsDistance =
       Math.round(katakana.length() * SIMILARITY_RATIO);
     boolean found = false;
-    List<ValidationError> errors = new ArrayList<ValidationError>();
+    List<ValidationError> errors = new ArrayList<>();
     for (String key : dic.keySet()) {
       if (LevenshteinDistance.getDistance(key, katakana) <= minLsDistance) {
         found = true;

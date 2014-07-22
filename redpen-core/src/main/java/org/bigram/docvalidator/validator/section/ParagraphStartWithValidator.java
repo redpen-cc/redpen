@@ -56,7 +56,7 @@ public class ParagraphStartWithValidator implements Validator<Section> {
 
   @Override
   public List<ValidationError> validate(Section section) {
-    List<ValidationError> validationErrors = new ArrayList<ValidationError>();
+    List<ValidationError> validationErrors = new ArrayList<>();
     for (Paragraph currentParagraph : section.getParagraphs()) {
       if (currentParagraph.getNumberOfSentences() == 0) {
         continue;

@@ -212,15 +212,15 @@ public final class SentenceExtractor {
   }
 
   private static <E> List<E> generateUmList(E... args){
-    List<E> list = new ArrayList<E>(Arrays.asList(args));
+    List<E> list = new ArrayList<>(Arrays.asList(args));
     return list;
   }
 
   private Pattern fullStopPattern;
 
-  private List<String> fullStopList = new ArrayList<String>();
+  private List<String> fullStopList = new ArrayList<>();
 
-  private List<String> rightQuotationList = new ArrayList<String>();
+  private List<String> rightQuotationList = new ArrayList<>();
 
   // TODO make white words configurable.
   private List<String> whiteWords = generateUmList("Mr.",

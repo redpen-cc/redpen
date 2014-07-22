@@ -33,10 +33,10 @@ public final class Section {
   public Section(int sectionLevel) {
     super();
     this.level = sectionLevel;
-    this.headerContent = new ArrayList<Sentence>();
-    this.subsections = new ArrayList<Section>();
-    this.paragraphs = new ArrayList<Paragraph>();
-    this.lists = new ArrayList<ListBlock>();
+    this.headerContent = new ArrayList<>();
+    this.subsections = new ArrayList<>();
+    this.paragraphs = new ArrayList<>();
+    this.lists = new ArrayList<>();
   }
 
   /**
@@ -49,9 +49,9 @@ public final class Section {
     super();
     this.level = sectionLevel;
     this.headerContent = header;
-    this.subsections = new ArrayList<Section>();
-    this.paragraphs = new ArrayList<Paragraph>();
-    this.lists = new ArrayList<ListBlock>();
+    this.subsections = new ArrayList<>();
+    this.paragraphs = new ArrayList<>();
+    this.lists = new ArrayList<>();
   }
 
   /**
@@ -62,13 +62,13 @@ public final class Section {
    */
   public Section(int sectionLevel, String headerString) {
     Sentence headerSentence = new Sentence(headerString, 0);
-    List<Sentence> headers = new ArrayList<Sentence>();
+    List<Sentence> headers = new ArrayList<>();
     headers.add(headerSentence);
     this.level = sectionLevel;
     this.headerContent = headers;
-    this.subsections = new ArrayList<Section>();
-    this.paragraphs = new ArrayList<Paragraph>();
-    this.lists = new ArrayList<ListBlock>();
+    this.subsections = new ArrayList<>();
+    this.paragraphs = new ArrayList<>();
+    this.lists = new ArrayList<>();
   }
 
   /**

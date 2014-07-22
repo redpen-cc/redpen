@@ -38,7 +38,7 @@ public class SuggestExpressionValidator implements Validator<Sentence> {
 
   public SuggestExpressionValidator() {
     super();
-    synonyms = new HashMap<String, String>();
+    synonyms = new HashMap<>();
   }
 
   public SuggestExpressionValidator(ValidatorConfiguration config,
@@ -48,7 +48,7 @@ public class SuggestExpressionValidator implements Validator<Sentence> {
   }
 
   public List<ValidationError> validate(Sentence line) {
-    List<ValidationError> result = new ArrayList<ValidationError>();
+    List<ValidationError> result = new ArrayList<>();
     String str = line.content;
     Set<String> invalidWords = synonyms.keySet();
     for (String w : invalidWords) {

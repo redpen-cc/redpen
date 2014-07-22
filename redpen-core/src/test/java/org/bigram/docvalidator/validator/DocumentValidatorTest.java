@@ -53,7 +53,7 @@ class ValidatorForTest implements Validator<Section> {
     for (Paragraph paragraph : section.getParagraphs()) {
       sentenceNum += paragraph.getNumberOfSentences();
     }
-    return new ArrayList<ValidationError>();
+    return new ArrayList<>();
   }
 
   public int getProcessedSentenceNum() {
@@ -79,7 +79,7 @@ class ValidatorReturnsNull implements Validator<Section> {
 
   @Override
   public List<ValidationError> validate(Section section) {
-    return new ArrayList<ValidationError>();
+    return new ArrayList<>();
   }
 }
 

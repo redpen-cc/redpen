@@ -41,7 +41,7 @@ public class PlainTextParserTest {
   private Parser parser = null;
 
     private List<Paragraph> extractParagraphs(Section section) {
-    List<Paragraph> paragraphs = new ArrayList<Paragraph>();
+    List<Paragraph> paragraphs = new ArrayList<>();
       for (Paragraph paragraph1 : section.getParagraphs()) {
         paragraphs.add(paragraph1);
       }

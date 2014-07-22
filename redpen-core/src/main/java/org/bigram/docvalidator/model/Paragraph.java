@@ -29,7 +29,7 @@ public final class Paragraph {
    */
   public Paragraph() {
     super();
-    sentences = new ArrayList<Sentence>();
+    sentences = new ArrayList<>();
   }
 
   /**

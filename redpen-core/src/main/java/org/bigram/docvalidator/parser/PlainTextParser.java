@@ -46,7 +46,7 @@ public final class PlainTextParser extends BasicDocumentParser {
       throws DocumentValidatorException {
     builder.addDocument("");
     BufferedReader br = null;
-    List<Sentence> headers = new ArrayList<Sentence>();
+    List<Sentence> headers = new ArrayList<>();
     headers.add(new Sentence("", 0));
     builder.addSection(0, headers);
     builder.addParagraph();

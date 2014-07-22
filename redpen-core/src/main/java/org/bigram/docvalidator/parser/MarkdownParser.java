@@ -59,7 +59,7 @@ public class MarkdownParser extends BasicDocumentParser {
     StringBuilder sb = new StringBuilder();
     String line;
     int charCount = 0;
-    List<Integer> lineList = new ArrayList<Integer>();
+    List<Integer> lineList = new ArrayList<>();
     BufferedReader br = null;
 
     try {
@@ -72,7 +72,7 @@ public class MarkdownParser extends BasicDocumentParser {
         lineList.add(charCount);
       }
 
-      List<Sentence> headers = new ArrayList<Sentence>();
+      List<Sentence> headers = new ArrayList<>();
       headers.add(new Sentence("", 0));
       builder.addSection(0, headers);
 

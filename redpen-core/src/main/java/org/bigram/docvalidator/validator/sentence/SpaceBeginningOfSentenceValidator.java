@@ -42,7 +42,7 @@ public class SpaceBeginningOfSentenceValidator implements Validator<Sentence> {
   }
 
   public List<ValidationError> validate(Sentence sentence) {
-    List<ValidationError> result = new ArrayList<ValidationError>();
+    List<ValidationError> result = new ArrayList<>();
     String content = sentence.content;
     if (!sentence.isFirstSentence && content.length() > 0
         && !String.valueOf(content.charAt(0)).equals(" ")) {

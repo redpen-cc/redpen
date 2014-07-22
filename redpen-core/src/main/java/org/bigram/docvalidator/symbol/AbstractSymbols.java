@@ -57,7 +57,7 @@ public abstract class AbstractSymbols {
   }
 
   private final Map<String, Character> symbolTable
-      = new HashMap<String, Character>();
+      = new HashMap<>();
 
   private static final Logger LOG = LoggerFactory.getLogger(AbstractSymbols.class);
 }

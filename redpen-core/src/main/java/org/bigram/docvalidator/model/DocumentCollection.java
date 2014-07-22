@@ -29,7 +29,7 @@ public final class DocumentCollection implements Iterable<Document> {
 
   public DocumentCollection() {
     super();
-    documents = new ArrayList<Document>();
+    documents = new ArrayList<>();
   }
 
   /**
@@ -159,7 +159,7 @@ public final class DocumentCollection implements Iterable<Document> {
      * @return builder
      */
     public Builder addSection(int level) {
-      addSection(level, new ArrayList<Sentence>());
+      addSection(level, new ArrayList<>());
       return this;
     }
 
@@ -290,7 +290,7 @@ public final class DocumentCollection implements Iterable<Document> {
      * NOTE: parameter str is not split into more than one Sentence object.
      */
     public Builder addListElement(int level, String str) {
-      List<Sentence> elementSentence = new ArrayList<Sentence>();
+      List<Sentence> elementSentence = new ArrayList<>();
       elementSentence.add(new Sentence(str, 0));
       this.addListElement(level, elementSentence);
       return this;

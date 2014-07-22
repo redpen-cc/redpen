@@ -41,9 +41,9 @@ public class DocumentValidator implements Validator<Document> {
     Configuration configuration = builder.configuration;
     this.distributor = builder.distributor;
 
-    validators = new ArrayList<Validator<Document>>();
-    sectionValidators = new ArrayList<Validator<Section>>();
-    sentenceValidators = new ArrayList<Validator<Sentence>>();
+    validators = new ArrayList<>();
+    sectionValidators = new ArrayList<>();
+    sentenceValidators = new ArrayList<>();
 
     loadValidators(configuration);
   }
@@ -83,7 +83,7 @@ public class DocumentValidator implements Validator<Document> {
    */
   public List<ValidationError> check(DocumentCollection documentCollection) {
     distributor.flushHeader();
-    List<ValidationError> errors = new ArrayList<ValidationError>();
+    List<ValidationError> errors = new ArrayList<>();
     runDocumentValidators(documentCollection, errors);
     runSectionValidators(documentCollection, errors);
     runSentenceValidators(documentCollection, errors);
@@ -135,7 +135,7 @@ public class DocumentValidator implements Validator<Document> {
 
   private List<ValidationError> applySentenceValidationsToSection(
       Document document, Section section) {
-    List<ValidationError> newErrors = new ArrayList<ValidationError>();
+    List<ValidationError> newErrors = new ArrayList<>();
     // apply paragraphs
     for (Paragraph paragraph : section.getParagraphs()) {
       newErrors.addAll(validateParagraph(paragraph));
@@ -158,7 +158,7 @@ public class DocumentValidator implements Validator<Document> {
   }
 
   private List<ValidationError> validateDocument(Document document) {
-    List<ValidationError> errors = new ArrayList<ValidationError>();
+    List<ValidationError> errors = new ArrayList<>();
     for (Validator<Document> validator : validators) {
       errors.addAll(validator.validate(document));
     }
@@ -166,7 +166,7 @@ public class DocumentValidator implements Validator<Document> {
   }
 
   private List<ValidationError> validateSection(Section section) {
-    List<ValidationError> errors = new ArrayList<ValidationError>();
+    List<ValidationError> errors = new ArrayList<>();
     for (Validator<Section> sectionValidator : sectionValidators) {
       errors.addAll(sectionValidator.validate(section));
     }
@@ -174,13 +174,13 @@ public class DocumentValidator implements Validator<Document> {
   }
 
   private List<ValidationError> validateParagraph(Paragraph paragraph) {
-    List<ValidationError> errors = new ArrayList<ValidationError>();
+    List<ValidationError> errors = new ArrayList<>();
     errors.addAll(validateSentences(paragraph.getSentences()));
     return errors;
   }
 
   private List<ValidationError> validateSentences(List<Sentence> sentences) {
-    List<ValidationError> errors = new ArrayList<ValidationError>();
+    List<ValidationError> errors = new ArrayList<>();
     for (Validator<Sentence> sentenceValidator : sentenceValidators) {
       for (Sentence sentence : sentences) {
         errors.addAll(sentenceValidator.validate(sentence));
@@ -196,9 +196,9 @@ public class DocumentValidator implements Validator<Document> {
     this.distributor = ResultDistributorFactory
         .createDistributor(Formatter.Type.PLAIN,
             System.out);
-    this.validators = new ArrayList<Validator<Document>>();
-    sectionValidators = new ArrayList<Validator<Section>>();
-    sentenceValidators = new ArrayList<Validator<Sentence>>();
+    this.validators = new ArrayList<>();
+    sectionValidators = new ArrayList<>();
+    sentenceValidators = new ArrayList<>();
   }
 
   /**

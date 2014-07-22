@@ -37,7 +37,7 @@ public class SpaceWithSymbolValidatorTest {
   public void testNotNeedSpace() throws DocumentValidatorException {
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
-        .addSection(1, new ArrayList<Sentence>())
+        .addSection(1, new ArrayList<>())
         .addParagraph()
         .addSentence("I like apple/orange", 1)
         .build();
@@ -61,7 +61,7 @@ public class SpaceWithSymbolValidatorTest {
   public void testNeedAfterSpace() throws DocumentValidatorException {
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
-        .addSection(1, new ArrayList<Sentence>())
+        .addSection(1, new ArrayList<>())
         .addParagraph()
         .addSentence("I like her:yes it is", 1)
         .build();
@@ -85,7 +85,7 @@ public class SpaceWithSymbolValidatorTest {
   public void testNeedBeforeSpace() throws DocumentValidatorException {
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
-        .addSection(1, new ArrayList<Sentence>())
+        .addSection(1, new ArrayList<>())
         .addParagraph()
         .addSentence("I like her(Nancy)very much.", 1)
         .build();
@@ -109,7 +109,7 @@ public class SpaceWithSymbolValidatorTest {
   public void testNeedSpaceInMultiplePosition() throws DocumentValidatorException {
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
-        .addSection(1, new ArrayList<Sentence>())
+        .addSection(1, new ArrayList<>())
         .addParagraph()
         .addSentence("I like her(Nancy)very much.", 1)
         .build();
@@ -134,7 +134,7 @@ public class SpaceWithSymbolValidatorTest {
   public void testReturnOnlyOneForHitBothBeforeAndAfter() throws DocumentValidatorException {
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
-        .addSection(1, new ArrayList<Sentence>())
+        .addSection(1, new ArrayList<>())
         .addParagraph()
         .addSentence("I like 1*10.", 1)
         .build();

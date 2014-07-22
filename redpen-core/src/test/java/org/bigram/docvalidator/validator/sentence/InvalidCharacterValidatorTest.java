@@ -37,7 +37,7 @@ public class InvalidCharacterValidatorTest {
   public void testWithInvalidCharacter() throws DocumentValidatorException {
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
-        .addSection(1, new ArrayList<Sentence>())
+        .addSection(1, new ArrayList<>())
         .addParagraph()
         .addSentence("わたしはカラオケが大好き！", 1)
         .build();
@@ -61,7 +61,7 @@ public class InvalidCharacterValidatorTest {
   public void testWithoutInvalidCharacter() throws DocumentValidatorException {
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
-        .addSection(1, new ArrayList<Sentence>())
+        .addSection(1, new ArrayList<>())
         .addParagraph()
         .addSentence("I like Karaoke", 1)
         .build();
@@ -86,7 +86,7 @@ public class InvalidCharacterValidatorTest {
 
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
-        .addSection(1, new ArrayList<Sentence>())
+        .addSection(1, new ArrayList<>())
         .addParagraph()
         .addSentence("わたしは、カラオケが大好き！", 1) // NOTE: two invalid characters
         .build();

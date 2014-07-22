@@ -52,7 +52,7 @@ public final class WikiParser extends BasicDocumentParser {
     BufferedReader br = null;
 
     // for sentences right below the beginning of document
-    List<Sentence> headers = new ArrayList<Sentence>();
+    List<Sentence> headers = new ArrayList<>();
     headers.add(new Sentence("", 0));
     builder.addSection(0, headers);
 
@@ -65,7 +65,7 @@ public final class WikiParser extends BasicDocumentParser {
       br = createReader(is);
       while ((line = br.readLine()) != null) {
         prevPattern = currentPattern;
-        List<String> head = new ArrayList<String>();
+        List<String> head = new ArrayList<>();
         if (currentPattern == LinePattern.COMMENT) {
           if (check(END_COMMENT_PATTERN, line, head)) {
             currentPattern = LinePattern.VOID;
@@ -111,7 +111,7 @@ public final class WikiParser extends BasicDocumentParser {
     if (prevPattern != LinePattern.LIST) {
       builder.addListBlock();
     }
-    List<Sentence> outputSentences = new ArrayList<Sentence>();
+    List<Sentence> outputSentences = new ArrayList<>();
     String remainSentence = obtainSentences(0, head.get(1), outputSentences);
     builder.addListElement(extractListLevel(head.get(0)),
         outputSentences);
@@ -123,7 +123,7 @@ public final class WikiParser extends BasicDocumentParser {
 
   private Section appendSection(List<String> head, int lineNum) {
     Integer level = Integer.valueOf(head.get(0));
-    List<Sentence> outputSentences = new ArrayList<Sentence>();
+    List<Sentence> outputSentences = new ArrayList<>();
     String remainHeader =
         obtainSentences(lineNum, head.get(1), outputSentences);
     // NOTE: for header without period
@@ -236,7 +236,7 @@ public final class WikiParser extends BasicDocumentParser {
   }
 
   private String appendSentencesIntoSection(int lineNum, String line) {
-  List<Sentence> outputSentences = new ArrayList<Sentence>();
+  List<Sentence> outputSentences = new ArrayList<>();
   String remain = obtainSentences(lineNum, line, outputSentences);
 
   for (Sentence sentence : outputSentences) {

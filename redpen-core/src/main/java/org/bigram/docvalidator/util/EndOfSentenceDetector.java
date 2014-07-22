@@ -37,7 +37,7 @@ public final class EndOfSentenceDetector {
    */
   public EndOfSentenceDetector(Pattern pattern) {
     this.pattern = pattern;
-    this.whiteList = new ArrayList<String>();
+    this.whiteList = new ArrayList<>();
   }
 
   /**
@@ -118,7 +118,7 @@ public final class EndOfSentenceDetector {
   // TODO: efficient computing with common prefix search.
   private Set<Integer> extractNonEndOfSentencePositions(
       String inputString) {
-    Set<Integer> nonEndOfSentencePositions = new HashSet<Integer>();
+    Set<Integer> nonEndOfSentencePositions = new HashSet<>();
     for (String whiteWord : this.whiteList) {
       int offset = 0;
       while(true) {
