@@ -24,11 +24,11 @@ import org.bigram.docvalidator.distributor.ResultDistributor;
 import org.bigram.docvalidator.distributor.ResultDistributorFactory;
 import org.bigram.docvalidator.formatter.Formatter;
 import org.bigram.docvalidator.model.*;
+import org.bigram.docvalidator.util.ClassUtils;
 import org.bigram.docvalidator.validator.Validator;
 import org.bigram.docvalidator.validator.ValidatorFactory;
 
 import java.io.PrintStream;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,12 +64,7 @@ public class DocumentValidator implements Validator<Document> {
 
       Validator<?> validator = ValidatorFactory.getInstance(
           config, configuration.getCharacterTable());
-
-      // TODO extract this block into a utility method
-      Class clazz = validator.getClass();
-      Type validatorType = clazz.getGenericInterfaces()[0];
-      Type type = ParameterizedType.class
-          .cast(validatorType).getActualTypeArguments()[0];
+      Type type = ClassUtils.getParameterizedClass(validator);
 
       if (type == Sentence.class) {
         this.sentenceValidators.add((Validator<Sentence>) validator);
