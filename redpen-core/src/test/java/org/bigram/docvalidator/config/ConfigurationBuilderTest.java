@@ -10,65 +10,56 @@ public class ConfigurationBuilderTest {
   @Test
   public void testBuildSimpleConfiguration() {
     Configuration config = new Configuration.Builder()
-        .addSectionValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
-        .addSentenceValidatorConfig(new ValidatorConfiguration("SentenceLength"))
+        .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
+        .addValidatorConfig(new ValidatorConfiguration("SentenceLength"))
         .setCharacterTable("en").build();
 
-    assertEquals(1, config.getSentenceValidatorConfigs().size());
-    assertEquals(1, config.getSectionValidatorConfigs().size());
-    assertEquals(0, config.getParagraphValidatorConfigs().size());
-    assertEquals(0, config.getDocumentValidatorConfigs().size());
+    assertEquals(2, config.getValidatorConfigs().size());
     assertNotNull(config.getCharacterTable());
-    assertEquals("InvalidExpression", config.getSectionValidatorConfigs()
+    assertEquals("InvalidExpression", config.getValidatorConfigs()
         .get(0).getConfigurationName());
-    assertEquals("SentenceLength", config.getSentenceValidatorConfigs()
-        .get(0).getConfigurationName());
+    assertEquals("SentenceLength", config.getValidatorConfigs()
+        .get(1).getConfigurationName());
   }
 
   @Test
   public void testBuildConfigurationWithoutCharacterTable() {
     Configuration config = new Configuration.Builder()
-        .addSectionValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
-        .addSentenceValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
+        .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
+        .addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
 
-    assertEquals(1, config.getSentenceValidatorConfigs().size());
-    assertEquals(1, config.getSectionValidatorConfigs().size());
-    assertEquals(0, config.getParagraphValidatorConfigs().size());
-    assertEquals(0, config.getDocumentValidatorConfigs().size());
+    assertEquals(2, config.getValidatorConfigs().size());
     assertNotNull(config.getCharacterTable());
-    assertEquals("InvalidExpression", config.getSectionValidatorConfigs()
+    assertEquals("InvalidExpression", config.getValidatorConfigs()
         .get(0).getConfigurationName());
-    assertEquals("SentenceLength", config.getSentenceValidatorConfigs()
-        .get(0).getConfigurationName());
+    assertEquals("SentenceLength", config.getValidatorConfigs()
+        .get(1).getConfigurationName());
   }
 
   @Test
   public void testBuildConfigurationAddingProperties() {
     Configuration config = new Configuration.Builder()
-        .addSectionValidatorConfig(new ValidatorConfiguration("InvalidExpression")
+        .addValidatorConfig(new ValidatorConfiguration("InvalidExpression")
             .addAttribute("dict", "./foobar.dict"))
-        .addSentenceValidatorConfig(new ValidatorConfiguration("SentenceLength")
+        .addValidatorConfig(new ValidatorConfiguration("SentenceLength")
             .addAttribute("max_length", "10")).build();
 
-    assertEquals(1, config.getSentenceValidatorConfigs().size());
-    assertEquals(1, config.getSectionValidatorConfigs().size());
-    assertEquals(0, config.getParagraphValidatorConfigs().size());
-    assertEquals(0, config.getDocumentValidatorConfigs().size());
+    assertEquals(2, config.getValidatorConfigs().size());
     assertNotNull(config.getCharacterTable());
-    assertEquals("InvalidExpression", config.getSectionValidatorConfigs()
+    assertEquals("InvalidExpression", config.getValidatorConfigs()
         .get(0).getConfigurationName());
     assertEquals("./foobar.dict",
-        config.getSectionValidatorConfigs().get(0).getAttribute("dict"));
-    assertEquals("SentenceLength", config.getSentenceValidatorConfigs()
-        .get(0).getConfigurationName());
+        config.getValidatorConfigs().get(0).getAttribute("dict"));
+    assertEquals("SentenceLength", config.getValidatorConfigs()
+        .get(1).getConfigurationName());
     assertEquals("10",
-        config.getSentenceValidatorConfigs().get(0).getAttribute("max_length"));
+        config.getValidatorConfigs().get(1).getAttribute("max_length"));
   }
 
   @Test
   public void testBuildConfigurationSpecifyingLanguage() {
     Configuration config = new Configuration.Builder()
-        .addSectionValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
+        .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
         .setCharacterTable("ja")
         .build();
 
@@ -80,7 +71,7 @@ public class ConfigurationBuilderTest {
   @Test
   public void testBuildConfigurationOverrideCharacterSetting() {
     Configuration config = new Configuration.Builder()
-        .addSectionValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
+        .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
         .setCharacterTable("ja")
         .setCharacter("FULL_STOP", ".")
         .build();
@@ -93,7 +84,7 @@ public class ConfigurationBuilderTest {
   @Test
   public void testBuildConfigurationOverrideAddInvalidCharacterSetting() {
     Configuration config = new Configuration.Builder()
-        .addSectionValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
+        .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
         .setCharacterTable("ja")
         .addInvalidPattern("FULL_STOP", "●")
         .build();

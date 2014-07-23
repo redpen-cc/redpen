@@ -17,20 +17,20 @@
  */
 package org.bigram.docvalidator.validator.sentence;
 
-import static org.junit.Assert.*;
+import org.bigram.docvalidator.DocumentValidator;
+import org.bigram.docvalidator.DocumentValidatorException;
+import org.bigram.docvalidator.ValidationError;
+import org.bigram.docvalidator.config.Character;
+import org.bigram.docvalidator.config.Configuration;
+import org.bigram.docvalidator.config.ValidatorConfiguration;
+import org.bigram.docvalidator.distributor.FakeResultDistributor;
+import org.bigram.docvalidator.model.DocumentCollection;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bigram.docvalidator.DocumentValidator;
-import org.bigram.docvalidator.DocumentValidatorException;
-import org.bigram.docvalidator.config.*;
-import org.bigram.docvalidator.config.Character;
-import org.bigram.docvalidator.distributor.FakeResultDistributor;
-import org.bigram.docvalidator.model.DocumentCollection;
-import org.junit.Test;
-import org.bigram.docvalidator.model.Sentence;
-import org.bigram.docvalidator.ValidationError;
+import static org.junit.Assert.assertEquals;
 
 public class InvalidCharacterValidatorTest {
   @Test
@@ -43,7 +43,7 @@ public class InvalidCharacterValidatorTest {
         .build();
 
     Configuration conf = new Configuration.Builder()
-        .addSentenceValidatorConfig(new ValidatorConfiguration("InvalidCharacter"))
+        .addValidatorConfig(new ValidatorConfiguration("InvalidCharacter"))
         .setCharacterTable("en")
         .setCharacter(new Character("EXCLAMATION_MARK", "!", "！"))
         .build();
@@ -67,7 +67,7 @@ public class InvalidCharacterValidatorTest {
         .build();
 
     Configuration conf = new Configuration.Builder()
-        .addSentenceValidatorConfig(new ValidatorConfiguration("InvalidCharacter"))
+        .addValidatorConfig(new ValidatorConfiguration("InvalidCharacter"))
         .setCharacterTable("en")
         .setCharacter(new Character("EXCLAMATION_MARK", "!", "！"))
         .build();
@@ -92,7 +92,7 @@ public class InvalidCharacterValidatorTest {
         .build();
 
     Configuration conf = new Configuration.Builder()
-        .addSentenceValidatorConfig(new ValidatorConfiguration("InvalidCharacter"))
+        .addValidatorConfig(new ValidatorConfiguration("InvalidCharacter"))
         .setCharacterTable("en")
         .setCharacter(new Character("EXCLAMATION_MARK", "!", "！"))
         .setCharacter(new Character("COMMA", ",", "、"))

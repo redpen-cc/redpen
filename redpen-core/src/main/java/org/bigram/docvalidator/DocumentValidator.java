@@ -25,10 +25,11 @@ import org.bigram.docvalidator.distributor.ResultDistributorFactory;
 import org.bigram.docvalidator.formatter.Formatter;
 import org.bigram.docvalidator.model.*;
 import org.bigram.docvalidator.validator.Validator;
-import org.bigram.docvalidator.validator.section.SectionValidatorFactory;
-import org.bigram.docvalidator.validator.sentence.SentenceValidatorFactory;
+import org.bigram.docvalidator.validator.ValidatorFactory;
 
 import java.io.PrintStream;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,28 +52,33 @@ public class DocumentValidator implements Validator<Document> {
   /**
    * Load validators written in the configuration file.
    */
-  @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+  @SuppressWarnings("unchecked")
   private void loadValidators(Configuration configuration)
       throws DocumentValidatorException {
     if (configuration == null) {
       throw new IllegalStateException("Configuration object is null");
     }
 
-    //TODO duplicate code...
     for (ValidatorConfiguration config : configuration
-        .getSectionValidatorConfigs()) {
-      sectionValidators.add(SectionValidatorFactory
-          .getInstance(config, configuration.getCharacterTable()));
-    }
+        .getValidatorConfigs()) {
 
-    for (ValidatorConfiguration config : configuration
-        .getSentenceValidatorConfigs()) {
-      sentenceValidators.add(SentenceValidatorFactory
-          .getInstance(config, configuration.getCharacterTable()));
-    }
+      Validator<?> validator = ValidatorFactory.getInstance(
+          config, configuration.getCharacterTable());
 
-    //TODO execute document validator
-    //TODO execute paragraph validator
+      // TODO extract this block into a utility method
+      Class clazz = validator.getClass();
+      Type validatorType = clazz.getGenericInterfaces()[0];
+      Type type = ParameterizedType.class
+          .cast(validatorType).getActualTypeArguments()[0];
+
+      if (type == Sentence.class) {
+        this.sentenceValidators.add((Validator<Sentence>) validator);
+      } else if (type == Section.class) {
+        this.sectionValidators.add((Validator<Section>) validator);
+      } else {
+        throw new IllegalStateException("No validator for " + type + " block.");
+      }
+    }
   }
 
   /**

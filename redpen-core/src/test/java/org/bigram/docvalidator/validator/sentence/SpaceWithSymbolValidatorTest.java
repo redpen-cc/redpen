@@ -17,20 +17,20 @@
  */
 package org.bigram.docvalidator.validator.sentence;
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-import java.util.List;
 import org.bigram.docvalidator.DocumentValidator;
 import org.bigram.docvalidator.DocumentValidatorException;
-import org.bigram.docvalidator.config.Configuration;
+import org.bigram.docvalidator.ValidationError;
 import org.bigram.docvalidator.config.Character;
+import org.bigram.docvalidator.config.Configuration;
 import org.bigram.docvalidator.config.ValidatorConfiguration;
 import org.bigram.docvalidator.distributor.FakeResultDistributor;
 import org.bigram.docvalidator.model.DocumentCollection;
 import org.junit.Test;
-import org.bigram.docvalidator.model.Sentence;
-import org.bigram.docvalidator.ValidationError;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 public class SpaceWithSymbolValidatorTest {
   @Test
@@ -43,7 +43,7 @@ public class SpaceWithSymbolValidatorTest {
         .build();
 
     Configuration conf = new Configuration.Builder()
-        .addSentenceValidatorConfig(new ValidatorConfiguration("SpaceWithSymbol"))
+        .addValidatorConfig(new ValidatorConfiguration("SpaceWithSymbol"))
         .setCharacterTable("en")
         .setCharacter(new Character("SLASH", "/"))
         .build();
@@ -67,7 +67,7 @@ public class SpaceWithSymbolValidatorTest {
         .build();
 
     Configuration conf = new Configuration.Builder()
-        .addSentenceValidatorConfig(new ValidatorConfiguration("SpaceWithSymbol"))
+        .addValidatorConfig(new ValidatorConfiguration("SpaceWithSymbol"))
         .setCharacterTable("en")
         .setCharacter(new Character("COLON", ":", "", false, true))
         .build();
@@ -91,7 +91,7 @@ public class SpaceWithSymbolValidatorTest {
         .build();
 
     Configuration conf = new Configuration.Builder()
-        .addSentenceValidatorConfig(new ValidatorConfiguration("SpaceWithSymbol"))
+        .addValidatorConfig(new ValidatorConfiguration("SpaceWithSymbol"))
         .setCharacterTable("en")
         .setCharacter(new Character("LEFT_PARENTHESIS", "(", "", true, false))
         .build();
@@ -115,7 +115,7 @@ public class SpaceWithSymbolValidatorTest {
         .build();
 
     Configuration conf = new Configuration.Builder()
-        .addSentenceValidatorConfig(new ValidatorConfiguration("SpaceWithSymbol"))
+        .addValidatorConfig(new ValidatorConfiguration("SpaceWithSymbol"))
         .setCharacterTable("en")
         .setCharacter(new Character("LEFT_PARENTHESIS", "(", "", true, false))
         .setCharacter(new Character("RIGHT_PARENTHESIS", ")", "", false, true))
@@ -140,7 +140,7 @@ public class SpaceWithSymbolValidatorTest {
         .build();
 
     Configuration conf = new Configuration.Builder()
-        .addSentenceValidatorConfig(new ValidatorConfiguration("SpaceWithSymbol"))
+        .addValidatorConfig(new ValidatorConfiguration("SpaceWithSymbol"))
         .setCharacterTable("en")
         .setCharacter(new Character("ASTARISK", "*", "", true, true))
         .build();

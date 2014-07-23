@@ -1,37 +1,20 @@
-/**
- * redpen: a text inspection tool
- * Copyright (C) 2014 Recruit Technologies Co., Ltd. and contributors
- * (see CONTRIBUTORS.md)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package org.bigram.docvalidator.validator.sentence;
+package org.bigram.docvalidator.validator;
 
 import org.bigram.docvalidator.DocumentValidatorException;
 import org.bigram.docvalidator.config.CharacterTable;
 import org.bigram.docvalidator.config.ValidatorConfiguration;
-import org.bigram.docvalidator.model.Sentence;
-import org.bigram.docvalidator.validator.Validator;
+import org.bigram.docvalidator.validator.section.ParagraphNumberValidator;
+import org.bigram.docvalidator.validator.section.ParagraphStartWithValidator;
+import org.bigram.docvalidator.validator.section.SectionLengthValidator;
+import org.bigram.docvalidator.validator.sentence.*;
 
 /**
- *
+ * Factory class of validators.
  */
-public final class SentenceValidatorFactory {
+public class ValidatorFactory {
 
-  private SentenceValidatorFactory() { }
-
-  public static Validator<Sentence> getInstance(ValidatorConfiguration config,
-                                              CharacterTable characterTable)
+  public static Validator<?> getInstance(ValidatorConfiguration config,
+      CharacterTable characterTable)
       throws DocumentValidatorException {
 
     if ("SentenceLength".equals(config.getConfigurationName())) {
@@ -57,10 +40,15 @@ public final class SentenceValidatorFactory {
     } else if ("KatakanaSpellCheck"
         .equals(config.getConfigurationName())) {
       return new KatakanaSpellCheckValidator(config, characterTable);
+    } if ("SectionLength".equals(config.getConfigurationName())) {
+      return new SectionLengthValidator(config, characterTable);
+    } else if ("MaxParagraphNumber".equals(config.getConfigurationName())) {
+      return new ParagraphNumberValidator(config, characterTable);
+    } else if ("ParagraphStartWith".equals(config.getConfigurationName())) {
+      return new ParagraphStartWithValidator(config, characterTable);
     } else {
       throw new DocumentValidatorException(
           "There is no Validator like " + config.getConfigurationName());
     }
   }
-
 }
