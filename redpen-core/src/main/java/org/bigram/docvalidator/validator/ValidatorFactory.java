@@ -37,9 +37,10 @@ public class ValidatorFactory {
       return new SymbolWithSpaceValidator(config, characterTable);
     } else if ("KatakanaEndHyphen".equals(config.getConfigurationName())) {
       return new KatakanaEndHyphenValidator(config, characterTable);
-    } else if ("KatakanaSpellCheck"
-        .equals(config.getConfigurationName())) {
+    } else if ("KatakanaSpellCheck".equals(config.getConfigurationName())) {
       return new KatakanaSpellCheckValidator(config, characterTable);
+    } else if ("Spelling".equals(config.getConfigurationName())) {
+        return new SpellingValidator(config, characterTable);
     } if ("SectionLength".equals(config.getConfigurationName())) {
       return new SectionLengthValidator(config, characterTable);
     } else if ("MaxParagraphNumber".equals(config.getConfigurationName())) {
