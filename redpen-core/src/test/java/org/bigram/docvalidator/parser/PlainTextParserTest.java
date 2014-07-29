@@ -40,7 +40,7 @@ public class PlainTextParserTest {
 
   private Parser parser = null;
 
-    private List<Paragraph> extractParagraphs(Section section) {
+  private List<Paragraph> extractParagraphs(Section section) {
     List<Paragraph> paragraphs = new ArrayList<>();
       for (Paragraph paragraph1 : section.getParagraphs()) {
         paragraphs.add(paragraph1);
@@ -76,7 +76,7 @@ public class PlainTextParserTest {
   @Before
   public void setup() {
     Configuration configuration = new Configuration.Builder()
-        .addSentenceValidatorConfig(
+        .addValidatorConfig(
             new ValidatorConfiguration("SentenceLength").addAttribute("max_length", "10"))
         .build();
     try {

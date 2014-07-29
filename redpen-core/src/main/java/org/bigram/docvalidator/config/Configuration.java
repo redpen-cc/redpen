@@ -17,13 +17,14 @@
  */
 package org.bigram.docvalidator.config;
 
+import org.bigram.docvalidator.symbol.AbstractSymbols;
+import org.bigram.docvalidator.symbol.DefaultSymbols;
+import org.bigram.docvalidator.symbol.JapaneseSymbols;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.bigram.docvalidator.symbol.AbstractSymbols;
-import org.bigram.docvalidator.symbol.JapaneseSymbols;
-import org.bigram.docvalidator.symbol.DefaultSymbols;
 
 /**
  * Contains Settings used throughout DocumentValidator.
@@ -40,10 +41,7 @@ public final class Configuration {
     } else {
       this.characterTable = builder.characterTable;
     }
-    this.sentenceValidatorConfigs.addAll(builder.sentenceValidatorConfigs);
-    this.paragraphValidatorConfigs.addAll(builder.paragraphValidatorConfigs);
-    this.sectionValidatorConfigs.addAll(builder.sectionValidatorConfigs);
-    this.documentValidatorConfigs.addAll(builder.documentValidatorConfigs);
+    this.validatorConfigs.addAll(builder.validatorConfigs);
   }
 
   /**
@@ -56,39 +54,12 @@ public final class Configuration {
   }
 
   /**
-   * Get document validator configurations.
+   * Get validator configurations.
    *
    * @return list of configurations
    */
-  public List<ValidatorConfiguration> getDocumentValidatorConfigs() {
-    return documentValidatorConfigs;
-  }
-
-  /**
-   * Get section validator configurations.
-   *
-   * @return list of configurations
-   */
-  public List<ValidatorConfiguration> getSectionValidatorConfigs() {
-    return sectionValidatorConfigs;
-  }
-
-  /**
-   * Get paragraph validator configurations.
-   *
-   * @return list of configurations
-   */
-  public List<ValidatorConfiguration> getParagraphValidatorConfigs() {
-    return paragraphValidatorConfigs;
-  }
-
-  /**
-   * Get sentence validator configurations.
-   *
-   * @return list of configurations
-   */
-  public List<ValidatorConfiguration> getSentenceValidatorConfigs() {
-    return sentenceValidatorConfigs;
+  public List<ValidatorConfiguration> getValidatorConfigs() {
+    return validatorConfigs;
   }
 
 
@@ -98,28 +69,21 @@ public final class Configuration {
   public static class Builder {
     private CharacterTable characterTable;
 
-    private final List<ValidatorConfiguration> documentValidatorConfigs =
+    private final List<ValidatorConfiguration> validatorConfigs =
         new ArrayList<>();
-    private final List<ValidatorConfiguration> sectionValidatorConfigs =
-        new ArrayList<>();
-    private final List<ValidatorConfiguration> paragraphValidatorConfigs =
-        new ArrayList<>();
-    private final List<ValidatorConfiguration> sentenceValidatorConfigs =
-        new ArrayList<>();
-
 
     public Builder setCharacterTable(String lang) {
       this.characterTable = loadLanguageDefaultCharacterTable(lang);
       return this;
     }
 
-    public Builder setCharacter(String name, String value) {
-      this.characterTable.override(new Character(name, value));
+    public Builder setCharacter(Character character) {
+      this.characterTable.override(character);
       return this;
     }
 
-    public Builder setCharacter(Character character) {
-      this.characterTable.override(character);
+    public Builder setCharacter(String name, String value) {
+      this.characterTable.override(new Character(name, value));
       return this;
     }
 
@@ -129,63 +93,9 @@ public final class Configuration {
       return this;
     }
 
-    public Builder addSentenceValidatorConfig(ValidatorConfiguration config) {
-      sentenceValidatorConfigs.add(config);
+    public Builder addValidatorConfig(ValidatorConfiguration config) {
+        validatorConfigs.add(config);
       return this;
-    }
-
-    public Builder addSectionValidatorConfig(ValidatorConfiguration config) {
-      sectionValidatorConfigs.add(config);
-      return this;
-    }
-
-    public Builder addParagraphValidatorConfig(ValidatorConfiguration config) {
-      paragraphValidatorConfigs.add(config);
-      return this;
-    }
-
-    public Builder addValidationConfig(ValidatorConfiguration config) {
-      if ("SentenceLength".equals(config.getConfigurationName())) {
-        sentenceValidatorConfigs.add(config);
-      } else if ("InvalidExpression".equals(config.getConfigurationName())) {
-        sentenceValidatorConfigs.add(config);
-      } else if ("SpaceAfterPeriod".equals(config.getConfigurationName())) {
-        sentenceValidatorConfigs.add(config);
-      } else if ("CommaNumber".equals(config.getConfigurationName())) {
-        sentenceValidatorConfigs.add(config);
-      } else if ("WordNumber".equals(config.getConfigurationName())) {
-        sentenceValidatorConfigs.add(config);
-      } else if ("SuggestExpression".equals(config.getConfigurationName())) {
-        sentenceValidatorConfigs.add(config);
-      } else if ("InvalidCharacter".equals(config.getConfigurationName())) {
-        sentenceValidatorConfigs.add(config);
-      } else if ("SpaceWithSymbol".equals(config.getConfigurationName())) {
-        sentenceValidatorConfigs.add(config);
-      } else if ("KatakanaEndHyphen".equals(config.getConfigurationName())) {
-        sentenceValidatorConfigs.add(config);
-      } else if ("KatakanaSpellCheck".equals(config.getConfigurationName())) {
-        sentenceValidatorConfigs.add(config);
-      } else if ("SectionLength".equals(config.getConfigurationName())) {
-        this.sectionValidatorConfigs.add(config);
-      } else if ("MaxParagraphNumber".equals(config.getConfigurationName())) {
-        this.sectionValidatorConfigs.add(config);
-      } else if ("ParagraphStartWith".equals(config.getConfigurationName())) {
-        this.sectionValidatorConfigs.add(config);
-      } else {
-        throw new IllegalStateException("No Validator such as '"
-            + config.getConfigurationName() + "'");
-      }
-      return this;
-    }
-
-    private void extractChildValidators(ValidatorConfiguration validatorConfig) {
-      if (validatorConfig == null) {
-        return;
-      }
-      // TODO tricky implementation. this code is need to refactor with ConfigurationLoader.
-      for (ValidatorConfiguration config : validatorConfig.getChildren()) {
-        addValidationConfig(config);
-      }
     }
 
     private static CharacterTable loadLanguageDefaultCharacterTable(
@@ -219,13 +129,6 @@ public final class Configuration {
 
   private final CharacterTable characterTable;
 
-  private final List<ValidatorConfiguration> documentValidatorConfigs =
+  private final List<ValidatorConfiguration> validatorConfigs =
       new ArrayList<>();
-  private final List<ValidatorConfiguration> sectionValidatorConfigs =
-      new ArrayList<>();
-  private final List<ValidatorConfiguration> paragraphValidatorConfigs =
-      new ArrayList<>();
-  private final List<ValidatorConfiguration> sentenceValidatorConfigs =
-      new ArrayList<>();
-
 }

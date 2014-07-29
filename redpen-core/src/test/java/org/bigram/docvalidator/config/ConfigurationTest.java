@@ -31,31 +31,37 @@ public class ConfigurationTest {
   public void testSentenceValidatorConfiguration() throws Exception {
 
     Configuration configuration = new Configuration.Builder()
-        .addValidationConfig(new ValidatorConfiguration("SentenceLength"))
-        .addValidationConfig(new ValidatorConfiguration("InvalidExpression"))
-        .addValidationConfig(new ValidatorConfiguration("SpaceAfterPeriod"))
-        .addValidationConfig(new ValidatorConfiguration("CommaNumber"))
-        .addValidationConfig(new ValidatorConfiguration("WordNumber"))
-        .addValidationConfig(new ValidatorConfiguration("SuggestExpression"))
-        .addValidationConfig(new ValidatorConfiguration("InvalidCharacter"))
-        .addValidationConfig(new ValidatorConfiguration("SpaceWithSymbol"))
-        .addValidationConfig(new ValidatorConfiguration("KatakanaEndHyphen"))
-        .addValidationConfig(new ValidatorConfiguration("KatakanaSpellCheck"))
+        .addValidatorConfig(new ValidatorConfiguration("SentenceLength"))
+        .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
+        .addValidatorConfig(new ValidatorConfiguration("SpaceAfterPeriod"))
+        .addValidatorConfig(new ValidatorConfiguration("CommaNumber"))
+        .addValidatorConfig(new ValidatorConfiguration("WordNumber"))
+        .addValidatorConfig(new ValidatorConfiguration("SuggestExpression"))
+        .addValidatorConfig(new ValidatorConfiguration("InvalidCharacter"))
+        .addValidatorConfig(new ValidatorConfiguration("SpaceWithSymbol"))
+        .addValidatorConfig(new ValidatorConfiguration("KatakanaEndHyphen"))
+        .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck"))
         .build();
-    assertEquals(10, configuration.getSentenceValidatorConfigs().size());
+    assertEquals(10, configuration.getValidatorConfigs().size());
   }
 
-  @Test(expected = IllegalStateException.class)
+  @Test
   public void testInvalidValidatorConfiguration() {
-    Configuration configuration = new Configuration.Builder()
-        .addValidationConfig(new ValidatorConfiguration("ThereIsNoSuchValidator")).build();
+    // NOTE: not throw a exception even when adding a non exist validator.
+    // The errors occurs when creating the added non existing validator instance.
+    try {
+      new Configuration.Builder()
+          .addValidatorConfig(new ValidatorConfiguration("ThereIsNoSuchValidator")).build();
+    } catch (Exception e) {
+      fail();
+    }
   }
 
   @Test
   public void testSectionValidatorConfiguration() throws Exception{
-    Configuration configuration = new Configuration.Builder().addValidationConfig(new ValidatorConfiguration("SectionLength"))
-        .addValidationConfig(new ValidatorConfiguration("MaxParagraphNumber"))
-        .addValidationConfig(new ValidatorConfiguration("ParagraphStartWith")).build();
-    assertEquals(3, configuration.getSectionValidatorConfigs().size());
+    Configuration configuration = new Configuration.Builder().addValidatorConfig(new ValidatorConfiguration("SectionLength"))
+        .addValidatorConfig(new ValidatorConfiguration("MaxParagraphNumber"))
+        .addValidatorConfig(new ValidatorConfiguration("ParagraphStartWith")).build();
+    assertEquals(3, configuration.getValidatorConfigs().size());
   }
 }

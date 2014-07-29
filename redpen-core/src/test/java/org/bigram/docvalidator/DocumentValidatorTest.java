@@ -17,12 +17,11 @@
  */
 package org.bigram.docvalidator;
 
-import org.bigram.docvalidator.distributor.FakeResultDistributor;
-import org.junit.Test;
 import org.bigram.docvalidator.config.Configuration;
 import org.bigram.docvalidator.config.ValidatorConfiguration;
+import org.bigram.docvalidator.distributor.FakeResultDistributor;
 import org.bigram.docvalidator.model.DocumentCollection;
-import org.bigram.docvalidator.model.Sentence;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -180,7 +179,7 @@ public class DocumentValidatorTest {
       DocumentValidatorException {
 
     Configuration configuration = new Configuration.Builder()
-        .addSentenceValidatorConfig(
+        .addValidatorConfig(
             new ValidatorConfiguration("SentenceLength").addAttribute("max_length", "5"))
         .build();
     return new DocumentValidator.Builder()
@@ -192,7 +191,7 @@ public class DocumentValidatorTest {
   private DocumentValidator getValidaorWithSectionValidator() throws
       DocumentValidatorException {
     Configuration configuration = new Configuration.Builder()
-        .addSectionValidatorConfig(
+        .addValidatorConfig(
             new ValidatorConfiguration("SectionLength").addAttribute("max_char_num", "5"))
         .build();
     return new DocumentValidator.Builder()

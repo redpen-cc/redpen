@@ -17,13 +17,14 @@
  */
 package org.bigram.docvalidator;
 
-import static org.junit.Assert.*;
-import java.io.InputStream;
+import org.apache.commons.io.IOUtils;
+import org.bigram.docvalidator.config.Character;
+import org.bigram.docvalidator.config.Configuration;
 import org.junit.Test;
 
-import org.apache.commons.io.IOUtils;
-import org.bigram.docvalidator.config.Configuration;
-import org.bigram.docvalidator.config.Character;
+import java.io.InputStream;
+
+import static org.junit.Assert.*;
 
 public class ConfigurationLoaderTest {
   @Test
@@ -47,14 +48,13 @@ public class ConfigurationLoaderTest {
     IOUtils.closeQuietly(stream);
 
     assertNotNull(configuration);
-    assertEquals(1, configuration.getSentenceValidatorConfigs().size());
+    assertEquals(2, configuration.getValidatorConfigs().size());
     assertEquals("SentenceLength",
-        configuration.getSentenceValidatorConfigs().get(0).getConfigurationName());
+        configuration.getValidatorConfigs().get(0).getConfigurationName());
     assertEquals("200",
-        configuration.getSentenceValidatorConfigs().get(0).getAttribute("max_length"));
-    assertEquals(1, configuration.getSectionValidatorConfigs().size());
+        configuration.getValidatorConfigs().get(0).getAttribute("max_length"));
     assertEquals("MaxParagraphNumber",
-        configuration.getSectionValidatorConfigs().get(0).getConfigurationName());
+        configuration.getValidatorConfigs().get(1).getConfigurationName());
     assertNotNull(configuration.getCharacterTable());
     assertEquals("!", configuration.getCharacterTable()
         .getCharacter("EXCLAMATION_MARK").getValue());
@@ -82,12 +82,11 @@ public class ConfigurationLoaderTest {
     IOUtils.closeQuietly(stream);
 
     assertNotNull(configuration);
-    assertEquals(1, configuration.getSentenceValidatorConfigs().size());
+    assertEquals(2, configuration.getValidatorConfigs().size());
     assertEquals("SentenceLength",
-        configuration.getSentenceValidatorConfigs().get(0).getConfigurationName());
-    assertEquals(1, configuration.getSectionValidatorConfigs().size());
+        configuration.getValidatorConfigs().get(0).getConfigurationName());
     assertEquals("MaxParagraphNumber",
-        configuration.getSectionValidatorConfigs().get(0).getConfigurationName());
+        configuration.getValidatorConfigs().get(1).getConfigurationName());
     assertNotNull(configuration.getCharacterTable());
     assertEquals("!", configuration.getCharacterTable()
         .getCharacter("EXCLAMATION_MARK").getValue());
@@ -113,12 +112,11 @@ public class ConfigurationLoaderTest {
     IOUtils.closeQuietly(stream);
 
     assertNotNull(configuration);
-    assertEquals(1, configuration.getSentenceValidatorConfigs().size());
+    assertEquals(2, configuration.getValidatorConfigs().size());
     assertEquals("SentenceLength",
-        configuration.getSentenceValidatorConfigs().get(0).getConfigurationName());
-    assertEquals(1, configuration.getSectionValidatorConfigs().size());
+        configuration.getValidatorConfigs().get(0).getConfigurationName());
     assertEquals("MaxParagraphNumber",
-        configuration.getSectionValidatorConfigs().get(0).getConfigurationName());
+        configuration.getValidatorConfigs().get(1).getConfigurationName());
     assertNotNull(configuration.getCharacterTable());
     assertEquals("!", configuration.getCharacterTable()
         .getCharacter("EXCLAMATION_MARK").getValue());
