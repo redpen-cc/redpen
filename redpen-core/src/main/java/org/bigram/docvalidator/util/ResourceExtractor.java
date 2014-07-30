@@ -21,7 +21,7 @@ package org.bigram.docvalidator.util;
  * ResourceExtractor is called from FileLoader. To support a file format,
  * we create a class implementing ResourceExtractor.
  */
-public interface ResourceExtractor {
+public interface ResourceExtractor<E> {
   /**
    * load line.
    *
@@ -29,4 +29,11 @@ public interface ResourceExtractor {
    * @return 0 when succeeded, otherwise 1
    */
   int load(String line);
+
+  /**
+   * Get the loaded container.
+   *
+   * @return container
+   */
+  E get();
 }

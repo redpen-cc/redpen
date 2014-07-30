@@ -24,7 +24,7 @@ import java.util.Set;
  * WordListExtractor extracts word from a given line. This class is called from
  * FileLoader.
  */
-public class WordListExtractor implements ResourceExtractor {
+public class WordListExtractor implements ResourceExtractor<Set<String>> {
 
   /**
    * Constructor.
@@ -40,6 +40,7 @@ public class WordListExtractor implements ResourceExtractor {
    * @param line line in a file
    * @return 0 when succeeded.
    */
+  @Override
   public int load(String line) {
     wordList.add(line);
     return 0;
@@ -50,6 +51,7 @@ public class WordListExtractor implements ResourceExtractor {
    *
    * @return word list
    */
+  @Override
   public Set<String> get() {
     return wordList;
   }
