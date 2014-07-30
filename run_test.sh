@@ -20,6 +20,21 @@ run_test() {
 	echo "Error runnig application..."
 	FAILED=1
     fi
+    cd ../../..
+
+    echo "Running sample server"
+    java -jar redpen-server/target/redpen-server.war &
+    if [ -z "$(pgrep redpen)" ]
+    then
+        echo "RedPen server is nunning as expected ..."
+	sleep 5
+	echo "Killing sample server"
+	pgrep -f redpen | xargs kill
+    else
+	echo "RedPen server failed to start ..."
+	FAILED=1
+    fi
+
 }
 
 [ ${#BASH_SOURCE[@]} = 1 ] && run_test "$@"
