@@ -77,6 +77,76 @@ public class SpellingValidatorTest {
     assertEquals(1, errors.size());
   }
 
-  // TODO: add case related cases.
-  // TODO: add cases with end period.
+
+  @Test
+  public void testSkipCharacterCase() throws DocumentValidatorException {
+    Configuration config = new Configuration.Builder()
+        .addValidatorConfig(new ValidatorConfiguration("Spelling"))
+        .setCharacterTable("en").build();
+
+    DocumentCollection documents = new DocumentCollection.Builder()
+        .addDocument("")
+        .addSection(1, new ArrayList<>())
+        .addParagraph()
+        .addSentence(
+            "That is true, but there is a condition",
+            1)
+        .build();
+
+    DocumentValidator validator = new DocumentValidator.Builder()
+        .setConfiguration(config)
+        .setResultDistributor(new FakeResultDistributor())
+        .build();
+
+    List<ValidationError> errors = validator.check(documents);
+    assertEquals(0, errors.size());
+  }
+
+  @Test
+  public void testEndPeriod() throws DocumentValidatorException {
+    Configuration config = new Configuration.Builder()
+        .addValidatorConfig(new ValidatorConfiguration("Spelling"))
+        .setCharacterTable("en").build();
+
+    DocumentCollection documents = new DocumentCollection.Builder()
+        .addDocument("")
+        .addSection(1, new ArrayList<>())
+        .addParagraph()
+        .addSentence(
+            "That is true.",
+            1)
+        .build();
+
+    DocumentValidator validator = new DocumentValidator.Builder()
+        .setConfiguration(config)
+        .setResultDistributor(new FakeResultDistributor())
+        .build();
+
+    List<ValidationError> errors = validator.check(documents);
+    assertEquals(0, errors.size());
+  }
+
+  @Test
+  public void testVoid() throws DocumentValidatorException {
+    Configuration config = new Configuration.Builder()
+        .addValidatorConfig(new ValidatorConfiguration("Spelling"))
+        .setCharacterTable("en").build();
+
+    DocumentCollection documents = new DocumentCollection.Builder()
+        .addDocument("")
+        .addSection(1, new ArrayList<>())
+        .addParagraph()
+        .addSentence(
+            "",
+            1)
+        .build();
+
+    DocumentValidator validator = new DocumentValidator.Builder()
+        .setConfiguration(config)
+        .setResultDistributor(new FakeResultDistributor())
+        .build();
+
+    List<ValidationError> errors = validator.check(documents);
+    assertEquals(0, errors.size());
+  }
 }

@@ -11,10 +11,7 @@ import org.bigram.docvalidator.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class SpellingValidator implements Validator<Sentence> {
 
@@ -75,9 +72,13 @@ public class SpellingValidator implements Validator<Sentence> {
   @Override
   public List<ValidationError> validate(Sentence line) {
     List<ValidationError> result = new ArrayList<>();
-    String str = line.content.toLowerCase();
+    String str = normalize(line);
     String[] words = str.split(" ");
     for (String word : words) {
+      if (word.length() == 0) {
+        continue;
+      }
+
       if (!this.validWords.contains(word)) {
         result.add(new ValidationError(
             this.getClass(),
@@ -85,6 +86,16 @@ public class SpellingValidator implements Validator<Sentence> {
       }
     }
     return result;
+  }
+
+  private String normalize(Sentence line) {
+    StringBuilder builder = new StringBuilder(line.content.length());
+    for (Character ch: line.content.toCharArray()) {
+      if (!skipCharacters.contains(ch)) {
+        builder.append(Character.toLowerCase(ch));
+      }
+    }
+    return builder.toString();
   }
 
   /**
@@ -101,4 +112,10 @@ public class SpellingValidator implements Validator<Sentence> {
 
   private static final Logger LOG =
       LoggerFactory.getLogger(SpellingValidator.class);
+
+  private static Character[] skipChars =
+      new Character[] {'+', '~', '-', '(', ')', ',', '\"', '.' };
+
+  private static Set<Character> skipCharacters =
+      new HashSet<>(Arrays.asList(skipChars));
 }
