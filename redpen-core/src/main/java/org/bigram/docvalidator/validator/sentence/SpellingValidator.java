@@ -24,7 +24,7 @@ public class SpellingValidator implements Validator<Sentence> {
    * Constructor.
    */
   public SpellingValidator() {
-    this.validWords = validWords = new HashSet<>();
+    this.validWords = new HashSet<>();
   }
 
   /**
@@ -44,6 +44,7 @@ public class SpellingValidator implements Validator<Sentence> {
       CharacterTable characterTable) {
     String lang = characterTable.getLang();
     WordListExtractor extractor = new WordListExtractor();
+    extractor.setToLowerCase();
     ResourceLoader loader = new ResourceLoader(extractor);
 
     LOG.info("Loading default invalid expression dictionary for " +
@@ -74,7 +75,7 @@ public class SpellingValidator implements Validator<Sentence> {
   @Override
   public List<ValidationError> validate(Sentence line) {
     List<ValidationError> result = new ArrayList<>();
-    String str = line.content;
+    String str = line.content.toLowerCase();
     String[] words = str.split(" ");
     for (String word : words) {
       if (!this.validWords.contains(word)) {
@@ -89,7 +90,7 @@ public class SpellingValidator implements Validator<Sentence> {
   /**
    * Register a word. This method is for testing purpose.
    *
-   * @param word
+   * @param word word to register a repelling dictionary
    */
   public void addWord(String word) {
     validWords.add(word);
@@ -100,6 +101,4 @@ public class SpellingValidator implements Validator<Sentence> {
 
   private static final Logger LOG =
       LoggerFactory.getLogger(SpellingValidator.class);
-
-
 }

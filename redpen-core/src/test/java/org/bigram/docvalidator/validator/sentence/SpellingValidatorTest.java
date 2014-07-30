@@ -53,6 +53,30 @@ public class SpellingValidatorTest {
     assertEquals(1, errors.size());
   }
 
+  @Test
+  public void testUpperCase() throws DocumentValidatorException {
+    Configuration config = new Configuration.Builder()
+        .addValidatorConfig(new ValidatorConfiguration("Spelling"))
+        .setCharacterTable("en").build();
+
+    DocumentCollection documents = new DocumentCollection.Builder()
+        .addDocument("")
+        .addSection(1, new ArrayList<>())
+        .addParagraph()
+        .addSentence(
+            "This iz goody",
+            1)
+        .build();
+
+    DocumentValidator validator = new DocumentValidator.Builder()
+        .setConfiguration(config)
+        .setResultDistributor(new FakeResultDistributor())
+        .build();
+
+    List<ValidationError> errors = validator.check(documents);
+    assertEquals(1, errors.size());
+  }
+
   // TODO: add case related cases.
   // TODO: add cases with end period.
 }

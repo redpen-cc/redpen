@@ -35,13 +35,16 @@ public class WordListExtractor implements ResourceExtractor<Set<String>> {
   }
 
   /**
-   * Load　word list file.
+   * Load word list file.
    *
    * @param line line in a file
    * @return 0 when succeeded.
    */
   @Override
   public int load(String line) {
+    if (this.toLowerCase) {
+      line = line.toLowerCase();
+    }
     wordList.add(line);
     return 0;
   }
@@ -56,5 +59,15 @@ public class WordListExtractor implements ResourceExtractor<Set<String>> {
     return wordList;
   }
 
+  /**
+   * Add inputs after convert the character to lowercase.
+   */
+  public void setToLowerCase() {
+    this.toLowerCase = true;
+  }
+
   private final Set<String> wordList;
+
+  private boolean toLowerCase = false;
+
 }
