@@ -53,7 +53,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>org.bigram.docvalidator.Main</mainClass>
+              <mainClass>cc.redpen.docvalidator.Main</mainClass>
               <addClasspath>true</addClasspath>
               <classpathPrefix></classpathPrefix>
             </manifest>

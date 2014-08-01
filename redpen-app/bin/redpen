@@ -3,7 +3,7 @@
 VERSION=0.1
 RUN_SCRIPT="$(basename "${0}")"
 DV_HOME=${DV_HOME:-`dirname "$this"`}
-MAIN_CLASS="org.bigram.docvalidator.Main"
+MAIN_CLASS="cc.redpen.docvalidator.Main"
 
 usage() {
     echo "Usage: $RUN_SCRIPT [OPTIONS] INPUT-FILES"
