@@ -8,6 +8,7 @@ import cc.redpen.docvalidator.config.ValidatorConfiguration;
 import cc.redpen.docvalidator.distributor.FakeResultDistributor;
 import cc.redpen.docvalidator.model.DocumentCollection;
 import cc.redpen.docvalidator.model.Sentence;
+import cc.redpen.docvalidator.validator.sentence.SpellingValidator;
 import org.junit.Test;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package org.bigram.docvalidator.validator.sentence;
+package cc.redpen.docvalidator.validator.sentence;
 
 import cc.redpen.docvalidator.DocumentValidatorException;
 import cc.redpen.docvalidator.ValidationError;
