@@ -12,7 +12,7 @@
 
   <listener>
     <listener-class>
-        org.bigram.docvalidator.server.DocumentValidatorInitializer
+      cc.redpen.docvalidator.server.DocumentValidatorInitializer
     </listener-class>
   </listener>
 
