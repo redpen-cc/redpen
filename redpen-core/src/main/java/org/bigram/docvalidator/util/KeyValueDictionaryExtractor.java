@@ -23,13 +23,13 @@ import java.util.Map;
 /**
  * An ResourceExtractor implementation for KeyValue input data.
  */
-public class KeyValueDictionaryExtractor implements ResourceExtractor {
+public class KeyValueDictionaryExtractor implements ResourceExtractor<Map<String, String>> {
   /**
    * Constructor.
    */
   public KeyValueDictionaryExtractor() {
     super();
-    map = new HashMap<>();
+    this.map = new HashMap<>();
   }
 
   /**
@@ -38,6 +38,7 @@ public class KeyValueDictionaryExtractor implements ResourceExtractor {
    * @param line line in a file
    * @return 0 when succeeded to load, 1 otherwise
    */
+  @Override
   public int load(String line) {
     String[] result = line.split("\t");
     if (result.length != 2) {
@@ -47,6 +48,7 @@ public class KeyValueDictionaryExtractor implements ResourceExtractor {
     return 0;
   }
 
+  @Override
   public Map<String, String> get() {
     return map;
   }
