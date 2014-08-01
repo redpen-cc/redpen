@@ -7,12 +7,12 @@
 
   <context-param>
     <param-name>redpen.conf.path</param-name>
-    <param-value>/conf/dv-conf.xml</param-value>
+    <param-value>/conf/redpen-conf.xml</param-value>
   </context-param>
 
   <listener>
     <listener-class>
-      cc.redpen.docvalidator.server.DocumentValidatorInitializer
+      cc.redpen.server.DocumentValidatorInitializer
     </listener-class>
   </listener>
 

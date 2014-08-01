@@ -15,7 +15,7 @@ run_test() {
     cd redpen-app/target;
     tar zxvf redpen-app-$VERSION-assembled.tar.gz;
     cd redpen-app-$VERSION
-    bin/redpen -c conf/dv-conf-en.xml doc/txt/en/sampledoc-en.txt
+    bin/redpen -c conf/redpen-conf-en.xml doc/txt/en/sampledoc-en.txt
     if [ $? -ne 0 ]; then
 	echo "Error runnig application..."
 	FAILED=1

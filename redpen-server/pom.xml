@@ -40,7 +40,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>DocumentValidatorRunner</mainClass>
+              <mainClass>cc.redpen.sentence.DocumentValidatorRunner</mainClass>
             </manifest>
           </archive>
           <warSourceDirectory>${basedir}/src/main/webapp</warSourceDirectory>
@@ -58,7 +58,7 @@
               <target>
                 <move todir="${project.build.directory}/${project.artifactId}/">
                   <fileset dir="${project.build.directory}/classes/">
-                    <include name="DocumentValidatorRunner.class" />
+                    <include name="cc.redpen.sentence.DocumentValidatorRunner.class" />
                   </fileset>
                 </move>
               </target>

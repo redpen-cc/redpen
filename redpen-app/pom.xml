@@ -53,7 +53,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>cc.redpen.docvalidator.Main</mainClass>
+              <mainClass>cc.redpen.Main</mainClass>
               <addClasspath>true</addClasspath>
               <classpathPrefix></classpathPrefix>
             </manifest>
