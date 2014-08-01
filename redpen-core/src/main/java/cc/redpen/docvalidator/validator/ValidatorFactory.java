@@ -7,6 +7,7 @@ import cc.redpen.docvalidator.validator.section.ParagraphNumberValidator;
 import cc.redpen.docvalidator.validator.section.ParagraphStartWithValidator;
 import cc.redpen.docvalidator.validator.section.SectionLengthValidator;
 import cc.redpen.docvalidator.validator.sentence.*;
+import org.bigram.docvalidator.validator.sentence.SpellingValidator;
 
 /**
  * Factory class of validators.

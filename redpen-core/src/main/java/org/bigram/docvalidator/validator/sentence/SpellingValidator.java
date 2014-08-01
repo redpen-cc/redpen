@@ -1,13 +1,13 @@
 package org.bigram.docvalidator.validator.sentence;
 
-import org.bigram.docvalidator.DocumentValidatorException;
-import org.bigram.docvalidator.ValidationError;
-import org.bigram.docvalidator.config.CharacterTable;
-import org.bigram.docvalidator.config.ValidatorConfiguration;
-import org.bigram.docvalidator.model.Sentence;
-import org.bigram.docvalidator.util.ResourceLoader;
-import org.bigram.docvalidator.util.WordListExtractor;
-import org.bigram.docvalidator.validator.Validator;
+import cc.redpen.docvalidator.DocumentValidatorException;
+import cc.redpen.docvalidator.ValidationError;
+import cc.redpen.docvalidator.config.CharacterTable;
+import cc.redpen.docvalidator.config.ValidatorConfiguration;
+import cc.redpen.docvalidator.model.Sentence;
+import cc.redpen.docvalidator.util.ResourceLoader;
+import cc.redpen.docvalidator.util.WordListExtractor;
+import cc.redpen.docvalidator.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

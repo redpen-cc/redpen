@@ -1,13 +1,13 @@
 package org.bigram.docvalidator.validator.sentence;
 
-import org.bigram.docvalidator.DocumentValidator;
-import org.bigram.docvalidator.DocumentValidatorException;
-import org.bigram.docvalidator.ValidationError;
-import org.bigram.docvalidator.config.Configuration;
-import org.bigram.docvalidator.config.ValidatorConfiguration;
-import org.bigram.docvalidator.distributor.FakeResultDistributor;
-import org.bigram.docvalidator.model.DocumentCollection;
-import org.bigram.docvalidator.model.Sentence;
+import cc.redpen.docvalidator.DocumentValidator;
+import cc.redpen.docvalidator.DocumentValidatorException;
+import cc.redpen.docvalidator.ValidationError;
+import cc.redpen.docvalidator.config.Configuration;
+import cc.redpen.docvalidator.config.ValidatorConfiguration;
+import cc.redpen.docvalidator.distributor.FakeResultDistributor;
+import cc.redpen.docvalidator.model.DocumentCollection;
+import cc.redpen.docvalidator.model.Sentence;
 import org.junit.Test;
 
 import java.util.ArrayList;
