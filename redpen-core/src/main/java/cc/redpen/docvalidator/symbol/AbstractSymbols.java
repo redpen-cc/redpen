@@ -28,7 +28,7 @@ import java.util.Map;
 /**
  * Base class of the symbol settings.
  */
-public abstract class AbstractSymbols {
+public abstract class AbstractSymbols implements Iterable<String> {
   /**
    * Get the specified character or symbol.
    *
@@ -49,6 +49,11 @@ public abstract class AbstractSymbols {
    * @return all names of characters
    */
   public Iterator<String> getAllCharacterNames() {
+    return symbolTable.keySet().iterator();
+  }
+
+  @Override
+  public Iterator<String> iterator() {
     return symbolTable.keySet().iterator();
   }
 

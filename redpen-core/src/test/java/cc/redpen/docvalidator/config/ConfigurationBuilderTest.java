@@ -95,4 +95,22 @@ public class ConfigurationBuilderTest {
     assertTrue(config.getCharacterTable()
         .getCharacter("FULL_STOP").getInvalidChars().contains("●"));
   }
+
+  @Test
+  public void testBuildConfigurationAccessingCharacterByValue() {
+    Configuration config = new Configuration.Builder()
+        .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
+        .setCharacterTable("ja")
+        .addInvalidPattern("FULL_STOP", "●")
+        .build();
+
+    assertNotNull(config.getCharacterTable());
+    assertNotNull(config.getCharacterTable().getCharacter("FULL_STOP"));
+    assertEquals("。", config.getCharacterTable().getCharacter("FULL_STOP").getValue());
+    assertTrue(config.getCharacterTable()
+        .getCharacter("FULL_STOP").getInvalidChars().contains("●"));
+    assertTrue(config.getCharacterTable().isContainCharacterByValue("。"));
+    assertTrue(config.getCharacterTable()
+        .getCharacterByValue("。").getInvalidChars().contains("●"));
+  }
 }
