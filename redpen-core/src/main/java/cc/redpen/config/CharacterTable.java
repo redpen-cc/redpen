@@ -32,6 +32,7 @@ public final class CharacterTable {
   public CharacterTable() {
     super();
     characterDictionary = new HashMap<>();
+    valueDictionary = new HashMap<>();
   }
 
   /**
@@ -63,6 +64,16 @@ public final class CharacterTable {
   }
 
   /**
+   * Get the character specified with the value.
+   *
+   * @param value character name
+   * @return character containing the settings
+   */
+  public Character getCharacterByValue(String value) {
+    return this.valueDictionary.get(value);
+  }
+
+  /**
    * Get all elements of character dictionary.
    *
    * @return character dictionary
@@ -83,11 +94,23 @@ public final class CharacterTable {
   }
 
   /**
+   * Detect the specified character is exit in the dictionary.
+   *
+   * @param value character value
+   * @return character when exist, null when the specified
+   * character does not exist
+   */
+  public boolean isContainCharacterByValue(String value) {
+    return this.valueDictionary.get(value) != null;
+  }
+
+  /**
    * Replace the current character setting.
    * @param character symbol configuration
    */
   public void override(cc.redpen.config.Character character) {
     characterDictionary.put(character.getName(), character);
+    valueDictionary.put(character.getValue(), character);
   }
 
   public String getLang() {
@@ -99,6 +122,8 @@ public final class CharacterTable {
   }
 
   private final Map<String, cc.redpen.config.Character> characterDictionary;
+
+  private final Map<String, Character> valueDictionary;
 
   private String lang;
 

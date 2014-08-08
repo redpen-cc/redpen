@@ -22,9 +22,7 @@ import cc.redpen.symbol.DefaultSymbols;
 import cc.redpen.symbol.JapaneseSymbols;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Contains Settings used throughout DocumentValidator.
@@ -101,8 +99,7 @@ public final class Configuration {
     private static CharacterTable loadLanguageDefaultCharacterTable(
         String lang) {
       CharacterTable characterTable = new CharacterTable();
-      Map<String, Character> dictionary
-          = characterTable.getCharacterDictionary();
+
       AbstractSymbols symbolSettings;
       if (lang.equals("ja")) {
         symbolSettings = JapaneseSymbols.getInstance();
@@ -112,12 +109,9 @@ public final class Configuration {
         characterTable.setLang("en");
       }
 
-      Iterator<String> characterNames =
-          symbolSettings.getAllCharacterNames();
-      while (characterNames.hasNext()) {
-        String charName = characterNames.next();
-        Character character = symbolSettings.get(charName);
-        dictionary.put(charName, character);
+      for(String characterName : symbolSettings) {
+        Character character = symbolSettings.get(characterName);
+        characterTable.override(character);
       }
       return characterTable;
     }
