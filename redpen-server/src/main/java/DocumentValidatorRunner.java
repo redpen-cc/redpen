@@ -43,7 +43,7 @@ public class DocumentValidatorRunner {
       System.exit(-1);
     }
 
-    String configFileName = "/conf/dv-conf.xml";
+    String configFileName = "/conf/redpen-conf.xml";
     int portNum = 8080;
 
     if (commandLine.hasOption("h")) {
