@@ -441,8 +441,8 @@ public class MarkdownParserTest {
 
   @Test
   public void testGenerateJapaneseWithMultipleSentencesInOneLine() {
-    String sampleText = "規約には一文の長さ，利用する句読点の種類（半角全角など），文書中で利用する技術単語の選択などがあり，文書を作成する組織ごとに異なる．たとえば，\\n" +
-        "アルゴリズムをアルファベットで記述する組織もあれば，カタカナに変換して記述する組織も存在する．";
+    String sampleText = "それは異なる．たとえば，\\n" +
+        "以下のとおりである．";
     Configuration conf = new Configuration.Builder()
         .setCharacterTable("ja")
         .setCharacter(new Character("FULL_STOP", "．", "."))
@@ -453,9 +453,9 @@ public class MarkdownParserTest {
     Section firstSection = doc.getSection(0);
     Paragraph firstParagraph = firstSection.getParagraph(0);
     assertEquals(2, firstParagraph.getNumberOfSentences());
-    assertEquals("規約には一文の長さ，利用する句読点の種類（半角全角など），文書中で利用する技術単語の選択などがあり，文書を作成する組織ごとに異なる．",
+    assertEquals("それは異なる．",
         firstParagraph.getSentence(0).content);
-    assertEquals("たとえば，\\nアルゴリズムをアルファベットで記述する組織もあれば，カタカナに変換して記述する組織も存在する．",
+    assertEquals("たとえば，\\n以下のとおりである．",
         firstParagraph.getSentence(1).content);
   }
 
