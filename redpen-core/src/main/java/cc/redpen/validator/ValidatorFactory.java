@@ -41,6 +41,8 @@ public class ValidatorFactory {
         return new KatakanaSpellCheckValidator(config, characterTable);
       case "Spelling":
         return new SpellingValidator(config, characterTable);
+      case "SpaceBetweenAlphabeticalWord":
+        return new SpaceBetweenAlphabeticalWord();
       case "SectionLength":
         return new SectionLengthValidator(config, characterTable);
       case "MaxParagraphNumber":
