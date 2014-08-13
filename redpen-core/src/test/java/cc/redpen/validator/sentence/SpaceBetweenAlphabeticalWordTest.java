@@ -1,7 +1,7 @@
-package cc.redpen.docvalidator.validator.sentence;
+package cc.redpen.validator.sentence;
 
-import cc.redpen.docvalidator.ValidationError;
-import cc.redpen.docvalidator.model.Sentence;
+import cc.redpen.ValidationError;
+import cc.redpen.model.Sentence;
 import org.junit.Test;
 
 import java.util.List;

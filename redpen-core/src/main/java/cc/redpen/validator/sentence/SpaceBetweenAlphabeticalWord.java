@@ -1,9 +1,9 @@
-package cc.redpen.docvalidator.validator.sentence;
+package cc.redpen.validator.sentence;
 
-import cc.redpen.docvalidator.ValidationError;
-import cc.redpen.docvalidator.model.Sentence;
-import cc.redpen.docvalidator.util.StringUtils;
-import cc.redpen.docvalidator.validator.Validator;
+import cc.redpen.ValidationError;
+import cc.redpen.model.Sentence;
+import cc.redpen.util.StringUtils;
+import cc.redpen.validator.Validator;
 
 import java.util.ArrayList;
 import java.util.List;
