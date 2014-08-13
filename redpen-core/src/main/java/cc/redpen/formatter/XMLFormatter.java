@@ -71,32 +71,28 @@ public class XMLFormatter implements Formatter {
     Text validator = doc.createTextNode(error.getValidatorName());
     validatorElement.appendChild(validator);
 
-    if (error.getMessage() != null && !error.getMessage().equals("")) {
-      Element contentElement = doc.createElement("message");
-      errorElement.appendChild(contentElement);
-      Text content = doc.createTextNode(error.getMessage());
-      contentElement.appendChild(content);
-    }
+    Element contentElement = doc.createElement("message");
+    errorElement.appendChild(contentElement);
+    Text content = doc.createTextNode(error.getMessage());
+    contentElement.appendChild(content);
 
-    if (error.getFileName() != null && !error.getFileName().equals("")) {
+    error.getFileName().ifPresent(e -> {
       Element fileNameElement = doc.createElement("file");
       errorElement.appendChild(fileNameElement);
-      Text fileName = doc.createTextNode(error.getFileName());
+      Text fileName = doc.createTextNode(e);
       fileNameElement.appendChild(fileName);
-    }
+    });
 
     Element lineNumberElement = doc.createElement("lineNum");
     errorElement.appendChild(lineNumberElement);
     Text lineNum = doc.createTextNode(Integer.toString(error.getLineNumber()));
     lineNumberElement.appendChild(lineNum);
 
-    if (error.getSentence() != null
-        && !error.getSentence().content.equals("")) {
-      Element sentencElement = doc.createElement("sentence");
-      errorElement.appendChild(sentencElement);
-      Text content = doc.createTextNode(error.getSentence().content);
-      sentencElement.appendChild(content);
-    }
+    error.getSentence().ifPresent(e -> {
+      Element sentenceElement = doc.createElement("sentence");
+      errorElement.appendChild(sentenceElement);
+      sentenceElement.appendChild(doc.createTextNode(e.content));
+    });
 
     // create a transformer
     Transformer transformer = createTransformer();

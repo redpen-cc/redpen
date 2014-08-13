@@ -41,7 +41,8 @@ public class XMLFormatterTest {
     ValidationError error = new ValidationError(
         this.getClass(),
         "Fatal Error",
-        new Sentence("This is a sentence", 0), "foobar.md");
+        new Sentence("This is a sentence", 0));
+    error.setFileName("foobar.md");
     XMLFormatter formatter = createXMLFormatter();
     String resultString = formatter.convertError(error);
     Document document = extractDocument(resultString);
@@ -84,7 +85,7 @@ public class XMLFormatterTest {
 
   @Test
   public void testConvertValidationErrorWithoutLineNumAndFileName() {
-    ValidationError error = new ValidationError(this.getClass(), "Fatal Error");
+    ValidationError error = new ValidationError(this.getClass(), "Fatal Error", -1);
     XMLFormatter formatter = createXMLFormatter();
     String resultString = formatter.convertError(error);
     Document document = extractDocument(resultString);

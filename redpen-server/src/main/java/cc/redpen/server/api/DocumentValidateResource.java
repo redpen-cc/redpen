@@ -20,8 +20,8 @@ package cc.redpen.server.api;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-  import cc.redpen.server.DocumentValidatorServer;
-  import org.json.JSONArray;
+import cc.redpen.server.DocumentValidatorServer;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import cc.redpen.parser.DocumentParserFactory;
@@ -74,7 +74,9 @@ public class DocumentValidateResource {
 
     for (ValidationError error : errors) {
       JSONObject jsonError = new JSONObject();
-      jsonError.put("sentence", error.getSentence().content);
+      if (error.getSentence().isPresent()) {
+        jsonError.put("sentence", error.getSentence().get().content);
+      }
       jsonError.put("message", error.getMessage());
       jsonErrors.put(jsonError);
     }

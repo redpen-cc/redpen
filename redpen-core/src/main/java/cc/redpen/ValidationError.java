@@ -19,25 +19,12 @@ package cc.redpen;
 
 import cc.redpen.model.Sentence;
 
+import java.util.Optional;
+
 /**
  * Error to report invalid point from Validators.
  */
 public class ValidationError {
-
-  /**
-   * Constructor.
-   *
-   * @param validatorClass validator class
-   * @param errorMessage   error message
-   */
-  public ValidationError(Class validatorClass, String errorMessage) {
-    super();
-    this.lineNumber = -1;
-    this.message = errorMessage;
-    this.fileName = "";
-    this.sentence = null;
-    this.validatorName = validatorClass.getSimpleName();
-  }
 
   /**
    * Constructor.
@@ -48,8 +35,9 @@ public class ValidationError {
    */
   public ValidationError(Class validatorClass,
                          String errorMessage, int errorLineNumber) {
-    this(validatorClass, errorMessage);
     this.lineNumber = errorLineNumber;
+    this.message = errorMessage;
+    this.validatorName = validatorClass.getSimpleName();
   }
 
   /**
@@ -63,37 +51,7 @@ public class ValidationError {
                          String errorMessage,
                          Sentence sentenceWithError) {
     this(validatorClass, errorMessage, sentenceWithError.position);
-    this.sentence = sentenceWithError;
-  }
-
-  /**
-   * Constructor.
-   *
-   * @param validatorClass  validator class
-   * @param errorMessage    error message
-   * @param errorLineNumber error position (line number)
-   * @param errorFileName   file name in which the error occurs
-   */
-  public ValidationError(Class validatorClass,
-                         String errorMessage, int errorLineNumber,
-                         String errorFileName) {
-    this(validatorClass, errorMessage, errorLineNumber);
-    this.fileName = errorFileName;
-  }
-
-  /**
-   * Constructor.
-   *
-   * @param validatorClass    validator class
-   * @param errorMessage      error message
-   * @param sentenceWithError sentence containing validation error
-   * @param errorFileName     file name in which the error occurs
-   */
-  public ValidationError(Class validatorClass, String errorMessage,
-                         Sentence sentenceWithError, String errorFileName) {
-    this(validatorClass, errorMessage, sentenceWithError.position);
-    this.sentence = sentenceWithError;
-    this.fileName = errorFileName;
+    this.sentence = Optional.of(sentenceWithError);
   }
 
   /**
@@ -106,15 +64,6 @@ public class ValidationError {
   }
 
   /**
-   * Set the line number in which error occurs.
-   *
-   * @param errorLineNumber line number in which error occurs
-   */
-  public void setLineNumber(int errorLineNumber) {
-    this.lineNumber = errorLineNumber;
-  }
-
-  /**
    * Get error message.
    *
    * @return error message
@@ -124,20 +73,11 @@ public class ValidationError {
   }
 
   /**
-   * Set error message.
-   *
-   * @param errorMessage error message
-   */
-  public void setMessage(String errorMessage) {
-    this.message = errorMessage;
-  }
-
-  /**
    * Get file name.
    *
    * @return file name
    */
-  public String getFileName() {
+  public Optional<String> getFileName() {
     return fileName;
   }
 
@@ -147,7 +87,7 @@ public class ValidationError {
    * @param errorFileName file name in which the error occurs
    */
   public void setFileName(String errorFileName) {
-    this.fileName = errorFileName;
+    this.fileName = Optional.of(errorFileName);
   }
 
   /**
@@ -155,7 +95,7 @@ public class ValidationError {
    *
    * @return sentence
    */
-  public Sentence getSentence() {
+  public Optional<Sentence> getSentence() {
     return sentence;
   }
 
@@ -165,7 +105,7 @@ public class ValidationError {
    * @param sentenceWithError sentenceWithError containing validation error
    */
   public void setSentence(Sentence sentenceWithError) {
-    this.sentence = sentenceWithError;
+    this.sentence = Optional.of(sentenceWithError);
   }
 
   /**
@@ -194,13 +134,13 @@ public class ValidationError {
     return sb.toString();
   }
 
-  private int lineNumber;
+  private final int lineNumber;
 
-  private String message;
+  private final String message;
 
-  private String fileName;
+  private Optional<String> fileName = Optional.empty();
 
-  private Sentence sentence;
+  private Optional<Sentence> sentence = Optional.empty();
 
   private final String validatorName;
 }
