@@ -52,6 +52,14 @@ public class EndOfSentenceDetectorTest {
   }
 
   @Test
+  public void tesEndPositionForPartialSentence() {
+    Pattern pattern = Pattern.compile("\\.");
+    String str = "this is a pen. that is not";
+    EndOfSentenceDetector detector = new EndOfSentenceDetector(pattern);
+    assertEquals(13, detector.getSentenceEndPosition(str));
+  }
+
+  @Test
   public void testEndPositionInJapanese() {
     Pattern pattern = Pattern.compile("。");
     String str = "私はペンではない。私は人間です。";
@@ -121,6 +129,14 @@ public class EndOfSentenceDetectorTest {
     String str = "これは。。。ペンですか。";
     EndOfSentenceDetector detector = new EndOfSentenceDetector(pattern);
     assertEquals(5, detector.getSentenceEndPosition(str));
+  }
+
+  @Test
+  public void tesEndPositionForPartialJapaneseSentence() {
+    Pattern pattern = Pattern.compile("。");
+    String str = "異なる。たとえば，";
+    EndOfSentenceDetector detector = new EndOfSentenceDetector(pattern);
+    assertEquals(3, detector.getSentenceEndPosition(str));
   }
 
   @Test

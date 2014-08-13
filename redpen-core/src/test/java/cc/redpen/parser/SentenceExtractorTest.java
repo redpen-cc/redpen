@@ -17,13 +17,13 @@
  */
 package cc.redpen.parser;
 
-import static org.junit.Assert.*;
+import cc.redpen.model.Sentence;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
-import cc.redpen.model.Sentence;
+import static org.junit.Assert.assertEquals;
 
 public class SentenceExtractorTest {
 
@@ -130,6 +130,30 @@ public class SentenceExtractorTest {
   }
 
   @Test
+  public void testMultipleSentencesWithPartialSplit() {
+    SentenceExtractor extractor = new SentenceExtractor();
+    List<Sentence> outputSentences = new ArrayList<>();
+    String remain = extractor.extract("this is a pen. Another\n" +
+            "one is not a pen.",
+        outputSentences);
+    assertEquals(2, outputSentences.size());
+    assertEquals("this is a pen.", outputSentences.get(0).content);
+    assertEquals(" Another\none is not a pen.", outputSentences.get(1).content);
+    assertEquals("", remain);
+  }
+
+  @Test
+  public void testMultipleSentencesWithPartialSentence() {
+    SentenceExtractor extractor = new SentenceExtractor();
+    List<Sentence> outputSentences = new ArrayList<>();
+    String remain = extractor.extract("this is a pen. Another\n",
+        outputSentences);
+    assertEquals(1, outputSentences.size());
+    assertEquals("this is a pen.", outputSentences.get(0).content);
+    assertEquals(" Another\n", remain);
+  }
+
+  @Test
   public void testJapaneseSimple() {
     List<String> stopChars = new ArrayList<>();
     stopChars.add("。");
@@ -192,6 +216,67 @@ public class SentenceExtractorTest {
     assertEquals("これは“群馬。”", outputSentences.get(0).content);
     assertEquals("あれは群馬ではない。", outputSentences.get(1).content);
     assertEquals("", remain);
+  }
+
+  @Test
+  public void testJapaneseMultipleSentencesWithPartialSplit() {
+    List<String> stopChars = new ArrayList<>();
+    stopChars.add("．");
+    stopChars.add("？");
+    List<String> rightQuotations = new ArrayList<>();
+    SentenceExtractor extractor = new SentenceExtractor(stopChars, rightQuotations);
+    List<Sentence> outputSentences = new ArrayList<>();
+    String remain = extractor.extract("規約には一文の長さ，利用する句読点の種類（半角全角など），文書中で利用する技術単語の選択などがあり，文書を作成する組織ごとに異なる．たとえば，\n" +
+            "アルゴリズムをアルファベットで記述する組織もあれば，カタカナに変換して記述する組織も存在する．",
+        outputSentences);
+    assertEquals("規約には一文の長さ，利用する句読点の種類（半角全角など），文書中で利用する技術単語の選択などがあり，文書を作成する組織ごとに異なる．", outputSentences.get(0).content);
+    assertEquals("たとえば，\nアルゴリズムをアルファベットで記述する組織もあれば，カタカナに変換して記述する組織も存在する．", outputSentences.get(1).content);
+    assertEquals(2, outputSentences.size());
+  }
+
+
+  @Test
+  public void testExtractWithoutLastSentenceJapaneseWithPartialSplit() {
+    List<String> stopChars = new ArrayList<>();
+    stopChars.add("．");
+    stopChars.add("？");
+    List<String> rightQuotations = new ArrayList<>();
+    SentenceExtractor extractor = new SentenceExtractor(stopChars, rightQuotations);
+    List<Sentence> outputSentences = new ArrayList<>();
+    String remain = extractor.extractWithoutLastSentence("規約には一文の長さ，利用する句読点の種類（半角全角など），文書中で利用する技術単語の選択などがあり，文書を作成する組織ごとに異なる．たとえば，\n" +
+        "アルゴリズムをアルファベットで記述する組織もあれば，カタカナに変換して記述する組織も存在する．",  outputSentences, 0);
+    assertEquals(1, outputSentences.size());
+    assertEquals("規約には一文の長さ，利用する句読点の種類（半角全角など），文書中で利用する技術単語の選択などがあり，文書を作成する組織ごとに異なる．", outputSentences.get(0).content);
+    assertEquals("たとえば，\nアルゴリズムをアルファベットで記述する組織もあれば，カタカナに変換して記述する組織も存在する．", remain);
+  }
+
+  @Test
+  public void testJapanesSentenceWithEndWithNonFullStop() {
+    List<String> stopChars = new ArrayList<>();
+    stopChars.add("．");
+    List<String> rightQuotations = new ArrayList<>();
+    SentenceExtractor extractor = new SentenceExtractor(stopChars, rightQuotations);
+    List<Sentence> outputSentences = new ArrayList<>();
+    String remain = extractor.extract("規約には一文の長さ，利用する句読点の種類（半角全角など），文書中で利用する技術単語の選択などがあり，文書を作成する組織ごとに異なる．たとえば，",
+        outputSentences);
+    assertEquals(1, outputSentences.size());
+    assertEquals("規約には一文の長さ，利用する句読点の種類（半角全角など），文書中で利用する技術単語の選択などがあり，文書を作成する組織ごとに異なる．", outputSentences.get(0).content);
+    assertEquals("たとえば，", remain);
+
+  }
+
+  @Test
+  public void testExtractWithoutLastSentenceJapaneseSentencesEndWithNonFullStop() {
+    List<String> stopChars = new ArrayList<>();
+    stopChars.add("．");
+    stopChars.add("？");
+    List<String> rightQuotations = new ArrayList<>();
+    SentenceExtractor extractor = new SentenceExtractor(stopChars, rightQuotations);
+    List<Sentence> outputSentences = new ArrayList<>();
+    String remain = extractor.extractWithoutLastSentence("規約には一文の長さ，利用する句読点の種類（半角全角など），文書中で利用する技術単語の選択などがあり，文書を作成する組織ごとに異なる．たとえば，\n",
+        outputSentences,0);
+    assertEquals(1, outputSentences.size());
+    assertEquals("たとえば，\n", remain);
   }
 
   @Test

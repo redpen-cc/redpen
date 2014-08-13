@@ -147,8 +147,9 @@ public final class EndOfSentenceDetector {
       matchPosition = matcher.start();
     }
 
-    if (matchPosition > -1 && (!StringUtils.isBasicLatin(str.charAt(matchPosition)))
-        && matchPosition != nextPosition) {
+    if (isNonAlphabetWithoutSucessiveEnd(str, nextPosition, matchPosition)
+        || isNonAlphabetEndOfSentenceWithPartialSentence(str, position, matchPosition)
+        ) {
       // NOTE: Non Latin languages (especially Asian languages, periods do not
       // have tailing spaces in the end of sentences)
       return position;
@@ -164,6 +165,15 @@ public final class EndOfSentenceDetector {
     } else {
       return getEndPosition(str, nextPosition, whitePositions);
     }
+  }
+
+  private boolean isNonAlphabetEndOfSentenceWithPartialSentence(String str, int position, int matchPosition) {
+    return (matchPosition == -1 && (!StringUtils.isBasicLatin(str.charAt(position))));
+  }
+
+  private boolean isNonAlphabetWithoutSucessiveEnd(String str, int nextPosition, int matchPosition) {
+    return matchPosition > -1 && (!StringUtils.isBasicLatin(str.charAt(matchPosition)))
+        && matchPosition != nextPosition;
   }
 
   private static boolean checkPosition(int position, String str) {
