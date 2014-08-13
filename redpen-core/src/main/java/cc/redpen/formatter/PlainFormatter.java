@@ -31,14 +31,10 @@ public class PlainFormatter implements Formatter {
     str.append("ValidationError[");
     str.append(error.getValidatorName());
     str.append("][");
-    if (error.getFileName() != null && !"".equals(error.getFileName())) {
-      str.append(error.getFileName()).append(" : ");
-    }
+    error.getFileName().ifPresent(e -> str.append(e).append(" : "));
     str.append(error.getLineNumber()).append(" (")
         .append(error.getMessage()).append(")]");
-    if (error.getSentence() != null) {
-      str.append(" at line: ").append(error.getSentence().content);
-    }
+    error.getSentence().ifPresent(e -> str.append(" at line: ").append(e.content));
     return str.toString();
   }
 

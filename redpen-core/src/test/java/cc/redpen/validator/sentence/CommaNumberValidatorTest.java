@@ -35,7 +35,7 @@ public class CommaNumberValidatorTest {
     List<ValidationError> errors = commaNumberValidator.validate(str);
     assertNotNull(errors);
     assertEquals(1, errors.size());
-    assertEquals(content, errors.get(0).getSentence().content);
+    assertEquals(content, errors.get(0).getSentence().get().content);
   }
 
   @Test
