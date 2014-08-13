@@ -106,30 +106,12 @@ public class ValidationError {
   }
 
   /**
-   * Set the line number in which error occurs.
-   *
-   * @param errorLineNumber line number in which error occurs
-   */
-  public void setLineNumber(int errorLineNumber) {
-    this.lineNumber = errorLineNumber;
-  }
-
-  /**
    * Get error message.
    *
    * @return error message
    */
   public String getMessage() {
     return message;
-  }
-
-  /**
-   * Set error message.
-   *
-   * @param errorMessage error message
-   */
-  public void setMessage(String errorMessage) {
-    this.message = errorMessage;
   }
 
   /**

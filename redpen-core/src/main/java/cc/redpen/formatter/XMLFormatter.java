@@ -92,10 +92,10 @@ public class XMLFormatter implements Formatter {
 
     if (error.getSentence() != null
         && !error.getSentence().content.equals("")) {
-      Element sentencElement = doc.createElement("sentence");
-      errorElement.appendChild(sentencElement);
+      Element sentenceElement = doc.createElement("sentence");
+      errorElement.appendChild(sentenceElement);
       Text content = doc.createTextNode(error.getSentence().content);
-      sentencElement.appendChild(content);
+      sentenceElement.appendChild(content);
     }
 
     // create a transformer
