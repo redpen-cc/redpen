@@ -15,7 +15,7 @@
 
   <modules>
     <module>redpen-core</module>
-    <module>redpen-app</module>
+    <module>redpen-cli</module>
     <module>redpen-server</module>
   </modules>
 
@@ -64,7 +64,7 @@
       </dependency>
       <dependency>
         <groupId>cc.redpen</groupId>
-        <artifactId>redpen-app</artifactId>
+        <artifactId>redpen-cli</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>

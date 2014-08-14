@@ -9,9 +9,9 @@
     <version>0.6</version>
   </parent>
 
-  <artifactId>redpen-app</artifactId>
+  <artifactId>redpen-cli</artifactId>
   <version>0.6</version>
-  <name>redpen-app</name>
+  <name>redpen-cli</name>
   <url>http://document-validator.org</url>
 
   <properties>
