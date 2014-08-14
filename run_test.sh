@@ -12,9 +12,9 @@ run_test() {
     fi
 
     echo "Running application"
-    cd redpen-app/target;
-    tar zxvf redpen-app-$VERSION-assembled.tar.gz;
-    cd redpen-app-$VERSION
+    cd redpen-cli/target;
+    tar zxvf redpen-cli-$VERSION-assembled.tar.gz;
+    cd redpen-cli-$VERSION
     bin/redpen -c conf/redpen-conf-en.xml doc/txt/en/sampledoc-en.txt
     if [ $? -ne 0 ]; then
 	echo "Error runnig application..."
