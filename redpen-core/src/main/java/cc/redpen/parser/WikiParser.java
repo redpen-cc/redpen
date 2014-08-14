@@ -17,23 +17,21 @@
  */
 package cc.redpen.parser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-
-import org.apache.commons.io.IOUtils;
 import cc.redpen.DocumentValidatorException;
 import cc.redpen.model.Document;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Parser for wiki formatted file.
@@ -227,9 +225,8 @@ public final class WikiParser extends BasicDocumentParser {
 
   private String obtainSentences(int lineNum, String line,
       List<Sentence> outputSentences) {
-    String remain = getSentenceExtractor().extract(line, outputSentences);
+    String remain = getSentenceExtractor().extract(line, outputSentences, lineNum);
     for (Sentence sentence : outputSentences) {
-      sentence.position = lineNum;
       parseSentence(sentence); // extract inline elements
     }
     return remain;

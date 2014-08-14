@@ -17,15 +17,15 @@
  */
 package cc.redpen.parser;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.regex.Pattern;
-
 import cc.redpen.model.Sentence;
 import cc.redpen.symbol.AbstractSymbols;
 import cc.redpen.symbol.DefaultSymbols;
 import cc.redpen.util.EndOfSentenceDetector;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Utility Class to extract a Sentence list from given String.
@@ -87,9 +87,11 @@ public final class SentenceExtractor {
    *
    * @param line            input line which can contain more than one sentences
    * @param outputSentences List of extracted sentences
+   * @param position        line number
    * @return remaining line
    */
-  public String extract(String line, List<Sentence> outputSentences) {
+  public String extract(String line,
+      List<Sentence> outputSentences, int position) {
     int periodPosition =
         endOfSentenceDetector.getSentenceEndPosition(line);
     if (periodPosition == -1) {
@@ -97,7 +99,7 @@ public final class SentenceExtractor {
     } else {
       while (true) {
         Sentence sentence = new Sentence(line.substring(0,
-            periodPosition + 1), 0);
+            periodPosition + 1), position);
         outputSentences.add(sentence);
         line = line.substring(periodPosition + 1,
             line.length());
