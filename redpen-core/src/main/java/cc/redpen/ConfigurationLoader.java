@@ -147,7 +147,7 @@ public class ConfigurationLoader {
 
     NodeList symbolTableElementList =
         getSpecifiedNodeList((Element)
-            symbolTableConfigElementList.item(0), "character");
+            symbolTableConfigElementList.item(0), "symbol");
     if (symbolTableElementList == null) {
       LOG.warn("there is no character block");
       return;

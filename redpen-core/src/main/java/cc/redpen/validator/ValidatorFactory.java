@@ -31,7 +31,7 @@ public class ValidatorFactory {
         return new WordNumberValidator(config, symbolTable);
       case "SuggestExpression":
         return new SuggestExpressionValidator(config, symbolTable);
-      case "InvalidCharacter":
+      case "InvalidSymbol":
         return new InvalidSymbolValidator(config, symbolTable);
       case "SpaceWithSymbol":
         return new SymbolWithSpaceValidator(config, symbolTable);
