@@ -187,37 +187,39 @@ public class ToFileContentSerializer implements Visitor {
   }
 
   private List<Sentence> createSentenceList() {
-    List<Sentence> newSentences = new ArrayList<Sentence>();
-    Sentence currentSentence = null;
-    StringBuffer sentenceContent =
-        new StringBuffer();
+    List<Sentence> newSentences = new ArrayList<>();
+    String remainStr = "";
+    Sentence currentSentence = null; // TODO: use StringBuilder
+    List<String> remainLinks = new ArrayList<>();
+    int lineNum = -1;
+
     for (CandidateSentence candidateSentence : candidateSentences) {
-      String remain =
-          sentenceExtractor.extractWithoutLastSentence(
-              candidateSentence.getSentence(),
-              newSentences, candidateSentence.getLineNum());
+      lineNum = candidateSentence.getLineNum();
+      List<Sentence> currentSentences = new ArrayList<>();
+      remainStr = sentenceExtractor.extract(
+          remainStr + candidateSentence.getSentence(),
+          currentSentences, lineNum);
 
-      //TODO refactor StringUtils...
-      if (StringUtils.isNotEmpty(remain)) {
-        if (currentSentence != null) {
-          currentSentence.content += candidateSentence.getSentence();
-        } else {
-          currentSentence = new Sentence(remain,
-              candidateSentence.getLineNum());
-          newSentences.add(currentSentence);
+      if (currentSentences.size() > 0) {
+        currentSentence = currentSentences.get(currentSentences.size()-1);
+        for (String remainLink : remainLinks) {
+          currentSentence.links.add(remainLink);
         }
-        // FIXME validate: pegdown extract 1 candidate sentence to 1 link?
-        if (candidateSentence.getLink() != null) {
-          currentSentence.links.add(candidateSentence.getLink());
-        }
+        remainLinks = new ArrayList<>();
       }
+      newSentences.addAll(currentSentences);
 
-      // TODO ...
-      if (sentenceExtractor.getSentenceEndPosition(
-          currentSentence.content) != -1) {
-        currentSentence = null;
+      if (candidateSentence.getLink() == null) {continue;}
+
+      if (currentSentence != null) {
+        currentSentence.links.add(candidateSentence.getLink());
+      } else {
+        remainLinks.add(candidateSentence.getLink());
       }
+    }
 
+    if (remainStr.length() > 0) {
+      newSentences.add(new Sentence(remainStr, lineNum));
     }
     candidateSentences.clear();
     return newSentences;

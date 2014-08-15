@@ -135,7 +135,7 @@ public class SentenceExtractorTest {
     List<Sentence> outputSentences = new ArrayList<>();
     String remain = extractor.extract("this is a pen. Another\n" +
             "one is not a pen.",
-        outputSentences);
+        outputSentences, 0);
     assertEquals(2, outputSentences.size());
     assertEquals("this is a pen.", outputSentences.get(0).content);
     assertEquals(" Another\none is not a pen.", outputSentences.get(1).content);
@@ -147,7 +147,7 @@ public class SentenceExtractorTest {
     SentenceExtractor extractor = new SentenceExtractor();
     List<Sentence> outputSentences = new ArrayList<>();
     String remain = extractor.extract("this is a pen. Another\n",
-        outputSentences);
+        outputSentences, 0);
     assertEquals(1, outputSentences.size());
     assertEquals("this is a pen.", outputSentences.get(0).content);
     assertEquals(" Another\n", remain);
@@ -228,7 +228,7 @@ public class SentenceExtractorTest {
     List<Sentence> outputSentences = new ArrayList<>();
     String remain = extractor.extract("それは異なる．たとえば，\n" +
             "以下のとおりである．",
-        outputSentences);
+        outputSentences, 0);
     assertEquals(2, outputSentences.size());
     assertEquals("それは異なる．", outputSentences.get(0).content);
     assertEquals("たとえば，\n以下のとおりである．", outputSentences.get(1).content);
@@ -258,7 +258,7 @@ public class SentenceExtractorTest {
     SentenceExtractor extractor = new SentenceExtractor(stopChars, rightQuotations);
     List<Sentence> outputSentences = new ArrayList<>();
     String remain = extractor.extract("それは異なる．たとえば，",
-        outputSentences);
+        outputSentences, 0) ;
     assertEquals(1, outputSentences.size());
     assertEquals("それは異なる．", outputSentences.get(0).content);
     assertEquals("たとえば，", remain);
