@@ -113,39 +113,6 @@ public final class SentenceExtractor {
   }
 
   /**
-   * FIXME temporary implementation! need to refactor
-   * Get Sentence lists without creating the last sentence.
-   * @param line input line which can contain more than one sentences
-   * @param outputSentences List of extracted sentences
-   * @param position line number
-   * @return remaining line or last sentence
-   */
-  public String extractWithoutLastSentence(
-      String line, List<Sentence> outputSentences,
-      int position) {
-    int periodPosition =
-        endOfSentenceDetector.getSentenceEndPosition(line);
-    if (periodPosition == -1) {
-      return line;
-    } else {
-      while (true) {
-        if (periodPosition == line.length() - 1) {
-          return line;
-        }
-        Sentence sentence =
-            new Sentence(line.substring(0, periodPosition + 1), position);
-        outputSentences.add(sentence);
-        line = line.substring(periodPosition + 1, line.length());
-        periodPosition =
-            endOfSentenceDetector.getSentenceEndPosition(line);
-        if (periodPosition == -1) {
-          return line;
-        }
-      }
-    }
-  }
-
-  /**
    * Given string, return sentence end position.
    *
    * @param str    input string

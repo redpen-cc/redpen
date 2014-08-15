@@ -236,21 +236,6 @@ public class SentenceExtractorTest {
   }
 
   @Test
-  public void testExtractWithoutLastSentenceJapaneseWithPartialSplit() {
-    List<String> stopChars = new ArrayList<>();
-    stopChars.add("．");
-    stopChars.add("？");
-    List<String> rightQuotations = new ArrayList<>();
-    SentenceExtractor extractor = new SentenceExtractor(stopChars, rightQuotations);
-    List<Sentence> outputSentences = new ArrayList<>();
-    String remain = extractor.extractWithoutLastSentence("それは異なる．たとえば，\n" +
-        "以下のとおりである．",  outputSentences, 0);
-    assertEquals(1, outputSentences.size());
-    assertEquals("それは異なる．", outputSentences.get(0).content);
-    assertEquals("たとえば，\n以下のとおりである．", remain);
-  }
-
-  @Test
   public void testJapanesSentenceWithEndWithNonFullStop() {
     List<String> stopChars = new ArrayList<>();
     stopChars.add("．");
@@ -263,21 +248,6 @@ public class SentenceExtractorTest {
     assertEquals("それは異なる．", outputSentences.get(0).content);
     assertEquals("たとえば，", remain);
 
-  }
-
-  @Test
-  public void testExtractWithoutLastSentenceJapaneseSentencesEndWithNonFullStop() {
-    List<String> stopChars = new ArrayList<>();
-    stopChars.add("．");
-    stopChars.add("？");
-    List<String> rightQuotations = new ArrayList<>();
-    SentenceExtractor extractor = new SentenceExtractor(stopChars, rightQuotations);
-    List<Sentence> outputSentences = new ArrayList<>();
-    String remain = extractor.extractWithoutLastSentence("それは異なる．たとえば，\n",
-        outputSentences,0);
-    assertEquals(1, outputSentences.size());
-    assertEquals("それは異なる．", outputSentences.get(0).content);
-    assertEquals("たとえば，\n", remain);
   }
 
   @Test
