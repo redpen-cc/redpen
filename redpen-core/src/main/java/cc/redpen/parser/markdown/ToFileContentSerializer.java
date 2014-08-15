@@ -189,40 +189,48 @@ public class ToFileContentSerializer implements Visitor {
   private List<Sentence> createSentenceList() {
     List<Sentence> newSentences = new ArrayList<>();
     String remainStr = "";
-    Sentence currentSentence = null; // TODO: use StringBuilder
+    Sentence currentSentence = null;
     List<String> remainLinks = new ArrayList<>();
     int lineNum = -1;
 
     for (CandidateSentence candidateSentence : candidateSentences) {
       lineNum = candidateSentence.getLineNum();
+      // extract sentences in input line
       List<Sentence> currentSentences = new ArrayList<>();
       remainStr = sentenceExtractor.extract(
           remainStr + candidateSentence.getSentence(),
           currentSentences, lineNum);
 
       if (currentSentences.size() > 0) {
-        currentSentence = currentSentences.get(currentSentences.size()-1);
-        for (String remainLink : remainLinks) {
-          currentSentence.links.add(remainLink);
-        }
+        currentSentence = addExtractedSentences(newSentences,
+            remainLinks, currentSentences);
         remainLinks = new ArrayList<>();
       }
-      newSentences.addAll(currentSentences);
 
       if (candidateSentence.getLink() == null) {continue;}
-
       if (currentSentence != null) {
         currentSentence.links.add(candidateSentence.getLink());
       } else {
         remainLinks.add(candidateSentence.getLink());
       }
     }
-
+    // for remaining
     if (remainStr.length() > 0) {
       newSentences.add(new Sentence(remainStr, lineNum));
     }
     candidateSentences.clear();
     return newSentences;
+  }
+
+  private Sentence addExtractedSentences(List<Sentence> newSentences,
+      List<String> remainLinks, List<Sentence> currentSentences) {
+    Sentence currentSentence;
+    newSentences.addAll(currentSentences);
+    currentSentence = currentSentences.get(currentSentences.size()-1);
+    for (String remainLink : remainLinks) {
+      currentSentence.links.add(remainLink);
+    }
+    return currentSentence;
   }
 
   //FIXME wikiparser have same method. pull up or expand to utils
