@@ -17,9 +17,9 @@
  */
 package cc.redpen.symbol;
 
+import cc.redpen.config.Symbol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import cc.redpen.config.Character;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -35,7 +35,7 @@ public abstract class AbstractSymbols implements Iterable<String> {
    * @param name name of symbol
    * @return specified character
    */
-  public Character get(String name) {
+  public Symbol get(String name) {
     if (!symbolTable.containsKey(name)) {
       LOG.info(name + " is not defined in DefaultSymbols.");
       return null;
@@ -48,7 +48,7 @@ public abstract class AbstractSymbols implements Iterable<String> {
    *
    * @return all names of characters
    */
-  public Iterator<String> getAllCharacterNames() {
+  public Iterator<String> getAllSymbolNames() {
     return symbolTable.keySet().iterator();
   }
 
@@ -57,11 +57,11 @@ public abstract class AbstractSymbols implements Iterable<String> {
     return symbolTable.keySet().iterator();
   }
 
-  protected Map<String, Character> getSymbolTable() {
+  protected Map<String, Symbol> getSymbolTable() {
     return symbolTable;
   }
 
-  private final Map<String, Character> symbolTable
+  private final Map<String, Symbol> symbolTable
       = new HashMap<>();
 
   private static final Logger LOG = LoggerFactory.getLogger(AbstractSymbols.class);

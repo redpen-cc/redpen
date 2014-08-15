@@ -63,7 +63,7 @@ public class DocumentValidator implements Validator<Document> {
         .getValidatorConfigs()) {
 
       Validator<?> validator = ValidatorFactory.getInstance(
-          config, configuration.getCharacterTable());
+          config, configuration.getSymbolTable());
       Type type = ClassUtils.getParameterizedClass(validator);
 
       if (type == Sentence.class) {

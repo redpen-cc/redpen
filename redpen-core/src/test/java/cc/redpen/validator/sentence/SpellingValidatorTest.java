@@ -8,7 +8,6 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.distributor.FakeResultDistributor;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.model.Sentence;
-import cc.redpen.validator.sentence.SpellingValidator;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ public class SpellingValidatorTest {
   public void testLoadDefaultDictionary() throws DocumentValidatorException {
     Configuration config = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("Spelling"))
-        .setCharacterTable("en").build();
+        .setSymbolTable("en").build();
 
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
@@ -58,7 +57,7 @@ public class SpellingValidatorTest {
   public void testUpperCase() throws DocumentValidatorException {
     Configuration config = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("Spelling"))
-        .setCharacterTable("en").build();
+        .setSymbolTable("en").build();
 
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
@@ -83,7 +82,7 @@ public class SpellingValidatorTest {
   public void testSkipCharacterCase() throws DocumentValidatorException {
     Configuration config = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("Spelling"))
-        .setCharacterTable("en").build();
+        .setSymbolTable("en").build();
 
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
@@ -107,7 +106,7 @@ public class SpellingValidatorTest {
   public void testEndPeriod() throws DocumentValidatorException {
     Configuration config = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("Spelling"))
-        .setCharacterTable("en").build();
+        .setSymbolTable("en").build();
 
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
@@ -131,7 +130,7 @@ public class SpellingValidatorTest {
   public void testVoid() throws DocumentValidatorException {
     Configuration config = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("Spelling"))
-        .setCharacterTable("en").build();
+        .setSymbolTable("en").build();
 
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")

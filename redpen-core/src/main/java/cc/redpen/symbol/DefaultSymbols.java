@@ -17,7 +17,7 @@
  */
 package cc.redpen.symbol;
 
-import cc.redpen.config.Character;
+import cc.redpen.config.Symbol;
 
 import java.util.Map;
 
@@ -34,94 +34,94 @@ public final class DefaultSymbols extends AbstractSymbols {
     /******************************************************************
      * Common symbols
      ******************************************************************/
-    Map<String, Character> symbols = getSymbolTable();
+    Map<String, Symbol> symbols = getSymbolTable();
 
-    symbols.put("SPACE", new Character("SPACE", " ", "", false, false));
+    symbols.put("SPACE", new Symbol("SPACE", " ", "", false, false));
     symbols.put("EXCLAMATION_MARK",
-        new Character("EXCLAMATION_MARK", "!", "", false, false));
+        new Symbol("EXCLAMATION_MARK", "!", "", false, false));
     symbols.put("NUMBER_SIGN",
-        new Character("NUMBER_SIGN", "#", "", false, false));
+        new Symbol("NUMBER_SIGN", "#", "", false, false));
     symbols.put("DOLLAR_SIGN",
-        new Character("DOLLAR_SIGN", "$", "", false, false));
+        new Symbol("DOLLAR_SIGN", "$", "", false, false));
     symbols.put("PERCENT_SIGN",
-        new Character("PERCENT_SIGN", "%", "", false, false));
+        new Symbol("PERCENT_SIGN", "%", "", false, false));
     symbols.put("QUESTION_MARK",
-        new Character("QUESTION_MARK", "?", "", false, false));
+        new Symbol("QUESTION_MARK", "?", "", false, false));
     symbols.put("AMPERSAND",
-        new Character("AMPERSAND", "&", "", false, false));
+        new Symbol("AMPERSAND", "&", "", false, false));
     symbols.put("LEFT_PARENTHESIS",
-        new Character("LEFT_PARENTHESIS", "(", "", false, false));
+        new Symbol("LEFT_PARENTHESIS", "(", "", false, false));
     symbols.put("RIGHT_PARENTHESIS",
-        new Character("RIGHT_PARENTHESIS", ")", "", false, false));
+        new Symbol("RIGHT_PARENTHESIS", ")", "", false, false));
     symbols.put("ASTERISK",
-        new Character("ASTERISK", ",", "", false, false));
-    symbols.put("COMMA", new Character("COMMA", ",", "", false, false));
+        new Symbol("ASTERISK", ",", "", false, false));
+    symbols.put("COMMA", new Symbol("COMMA", ",", "", false, false));
     symbols.put("COMMENT",
-        new Character("COMMENT", "#", "", false, false));
+        new Symbol("COMMENT", "#", "", false, false));
     symbols.put("FULL_STOP",
-        new Character("FULL_STOP", ".", "", false, false));
+        new Symbol("FULL_STOP", ".", "", false, false));
     symbols.put("PLUS_SIGN",
-        new Character("PLUS_SIGN", "+", "", false, false));
+        new Symbol("PLUS_SIGN", "+", "", false, false));
     symbols.put("HYPHEN_SIGN",
-        new Character("HYPHEN_SIGN", "-", "", false, false));
+        new Symbol("HYPHEN_SIGN", "-", "", false, false));
     symbols.put("MINUS_SIGN",
-        new Character("MINUS_SIGN", "-", "", false, false));
-    symbols.put("SLASH", new Character("SLASH", "/", "", false, false));
-    symbols.put("COLON", new Character("COLON", ":", "", false, false));
+        new Symbol("MINUS_SIGN", "-", "", false, false));
+    symbols.put("SLASH", new Symbol("SLASH", "/", "", false, false));
+    symbols.put("COLON", new Symbol("COLON", ":", "", false, false));
     symbols.put("SEMICOLON",
-        new Character("SEMICOLON", ";", "", false, false));
+        new Symbol("SEMICOLON", ";", "", false, false));
     symbols.put("LESS_THAN_SIGN",
-        new Character("LESS_THAN_SIGN", "<", "", false, false));
+        new Symbol("LESS_THAN_SIGN", "<", "", false, false));
     symbols.put("EQUAL_SIGN",
-        new Character("EQUAL_SIGN", "=", "", false, false));
+        new Symbol("EQUAL_SIGN", "=", "", false, false));
     symbols.put("GREATER_THAN_SIGN",
-        new Character("GREATER_THAN_SIGN", ">", "", false, false));
+        new Symbol("GREATER_THAN_SIGN", ">", "", false, false));
     symbols.put("AT_MARK",
-        new Character("AT_MARK", "@", "", false, false));
+        new Symbol("AT_MARK", "@", "", false, false));
     symbols.put("LEFT_SQUARE_BRACKET",
-        new Character("LEFT_SQUARE_BRACKET", "[", "", false, false));
+        new Symbol("LEFT_SQUARE_BRACKET", "[", "", false, false));
     symbols.put("RIGHT_SQUARE_BRACKET",
-        new Character("RIGHT_SQUARE_BRACKET", "]", "", false, false));
+        new Symbol("RIGHT_SQUARE_BRACKET", "]", "", false, false));
     symbols.put("BACKSLASH",
-        new Character("BACKSLASH", "\\", "", false, false));
+        new Symbol("BACKSLASH", "\\", "", false, false));
     symbols.put("CIRCUMFLEX_ACCENT",
-        new Character("CIRCUMFLEX_ACCENT", "^", "", false, false));
+        new Symbol("CIRCUMFLEX_ACCENT", "^", "", false, false));
     symbols.put("LOW_LINE",
-        new Character("LOW_LINE", "_", "", false, false));
+        new Symbol("LOW_LINE", "_", "", false, false));
     symbols.put("LEFT_CURLY_BRACKET",
-        new Character("LEFT_CURLY_BRACKET", "{", "", false, false));
+        new Symbol("LEFT_CURLY_BRACKET", "{", "", false, false));
     symbols.put("RIGHT_CURLY_BRACKET",
-        new Character("RIGHT_CURLY_BRACKET", "}", "", false, false));
+        new Symbol("RIGHT_CURLY_BRACKET", "}", "", false, false));
     symbols.put("VERTICAL_BAR",
-        new Character("VERTICAL_BAR", "|", "", false, false));
+        new Symbol("VERTICAL_BAR", "|", "", false, false));
     symbols.put("TILDE",
-        new Character("TILDE", "~", "", false, false));
+        new Symbol("TILDE", "~", "", false, false));
     symbols.put("LEFT_SINGLE_QUOTATION_MARK",
-        new Character("LEFT_SINGLE_QUOTATION_MARK", "'", "", false, false));
+        new Symbol("LEFT_SINGLE_QUOTATION_MARK", "'", "", false, false));
     symbols.put("RIGHT_SINGLE_QUOTATION_MARK",
-        new Character("LEFT_SINGLE_QUOTATION_MARK", "'", "", false, false));
+        new Symbol("LEFT_SINGLE_QUOTATION_MARK", "'", "", false, false));
     symbols.put("LEFT_DOUBLE_QUOTATION_MARK",
-        new Character("LEFT_SINGLE_QUOTATION_MARK", "\"", "", false, false));
+        new Symbol("LEFT_SINGLE_QUOTATION_MARK", "\"", "", false, false));
     symbols.put("RIGHT_DOUBLE_QUOTATION_MARK",
-        new Character("LEFT_SINGLE_QUOTATION_MARK", "\"", "", false, false));
+        new Symbol("LEFT_SINGLE_QUOTATION_MARK", "\"", "", false, false));
 
     /******************************************************************
      * Digits
      ******************************************************************/
 
-    symbols.put("DIGIT_ZERO", new Character("0", ",", "", false, false));
-    symbols.put("DIGIT_ONE", new Character("1", ",", "", false, false));
-    symbols.put("DIGIT_TWO", new Character("2", ",", "", false, false));
+    symbols.put("DIGIT_ZERO", new Symbol("0", ",", "", false, false));
+    symbols.put("DIGIT_ONE", new Symbol("1", ",", "", false, false));
+    symbols.put("DIGIT_TWO", new Symbol("2", ",", "", false, false));
     symbols.put("DIGIT_THREE",
-        new Character("3", ",", "", false, false));
-    symbols.put("DIGIT_FOUR", new Character("4", ",", "", false, false));
-    symbols.put("DIGIT_FIVE", new Character("5", ",", "", false, false));
-    symbols.put("DIGIT_SIX", new Character("6", ",", "", false, false));
+        new Symbol("3", ",", "", false, false));
+    symbols.put("DIGIT_FOUR", new Symbol("4", ",", "", false, false));
+    symbols.put("DIGIT_FIVE", new Symbol("5", ",", "", false, false));
+    symbols.put("DIGIT_SIX", new Symbol("6", ",", "", false, false));
     symbols.put("DIGIT_SEVEN",
-        new Character("7", ",", "", false, false));
+        new Symbol("7", ",", "", false, false));
     symbols.put("DIGIT_EIGHT",
-        new Character("8", ",", "", false, false));
-    symbols.put("DIGIT_NINE", new Character("9", ",", "", false, false));
+        new Symbol("8", ",", "", false, false));
+    symbols.put("DIGIT_NINE", new Symbol("9", ",", "", false, false));
 
     // not create instance
     INSTANCE = null;

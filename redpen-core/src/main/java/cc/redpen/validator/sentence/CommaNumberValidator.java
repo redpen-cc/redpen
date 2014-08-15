@@ -20,7 +20,7 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.DocumentValidatorException;
 import cc.redpen.ValidationError;
-import cc.redpen.config.CharacterTable;
+import cc.redpen.config.SymbolTable;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.Validator;
@@ -53,9 +53,9 @@ public class CommaNumberValidator implements Validator<Sentence> {
     comma = DEFAULT_COMMA;
   }
 
-  public CommaNumberValidator(ValidatorConfiguration config, CharacterTable characterTable)
+  public CommaNumberValidator(ValidatorConfiguration config, SymbolTable symbolTable)
       throws DocumentValidatorException {
-    initialize(config, characterTable);
+    initialize(config, symbolTable);
   }
 
   public List<ValidationError> validate(Sentence line) {
@@ -78,7 +78,7 @@ public class CommaNumberValidator implements Validator<Sentence> {
   }
 
   private boolean initialize(ValidatorConfiguration conf,
-                             CharacterTable characterTable)
+                             SymbolTable symbolTable)
       throws DocumentValidatorException {
     //TODO search parent configurations to get comma settings...
     this.maxCommaNum = DEFAULT_MAX_COMMA_NUMBER;
@@ -91,8 +91,8 @@ public class CommaNumberValidator implements Validator<Sentence> {
       LOG.info("Using the default value.");
     }
     this.comma = DEFAULT_COMMA;
-    if (characterTable.isContainCharacter("COMMA")) {
-      this.comma = characterTable.getCharacter("COMMA").getValue();
+    if (symbolTable.containsSymbol("COMMA")) {
+      this.comma = symbolTable.getSymbol("COMMA").getValue();
       LOG.info("comma is set to \"" + this.comma + "\"");
     } else {
       this.maxCommaNum = Integer.valueOf(conf.getAttribute("max_length"));

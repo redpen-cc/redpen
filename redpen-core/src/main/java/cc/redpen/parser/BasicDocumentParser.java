@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cc.redpen.DocumentValidatorException;
-import cc.redpen.config.CharacterTable;
+import cc.redpen.config.SymbolTable;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
 import org.slf4j.Logger;
@@ -63,31 +63,31 @@ public abstract class BasicDocumentParser implements Parser {
     if (configuration == null) {
       throw new DocumentValidatorException("Given configuration is null");
     }
-    if (configuration.getCharacterTable() == null) {
+    if (configuration.getSymbolTable() == null) {
       throw new DocumentValidatorException(
           "Character table in the given configuration is null");
     }
 
-    CharacterTable characterTable = configuration.getCharacterTable();
-    List<String> periods = extractPeriods(characterTable);
-    List<String> rightQuotations = extractRightQuotations(characterTable);
+    SymbolTable symbolTable = configuration.getSymbolTable();
+    List<String> periods = extractPeriods(symbolTable);
+    List<String> rightQuotations = extractRightQuotations(symbolTable);
 
     this.sentenceExtractor = new SentenceExtractor(periods, rightQuotations);
     this.builder = documentBuilder;
   }
 
-  private List<String> extractRightQuotations(CharacterTable characterTable) {
+  private List<String> extractRightQuotations(SymbolTable symbolTable) {
     List<String> rightQuotations = new ArrayList<>();
-    if (characterTable.isContainCharacter("RIGHT_SINGLE_QUOTATION_MARK")) {
+    if (symbolTable.containsSymbol("RIGHT_SINGLE_QUOTATION_MARK")) {
       rightQuotations.add(
-          characterTable.getCharacter("RIGHT_SINGLE_QUOTATION_MARK").getValue());
+          symbolTable.getSymbol("RIGHT_SINGLE_QUOTATION_MARK").getValue());
     } else {
       rightQuotations.add(
           DefaultSymbols.getInstance().get("RIGHT_SINGLE_QUOTATION_MARK").getValue());
     }
-    if (characterTable.isContainCharacter("RIGHT_DOUBLE_QUOTATION_MARK")) {
+    if (symbolTable.containsSymbol("RIGHT_DOUBLE_QUOTATION_MARK")) {
       rightQuotations.add(
-          characterTable.getCharacter("RIGHT_DOUBLE_QUOTATION_MARK").getValue());
+          symbolTable.getSymbol("RIGHT_DOUBLE_QUOTATION_MARK").getValue());
     } else {
       rightQuotations.add(
           DefaultSymbols.getInstance().get("RIGHT_DOUBLE_QUOTATION_MARK").getValue());
@@ -98,27 +98,27 @@ public abstract class BasicDocumentParser implements Parser {
     return rightQuotations;
   }
 
-  private List<String> extractPeriods(CharacterTable characterTable) {
+  private List<String> extractPeriods(SymbolTable symbolTable) {
     List<String> periods = new ArrayList<>();
-    if (characterTable.isContainCharacter("FULL_STOP")) {
+    if (symbolTable.containsSymbol("FULL_STOP")) {
       periods.add(
-          characterTable.getCharacter("FULL_STOP").getValue());
+          symbolTable.getSymbol("FULL_STOP").getValue());
     } else {
       periods.add(
           DefaultSymbols.getInstance().get("FULL_STOP").getValue());
     }
 
-    if (characterTable.isContainCharacter("QUESTION_MARK")) {
+    if (symbolTable.containsSymbol("QUESTION_MARK")) {
       periods.add(
-          characterTable.getCharacter("QUESTION_MARK").getValue());
+          symbolTable.getSymbol("QUESTION_MARK").getValue());
     } else {
       periods.add(
           DefaultSymbols.getInstance().get("QUESTION_MARK").getValue());
     }
 
-    if (characterTable.isContainCharacter("EXCLAMATION_MARK")) {
+    if (symbolTable.containsSymbol("EXCLAMATION_MARK")) {
       periods.add(
-          characterTable.getCharacter("EXCLAMATION_MARK").getValue());
+          symbolTable.getSymbol("EXCLAMATION_MARK").getValue());
     } else {
       periods.add(
           DefaultSymbols.getInstance().get("EXCLAMATION_MARK").getValue());

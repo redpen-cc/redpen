@@ -20,7 +20,7 @@ package cc.redpen.validator.sentence;
 import cc.redpen.DocumentValidator;
 import cc.redpen.DocumentValidatorException;
 import cc.redpen.ValidationError;
-import cc.redpen.config.Character;
+import cc.redpen.config.Symbol;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.distributor.FakeResultDistributor;
@@ -44,8 +44,8 @@ public class SymbolWithSpaceValidatorTest {
 
     Configuration conf = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
-        .setCharacterTable("en")
-        .setCharacter(new Character("SLASH", "/"))
+        .setSymbolTable("en")
+        .setSymbol(new Symbol("SLASH", "/"))
         .build();
 
     DocumentValidator validator = new DocumentValidator.Builder()
@@ -68,8 +68,8 @@ public class SymbolWithSpaceValidatorTest {
 
     Configuration conf = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
-        .setCharacterTable("en")
-        .setCharacter(new Character("COLON", ":", "", false, true))
+        .setSymbolTable("en")
+        .setSymbol(new Symbol("COLON", ":", "", false, true))
         .build();
 
     DocumentValidator validator = new DocumentValidator.Builder()
@@ -92,8 +92,8 @@ public class SymbolWithSpaceValidatorTest {
 
     Configuration conf = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
-        .setCharacterTable("en")
-        .setCharacter(new Character("LEFT_PARENTHESIS", "(", "", true, false))
+        .setSymbolTable("en")
+        .setSymbol(new Symbol("LEFT_PARENTHESIS", "(", "", true, false))
         .build();
 
     DocumentValidator validator = new DocumentValidator.Builder()
@@ -116,9 +116,9 @@ public class SymbolWithSpaceValidatorTest {
 
     Configuration conf = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
-        .setCharacterTable("en")
-        .setCharacter(new Character("LEFT_PARENTHESIS", "(", "", true, false))
-        .setCharacter(new Character("RIGHT_PARENTHESIS", ")", "", false, true))
+        .setSymbolTable("en")
+        .setSymbol(new Symbol("LEFT_PARENTHESIS", "(", "", true, false))
+        .setSymbol(new Symbol("RIGHT_PARENTHESIS", ")", "", false, true))
         .build();
 
     DocumentValidator validator = new DocumentValidator.Builder()
@@ -141,8 +141,8 @@ public class SymbolWithSpaceValidatorTest {
 
     Configuration conf = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
-        .setCharacterTable("en")
-        .setCharacter(new Character("ASTARISK", "*", "", true, true))
+        .setSymbolTable("en")
+        .setSymbol(new Symbol("ASTARISK", "*", "", true, true))
         .build();
 
     DocumentValidator validator = new DocumentValidator.Builder()

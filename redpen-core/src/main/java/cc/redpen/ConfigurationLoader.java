@@ -26,10 +26,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import cc.redpen.config.Symbol;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import cc.redpen.config.Character;
 import cc.redpen.config.Configuration;
 import cc.redpen.util.SAXErrorHandler;
 import cc.redpen.config.ValidatorConfiguration;
@@ -94,13 +94,13 @@ public class ConfigurationLoader {
     }
     extractValidatorConfigurations(validatorElementList);
 
-    // extract character configurations
-    NodeList characterTableConfigElementList =
-        getSpecifiedNodeList(rootElement, "character-table");
-    if (characterTableConfigElementList == null) {
-      configBuilder.setCharacterTable("en");
+    // extract symbol configurations
+    NodeList symbolTableConfigElementList =
+        getSpecifiedNodeList(rootElement, "symbol-table");
+    if (symbolTableConfigElementList == null) {
+      configBuilder.setSymbolTable("en");
     } else {
-      extractCharacterConfig(characterTableConfigElementList);
+      extractSymbolConfig(symbolTableConfigElementList);
     }
     return configBuilder.build();
   }
@@ -139,34 +139,34 @@ public class ConfigurationLoader {
     }
   }
 
-  private void extractCharacterConfig(NodeList characterTableConfigElementList) {
+  private void extractSymbolConfig(NodeList symbolTableConfigElementList) {
     String language
-        = characterTableConfigElementList.item(0).
+        = symbolTableConfigElementList.item(0).
         getAttributes().getNamedItem("lang").getNodeValue();
-    configBuilder.setCharacterTable(language);
+    configBuilder.setSymbolTable(language);
 
-    NodeList characterTableElementList =
+    NodeList symbolTableElementList =
         getSpecifiedNodeList((Element)
-            characterTableConfigElementList.item(0), "character");
-    if (characterTableElementList == null) {
+            symbolTableConfigElementList.item(0), "symbol");
+    if (symbolTableElementList == null) {
       LOG.warn("there is no character block");
       return;
     }
-    for (int temp = 0; temp < characterTableElementList.getLength(); temp++) {
-      Node nNode = characterTableElementList.item(temp);
+    for (int temp = 0; temp < symbolTableElementList.getLength(); temp++) {
+      Node nNode = symbolTableElementList.item(temp);
       if (nNode.getNodeType() == Node.ELEMENT_NODE) {
         Element element = (Element) nNode;
-        Character currentChar = createCharacter(element);
-        configBuilder.setCharacter(currentChar);
+        Symbol currentSymbol = createSymbol(element);
+        configBuilder.setSymbol(currentSymbol);
       }
     }
   }
 
-  private static Character createCharacter(Element element) {
+  private static Symbol createSymbol(Element element) {
     if (!element.hasAttribute("name") || !element.hasAttribute("value")) {
       throw new IllegalStateException("Found element does not have name and value attribute...");
     }
-    return new Character(
+    return new Symbol(
         element.getAttribute("name"),
         element.getAttribute("value"),
         element.getAttribute("invalid-chars"),

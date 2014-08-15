@@ -17,7 +17,6 @@
  */
 package cc.redpen;
 
-import cc.redpen.DocumentValidatorException;
 import org.apache.commons.io.IOUtils;
 import cc.redpen.parser.DocumentParserFactory;
 import cc.redpen.parser.Parser;
@@ -44,7 +43,7 @@ public class SampleDocumentGenerator {
   public static DocumentCollection generateOneFileDocument(String docString,
       Parser.Type type) throws DocumentValidatorException {
     Configuration configuration = new Configuration.Builder()
-        .setCharacterTable("en").build();
+        .setSymbolTable("en").build();
     DocumentCollection.Builder builder = new DocumentCollection.Builder();
     Parser parser = DocumentParserFactory.generate(type, configuration, builder);
     InputStream stream = IOUtils.toInputStream(docString);

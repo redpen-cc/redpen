@@ -140,7 +140,7 @@ public class EndOfSentenceDetectorTest {
   }
 
   @Test
-  public void testEndPositionContainingMultipleCharacters() {
+  public void testEndPositionContainingMultipleSymbold() {
     Pattern pattern = Pattern.compile("\\?|\\.");
     String str = "is this a pen? yes it is.";
     EndOfSentenceDetector detector = new EndOfSentenceDetector(pattern);
@@ -148,7 +148,7 @@ public class EndOfSentenceDetectorTest {
   }
 
   @Test
-  public void testEndPositionContainingMultipleNonAsciiCharacters() {
+  public void testEndPositionContainingMultipleNonAsciiSymbols() {
     Pattern pattern = Pattern.compile("。|？");
     String str = "これは群馬ですか？いいえ埼玉です。";
     EndOfSentenceDetector detector = new EndOfSentenceDetector(pattern);

@@ -17,10 +17,10 @@
  */
 package cc.redpen.parser;
 
+import cc.redpen.config.Symbol;
 import org.junit.Before;
 import org.junit.Test;
 import cc.redpen.model.*;
-import cc.redpen.config.Character;
 import cc.redpen.config.Configuration;
 import cc.redpen.DocumentValidatorException;
 
@@ -431,7 +431,7 @@ public class MarkdownParserTest {
     String sampleText = "埼玉は東京の北に存在する。";
     sampleText += "大きなベッドタウンであり、多くの人が住んでいる。";
     Configuration conf = new Configuration.Builder()
-        .setCharacterTable("ja").build();
+        .setSymbolTable("ja").build();
 
     Document doc = createFileContent(sampleText, conf);
     Section firstSections = doc.getSection(0);
@@ -444,9 +444,9 @@ public class MarkdownParserTest {
     String sampleText = "それは異なる．たとえば，\\n" +
         "以下のとおりである．";
     Configuration conf = new Configuration.Builder()
-        .setCharacterTable("ja")
-        .setCharacter(new Character("FULL_STOP", "．", "."))
-        .setCharacter(new Character("COMMA", "，", "、"))
+        .setSymbolTable("ja")
+        .setSymbol(new Symbol("FULL_STOP", "．", "."))
+        .setSymbol(new Symbol("COMMA", "，", "、"))
         .build();
 
     Document doc = createFileContent(sampleText, conf);

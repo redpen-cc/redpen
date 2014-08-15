@@ -1,7 +1,7 @@
 package cc.redpen.validator;
 
 import cc.redpen.DocumentValidatorException;
-import cc.redpen.config.CharacterTable;
+import cc.redpen.config.SymbolTable;
 import cc.redpen.config.ValidatorConfiguration;
 
 import java.lang.reflect.Constructor;
@@ -27,7 +27,7 @@ public class ValidatorFactory {
   }
 
   public static Validator<?> getInstance(ValidatorConfiguration config,
-                                         CharacterTable characterTable)
+                                         SymbolTable symbolTable)
       throws DocumentValidatorException {
     try {
       for (String validatorPackage : VALIDATOR_PACKAGES) {
@@ -46,8 +46,8 @@ public class ValidatorFactory {
             throw new RuntimeException(validatorClassName + " doesn't implement cc.redpen.validator.Validator");
           }
 
-          Constructor<?> constructor = clazz.getConstructor(ValidatorConfiguration.class, CharacterTable.class);
-          return (Validator<?>) constructor.newInstance(config, characterTable);
+          Constructor<?> constructor = clazz.getConstructor(ValidatorConfiguration.class, SymbolTable.class);
+          return (Validator<?>) constructor.newInstance(config, symbolTable);
         } catch (ClassNotFoundException ignore) {
         }
       }

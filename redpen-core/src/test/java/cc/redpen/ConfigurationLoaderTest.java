@@ -17,7 +17,7 @@
  */
 package cc.redpen;
 
-import cc.redpen.config.Character;
+import cc.redpen.config.Symbol;
 import cc.redpen.config.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
@@ -37,9 +37,9 @@ public class ConfigurationLoaderTest {
             "</validator>" +
             "<validator name=\"MaxParagraphNumber\" />" +
             "</validator-list>" +
-            "<character-table lang=\"en\">" +
-            "<character name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\" after-space=\"true\" />" +
-            "</character-table>" +
+            "<symbol-table lang=\"en\">" +
+            "<symbol name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\" after-space=\"true\" />" +
+            "</symbol-table>" +
             "</redpen-conf>";
 
     ConfigurationLoader configurationLoader = new ConfigurationLoader();
@@ -55,17 +55,17 @@ public class ConfigurationLoaderTest {
         configuration.getValidatorConfigs().get(0).getAttribute("max_length"));
     assertEquals("MaxParagraphNumber",
         configuration.getValidatorConfigs().get(1).getConfigurationName());
-    assertNotNull(configuration.getCharacterTable());
-    assertEquals("!", configuration.getCharacterTable()
-        .getCharacter("EXCLAMATION_MARK").getValue());
-    assertEquals(1, configuration.getCharacterTable()
-        .getCharacter("EXCLAMATION_MARK").getInvalidChars().size());
-    assertEquals("！", configuration.getCharacterTable()
-        .getCharacter("EXCLAMATION_MARK").getInvalidChars().get(0));
+    assertNotNull(configuration.getSymbolTable());
+    assertEquals("!", configuration.getSymbolTable()
+        .getSymbol("EXCLAMATION_MARK").getValue());
+    assertEquals(1, configuration.getSymbolTable()
+        .getSymbol("EXCLAMATION_MARK").getInvalidSymbols().size());
+    assertEquals("！", configuration.getSymbolTable()
+        .getSymbol("EXCLAMATION_MARK").getInvalidSymbols().get(0));
   }
 
   @Test
-  public void testNewLoadConfigurationWithoutCharacterTableConfig() {
+  public void testNewLoadConfigurationWithoutSymbolTableConfig() {
     String sampleConfigString =
         "<redpen-conf>" +
             "<validator-list>" +
@@ -87,13 +87,13 @@ public class ConfigurationLoaderTest {
         configuration.getValidatorConfigs().get(0).getConfigurationName());
     assertEquals("MaxParagraphNumber",
         configuration.getValidatorConfigs().get(1).getConfigurationName());
-    assertNotNull(configuration.getCharacterTable());
-    assertEquals("!", configuration.getCharacterTable()
-        .getCharacter("EXCLAMATION_MARK").getValue());
+    assertNotNull(configuration.getSymbolTable());
+    assertEquals("!", configuration.getSymbolTable()
+        .getSymbol("EXCLAMATION_MARK").getValue());
   }
 
   @Test
-  public void testNewLoadConfigurationWithoutCharacterTableConfigContent() {
+  public void testNewLoadConfigurationWithoutSymbolTableConfigContent() {
     String sampleConfigString =
         "<redpen-conf>" +
             "<validator-list>" +
@@ -102,8 +102,8 @@ public class ConfigurationLoaderTest {
             "</validator>" +
             "<validator name=\"MaxParagraphNumber\" />" +
             "</validator-list>" +
-            "<character-table lang=\"en\">" +
-            "</character-table>" +
+            "<symbol-table lang=\"en\">" +
+            "</symbol-table>" +
             "</redpen-conf>";
 
     ConfigurationLoader configurationLoader = new ConfigurationLoader();
@@ -117,18 +117,18 @@ public class ConfigurationLoaderTest {
         configuration.getValidatorConfigs().get(0).getConfigurationName());
     assertEquals("MaxParagraphNumber",
         configuration.getValidatorConfigs().get(1).getConfigurationName());
-    assertNotNull(configuration.getCharacterTable());
-    assertEquals("!", configuration.getCharacterTable()
-        .getCharacter("EXCLAMATION_MARK").getValue());
+    assertNotNull(configuration.getSymbolTable());
+    assertEquals("!", configuration.getSymbolTable()
+        .getSymbol("EXCLAMATION_MARK").getValue());
   }
 
   @Test
   public void testNewLoadConfigurationWithoutValidatorConfig() {
     String sampleConfigString =
         "<redpen-conf>" +
-            "<character-table lang=\"en\">" +
-            "<character name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\" after-space=\"true\" />" +
-            "</character-table>" +
+            "<symbol-table lang=\"en\">" +
+            "<symbol name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\" after-space=\"true\" />" +
+            "</symbol-table>" +
             "</redpen-conf>";
 
     ConfigurationLoader configurationLoader = new ConfigurationLoader();
@@ -144,9 +144,9 @@ public class ConfigurationLoaderTest {
         "<redpen-conf>" +
             "<validator-list>" +
             "</validator-list>" +
-            "<character-table lang=\"en\">" +
-            "<character name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\" after-space=\"true\" />" +
-            "</character-table>" +
+            "<symbol-table lang=\"en\">" +
+            "<symbol name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\" after-space=\"true\" />" +
+            "</symbol-table>" +
             "</redpen-conf>";
 
     ConfigurationLoader configurationLoader = new ConfigurationLoader();
@@ -177,9 +177,9 @@ public class ConfigurationLoaderTest {
             "</validator>" +
             "<validator name=\"MaxParagraphNumber\" />" +
             "</validator-list>" +
-            "<character-table lang=\"en\">" +
-            "<character name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\" after-space=\"true\" />" +
-            "</character-table>" +
+            "<symbol-table lang=\"en\">" +
+            "<symbol name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\" after-space=\"true\" />" +
+            "</symbol-table>" +
             "<redpen-conf>";  // NOTE: Invalid xml since slash should be exist.
 
     ConfigurationLoader configurationLoader = new ConfigurationLoader();
@@ -198,9 +198,9 @@ public class ConfigurationLoaderTest {
             "<validator name=\"SentenceLength\" />" +
             "<validator name=\"MaxParagraphNumber\" />" +
             "</validator-list>" +
-            "<character-table lang=\"en\">" +
-            "<character name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\" after-space=\"true\" />" +
-            "</character-table>" +
+            "<symbol-table lang=\"en\">" +
+            "<symbol name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\" after-space=\"true\" />" +
+            "</symbol-table>" +
             "</redpen-conf>";
 
     ConfigurationLoader configurationLoader = new ConfigurationLoader();
@@ -210,16 +210,16 @@ public class ConfigurationLoaderTest {
 
     assertNotNull(configuration);
 
-    assertEquals("!", configuration.getCharacterTable()
-        .getCharacter("EXCLAMATION_MARK").getValue());
-    assertEquals(1, configuration.getCharacterTable()
-        .getCharacter("EXCLAMATION_MARK").getInvalidChars().size());
-    assertEquals("！", configuration.getCharacterTable()
-        .getCharacter("EXCLAMATION_MARK").getInvalidChars().get(0));
-    assertEquals(false, configuration.getCharacterTable()
-        .getCharacter("EXCLAMATION_MARK").isNeedBeforeSpace());
-    assertEquals(true, configuration.getCharacterTable()
-        .getCharacter("EXCLAMATION_MARK").isNeedAfterSpace());
+    assertEquals("!", configuration.getSymbolTable()
+        .getSymbol("EXCLAMATION_MARK").getValue());
+    assertEquals(1, configuration.getSymbolTable()
+        .getSymbol("EXCLAMATION_MARK").getInvalidSymbols().size());
+    assertEquals("！", configuration.getSymbolTable()
+        .getSymbol("EXCLAMATION_MARK").getInvalidSymbols().get(0));
+    assertEquals(false, configuration.getSymbolTable()
+        .getSymbol("EXCLAMATION_MARK").isNeedBeforeSpace());
+    assertEquals(true, configuration.getSymbolTable()
+        .getSymbol("EXCLAMATION_MARK").isNeedAfterSpace());
   }
 
   @Test
@@ -230,9 +230,9 @@ public class ConfigurationLoaderTest {
             "<validator name=\"SentenceLength\" />" +
             "<validator name=\"MaxParagraphNumber\" />" +
             "</validator-list>" +
-            "<character-table lang=\"en\">" +
-            "<character name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\" />" +
-            "</character-table>" +
+            "<symbol-table lang=\"en\">" +
+            "<symbol name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\" />" +
+            "</symbol-table>" +
             "</redpen-conf>";
 
     ConfigurationLoader configurationLoader = new ConfigurationLoader();
@@ -242,16 +242,16 @@ public class ConfigurationLoaderTest {
 
     assertNotNull(configuration);
 
-    assertEquals("!", configuration.getCharacterTable()
-        .getCharacter("EXCLAMATION_MARK").getValue());
-    assertEquals(1, configuration.getCharacterTable()
-        .getCharacter("EXCLAMATION_MARK").getInvalidChars().size());
-    assertEquals("！", configuration.getCharacterTable()
-        .getCharacter("EXCLAMATION_MARK").getInvalidChars().get(0));
-    assertEquals(false, configuration.getCharacterTable()
-        .getCharacter("EXCLAMATION_MARK").isNeedBeforeSpace());
-    assertEquals(false, configuration.getCharacterTable()
-        .getCharacter("EXCLAMATION_MARK").isNeedAfterSpace());
+    assertEquals("!", configuration.getSymbolTable()
+        .getSymbol("EXCLAMATION_MARK").getValue());
+    assertEquals(1, configuration.getSymbolTable()
+        .getSymbol("EXCLAMATION_MARK").getInvalidSymbols().size());
+    assertEquals("！", configuration.getSymbolTable()
+        .getSymbol("EXCLAMATION_MARK").getInvalidSymbols().get(0));
+    assertEquals(false, configuration.getSymbolTable()
+        .getSymbol("EXCLAMATION_MARK").isNeedBeforeSpace());
+    assertEquals(false, configuration.getSymbolTable()
+        .getSymbol("EXCLAMATION_MARK").isNeedAfterSpace());
   }
 
 
@@ -263,9 +263,9 @@ public class ConfigurationLoaderTest {
             "<validator name=\"SentenceLength\" />" +
             "<validator name=\"MaxParagraphNumber\" />" +
             "</validator-list>" +
-            "<character-table lang=\"en\">" +
-            "<character name=\"LEFT_QUOTATION_MARK\" value=\"\'\" invalid-chars=\"‘’\"/>" +
-            "</character-table>" +
+            "<symbol-table lang=\"en\">" +
+            "<symbol name=\"LEFT_QUOTATION_MARK\" value=\"\'\" invalid-chars=\"‘’\"/>" +
+            "</symbol-table>" +
             "</redpen-conf>";
 
     ConfigurationLoader configurationLoader = new ConfigurationLoader();
@@ -275,25 +275,25 @@ public class ConfigurationLoaderTest {
 
     assertNotNull(configuration);
 
-    assertEquals("\'", configuration.getCharacterTable()
-        .getCharacter("LEFT_QUOTATION_MARK").getValue());
-    assertEquals(2, configuration.getCharacterTable()
-        .getCharacter("LEFT_QUOTATION_MARK").getInvalidChars().size());
-    assertEquals("‘", configuration.getCharacterTable().getCharacter("LEFT_QUOTATION_MARK").getInvalidChars().get(0));
-    assertEquals("’", configuration.getCharacterTable().getCharacter("LEFT_QUOTATION_MARK").getInvalidChars().get(1));
+    assertEquals("\'", configuration.getSymbolTable()
+        .getSymbol("LEFT_QUOTATION_MARK").getValue());
+    assertEquals(2, configuration.getSymbolTable()
+        .getSymbol("LEFT_QUOTATION_MARK").getInvalidSymbols().size());
+    assertEquals("‘", configuration.getSymbolTable().getSymbol("LEFT_QUOTATION_MARK").getInvalidSymbols().get(0));
+    assertEquals("’", configuration.getSymbolTable().getSymbol("LEFT_QUOTATION_MARK").getInvalidSymbols().get(1));
   }
 
   @Test
-  public void testCharacterConfigurationWithoutInvalid() {
+  public void testSymbolConfigurationWithoutInvalid() {
     String sampleConfigString =
         "<redpen-conf>" +
             "<validator-list>" +
             "<validator name=\"SentenceLength\" />" +
             "<validator name=\"MaxParagraphNumber\" />" +
             "</validator-list>" +
-            "<character-table lang=\"en\">" +
-            "<character name=\"EXCLAMATION_MARK\" value=\"!\" />" +
-            "</character-table>" +
+            "<symbol-table lang=\"en\">" +
+            "<symbol name=\"EXCLAMATION_MARK\" value=\"!\" />" +
+            "</symbol-table>" +
             "</redpen-conf>";
 
     ConfigurationLoader configurationLoader = new ConfigurationLoader();
@@ -303,27 +303,27 @@ public class ConfigurationLoaderTest {
 
     assertNotNull(configuration);
 
-    assertEquals("!", configuration.getCharacterTable()
-        .getCharacter("EXCLAMATION_MARK").getValue());
-    assertEquals(0, configuration.getCharacterTable()
-        .getCharacter("EXCLAMATION_MARK").getInvalidChars().size());
-    assertEquals(false, configuration.getCharacterTable()
-        .getCharacter("EXCLAMATION_MARK").isNeedBeforeSpace());
-    assertEquals(false, configuration.getCharacterTable()
-        .getCharacter("EXCLAMATION_MARK").isNeedAfterSpace());
+    assertEquals("!", configuration.getSymbolTable()
+        .getSymbol("EXCLAMATION_MARK").getValue());
+    assertEquals(0, configuration.getSymbolTable()
+        .getSymbol("EXCLAMATION_MARK").getInvalidSymbols().size());
+    assertEquals(false, configuration.getSymbolTable()
+        .getSymbol("EXCLAMATION_MARK").isNeedBeforeSpace());
+    assertEquals(false, configuration.getSymbolTable()
+        .getSymbol("EXCLAMATION_MARK").isNeedAfterSpace());
   }
 
   @Test
-  public void testAccessNotRegisteredCharacter() {
+  public void testAccessNotRegisteredSymbol() {
     String sampleConfigString =
         "<redpen-conf>" +
             "<validator-list>" +
             "<validator name=\"SentenceLength\" />" +
             "<validator name=\"MaxParagraphNumber\" />" +
             "</validator-list>" +
-            "<character-table lang=\"en\">" +
-            "<character name=\"EXCLAMATION_MARK\" value=\"!\" />" +
-            "</character-table>" +
+            "<symbol-table lang=\"en\">" +
+            "<symbol name=\"EXCLAMATION_MARK\" value=\"!\" />" +
+            "</symbol-table>" +
             "</redpen-conf>";
 
     ConfigurationLoader configurationLoader = new ConfigurationLoader();
@@ -333,7 +333,7 @@ public class ConfigurationLoaderTest {
 
     assertNotNull(configuration);
     // NOTE: HADOOP_CHARACTER does not exist even in default settings
-    Character ch = configuration.getCharacterTable().getCharacter("HADOOP_CHARACTER");
+    Symbol ch = configuration.getSymbolTable().getSymbol("HADOOP_CHARACTER");
     assertNull(ch);
   }
 
@@ -346,9 +346,9 @@ public class ConfigurationLoaderTest {
             "<validator name=\"SentenceLength\" />" +
             "<validator name=\"MaxParagraphNumber\" />" +
             "</validator-list>" +
-            "<character-table lang=\"en\">" +
+            "<symbol-table lang=\"en\">" +
             "<charcc name=\"EXCLAMATION_MARK\" value=\"!\" />" +
-            "</character-table>" +
+            "</symbol-table>" +
             "</redpen-conf>";
 
     ConfigurationLoader configurationLoader = new ConfigurationLoader();
@@ -356,20 +356,20 @@ public class ConfigurationLoaderTest {
     Configuration configuration = configurationLoader.loadConfiguration(stream);
     IOUtils.closeQuietly(stream);
     assertNotNull(configuration); //FIXME: should be null or throw a exception. This will be fixed with issue #133.
-    assertNotNull(configuration.getCharacterTable());
+    assertNotNull(configuration.getSymbolTable());
   }
 
   @Test(expected = IllegalStateException.class)
-  public void testCharacterConfigurationWithoutName() {
+  public void testSymbolConfigurationWithoutName() {
     String sampleConfigString =
         "<redpen-conf>" +
             "<validator-list>" +
             "<validator name=\"SentenceLength\" />" +
             "<validator name=\"MaxParagraphNumber\" />" +
             "</validator-list>" +
-            "<character-table lang=\"en\">" +
-            "<character value=\"!\" invalid-chars=\"！\"/>" + //NOTE: NO NAME!
-            "</character-table>" +
+            "<symbol-table lang=\"en\">" +
+            "<symbol value=\"!\" invalid-chars=\"！\"/>" + //NOTE: NO NAME!
+            "</symbol-table>" +
             "</redpen-conf>";
 
     ConfigurationLoader configurationLoader = new ConfigurationLoader();

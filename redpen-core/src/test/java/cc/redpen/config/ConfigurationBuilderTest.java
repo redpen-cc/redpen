@@ -12,10 +12,10 @@ public class ConfigurationBuilderTest {
     Configuration config = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
         .addValidatorConfig(new ValidatorConfiguration("SentenceLength"))
-        .setCharacterTable("en").build();
+        .setSymbolTable("en").build();
 
     assertEquals(2, config.getValidatorConfigs().size());
-    assertNotNull(config.getCharacterTable());
+    assertNotNull(config.getSymbolTable());
     assertEquals("InvalidExpression", config.getValidatorConfigs()
         .get(0).getConfigurationName());
     assertEquals("SentenceLength", config.getValidatorConfigs()
@@ -23,13 +23,13 @@ public class ConfigurationBuilderTest {
   }
 
   @Test
-  public void testBuildConfigurationWithoutCharacterTable() {
+  public void testBuildConfigurationWithoutSymbolTable() {
     Configuration config = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
         .addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
 
     assertEquals(2, config.getValidatorConfigs().size());
-    assertNotNull(config.getCharacterTable());
+    assertNotNull(config.getSymbolTable());
     assertEquals("InvalidExpression", config.getValidatorConfigs()
         .get(0).getConfigurationName());
     assertEquals("SentenceLength", config.getValidatorConfigs()
@@ -45,7 +45,7 @@ public class ConfigurationBuilderTest {
             .addAttribute("max_length", "10")).build();
 
     assertEquals(2, config.getValidatorConfigs().size());
-    assertNotNull(config.getCharacterTable());
+    assertNotNull(config.getSymbolTable());
     assertEquals("InvalidExpression", config.getValidatorConfigs()
         .get(0).getConfigurationName());
     assertEquals("./foobar.dict",
@@ -60,57 +60,57 @@ public class ConfigurationBuilderTest {
   public void testBuildConfigurationSpecifyingLanguage() {
     Configuration config = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
-        .setCharacterTable("ja")
+        .setSymbolTable("ja")
         .build();
 
-    assertNotNull(config.getCharacterTable());
-    assertNotNull(config.getCharacterTable().getCharacter("FULL_STOP"));
-    assertEquals("。", config.getCharacterTable().getCharacter("FULL_STOP").getValue());
+    assertNotNull(config.getSymbolTable());
+    assertNotNull(config.getSymbolTable().getSymbol("FULL_STOP"));
+    assertEquals("。", config.getSymbolTable().getSymbol("FULL_STOP").getValue());
   }
 
   @Test
-  public void testBuildConfigurationOverrideCharacterSetting() {
+  public void testBuildConfigurationOverrideSymbolSetting() {
     Configuration config = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
-        .setCharacterTable("ja")
-        .setCharacter("FULL_STOP", ".")
+        .setSymbolTable("ja")
+        .setSymbol("FULL_STOP", ".")
         .build();
 
-    assertNotNull(config.getCharacterTable());
-    assertNotNull(config.getCharacterTable().getCharacter("FULL_STOP"));
-    assertEquals(".", config.getCharacterTable().getCharacter("FULL_STOP").getValue());
+    assertNotNull(config.getSymbolTable());
+    assertNotNull(config.getSymbolTable().getSymbol("FULL_STOP"));
+    assertEquals(".", config.getSymbolTable().getSymbol("FULL_STOP").getValue());
   }
 
   @Test
-  public void testBuildConfigurationOverrideAddInvalidCharacterSetting() {
+  public void testBuildConfigurationOverrideAddInvalidSymbolSetting() {
     Configuration config = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
-        .setCharacterTable("ja")
+        .setSymbolTable("ja")
         .addInvalidPattern("FULL_STOP", "●")
         .build();
 
-    assertNotNull(config.getCharacterTable());
-    assertNotNull(config.getCharacterTable().getCharacter("FULL_STOP"));
-    assertEquals("。", config.getCharacterTable().getCharacter("FULL_STOP").getValue());
-    assertTrue(config.getCharacterTable()
-        .getCharacter("FULL_STOP").getInvalidChars().contains("●"));
+    assertNotNull(config.getSymbolTable());
+    assertNotNull(config.getSymbolTable().getSymbol("FULL_STOP"));
+    assertEquals("。", config.getSymbolTable().getSymbol("FULL_STOP").getValue());
+    assertTrue(config.getSymbolTable()
+        .getSymbol("FULL_STOP").getInvalidSymbols().contains("●"));
   }
 
   @Test
-  public void testBuildConfigurationAccessingCharacterByValue() {
+  public void testBuildConfigurationAccessingSymbolByValue() {
     Configuration config = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
-        .setCharacterTable("ja")
+        .setSymbolTable("ja")
         .addInvalidPattern("FULL_STOP", "●")
         .build();
 
-    assertNotNull(config.getCharacterTable());
-    assertNotNull(config.getCharacterTable().getCharacter("FULL_STOP"));
-    assertEquals("。", config.getCharacterTable().getCharacter("FULL_STOP").getValue());
-    assertTrue(config.getCharacterTable()
-        .getCharacter("FULL_STOP").getInvalidChars().contains("●"));
-    assertTrue(config.getCharacterTable().isContainCharacterByValue("。"));
-    assertTrue(config.getCharacterTable()
-        .getCharacterByValue("。").getInvalidChars().contains("●"));
+    assertNotNull(config.getSymbolTable());
+    assertNotNull(config.getSymbolTable().getSymbol("FULL_STOP"));
+    assertEquals("。", config.getSymbolTable().getSymbol("FULL_STOP").getValue());
+    assertTrue(config.getSymbolTable()
+        .getSymbol("FULL_STOP").getInvalidSymbols().contains("●"));
+    assertTrue(config.getSymbolTable().containsSymbolByValue("。"));
+    assertTrue(config.getSymbolTable()
+        .getSymbolByValue("。").getInvalidSymbols().contains("●"));
   }
 }

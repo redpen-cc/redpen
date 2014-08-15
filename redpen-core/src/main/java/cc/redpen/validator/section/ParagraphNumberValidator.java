@@ -18,7 +18,7 @@
 package cc.redpen.validator.section;
 
 import cc.redpen.ValidationError;
-import cc.redpen.config.CharacterTable;
+import cc.redpen.config.SymbolTable;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Section;
 import cc.redpen.validator.Validator;
@@ -41,7 +41,7 @@ public class ParagraphNumberValidator implements Validator<Section> {
     super();
   }
 
-  public ParagraphNumberValidator(ValidatorConfiguration conf, CharacterTable
+  public ParagraphNumberValidator(ValidatorConfiguration conf, SymbolTable
     charTable) {
     this();
     loadConfiguration(conf);
