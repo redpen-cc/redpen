@@ -25,13 +25,13 @@ import java.util.Set;
 /**
  * Configuration table of characters used in DocumentValidator.
  */
-public final class CharacterTable {
+public final class SymbolTable {
   /**
    * Constructor.
    */
-  public CharacterTable() {
+  public SymbolTable() {
     super();
-    characterDictionary = new HashMap<>();
+    symbolDictionary = new HashMap<>();
     valueDictionary = new HashMap<>();
   }
 
@@ -41,7 +41,7 @@ public final class CharacterTable {
    * @return size of registered character
    */
   public int getSizeDictionarySize() {
-    return this.characterDictionary.size();
+    return this.symbolDictionary.size();
   }
 
   /**
@@ -50,7 +50,7 @@ public final class CharacterTable {
    * @return names of characters
    */
   public Set<String> getNames() {
-    return this.characterDictionary.keySet();
+    return this.symbolDictionary.keySet();
   }
 
   /**
@@ -59,8 +59,8 @@ public final class CharacterTable {
    * @param name character name
    * @return character containing the settings
    */
-  public cc.redpen.config.Character getCharacter(String name) {
-    return this.characterDictionary.get(name);
+  public Symbol getSymbol(String name) {
+    return this.symbolDictionary.get(name);
   }
 
   /**
@@ -69,7 +69,7 @@ public final class CharacterTable {
    * @param value character name
    * @return character containing the settings
    */
-  public Character getCharacterByValue(String value) {
+  public Symbol getSymbolByValue(String value) {
     return this.valueDictionary.get(value);
   }
 
@@ -78,8 +78,8 @@ public final class CharacterTable {
    *
    * @return character dictionary
    */
-  public Map<String, cc.redpen.config.Character> getCharacterDictionary() {
-    return characterDictionary;
+  public Map<String, Symbol> getSymbolDictionary() {
+    return symbolDictionary;
   }
 
   /**
@@ -89,8 +89,8 @@ public final class CharacterTable {
    * @return character when exist, null when the specified
    * character does not exist
    */
-  public boolean isContainCharacter(String name) {
-    return this.characterDictionary.get(name) != null;
+  public boolean containsSymbol(String name) {
+    return this.symbolDictionary.get(name) != null;
   }
 
   /**
@@ -100,17 +100,17 @@ public final class CharacterTable {
    * @return character when exist, null when the specified
    * character does not exist
    */
-  public boolean isContainCharacterByValue(String value) {
+  public boolean containsSymbolByValue(String value) {
     return this.valueDictionary.get(value) != null;
   }
 
   /**
    * Replace the current character setting.
-   * @param character symbol configuration
+   * @param symbol symbol configuration
    */
-  public void override(cc.redpen.config.Character character) {
-    characterDictionary.put(character.getName(), character);
-    valueDictionary.put(character.getValue(), character);
+  public void override(Symbol symbol) {
+    symbolDictionary.put(symbol.getName(), symbol);
+    valueDictionary.put(symbol.getValue(), symbol);
   }
 
   public String getLang() {
@@ -121,9 +121,9 @@ public final class CharacterTable {
     this.lang = lang;
   }
 
-  private final Map<String, cc.redpen.config.Character> characterDictionary;
+  private final Map<String, Symbol> symbolDictionary;
 
-  private final Map<String, Character> valueDictionary;
+  private final Map<String, Symbol> valueDictionary;
 
   private String lang;
 

@@ -54,7 +54,7 @@ public class InvalidExpressionValidatorTest {
   public void testLoadDefaultDictionary() throws DocumentValidatorException {
     Configuration config = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
-        .setCharacterTable("en").build();
+        .setSymbolTable("en").build();
 
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
@@ -78,7 +78,7 @@ public class InvalidExpressionValidatorTest {
   public void testLoadJapaneseDefaultDictionary() throws DocumentValidatorException {
     Configuration config = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
-        .setCharacterTable("ja").build();
+        .setSymbolTable("ja").build();
 
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")

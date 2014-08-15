@@ -34,16 +34,16 @@ import java.util.Set;
 public class SymbolWithSpaceValidator implements Validator<Sentence> {
 
   public SymbolWithSpaceValidator(ValidatorConfiguration config,
-                                  CharacterTable characterTable) throws
+                                  SymbolTable symbolTable) throws
       DocumentValidatorException {
-    initialize(characterTable);
+    initialize(symbolTable);
   }
 
   public List<ValidationError> validate(Sentence sentence) {
     List<ValidationError> errors = new ArrayList<>();
-    Set<String> names = characterTable.getNames();
+    Set<String> names = symbolTable.getNames();
     for (String name : names) {
-      ValidationError error = validateCharacter(sentence, name);
+      ValidationError error = validateSymbol(sentence, name);
       if (error != null) {
         errors.add(error);
       }
@@ -51,44 +51,44 @@ public class SymbolWithSpaceValidator implements Validator<Sentence> {
     return errors;
   }
 
-  private boolean initialize(CharacterTable characterConf)
+  private boolean initialize(SymbolTable symbolConf)
       throws DocumentValidatorException {
-    this.characterTable = characterConf;
+    this.symbolTable = symbolConf;
     return true;
   }
 
-  protected void setCharacterTable(CharacterTable characters) {
-    this.characterTable = characters;
+  protected void setSymbolTable(SymbolTable symbols) {
+    this.symbolTable = symbols;
   }
 
-  private ValidationError validateCharacter(Sentence sentence, String name) {
+  private ValidationError validateSymbol(Sentence sentence, String name) {
     String sentenceStr = sentence.content;
-    cc.redpen.config.Character character = characterTable.getCharacter(name);
-    if (!character.isNeedAfterSpace() && !character.isNeedBeforeSpace()) {
+    Symbol symbol = symbolTable.getSymbol(name);
+    if (!symbol.isNeedAfterSpace() && !symbol.isNeedBeforeSpace()) {
         return null;
     }
 
-    String target = character.getValue();
+    String target = symbol.getValue();
     int position = sentenceStr.indexOf(target);
     if (position != -1) {
-      if (position > 0 && character.isNeedBeforeSpace()
-          && !java.lang.Character.isWhitespace(sentenceStr.charAt(position - 1))) {
+      if (position > 0 && symbol.isNeedBeforeSpace()
+          && !Character.isWhitespace(sentenceStr.charAt(position - 1))) {
         return new ValidationError(
             this.getClass(),
-            "Need white space before symbol (" +  character.getName()
+            "Need white space before symbol (" +  symbol.getName()
             + "): " + sentenceStr.charAt(position) + ".",
             sentence);
       } else if (position < sentenceStr.length() - 1
-          && character.isNeedAfterSpace()
-          && !java.lang.Character.isWhitespace(sentenceStr.charAt(position + 1))) {
+          && symbol.isNeedAfterSpace()
+          && !Character.isWhitespace(sentenceStr.charAt(position + 1))) {
         return new ValidationError(
             this.getClass(),
-            "Need white space after symbol (" + character.getName()
+            "Need white space after symbol (" + symbol.getName()
             + "): " + sentenceStr.charAt(position), sentence);
       }
     }
     return null;
   }
 
-  private CharacterTable characterTable;
+  private SymbolTable symbolTable;
 }

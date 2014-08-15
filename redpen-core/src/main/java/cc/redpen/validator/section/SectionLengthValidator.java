@@ -17,7 +17,7 @@
  */
 package cc.redpen.validator.section;
 
-import cc.redpen.config.CharacterTable;
+import cc.redpen.config.SymbolTable;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
@@ -42,7 +42,7 @@ public class SectionLengthValidator implements Validator<Section> {
   }
 
   public SectionLengthValidator(ValidatorConfiguration conf,
-      CharacterTable charTable) {
+      SymbolTable charTable) {
     this();
     loadConfiguration(conf);
   }

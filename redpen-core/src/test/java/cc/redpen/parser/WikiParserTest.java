@@ -550,7 +550,7 @@ public class WikiParserTest {
     sampleText += "大きなベッドタウンであり、多くの人が住んでいる。";
 
     Configuration config =
-        new Configuration.Builder().setCharacterTable("ja").build();
+        new Configuration.Builder().setSymbolTable("ja").build();
     Document doc = createFileContent(sampleText, config);
 
     Section firstSections = doc.getSection(0);

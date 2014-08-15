@@ -19,7 +19,7 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.DocumentValidatorException;
 import cc.redpen.ValidationError;
-import cc.redpen.config.CharacterTable;
+import cc.redpen.config.SymbolTable;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.LevenshteinDistance;
@@ -66,9 +66,9 @@ public class KatakanaSpellCheckValidator implements Validator<Sentence> {
   private HashMap<String, Integer> dic = new HashMap<>();
 
   public KatakanaSpellCheckValidator(ValidatorConfiguration config,
-                                     CharacterTable characterTable)
+                                     SymbolTable symbolTable)
       throws DocumentValidatorException {
-    initialize(config, characterTable);
+    initialize(config, symbolTable);
   }
 
   public List<ValidationError> validate(Sentence sentence) {
@@ -128,7 +128,7 @@ public class KatakanaSpellCheckValidator implements Validator<Sentence> {
   }
 
   private boolean initialize(ValidatorConfiguration conf,
-                             CharacterTable characterTable)
+                             SymbolTable symbolTable)
       throws DocumentValidatorException {
     //TODO : support the exception word list.
     //TODO : configurable SIMILARITY_RATIO.

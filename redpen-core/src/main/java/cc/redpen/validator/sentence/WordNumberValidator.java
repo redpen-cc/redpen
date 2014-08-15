@@ -19,7 +19,7 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.DocumentValidatorException;
 import cc.redpen.ValidationError;
-import cc.redpen.config.CharacterTable;
+import cc.redpen.config.SymbolTable;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.Validator;
@@ -45,7 +45,7 @@ public class WordNumberValidator implements Validator<Sentence> {
   }
 
   public WordNumberValidator(ValidatorConfiguration config,
-                             CharacterTable characterTable)
+                             SymbolTable symbolTable)
       throws DocumentValidatorException {
     initialize(config);
   }

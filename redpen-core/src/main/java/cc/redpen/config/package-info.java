@@ -1,4 +1,4 @@
 /**
- * Configuration and CharacterTable are provided.
+ * Configuration and SymbolTable are provided.
  */
 package cc.redpen.config;

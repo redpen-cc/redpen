@@ -37,7 +37,7 @@ public class InvalidWordValidatorTest {
   public void testLoadDefaultDictionary() throws DocumentValidatorException {
     Configuration config = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("InvalidWord"))
-        .setCharacterTable("en").build();
+        .setSymbolTable("en").build();
 
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
@@ -67,7 +67,7 @@ public class InvalidWordValidatorTest {
   public void testLoadNotExistDefaultDictionary() throws DocumentValidatorException {
     Configuration config = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("InvalidWord"))
-        .setCharacterTable("ja").build(); // NOTE: no dictionary for japanese or other languages whose words are not split by white space.
+        .setSymbolTable("ja").build(); // NOTE: no dictionary for japanese or other languages whose words are not split by white space.
 
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")

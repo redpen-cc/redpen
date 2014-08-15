@@ -20,7 +20,7 @@ package cc.redpen.validator.sentence;
 import cc.redpen.DocumentValidator;
 import cc.redpen.DocumentValidatorException;
 import cc.redpen.ValidationError;
-import cc.redpen.config.Character;
+import cc.redpen.config.Symbol;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.distributor.FakeResultDistributor;
@@ -32,9 +32,9 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class InvalidCharacterValidatorTest {
+public class InvalidSymbolValidatorTest {
   @Test
-  public void testWithInvalidCharacter() throws DocumentValidatorException {
+  public void testWithInvalidSymbol() throws DocumentValidatorException {
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
         .addSection(1, new ArrayList<>())
@@ -43,9 +43,9 @@ public class InvalidCharacterValidatorTest {
         .build();
 
     Configuration conf = new Configuration.Builder()
-        .addValidatorConfig(new ValidatorConfiguration("InvalidCharacter"))
-        .setCharacterTable("en")
-        .setCharacter(new Character("EXCLAMATION_MARK", "!", "！"))
+        .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
+        .setSymbolTable("en")
+        .setSymbol(new Symbol("EXCLAMATION_MARK", "!", "！"))
         .build();
 
     DocumentValidator validator = new DocumentValidator.Builder()
@@ -58,7 +58,7 @@ public class InvalidCharacterValidatorTest {
   }
 
   @Test
-  public void testWithoutInvalidCharacter() throws DocumentValidatorException {
+  public void testWithoutInvalidSymbol() throws DocumentValidatorException {
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
         .addSection(1, new ArrayList<>())
@@ -67,9 +67,9 @@ public class InvalidCharacterValidatorTest {
         .build();
 
     Configuration conf = new Configuration.Builder()
-        .addValidatorConfig(new ValidatorConfiguration("InvalidCharacter"))
-        .setCharacterTable("en")
-        .setCharacter(new Character("EXCLAMATION_MARK", "!", "！"))
+        .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
+        .setSymbolTable("en")
+        .setSymbol(new Symbol("EXCLAMATION_MARK", "!", "！"))
         .build();
 
     DocumentValidator validator = new DocumentValidator.Builder()
@@ -82,20 +82,20 @@ public class InvalidCharacterValidatorTest {
   }
 
   @Test
-  public void testWithoutMultipleInvalidCharacter() throws DocumentValidatorException {
+  public void testWithoutMultipleInvalidSymbol() throws DocumentValidatorException {
 
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
         .addSection(1, new ArrayList<>())
         .addParagraph()
-        .addSentence("わたしは、カラオケが大好き！", 1) // NOTE: two invalid characters
+        .addSentence("わたしは、カラオケが大好き！", 1) // NOTE: two invalid symbols
         .build();
 
     Configuration conf = new Configuration.Builder()
-        .addValidatorConfig(new ValidatorConfiguration("InvalidCharacter"))
-        .setCharacterTable("en")
-        .setCharacter(new Character("EXCLAMATION_MARK", "!", "！"))
-        .setCharacter(new Character("COMMA", ",", "、"))
+        .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
+        .setSymbolTable("en")
+        .setSymbol(new Symbol("EXCLAMATION_MARK", "!", "！"))
+        .setSymbol(new Symbol("COMMA", ",", "、"))
         .build();
 
     DocumentValidator validator = new DocumentValidator.Builder()

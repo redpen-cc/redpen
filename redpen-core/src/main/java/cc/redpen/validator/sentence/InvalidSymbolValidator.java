@@ -30,18 +30,18 @@ import java.util.Set;
 /**
  * Validate if there is invalid characters in sentences.
  */
-public class InvalidCharacterValidator implements Validator<Sentence> {
-  public InvalidCharacterValidator(ValidatorConfiguration config,
-                                   CharacterTable characterTable)
+public class InvalidSymbolValidator implements Validator<Sentence> {
+  public InvalidSymbolValidator(ValidatorConfiguration config,
+                                SymbolTable symbolTable)
       throws DocumentValidatorException {
-    initialize(characterTable);
+    initialize(symbolTable);
   }
 
   public List<ValidationError> validate(Sentence sentence) {
     List<ValidationError> errors = new ArrayList<>();
-    Set<String> names = characterTable.getNames();
+    Set<String> names = symbolTable.getNames();
     for (String name : names) {
-      ValidationError error = validateCharacter(sentence, name);
+      ValidationError error = validateSymbol(sentence, name);
       if (error != null) {
         errors.add(error);
       }
@@ -49,20 +49,20 @@ public class InvalidCharacterValidator implements Validator<Sentence> {
     return errors;
   }
 
-  private boolean initialize(CharacterTable characters)
+  private boolean initialize(SymbolTable symbols)
       throws DocumentValidatorException {
-    this.characterTable = characters;
+    this.symbolTable = symbols;
     return true;
   }
 
-  protected void setCharacterTable(CharacterTable characters) {
-    this.characterTable = characters;
+  protected void setSymbolTable(SymbolTable symbols) {
+    this.symbolTable = symbols;
   }
 
-  private ValidationError validateCharacter(Sentence sentence, String name) {
+  private ValidationError validateSymbol(Sentence sentence, String name) {
     String sentenceStr = sentence.content;
-    cc.redpen.config.Character character = characterTable.getCharacter(name);
-    List<String> invalidCharsList = character.getInvalidChars();
+    Symbol symbol = symbolTable.getSymbol(name);
+    List<String> invalidCharsList = symbol.getInvalidSymbols();
     for (String invalidChar : invalidCharsList) {
       if (sentenceStr.contains(invalidChar)) {
         return new ValidationError(
@@ -74,5 +74,5 @@ public class InvalidCharacterValidator implements Validator<Sentence> {
     return null;
   }
 
-  private CharacterTable characterTable;
+  private SymbolTable symbolTable;
 }
