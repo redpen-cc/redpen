@@ -42,11 +42,11 @@ import org.xml.sax.SAXException;
 import static cc.redpen.config.Configuration.Builder;
 
 /**
- * Load the central configuration of DocumentValidator.
+ * Load the central configuration of {@link cc.redpen.RedPen}.
  */
 public class ConfigurationLoader {
   /**
-   * load DocumentValidator settings.
+   * load {@link cc.redpen.RedPen} settings.
    * @param configFileName input configuration settings
    * @return Validator configuration resources
    */
@@ -64,7 +64,7 @@ public class ConfigurationLoader {
 
 
   /**
-   * load DocumentValidator configuration.
+   * load {@link cc.redpen.RedPen} configuration.
    * @param stream input configuration settings
    * @return Configuration loaded from input stream
    * NOTE: return null when failed to create Configuration

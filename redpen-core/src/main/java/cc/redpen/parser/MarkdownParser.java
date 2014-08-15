@@ -17,8 +17,8 @@
  */
 package cc.redpen.parser;
 
+import cc.redpen.RedPenException;
 import org.apache.commons.io.IOUtils;
-import cc.redpen.DocumentValidatorException;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import org.pegdown.Extensions;
@@ -53,7 +53,7 @@ public class MarkdownParser extends BasicDocumentParser {
 
   @Override
   public Document generateDocument(InputStream inputStream)
-      throws DocumentValidatorException {
+      throws RedPenException {
     builder.addDocument("");
 
     StringBuilder sb = new StringBuilder();
@@ -84,9 +84,9 @@ public class MarkdownParser extends BasicDocumentParser {
               lineList, this.getSentenceExtractor());
       serializer.toFileContent(rootNode);
     } catch (ParsingTimeoutException e) {
-      throw new DocumentValidatorException("Failed to parse timeout");
+      throw new RedPenException("Failed to parse timeout");
     } catch (IOException e) {
-      throw new DocumentValidatorException("Failed to read lines");
+      throw new RedPenException("Failed to read lines");
     } finally {
       IOUtils.closeQuietly(br);
     }

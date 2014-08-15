@@ -17,7 +17,7 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.DocumentValidatorException;
+import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
 import cc.redpen.config.Symbol;
 import cc.redpen.config.SymbolTable;
@@ -102,7 +102,7 @@ public class QuotationValidator implements Validator<Sentence> {
 
   public boolean initialize(
       ValidatorConfiguration conf, SymbolTable charTable)
-      throws DocumentValidatorException {
+      throws RedPenException {
     if (charTable.containsSymbol("FULL_STOP")) {
       this.period = charTable.getSymbol("FULL_STOP").getValue().charAt(0);
     }

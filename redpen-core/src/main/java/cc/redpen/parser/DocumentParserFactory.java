@@ -17,7 +17,7 @@
  */
 package cc.redpen.parser;
 
-import cc.redpen.DocumentValidatorException;
+import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.model.DocumentCollection;
 
@@ -34,13 +34,13 @@ public final class DocumentParserFactory {
    * @param configuration   configuration settings
    * @param documentBuilder Builder object of DocumentCollection
    * @return Parser implementation object
-   * @throws cc.redpen.DocumentValidatorException
+   * @throws cc.redpen.RedPenException
    * when failed to generate Parser instance or no specified parser implementation.
    */
   public static Parser generate(Parser.Type parserType,
       Configuration configuration,
       DocumentCollection.Builder documentBuilder)
-      throws DocumentValidatorException {
+      throws RedPenException {
     Parser docparser;
     switch (parserType) {
       case PLAIN:
@@ -53,7 +53,7 @@ public final class DocumentParserFactory {
         docparser = new MarkdownParser();
         break;
       default:
-        throw new DocumentValidatorException("Specified parser type not exist: "
+        throw new RedPenException("Specified parser type not exist: "
             + parserType);
     }
     docparser.initialize(configuration, documentBuilder);

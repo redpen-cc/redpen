@@ -17,7 +17,7 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.DocumentValidatorException;
+import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
 import cc.redpen.config.*;
 import cc.redpen.model.Sentence;
@@ -35,7 +35,7 @@ public class SymbolWithSpaceValidator implements Validator<Sentence> {
 
   public SymbolWithSpaceValidator(ValidatorConfiguration config,
                                   SymbolTable symbolTable) throws
-      DocumentValidatorException {
+      RedPenException {
     initialize(symbolTable);
   }
 
@@ -52,7 +52,7 @@ public class SymbolWithSpaceValidator implements Validator<Sentence> {
   }
 
   private boolean initialize(SymbolTable symbolConf)
-      throws DocumentValidatorException {
+      throws RedPenException {
     this.symbolTable = symbolConf;
     return true;
   }

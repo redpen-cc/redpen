@@ -41,7 +41,7 @@ public class SampleDocumentGenerator {
    * @return DocumentCollection object
    */
   public static DocumentCollection generateOneFileDocument(String docString,
-      Parser.Type type) throws DocumentValidatorException {
+      Parser.Type type) throws RedPenException {
     Configuration configuration = new Configuration.Builder()
         .setSymbolTable("en").build();
     DocumentCollection.Builder builder = new DocumentCollection.Builder();

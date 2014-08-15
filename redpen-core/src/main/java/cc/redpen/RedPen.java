@@ -36,9 +36,9 @@ import java.util.List;
 /**
  * Validate all input files using appended Validators.
  */
-public class DocumentValidator implements Validator<Document> {
+public class RedPen implements Validator<Document> {
 
-  private DocumentValidator(Builder builder) throws DocumentValidatorException {
+  private RedPen(Builder builder) throws RedPenException {
     Configuration configuration = builder.configuration;
     this.distributor = builder.distributor;
 
@@ -54,7 +54,7 @@ public class DocumentValidator implements Validator<Document> {
    */
   @SuppressWarnings("unchecked")
   private void loadValidators(Configuration configuration)
-      throws DocumentValidatorException {
+      throws RedPenException {
     if (configuration == null) {
       throw new IllegalStateException("Configuration object is null");
     }
@@ -193,7 +193,7 @@ public class DocumentValidator implements Validator<Document> {
   /**
    * Constructor only for testing.
    */
-  protected DocumentValidator() {
+  protected RedPen() {
     this.distributor = ResultDistributorFactory
         .createDistributor(Formatter.Type.PLAIN,
             System.out);
@@ -227,7 +227,7 @@ public class DocumentValidator implements Validator<Document> {
   }
 
   /**
-   * Builder for DocumentValidator.
+   * Builder for {@link cc.redpen.RedPen}.
    */
   public static class Builder {
 
@@ -247,8 +247,8 @@ public class DocumentValidator implements Validator<Document> {
       return this;
     }
 
-    public DocumentValidator build() throws DocumentValidatorException {
-      return new DocumentValidator(this);
+    public RedPen build() throws RedPenException {
+      return new RedPen(this);
     }
   }
 

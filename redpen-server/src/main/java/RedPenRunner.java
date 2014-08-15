@@ -11,7 +11,7 @@ import javax.servlet.ServletContext;
 import java.net.URL;
 import java.security.ProtectionDomain;
 
-public class DocumentValidatorRunner {
+public class RedPenRunner {
 
   public static void main(String[] args) throws Exception {
     Options options = new Options();
@@ -65,7 +65,7 @@ public class DocumentValidatorRunner {
     final String contextPath = System.getProperty("redpen.home","/");
 
     Server server = new Server(portNum);
-    ProtectionDomain domain = DocumentValidatorRunner.class.getProtectionDomain();
+    ProtectionDomain domain = RedPenRunner.class.getProtectionDomain();
     URL location = domain.getCodeSource().getLocation();
 
     WebAppContext webapp = new WebAppContext();

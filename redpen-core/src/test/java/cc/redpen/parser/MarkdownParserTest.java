@@ -17,12 +17,12 @@
  */
 package cc.redpen.parser;
 
+import cc.redpen.RedPenException;
 import cc.redpen.config.Symbol;
 import org.junit.Before;
 import org.junit.Test;
 import cc.redpen.model.*;
 import cc.redpen.config.Configuration;
-import cc.redpen.DocumentValidatorException;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -37,14 +37,14 @@ public class MarkdownParserTest {
   public void setup() {
   }
 
-  @Test(expected = DocumentValidatorException.class)
+  @Test(expected = RedPenException.class)
   public void testNullDocument() throws Exception {
     Parser parser = loadParser(new Configuration.Builder().build());
     InputStream is = null;
     parser.generateDocument(is);
   }
 
-  @Test(expected = DocumentValidatorException.class)
+  @Test(expected = RedPenException.class)
   public void testNullFileName() throws Exception {
     Parser parser = loadParser(new Configuration.Builder().build());
     String fileName = null;
@@ -465,7 +465,7 @@ public class MarkdownParserTest {
     try {
       parser = DocumentParserFactory.generate(MARKDOWN, configuration,
           new DocumentCollection.Builder());
-    } catch (DocumentValidatorException e1) {
+    } catch (RedPenException e1) {
       fail();
       e1.printStackTrace();
     }
@@ -486,7 +486,7 @@ public class MarkdownParserTest {
 
     try {
       return parser.generateDocument(inputDocumentStream);
-    } catch (DocumentValidatorException e) {
+    } catch (RedPenException e) {
       e.printStackTrace();
       return null;
     }
@@ -506,7 +506,7 @@ public class MarkdownParserTest {
     Document doc = null;
     try {
       doc = parser.generateDocument(is);
-    } catch (DocumentValidatorException e) {
+    } catch (RedPenException e) {
       e.printStackTrace();
       fail();
     }

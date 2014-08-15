@@ -18,9 +18,10 @@
 
 package cc.redpen.server.api;
 
+import cc.redpen.RedPenException;
+import cc.redpen.server.RedPenServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import cc.redpen.server.DocumentValidatorServer;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,7 +29,6 @@ import cc.redpen.parser.DocumentParserFactory;
 import cc.redpen.parser.Parser;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
-import cc.redpen.DocumentValidatorException;
 import cc.redpen.ValidationError;
 
 import javax.ws.rs.*;
@@ -52,23 +52,23 @@ public class DocumentValidateResource {
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   public Response validateDocument(@FormParam("textarea") @DefaultValue("") String document) throws
-    JSONException, DocumentValidatorException, UnsupportedEncodingException {
+    JSONException, RedPenException, UnsupportedEncodingException {
 
     LOG.info("Validating document");
-    DocumentValidatorServer server = DocumentValidatorServer.getInstance();
+    RedPenServer server = RedPenServer.getInstance();
     JSONObject json = new JSONObject();
 
     json.put("document", document);
 
     Parser parser = DocumentParserFactory.generate(
-        Parser.Type.PLAIN, server.getDocumentValidatorConfig(), new DocumentCollection.Builder());
+        Parser.Type.PLAIN, server.getConfig(), new DocumentCollection.Builder());
     Document fileContent = parser.generateDocument(new
         ByteArrayInputStream(document.getBytes("UTF-8")));
 
     DocumentCollection d = new DocumentCollection();
     d.addDocument(fileContent);
 
-    List<ValidationError> errors = server.getValidator().check(d);
+    List<ValidationError> errors = server.getRedPen().check(d);
 
     JSONArray jsonErrors = new JSONArray();
 

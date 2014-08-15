@@ -1,7 +1,7 @@
 package cc.redpen.validator.sentence;
 
-import cc.redpen.DocumentValidator;
-import cc.redpen.DocumentValidatorException;
+import cc.redpen.RedPen;
+import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
@@ -34,7 +34,7 @@ public class InvalidWordValidatorTest {
   }
 
   @Test
-  public void testLoadDefaultDictionary() throws DocumentValidatorException {
+  public void testLoadDefaultDictionary() throws RedPenException {
     Configuration config = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("InvalidWord"))
         .setSymbolTable("en").build();
@@ -48,7 +48,7 @@ public class InvalidWordValidatorTest {
             1)
         .build();
 
-    DocumentValidator validator = new DocumentValidator.Builder()
+    RedPen validator = new RedPen.Builder()
         .setConfiguration(config)
         .setResultDistributor(new FakeResultDistributor())
         .build();
@@ -61,10 +61,10 @@ public class InvalidWordValidatorTest {
   /**
    * Assert not throw a exception even when there is no default dictionary.
    *
-   * @throws DocumentValidatorException
+   * @throws cc.redpen.RedPenException
    */
   @Test
-  public void testLoadNotExistDefaultDictionary() throws DocumentValidatorException {
+  public void testLoadNotExistDefaultDictionary() throws RedPenException {
     Configuration config = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("InvalidWord"))
         .setSymbolTable("ja").build(); // NOTE: no dictionary for japanese or other languages whose words are not split by white space.
@@ -78,7 +78,7 @@ public class InvalidWordValidatorTest {
             1)
         .build();
 
-    DocumentValidator validator = new DocumentValidator.Builder()
+    RedPen validator = new RedPen.Builder()
         .setConfiguration(config)
         .setResultDistributor(new FakeResultDistributor())
         .build();

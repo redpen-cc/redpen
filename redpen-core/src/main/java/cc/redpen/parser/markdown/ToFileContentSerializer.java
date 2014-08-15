@@ -16,7 +16,7 @@
  */
 package cc.redpen.parser.markdown;
 
-import cc.redpen.DocumentValidatorException;
+import cc.redpen.RedPenException;
 import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
@@ -130,17 +130,17 @@ public class ToFileContentSerializer implements Visitor {
    * @param astRoot Pegdown RootNode
    *                (markdown tree that is parsed pegdown parser)
    * @return file content that re-parse Pegdown RootNode.
-   * @throws cc.redpen.DocumentValidatorException
+   * @throws cc.redpen.RedPenException
    * Fail to traverse markdown tree
    */
   public Document toFileContent(RootNode astRoot)
-      throws DocumentValidatorException {
+      throws RedPenException {
     try {
       checkArgNotNull(astRoot, "astRoot");
       astRoot.accept(this);
     } catch (NullPointerException e) {
       LOG.error("Fail to traverse RootNode.");
-      throw new DocumentValidatorException("Fail to traverse RootNode.", e);
+      throw new RedPenException("Fail to traverse RootNode.", e);
     }
     return builder.getLastDocument();
   }

@@ -17,7 +17,7 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.DocumentValidatorException;
+import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
 import cc.redpen.config.*;
 import cc.redpen.model.Sentence;
@@ -33,7 +33,7 @@ import java.util.Set;
 public class InvalidSymbolValidator implements Validator<Sentence> {
   public InvalidSymbolValidator(ValidatorConfiguration config,
                                 SymbolTable symbolTable)
-      throws DocumentValidatorException {
+      throws RedPenException {
     initialize(symbolTable);
   }
 
@@ -50,7 +50,7 @@ public class InvalidSymbolValidator implements Validator<Sentence> {
   }
 
   private boolean initialize(SymbolTable symbols)
-      throws DocumentValidatorException {
+      throws RedPenException {
     this.symbolTable = symbols;
     return true;
   }

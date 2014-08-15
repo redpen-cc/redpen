@@ -1,6 +1,6 @@
 package cc.redpen.validator;
 
-import cc.redpen.DocumentValidatorException;
+import cc.redpen.RedPenException;
 import cc.redpen.config.SymbolTable;
 import cc.redpen.config.ValidatorConfiguration;
 
@@ -28,7 +28,7 @@ public class ValidatorFactory {
 
   public static Validator<?> getInstance(ValidatorConfiguration config,
                                          SymbolTable symbolTable)
-      throws DocumentValidatorException {
+      throws RedPenException {
     try {
       for (String validatorPackage : VALIDATOR_PACKAGES) {
         String validatorClassName = validatorPackage + "." + config.getConfigurationName() + "Validator";
@@ -54,7 +54,7 @@ public class ValidatorFactory {
     } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
       throw new RuntimeException(e);
     }
-    throw new DocumentValidatorException(
+    throw new RedPenException(
         "There is no such Validator: " + config.getConfigurationName());
   }
 }

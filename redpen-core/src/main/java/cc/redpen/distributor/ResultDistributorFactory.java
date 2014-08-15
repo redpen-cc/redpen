@@ -19,7 +19,7 @@ package cc.redpen.distributor;
 
 import java.io.OutputStream;
 
-import cc.redpen.DocumentValidatorException;
+import cc.redpen.RedPenException;
 import cc.redpen.formatter.PlainFormatter;
 import cc.redpen.formatter.XMLFormatter;
 import org.slf4j.Logger;
@@ -63,7 +63,7 @@ public final class ResultDistributorFactory {
           LOG.error("No specified distributor...");
           return null;
       }
-    } catch (DocumentValidatorException e) {
+    } catch (RedPenException e) {
       LOG.error(e.getMessage());
       return null;
     }

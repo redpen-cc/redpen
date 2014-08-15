@@ -1,9 +1,9 @@
 package cc.redpen.server.api;
 
+import cc.redpen.server.RedPenInitializer;
 import org.apache.wink.common.internal.application.ApplicationFileLoader;
 import org.apache.wink.server.internal.servlet.MockServletInvocationTest;
 import org.apache.wink.common.http.HttpStatus;
-import cc.redpen.server.DocumentValidatorInitializer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -16,7 +16,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.ws.rs.core.MediaType;
 
-public class DocumentValidateResourceTest extends MockServletInvocationTest {
+public class RedPenResourceTest extends MockServletInvocationTest {
 
   @Override
   protected void setUp() throws Exception {
@@ -111,5 +111,5 @@ public class DocumentValidateResourceTest extends MockServletInvocationTest {
     return mockRequest;
   }
 
-  private ServletContextListener listner = new DocumentValidatorInitializer();
+  private ServletContextListener listner = new RedPenInitializer();
 }

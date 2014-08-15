@@ -17,8 +17,8 @@
  */
 package cc.redpen.validator;
 
+import cc.redpen.RedPenException;
 import cc.redpen.config.SymbolTable;
-import cc.redpen.DocumentValidatorException;
 import cc.redpen.config.ValidatorConfiguration;
 
 /**
@@ -32,10 +32,10 @@ public interface ConfigurationLoader {
    * @param conf      validator configuration
    * @param charTable character configuration
    * @return true succeeded, otherwise false
-   * @throws cc.redpen.DocumentValidatorException
+   * @throws cc.redpen.RedPenException
    */
   boolean loadConfiguration(ValidatorConfiguration conf,
                             SymbolTable charTable)
-      throws DocumentValidatorException;
+      throws RedPenException;
 
 }

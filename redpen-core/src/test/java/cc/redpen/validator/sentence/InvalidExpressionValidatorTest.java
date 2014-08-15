@@ -17,8 +17,8 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.DocumentValidator;
-import cc.redpen.DocumentValidatorException;
+import cc.redpen.RedPen;
+import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
@@ -51,7 +51,7 @@ public class InvalidExpressionValidatorTest {
   }
 
   @Test
-  public void testLoadDefaultDictionary() throws DocumentValidatorException {
+  public void testLoadDefaultDictionary() throws RedPenException {
     Configuration config = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
         .setSymbolTable("en").build();
@@ -65,7 +65,7 @@ public class InvalidExpressionValidatorTest {
             1)
         .build();
 
-    DocumentValidator validator = new DocumentValidator.Builder()
+    RedPen validator = new RedPen.Builder()
         .setConfiguration(config)
         .setResultDistributor(new FakeResultDistributor())
         .build();
@@ -75,7 +75,7 @@ public class InvalidExpressionValidatorTest {
   }
 
   @Test
-  public void testLoadJapaneseDefaultDictionary() throws DocumentValidatorException {
+  public void testLoadJapaneseDefaultDictionary() throws RedPenException {
     Configuration config = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
         .setSymbolTable("ja").build();
@@ -89,7 +89,7 @@ public class InvalidExpressionValidatorTest {
             1)
         .build();
 
-    DocumentValidator validator = new DocumentValidator.Builder()
+    RedPen validator = new RedPen.Builder()
         .setConfiguration(config)
         .setResultDistributor(new FakeResultDistributor())
         .build();

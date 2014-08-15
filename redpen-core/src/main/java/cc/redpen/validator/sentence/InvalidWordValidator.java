@@ -17,7 +17,7 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.DocumentValidatorException;
+import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
 import cc.redpen.config.SymbolTable;
 import cc.redpen.config.ValidatorConfiguration;
@@ -45,11 +45,11 @@ public class InvalidWordValidator implements Validator<Sentence> {
    * Constructor
    * @param config Configuration object
    * @param symbolTable  Character settings
-   * @throws DocumentValidatorException
+   * @throws cc.redpen.RedPenException
    */
   public InvalidWordValidator(ValidatorConfiguration config,
       SymbolTable symbolTable)
-      throws DocumentValidatorException {
+      throws RedPenException {
     initialize(config, symbolTable);
   }
 
@@ -79,7 +79,7 @@ public class InvalidWordValidator implements Validator<Sentence> {
 
   private boolean initialize(ValidatorConfiguration conf,
       SymbolTable symbolTable)
-      throws DocumentValidatorException {
+      throws RedPenException {
     String lang = symbolTable.getLang();
     WordListExtractor extractor = new WordListExtractor();
     ResourceLoader loader = new ResourceLoader(extractor);

@@ -17,6 +17,7 @@
  */
 package cc.redpen.parser;
 
+import cc.redpen.RedPenException;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.DocumentCollection;
 import org.junit.Before;
@@ -25,7 +26,6 @@ import cc.redpen.config.Configuration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
-import cc.redpen.DocumentValidatorException;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -67,7 +67,7 @@ public class PlainTextParserTest {
     Document doc = null;
     try {
       doc = parser.generateDocument(is);
-    } catch (DocumentValidatorException e) {
+    } catch (RedPenException e) {
       fail();
     }
     return doc;
@@ -81,7 +81,7 @@ public class PlainTextParserTest {
         .build();
     try {
       parser = DocumentParserFactory.generate(Parser.Type.PLAIN, configuration, new DocumentCollection.Builder());
-    } catch (DocumentValidatorException e1) {
+    } catch (RedPenException e1) {
       e1.printStackTrace();
       fail();
     }
@@ -174,13 +174,13 @@ public class PlainTextParserTest {
     assertEquals(0 ,calcLineNum(section));
   }
 
-  @Test(expected = DocumentValidatorException.class)
+  @Test(expected = RedPenException.class)
   public void testNullInitialize() throws Exception {
     DocumentParserFactory.generate(Parser.Type.PLAIN, null,
         new DocumentCollection.Builder());
   }
 
-  @Test(expected = DocumentValidatorException.class)
+  @Test(expected = RedPenException.class)
   public void testNullFileName() throws Exception {
     parser.generateDocument("no_exist_files");
   }

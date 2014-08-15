@@ -36,7 +36,7 @@ public final class DocumentGenerator {
    */
   static DocumentCollection generate(String[] inputFileNames,
                            Configuration configuration,
-                           Parser.Type format) throws DocumentValidatorException {
+                           Parser.Type format) throws RedPenException {
     DocumentCollection.Builder documentBuilder =
         new DocumentCollection.Builder();
     Parser parser = DocumentParserFactory.generate(format,

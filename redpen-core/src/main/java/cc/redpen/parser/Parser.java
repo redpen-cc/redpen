@@ -19,7 +19,7 @@ package cc.redpen.parser;
 
 import java.io.InputStream;
 
-import cc.redpen.DocumentValidatorException;
+import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
 import cc.redpen.config.Configuration;
 import cc.redpen.model.DocumentCollection;
@@ -33,20 +33,20 @@ public interface Parser {
    *
    * @param io input stream containing input content
    * @return a generated file content
-   * @throws cc.redpen.DocumentValidatorException if Parser failed to parse input.
+   * @throws cc.redpen.RedPenException if Parser failed to parse input.
    */
   Document generateDocument(InputStream io)
-      throws DocumentValidatorException;
+      throws RedPenException;
 
   /**
    * Given input file name, return Document instance for the specified file.
    *
    * @param fileName input file name
    * @return a generated file content
-   * @throws DocumentValidatorException if Parser failed to parse input.
+   * @throws cc.redpen.RedPenException if Parser failed to parse input.
    */
   Document generateDocument(String fileName)
-      throws DocumentValidatorException;
+      throws RedPenException;
 
   /**
    * Initialize parser.
@@ -54,10 +54,10 @@ public interface Parser {
    *
    * @param configuration configuration
    * @param documentBuilder
-   * @throws DocumentValidatorException if the configurations loading failed
+   * @throws cc.redpen.RedPenException if the configurations loading failed
    */
   void initialize(Configuration configuration,
-      DocumentCollection.Builder documentBuilder) throws DocumentValidatorException;
+      DocumentCollection.Builder documentBuilder) throws RedPenException;
 
   /**
    * the type of parser using DocumentParserFactory.

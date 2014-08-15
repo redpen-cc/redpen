@@ -18,33 +18,33 @@
 
 package cc.redpen.server;
 
+import cc.redpen.RedPen;
+import cc.redpen.RedPenException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cc.redpen.ConfigurationLoader;
 import cc.redpen.config.Configuration;
-import cc.redpen.DocumentValidatorException;
-import cc.redpen.DocumentValidator;
 
 import java.io.InputStream;
 
 /**
- * Document validator server.
+ * Document redPen server.
  */
-public class DocumentValidatorServer {
+public class RedPenServer {
 
   static String DEFAULT_INTERNAL_CONFIG_PATH = "/conf/redpen-conf.xml";
 
   private static final Logger LOG =
-      LoggerFactory.getLogger(DocumentValidatorServer.class);
+      LoggerFactory.getLogger(RedPenServer.class);
 
-  private static DocumentValidatorServer documentValidatorServer = null;
+  private static RedPenServer redPenServer = null;
 
-  private DocumentValidator validator;
+  private RedPen redPen;
 
-  private Configuration documentValidatorConfig;
+  private Configuration config;
 
-  private DocumentValidatorServer() throws DocumentValidatorException {
+  private RedPenServer() throws RedPenException {
     ConfigurationLoader configLoader = new ConfigurationLoader();
     String confPath = System.getProperty("redpen.conf.path", DEFAULT_INTERNAL_CONFIG_PATH);
 
@@ -55,35 +55,35 @@ public class DocumentValidatorServer {
     if (inputConfigStream == null) {
       LOG.info("Loading config from specified config file: " +
           "\"" + confPath + "\"");
-      documentValidatorConfig = configLoader.loadConfiguration(confPath);
+      config = configLoader.loadConfiguration(confPath);
     } else {
       LOG.info("Loading config from default configuration");
-      documentValidatorConfig = configLoader.loadConfiguration(inputConfigStream);
+      config = configLoader.loadConfiguration(inputConfigStream);
     }
 
-    validator = new DocumentValidator.Builder()
-        .setConfiguration(documentValidatorConfig)
+    redPen = new RedPen.Builder()
+        .setConfiguration(config)
         .build();
   }
 
-  public DocumentValidator getValidator() {
-    return validator;
+  public RedPen getRedPen() {
+    return redPen;
   }
 
-  public Configuration getDocumentValidatorConfig() {
-    return documentValidatorConfig;
+  public Configuration getConfig() {
+    return config;
   }
 
-  public static DocumentValidatorServer getInstance() throws
-      DocumentValidatorException {
-    if (documentValidatorServer == null) {
+  public static RedPenServer getInstance() throws
+      RedPenException {
+    if (redPenServer == null) {
       initialize();
     }
-    return documentValidatorServer;
+    return redPenServer;
   }
 
-  public static synchronized void initialize() throws DocumentValidatorException {
+  public static synchronized void initialize() throws RedPenException {
     LOG.info("Initializing Document Validator");
-    documentValidatorServer = new DocumentValidatorServer();
+    redPenServer = new RedPenServer();
   }
 }

@@ -26,8 +26,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import cc.redpen.RedPenException;
 import org.junit.Test;
-import cc.redpen.DocumentValidatorException;
 import cc.redpen.ValidationError;
 import cc.redpen.formatter.XMLFormatter;
 import cc.redpen.model.Sentence;
@@ -128,7 +128,7 @@ public class XMLFormatterTest {
     XMLFormatter formatter = null;
     try {
       formatter = new XMLFormatter();
-    } catch (DocumentValidatorException e) {
+    } catch (RedPenException e) {
       fail();
       e.printStackTrace();
     }
