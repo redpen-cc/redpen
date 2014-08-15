@@ -10,3 +10,4 @@ Resources
 
 * [Mailing List](https://groups.google.com/forum/#!forum/redpen-validator)
 * [Docs](http://redpen.cc/docs.html)
+* [Docker Image](https://registry.hub.docker.com/u/ainoya/redpen-server/)
