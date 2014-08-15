@@ -17,9 +17,10 @@
  */
 package cc.redpen.parser;
 
-import cc.redpen.model.*;
 import org.junit.Before;
 import org.junit.Test;
+import cc.redpen.model.*;
+import cc.redpen.config.Character;
 import cc.redpen.config.Configuration;
 import cc.redpen.DocumentValidatorException;
 
@@ -431,10 +432,31 @@ public class MarkdownParserTest {
     sampleText += "大きなベッドタウンであり、多くの人が住んでいる。";
     Configuration conf = new Configuration.Builder()
         .setCharacterTable("ja").build();
+
     Document doc = createFileContent(sampleText, conf);
     Section firstSections = doc.getSection(0);
     Paragraph firstParagraph = firstSections.getParagraph(0);
     assertEquals(2, firstParagraph.getNumberOfSentences());
+  }
+
+  @Test
+  public void testGenerateJapaneseWithMultipleSentencesInOneLine() {
+    String sampleText = "それは異なる．たとえば，\\n" +
+        "以下のとおりである．";
+    Configuration conf = new Configuration.Builder()
+        .setCharacterTable("ja")
+        .setCharacter(new Character("FULL_STOP", "．", "."))
+        .setCharacter(new Character("COMMA", "，", "、"))
+        .build();
+
+    Document doc = createFileContent(sampleText, conf);
+    Section firstSection = doc.getSection(0);
+    Paragraph firstParagraph = firstSection.getParagraph(0);
+    assertEquals(2, firstParagraph.getNumberOfSentences());
+    assertEquals("それは異なる．",
+        firstParagraph.getSentence(0).content);
+    assertEquals("たとえば，\\n以下のとおりである．",
+        firstParagraph.getSentence(1).content);
   }
 
 
