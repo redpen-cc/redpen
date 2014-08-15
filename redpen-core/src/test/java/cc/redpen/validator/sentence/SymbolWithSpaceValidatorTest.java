@@ -17,8 +17,8 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.DocumentValidator;
-import cc.redpen.DocumentValidatorException;
+import cc.redpen.RedPen;
+import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
 import cc.redpen.config.Symbol;
 import cc.redpen.config.Configuration;
@@ -34,7 +34,7 @@ import static org.junit.Assert.assertEquals;
 
 public class SymbolWithSpaceValidatorTest {
   @Test
-  public void testNotNeedSpace() throws DocumentValidatorException {
+  public void testNotNeedSpace() throws RedPenException {
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
         .addSection(1, new ArrayList<>())
@@ -48,7 +48,7 @@ public class SymbolWithSpaceValidatorTest {
         .setSymbol(new Symbol("SLASH", "/"))
         .build();
 
-    DocumentValidator validator = new DocumentValidator.Builder()
+    RedPen validator = new RedPen.Builder()
         .setConfiguration(conf)
         .setResultDistributor(new FakeResultDistributor())
         .build();
@@ -58,7 +58,7 @@ public class SymbolWithSpaceValidatorTest {
   }
 
   @Test
-  public void testNeedAfterSpace() throws DocumentValidatorException {
+  public void testNeedAfterSpace() throws RedPenException {
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
         .addSection(1, new ArrayList<>())
@@ -72,7 +72,7 @@ public class SymbolWithSpaceValidatorTest {
         .setSymbol(new Symbol("COLON", ":", "", false, true))
         .build();
 
-    DocumentValidator validator = new DocumentValidator.Builder()
+    RedPen validator = new RedPen.Builder()
         .setConfiguration(conf)
         .setResultDistributor(new FakeResultDistributor())
         .build();
@@ -82,7 +82,7 @@ public class SymbolWithSpaceValidatorTest {
   }
 
   @Test
-  public void testNeedBeforeSpace() throws DocumentValidatorException {
+  public void testNeedBeforeSpace() throws RedPenException {
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
         .addSection(1, new ArrayList<>())
@@ -96,7 +96,7 @@ public class SymbolWithSpaceValidatorTest {
         .setSymbol(new Symbol("LEFT_PARENTHESIS", "(", "", true, false))
         .build();
 
-    DocumentValidator validator = new DocumentValidator.Builder()
+    RedPen validator = new RedPen.Builder()
         .setConfiguration(conf)
         .setResultDistributor(new FakeResultDistributor())
         .build();
@@ -106,7 +106,7 @@ public class SymbolWithSpaceValidatorTest {
   }
 
   @Test
-  public void testNeedSpaceInMultiplePosition() throws DocumentValidatorException {
+  public void testNeedSpaceInMultiplePosition() throws RedPenException {
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
         .addSection(1, new ArrayList<>())
@@ -121,7 +121,7 @@ public class SymbolWithSpaceValidatorTest {
         .setSymbol(new Symbol("RIGHT_PARENTHESIS", ")", "", false, true))
         .build();
 
-    DocumentValidator validator = new DocumentValidator.Builder()
+    RedPen validator = new RedPen.Builder()
         .setConfiguration(conf)
         .setResultDistributor(new FakeResultDistributor())
         .build();
@@ -131,7 +131,7 @@ public class SymbolWithSpaceValidatorTest {
   }
 
   @Test
-  public void testReturnOnlyOneForHitBothBeforeAndAfter() throws DocumentValidatorException {
+  public void testReturnOnlyOneForHitBothBeforeAndAfter() throws RedPenException {
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
         .addSection(1, new ArrayList<>())
@@ -145,7 +145,7 @@ public class SymbolWithSpaceValidatorTest {
         .setSymbol(new Symbol("ASTARISK", "*", "", true, true))
         .build();
 
-    DocumentValidator validator = new DocumentValidator.Builder()
+    RedPen validator = new RedPen.Builder()
         .setConfiguration(conf)
         .setResultDistributor(new FakeResultDistributor())
         .build();

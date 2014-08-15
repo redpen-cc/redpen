@@ -18,7 +18,7 @@
 package cc.redpen.validator.sentence;
 
 
-import cc.redpen.DocumentValidatorException;
+import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
 import cc.redpen.config.SymbolTable;
 import cc.redpen.config.ValidatorConfiguration;
@@ -54,7 +54,7 @@ public class CommaNumberValidator implements Validator<Sentence> {
   }
 
   public CommaNumberValidator(ValidatorConfiguration config, SymbolTable symbolTable)
-      throws DocumentValidatorException {
+      throws RedPenException {
     initialize(config, symbolTable);
   }
 
@@ -79,7 +79,7 @@ public class CommaNumberValidator implements Validator<Sentence> {
 
   private boolean initialize(ValidatorConfiguration conf,
                              SymbolTable symbolTable)
-      throws DocumentValidatorException {
+      throws RedPenException {
     //TODO search parent configurations to get comma settings...
     this.maxCommaNum = DEFAULT_MAX_COMMA_NUMBER;
     if (conf.getAttribute("max_comma_num") != null) {

@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Configuration table of characters used in DocumentValidator.
+ * Configuration table of characters used in {@link cc.redpen.RedPen}.
  */
 public final class SymbolTable {
   /**

@@ -17,8 +17,8 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.DocumentValidator;
-import cc.redpen.DocumentValidatorException;
+import cc.redpen.RedPen;
+import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
 import cc.redpen.config.Symbol;
 import cc.redpen.config.Configuration;
@@ -34,7 +34,7 @@ import static org.junit.Assert.assertEquals;
 
 public class InvalidSymbolValidatorTest {
   @Test
-  public void testWithInvalidSymbol() throws DocumentValidatorException {
+  public void testWithInvalidSymbol() throws RedPenException {
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
         .addSection(1, new ArrayList<>())
@@ -48,7 +48,7 @@ public class InvalidSymbolValidatorTest {
         .setSymbol(new Symbol("EXCLAMATION_MARK", "!", "！"))
         .build();
 
-    DocumentValidator validator = new DocumentValidator.Builder()
+    RedPen validator = new RedPen.Builder()
         .setConfiguration(conf)
         .setResultDistributor(new FakeResultDistributor())
         .build();
@@ -58,7 +58,7 @@ public class InvalidSymbolValidatorTest {
   }
 
   @Test
-  public void testWithoutInvalidSymbol() throws DocumentValidatorException {
+  public void testWithoutInvalidSymbol() throws RedPenException {
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
         .addSection(1, new ArrayList<>())
@@ -72,7 +72,7 @@ public class InvalidSymbolValidatorTest {
         .setSymbol(new Symbol("EXCLAMATION_MARK", "!", "！"))
         .build();
 
-    DocumentValidator validator = new DocumentValidator.Builder()
+    RedPen validator = new RedPen.Builder()
         .setConfiguration(conf)
         .setResultDistributor(new FakeResultDistributor())
         .build();
@@ -82,7 +82,7 @@ public class InvalidSymbolValidatorTest {
   }
 
   @Test
-  public void testWithoutMultipleInvalidSymbol() throws DocumentValidatorException {
+  public void testWithoutMultipleInvalidSymbol() throws RedPenException {
 
     DocumentCollection documents = new DocumentCollection.Builder()
         .addDocument("")
@@ -98,7 +98,7 @@ public class InvalidSymbolValidatorTest {
         .setSymbol(new Symbol("COMMA", ",", "、"))
         .build();
 
-    DocumentValidator validator = new DocumentValidator.Builder()
+    RedPen validator = new RedPen.Builder()
         .setConfiguration(conf)
         .setResultDistributor(new FakeResultDistributor())
         .build();

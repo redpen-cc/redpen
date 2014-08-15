@@ -1,7 +1,7 @@
 package cc.redpen.validator.sentence;
 
-import cc.redpen.DocumentValidator;
-import cc.redpen.DocumentValidatorException;
+import cc.redpen.RedPen;
+import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
@@ -30,7 +30,7 @@ public class SpellingValidatorTest {
   }
 
   @Test
-  public void testLoadDefaultDictionary() throws DocumentValidatorException {
+  public void testLoadDefaultDictionary() throws RedPenException {
     Configuration config = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("Spelling"))
         .setSymbolTable("en").build();
@@ -44,7 +44,7 @@ public class SpellingValidatorTest {
             1)
         .build();
 
-    DocumentValidator validator = new DocumentValidator.Builder()
+    RedPen validator = new RedPen.Builder()
         .setConfiguration(config)
         .setResultDistributor(new FakeResultDistributor())
         .build();
@@ -54,7 +54,7 @@ public class SpellingValidatorTest {
   }
 
   @Test
-  public void testUpperCase() throws DocumentValidatorException {
+  public void testUpperCase() throws RedPenException {
     Configuration config = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("Spelling"))
         .setSymbolTable("en").build();
@@ -68,7 +68,7 @@ public class SpellingValidatorTest {
             1)
         .build();
 
-    DocumentValidator validator = new DocumentValidator.Builder()
+    RedPen validator = new RedPen.Builder()
         .setConfiguration(config)
         .setResultDistributor(new FakeResultDistributor())
         .build();
@@ -79,7 +79,7 @@ public class SpellingValidatorTest {
 
 
   @Test
-  public void testSkipCharacterCase() throws DocumentValidatorException {
+  public void testSkipCharacterCase() throws RedPenException {
     Configuration config = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("Spelling"))
         .setSymbolTable("en").build();
@@ -93,7 +93,7 @@ public class SpellingValidatorTest {
             1)
         .build();
 
-    DocumentValidator validator = new DocumentValidator.Builder()
+    RedPen validator = new RedPen.Builder()
         .setConfiguration(config)
         .setResultDistributor(new FakeResultDistributor())
         .build();
@@ -103,7 +103,7 @@ public class SpellingValidatorTest {
   }
 
   @Test
-  public void testEndPeriod() throws DocumentValidatorException {
+  public void testEndPeriod() throws RedPenException {
     Configuration config = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("Spelling"))
         .setSymbolTable("en").build();
@@ -117,7 +117,7 @@ public class SpellingValidatorTest {
             1)
         .build();
 
-    DocumentValidator validator = new DocumentValidator.Builder()
+    RedPen validator = new RedPen.Builder()
         .setConfiguration(config)
         .setResultDistributor(new FakeResultDistributor())
         .build();
@@ -127,7 +127,7 @@ public class SpellingValidatorTest {
   }
 
   @Test
-  public void testVoid() throws DocumentValidatorException {
+  public void testVoid() throws RedPenException {
     Configuration config = new Configuration.Builder()
         .addValidatorConfig(new ValidatorConfiguration("Spelling"))
         .setSymbolTable("en").build();
@@ -141,7 +141,7 @@ public class SpellingValidatorTest {
             1)
         .build();
 
-    DocumentValidator validator = new DocumentValidator.Builder()
+    RedPen validator = new RedPen.Builder()
         .setConfiguration(config)
         .setResultDistributor(new FakeResultDistributor())
         .build();

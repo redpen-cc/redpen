@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Contains Settings used throughout DocumentValidator.
+ * Contains Settings used throughout {@link cc.redpen.RedPen}.
  */
 public final class Configuration {
   /**

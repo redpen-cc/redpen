@@ -1,5 +1,5 @@
 /**
- * DocumentValidator
+ * RedPen
  * Copyright (c) 2013-, Takahiko Ito, All rights reserved.
  *
  * This library is free software; you can redistribute it and/or

@@ -17,7 +17,7 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.DocumentValidatorException;
+import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
 import cc.redpen.config.SymbolTable;
 import cc.redpen.config.ValidatorConfiguration;
@@ -38,7 +38,7 @@ public class SpaceBeginningOfSentenceValidator implements Validator<Sentence> {
 
   public SpaceBeginningOfSentenceValidator(ValidatorConfiguration config,
                                            SymbolTable symbolTable)
-      throws DocumentValidatorException {
+      throws RedPenException {
   }
 
   public List<ValidationError> validate(Sentence sentence) {

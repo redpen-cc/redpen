@@ -24,8 +24,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import cc.redpen.RedPenException;
 import org.apache.commons.io.IOUtils;
-import cc.redpen.DocumentValidatorException;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import org.slf4j.Logger;
@@ -43,7 +43,7 @@ public final class PlainTextParser extends BasicDocumentParser {
   }
 
   public Document generateDocument(InputStream is)
-      throws DocumentValidatorException {
+      throws RedPenException {
     builder.addDocument("");
     BufferedReader br = null;
     List<Sentence> headers = new ArrayList<>();
@@ -72,7 +72,7 @@ public final class PlainTextParser extends BasicDocumentParser {
         builder.addSentence(remain, lineNum);
       }
     } catch (IOException e) {
-      throw new DocumentValidatorException("Failed to parse", e);
+      throw new RedPenException("Failed to parse", e);
     } finally {
       IOUtils.closeQuietly(br);
     }

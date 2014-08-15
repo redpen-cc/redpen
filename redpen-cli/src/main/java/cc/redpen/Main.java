@@ -37,7 +37,7 @@ import cc.redpen.distributor.ResultDistributorFactory;
  * Class containing main method called from command line.
  */
 public final class Main {
-  public static void main(String[] args) throws DocumentValidatorException {
+  public static void main(String[] args) throws RedPenException {
     Options options = new Options();
     options.addOption("h", "help", false, "help");
 
@@ -109,7 +109,7 @@ public final class Main {
     ConfigurationLoader configLoader = new ConfigurationLoader();
     Configuration conf = configLoader.loadConfiguration(configFileName);
     if (conf == null) {
-      LOG.error("Failed to initialize the DocumentValidator configuration.");
+      LOG.error("Failed to initialize the RedPen configuration.");
       System.exit(-1);
     }
 
@@ -126,12 +126,12 @@ public final class Main {
     ResultDistributor distributor =
         ResultDistributorFactory.createDistributor(outputFormat, System.out);
 
-    DocumentValidator validator = new DocumentValidator.Builder()
+    RedPen redPen = new RedPen.Builder()
         .setConfiguration(conf)
         .setResultDistributor(distributor)
         .build();
 
-    validator.check(documentCollection);
+    redPen.check(documentCollection);
 
     System.exit(0);
   }

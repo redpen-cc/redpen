@@ -30,9 +30,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import cc.redpen.RedPenException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import cc.redpen.DocumentValidatorException;
 import cc.redpen.ValidationError;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -46,15 +46,15 @@ public class XMLFormatter implements Formatter {
   /**
    * Constructor.
    *
-   * @throws cc.redpen.DocumentValidatorException when failed to create Formatter
+   * @throws cc.redpen.RedPenException when failed to create Formatter
    */
-  public XMLFormatter() throws DocumentValidatorException {
+  public XMLFormatter() throws RedPenException {
     super();
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
     try {
       this.db = dbf.newDocumentBuilder();
     } catch (ParserConfigurationException e) {
-      throw new DocumentValidatorException(e.getMessage());
+      throw new RedPenException(e.getMessage());
     }
   }
 

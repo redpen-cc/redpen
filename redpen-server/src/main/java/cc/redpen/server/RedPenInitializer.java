@@ -18,9 +18,9 @@
 
 package cc.redpen.server;
 
+import cc.redpen.RedPenException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import cc.redpen.DocumentValidatorException;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -28,11 +28,11 @@ import javax.servlet.ServletContextListener;
 /**
  * Initiation of the document validator server.
  */
-public class DocumentValidatorInitializer implements ServletContextListener {
+public class RedPenInitializer implements ServletContextListener {
 
 
   private static Logger log = LogManager.getLogger(
-    DocumentValidatorInitializer.class
+    RedPenInitializer.class
   );
 
   @Override
@@ -50,9 +50,9 @@ public class DocumentValidatorInitializer implements ServletContextListener {
 
     log.info("Config Path is set to " + "\"" + configPath + "\"");
     try {
-      DocumentValidatorServer.initialize();
+      RedPenServer.initialize();
       log.info("Document Validator Server is running.");
-    } catch (DocumentValidatorException e) {
+    } catch (RedPenException e) {
       log.error("Could not initialize Document Validator Server: ", e);
     }
   }

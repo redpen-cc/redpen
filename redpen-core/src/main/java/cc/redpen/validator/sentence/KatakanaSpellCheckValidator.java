@@ -17,7 +17,7 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.DocumentValidatorException;
+import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
 import cc.redpen.config.SymbolTable;
 import cc.redpen.config.ValidatorConfiguration;
@@ -67,7 +67,7 @@ public class KatakanaSpellCheckValidator implements Validator<Sentence> {
 
   public KatakanaSpellCheckValidator(ValidatorConfiguration config,
                                      SymbolTable symbolTable)
-      throws DocumentValidatorException {
+      throws RedPenException {
     initialize(config, symbolTable);
   }
 
@@ -129,7 +129,7 @@ public class KatakanaSpellCheckValidator implements Validator<Sentence> {
 
   private boolean initialize(ValidatorConfiguration conf,
                              SymbolTable symbolTable)
-      throws DocumentValidatorException {
+      throws RedPenException {
     //TODO : support the exception word list.
     //TODO : configurable SIMILARITY_RATIO.
     //TODO : configurable MAX_IGNORE_KATAKANA_LENGTH.

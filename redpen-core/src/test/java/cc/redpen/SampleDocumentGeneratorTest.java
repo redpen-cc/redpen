@@ -25,7 +25,7 @@ import static cc.redpen.parser.Parser.Type.*;
 
 public class SampleDocumentGeneratorTest {
   @Test
-  public void testGenerateSimplePlainDocument() throws DocumentValidatorException {
+  public void testGenerateSimplePlainDocument() throws RedPenException {
     String sampleText = "";
     sampleText += "Gekioko pun pun maru means very very angry.\n";
     DocumentCollection doc = SampleDocumentGenerator.generateOneFileDocument(sampleText,
@@ -41,7 +41,7 @@ public class SampleDocumentGeneratorTest {
   }
 
   @Test
-  public void testGenerateSimpleWikiDocument() throws DocumentValidatorException {
+  public void testGenerateSimpleWikiDocument() throws RedPenException {
     String sampleText = "";
     sampleText += "h1. About Gekioko.\n";
     sampleText += "Gekioko pun pun maru means very very angry.\n";
@@ -59,7 +59,7 @@ public class SampleDocumentGeneratorTest {
   }
 
   @Test
-  public void testGenerateSimpleMarkdownDocument() throws DocumentValidatorException {
+  public void testGenerateSimpleMarkdownDocument() throws RedPenException {
     String sampleText = "";
     sampleText += "# About Gekioko.\n";
     sampleText += "Gekioko pun pun maru means very very angry.\n";
@@ -77,7 +77,7 @@ public class SampleDocumentGeneratorTest {
   }
 
   @Test(expected=NullPointerException.class)
-  public void testInputNullDocument() throws DocumentValidatorException {
+  public void testInputNullDocument() throws RedPenException {
     SampleDocumentGenerator.generateOneFileDocument(null, MARKDOWN);
   }
 }

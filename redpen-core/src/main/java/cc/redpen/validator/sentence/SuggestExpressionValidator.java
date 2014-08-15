@@ -17,7 +17,7 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.DocumentValidatorException;
+import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
 import cc.redpen.config.SymbolTable;
 import cc.redpen.config.ValidatorConfiguration;
@@ -43,7 +43,7 @@ public class SuggestExpressionValidator implements Validator<Sentence> {
 
   public SuggestExpressionValidator(ValidatorConfiguration config,
                                     SymbolTable symbolTable)
-      throws DocumentValidatorException {
+      throws RedPenException {
     initialize(config);
   }
 
@@ -66,7 +66,7 @@ public class SuggestExpressionValidator implements Validator<Sentence> {
 
   private boolean initialize(
     ValidatorConfiguration conf)
-      throws DocumentValidatorException {
+      throws RedPenException {
     String confFile = conf.getAttribute("invalid_word_file");
     LOG.info("dictionary file is " + confFile);
     if (confFile == null || confFile.equals("")) {

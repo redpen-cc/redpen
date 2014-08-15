@@ -26,7 +26,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import cc.redpen.DocumentValidatorException;
+import cc.redpen.RedPenException;
 import cc.redpen.config.SymbolTable;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
@@ -42,7 +42,7 @@ import cc.redpen.symbol.DefaultSymbols;
 public abstract class BasicDocumentParser implements Parser {
   @Override
   public Document generateDocument(String fileName)
-      throws DocumentValidatorException {
+      throws RedPenException {
     InputStream inputStream = this.loadStream(fileName);
     Document document = this.generateDocument(inputStream);
     if (document != null) {
@@ -59,12 +59,12 @@ public abstract class BasicDocumentParser implements Parser {
    */
   public final void initialize(Configuration configuration,
       DocumentCollection.Builder documentBuilder) throws
-      DocumentValidatorException {
+      RedPenException {
     if (configuration == null) {
-      throw new DocumentValidatorException("Given configuration is null");
+      throw new RedPenException("Given configuration is null");
     }
     if (configuration.getSymbolTable() == null) {
-      throw new DocumentValidatorException(
+      throw new RedPenException(
           "Character table in the given configuration is null");
     }
 
@@ -134,34 +134,34 @@ public abstract class BasicDocumentParser implements Parser {
    * create BufferedReader from InputStream is.
    * @param is InputStream using to parse
    * @return BufferedReader created from InputStream
-   * @throws DocumentValidatorException if InputStream is not
+   * @throws cc.redpen.RedPenException if InputStream is not
    * supported UTF-8 encoding
    */
   protected BufferedReader createReader(InputStream is)
-      throws DocumentValidatorException {
+      throws RedPenException {
     if (is == null) {
-      throw new DocumentValidatorException("input stream is null");
+      throw new RedPenException("input stream is null");
     }
     BufferedReader br;
     try {
       br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
     } catch (UnsupportedEncodingException e) {
-      throw new DocumentValidatorException(
+      throw new RedPenException(
           "does not support UTF-8 encoding", e);
     }
     return br;
   }
 
   protected final InputStream loadStream(String fileName)
-      throws DocumentValidatorException {
+      throws RedPenException {
     InputStream inputStream;
     if (fileName == null || fileName.equals("")) {
-      throw new DocumentValidatorException("input file was not specified.");
+      throw new RedPenException("input file was not specified.");
     } else {
       try {
         inputStream = new FileInputStream(fileName);
       } catch (FileNotFoundException e) {
-        throw new DocumentValidatorException("Input file is not found", e);
+        throw new RedPenException("Input file is not found", e);
       }
     }
     return inputStream;

@@ -12,7 +12,7 @@
 
   <listener>
     <listener-class>
-      cc.redpen.server.DocumentValidatorInitializer
+      cc.redpen.server.RedPenInitializer
     </listener-class>
   </listener>
 
