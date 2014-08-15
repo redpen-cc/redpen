@@ -21,7 +21,7 @@
         <validator name="SentenceLength">
             <property name="max_length" value="200"/>
         </validator>
-        <validator name="InvalidCharacter" />
+        <validator name="InvalidSymbol" />
         <validator name="SpaceWithSymbol" />
         <validator name="SectionLength">
             <property name="max_char_num" value="2000"/>
