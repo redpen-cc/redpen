@@ -4,7 +4,7 @@
             <property name="max_length" value="200"/>
         </validator>
         <validator name="InvalidCharacter" />
-        <validator name="SpaceWithSymbol" />
+        <validator name="SymbolWithSpace" />
         <validator name="SectionLength">
             <property name="max_char_num" value="2000"/>
         </validator>

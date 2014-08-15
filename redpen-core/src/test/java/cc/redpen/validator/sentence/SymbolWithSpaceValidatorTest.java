@@ -32,7 +32,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class SpaceWithSymbolValidatorTest {
+public class SymbolWithSpaceValidatorTest {
   @Test
   public void testNotNeedSpace() throws DocumentValidatorException {
     DocumentCollection documents = new DocumentCollection.Builder()
