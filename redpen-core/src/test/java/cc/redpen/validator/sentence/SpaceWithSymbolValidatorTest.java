@@ -43,7 +43,7 @@ public class SpaceWithSymbolValidatorTest {
         .build();
 
     Configuration conf = new Configuration.Builder()
-        .addValidatorConfig(new ValidatorConfiguration("SpaceWithSymbol"))
+        .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
         .setCharacterTable("en")
         .setCharacter(new Character("SLASH", "/"))
         .build();
@@ -67,7 +67,7 @@ public class SpaceWithSymbolValidatorTest {
         .build();
 
     Configuration conf = new Configuration.Builder()
-        .addValidatorConfig(new ValidatorConfiguration("SpaceWithSymbol"))
+        .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
         .setCharacterTable("en")
         .setCharacter(new Character("COLON", ":", "", false, true))
         .build();
@@ -91,7 +91,7 @@ public class SpaceWithSymbolValidatorTest {
         .build();
 
     Configuration conf = new Configuration.Builder()
-        .addValidatorConfig(new ValidatorConfiguration("SpaceWithSymbol"))
+        .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
         .setCharacterTable("en")
         .setCharacter(new Character("LEFT_PARENTHESIS", "(", "", true, false))
         .build();
@@ -115,7 +115,7 @@ public class SpaceWithSymbolValidatorTest {
         .build();
 
     Configuration conf = new Configuration.Builder()
-        .addValidatorConfig(new ValidatorConfiguration("SpaceWithSymbol"))
+        .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
         .setCharacterTable("en")
         .setCharacter(new Character("LEFT_PARENTHESIS", "(", "", true, false))
         .setCharacter(new Character("RIGHT_PARENTHESIS", ")", "", false, true))
@@ -140,7 +140,7 @@ public class SpaceWithSymbolValidatorTest {
         .build();
 
     Configuration conf = new Configuration.Builder()
-        .addValidatorConfig(new ValidatorConfiguration("SpaceWithSymbol"))
+        .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
         .setCharacterTable("en")
         .setCharacter(new Character("ASTARISK", "*", "", true, true))
         .build();
