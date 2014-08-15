@@ -22,29 +22,29 @@ package cc.redpen;
  */
 @SuppressWarnings("serial")
 public class RedPenException extends Exception {
-  /**
-   * Constructor.
-   */
-  public RedPenException() {
-    super();
-  }
+    /**
+     * Constructor.
+     */
+    public RedPenException() {
+        super();
+    }
 
-  /**
-   * Constructor.
-   *
-   * @param message error message
-   */
-  public RedPenException(String message) {
-    super(message);
-  }
+    /**
+     * Constructor.
+     *
+     * @param message error message
+     */
+    public RedPenException(String message) {
+        super(message);
+    }
 
-  /**
-   * Constructor.
-   *
-   * @param message error message
-   * @param cause   error cause
-   */
-  public RedPenException(String message, Exception cause) {
-    super(message, cause);
-  }
+    /**
+     * Constructor.
+     *
+     * @param message error message
+     * @param cause   error cause
+     */
+    public RedPenException(String message, Exception cause) {
+        super(message, cause);
+    }
 }

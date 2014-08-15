@@ -18,48 +18,52 @@
 package cc.redpen.util;
 
 import org.junit.Test;
+
 import java.lang.reflect.Type;
+
 import static org.junit.Assert.assertEquals;
 
 interface Generic<T> {
-  T getValue();
+    T getValue();
 }
+
 class HasString implements Generic<String> {
-  @Override
-  public String getValue() {
-    return "foobar";
-  }
+    @Override
+    public String getValue() {
+        return "foobar";
+    }
 }
+
 class HasInteger implements Generic<Integer> {
-  @Override
-  public Integer getValue() {
-    return 1;
-  }
+    @Override
+    public Integer getValue() {
+        return 1;
+    }
 }
 
 public class ClassUtilsTest {
-  @Test
-  public void testGetParameterizedOfStringParameterrizedClass() {
-    Type type = ClassUtils.getParameterizedClass(new HasString());
-    assertEquals(String.class, type);
-  }
+    @Test
+    public void testGetParameterizedOfStringParameterrizedClass() {
+        Type type = ClassUtils.getParameterizedClass(new HasString());
+        assertEquals(String.class, type);
+    }
 
-  @Test
-  public void testGetParameterizedOfIntegerParameterrizedClass() {
-    Type type = ClassUtils.getParameterizedClass(new HasInteger());
-    assertEquals(Integer.class, type);
-  }
+    @Test
+    public void testGetParameterizedOfIntegerParameterrizedClass() {
+        Type type = ClassUtils.getParameterizedClass(new HasInteger());
+        assertEquals(Integer.class, type);
+    }
 
-  @Test
-  public void testGetParameterizedOfNonGenericClass() {
-    Type type = ClassUtils.getParameterizedClass("");
-    assertEquals(null, type);
-  }
+    @Test
+    public void testGetParameterizedOfNonGenericClass() {
+        Type type = ClassUtils.getParameterizedClass("");
+        assertEquals(null, type);
+    }
 
-  @Test
-  public void testGetParameterizedOfNull() {
-    Type type = ClassUtils.getParameterizedClass(null);
-    assertEquals(null, type);
-  }
+    @Test
+    public void testGetParameterizedOfNull() {
+        Type type = ClassUtils.getParameterizedClass(null);
+        assertEquals(null, type);
+    }
 
 }

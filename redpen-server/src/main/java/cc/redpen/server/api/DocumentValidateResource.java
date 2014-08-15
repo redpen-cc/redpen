@@ -19,17 +19,17 @@
 package cc.redpen.server.api;
 
 import cc.redpen.RedPenException;
+import cc.redpen.ValidationError;
+import cc.redpen.model.Document;
+import cc.redpen.model.DocumentCollection;
+import cc.redpen.parser.DocumentParserFactory;
+import cc.redpen.parser.Parser;
 import cc.redpen.server.RedPenServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import cc.redpen.parser.DocumentParserFactory;
-import cc.redpen.parser.Parser;
-import cc.redpen.model.Document;
-import cc.redpen.model.DocumentCollection;
-import cc.redpen.ValidationError;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -44,45 +44,45 @@ import java.util.List;
 @Path("/document")
 public class DocumentValidateResource {
 
-  private static final Logger LOG = LogManager.getLogger(
-    DocumentValidateResource.class
-  );
+    private static final Logger LOG = LogManager.getLogger(
+            DocumentValidateResource.class
+    );
 
-  @Path("/validate")
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response validateDocument(@FormParam("textarea") @DefaultValue("") String document) throws
-    JSONException, RedPenException, UnsupportedEncodingException {
+    @Path("/validate")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response validateDocument(@FormParam("textarea") @DefaultValue("") String document) throws
+            JSONException, RedPenException, UnsupportedEncodingException {
 
-    LOG.info("Validating document");
-    RedPenServer server = RedPenServer.getInstance();
-    JSONObject json = new JSONObject();
+        LOG.info("Validating document");
+        RedPenServer server = RedPenServer.getInstance();
+        JSONObject json = new JSONObject();
 
-    json.put("document", document);
+        json.put("document", document);
 
-    Parser parser = DocumentParserFactory.generate(
-        Parser.Type.PLAIN, server.getConfig(), new DocumentCollection.Builder());
-    Document fileContent = parser.generateDocument(new
-        ByteArrayInputStream(document.getBytes("UTF-8")));
+        Parser parser = DocumentParserFactory.generate(
+                Parser.Type.PLAIN, server.getConfig(), new DocumentCollection.Builder());
+        Document fileContent = parser.generateDocument(new
+                ByteArrayInputStream(document.getBytes("UTF-8")));
 
-    DocumentCollection d = new DocumentCollection();
-    d.addDocument(fileContent);
+        DocumentCollection d = new DocumentCollection();
+        d.addDocument(fileContent);
 
-    List<ValidationError> errors = server.getRedPen().check(d);
+        List<ValidationError> errors = server.getRedPen().check(d);
 
-    JSONArray jsonErrors = new JSONArray();
+        JSONArray jsonErrors = new JSONArray();
 
-    for (ValidationError error : errors) {
-      JSONObject jsonError = new JSONObject();
-      if (error.getSentence().isPresent()) {
-        jsonError.put("sentence", error.getSentence().get().content);
-      }
-      jsonError.put("message", error.getMessage());
-      jsonErrors.put(jsonError);
+        for (ValidationError error : errors) {
+            JSONObject jsonError = new JSONObject();
+            if (error.getSentence().isPresent()) {
+                jsonError.put("sentence", error.getSentence().get().content);
+            }
+            jsonError.put("message", error.getMessage());
+            jsonErrors.put(jsonError);
+        }
+
+        json.put("errors", jsonErrors);
+
+        return Response.ok().entity(json).build();
     }
-
-    json.put("errors", jsonErrors);
-
-    return Response.ok().entity(json).build();
-  }
 }

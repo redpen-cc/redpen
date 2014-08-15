@@ -31,34 +31,34 @@ import javax.servlet.ServletContextListener;
 public class RedPenInitializer implements ServletContextListener {
 
 
-  private static Logger log = LogManager.getLogger(
-    RedPenInitializer.class
-  );
+    private static Logger log = LogManager.getLogger(
+            RedPenInitializer.class
+    );
 
-  @Override
-  public void contextInitialized(ServletContextEvent servletContextEvent) {
-    log.info("Starting Document Validator Server.");
-    String configPath = System.getProperty("redpen.conf.path");
-    // if redpen.conf.path is not set via system property, fallback to web.xml's context-param.
-    if (configPath == null) {
-      configPath = servletContextEvent.getServletContext().getInitParameter("redpen.conf.path");
-      if (configPath == null) {
-        throw new ExceptionInInitializerError("redpen.conf.path not specified in web.xml");
-      }
-      System.setProperty("redpen.conf.path", configPath);
+    @Override
+    public void contextInitialized(ServletContextEvent servletContextEvent) {
+        log.info("Starting Document Validator Server.");
+        String configPath = System.getProperty("redpen.conf.path");
+        // if redpen.conf.path is not set via system property, fallback to web.xml's context-param.
+        if (configPath == null) {
+            configPath = servletContextEvent.getServletContext().getInitParameter("redpen.conf.path");
+            if (configPath == null) {
+                throw new ExceptionInInitializerError("redpen.conf.path not specified in web.xml");
+            }
+            System.setProperty("redpen.conf.path", configPath);
+        }
+
+        log.info("Config Path is set to " + "\"" + configPath + "\"");
+        try {
+            RedPenServer.initialize();
+            log.info("Document Validator Server is running.");
+        } catch (RedPenException e) {
+            log.error("Could not initialize Document Validator Server: ", e);
+        }
     }
 
-    log.info("Config Path is set to " + "\"" + configPath + "\"");
-    try {
-      RedPenServer.initialize();
-      log.info("Document Validator Server is running.");
-    } catch (RedPenException e) {
-      log.error("Could not initialize Document Validator Server: ", e);
+    @Override
+    public void contextDestroyed(ServletContextEvent servletContextEvent) {
+        log.info("Stopping Document Validator Server.");
     }
-  }
-
-  @Override
-  public void contextDestroyed(ServletContextEvent servletContextEvent) {
-    log.info("Stopping Document Validator Server.");
-  }
 }

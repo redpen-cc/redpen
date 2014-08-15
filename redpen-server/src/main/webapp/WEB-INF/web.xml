@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0"
+         xmlns="http://java.sun.com/xml/ns/javaee"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
-  <display-name>RedPen Server</display-name>
-  <description>RedPen Server</description>
+    <display-name>RedPen Server</display-name>
+    <description>RedPen Server</description>
 
-  <context-param>
-    <param-name>redpen.conf.path</param-name>
-    <param-value>/conf/redpen-conf.xml</param-value>
-  </context-param>
+    <context-param>
+        <param-name>redpen.conf.path</param-name>
+        <param-value>/conf/redpen-conf.xml</param-value>
+    </context-param>
 
-  <listener>
-    <listener-class>
-      cc.redpen.server.RedPenInitializer
-    </listener-class>
-  </listener>
+    <listener>
+        <listener-class>
+            cc.redpen.server.RedPenInitializer
+        </listener-class>
+    </listener>
 
-  <!-- Wink SDK servlet configuration. This servlet handles HTTP requests of
-  SDK web service on application server. -->
-  <servlet>
-    <servlet-name>restSdkService</servlet-name>
-    <servlet-class>org.apache.wink.server.internal.servlet.RestServlet
-    </servlet-class>
-    <init-param>
-      <param-name>applicationConfigLocation</param-name>
-      <param-value>/WEB-INF/application</param-value>
-    </init-param>
-  </servlet>
+    <!-- Wink SDK servlet configuration. This servlet handles HTTP requests of
+    SDK web service on application server. -->
+    <servlet>
+        <servlet-name>restSdkService</servlet-name>
+        <servlet-class>org.apache.wink.server.internal.servlet.RestServlet
+        </servlet-class>
+        <init-param>
+            <param-name>applicationConfigLocation</param-name>
+            <param-value>/WEB-INF/application</param-value>
+        </init-param>
+    </servlet>
 
-  <servlet-mapping>
-    <servlet-name>restSdkService</servlet-name>
-    <url-pattern>/rest/*</url-pattern>
-  </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>restSdkService</servlet-name>
+        <url-pattern>/rest/*</url-pattern>
+    </servlet-mapping>
 </web-app>

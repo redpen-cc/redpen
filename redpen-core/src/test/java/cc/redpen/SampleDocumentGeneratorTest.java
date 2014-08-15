@@ -17,67 +17,68 @@
  */
 package cc.redpen;
 
-import org.junit.Test;
 import cc.redpen.model.DocumentCollection;
+import org.junit.Test;
 
-import static org.junit.Assert.*;
 import static cc.redpen.parser.Parser.Type.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class SampleDocumentGeneratorTest {
-  @Test
-  public void testGenerateSimplePlainDocument() throws RedPenException {
-    String sampleText = "";
-    sampleText += "Gekioko pun pun maru means very very angry.\n";
-    DocumentCollection doc = SampleDocumentGenerator.generateOneFileDocument(sampleText,
-        PLAIN);
-    assertNotNull(doc);
-    assertEquals(1, doc.size());
-    assertEquals(1, doc.getFile(0).getNumberOfSections());
-    assertEquals(1, doc.getFile(0).getSection(0).getNumberOfParagraphs());
-    assertEquals(1, doc.getFile(0).getSection(0).getParagraph(0)
-        .getNumberOfSentences());
-    assertEquals("Gekioko pun pun maru means very very angry.", doc.getFile(0).getSection(0)
-        .getParagraph(0).getSentence(0).content);
-  }
+    @Test
+    public void testGenerateSimplePlainDocument() throws RedPenException {
+        String sampleText = "";
+        sampleText += "Gekioko pun pun maru means very very angry.\n";
+        DocumentCollection doc = SampleDocumentGenerator.generateOneFileDocument(sampleText,
+                PLAIN);
+        assertNotNull(doc);
+        assertEquals(1, doc.size());
+        assertEquals(1, doc.getFile(0).getNumberOfSections());
+        assertEquals(1, doc.getFile(0).getSection(0).getNumberOfParagraphs());
+        assertEquals(1, doc.getFile(0).getSection(0).getParagraph(0)
+                .getNumberOfSentences());
+        assertEquals("Gekioko pun pun maru means very very angry.", doc.getFile(0).getSection(0)
+                .getParagraph(0).getSentence(0).content);
+    }
 
-  @Test
-  public void testGenerateSimpleWikiDocument() throws RedPenException {
-    String sampleText = "";
-    sampleText += "h1. About Gekioko.\n";
-    sampleText += "Gekioko pun pun maru means very very angry.\n";
-    DocumentCollection doc = SampleDocumentGenerator.generateOneFileDocument(sampleText,
-        WIKI);
-    assertNotNull(doc);
-    assertEquals(1, doc.size());
-    assertEquals(2, doc.getFile(0).getNumberOfSections());
-    assertEquals("About Gekioko.", doc.getFile(0).getSection(1).getHeaderContent(0).content);
-    assertEquals(1, doc.getFile(0).getSection(1).getNumberOfParagraphs());
-    assertEquals(1, doc.getFile(0).getSection(1).getParagraph(0)
-        .getNumberOfSentences());
-    assertEquals("Gekioko pun pun maru means very very angry.", doc.getFile(0).getSection(1)
-        .getParagraph(0).getSentence(0).content);
-  }
+    @Test
+    public void testGenerateSimpleWikiDocument() throws RedPenException {
+        String sampleText = "";
+        sampleText += "h1. About Gekioko.\n";
+        sampleText += "Gekioko pun pun maru means very very angry.\n";
+        DocumentCollection doc = SampleDocumentGenerator.generateOneFileDocument(sampleText,
+                WIKI);
+        assertNotNull(doc);
+        assertEquals(1, doc.size());
+        assertEquals(2, doc.getFile(0).getNumberOfSections());
+        assertEquals("About Gekioko.", doc.getFile(0).getSection(1).getHeaderContent(0).content);
+        assertEquals(1, doc.getFile(0).getSection(1).getNumberOfParagraphs());
+        assertEquals(1, doc.getFile(0).getSection(1).getParagraph(0)
+                .getNumberOfSentences());
+        assertEquals("Gekioko pun pun maru means very very angry.", doc.getFile(0).getSection(1)
+                .getParagraph(0).getSentence(0).content);
+    }
 
-  @Test
-  public void testGenerateSimpleMarkdownDocument() throws RedPenException {
-    String sampleText = "";
-    sampleText += "# About Gekioko.\n";
-    sampleText += "Gekioko pun pun maru means very very angry.\n";
-    DocumentCollection doc = SampleDocumentGenerator.generateOneFileDocument(sampleText,
-        MARKDOWN);
-    assertNotNull(doc);
-    assertEquals(1, doc.size());
-    assertEquals(2, doc.getFile(0).getNumberOfSections());
-    assertEquals("About Gekioko.", doc.getFile(0).getSection(1).getHeaderContent(0).content);
-    assertEquals(1, doc.getFile(0).getSection(1).getNumberOfParagraphs());
-    assertEquals(1, doc.getFile(0).getSection(1).getParagraph(0)
-        .getNumberOfSentences());
-    assertEquals("Gekioko pun pun maru means very very angry.", doc.getFile(0).getSection(1)
-        .getParagraph(0).getSentence(0).content);
-  }
+    @Test
+    public void testGenerateSimpleMarkdownDocument() throws RedPenException {
+        String sampleText = "";
+        sampleText += "# About Gekioko.\n";
+        sampleText += "Gekioko pun pun maru means very very angry.\n";
+        DocumentCollection doc = SampleDocumentGenerator.generateOneFileDocument(sampleText,
+                MARKDOWN);
+        assertNotNull(doc);
+        assertEquals(1, doc.size());
+        assertEquals(2, doc.getFile(0).getNumberOfSections());
+        assertEquals("About Gekioko.", doc.getFile(0).getSection(1).getHeaderContent(0).content);
+        assertEquals(1, doc.getFile(0).getSection(1).getNumberOfParagraphs());
+        assertEquals(1, doc.getFile(0).getSection(1).getParagraph(0)
+                .getNumberOfSentences());
+        assertEquals("Gekioko pun pun maru means very very angry.", doc.getFile(0).getSection(1)
+                .getParagraph(0).getSentence(0).content);
+    }
 
-  @Test(expected=NullPointerException.class)
-  public void testInputNullDocument() throws RedPenException {
-    SampleDocumentGenerator.generateOneFileDocument(null, MARKDOWN);
-  }
+    @Test(expected = NullPointerException.class)
+    public void testInputNullDocument() throws RedPenException {
+        SampleDocumentGenerator.generateOneFileDocument(null, MARKDOWN);
+    }
 }

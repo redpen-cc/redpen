@@ -34,249 +34,245 @@ import java.util.List;
  */
 public class QuotationValidator implements Validator<Sentence> {
 
-  /**
-   * Constructor.
-   */
-  public QuotationValidator() {
-    super();
-    this.useAscii = false;
-    this.period = DefaultSymbols.getInstance().get(
-        "FULL_STOP").getValue().charAt(0);
-    leftSingleQuotationMark =
-        new Symbol("LEFT_SINGLE_QUOTATION_MARK", "‘", "", true, false);
-    rightSingleQuotationMark =
-        new Symbol("RIGHT_SINGLE_QUOTATION_MARK", "’", "", false, true);
-    leftDoubleQuotationMark =
-        new Symbol("LEFT_DOUBLE_QUOTATION_MARK", "“", "", true, false);
-    rightDoubleQuotationMark =
-        new Symbol("RIGHT_DOUBLE_QUOTATION_MARK", "”", "", false, true);
-    exceptionSuffixes = DEFAULT_EXCEPTION_SUFFIXES;
-  }
+    private static final List<String> DEFAULT_EXCEPTION_SUFFIXES;
 
-  /**
-   * Constructor.
-   * @param isUseAscii true when this validator uses ascii setting,
-   *                   false uses the user-defined character settings
-   */
-  public QuotationValidator(boolean isUseAscii) {
-    this();
-    this.useAscii = isUseAscii;
-    if (useAscii) {
-      leftSingleQuotationMark =
-          new Symbol("LEFT_SINGLE_QUOTATION_MARK", "'", "", true, false);
-      rightSingleQuotationMark =
-          new Symbol("RIGHT_SINGLE_QUOTATION_MARK", "'", "", false, true);
-      leftDoubleQuotationMark =
-          new Symbol("LEFT_DOUBLE_QUOTATION_MARK", "\"", "", true, false);
-      rightDoubleQuotationMark =
-          new Symbol("RIGHT_DOUBLE_QUOTATION_MARK", "\"", "", false, true);
-    }
-  }
-
-  /**
-   * Constructor.
-   * @param isUseAscii true when this validator uses ascii setting,
-   *                   false uses the user-defined character settings
-   * @param fullStop period character
-   */
-  public QuotationValidator(boolean isUseAscii, Character fullStop) {
-    this(isUseAscii);
-    this.period = fullStop;
-  }
-
-  @Override
-  public List<ValidationError> validate(Sentence sentence) {
-    List<ValidationError> errors = new ArrayList<>();
-    // validate single quotation
-    List<ValidationError> result = this.checkQuotation(sentence,
-        leftSingleQuotationMark, rightSingleQuotationMark);
-    if (result != null) {
-      errors.addAll(result);
+    static {
+        DEFAULT_EXCEPTION_SUFFIXES = new ArrayList<>();
+        DEFAULT_EXCEPTION_SUFFIXES.add("s "); // He's
+        DEFAULT_EXCEPTION_SUFFIXES.add("m "); // I'm
     }
 
-    // validate double quotation
-    errors.addAll(this.checkQuotation(sentence,
-        leftDoubleQuotationMark, rightDoubleQuotationMark));
-    return errors;
-  }
+    private final List<String> exceptionSuffixes;
+    private Symbol leftSingleQuotationMark;
+    private Symbol rightSingleQuotationMark;
+    private Symbol leftDoubleQuotationMark;
+    private Symbol rightDoubleQuotationMark;
+    private boolean useAscii;
+    private Character period;
 
-  public boolean initialize(
-      ValidatorConfiguration conf, SymbolTable charTable)
-      throws RedPenException {
-    if (charTable.containsSymbol("FULL_STOP")) {
-      this.period = charTable.getSymbol("FULL_STOP").getValue().charAt(0);
-    }
-
-    if (conf.getAttribute("use_ascii").equals("true")) {
-      useAscii = true;
-      leftSingleQuotationMark =
-          new Symbol("LEFT_SINGLE_QUOTATION_MARK", "'", "", true, false);
-      rightSingleQuotationMark =
-          new Symbol("RIGHT_SINGLE_QUOTATION_MARK", "'", "", false, true);
-      leftDoubleQuotationMark =
-          new Symbol("LEFT_DOUBLE_QUOTATION_MARK", "\"", "", true, false);
-      rightDoubleQuotationMark =
-          new Symbol("RIGHT_DOUBLE_QUOTATION_MARK", "\"", "", false, true);
-    } else {
-      // single quotes
-      if (charTable.containsSymbol("LEFT_SINGLE_QUOTATION_MARK")) {
+    /**
+     * Constructor.
+     */
+    public QuotationValidator() {
+        super();
+        this.useAscii = false;
+        this.period = DefaultSymbols.getInstance().get(
+                "FULL_STOP").getValue().charAt(0);
         leftSingleQuotationMark =
-            charTable.getSymbol("LEFT_SINGLE_QUOTATION_MARK");
-      }
-      if (charTable.containsSymbol("RIGHT_SINGLE_QUOTATION_MARK")) {
+                new Symbol("LEFT_SINGLE_QUOTATION_MARK", "‘", "", true, false);
         rightSingleQuotationMark =
-            charTable.getSymbol("RIGHT_SINGLE_QUOTATION_MARK");
-      }
-
-      // single quotes
-      if (charTable.containsSymbol("LEFT_DOUBLE_QUOTATION_MARK")) {
-        leftSingleQuotationMark =
-            charTable.getSymbol("LEFT_DOUBLE_QUOTATION_MARK");
-      }
-      if (charTable.containsSymbol("RIGHT_DOUBLE_QUOTATION_MARK")) {
-        rightSingleQuotationMark =
-            charTable.getSymbol("RIGHT_DOUBLE_QUOTATION_MARK");
-      }
+                new Symbol("RIGHT_SINGLE_QUOTATION_MARK", "’", "", false, true);
+        leftDoubleQuotationMark =
+                new Symbol("LEFT_DOUBLE_QUOTATION_MARK", "“", "", true, false);
+        rightDoubleQuotationMark =
+                new Symbol("RIGHT_DOUBLE_QUOTATION_MARK", "”", "", false, true);
+        exceptionSuffixes = DEFAULT_EXCEPTION_SUFFIXES;
     }
-    return true;
-  }
 
-  private List<ValidationError> checkQuotation(Sentence sentence,
-      Symbol leftQuotation,
-      Symbol rightQuotation) {
-    String sentenceString = sentence.content;
-    List<ValidationError> errors = new ArrayList<>();
-    int leftPosition = 0;
-    int rightPosition = 0;
-    while (leftPosition >= 0 && rightPosition < sentenceString.length()) {
-      leftPosition = this.getQuotePosition(sentenceString,
-          leftQuotation.getValue(),
-          rightPosition + 1);
-
-      if (leftPosition < 0) {
-        rightPosition  = this.getQuotePosition(sentenceString,
-            rightQuotation.getValue(),
-            rightPosition + 1);
-      } else {
-        rightPosition  = this.getQuotePosition(sentenceString,
-            rightQuotation.getValue(),
-            leftPosition + 1);
-      }
-
-      // validate if left and right quote pair exists
-      if (leftPosition >= 0 && rightPosition < 0) {
-        errors.add(new ValidationError(
-            this.getClass(),
-            "Right Quotation mark does not exist."
-            + String.valueOf(sentence.content.length()),
-            sentence));
-        break;
-      }
-
-      if (leftPosition < 0 && rightPosition >= 0) {
-        errors.add(new ValidationError(
-            this.getClass(),
-            "left Quotation mark does not exist."
-            + String.valueOf(sentence.content.length()),
-            sentence));
-        break;
-      }
-
-      // validate inconsistent quotation marks
-      int nextLeftPosition  = this.getQuotePosition(sentenceString,
-          leftQuotation.getValue(),
-          leftPosition + 1);
-
-      int nextRightPosition  = this.getQuotePosition(sentenceString,
-          leftQuotation.getValue(),
-          leftPosition + 1);
-
-      if (nextLeftPosition < rightPosition && nextLeftPosition > 0) {
-        errors.add(new ValidationError(
-            this.getClass(),
-            "Twice Right Quotation marks in succession.",
-            sentence));
-      }
-
-      if (nextRightPosition < leftPosition && nextRightPosition > 0) {
-        errors.add(new ValidationError(
-            this.getClass(),
-            "Twice Left Quotation marks in succession.",
-            sentence));
-      }
-
-      // validate if quotes have white spaces
-      if (leftPosition > 0 && leftQuotation.isNeedBeforeSpace()
-          && (sentenceString.charAt(leftPosition - 1) != ' ')) {
-        errors.add(new ValidationError(
-            this.getClass(),
-            "Left quotation does not have space.",
-            sentence));
-      }
-
-      if (rightPosition > 0 && rightPosition < sentenceString.length() - 1
-          && rightQuotation.isNeedAfterSpace()
-          && (sentenceString.charAt(rightPosition + 1) != ' '
-          && sentenceString.charAt(rightPosition + 1) != this.period)) {
-        errors.add(new ValidationError(
-            this.getClass(),
-            "Right quotation does not have space",
-            sentence));
-      }
+    /**
+     * Constructor.
+     *
+     * @param isUseAscii true when this validator uses ascii setting,
+     *                   false uses the user-defined character settings
+     */
+    public QuotationValidator(boolean isUseAscii) {
+        this();
+        this.useAscii = isUseAscii;
+        if (useAscii) {
+            leftSingleQuotationMark =
+                    new Symbol("LEFT_SINGLE_QUOTATION_MARK", "'", "", true, false);
+            rightSingleQuotationMark =
+                    new Symbol("RIGHT_SINGLE_QUOTATION_MARK", "'", "", false, true);
+            leftDoubleQuotationMark =
+                    new Symbol("LEFT_DOUBLE_QUOTATION_MARK", "\"", "", true, false);
+            rightDoubleQuotationMark =
+                    new Symbol("RIGHT_DOUBLE_QUOTATION_MARK", "\"", "", false, true);
+        }
     }
-    return errors;
-  }
 
-  private int getQuotePosition(String sentenceStr, String quote,
-      int startPosition) {
-    int quoteCandidatePosition = startPosition;
-    boolean isFound;
-    while (startPosition > -1) {
-      quoteCandidatePosition = sentenceStr.indexOf(quote, startPosition);
-      isFound = detectIsFound(sentenceStr, quoteCandidatePosition);
-      if (isFound) {
+    /**
+     * Constructor.
+     *
+     * @param isUseAscii true when this validator uses ascii setting,
+     *                   false uses the user-defined character settings
+     * @param fullStop   period character
+     */
+    public QuotationValidator(boolean isUseAscii, Character fullStop) {
+        this(isUseAscii);
+        this.period = fullStop;
+    }
+
+    @Override
+    public List<ValidationError> validate(Sentence sentence) {
+        List<ValidationError> errors = new ArrayList<>();
+        // validate single quotation
+        List<ValidationError> result = this.checkQuotation(sentence,
+                leftSingleQuotationMark, rightSingleQuotationMark);
+        if (result != null) {
+            errors.addAll(result);
+        }
+
+        // validate double quotation
+        errors.addAll(this.checkQuotation(sentence,
+                leftDoubleQuotationMark, rightDoubleQuotationMark));
+        return errors;
+    }
+
+    public boolean initialize(
+            ValidatorConfiguration conf, SymbolTable charTable)
+            throws RedPenException {
+        if (charTable.containsSymbol("FULL_STOP")) {
+            this.period = charTable.getSymbol("FULL_STOP").getValue().charAt(0);
+        }
+
+        if (conf.getAttribute("use_ascii").equals("true")) {
+            useAscii = true;
+            leftSingleQuotationMark =
+                    new Symbol("LEFT_SINGLE_QUOTATION_MARK", "'", "", true, false);
+            rightSingleQuotationMark =
+                    new Symbol("RIGHT_SINGLE_QUOTATION_MARK", "'", "", false, true);
+            leftDoubleQuotationMark =
+                    new Symbol("LEFT_DOUBLE_QUOTATION_MARK", "\"", "", true, false);
+            rightDoubleQuotationMark =
+                    new Symbol("RIGHT_DOUBLE_QUOTATION_MARK", "\"", "", false, true);
+        } else {
+            // single quotes
+            if (charTable.containsSymbol("LEFT_SINGLE_QUOTATION_MARK")) {
+                leftSingleQuotationMark =
+                        charTable.getSymbol("LEFT_SINGLE_QUOTATION_MARK");
+            }
+            if (charTable.containsSymbol("RIGHT_SINGLE_QUOTATION_MARK")) {
+                rightSingleQuotationMark =
+                        charTable.getSymbol("RIGHT_SINGLE_QUOTATION_MARK");
+            }
+
+            // single quotes
+            if (charTable.containsSymbol("LEFT_DOUBLE_QUOTATION_MARK")) {
+                leftSingleQuotationMark =
+                        charTable.getSymbol("LEFT_DOUBLE_QUOTATION_MARK");
+            }
+            if (charTable.containsSymbol("RIGHT_DOUBLE_QUOTATION_MARK")) {
+                rightSingleQuotationMark =
+                        charTable.getSymbol("RIGHT_DOUBLE_QUOTATION_MARK");
+            }
+        }
+        return true;
+    }
+
+    private List<ValidationError> checkQuotation(Sentence sentence,
+                                                 Symbol leftQuotation,
+                                                 Symbol rightQuotation) {
+        String sentenceString = sentence.content;
+        List<ValidationError> errors = new ArrayList<>();
+        int leftPosition = 0;
+        int rightPosition = 0;
+        while (leftPosition >= 0 && rightPosition < sentenceString.length()) {
+            leftPosition = this.getQuotePosition(sentenceString,
+                    leftQuotation.getValue(),
+                    rightPosition + 1);
+
+            if (leftPosition < 0) {
+                rightPosition = this.getQuotePosition(sentenceString,
+                        rightQuotation.getValue(),
+                        rightPosition + 1);
+            } else {
+                rightPosition = this.getQuotePosition(sentenceString,
+                        rightQuotation.getValue(),
+                        leftPosition + 1);
+            }
+
+            // validate if left and right quote pair exists
+            if (leftPosition >= 0 && rightPosition < 0) {
+                errors.add(new ValidationError(
+                        this.getClass(),
+                        "Right Quotation mark does not exist."
+                                + String.valueOf(sentence.content.length()),
+                        sentence));
+                break;
+            }
+
+            if (leftPosition < 0 && rightPosition >= 0) {
+                errors.add(new ValidationError(
+                        this.getClass(),
+                        "left Quotation mark does not exist."
+                                + String.valueOf(sentence.content.length()),
+                        sentence));
+                break;
+            }
+
+            // validate inconsistent quotation marks
+            int nextLeftPosition = this.getQuotePosition(sentenceString,
+                    leftQuotation.getValue(),
+                    leftPosition + 1);
+
+            int nextRightPosition = this.getQuotePosition(sentenceString,
+                    leftQuotation.getValue(),
+                    leftPosition + 1);
+
+            if (nextLeftPosition < rightPosition && nextLeftPosition > 0) {
+                errors.add(new ValidationError(
+                        this.getClass(),
+                        "Twice Right Quotation marks in succession.",
+                        sentence));
+            }
+
+            if (nextRightPosition < leftPosition && nextRightPosition > 0) {
+                errors.add(new ValidationError(
+                        this.getClass(),
+                        "Twice Left Quotation marks in succession.",
+                        sentence));
+            }
+
+            // validate if quotes have white spaces
+            if (leftPosition > 0 && leftQuotation.isNeedBeforeSpace()
+                    && (sentenceString.charAt(leftPosition - 1) != ' ')) {
+                errors.add(new ValidationError(
+                        this.getClass(),
+                        "Left quotation does not have space.",
+                        sentence));
+            }
+
+            if (rightPosition > 0 && rightPosition < sentenceString.length() - 1
+                    && rightQuotation.isNeedAfterSpace()
+                    && (sentenceString.charAt(rightPosition + 1) != ' '
+                    && sentenceString.charAt(rightPosition + 1) != this.period)) {
+                errors.add(new ValidationError(
+                        this.getClass(),
+                        "Right quotation does not have space",
+                        sentence));
+            }
+        }
+        return errors;
+    }
+
+    private int getQuotePosition(String sentenceStr, String quote,
+                                 int startPosition) {
+        int quoteCandidatePosition = startPosition;
+        boolean isFound;
+        while (startPosition > -1) {
+            quoteCandidatePosition = sentenceStr.indexOf(quote, startPosition);
+            isFound = detectIsFound(sentenceStr, quoteCandidatePosition);
+            if (isFound) {
+                return quoteCandidatePosition;
+            } else if (quoteCandidatePosition >= 0) { // exception case
+                startPosition = quoteCandidatePosition + 1;
+            } else {
+                return -1;
+            }
+        }
         return quoteCandidatePosition;
-      } else if (quoteCandidatePosition >= 0) { // exception case
-        startPosition = quoteCandidatePosition + 1;
-      } else {
-        return -1;
-      }
-    }
-    return quoteCandidatePosition;
-  }
-
-  private boolean detectIsFound(String sentenceStr, final int startPosition) {
-    if (startPosition < 0) {
-      return false;
     }
 
-    for (String exceptionSuffix : exceptionSuffixes) {
-      if (sentenceStr.startsWith(exceptionSuffix, startPosition + 1)) {
-        return false;
-      }
+    private boolean detectIsFound(String sentenceStr, final int startPosition) {
+        if (startPosition < 0) {
+            return false;
+        }
+
+        for (String exceptionSuffix : exceptionSuffixes) {
+            if (sentenceStr.startsWith(exceptionSuffix, startPosition + 1)) {
+                return false;
+            }
+        }
+        return true;
     }
-    return true;
-  }
-
-  private static final List<String> DEFAULT_EXCEPTION_SUFFIXES;
-
-  static {
-    DEFAULT_EXCEPTION_SUFFIXES = new ArrayList<>();
-    DEFAULT_EXCEPTION_SUFFIXES.add("s "); // He's
-    DEFAULT_EXCEPTION_SUFFIXES.add("m "); // I'm
-  }
-
-  private Symbol leftSingleQuotationMark;
-
-  private Symbol rightSingleQuotationMark;
-
-  private Symbol leftDoubleQuotationMark;
-
-  private Symbol rightDoubleQuotationMark;
-
-  private final List<String> exceptionSuffixes;
-
-  private boolean useAscii;
-
-  private Character period;
 }

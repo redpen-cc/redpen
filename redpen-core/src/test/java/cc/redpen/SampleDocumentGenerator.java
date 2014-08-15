@@ -17,11 +17,11 @@
  */
 package cc.redpen;
 
-import org.apache.commons.io.IOUtils;
+import cc.redpen.config.Configuration;
+import cc.redpen.model.DocumentCollection;
 import cc.redpen.parser.DocumentParserFactory;
 import cc.redpen.parser.Parser;
-import cc.redpen.model.DocumentCollection;
-import cc.redpen.config.Configuration;
+import org.apache.commons.io.IOUtils;
 
 import java.io.InputStream;
 
@@ -30,24 +30,24 @@ import java.io.InputStream;
  * only for testing purpose.
  */
 public class SampleDocumentGenerator {
-  /**
-   * Given a string and the syntax type, build a DocumentCollection object.
-   * This build method is made to write test easily, but this generator
-   * class does not supports the configurations if the configurations are
-   * needed please use DocumentGenerator class.
-   *
-   * @param docString input document string
-   * @param type document syntax: wiki, markdown or plain
-   * @return DocumentCollection object
-   */
-  public static DocumentCollection generateOneFileDocument(String docString,
-      Parser.Type type) throws RedPenException {
-    Configuration configuration = new Configuration.Builder()
-        .setSymbolTable("en").build();
-    DocumentCollection.Builder builder = new DocumentCollection.Builder();
-    Parser parser = DocumentParserFactory.generate(type, configuration, builder);
-    InputStream stream = IOUtils.toInputStream(docString);
-    parser.generateDocument(stream);
-    return builder.build();
-  }
+    /**
+     * Given a string and the syntax type, build a DocumentCollection object.
+     * This build method is made to write test easily, but this generator
+     * class does not supports the configurations if the configurations are
+     * needed please use DocumentGenerator class.
+     *
+     * @param docString input document string
+     * @param type      document syntax: wiki, markdown or plain
+     * @return DocumentCollection object
+     */
+    public static DocumentCollection generateOneFileDocument(String docString,
+                                                             Parser.Type type) throws RedPenException {
+        Configuration configuration = new Configuration.Builder()
+                .setSymbolTable("en").build();
+        DocumentCollection.Builder builder = new DocumentCollection.Builder();
+        Parser parser = DocumentParserFactory.generate(type, configuration, builder);
+        InputStream stream = IOUtils.toInputStream(docString);
+        parser.generateDocument(stream);
+        return builder.build();
+    }
 }

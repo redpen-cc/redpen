@@ -30,84 +30,83 @@ import java.io.UnsupportedEncodingException;
  * given output stream.
  */
 public class DefaultResultDistributor implements ResultDistributor {
-  /**
-   * Constructor.
-   *
-   * @param os output stream
-   */
-  DefaultResultDistributor(OutputStream os) {
-    super();
-    if (os == null) {
-      throw new IllegalArgumentException("argument OutputStream is null");
-    }
-    try {
-      writer = new PrintStream(os, true, "UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      throw new IllegalStateException("Specified output stream is illegal: "
-          + e.getMessage());
-    }
-    myFormatter = new PlainFormatter();
-  }
+    private Formatter myFormatter;
+    private PrintStream writer;
 
-  /**
-   * Constructor.
-   *
-   * @param ps output stream
-   */
-  public DefaultResultDistributor(PrintStream ps) {
-    if (ps == null) {
-      throw new IllegalArgumentException("argument PrintStream is null");
+    /**
+     * Constructor.
+     *
+     * @param os output stream
+     */
+    DefaultResultDistributor(OutputStream os) {
+        super();
+        if (os == null) {
+            throw new IllegalArgumentException("argument OutputStream is null");
+        }
+        try {
+            writer = new PrintStream(os, true, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException("Specified output stream is illegal: "
+                    + e.getMessage());
+        }
+        myFormatter = new PlainFormatter();
     }
-    try {
-      writer = new PrintStream(ps, true, "UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      throw new IllegalStateException("Specified output stream is illegal: "
-          + e.getMessage());
+
+    /**
+     * Constructor.
+     *
+     * @param ps output stream
+     */
+    public DefaultResultDistributor(PrintStream ps) {
+        if (ps == null) {
+            throw new IllegalArgumentException("argument PrintStream is null");
+        }
+        try {
+            writer = new PrintStream(ps, true, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException("Specified output stream is illegal: "
+                    + e.getMessage());
+        }
+        myFormatter = new PlainFormatter();
     }
-    myFormatter = new PlainFormatter();
-  }
 
-  /**
-   * Output given validation error.
-   *
-   * @param err validation error
-   */
-  public int flushResult(ValidationError err) {
-    if (err == null) {
-      throw new IllegalArgumentException("argument ValidationError is null");
+    /**
+     * Output given validation error.
+     *
+     * @param err validation error
+     */
+    public int flushResult(ValidationError err) {
+        if (err == null) {
+            throw new IllegalArgumentException("argument ValidationError is null");
+        }
+        writer.println(myFormatter.convertError(err));
+        writer.flush();
+        return 0;
     }
-    writer.println(myFormatter.convertError(err));
-    writer.flush();
-    return 0;
-  }
 
-  @Override
-  public void flushHeader() {
-    String header = myFormatter.header();
-    if (header != null) {
-      writer.println(header);
+    @Override
+    public void flushHeader() {
+        String header = myFormatter.header();
+        if (header != null) {
+            writer.println(header);
+        }
     }
-  }
 
-  @Override
-  public void flushFooter() {
-    String footer = myFormatter.footer();
-    if (footer != null) {
-      writer.println(footer);
-      writer.flush();
+    @Override
+    public void flushFooter() {
+        String footer = myFormatter.footer();
+        if (footer != null) {
+            writer.println(footer);
+            writer.flush();
+        }
     }
-  }
 
-  @Override
-  public void setFormatter(Formatter formatter) {
-    if (formatter == null) {
-      throw new IllegalArgumentException("argument formatter is null");
+    @Override
+    public void setFormatter(Formatter formatter) {
+        if (formatter == null) {
+            throw new IllegalArgumentException("argument formatter is null");
+        }
+        this.myFormatter = formatter;
     }
-    this.myFormatter = formatter;
-  }
-
-  private Formatter myFormatter;
-
-  private PrintStream writer;
 
 }

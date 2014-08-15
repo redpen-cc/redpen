@@ -17,49 +17,50 @@
  */
 package cc.redpen.validator.sentence;
 
-import static org.junit.Assert.*;
+import cc.redpen.ValidationError;
+import cc.redpen.model.Sentence;
+import org.junit.Test;
 
 import java.util.List;
 
-import org.junit.Test;
-import cc.redpen.model.Sentence;
-import cc.redpen.ValidationError;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 class SentenceLengthValidatorForTest extends SentenceLengthValidator {
-  protected void setLengthLimit(int maxLength) {
-    this.setMaxLength(maxLength);
-  }
+    protected void setLengthLimit(int maxLength) {
+        this.setMaxLength(maxLength);
+    }
 }
 
 public class SentenceLengthValidatorTest {
-  @Test
-  public void testWithLongSentence(){
-    SentenceLengthValidatorForTest validator = new SentenceLengthValidatorForTest();
-    validator.setLengthLimit(30);
-    Sentence str = new Sentence("this is a very long long long long long long"
-        + "long long long long long long sentence.",0);
-    List<ValidationError> error = validator.validate(str);
-    assertNotNull(error);
-    assertEquals(1, error.size());
-  }
+    @Test
+    public void testWithLongSentence() {
+        SentenceLengthValidatorForTest validator = new SentenceLengthValidatorForTest();
+        validator.setLengthLimit(30);
+        Sentence str = new Sentence("this is a very long long long long long long"
+                + "long long long long long long sentence.", 0);
+        List<ValidationError> error = validator.validate(str);
+        assertNotNull(error);
+        assertEquals(1, error.size());
+    }
 
-  @Test
-  public void testWithShortSentence(){
-    SentenceLengthValidatorForTest validator = new SentenceLengthValidatorForTest();
-    validator.setLengthLimit(30);
-    Sentence str = new Sentence("this is a sentence.",0);
-    List<ValidationError> error = validator.validate(str);
-    assertNotNull(error);
-    assertEquals(0, error.size());
-  }
+    @Test
+    public void testWithShortSentence() {
+        SentenceLengthValidatorForTest validator = new SentenceLengthValidatorForTest();
+        validator.setLengthLimit(30);
+        Sentence str = new Sentence("this is a sentence.", 0);
+        List<ValidationError> error = validator.validate(str);
+        assertNotNull(error);
+        assertEquals(0, error.size());
+    }
 
-  @Test
-  public void testWithZeroLengthSentence(){
-    SentenceLengthValidatorForTest validator = new SentenceLengthValidatorForTest();
-    validator.setLengthLimit(30);
-    Sentence str = new Sentence("",0);
-    List<ValidationError> error = validator.validate(str);
-    assertNotNull(error);
-    assertEquals(0, error.size());
-  }
+    @Test
+    public void testWithZeroLengthSentence() {
+        SentenceLengthValidatorForTest validator = new SentenceLengthValidatorForTest();
+        validator.setLengthLimit(30);
+        Sentence str = new Sentence("", 0);
+        List<ValidationError> error = validator.validate(str);
+        assertNotNull(error);
+        assertEquals(0, error.size());
+    }
 }

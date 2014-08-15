@@ -26,89 +26,88 @@ import java.util.List;
  * such as sentences, lists and headers.
  */
 public final class Document implements Iterable<Section> {
-  /**
-   * Constructor.
-   */
-  public Document() {
-    super();
-    sections = new ArrayList<>();
-    fileName = "";
-  }
+    private final List<Section> sections;
+    private String fileName;
 
-  /**
-   * Get Iterator for Section in the Document.
-   *
-   * @return Iterator of Section list
-   */
-  public Iterator<Section> getSections() {
-    return sections.iterator();
-  }
-
-  /**
-   * Add a Section.
-   *
-   * @param section a section in file content
-   */
-  public void appendSection(Section section) {
-    sections.add(section);
-  }
-
-  /**
-   * Get last Section.
-   *
-   * @return last section in the Document
-   */
-  public Section getLastSection() {
-    Section section = null;
-    if (sections.size() > 0) {
-      section = sections.get(sections.size() - 1);
+    /**
+     * Constructor.
+     */
+    public Document() {
+        super();
+        sections = new ArrayList<>();
+        fileName = "";
     }
-    return section;
-  }
 
-  /**
-   * Get the size of sections in the file.
-   *
-   * @return size of sections
-   */
-  public int getNumberOfSections() {
-    return sections.size();
-  }
+    /**
+     * Get Iterator for Section in the Document.
+     *
+     * @return Iterator of Section list
+     */
+    public Iterator<Section> getSections() {
+        return sections.iterator();
+    }
 
-  /**
-   * Get the specified section.
-   *
-   * @param id section id
-   * @return a section with specified id
-   */
-  public Section getSection(int id) {
-    return sections.get(id);
-  }
+    /**
+     * Add a Section.
+     *
+     * @param section a section in file content
+     */
+    public void appendSection(Section section) {
+        sections.add(section);
+    }
 
-  /**
-   * Set file name.
-   *
-   * @param name file name
-   */
-  public void setFileName(String name) {
-    this.fileName = name;
-  }
+    /**
+     * Get last Section.
+     *
+     * @return last section in the Document
+     */
+    public Section getLastSection() {
+        Section section = null;
+        if (sections.size() > 0) {
+            section = sections.get(sections.size() - 1);
+        }
+        return section;
+    }
 
-  /**
-   * Get file name.
-   *
-   * @return file name
-   */
-  public String getFileName() {
-    return fileName;
-  }
+    /**
+     * Get the size of sections in the file.
+     *
+     * @return size of sections
+     */
+    public int getNumberOfSections() {
+        return sections.size();
+    }
 
-  private final List<Section> sections;
+    /**
+     * Get the specified section.
+     *
+     * @param id section id
+     * @return a section with specified id
+     */
+    public Section getSection(int id) {
+        return sections.get(id);
+    }
 
-  private String fileName;
+    /**
+     * Get file name.
+     *
+     * @return file name
+     */
+    public String getFileName() {
+        return fileName;
+    }
 
-  @Override
-  public Iterator<Section> iterator() {
-    return sections.iterator();
-  }
+    /**
+     * Set file name.
+     *
+     * @param name file name
+     */
+    public void setFileName(String name) {
+        this.fileName = name;
+    }
+
+    @Override
+    public Iterator<Section> iterator() {
+        return sections.iterator();
+    }
 }

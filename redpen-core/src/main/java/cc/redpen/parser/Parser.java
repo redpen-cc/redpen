@@ -17,61 +17,66 @@
  */
 package cc.redpen.parser;
 
-import java.io.InputStream;
-
 import cc.redpen.RedPenException;
-import cc.redpen.model.Document;
 import cc.redpen.config.Configuration;
+import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
+
+import java.io.InputStream;
 
 /**
  * Parser generates Document from input.
  */
 public interface Parser {
-  /**
-   * Given input stream, return Document instance from a stream.
-   *
-   * @param io input stream containing input content
-   * @return a generated file content
-   * @throws cc.redpen.RedPenException if Parser failed to parse input.
-   */
-  Document generateDocument(InputStream io)
-      throws RedPenException;
+    /**
+     * Given input stream, return Document instance from a stream.
+     *
+     * @param io input stream containing input content
+     * @return a generated file content
+     * @throws cc.redpen.RedPenException if Parser failed to parse input.
+     */
+    Document generateDocument(InputStream io)
+            throws RedPenException;
 
-  /**
-   * Given input file name, return Document instance for the specified file.
-   *
-   * @param fileName input file name
-   * @return a generated file content
-   * @throws cc.redpen.RedPenException if Parser failed to parse input.
-   */
-  Document generateDocument(String fileName)
-      throws RedPenException;
+    /**
+     * Given input file name, return Document instance for the specified file.
+     *
+     * @param fileName input file name
+     * @return a generated file content
+     * @throws cc.redpen.RedPenException if Parser failed to parse input.
+     */
+    Document generateDocument(String fileName)
+            throws RedPenException;
 
-  /**
-   * Initialize parser.
-   *
-   *
-   * @param configuration configuration
-   * @param documentBuilder
-   * @throws cc.redpen.RedPenException if the configurations loading failed
-   */
-  void initialize(Configuration configuration,
-      DocumentCollection.Builder documentBuilder) throws RedPenException;
+    /**
+     * Initialize parser.
+     *
+     * @param configuration   configuration
+     * @param documentBuilder
+     * @throws cc.redpen.RedPenException if the configurations loading failed
+     */
+    void initialize(Configuration configuration,
+                    DocumentCollection.Builder documentBuilder) throws RedPenException;
 
-  /**
-   * the type of parser using DocumentParserFactory.
-   */
-  enum Type {
+    /**
+     * the type of parser using DocumentParserFactory.
+     */
+    enum Type {
 
-    /** plain text parser. */
-    PLAIN,
+        /**
+         * plain text parser.
+         */
+        PLAIN,
 
-    /** wiki parser. */
-    WIKI,
+        /**
+         * wiki parser.
+         */
+        WIKI,
 
-    /** markdown parser. */
-    MARKDOWN
+        /**
+         * markdown parser.
+         */
+        MARKDOWN
 
-  }
+    }
 }

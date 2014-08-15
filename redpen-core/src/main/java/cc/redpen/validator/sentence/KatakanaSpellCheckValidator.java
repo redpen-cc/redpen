@@ -51,89 +51,89 @@ import java.util.List;
  * the similarity.
  */
 public class KatakanaSpellCheckValidator implements Validator<Sentence> {
-  /**
-   * The default similarity ratio between the length and the distance.
-   */
-  private static final float SIMILARITY_RATIO = 0.3f;
-  /**
-   * The default threshold value for the length of Katakana word
-   * to ignore.
-   */
-  private static final int MAX_IGNORE_KATAKANA_LENGTH = 3;
-  /**
-   * Katakana word dic with line number.
-   */
-  private HashMap<String, Integer> dic = new HashMap<>();
+    /**
+     * The default similarity ratio between the length and the distance.
+     */
+    private static final float SIMILARITY_RATIO = 0.3f;
+    /**
+     * The default threshold value for the length of Katakana word
+     * to ignore.
+     */
+    private static final int MAX_IGNORE_KATAKANA_LENGTH = 3;
+    /**
+     * Katakana word dic with line number.
+     */
+    private HashMap<String, Integer> dic = new HashMap<>();
 
-  public KatakanaSpellCheckValidator(ValidatorConfiguration config,
-                                     SymbolTable symbolTable)
-      throws RedPenException {
-    initialize(config, symbolTable);
-  }
+    public KatakanaSpellCheckValidator(ValidatorConfiguration config,
+                                       SymbolTable symbolTable)
+            throws RedPenException {
+        initialize(config, symbolTable);
+    }
 
-  public List<ValidationError> validate(Sentence sentence) {
-    List<ValidationError> errors = new ArrayList<>();
-    List<ValidationError> result;
-    StringBuilder katakana = new StringBuilder("");
-    for (int i = 0; i < sentence.content.length(); i++) {
-      char c = sentence.content.charAt(i);
-      if (StringUtils.isKatakana(c)) {
-        katakana.append(c);
-      } else {
-        result = this.checkKatakanaSpell(sentence, katakana.toString());
-        if (result != null) {
-          errors.addAll(result);
+    public KatakanaSpellCheckValidator() {
+        super();
+    }
+
+    public List<ValidationError> validate(Sentence sentence) {
+        List<ValidationError> errors = new ArrayList<>();
+        List<ValidationError> result;
+        StringBuilder katakana = new StringBuilder("");
+        for (int i = 0; i < sentence.content.length(); i++) {
+            char c = sentence.content.charAt(i);
+            if (StringUtils.isKatakana(c)) {
+                katakana.append(c);
+            } else {
+                result = this.checkKatakanaSpell(sentence, katakana.toString());
+                if (result != null) {
+                    errors.addAll(result);
+                }
+                katakana.delete(0, katakana.length());
+            }
         }
-        katakana.delete(0, katakana.length());
-      }
+        result = checkKatakanaSpell(sentence, katakana.toString());
+        if (result != null) {
+            errors.addAll(result);
+        }
+        return errors;
     }
-    result = checkKatakanaSpell(sentence, katakana.toString());
-    if (result != null) {
-      errors.addAll(result);
-    }
-    return errors;
-  }
 
-  private List<ValidationError> checkKatakanaSpell(Sentence sentence,
-      String katakana) {
-    if (katakana.length() <= MAX_IGNORE_KATAKANA_LENGTH) {
-      return null;
+    private List<ValidationError> checkKatakanaSpell(Sentence sentence,
+                                                     String katakana) {
+        if (katakana.length() <= MAX_IGNORE_KATAKANA_LENGTH) {
+            return null;
+        }
+        if (dic.containsKey(katakana)) {
+            return null;
+        }
+        final int minLsDistance =
+                Math.round(katakana.length() * SIMILARITY_RATIO);
+        boolean found = false;
+        List<ValidationError> errors = new ArrayList<>();
+        for (String key : dic.keySet()) {
+            if (LevenshteinDistance.getDistance(key, katakana) <= minLsDistance) {
+                found = true;
+                errors.add(new ValidationError(
+                        this.getClass(),
+                        "Found a Katakana word: \"" + katakana + "\""
+                                + ", which is similar to \"" + key + "\""
+                                + " at postion " + dic.get(key).toString() + ".",
+                        sentence));
+            }
+        }
+        if (!found) {
+            dic.put(katakana, sentence.position);
+        }
+        return errors;
     }
-    if (dic.containsKey(katakana)) {
-      return null;
-    }
-    final int minLsDistance =
-      Math.round(katakana.length() * SIMILARITY_RATIO);
-    boolean found = false;
-    List<ValidationError> errors = new ArrayList<>();
-    for (String key : dic.keySet()) {
-      if (LevenshteinDistance.getDistance(key, katakana) <= minLsDistance) {
-        found = true;
-        errors.add(new ValidationError(
-            this.getClass(),
-          "Found a Katakana word: \"" + katakana + "\""
-          + ", which is similar to \"" + key + "\""
-          + " at postion " + dic.get(key).toString() + ".",
-          sentence));
-      }
-    }
-    if (!found) {
-      dic.put(katakana, sentence.position);
-    }
-    return errors;
-  }
 
-  public KatakanaSpellCheckValidator() {
-    super();
-  }
-
-  private boolean initialize(ValidatorConfiguration conf,
-                             SymbolTable symbolTable)
-      throws RedPenException {
-    //TODO : support the exception word list.
-    //TODO : configurable SIMILARITY_RATIO.
-    //TODO : configurable MAX_IGNORE_KATAKANA_LENGTH.
-    return true;
-  }
+    private boolean initialize(ValidatorConfiguration conf,
+                               SymbolTable symbolTable)
+            throws RedPenException {
+        //TODO : support the exception word list.
+        //TODO : configurable SIMILARITY_RATIO.
+        //TODO : configurable MAX_IGNORE_KATAKANA_LENGTH.
+        return true;
+    }
 
 }

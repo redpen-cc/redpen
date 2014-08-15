@@ -17,85 +17,80 @@
  */
 package cc.redpen.util;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
 
 /**
  * Load file from input file name or stream.
  */
 public class FileLoader {
-  /**
-   * Constructor.
-   *
-   * @param ex ResourceExtractor
-   */
-  public FileLoader(ResourceExtractor ex) {
-    this.resourceExtractor = ex;
-  }
+    private static final Logger LOG = LoggerFactory.getLogger(FileLoader.class);
+    private final ResourceExtractor resourceExtractor;
 
-  /**
-   * Load input file.
-   *
-   * @param fileName input file name.
-   * @return 0 when succeeded to load, 1 otherwise
-   */
-  public int loadFile(String fileName) {
-    InputStream inputStream;
-    try {
-      LOG.warn("input file: " + fileName);
-      inputStream = new FileInputStream(fileName);
-    } catch (IOException e) {
-      LOG.error("IO Error ", e);
-      return 1;
+    /**
+     * Constructor.
+     *
+     * @param ex ResourceExtractor
+     */
+    public FileLoader(ResourceExtractor ex) {
+        this.resourceExtractor = ex;
     }
-    if (loadFile(inputStream) != 0) {
-      LOG.error("Failed to load file: " + fileName);
-    }
-    IOUtils.closeQuietly(inputStream);
-    return 0;
-  }
 
-  /**
-   * Given a input stream, load the contents.
-   *
-   * @param inputStream input stream
-   * @return 0 when succeeded to load input stream, 1 otherwise
-   */
-  public int loadFile(InputStream inputStream) {
-    if (inputStream == null) {
-      LOG.error("Input Stream is null");
-      return 1;
-    }
-    InputStreamReader inputStreamReader = null;
-    BufferedReader bufferedReader = null;
-    try {
-      inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-      bufferedReader = new BufferedReader(inputStreamReader);
-      String line;
-      while ((line = bufferedReader.readLine()) != null) {
-        if (this.resourceExtractor.load(line) != 0) {
-          LOG.error("Failed to load line:" + line);
-          return 1;
+    /**
+     * Load input file.
+     *
+     * @param fileName input file name.
+     * @return 0 when succeeded to load, 1 otherwise
+     */
+    public int loadFile(String fileName) {
+        InputStream inputStream;
+        try {
+            LOG.warn("input file: " + fileName);
+            inputStream = new FileInputStream(fileName);
+        } catch (IOException e) {
+            LOG.error("IO Error ", e);
+            return 1;
         }
-      }
-    } catch (IOException e) {
-      LOG.error("IO Error ", e);
-      return 1;
-    } finally {
-      IOUtils.closeQuietly(bufferedReader);
-      IOUtils.closeQuietly(inputStreamReader);
+        if (loadFile(inputStream) != 0) {
+            LOG.error("Failed to load file: " + fileName);
+        }
+        IOUtils.closeQuietly(inputStream);
+        return 0;
     }
-    return 0;
-  }
 
-  private static final Logger LOG = LoggerFactory.getLogger(FileLoader.class);
-
-  private final ResourceExtractor resourceExtractor;
+    /**
+     * Given a input stream, load the contents.
+     *
+     * @param inputStream input stream
+     * @return 0 when succeeded to load input stream, 1 otherwise
+     */
+    public int loadFile(InputStream inputStream) {
+        if (inputStream == null) {
+            LOG.error("Input Stream is null");
+            return 1;
+        }
+        InputStreamReader inputStreamReader = null;
+        BufferedReader bufferedReader = null;
+        try {
+            inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+            bufferedReader = new BufferedReader(inputStreamReader);
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                if (this.resourceExtractor.load(line) != 0) {
+                    LOG.error("Failed to load line:" + line);
+                    return 1;
+                }
+            }
+        } catch (IOException e) {
+            LOG.error("IO Error ", e);
+            return 1;
+        } finally {
+            IOUtils.closeQuietly(bufferedReader);
+            IOUtils.closeQuietly(inputStreamReader);
+        }
+        return 0;
+    }
 }

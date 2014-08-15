@@ -18,13 +18,12 @@
 
 package cc.redpen.server;
 
+import cc.redpen.ConfigurationLoader;
 import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
+import cc.redpen.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import cc.redpen.ConfigurationLoader;
-import cc.redpen.config.Configuration;
 
 import java.io.InputStream;
 
@@ -33,57 +32,55 @@ import java.io.InputStream;
  */
 public class RedPenServer {
 
-  static String DEFAULT_INTERNAL_CONFIG_PATH = "/conf/redpen-conf.xml";
+    private static final Logger LOG =
+            LoggerFactory.getLogger(RedPenServer.class);
+    static String DEFAULT_INTERNAL_CONFIG_PATH = "/conf/redpen-conf.xml";
+    private static RedPenServer redPenServer = null;
 
-  private static final Logger LOG =
-      LoggerFactory.getLogger(RedPenServer.class);
+    private RedPen redPen;
 
-  private static RedPenServer redPenServer = null;
+    private Configuration config;
 
-  private RedPen redPen;
+    private RedPenServer() throws RedPenException {
+        ConfigurationLoader configLoader = new ConfigurationLoader();
+        String confPath = System.getProperty("redpen.conf.path", DEFAULT_INTERNAL_CONFIG_PATH);
 
-  private Configuration config;
+        InputStream inputConfigStream = getClass()
+                .getClassLoader()
+                .getResourceAsStream(confPath);
 
-  private RedPenServer() throws RedPenException {
-    ConfigurationLoader configLoader = new ConfigurationLoader();
-    String confPath = System.getProperty("redpen.conf.path", DEFAULT_INTERNAL_CONFIG_PATH);
+        if (inputConfigStream == null) {
+            LOG.info("Loading config from specified config file: " +
+                    "\"" + confPath + "\"");
+            config = configLoader.loadConfiguration(confPath);
+        } else {
+            LOG.info("Loading config from default configuration");
+            config = configLoader.loadConfiguration(inputConfigStream);
+        }
 
-    InputStream inputConfigStream = getClass()
-        .getClassLoader()
-        .getResourceAsStream(confPath);
-
-    if (inputConfigStream == null) {
-      LOG.info("Loading config from specified config file: " +
-          "\"" + confPath + "\"");
-      config = configLoader.loadConfiguration(confPath);
-    } else {
-      LOG.info("Loading config from default configuration");
-      config = configLoader.loadConfiguration(inputConfigStream);
+        redPen = new RedPen.Builder()
+                .setConfiguration(config)
+                .build();
     }
 
-    redPen = new RedPen.Builder()
-        .setConfiguration(config)
-        .build();
-  }
-
-  public RedPen getRedPen() {
-    return redPen;
-  }
-
-  public Configuration getConfig() {
-    return config;
-  }
-
-  public static RedPenServer getInstance() throws
-      RedPenException {
-    if (redPenServer == null) {
-      initialize();
+    public static RedPenServer getInstance() throws
+            RedPenException {
+        if (redPenServer == null) {
+            initialize();
+        }
+        return redPenServer;
     }
-    return redPenServer;
-  }
 
-  public static synchronized void initialize() throws RedPenException {
-    LOG.info("Initializing Document Validator");
-    redPenServer = new RedPenServer();
-  }
+    public static synchronized void initialize() throws RedPenException {
+        LOG.info("Initializing Document Validator");
+        redPenServer = new RedPenServer();
+    }
+
+    public RedPen getRedPen() {
+        return redPen;
+    }
+
+    public Configuration getConfig() {
+        return config;
+    }
 }

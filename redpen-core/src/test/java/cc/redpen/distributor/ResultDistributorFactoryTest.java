@@ -17,37 +17,38 @@
  */
 package cc.redpen.distributor;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
 import cc.redpen.formatter.Formatter;
+import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class ResultDistributorFactoryTest {
 
-  @Test
-  public void testCreatePlainDistributor() {
-    ResultDistributor distributor = ResultDistributorFactory.createDistributor(
-        Formatter.Type.PLAIN, System.out);
-    assertNotNull(distributor);
-  }
+    @Test
+    public void testCreatePlainDistributor() {
+        ResultDistributor distributor = ResultDistributorFactory.createDistributor(
+                Formatter.Type.PLAIN, System.out);
+        assertNotNull(distributor);
+    }
 
-  @Test
-  public void testCreateXMLDistributor() {
-    ResultDistributor distributor = ResultDistributorFactory.createDistributor(
-        Formatter.Type.XML, System.out);
-    assertNotNull(distributor);
-  }
+    @Test
+    public void testCreateXMLDistributor() {
+        ResultDistributor distributor = ResultDistributorFactory.createDistributor(
+                Formatter.Type.XML, System.out);
+        assertNotNull(distributor);
+    }
 
-  @Test
-  public void testNullDistributor() {
-    ResultDistributor distributor = ResultDistributorFactory.createDistributor(null, null);
-    assertNull(distributor);
-  }
+    @Test
+    public void testNullDistributor() {
+        ResultDistributor distributor = ResultDistributorFactory.createDistributor(null, null);
+        assertNull(distributor);
+    }
 
-  @Test
-  public void testNullOutputDistributor() {
-    ResultDistributor distributor = ResultDistributorFactory.createDistributor(Formatter.Type.PLAIN, null);
-    assertNull(distributor);
-  }
+    @Test
+    public void testNullOutputDistributor() {
+        ResultDistributor distributor = ResultDistributorFactory.createDistributor(Formatter.Type.PLAIN, null);
+        assertNull(distributor);
+    }
 
 }

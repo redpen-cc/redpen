@@ -17,7 +17,6 @@
  */
 package cc.redpen.config;
 
-import java.lang.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -26,105 +25,104 @@ import java.util.Set;
  * Configuration table of characters used in {@link cc.redpen.RedPen}.
  */
 public final class SymbolTable {
-  /**
-   * Constructor.
-   */
-  public SymbolTable() {
-    super();
-    symbolDictionary = new HashMap<>();
-    valueDictionary = new HashMap<>();
-  }
+    private final Map<String, Symbol> symbolDictionary;
+    private final Map<String, Symbol> valueDictionary;
+    private String lang;
 
-  /**
-   * Return the size of character Dictionary.
-   *
-   * @return size of registered character
-   */
-  public int getSizeDictionarySize() {
-    return this.symbolDictionary.size();
-  }
+    /**
+     * Constructor.
+     */
+    public SymbolTable() {
+        super();
+        symbolDictionary = new HashMap<>();
+        valueDictionary = new HashMap<>();
+    }
 
-  /**
-   * Get the character names in the dictionary.
-   *
-   * @return names of characters
-   */
-  public Set<String> getNames() {
-    return this.symbolDictionary.keySet();
-  }
+    /**
+     * Return the size of character Dictionary.
+     *
+     * @return size of registered character
+     */
+    public int getSizeDictionarySize() {
+        return this.symbolDictionary.size();
+    }
 
-  /**
-   * Get the character specified with the name.
-   *
-   * @param name character name
-   * @return character containing the settings
-   */
-  public Symbol getSymbol(String name) {
-    return this.symbolDictionary.get(name);
-  }
+    /**
+     * Get the character names in the dictionary.
+     *
+     * @return names of characters
+     */
+    public Set<String> getNames() {
+        return this.symbolDictionary.keySet();
+    }
 
-  /**
-   * Get the character specified with the value.
-   *
-   * @param value character name
-   * @return character containing the settings
-   */
-  public Symbol getSymbolByValue(String value) {
-    return this.valueDictionary.get(value);
-  }
+    /**
+     * Get the character specified with the name.
+     *
+     * @param name character name
+     * @return character containing the settings
+     */
+    public Symbol getSymbol(String name) {
+        return this.symbolDictionary.get(name);
+    }
 
-  /**
-   * Get all elements of character dictionary.
-   *
-   * @return character dictionary
-   */
-  public Map<String, Symbol> getSymbolDictionary() {
-    return symbolDictionary;
-  }
+    /**
+     * Get the character specified with the value.
+     *
+     * @param value character name
+     * @return character containing the settings
+     */
+    public Symbol getSymbolByValue(String value) {
+        return this.valueDictionary.get(value);
+    }
 
-  /**
-   * Detect the specified character is exit in the dictionary.
-   *
-   * @param name character name
-   * @return character when exist, null when the specified
-   * character does not exist
-   */
-  public boolean containsSymbol(String name) {
-    return this.symbolDictionary.get(name) != null;
-  }
+    /**
+     * Get all elements of character dictionary.
+     *
+     * @return character dictionary
+     */
+    public Map<String, Symbol> getSymbolDictionary() {
+        return symbolDictionary;
+    }
 
-  /**
-   * Detect the specified character is exit in the dictionary.
-   *
-   * @param value character value
-   * @return character when exist, null when the specified
-   * character does not exist
-   */
-  public boolean containsSymbolByValue(String value) {
-    return this.valueDictionary.get(value) != null;
-  }
+    /**
+     * Detect the specified character is exit in the dictionary.
+     *
+     * @param name character name
+     * @return character when exist, null when the specified
+     * character does not exist
+     */
+    public boolean containsSymbol(String name) {
+        return this.symbolDictionary.get(name) != null;
+    }
 
-  /**
-   * Replace the current character setting.
-   * @param symbol symbol configuration
-   */
-  public void override(Symbol symbol) {
-    symbolDictionary.put(symbol.getName(), symbol);
-    valueDictionary.put(symbol.getValue(), symbol);
-  }
+    /**
+     * Detect the specified character is exit in the dictionary.
+     *
+     * @param value character value
+     * @return character when exist, null when the specified
+     * character does not exist
+     */
+    public boolean containsSymbolByValue(String value) {
+        return this.valueDictionary.get(value) != null;
+    }
 
-  public String getLang() {
-    return lang;
-  }
+    /**
+     * Replace the current character setting.
+     *
+     * @param symbol symbol configuration
+     */
+    public void override(Symbol symbol) {
+        symbolDictionary.put(symbol.getName(), symbol);
+        valueDictionary.put(symbol.getValue(), symbol);
+    }
 
-  public void setLang(String lang) {
-    this.lang = lang;
-  }
+    public String getLang() {
+        return lang;
+    }
 
-  private final Map<String, Symbol> symbolDictionary;
-
-  private final Map<String, Symbol> valueDictionary;
-
-  private String lang;
+    public void setLang(String lang) {
+        this.lang = lang;
+    }
 
 }

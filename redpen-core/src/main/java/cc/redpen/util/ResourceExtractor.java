@@ -22,18 +22,18 @@ package cc.redpen.util;
  * we create a class implementing ResourceExtractor.
  */
 public interface ResourceExtractor<E> {
-  /**
-   * load line.
-   *
-   * @param line line in a file
-   * @return 0 when succeeded, otherwise 1
-   */
-  int load(String line);
+    /**
+     * load line.
+     *
+     * @param line line in a file
+     * @return 0 when succeeded, otherwise 1
+     */
+    int load(String line);
 
-  /**
-   * Get the loaded container.
-   *
-   * @return container
-   */
-  E get();
+    /**
+     * Get the loaded container.
+     *
+     * @return container
+     */
+    E get();
 }

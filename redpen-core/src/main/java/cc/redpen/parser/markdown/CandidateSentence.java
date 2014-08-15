@@ -21,45 +21,45 @@ package cc.redpen.parser.markdown;
  * Buffer list of to candidate sentence.
  */
 final class CandidateSentence {
-  private int lineNum;
+    private int lineNum;
 
-  private String sentence;
+    private String sentence;
 
-  private String link;
+    private String link;
 
-  CandidateSentence(int line,
-                    String lineCharacter, String linkCharacter) {
-    this.lineNum = line;
-    this.sentence = lineCharacter;
-    this.link = linkCharacter;
-  }
+    CandidateSentence(int line,
+                      String lineCharacter, String linkCharacter) {
+        this.lineNum = line;
+        this.sentence = lineCharacter;
+        this.link = linkCharacter;
+    }
 
-  public int getLineNum() {
-    return lineNum;
-  }
+    public int getLineNum() {
+        return lineNum;
+    }
 
-  public String getSentence() {
-    return sentence;
-  }
+    public String getSentence() {
+        return sentence;
+    }
 
-  public String getLink() {
-    return link;
-  }
+    public void setSentence(String text) {
+        this.sentence = text;
+    }
 
-  public void setLink(String url) {
-    this.link = url;
-  }
+    public String getLink() {
+        return link;
+    }
 
-  public void setSentence(String text) {
-    this.sentence = text;
-  }
+    public void setLink(String url) {
+        this.link = url;
+    }
 
-  @Override
-  public String toString() {
-    return "CandidateSentence{"
-        + "lineNum=" + lineNum
-        + ", sentence='" + sentence + '\''
-        + ", link='" + link + '\''
-        + '}';
-  }
+    @Override
+    public String toString() {
+        return "CandidateSentence{"
+                + "lineNum=" + lineNum
+                + ", sentence='" + sentence + '\''
+                + ", link='" + link + '\''
+                + '}';
+    }
 }

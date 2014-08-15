@@ -36,58 +36,57 @@ import java.util.*;
  */
 public class SuggestExpressionValidator implements Validator<Sentence> {
 
-  public SuggestExpressionValidator() {
-    super();
-    synonyms = new HashMap<>();
-  }
+    private static final Logger LOG =
+            LoggerFactory.getLogger(SuggestExpressionValidator.class);
+    private Map<String, String> synonyms;
 
-  public SuggestExpressionValidator(ValidatorConfiguration config,
-                                    SymbolTable symbolTable)
-      throws RedPenException {
-    initialize(config);
-  }
-
-  public List<ValidationError> validate(Sentence line) {
-    List<ValidationError> result = new ArrayList<>();
-    String str = line.content;
-    Set<String> invalidWords = synonyms.keySet();
-    for (String w : invalidWords) {
-      if (str.contains(w)) {
-        result.add(new ValidationError(
-            this.getClass(),
-            "Found invalid word, \"" + w + "\". "
-                + "Use the synonym of the word \""
-                + synonyms.get(w) + "\" instead.", line
-        ));
-      }
+    public SuggestExpressionValidator() {
+        super();
+        synonyms = new HashMap<>();
     }
-    return result;
-  }
 
-  private boolean initialize(
-    ValidatorConfiguration conf)
-      throws RedPenException {
-    String confFile = conf.getAttribute("invalid_word_file");
-    LOG.info("dictionary file is " + confFile);
-    if (confFile == null || confFile.equals("")) {
-      LOG.error("dictionary file is not specified");
-      return false;
+    public SuggestExpressionValidator(ValidatorConfiguration config,
+                                      SymbolTable symbolTable)
+            throws RedPenException {
+        initialize(config);
     }
-    KeyValueDictionaryExtractor extractor = new KeyValueDictionaryExtractor();
-    FileLoader loader = new FileLoader(extractor);
-    if (loader.loadFile(confFile) != 0) {
-      return false;
+
+    public List<ValidationError> validate(Sentence line) {
+        List<ValidationError> result = new ArrayList<>();
+        String str = line.content;
+        Set<String> invalidWords = synonyms.keySet();
+        for (String w : invalidWords) {
+            if (str.contains(w)) {
+                result.add(new ValidationError(
+                        this.getClass(),
+                        "Found invalid word, \"" + w + "\". "
+                                + "Use the synonym of the word \""
+                                + synonyms.get(w) + "\" instead.", line
+                ));
+            }
+        }
+        return result;
     }
-    synonyms = extractor.get();
-    return true;
-  }
 
-  protected void setSynonyms(Map<String, String> synonymMap) {
-    this.synonyms = synonymMap;
-  }
+    private boolean initialize(
+            ValidatorConfiguration conf)
+            throws RedPenException {
+        String confFile = conf.getAttribute("invalid_word_file");
+        LOG.info("dictionary file is " + confFile);
+        if (confFile == null || confFile.equals("")) {
+            LOG.error("dictionary file is not specified");
+            return false;
+        }
+        KeyValueDictionaryExtractor extractor = new KeyValueDictionaryExtractor();
+        FileLoader loader = new FileLoader(extractor);
+        if (loader.loadFile(confFile) != 0) {
+            return false;
+        }
+        synonyms = extractor.get();
+        return true;
+    }
 
-  private static final Logger LOG =
-      LoggerFactory.getLogger(SuggestExpressionValidator.class);
-
-  private Map<String, String> synonyms;
+    protected void setSynonyms(Map<String, String> synonymMap) {
+        this.synonyms = synonymMap;
+    }
 }

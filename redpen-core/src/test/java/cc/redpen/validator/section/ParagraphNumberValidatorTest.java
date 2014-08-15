@@ -17,51 +17,51 @@
  */
 package cc.redpen.validator.section;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import cc.redpen.ValidationError;
 import cc.redpen.model.Document;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
-import cc.redpen.ValidationError;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
 public class ParagraphNumberValidatorTest {
-  
-  private static ParagraphNumberValidator validator;
-  
-  @BeforeClass
-  public static void setUp() {
-    validator = new ParagraphNumberValidator();
-    validator.setMaxParagraphNumber(3);
-  }
-  
-  @Test
-  public void testSectionWithManySection() {
-    Section section = new Section(0, "header");
 
-    section.appendParagraph(new Paragraph());
-    section.appendParagraph(new Paragraph());
-    section.appendParagraph(new Paragraph());
-    section.appendParagraph(new Paragraph());
+    private static ParagraphNumberValidator validator;
 
-    List<ValidationError> errors = validator.validate(section);
-    assertEquals(1, errors.size());
-  }
+    @BeforeClass
+    public static void setUp() {
+        validator = new ParagraphNumberValidator();
+        validator.setMaxParagraphNumber(3);
+    }
 
-  @Test
-  public void testSectionWithOnlyOneSection() {
+    @Test
+    public void testSectionWithManySection() {
+        Section section = new Section(0, "header");
 
-    Section section = new Section(0);
-    section.appendParagraph(new Paragraph());
+        section.appendParagraph(new Paragraph());
+        section.appendParagraph(new Paragraph());
+        section.appendParagraph(new Paragraph());
+        section.appendParagraph(new Paragraph());
 
-    Document document = new Document();
-    document.appendSection(section);
+        List<ValidationError> errors = validator.validate(section);
+        assertEquals(1, errors.size());
+    }
 
-    List<ValidationError> errors = validator.validate(section);
-    assertEquals(0, errors.size());
-  }
+    @Test
+    public void testSectionWithOnlyOneSection() {
+
+        Section section = new Section(0);
+        section.appendParagraph(new Paragraph());
+
+        Document document = new Document();
+        document.appendSection(section);
+
+        List<ValidationError> errors = validator.validate(section);
+        assertEquals(0, errors.size());
+    }
 
 }

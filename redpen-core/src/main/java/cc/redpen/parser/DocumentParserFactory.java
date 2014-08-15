@@ -25,42 +25,39 @@ import cc.redpen.model.DocumentCollection;
  * Factory class of DocumentParser.
  */
 public final class DocumentParserFactory {
-  /**
-   * Create DocumentParser object following specified input file type.
-   *
-   *
-   *
-   * @param parserType type of parser (plain or wiki etc.)
-   * @param configuration   configuration settings
-   * @param documentBuilder Builder object of DocumentCollection
-   * @return Parser implementation object
-   * @throws cc.redpen.RedPenException
-   * when failed to generate Parser instance or no specified parser implementation.
-   */
-  public static Parser generate(Parser.Type parserType,
-      Configuration configuration,
-      DocumentCollection.Builder documentBuilder)
-      throws RedPenException {
-    Parser docparser;
-    switch (parserType) {
-      case PLAIN:
-        docparser = new PlainTextParser();
-        break;
-      case WIKI:
-        docparser = new WikiParser();
-        break;
-      case MARKDOWN:
-        docparser = new MarkdownParser();
-        break;
-      default:
-        throw new RedPenException("Specified parser type not exist: "
-            + parserType);
+    private DocumentParserFactory() {
+        super();
     }
-    docparser.initialize(configuration, documentBuilder);
-    return docparser;
-  }
 
-  private DocumentParserFactory() {
-    super();
-  }
+    /**
+     * Create DocumentParser object following specified input file type.
+     *
+     * @param parserType      type of parser (plain or wiki etc.)
+     * @param configuration   configuration settings
+     * @param documentBuilder Builder object of DocumentCollection
+     * @return Parser implementation object
+     * @throws cc.redpen.RedPenException when failed to generate Parser instance or no specified parser implementation.
+     */
+    public static Parser generate(Parser.Type parserType,
+                                  Configuration configuration,
+                                  DocumentCollection.Builder documentBuilder)
+            throws RedPenException {
+        Parser docparser;
+        switch (parserType) {
+            case PLAIN:
+                docparser = new PlainTextParser();
+                break;
+            case WIKI:
+                docparser = new WikiParser();
+                break;
+            case MARKDOWN:
+                docparser = new MarkdownParser();
+                break;
+            default:
+                throw new RedPenException("Specified parser type not exist: "
+                        + parserType);
+        }
+        docparser.initialize(configuration, documentBuilder);
+        return docparser;
+    }
 }

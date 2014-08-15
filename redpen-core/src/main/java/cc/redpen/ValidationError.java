@@ -26,121 +26,117 @@ import java.util.Optional;
  */
 public class ValidationError {
 
-  /**
-   * Constructor.
-   *
-   * @param validatorClass  validator class
-   * @param errorMessage    error message
-   * @param errorLineNumber error position (line number)
-   */
-  public ValidationError(Class validatorClass,
-                         String errorMessage, int errorLineNumber) {
-    this.lineNumber = errorLineNumber;
-    this.message = errorMessage;
-    this.validatorName = validatorClass.getSimpleName();
-  }
+    private final int lineNumber;
+    private final String message;
+    private final String validatorName;
+    private Optional<String> fileName = Optional.empty();
+    private Optional<Sentence> sentence = Optional.empty();
 
-  /**
-   * Constructor.
-   *
-   * @param validatorClass    validator class
-   * @param errorMessage      error message
-   * @param sentenceWithError sentence containing validation error
-   */
-  public ValidationError(Class validatorClass,
-                         String errorMessage,
-                         Sentence sentenceWithError) {
-    this(validatorClass, errorMessage, sentenceWithError.position);
-    this.sentence = Optional.of(sentenceWithError);
-  }
-
-  /**
-   * Get line number in which the error occurs.
-   *
-   * @return the number of line
-   */
-  public int getLineNumber() {
-    return lineNumber;
-  }
-
-  /**
-   * Get error message.
-   *
-   * @return error message
-   */
-  public String getMessage() {
-    return message;
-  }
-
-  /**
-   * Get file name.
-   *
-   * @return file name
-   */
-  public Optional<String> getFileName() {
-    return fileName;
-  }
-
-  /**
-   * Set file name.
-   *
-   * @param errorFileName file name in which the error occurs
-   */
-  public void setFileName(String errorFileName) {
-    this.fileName = Optional.of(errorFileName);
-  }
-
-  /**
-   * Get sentence containing the error.
-   *
-   * @return sentence
-   */
-  public Optional<Sentence> getSentence() {
-    return sentence;
-  }
-
-  /**
-   * Set sentenceWithError contains the error.
-   *
-   * @param sentenceWithError sentenceWithError containing validation error
-   */
-  public void setSentence(Sentence sentenceWithError) {
-    this.sentence = Optional.of(sentenceWithError);
-  }
-
-  /**
-   * Get validator name.
-   *
-   * @return validator name
-   */
-  public String getValidatorName() {
-    if (validatorName.endsWith("Validator")) {
-      return validatorName
-          .substring(0, validatorName.length() - "Validator".length());
-    } else {
-      return validatorName;
+    /**
+     * Constructor.
+     *
+     * @param validatorClass  validator class
+     * @param errorMessage    error message
+     * @param errorLineNumber error position (line number)
+     */
+    public ValidationError(Class validatorClass,
+                           String errorMessage, int errorLineNumber) {
+        this.lineNumber = errorLineNumber;
+        this.message = errorMessage;
+        this.validatorName = validatorClass.getSimpleName();
     }
-  }
 
-  @Override
-  public String toString() {
-    final StringBuilder sb = new StringBuilder("ValidationError{");
-    sb.append("lineNumber=").append(lineNumber);
-    sb.append(", message='").append(message).append('\'');
-    sb.append(", fileName='").append(fileName).append('\'');
-    sb.append(", sentence=").append(sentence);
-    sb.append(", validatorName='").append(validatorName).append('\'');
-    sb.append('}');
-    return sb.toString();
-  }
+    /**
+     * Constructor.
+     *
+     * @param validatorClass    validator class
+     * @param errorMessage      error message
+     * @param sentenceWithError sentence containing validation error
+     */
+    public ValidationError(Class validatorClass,
+                           String errorMessage,
+                           Sentence sentenceWithError) {
+        this(validatorClass, errorMessage, sentenceWithError.position);
+        this.sentence = Optional.of(sentenceWithError);
+    }
 
-  private final int lineNumber;
+    /**
+     * Get line number in which the error occurs.
+     *
+     * @return the number of line
+     */
+    public int getLineNumber() {
+        return lineNumber;
+    }
 
-  private final String message;
+    /**
+     * Get error message.
+     *
+     * @return error message
+     */
+    public String getMessage() {
+        return message;
+    }
 
-  private Optional<String> fileName = Optional.empty();
+    /**
+     * Get file name.
+     *
+     * @return file name
+     */
+    public Optional<String> getFileName() {
+        return fileName;
+    }
 
-  private Optional<Sentence> sentence = Optional.empty();
+    /**
+     * Set file name.
+     *
+     * @param errorFileName file name in which the error occurs
+     */
+    public void setFileName(String errorFileName) {
+        this.fileName = Optional.of(errorFileName);
+    }
 
-  private final String validatorName;
+    /**
+     * Get sentence containing the error.
+     *
+     * @return sentence
+     */
+    public Optional<Sentence> getSentence() {
+        return sentence;
+    }
+
+    /**
+     * Set sentenceWithError contains the error.
+     *
+     * @param sentenceWithError sentenceWithError containing validation error
+     */
+    public void setSentence(Sentence sentenceWithError) {
+        this.sentence = Optional.of(sentenceWithError);
+    }
+
+    /**
+     * Get validator name.
+     *
+     * @return validator name
+     */
+    public String getValidatorName() {
+        if (validatorName.endsWith("Validator")) {
+            return validatorName
+                    .substring(0, validatorName.length() - "Validator".length());
+        } else {
+            return validatorName;
+        }
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("ValidationError{");
+        sb.append("lineNumber=").append(lineNumber);
+        sb.append(", message='").append(message).append('\'');
+        sb.append(", fileName='").append(fileName).append('\'');
+        sb.append(", sentence=").append(sentence);
+        sb.append(", validatorName='").append(validatorName).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

@@ -24,60 +24,60 @@ import java.util.List;
  * Represent a paragraph of text.
  */
 public final class Paragraph {
-  /**
-   * Constructor.
-   */
-  public Paragraph() {
-    super();
-    sentences = new ArrayList<>();
-  }
+    private final List<Sentence> sentences;
 
-  /**
-   * Get the iterator of sentences.
-   *
-   * @return sentences in the paragraph
-   */
-  public List<Sentence> getSentences() {
-    return sentences;
-  }
+    /**
+     * Constructor.
+     */
+    public Paragraph() {
+        super();
+        sentences = new ArrayList<>();
+    }
 
-  /**
-   * Get the specified sentence.
-   *
-   * @param sentenceNumber sentence number
-   * @return sentence with specified id
-   */
-  public Sentence getSentence(int sentenceNumber) {
-    return sentences.get(sentenceNumber);
-  }
+    /**
+     * Get the iterator of sentences.
+     *
+     * @return sentences in the paragraph
+     */
+    public List<Sentence> getSentences() {
+        return sentences;
+    }
 
-  /**
-   * Append a sentence to a paragraph.
-   *
-   * @param content sentence
-   * @param lineNum line number of sentence
-   */
-  public void appendSentence(String content, int lineNum) {
-    sentences.add(new Sentence(content, lineNum));
-  }
+    /**
+     * Get the specified sentence.
+     *
+     * @param sentenceNumber sentence number
+     * @return sentence with specified id
+     */
+    public Sentence getSentence(int sentenceNumber) {
+        return sentences.get(sentenceNumber);
+    }
 
-  /**
-   * Append a sentence.
-   *
-   * @param sentence a sentence to be added to paragraph
-   */
-  public void appendSentence(Sentence sentence) {
-    sentences.add(sentence);
-  }
+    /**
+     * Append a sentence to a paragraph.
+     *
+     * @param content sentence
+     * @param lineNum line number of sentence
+     */
+    public void appendSentence(String content, int lineNum) {
+        sentences.add(new Sentence(content, lineNum));
+    }
 
-  /**
-   * Get the number of sentences in the paragraph.
-   *
-   * @return sentences number
-   */
-  public int getNumberOfSentences() {
-    return sentences.size();
-  }
+    /**
+     * Append a sentence.
+     *
+     * @param sentence a sentence to be added to paragraph
+     */
+    public void appendSentence(Sentence sentence) {
+        sentences.add(sentence);
+    }
 
-  private final List<Sentence> sentences;
+    /**
+     * Get the number of sentences in the paragraph.
+     *
+     * @return sentences number
+     */
+    public int getNumberOfSentences() {
+        return sentences.size();
+    }
 }

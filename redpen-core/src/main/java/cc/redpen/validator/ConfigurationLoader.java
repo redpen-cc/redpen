@@ -26,16 +26,16 @@ import cc.redpen.config.ValidatorConfiguration;
  */
 public interface ConfigurationLoader {
 
-  /**
-   * load configuration files.
-   *
-   * @param conf      validator configuration
-   * @param charTable character configuration
-   * @return true succeeded, otherwise false
-   * @throws cc.redpen.RedPenException
-   */
-  boolean loadConfiguration(ValidatorConfiguration conf,
-                            SymbolTable charTable)
-      throws RedPenException;
+    /**
+     * load configuration files.
+     *
+     * @param conf      validator configuration
+     * @param charTable character configuration
+     * @return true succeeded, otherwise false
+     * @throws cc.redpen.RedPenException
+     */
+    boolean loadConfiguration(ValidatorConfiguration conf,
+                              SymbolTable charTable)
+            throws RedPenException;
 
 }

@@ -17,63 +17,63 @@
  */
 package cc.redpen.distributor;
 
-import java.io.OutputStream;
-
 import cc.redpen.RedPenException;
+import cc.redpen.formatter.Formatter;
 import cc.redpen.formatter.PlainFormatter;
 import cc.redpen.formatter.XMLFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import cc.redpen.formatter.Formatter;
+
+import java.io.OutputStream;
 
 /**
  * Factory class of ResultDistributor.
  */
 public final class ResultDistributorFactory {
-  /**
-   * Create ResultDistributor object.
-   *
-   * @param outputFormat syntax of output
-   * @param output       output stream
-   * @return ResultDistributor object when succeeded to create, null otherwise
-   */
-  public static ResultDistributor createDistributor(Formatter.Type outputFormat,
-                                                    OutputStream output) {
-    if (outputFormat == null) {
-      LOG.error("Specified output format is null...");
-      return null;
+    private static final Logger LOG =
+            LoggerFactory.getLogger(ResultDistributor.class);
+
+    private ResultDistributorFactory() {
+        // for safe
     }
 
-    if (output == null) {
-      LOG.error("Output stream is null...");
-      return null;
+    /**
+     * Create ResultDistributor object.
+     *
+     * @param outputFormat syntax of output
+     * @param output       output stream
+     * @return ResultDistributor object when succeeded to create, null otherwise
+     */
+    public static ResultDistributor createDistributor(Formatter.Type outputFormat,
+                                                      OutputStream output) {
+        if (outputFormat == null) {
+            LOG.error("Specified output format is null...");
+            return null;
+        }
+
+        if (output == null) {
+            LOG.error("Output stream is null...");
+            return null;
+        }
+        ResultDistributor distributor = new DefaultResultDistributor(output);
+
+        LOG.info("Creating Distributor...");
+        try {
+            switch (outputFormat) {
+                case PLAIN:
+                    distributor.setFormatter(new PlainFormatter());
+                    break;
+                case XML:
+                    distributor.setFormatter(new XMLFormatter());
+                    break;
+                default:
+                    LOG.error("No specified distributor...");
+                    return null;
+            }
+        } catch (RedPenException e) {
+            LOG.error(e.getMessage());
+            return null;
+        }
+        return distributor;
     }
-    ResultDistributor distributor = new DefaultResultDistributor(output);
-
-    LOG.info("Creating Distributor...");
-    try {
-      switch (outputFormat) {
-        case PLAIN:
-          distributor.setFormatter(new PlainFormatter());
-          break;
-        case XML:
-          distributor.setFormatter(new XMLFormatter());
-          break;
-        default :
-          LOG.error("No specified distributor...");
-          return null;
-      }
-    } catch (RedPenException e) {
-      LOG.error(e.getMessage());
-      return null;
-    }
-    return distributor;
-  }
-
-  private ResultDistributorFactory() {
-    // for safe
-  }
-
-  private static final Logger LOG =
-      LoggerFactory.getLogger(ResultDistributor.class);
 }

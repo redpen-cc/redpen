@@ -17,10 +17,10 @@
  */
 package cc.redpen.validator.section;
 
-import org.junit.Test;
+import cc.redpen.ValidationError;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
-import cc.redpen.ValidationError;
+import org.junit.Test;
 
 import java.util.List;
 
@@ -28,35 +28,35 @@ import static org.junit.Assert.assertEquals;
 
 public class ParagraphStartWithValidatorTest {
 
-  @Test
-  public void testStartWithoutSpace() {
-    ParagraphStartWithValidator validator = new ParagraphStartWithValidator();
-    Section section = new Section(0, "header");
-    Paragraph paragraph = new Paragraph();
-    paragraph.appendSentence("it like a piece of a cake.", 0);
-    section.appendParagraph(paragraph);
-    List<ValidationError> errors = validator.validate(section);
-    assertEquals(1, errors.size());
-  }
+    @Test
+    public void testStartWithoutSpace() {
+        ParagraphStartWithValidator validator = new ParagraphStartWithValidator();
+        Section section = new Section(0, "header");
+        Paragraph paragraph = new Paragraph();
+        paragraph.appendSentence("it like a piece of a cake.", 0);
+        section.appendParagraph(paragraph);
+        List<ValidationError> errors = validator.validate(section);
+        assertEquals(1, errors.size());
+    }
 
-  @Test
-  public void testStartWithSpace() {
-    ParagraphStartWithValidator validator = new ParagraphStartWithValidator();
-    Section section = new Section(0);
-    Paragraph paragraph = new Paragraph();
-    paragraph.appendSentence(" it like a piece of a cake.", 0);
-    section.appendParagraph(paragraph);
-    List<ValidationError> errors = validator.validate(section);
-    assertEquals(0, errors.size());
-  }
+    @Test
+    public void testStartWithSpace() {
+        ParagraphStartWithValidator validator = new ParagraphStartWithValidator();
+        Section section = new Section(0);
+        Paragraph paragraph = new Paragraph();
+        paragraph.appendSentence(" it like a piece of a cake.", 0);
+        section.appendParagraph(paragraph);
+        List<ValidationError> errors = validator.validate(section);
+        assertEquals(0, errors.size());
+    }
 
-  @Test
-  public void testVoidParagraph() {
-    ParagraphStartWithValidator validator = new ParagraphStartWithValidator();
-    Section section = new Section(0);
-    Paragraph paragraph = new Paragraph();
-    section.appendParagraph(paragraph);
-    List<ValidationError> errors = validator.validate(section);
-    assertEquals(0, errors.size());
-  }
+    @Test
+    public void testVoidParagraph() {
+        ParagraphStartWithValidator validator = new ParagraphStartWithValidator();
+        Section section = new Section(0);
+        Paragraph paragraph = new Paragraph();
+        section.appendParagraph(paragraph);
+        List<ValidationError> errors = validator.validate(section);
+        assertEquals(0, errors.size());
+    }
 }

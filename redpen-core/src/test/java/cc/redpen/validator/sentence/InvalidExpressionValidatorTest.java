@@ -30,71 +30,71 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class InvalidExpressionValidatorTest {
 
-  @Test
-  public void testSimpleRun() {
-    InvalidExpressionValidator validator = new InvalidExpressionValidator();
-    validator.addInvalid("may");
-    List<ValidationError> errors = validator.validate(new Sentence("The experiments may be true.", 0));
-    assertEquals(1, errors.size());
-  }
+    @Test
+    public void testSimpleRun() {
+        InvalidExpressionValidator validator = new InvalidExpressionValidator();
+        validator.addInvalid("may");
+        List<ValidationError> errors = validator.validate(new Sentence("The experiments may be true.", 0));
+        assertEquals(1, errors.size());
+    }
 
-  @Test
-  public void testVoid() {
-    InvalidExpressionValidator validator = new InvalidExpressionValidator();
-    validator.addInvalid("may");
-    List<ValidationError> errors = validator.validate(new Sentence("", 0));
-    assertEquals(0, errors.size());
-  }
+    @Test
+    public void testVoid() {
+        InvalidExpressionValidator validator = new InvalidExpressionValidator();
+        validator.addInvalid("may");
+        List<ValidationError> errors = validator.validate(new Sentence("", 0));
+        assertEquals(0, errors.size());
+    }
 
-  @Test
-  public void testLoadDefaultDictionary() throws RedPenException {
-    Configuration config = new Configuration.Builder()
-        .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
-        .setSymbolTable("en").build();
+    @Test
+    public void testLoadDefaultDictionary() throws RedPenException {
+        Configuration config = new Configuration.Builder()
+                .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
+                .setSymbolTable("en").build();
 
-    DocumentCollection documents = new DocumentCollection.Builder()
-        .addDocument("")
-        .addSection(1, new ArrayList<>())
-        .addParagraph()
-        .addSentence(
-            "You know. He is a super man.",
-            1)
-        .build();
+        DocumentCollection documents = new DocumentCollection.Builder()
+                .addDocument("")
+                .addSection(1, new ArrayList<>())
+                .addParagraph()
+                .addSentence(
+                        "You know. He is a super man.",
+                        1)
+                .build();
 
-    RedPen validator = new RedPen.Builder()
-        .setConfiguration(config)
-        .setResultDistributor(new FakeResultDistributor())
-        .build();
+        RedPen validator = new RedPen.Builder()
+                .setConfiguration(config)
+                .setResultDistributor(new FakeResultDistributor())
+                .build();
 
-    List<ValidationError> errors = validator.check(documents);
-    assertEquals(1, errors.size());
-  }
+        List<ValidationError> errors = validator.check(documents);
+        assertEquals(1, errors.size());
+    }
 
-  @Test
-  public void testLoadJapaneseDefaultDictionary() throws RedPenException {
-    Configuration config = new Configuration.Builder()
-        .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
-        .setSymbolTable("ja").build();
+    @Test
+    public void testLoadJapaneseDefaultDictionary() throws RedPenException {
+        Configuration config = new Configuration.Builder()
+                .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
+                .setSymbolTable("ja").build();
 
-    DocumentCollection documents = new DocumentCollection.Builder()
-        .addDocument("")
-        .addSection(1, new ArrayList<>())
-        .addParagraph()
-        .addSentence(
-            "明日地球が滅亡するってマジですか。",
-            1)
-        .build();
+        DocumentCollection documents = new DocumentCollection.Builder()
+                .addDocument("")
+                .addSection(1, new ArrayList<>())
+                .addParagraph()
+                .addSentence(
+                        "明日地球が滅亡するってマジですか。",
+                        1)
+                .build();
 
-    RedPen validator = new RedPen.Builder()
-        .setConfiguration(config)
-        .setResultDistributor(new FakeResultDistributor())
-        .build();
+        RedPen validator = new RedPen.Builder()
+                .setConfiguration(config)
+                .setResultDistributor(new FakeResultDistributor())
+                .build();
 
-    List<ValidationError> errors = validator.check(documents);
-    assertEquals(1, errors.size());
-  }
+        List<ValidationError> errors = validator.check(documents);
+        assertEquals(1, errors.size());
+    }
 }

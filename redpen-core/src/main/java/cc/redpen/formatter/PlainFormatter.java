@@ -24,28 +24,28 @@ import cc.redpen.ValidationError;
  */
 public class PlainFormatter implements Formatter {
 
-  @Override
-  public String convertError(ValidationError error) {
-    StringBuilder str = new StringBuilder();
+    @Override
+    public String convertError(ValidationError error) {
+        StringBuilder str = new StringBuilder();
 
-    str.append("ValidationError[");
-    str.append(error.getValidatorName());
-    str.append("][");
-    error.getFileName().ifPresent(e -> str.append(e).append(" : "));
-    str.append(error.getLineNumber()).append(" (")
-        .append(error.getMessage()).append(")]");
-    error.getSentence().ifPresent(e -> str.append(" at line: ").append(e.content));
-    return str.toString();
-  }
+        str.append("ValidationError[");
+        str.append(error.getValidatorName());
+        str.append("][");
+        error.getFileName().ifPresent(e -> str.append(e).append(" : "));
+        str.append(error.getLineNumber()).append(" (")
+                .append(error.getMessage()).append(")]");
+        error.getSentence().ifPresent(e -> str.append(" at line: ").append(e.content));
+        return str.toString();
+    }
 
-  @Override
-  public String header() {
-    return null;
-  }
+    @Override
+    public String header() {
+        return null;
+    }
 
-  @Override
-  public String footer() {
-    return null;
-  }
+    @Override
+    public String footer() {
+        return null;
+    }
 
 }

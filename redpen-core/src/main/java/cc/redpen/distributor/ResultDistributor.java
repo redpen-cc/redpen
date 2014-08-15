@@ -25,26 +25,28 @@ import cc.redpen.formatter.Formatter;
  */
 public interface ResultDistributor {
 
-  /**
-   * Flush header block of semi-structured format.
-   */
-  void flushHeader();
+    /**
+     * Flush header block of semi-structured format.
+     */
+    void flushHeader();
 
-  /**
-   * Flush footer block of semi-structured format.
-   */
-  void flushFooter();
+    /**
+     * Flush footer block of semi-structured format.
+     */
+    void flushFooter();
 
-  /**
-   * Flush given ValidationError.
-   * @param err error reported from a Validator
-   * @return 0 succeeded, otherwise 1
-   */
-  int flushResult(ValidationError err);
+    /**
+     * Flush given ValidationError.
+     *
+     * @param err error reported from a Validator
+     * @return 0 succeeded, otherwise 1
+     */
+    int flushResult(ValidationError err);
 
-  /**
-   * Set Formatter object.
-   * @param formatter
-   */
-  void setFormatter(Formatter formatter);
+    /**
+     * Set Formatter object.
+     *
+     * @param formatter
+     */
+    void setFormatter(Formatter formatter);
 }

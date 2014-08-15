@@ -24,39 +24,38 @@ import java.util.List;
  * Sentence block in a Document.
  */
 public final class Sentence {
-  /**
-   * Constructor.
-   *
-   * @param sentenceContent  content of sentence
-   * @param sentencePosition sentence position
-   */
-  public Sentence(String sentenceContent, int sentencePosition) {
-    super();
-    this.content = sentenceContent;
-    this.position = sentencePosition;
-    this.isFirstSentence = false;
-    this.links = new ArrayList<>();
-  }
+    /**
+     * Links (including internal and external ones).
+     */
+    public final List<String> links;
+    /**
+     * Content of string.
+     */
+    public String content;
 
-  /**
-   * Content of string.
-   */
-  public String content;
+    /**
+     * Sentence position in a file.
+     */
+    public int position;
 
-  /**
-   * Sentence position in a file.
-   */
-  public int position;
+    /**
+     * Flag for knowing if the sentence is the first sentence
+     * of a block, such as paragraph, list, header.
+     */
+    public boolean isFirstSentence;
 
-  /**
-   * Flag for knowing if the sentence is the first sentence
-   * of a block, such as paragraph, list, header.
-   */
-  public boolean isFirstSentence;
-
-  /**
-   * Links (including internal and external ones).
-   */
-  public final List<String> links;
+    /**
+     * Constructor.
+     *
+     * @param sentenceContent  content of sentence
+     * @param sentencePosition sentence position
+     */
+    public Sentence(String sentenceContent, int sentencePosition) {
+        super();
+        this.content = sentenceContent;
+        this.position = sentencePosition;
+        this.isFirstSentence = false;
+        this.links = new ArrayList<>();
+    }
 
 }
