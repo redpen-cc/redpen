@@ -17,43 +17,44 @@
  */
 package cc.redpen.validator.sentence;
 
-import static org.junit.Assert.*;
+import cc.redpen.ValidationError;
+import cc.redpen.model.Sentence;
+import org.junit.Test;
 
 import java.util.List;
 
-import org.junit.Test;
-import cc.redpen.model.Sentence;
-import cc.redpen.ValidationError;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class WordNumberValidatorTest {
 
-  @Test
-  public void testWithShortSentence() {
-    WordNumberValidator maxWordNumberValidator = new WordNumberValidator();
-    Sentence str = new Sentence(
-        "this sentence is short.",0);
-    List<ValidationError> errors = maxWordNumberValidator.validate(str);
-    assertNotNull(errors);
-    assertEquals(0, errors.size());
-  }
+    @Test
+    public void testWithShortSentence() {
+        WordNumberValidator maxWordNumberValidator = new WordNumberValidator();
+        Sentence str = new Sentence(
+                "this sentence is short.", 0);
+        List<ValidationError> errors = maxWordNumberValidator.validate(str);
+        assertNotNull(errors);
+        assertEquals(0, errors.size());
+    }
 
-  @Test
-  public void testWithLongSentence() {
-    WordNumberValidator maxWordNumberValidator = new WordNumberValidator();
-    Sentence str = new Sentence(
-        "this sentence is very very very very very very very very very very" +
-        " very very very very very very very very very very very very very very long",0);
-    List<ValidationError> errors = maxWordNumberValidator.validate(str);
-    assertNotNull(errors);
-    assertEquals(0, errors.size());
-  }
+    @Test
+    public void testWithLongSentence() {
+        WordNumberValidator maxWordNumberValidator = new WordNumberValidator();
+        Sentence str = new Sentence(
+                "this sentence is very very very very very very very very very very" +
+                        " very very very very very very very very very very very very very very long", 0);
+        List<ValidationError> errors = maxWordNumberValidator.validate(str);
+        assertNotNull(errors);
+        assertEquals(0, errors.size());
+    }
 
-  @Test
-  public void testWithZeroLengthSentence() {
-    WordNumberValidator maxWordNumberValidator = new WordNumberValidator();
-    Sentence str = new Sentence("", 0);
-    List<ValidationError> errors = maxWordNumberValidator.validate(str);
-    assertNotNull(errors);
-    assertEquals(0, errors.size());
-  }
+    @Test
+    public void testWithZeroLengthSentence() {
+        WordNumberValidator maxWordNumberValidator = new WordNumberValidator();
+        Sentence str = new Sentence("", 0);
+        List<ValidationError> errors = maxWordNumberValidator.validate(str);
+        assertNotNull(errors);
+        assertEquals(0, errors.size());
+    }
 }

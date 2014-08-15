@@ -28,101 +28,98 @@ import java.util.List;
  * Contains Settings used throughout {@link cc.redpen.RedPen}.
  */
 public final class Configuration {
-  /**
-   * Constructor.
-   *
-   * @param builder Configuration builder
-   */
-  public Configuration(Builder builder) {
-    if (builder.symbolTable == null) {
-      this.symbolTable = new SymbolTable();
-    } else {
-      this.symbolTable = builder.symbolTable;
-    }
-    this.validatorConfigs.addAll(builder.validatorConfigs);
-  }
-
-  /**
-   * Get SymbolTable.
-   *
-   * @return SymbolTable
-   */
-  public SymbolTable getSymbolTable() {
-    return symbolTable;
-  }
-
-  /**
-   * Get validator configurations.
-   *
-   * @return list of configurations
-   */
-  public List<ValidatorConfiguration> getValidatorConfigs() {
-    return validatorConfigs;
-  }
-
-
-  /**
-   * Builder class of Configuration.
-   */
-  public static class Builder {
-    private SymbolTable symbolTable;
-
+    private final SymbolTable symbolTable;
     private final List<ValidatorConfiguration> validatorConfigs =
-        new ArrayList<>();
+            new ArrayList<>();
 
-    public Builder setSymbolTable(String lang) {
-      this.symbolTable = loadLanguageDefaultSymbolTable(lang);
-      return this;
+    /**
+     * Constructor.
+     *
+     * @param builder Configuration builder
+     */
+    public Configuration(Builder builder) {
+        if (builder.symbolTable == null) {
+            this.symbolTable = new SymbolTable();
+        } else {
+            this.symbolTable = builder.symbolTable;
+        }
+        this.validatorConfigs.addAll(builder.validatorConfigs);
     }
 
-    public Builder setSymbol(Symbol symbol) {
-      this.symbolTable.override(symbol);
-      return this;
+    /**
+     * Get SymbolTable.
+     *
+     * @return SymbolTable
+     */
+    public SymbolTable getSymbolTable() {
+        return symbolTable;
     }
 
-    public Builder setSymbol(String name, String value) {
-      this.symbolTable.override(new Symbol(name, value));
-      return this;
+    /**
+     * Get validator configurations.
+     *
+     * @return list of configurations
+     */
+    public List<ValidatorConfiguration> getValidatorConfigs() {
+        return validatorConfigs;
     }
 
-    public Builder addInvalidPattern(String name, String invalid) {
-      Symbol symbol = this.symbolTable.getSymbol(name);
-      symbol.addInvalid(invalid);
-      return this;
+    /**
+     * Builder class of Configuration.
+     */
+    public static class Builder {
+        private final List<ValidatorConfiguration> validatorConfigs =
+                new ArrayList<>();
+        private SymbolTable symbolTable;
+
+        private static SymbolTable loadLanguageDefaultSymbolTable(
+                String lang) {
+            SymbolTable symbolTable = new SymbolTable();
+
+            AbstractSymbols symbolSettings;
+            if (lang.equals("ja")) {
+                symbolSettings = JapaneseSymbols.getInstance();
+                symbolTable.setLang("ja");
+            } else {
+                symbolSettings = DefaultSymbols.getInstance();
+                symbolTable.setLang("en");
+            }
+
+            for (String symbolName : symbolSettings) {
+                Symbol symbol = symbolSettings.get(symbolName);
+                symbolTable.override(symbol);
+            }
+            return symbolTable;
+        }
+
+        public Builder setSymbolTable(String lang) {
+            this.symbolTable = loadLanguageDefaultSymbolTable(lang);
+            return this;
+        }
+
+        public Builder setSymbol(Symbol symbol) {
+            this.symbolTable.override(symbol);
+            return this;
+        }
+
+        public Builder setSymbol(String name, String value) {
+            this.symbolTable.override(new Symbol(name, value));
+            return this;
+        }
+
+        public Builder addInvalidPattern(String name, String invalid) {
+            Symbol symbol = this.symbolTable.getSymbol(name);
+            symbol.addInvalid(invalid);
+            return this;
+        }
+
+        public Builder addValidatorConfig(ValidatorConfiguration config) {
+            validatorConfigs.add(config);
+            return this;
+        }
+
+        public Configuration build() {
+            return new Configuration(this);
+        }
     }
-
-    public Builder addValidatorConfig(ValidatorConfiguration config) {
-        validatorConfigs.add(config);
-      return this;
-    }
-
-    private static SymbolTable loadLanguageDefaultSymbolTable(
-        String lang) {
-      SymbolTable symbolTable = new SymbolTable();
-
-      AbstractSymbols symbolSettings;
-      if (lang.equals("ja")) {
-        symbolSettings = JapaneseSymbols.getInstance();
-        symbolTable.setLang("ja");
-      } else {
-        symbolSettings = DefaultSymbols.getInstance();
-        symbolTable.setLang("en");
-      }
-
-      for(String symbolName : symbolSettings) {
-        Symbol symbol = symbolSettings.get(symbolName);
-        symbolTable.override(symbol);
-      }
-      return symbolTable;
-    }
-
-    public Configuration build() {
-      return new Configuration(this);
-    }
-  }
-
-  private final SymbolTable symbolTable;
-
-  private final List<ValidatorConfiguration> validatorConfigs =
-      new ArrayList<>();
 }

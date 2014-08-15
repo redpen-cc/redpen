@@ -33,54 +33,52 @@ import java.util.List;
  * Validate input sentences contain more characters more than specified.
  */
 public class SentenceLengthValidator implements Validator<Sentence> {
-  /**
-   * Default maximum length of sentences.
-   */
-  @SuppressWarnings("WeakerAccess")
-  public static final int DEFAULT_MAX_LENGTH = 30;
+    /**
+     * Default maximum length of sentences.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final int DEFAULT_MAX_LENGTH = 30;
+    private static final Logger LOG =
+            LoggerFactory.getLogger(SentenceLengthValidator.class);
+    private int maxLength;
 
-  public SentenceLengthValidator(ValidatorConfiguration config,
-                                 SymbolTable symbolTable)
-      throws RedPenException {
-    initialize(config);
-  }
-
-  public SentenceLengthValidator() {
-    super();
-    this.maxLength = DEFAULT_MAX_LENGTH;
-  }
-
-  public List<ValidationError> validate(Sentence line) {
-    List<ValidationError> result = new ArrayList<>();
-    if (line.content.length() > maxLength) {
-      result.add(new ValidationError(
-          this.getClass(),
-          "The length of the line exceeds the maximum "
-              + String.valueOf(line.content.length()) + ".",
-              line));
+    public SentenceLengthValidator(ValidatorConfiguration config,
+                                   SymbolTable symbolTable)
+            throws RedPenException {
+        initialize(config);
     }
-    return result;
-  }
 
-  private boolean initialize(
-    ValidatorConfiguration conf)
-        throws RedPenException {
-    if (conf.getAttribute("max_length") == null) {
-      this.maxLength = DEFAULT_MAX_LENGTH;
-      LOG.info("max_length was not set.");
-      LOG.info("Using the default value of max_length.");
-    } else {
-      this.maxLength = Integer.valueOf(conf.getAttribute("max_length"));
+    public SentenceLengthValidator() {
+        super();
+        this.maxLength = DEFAULT_MAX_LENGTH;
     }
-    return true;
-  }
 
-  protected void setMaxLength(int max) {
-    this.maxLength = max;
-  }
+    public List<ValidationError> validate(Sentence line) {
+        List<ValidationError> result = new ArrayList<>();
+        if (line.content.length() > maxLength) {
+            result.add(new ValidationError(
+                    this.getClass(),
+                    "The length of the line exceeds the maximum "
+                            + String.valueOf(line.content.length()) + ".",
+                    line));
+        }
+        return result;
+    }
 
-  private static final Logger LOG =
-      LoggerFactory.getLogger(SentenceLengthValidator.class);
+    private boolean initialize(
+            ValidatorConfiguration conf)
+            throws RedPenException {
+        if (conf.getAttribute("max_length") == null) {
+            this.maxLength = DEFAULT_MAX_LENGTH;
+            LOG.info("max_length was not set.");
+            LOG.info("Using the default value of max_length.");
+        } else {
+            this.maxLength = Integer.valueOf(conf.getAttribute("max_length"));
+        }
+        return true;
+    }
 
-  private int maxLength;
+    protected void setMaxLength(int max) {
+        this.maxLength = max;
+    }
 }

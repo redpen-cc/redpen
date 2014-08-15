@@ -3,19 +3,19 @@
         <validator name="SentenceLength">
             <property name="max_length" value="200"/>
         </validator>
-        <validator name="InvalidCharacter" />
-        <validator name="SymbolWithSpace" />
+        <validator name="InvalidCharacter"/>
+        <validator name="SymbolWithSpace"/>
         <validator name="SectionLength">
             <property name="max_char_num" value="2000"/>
         </validator>
-        <validator name="MaxParagraphNumber" />
+        <validator name="MaxParagraphNumber"/>
     </validator-list>
     <symbol-table lang="en">
-        <symbol name="EXCLAMATION_MARK" value="!" invalid-chars="！" after-space="true" />
-        <symbol name="LEFT_QUOTATION_MARK" value="\'"  invalid-chars="“" before-space="true" />
-        <symbol name="RIGHT_QUOTATION_MARK" value="\'"  invalid-chars="”" after-space="true" />
-        <symbol name="NUMBER_SIGN" value="#" invalid-chars="＃" after-space="true" />
-        <symbol name="FULL_STOP" value="." invalid-chars="．。" after-space="true" />
-        <symbol name="COMMA" value="," invalid-chars="、，" after-space="true" />
+        <symbol name="EXCLAMATION_MARK" value="!" invalid-chars="！" after-space="true"/>
+        <symbol name="LEFT_QUOTATION_MARK" value="\'" invalid-chars="“" before-space="true"/>
+        <symbol name="RIGHT_QUOTATION_MARK" value="\'" invalid-chars="”" after-space="true"/>
+        <symbol name="NUMBER_SIGN" value="#" invalid-chars="＃" after-space="true"/>
+        <symbol name="FULL_STOP" value="." invalid-chars="．。" after-space="true"/>
+        <symbol name="COMMA" value="," invalid-chars="、，" after-space="true"/>
     </symbol-table>
 </redpen-conf>

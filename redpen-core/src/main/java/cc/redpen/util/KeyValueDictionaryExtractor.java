@@ -24,34 +24,34 @@ import java.util.Map;
  * An ResourceExtractor implementation for KeyValue input data.
  */
 public class KeyValueDictionaryExtractor implements ResourceExtractor<Map<String, String>> {
-  /**
-   * Constructor.
-   */
-  public KeyValueDictionaryExtractor() {
-    super();
-    this.map = new HashMap<>();
-  }
+    private final Map<String, String> map;
 
-  /**
-   * Load input file. The input file TSV with two columns.
-   *
-   * @param line line in a file
-   * @return 0 when succeeded to load, 1 otherwise
-   */
-  @Override
-  public int load(String line) {
-    String[] result = line.split("\t");
-    if (result.length != 2) {
-      return 1;
+    /**
+     * Constructor.
+     */
+    public KeyValueDictionaryExtractor() {
+        super();
+        this.map = new HashMap<>();
     }
-    map.put(result[0], result[1]);
-    return 0;
-  }
 
-  @Override
-  public Map<String, String> get() {
-    return map;
-  }
+    /**
+     * Load input file. The input file TSV with two columns.
+     *
+     * @param line line in a file
+     * @return 0 when succeeded to load, 1 otherwise
+     */
+    @Override
+    public int load(String line) {
+        String[] result = line.split("\t");
+        if (result.length != 2) {
+            return 1;
+        }
+        map.put(result[0], result[1]);
+        return 0;
+    }
 
-  private final Map<String, String> map;
+    @Override
+    public Map<String, String> get() {
+        return map;
+    }
 }

@@ -25,150 +25,150 @@ import java.util.List;
  * Represent a character settings.
  */
 public final class Symbol {
-  /**
-   * Constructor.
-   *
-   * @param charName  name of target character
-   * @param charValue character
-   */
-  public Symbol(String charName, String charValue) {
-    this.name = charName;
-    this.value = charValue;
-    this.invalidChars = new ArrayList<>();
-    this.needBeforeSpace = false;
-    this.needAfterSpace = false;
-  }
+    private String name;
+    private String value;
+    private List<String> invalidChars;
+    private boolean needBeforeSpace;
+    private boolean needAfterSpace;
 
-  /**
-   * Constructor.
-   *
-   * @param charName        name of target character
-   * @param charValue       character
-   * @param invalidCharsStr list of invalid characters
-   */
-  public Symbol(String charName, String charValue,
-                String invalidCharsStr) {
-    this(charName, charValue);
-    if (invalidCharsStr.length() > 0) {
-      this.invalidChars.addAll
-          (Arrays.asList(invalidCharsStr.split("(?!^)")));
+    /**
+     * Constructor.
+     *
+     * @param charName  name of target character
+     * @param charValue character
+     */
+    public Symbol(String charName, String charValue) {
+        this.name = charName;
+        this.value = charValue;
+        this.invalidChars = new ArrayList<>();
+        this.needBeforeSpace = false;
+        this.needAfterSpace = false;
     }
-  }
 
-  /**
-   * Constructor.
-   *
-   * @param charName        name of target character
-   * @param charValue       character
-   * @param invalidCharsStr list of invalid characters
-   * @param haveBeforeSpace flag to have a space before the character
-   * @param haveAfterSpace  flag to have a pace after the character
-   */
-  public Symbol(String charName, String charValue, String invalidCharsStr,
-                boolean haveBeforeSpace, boolean haveAfterSpace) {
-    this(charName, charValue, invalidCharsStr);
-    this.needBeforeSpace = haveBeforeSpace;
-    this.needAfterSpace = haveAfterSpace;
-  }
+    /**
+     * Constructor.
+     *
+     * @param charName        name of target character
+     * @param charValue       character
+     * @param invalidCharsStr list of invalid characters
+     */
+    public Symbol(String charName, String charValue,
+                  String invalidCharsStr) {
+        this(charName, charValue);
+        if (invalidCharsStr.length() > 0) {
+            this.invalidChars.addAll
+                    (Arrays.asList(invalidCharsStr.split("(?!^)")));
+        }
+    }
 
-  /**
-   * Get name of character.
-   *
-   * @return character name
-   */
-  public String getName() {
-    return name;
-  }
+    /**
+     * Constructor.
+     *
+     * @param charName        name of target character
+     * @param charValue       character
+     * @param invalidCharsStr list of invalid characters
+     * @param haveBeforeSpace flag to have a space before the character
+     * @param haveAfterSpace  flag to have a pace after the character
+     */
+    public Symbol(String charName, String charValue, String invalidCharsStr,
+                  boolean haveBeforeSpace, boolean haveAfterSpace) {
+        this(charName, charValue, invalidCharsStr);
+        this.needBeforeSpace = haveBeforeSpace;
+        this.needAfterSpace = haveAfterSpace;
+    }
 
-  /**
-   * Set name of character.
-   *
-   * @param charName name of character
-   */
-  public void setName(String charName) {
-    this.name = charName;
-  }
+    /**
+     * Get name of character.
+     *
+     * @return character name
+     */
+    public String getName() {
+        return name;
+    }
 
-  /**
-   * Get value of character.
-   *
-   * @return character
-   */
-  public String getValue() {
-    return value;
-  }
+    /**
+     * Set name of character.
+     *
+     * @param charName name of character
+     */
+    public void setName(String charName) {
+        this.name = charName;
+    }
 
-  /**
-   * Set value of character.
-   *
-   * @param charValue
-   */
-  public void setValue(String charValue) {
-    this.value = charValue;
-  }
+    /**
+     * Get value of character.
+     *
+     * @return character
+     */
+    public String getValue() {
+        return value;
+    }
 
-  /**
-   * Get invalid characters.
-   *
-   * @return a list of invalid characters
-   */
-  public List<String> getInvalidSymbols() {
-    return invalidChars;
-  }
+    /**
+     * Set value of character.
+     *
+     * @param charValue
+     */
+    public void setValue(String charValue) {
+        this.value = charValue;
+    }
 
-  /**
-   * Set invalid characters.
-   *
-   * @param invalidCharList list of invalid characters
-   */
-  public void setInvalidChars(List<String> invalidCharList) {
-    this.invalidChars = invalidCharList;
-  }
+    /**
+     * Get invalid characters.
+     *
+     * @return a list of invalid characters
+     */
+    public List<String> getInvalidSymbols() {
+        return invalidChars;
+    }
 
-  /**
-   * Get the flag to know the character should have a space.
-   *
-   * @return flag to determine the character should have a space before it
-   */
-  public boolean isNeedBeforeSpace() {
-    return needBeforeSpace;
-  }
+    /**
+     * Set invalid characters.
+     *
+     * @param invalidCharList list of invalid characters
+     */
+    public void setInvalidChars(List<String> invalidCharList) {
+        this.invalidChars = invalidCharList;
+    }
 
-  /**
-   * Set the flag to know the character should have a space.
-   *
-   * @param beforeSpace the character should have a space before it
-   */
-  public void setNeedBeforeSpace(boolean beforeSpace) {
-    this.needBeforeSpace = beforeSpace;
-  }
+    /**
+     * Get the flag to know the character should have a space.
+     *
+     * @return flag to determine the character should have a space before it
+     */
+    public boolean isNeedBeforeSpace() {
+        return needBeforeSpace;
+    }
 
-  /**
-   * Get the flag to know the character should have a space.
-   *
-   * @return flag to determine the character should have a space after it
-   */
-  public boolean isNeedAfterSpace() {
-    return needAfterSpace;
-  }
+    /**
+     * Set the flag to know the character should have a space.
+     *
+     * @param beforeSpace the character should have a space before it
+     */
+    public void setNeedBeforeSpace(boolean beforeSpace) {
+        this.needBeforeSpace = beforeSpace;
+    }
 
-  /**
-   * Set the flag to know the character should have a space.
-   *
-   * @param afterSpace the character should have a space after it
-   */
-  public void setNeedAfterSpace(boolean afterSpace) {
-    this.needAfterSpace = afterSpace;
-  }
+    /**
+     * Get the flag to know the character should have a space.
+     *
+     * @return flag to determine the character should have a space after it
+     */
+    public boolean isNeedAfterSpace() {
+        return needAfterSpace;
+    }
 
-  public void addInvalid(String invalid) {
-    this.invalidChars.add(invalid);
-  }
+    /**
+     * Set the flag to know the character should have a space.
+     *
+     * @param afterSpace the character should have a space after it
+     */
+    public void setNeedAfterSpace(boolean afterSpace) {
+        this.needAfterSpace = afterSpace;
+    }
 
-  private String name;
-  private String value;
-  private List<String> invalidChars;
-  private boolean needBeforeSpace;
-  private boolean needAfterSpace;
+    public void addInvalid(String invalid) {
+        this.invalidChars.add(invalid);
+    }
 
 }

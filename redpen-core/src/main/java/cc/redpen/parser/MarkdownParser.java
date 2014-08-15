@@ -18,16 +18,16 @@
 package cc.redpen.parser;
 
 import cc.redpen.RedPenException;
-import org.apache.commons.io.IOUtils;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
+import cc.redpen.parser.markdown.ToFileContentSerializer;
+import org.apache.commons.io.IOUtils;
 import org.pegdown.Extensions;
 import org.pegdown.ParsingTimeoutException;
 import org.pegdown.PegDownProcessor;
 import org.pegdown.ast.RootNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import cc.redpen.parser.markdown.ToFileContentSerializer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,63 +37,61 @@ import java.util.List;
 
 /**
  * Parser for Markdown format.<br/>
- * <p/>
+ * <p>
  * Markdown Syntax @see http://daringfireball.net/projects/markdown/
  */
 public class MarkdownParser extends BasicDocumentParser {
 
-  private PegDownProcessor pegDownProcessor = new PegDownProcessor(
-      Extensions.HARDWRAPS
-          + Extensions.AUTOLINKS
-          + Extensions.FENCED_CODE_BLOCKS);
+    private static final Logger LOG =
+            LoggerFactory.getLogger(MarkdownParser.class);
+    private PegDownProcessor pegDownProcessor = new PegDownProcessor(
+            Extensions.HARDWRAPS
+                    + Extensions.AUTOLINKS
+                    + Extensions.FENCED_CODE_BLOCKS);
 
-  MarkdownParser() {
-    super();
-  }
-
-  @Override
-  public Document generateDocument(InputStream inputStream)
-      throws RedPenException {
-    builder.addDocument("");
-
-    StringBuilder sb = new StringBuilder();
-    String line;
-    int charCount = 0;
-    List<Integer> lineList = new ArrayList<>();
-    BufferedReader br = null;
-
-    try {
-      br = createReader(inputStream);
-      while ((line = br.readLine()) != null) {
-        sb.append(line);
-        sb.append("\n");
-        // TODO surrogate pair ?
-        charCount += line.length() + 1;
-        lineList.add(charCount);
-      }
-
-      List<Sentence> headers = new ArrayList<>();
-      headers.add(new Sentence("", 0));
-      builder.addSection(0, headers);
-
-      // TODO create document after parsing... overhead...
-      RootNode rootNode =
-          pegDownProcessor.parseMarkdown(sb.toString().toCharArray());
-      ToFileContentSerializer serializer =
-          new ToFileContentSerializer(builder,
-              lineList, this.getSentenceExtractor());
-      serializer.toFileContent(rootNode);
-    } catch (ParsingTimeoutException e) {
-      throw new RedPenException("Failed to parse timeout");
-    } catch (IOException e) {
-      throw new RedPenException("Failed to read lines");
-    } finally {
-      IOUtils.closeQuietly(br);
+    MarkdownParser() {
+        super();
     }
-    return builder.getLastDocument();
-  }
 
+    @Override
+    public Document generateDocument(InputStream inputStream)
+            throws RedPenException {
+        builder.addDocument("");
 
-  private static final Logger LOG =
-      LoggerFactory.getLogger(MarkdownParser.class);
+        StringBuilder sb = new StringBuilder();
+        String line;
+        int charCount = 0;
+        List<Integer> lineList = new ArrayList<>();
+        BufferedReader br = null;
+
+        try {
+            br = createReader(inputStream);
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+                sb.append("\n");
+                // TODO surrogate pair ?
+                charCount += line.length() + 1;
+                lineList.add(charCount);
+            }
+
+            List<Sentence> headers = new ArrayList<>();
+            headers.add(new Sentence("", 0));
+            builder.addSection(0, headers);
+
+            // TODO create document after parsing... overhead...
+            RootNode rootNode =
+                    pegDownProcessor.parseMarkdown(sb.toString().toCharArray());
+            ToFileContentSerializer serializer =
+                    new ToFileContentSerializer(builder,
+                            lineList, this.getSentenceExtractor());
+            serializer.toFileContent(rootNode);
+        } catch (ParsingTimeoutException e) {
+            throw new RedPenException("Failed to parse timeout");
+        } catch (IOException e) {
+            throw new RedPenException("Failed to read lines");
+        } finally {
+            IOUtils.closeQuietly(br);
+        }
+        return builder.getLastDocument();
+    }
 }

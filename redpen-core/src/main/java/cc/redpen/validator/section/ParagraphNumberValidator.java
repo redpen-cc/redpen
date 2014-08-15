@@ -31,48 +31,47 @@ import java.util.List;
  * This validator reports it.
  */
 public class ParagraphNumberValidator implements Validator<Section> {
-  /**
-   * Default maximum number of paragraphs in a section.
-   */
-  @SuppressWarnings("WeakerAccess")
-  public static final int DEFAULT_MAX_PARAGRAPHS_IN_A_SECTION = 5;
+    /**
+     * Default maximum number of paragraphs in a section.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final int DEFAULT_MAX_PARAGRAPHS_IN_A_SECTION = 5;
+    private int maxParagraphs;
 
-  public ParagraphNumberValidator() {
-    super();
-  }
-
-  public ParagraphNumberValidator(ValidatorConfiguration conf, SymbolTable
-    charTable) {
-    this();
-    loadConfiguration(conf);
-  }
-
-  @Override
-  public List<ValidationError> validate(Section section) {
-    List<ValidationError> validationErrors = new ArrayList<>();
-    int paragraphNumber = section.getNumberOfParagraphs();
-    if (maxParagraphs < paragraphNumber) {
-      validationErrors.add(new ValidationError(
-          this.getClass(),
-          "The number of the paragraphs exceeds the maximum "
-              + String.valueOf(paragraphNumber), section.getHeaderContent(0)));
-      return validationErrors;
+    public ParagraphNumberValidator() {
+        super();
     }
-    return validationErrors;
-  }
 
-  private boolean loadConfiguration(ValidatorConfiguration conf) {
-    if (conf.getAttribute("max_paragraph_num") == null) {
-      this.maxParagraphs = DEFAULT_MAX_PARAGRAPHS_IN_A_SECTION;
-    } else {
-      this.maxParagraphs = Integer.valueOf(conf.getAttribute("max_paragraph_num"));
+    public ParagraphNumberValidator(ValidatorConfiguration conf, SymbolTable
+            charTable) {
+        this();
+        loadConfiguration(conf);
     }
-    return true;
-  }
 
-  protected void setMaxParagraphNumber(int max) {
-    this.maxParagraphs = max;
-  }
+    @Override
+    public List<ValidationError> validate(Section section) {
+        List<ValidationError> validationErrors = new ArrayList<>();
+        int paragraphNumber = section.getNumberOfParagraphs();
+        if (maxParagraphs < paragraphNumber) {
+            validationErrors.add(new ValidationError(
+                    this.getClass(),
+                    "The number of the paragraphs exceeds the maximum "
+                            + String.valueOf(paragraphNumber), section.getHeaderContent(0)));
+            return validationErrors;
+        }
+        return validationErrors;
+    }
 
-  private int maxParagraphs;
+    private boolean loadConfiguration(ValidatorConfiguration conf) {
+        if (conf.getAttribute("max_paragraph_num") == null) {
+            this.maxParagraphs = DEFAULT_MAX_PARAGRAPHS_IN_A_SECTION;
+        } else {
+            this.maxParagraphs = Integer.valueOf(conf.getAttribute("max_paragraph_num"));
+        }
+        return true;
+    }
+
+    protected void setMaxParagraphNumber(int max) {
+        this.maxParagraphs = max;
+    }
 }

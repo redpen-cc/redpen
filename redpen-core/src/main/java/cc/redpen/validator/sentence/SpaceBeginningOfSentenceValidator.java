@@ -33,24 +33,24 @@ import java.util.List;
  */
 public class SpaceBeginningOfSentenceValidator implements Validator<Sentence> {
 
-  public SpaceBeginningOfSentenceValidator() {
-  }
-
-  public SpaceBeginningOfSentenceValidator(ValidatorConfiguration config,
-                                           SymbolTable symbolTable)
-      throws RedPenException {
-  }
-
-  public List<ValidationError> validate(Sentence sentence) {
-    List<ValidationError> result = new ArrayList<>();
-    String content = sentence.content;
-    if (!sentence.isFirstSentence && content.length() > 0
-        && !String.valueOf(content.charAt(0)).equals(" ")) {
-      result.add(new ValidationError(
-          this.getClass(),
-          "Space not exist the beginning of sentence.",
-          sentence));
+    public SpaceBeginningOfSentenceValidator() {
     }
-    return result;
-  }
+
+    public SpaceBeginningOfSentenceValidator(ValidatorConfiguration config,
+                                             SymbolTable symbolTable)
+            throws RedPenException {
+    }
+
+    public List<ValidationError> validate(Sentence sentence) {
+        List<ValidationError> result = new ArrayList<>();
+        String content = sentence.content;
+        if (!sentence.isFirstSentence && content.length() > 0
+                && !String.valueOf(content.charAt(0)).equals(" ")) {
+            result.add(new ValidationError(
+                    this.getClass(),
+                    "Space not exist the beginning of sentence.",
+                    sentence));
+        }
+        return result;
+    }
 }

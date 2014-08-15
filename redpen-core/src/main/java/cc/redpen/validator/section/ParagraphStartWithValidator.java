@@ -34,58 +34,56 @@ import java.util.List;
  * Validate whether paragraph start as specified.
  */
 public class ParagraphStartWithValidator implements Validator<Section> {
-  /**
-   * Default matter paragraph start with.
-   */
-  @SuppressWarnings("WeakerAccess")
-  public static final String DEFAULT_PARAGRAPH_START_WITH = " ";
+    /**
+     * Default matter paragraph start with.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static final String DEFAULT_PARAGRAPH_START_WITH = " ";
+    private static final Logger LOG =
+            LoggerFactory.getLogger(ParagraphStartWithValidator.class);
+    private String beginningOfParagraph;
 
-  /**
-   * Constructor.
-   */
-  public ParagraphStartWithValidator() {
-    super();
-    this.beginningOfParagraph = DEFAULT_PARAGRAPH_START_WITH;
-  }
-
-  public ParagraphStartWithValidator(ValidatorConfiguration conf,
-                                     SymbolTable charTable) {
-    this();
-    loadConfiguration(conf);
-  }
-
-  @Override
-  public List<ValidationError> validate(Section section) {
-    List<ValidationError> validationErrors = new ArrayList<>();
-    for (Paragraph currentParagraph : section.getParagraphs()) {
-      if (currentParagraph.getNumberOfSentences() == 0) {
-        continue;
-      }
-      Sentence firstSentence = currentParagraph.getSentence(0);
-      if (firstSentence.content.indexOf(this.beginningOfParagraph) != 0) {
-        validationErrors.add(new ValidationError(
-            this.getClass(),
-            "Found invalid beginning of paragraph: \"",
-            firstSentence));
-      }
+    /**
+     * Constructor.
+     */
+    public ParagraphStartWithValidator() {
+        super();
+        this.beginningOfParagraph = DEFAULT_PARAGRAPH_START_WITH;
     }
 
-    return validationErrors;
-  }
-
-  private boolean loadConfiguration(ValidatorConfiguration conf) {
-    if (conf.getAttribute("paragraph_start_with") == null) {
-      this.beginningOfParagraph = DEFAULT_PARAGRAPH_START_WITH;
-      LOG.info("Using the default value of paragraph_start_with.");
-    } else {
-      this.beginningOfParagraph = conf.getAttribute("paragraph_start_with");
+    public ParagraphStartWithValidator(ValidatorConfiguration conf,
+                                       SymbolTable charTable) {
+        this();
+        loadConfiguration(conf);
     }
-    return true;
-  }
 
-  private String beginningOfParagraph;
+    @Override
+    public List<ValidationError> validate(Section section) {
+        List<ValidationError> validationErrors = new ArrayList<>();
+        for (Paragraph currentParagraph : section.getParagraphs()) {
+            if (currentParagraph.getNumberOfSentences() == 0) {
+                continue;
+            }
+            Sentence firstSentence = currentParagraph.getSentence(0);
+            if (firstSentence.content.indexOf(this.beginningOfParagraph) != 0) {
+                validationErrors.add(new ValidationError(
+                        this.getClass(),
+                        "Found invalid beginning of paragraph: \"",
+                        firstSentence));
+            }
+        }
 
-  private static final Logger LOG =
-      LoggerFactory.getLogger(ParagraphStartWithValidator.class);
+        return validationErrors;
+    }
+
+    private boolean loadConfiguration(ValidatorConfiguration conf) {
+        if (conf.getAttribute("paragraph_start_with") == null) {
+            this.beginningOfParagraph = DEFAULT_PARAGRAPH_START_WITH;
+            LOG.info("Using the default value of paragraph_start_with.");
+        } else {
+            this.beginningOfParagraph = conf.getAttribute("paragraph_start_with");
+        }
+        return true;
+    }
 
 }

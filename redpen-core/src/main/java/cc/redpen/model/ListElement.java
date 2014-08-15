@@ -23,55 +23,54 @@ import java.util.List;
  * Element of List in semi-structured text format such as wiki.
  */
 public final class ListElement {
-  /**
-   * Constructor.
-   *
-   * @param listLevel    indentation level
-   * @param listContents content of list element
-   */
-  public ListElement(int listLevel, List<Sentence> listContents) {
-    super();
-    this.level = listLevel;
-    this.contents = listContents;
-  }
+    private final List<Sentence> contents;
+    private final int level;
 
-  /**
-   * Get content of list element.
-   *
-   * @return all contents of list element
-   */
-  public List<Sentence> getSentences() {
-    return contents;
-  }
+    /**
+     * Constructor.
+     *
+     * @param listLevel    indentation level
+     * @param listContents content of list element
+     */
+    public ListElement(int listLevel, List<Sentence> listContents) {
+        super();
+        this.level = listLevel;
+        this.contents = listContents;
+    }
 
-  /**
-   * Given sentence id, return the content of sentence.
-   *
-   * @return content of list element
-   */
-  public Sentence getSentence(int id) {
-    return contents.get(id);
-  }
+    /**
+     * Get content of list element.
+     *
+     * @return all contents of list element
+     */
+    public List<Sentence> getSentences() {
+        return contents;
+    }
 
-  /**
-   * Get the number of content sentence.
-   *
-   * @return the number of sentences in the list item
-   */
-  public int getNumberOfSentences() {
-    return contents.size();
-  }
+    /**
+     * Given sentence id, return the content of sentence.
+     *
+     * @return content of list element
+     */
+    public Sentence getSentence(int id) {
+        return contents.get(id);
+    }
 
-  /**
-   * Get indentation level.
-   *
-   * @return indentation level
-   */
-  public int getLevel() {
-    return level;
-  }
+    /**
+     * Get the number of content sentence.
+     *
+     * @return the number of sentences in the list item
+     */
+    public int getNumberOfSentences() {
+        return contents.size();
+    }
 
-  private final List<Sentence> contents;
-
-  private final int level;
+    /**
+     * Get indentation level.
+     *
+     * @return indentation level
+     */
+    public int getLevel() {
+        return level;
+    }
 }

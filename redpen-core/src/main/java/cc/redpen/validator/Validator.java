@@ -26,11 +26,12 @@ import java.util.List;
  * Validate input document.
  */
 public interface Validator<E> {
-  /**
-   * validate the input document and returns the invalid points.
-   * @param block input
-   * @return List of ValidationError
-   */
-  List<ValidationError> validate(E block);
+    /**
+     * validate the input document and returns the invalid points.
+     *
+     * @param block input
+     * @return List of ValidationError
+     */
+    List<ValidationError> validate(E block);
 
 }

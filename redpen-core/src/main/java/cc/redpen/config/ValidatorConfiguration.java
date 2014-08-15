@@ -27,156 +27,153 @@ import java.util.Set;
  * Configuration for Validators.
  */
 public final class ValidatorConfiguration {
-  /**
-   * Constructor.
-   *
-   * @param name name configuration settings
-   */
-  public ValidatorConfiguration(String name) {
-    this.configurationName = name;
-    this.attributes = new HashMap<>();
-    this.childConfigurations = new ArrayList<>();
-    this.parentConfiguration = null;
-  }
+    private final String configurationName;
+    private final HashMap<String, String> attributes;
+    private final ArrayList<ValidatorConfiguration> childConfigurations;
+    private ValidatorConfiguration parentConfiguration;
 
-  /**
-   * Constructor.
-   *
-   * @param name   name configuration settings
-   * @param parent parent Configuration object
-   */
-  public ValidatorConfiguration(String name, ValidatorConfiguration parent) {
-    this.configurationName = name;
-    this.attributes = new HashMap<>();
-    this.childConfigurations = new ArrayList<>();
-    this.parentConfiguration = parent;
-  }
-
-  /**
-   * Check if the configuration has the settings for the specified attribute.
-   *
-   * @param name attribute name
-   * @return true when the configuration contains the specified attribute,
-   * false otherwise
-   */
-  public boolean hasAttribute(String name) {
-    return this.attributes.containsKey(name);
-  }
-
-  /**
-   * Get attribute value.
-   *
-   * @param name attribute name
-   * @return value of the specified attribute
-   */
-  public String getAttribute(String name) {
-    if (!this.attributes.containsKey(name)) {
-      if (this.parentConfiguration != null) {
-        return parentConfiguration.getAttribute(name);
-      } else {
-        return null;
-      }
+    /**
+     * Constructor.
+     *
+     * @param name name configuration settings
+     */
+    public ValidatorConfiguration(String name) {
+        this.configurationName = name;
+        this.attributes = new HashMap<>();
+        this.childConfigurations = new ArrayList<>();
+        this.parentConfiguration = null;
     }
-    return this.attributes.get(name);
-  }
 
-  /**
-   * Get configuration name.
-   *
-   * @return configuration name
-   */
-  public String getConfigurationName() {
-    return configurationName;
-  }
-
-  /**
-   * Set an attribute.
-   *
-   * @param name  attribute name
-   * @param value attribute value
-   * @return true when successfully set attribute,
-   * false failed to set attribute or a value is set for the attribute
-   * name (in such case the value is not overridden).
-   */
-  public boolean setAttribute(String name, String value) {
-    if (attributes.containsKey(name)) {
-      return false;
+    /**
+     * Constructor.
+     *
+     * @param name   name configuration settings
+     * @param parent parent Configuration object
+     */
+    public ValidatorConfiguration(String name, ValidatorConfiguration parent) {
+        this.configurationName = name;
+        this.attributes = new HashMap<>();
+        this.childConfigurations = new ArrayList<>();
+        this.parentConfiguration = parent;
     }
-    this.attributes.put(name, value);
-    return true;
-  }
 
-  /**
-   * Add an attribute.
-   *
-   * @param name  attribute name
-   * @param value attribute value
-   * @retrun this object
-   */
-  public ValidatorConfiguration addAttribute(String name, String value) {
-    attributes.put(name, value);
-    return this;
-  }
+    /**
+     * Check if the configuration has the settings for the specified attribute.
+     *
+     * @param name attribute name
+     * @return true when the configuration contains the specified attribute,
+     * false otherwise
+     */
+    public boolean hasAttribute(String name) {
+        return this.attributes.containsKey(name);
+    }
 
-  /**
-   * Get sub-configurations.
-   *
-   * @return sub-configuration list
-   */
-  public List<ValidatorConfiguration> getChildren() {
-    return childConfigurations;
-  }
+    /**
+     * Get attribute value.
+     *
+     * @param name attribute name
+     * @return value of the specified attribute
+     */
+    public String getAttribute(String name) {
+        if (!this.attributes.containsKey(name)) {
+            if (this.parentConfiguration != null) {
+                return parentConfiguration.getAttribute(name);
+            } else {
+                return null;
+            }
+        }
+        return this.attributes.get(name);
+    }
 
-  /**
-   * Get all the attribute names.
-   *
-   * @return attribute names in the configuration.
-   */
-  public Set<String> getAttributes() {
-    return attributes.keySet();
-  }
+    /**
+     * Get configuration name.
+     *
+     * @return configuration name
+     */
+    public String getConfigurationName() {
+        return configurationName;
+    }
 
-  /**
-   * Get the number of sub-configurations.
-   *
-   * @return sub configuration number
-   */
-  public int getChildrenNumber() {
-    return childConfigurations.size();
-  }
+    /**
+     * Set an attribute.
+     *
+     * @param name  attribute name
+     * @param value attribute value
+     * @return true when successfully set attribute,
+     * false failed to set attribute or a value is set for the attribute
+     * name (in such case the value is not overridden).
+     */
+    public boolean setAttribute(String name, String value) {
+        if (attributes.containsKey(name)) {
+            return false;
+        }
+        this.attributes.put(name, value);
+        return true;
+    }
 
-  /**
-   * Set the parent configuration.
-   *
-   * @param parent parent Configuration object
-   */
-  public void setParent(ValidatorConfiguration parent) {
-    this.parentConfiguration = parent;
-  }
+    /**
+     * Add an attribute.
+     *
+     * @param name  attribute name
+     * @param value attribute value
+     * @retrun this object
+     */
+    public ValidatorConfiguration addAttribute(String name, String value) {
+        attributes.put(name, value);
+        return this;
+    }
 
-  /**
-   * Get Parent configuration.
-   *
-   * @return Parent configuration
-   */
-  public ValidatorConfiguration getParent() {
-    return this.parentConfiguration;
-  }
+    /**
+     * Get sub-configurations.
+     *
+     * @return sub-configuration list
+     */
+    public List<ValidatorConfiguration> getChildren() {
+        return childConfigurations;
+    }
 
-  /**
-   * Add a sub-configuration configuration.
-   *
-   * @param childConfig sub-configuration
-   */
-  public void addChild(ValidatorConfiguration childConfig) {
-    this.childConfigurations.add(childConfig);
-  }
+    /**
+     * Get all the attribute names.
+     *
+     * @return attribute names in the configuration.
+     */
+    public Set<String> getAttributes() {
+        return attributes.keySet();
+    }
 
-  private final String configurationName;
+    /**
+     * Get the number of sub-configurations.
+     *
+     * @return sub configuration number
+     */
+    public int getChildrenNumber() {
+        return childConfigurations.size();
+    }
 
-  private final HashMap<String, String> attributes;
+    /**
+     * Get Parent configuration.
+     *
+     * @return Parent configuration
+     */
+    public ValidatorConfiguration getParent() {
+        return this.parentConfiguration;
+    }
 
-  private final ArrayList<ValidatorConfiguration> childConfigurations;
+    /**
+     * Set the parent configuration.
+     *
+     * @param parent parent Configuration object
+     */
+    public void setParent(ValidatorConfiguration parent) {
+        this.parentConfiguration = parent;
+    }
 
-  private ValidatorConfiguration parentConfiguration;
+    /**
+     * Add a sub-configuration configuration.
+     *
+     * @param childConfig sub-configuration
+     */
+    public void addChild(ValidatorConfiguration childConfig) {
+        this.childConfigurations.add(childConfig);
+    }
 }

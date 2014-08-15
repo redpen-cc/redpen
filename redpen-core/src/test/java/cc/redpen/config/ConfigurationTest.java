@@ -20,48 +20,49 @@ package cc.redpen.config;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * Test for Configuration Structure
  */
 public class ConfigurationTest {
 
-  @Test
-  public void testSentenceValidatorConfiguration() throws Exception {
+    @Test
+    public void testSentenceValidatorConfiguration() throws Exception {
 
-    Configuration configuration = new Configuration.Builder()
-        .addValidatorConfig(new ValidatorConfiguration("SentenceLength"))
-        .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
-        .addValidatorConfig(new ValidatorConfiguration("SpaceBeginningOfSentence"))
-        .addValidatorConfig(new ValidatorConfiguration("CommaNumber"))
-        .addValidatorConfig(new ValidatorConfiguration("WordNumber"))
-        .addValidatorConfig(new ValidatorConfiguration("SuggestExpression"))
-        .addValidatorConfig(new ValidatorConfiguration("InvalidCharacter"))
-        .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
-        .addValidatorConfig(new ValidatorConfiguration("KatakanaEndHyphen"))
-        .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck"))
-        .build();
-    assertEquals(10, configuration.getValidatorConfigs().size());
-  }
-
-  @Test
-  public void testInvalidValidatorConfiguration() {
-    // NOTE: not throw a exception even when adding a non exist validator.
-    // The errors occurs when creating the added non existing validator instance.
-    try {
-      new Configuration.Builder()
-          .addValidatorConfig(new ValidatorConfiguration("ThereIsNoSuchValidator")).build();
-    } catch (Exception e) {
-      fail();
+        Configuration configuration = new Configuration.Builder()
+                .addValidatorConfig(new ValidatorConfiguration("SentenceLength"))
+                .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
+                .addValidatorConfig(new ValidatorConfiguration("SpaceBeginningOfSentence"))
+                .addValidatorConfig(new ValidatorConfiguration("CommaNumber"))
+                .addValidatorConfig(new ValidatorConfiguration("WordNumber"))
+                .addValidatorConfig(new ValidatorConfiguration("SuggestExpression"))
+                .addValidatorConfig(new ValidatorConfiguration("InvalidCharacter"))
+                .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
+                .addValidatorConfig(new ValidatorConfiguration("KatakanaEndHyphen"))
+                .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck"))
+                .build();
+        assertEquals(10, configuration.getValidatorConfigs().size());
     }
-  }
 
-  @Test
-  public void testSectionValidatorConfiguration() throws Exception{
-    Configuration configuration = new Configuration.Builder().addValidatorConfig(new ValidatorConfiguration("SectionLength"))
-        .addValidatorConfig(new ValidatorConfiguration("MaxParagraphNumber"))
-        .addValidatorConfig(new ValidatorConfiguration("ParagraphStartWith")).build();
-    assertEquals(3, configuration.getValidatorConfigs().size());
-  }
+    @Test
+    public void testInvalidValidatorConfiguration() {
+        // NOTE: not throw a exception even when adding a non exist validator.
+        // The errors occurs when creating the added non existing validator instance.
+        try {
+            new Configuration.Builder()
+                    .addValidatorConfig(new ValidatorConfiguration("ThereIsNoSuchValidator")).build();
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testSectionValidatorConfiguration() throws Exception {
+        Configuration configuration = new Configuration.Builder().addValidatorConfig(new ValidatorConfiguration("SectionLength"))
+                .addValidatorConfig(new ValidatorConfiguration("MaxParagraphNumber"))
+                .addValidatorConfig(new ValidatorConfiguration("ParagraphStartWith")).build();
+        assertEquals(3, configuration.getValidatorConfigs().size());
+    }
 }

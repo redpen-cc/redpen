@@ -20,8 +20,8 @@ package cc.redpen.validator.sentence;
 import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
-import cc.redpen.config.Symbol;
 import cc.redpen.config.Configuration;
+import cc.redpen.config.Symbol;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.distributor.FakeResultDistributor;
 import cc.redpen.model.DocumentCollection;
@@ -33,124 +33,124 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public class SymbolWithSpaceValidatorTest {
-  @Test
-  public void testNotNeedSpace() throws RedPenException {
-    DocumentCollection documents = new DocumentCollection.Builder()
-        .addDocument("")
-        .addSection(1, new ArrayList<>())
-        .addParagraph()
-        .addSentence("I like apple/orange", 1)
-        .build();
+    @Test
+    public void testNotNeedSpace() throws RedPenException {
+        DocumentCollection documents = new DocumentCollection.Builder()
+                .addDocument("")
+                .addSection(1, new ArrayList<>())
+                .addParagraph()
+                .addSentence("I like apple/orange", 1)
+                .build();
 
-    Configuration conf = new Configuration.Builder()
-        .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
-        .setSymbolTable("en")
-        .setSymbol(new Symbol("SLASH", "/"))
-        .build();
+        Configuration conf = new Configuration.Builder()
+                .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
+                .setSymbolTable("en")
+                .setSymbol(new Symbol("SLASH", "/"))
+                .build();
 
-    RedPen validator = new RedPen.Builder()
-        .setConfiguration(conf)
-        .setResultDistributor(new FakeResultDistributor())
-        .build();
+        RedPen validator = new RedPen.Builder()
+                .setConfiguration(conf)
+                .setResultDistributor(new FakeResultDistributor())
+                .build();
 
-    List<ValidationError> errors = validator.check(documents);
-    assertEquals(0, errors.size());
-  }
+        List<ValidationError> errors = validator.check(documents);
+        assertEquals(0, errors.size());
+    }
 
-  @Test
-  public void testNeedAfterSpace() throws RedPenException {
-    DocumentCollection documents = new DocumentCollection.Builder()
-        .addDocument("")
-        .addSection(1, new ArrayList<>())
-        .addParagraph()
-        .addSentence("I like her:yes it is", 1)
-        .build();
+    @Test
+    public void testNeedAfterSpace() throws RedPenException {
+        DocumentCollection documents = new DocumentCollection.Builder()
+                .addDocument("")
+                .addSection(1, new ArrayList<>())
+                .addParagraph()
+                .addSentence("I like her:yes it is", 1)
+                .build();
 
-    Configuration conf = new Configuration.Builder()
-        .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
-        .setSymbolTable("en")
-        .setSymbol(new Symbol("COLON", ":", "", false, true))
-        .build();
+        Configuration conf = new Configuration.Builder()
+                .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
+                .setSymbolTable("en")
+                .setSymbol(new Symbol("COLON", ":", "", false, true))
+                .build();
 
-    RedPen validator = new RedPen.Builder()
-        .setConfiguration(conf)
-        .setResultDistributor(new FakeResultDistributor())
-        .build();
+        RedPen validator = new RedPen.Builder()
+                .setConfiguration(conf)
+                .setResultDistributor(new FakeResultDistributor())
+                .build();
 
-    List<ValidationError> errors = validator.check(documents);
-    assertEquals(1, errors.size());
-  }
+        List<ValidationError> errors = validator.check(documents);
+        assertEquals(1, errors.size());
+    }
 
-  @Test
-  public void testNeedBeforeSpace() throws RedPenException {
-    DocumentCollection documents = new DocumentCollection.Builder()
-        .addDocument("")
-        .addSection(1, new ArrayList<>())
-        .addParagraph()
-        .addSentence("I like her(Nancy)very much.", 1)
-        .build();
+    @Test
+    public void testNeedBeforeSpace() throws RedPenException {
+        DocumentCollection documents = new DocumentCollection.Builder()
+                .addDocument("")
+                .addSection(1, new ArrayList<>())
+                .addParagraph()
+                .addSentence("I like her(Nancy)very much.", 1)
+                .build();
 
-    Configuration conf = new Configuration.Builder()
-        .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
-        .setSymbolTable("en")
-        .setSymbol(new Symbol("LEFT_PARENTHESIS", "(", "", true, false))
-        .build();
+        Configuration conf = new Configuration.Builder()
+                .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
+                .setSymbolTable("en")
+                .setSymbol(new Symbol("LEFT_PARENTHESIS", "(", "", true, false))
+                .build();
 
-    RedPen validator = new RedPen.Builder()
-        .setConfiguration(conf)
-        .setResultDistributor(new FakeResultDistributor())
-        .build();
+        RedPen validator = new RedPen.Builder()
+                .setConfiguration(conf)
+                .setResultDistributor(new FakeResultDistributor())
+                .build();
 
-    List<ValidationError> errors = validator.check(documents);
-    assertEquals(1, errors.size());
-  }
+        List<ValidationError> errors = validator.check(documents);
+        assertEquals(1, errors.size());
+    }
 
-  @Test
-  public void testNeedSpaceInMultiplePosition() throws RedPenException {
-    DocumentCollection documents = new DocumentCollection.Builder()
-        .addDocument("")
-        .addSection(1, new ArrayList<>())
-        .addParagraph()
-        .addSentence("I like her(Nancy)very much.", 1)
-        .build();
+    @Test
+    public void testNeedSpaceInMultiplePosition() throws RedPenException {
+        DocumentCollection documents = new DocumentCollection.Builder()
+                .addDocument("")
+                .addSection(1, new ArrayList<>())
+                .addParagraph()
+                .addSentence("I like her(Nancy)very much.", 1)
+                .build();
 
-    Configuration conf = new Configuration.Builder()
-        .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
-        .setSymbolTable("en")
-        .setSymbol(new Symbol("LEFT_PARENTHESIS", "(", "", true, false))
-        .setSymbol(new Symbol("RIGHT_PARENTHESIS", ")", "", false, true))
-        .build();
+        Configuration conf = new Configuration.Builder()
+                .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
+                .setSymbolTable("en")
+                .setSymbol(new Symbol("LEFT_PARENTHESIS", "(", "", true, false))
+                .setSymbol(new Symbol("RIGHT_PARENTHESIS", ")", "", false, true))
+                .build();
 
-    RedPen validator = new RedPen.Builder()
-        .setConfiguration(conf)
-        .setResultDistributor(new FakeResultDistributor())
-        .build();
+        RedPen validator = new RedPen.Builder()
+                .setConfiguration(conf)
+                .setResultDistributor(new FakeResultDistributor())
+                .build();
 
-    List<ValidationError> errors = validator.check(documents);
-    assertEquals(2, errors.size());
-  }
+        List<ValidationError> errors = validator.check(documents);
+        assertEquals(2, errors.size());
+    }
 
-  @Test
-  public void testReturnOnlyOneForHitBothBeforeAndAfter() throws RedPenException {
-    DocumentCollection documents = new DocumentCollection.Builder()
-        .addDocument("")
-        .addSection(1, new ArrayList<>())
-        .addParagraph()
-        .addSentence("I like 1*10.", 1)
-        .build();
+    @Test
+    public void testReturnOnlyOneForHitBothBeforeAndAfter() throws RedPenException {
+        DocumentCollection documents = new DocumentCollection.Builder()
+                .addDocument("")
+                .addSection(1, new ArrayList<>())
+                .addParagraph()
+                .addSentence("I like 1*10.", 1)
+                .build();
 
-    Configuration conf = new Configuration.Builder()
-        .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
-        .setSymbolTable("en")
-        .setSymbol(new Symbol("ASTARISK", "*", "", true, true))
-        .build();
+        Configuration conf = new Configuration.Builder()
+                .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
+                .setSymbolTable("en")
+                .setSymbol(new Symbol("ASTARISK", "*", "", true, true))
+                .build();
 
-    RedPen validator = new RedPen.Builder()
-        .setConfiguration(conf)
-        .setResultDistributor(new FakeResultDistributor())
-        .build();
+        RedPen validator = new RedPen.Builder()
+                .setConfiguration(conf)
+                .setResultDistributor(new FakeResultDistributor())
+                .build();
 
-    List<ValidationError> errors = validator.check(documents);
-    assertEquals(1, errors.size());
-  }
+        List<ValidationError> errors = validator.check(documents);
+        assertEquals(1, errors.size());
+    }
 }

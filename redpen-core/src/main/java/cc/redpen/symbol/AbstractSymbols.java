@@ -29,40 +29,39 @@ import java.util.Map;
  * Base class of the symbol settings.
  */
 public abstract class AbstractSymbols implements Iterable<String> {
-  /**
-   * Get the specified character or symbol.
-   *
-   * @param name name of symbol
-   * @return specified character
-   */
-  public Symbol get(String name) {
-    if (!symbolTable.containsKey(name)) {
-      LOG.info(name + " is not defined in DefaultSymbols.");
-      return null;
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractSymbols.class);
+    private final Map<String, Symbol> symbolTable
+            = new HashMap<>();
+
+    /**
+     * Get the specified character or symbol.
+     *
+     * @param name name of symbol
+     * @return specified character
+     */
+    public Symbol get(String name) {
+        if (!symbolTable.containsKey(name)) {
+            LOG.info(name + " is not defined in DefaultSymbols.");
+            return null;
+        }
+        return symbolTable.get(name);
     }
-    return symbolTable.get(name);
-  }
 
-  /**
-   * Return all the names of registered characters.
-   *
-   * @return all names of characters
-   */
-  public Iterator<String> getAllSymbolNames() {
-    return symbolTable.keySet().iterator();
-  }
+    /**
+     * Return all the names of registered characters.
+     *
+     * @return all names of characters
+     */
+    public Iterator<String> getAllSymbolNames() {
+        return symbolTable.keySet().iterator();
+    }
 
-  @Override
-  public Iterator<String> iterator() {
-    return symbolTable.keySet().iterator();
-  }
+    @Override
+    public Iterator<String> iterator() {
+        return symbolTable.keySet().iterator();
+    }
 
-  protected Map<String, Symbol> getSymbolTable() {
-    return symbolTable;
-  }
-
-  private final Map<String, Symbol> symbolTable
-      = new HashMap<>();
-
-  private static final Logger LOG = LoggerFactory.getLogger(AbstractSymbols.class);
+    protected Map<String, Symbol> getSymbolTable() {
+        return symbolTable;
+    }
 }

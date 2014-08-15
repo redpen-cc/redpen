@@ -17,44 +17,45 @@
  */
 package cc.redpen.validator.sentence;
 
-import static org.junit.Assert.*;
+import cc.redpen.ValidationError;
+import cc.redpen.model.Sentence;
+import org.junit.Test;
 
 import java.util.List;
 
-import org.junit.Test;
-import cc.redpen.model.Sentence;
-import cc.redpen.ValidationError;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class CommaNumberValidatorTest {
 
-  @Test
-  public void testWithSentenceContainingManyCommas() {
-    CommaNumberValidator commaNumberValidator = new CommaNumberValidator();
-    String content = "is it true, not true, but it should be ture, right, or not right.";
-    Sentence str = new Sentence(content, 0);
-    List<ValidationError> errors = commaNumberValidator.validate(str);
-    assertNotNull(errors);
-    assertEquals(1, errors.size());
-    assertEquals(content, errors.get(0).getSentence().get().content);
-  }
+    @Test
+    public void testWithSentenceContainingManyCommas() {
+        CommaNumberValidator commaNumberValidator = new CommaNumberValidator();
+        String content = "is it true, not true, but it should be ture, right, or not right.";
+        Sentence str = new Sentence(content, 0);
+        List<ValidationError> errors = commaNumberValidator.validate(str);
+        assertNotNull(errors);
+        assertEquals(1, errors.size());
+        assertEquals(content, errors.get(0).getSentence().get().content);
+    }
 
-  @Test
-  public void testWithtSentenceWithoutComma() {
-    CommaNumberValidator commaNumberValidator = new CommaNumberValidator();
-    String content = "is it true.";
-    Sentence str = new Sentence(content, 0);
-    List<ValidationError> errors = commaNumberValidator.validate(str);
-    assertNotNull(errors);
-    assertEquals(0, errors.size());
-  }
+    @Test
+    public void testWithtSentenceWithoutComma() {
+        CommaNumberValidator commaNumberValidator = new CommaNumberValidator();
+        String content = "is it true.";
+        Sentence str = new Sentence(content, 0);
+        List<ValidationError> errors = commaNumberValidator.validate(str);
+        assertNotNull(errors);
+        assertEquals(0, errors.size());
+    }
 
-  @Test
-  public void testWithtZeroLengthSentence() {
-    CommaNumberValidator commaNumberValidator = new CommaNumberValidator();
-    String content = "";
-    Sentence str = new Sentence(content, 0);
-    List<ValidationError> errors = commaNumberValidator.validate(str);
-    assertNotNull(errors);
-    assertEquals(0, errors.size());
-  }
+    @Test
+    public void testWithtZeroLengthSentence() {
+        CommaNumberValidator commaNumberValidator = new CommaNumberValidator();
+        String content = "";
+        Sentence str = new Sentence(content, 0);
+        List<ValidationError> errors = commaNumberValidator.validate(str);
+        assertNotNull(errors);
+        assertEquals(0, errors.size());
+    }
 }

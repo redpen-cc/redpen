@@ -18,38 +18,38 @@
 package cc.redpen;
 
 import cc.redpen.config.Configuration;
-import cc.redpen.parser.Parser;
-import cc.redpen.parser.DocumentParserFactory;
 import cc.redpen.model.DocumentCollection;
+import cc.redpen.parser.DocumentParserFactory;
+import cc.redpen.parser.Parser;
 
 /**
  * Generate DocumentCollection object loading input file.
  */
 public final class DocumentGenerator {
-  /**
-   * Generate DocumentCollection from input file.
-   *
-   * @param inputFileNames input file name
-   * @param configuration       configuration configuration
-   * @param format         input file format
-   * @return a generated DocumentCollection object
-   */
-  static DocumentCollection generate(String[] inputFileNames,
-                           Configuration configuration,
-                           Parser.Type format) throws RedPenException {
-    DocumentCollection.Builder documentBuilder =
-        new DocumentCollection.Builder();
-    Parser parser = DocumentParserFactory.generate(format,
-          configuration, documentBuilder);
-
-    for (String inputFileName : inputFileNames) {
-        parser.generateDocument(inputFileName);
+    private DocumentGenerator() {
+        super();
     }
-    // @TODO extract summary information to validate documentCollection effectively
-    return documentBuilder.build();
-  }
 
-  private DocumentGenerator() {
-    super();
-  }
+    /**
+     * Generate DocumentCollection from input file.
+     *
+     * @param inputFileNames input file name
+     * @param configuration  configuration configuration
+     * @param format         input file format
+     * @return a generated DocumentCollection object
+     */
+    static DocumentCollection generate(String[] inputFileNames,
+                                       Configuration configuration,
+                                       Parser.Type format) throws RedPenException {
+        DocumentCollection.Builder documentBuilder =
+                new DocumentCollection.Builder();
+        Parser parser = DocumentParserFactory.generate(format,
+                configuration, documentBuilder);
+
+        for (String inputFileName : inputFileNames) {
+            parser.generateDocument(inputFileName);
+        }
+        // @TODO extract summary information to validate documentCollection effectively
+        return documentBuilder.build();
+    }
 }

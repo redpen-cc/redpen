@@ -30,157 +30,155 @@ import java.util.regex.Pattern;
 public final class EndOfSentenceDetector {
 
 
-  /**
-   * Constructor.
-   *
-   * @param pattern end of sentence regex pattern
-   */
-  public EndOfSentenceDetector(Pattern pattern) {
-    this.pattern = pattern;
-    this.whiteList = new ArrayList<>();
-  }
+    private List<String> whiteList;
+    private Pattern pattern;
 
-  /**
-   * Constructor.
-   *
-   * @param pattern end of sentence regex pattern
-   * @param whiteList word containing periods
-   */
-  public EndOfSentenceDetector(Pattern pattern,
-      List<String> whiteList) {
-    this.pattern = pattern;
-    this.whiteList = whiteList;
-  }
-
-  /**
-   * Get sentence end position.
-   *
-   * @param str    input string
-   * @return position of full stop when there is a full stop, -1 otherwise
-   */
-  public int getSentenceEndPosition(String str) {
-    Set<Integer> nonEndOfSentencePositions =
-        extractNonEndOfSentencePositions(str);
-    return getEndPosition(str, 0, nonEndOfSentencePositions);
-  }
-
-  private int getEndPosition(String str,
-      int offset, Set<Integer> whitePositions) {
-    int startPosition = -1;
-    int endPosition = -1;
-    Matcher matcher = pattern.matcher(str);
-    boolean matchResult = getEndPositionSkippingWhiteList(offset,
-        matcher, whitePositions);
-    if (matchResult) {
-      startPosition = matcher.start();
-      endPosition = matcher.end();
+    /**
+     * Constructor.
+     *
+     * @param pattern end of sentence regex pattern
+     */
+    public EndOfSentenceDetector(Pattern pattern) {
+        this.pattern = pattern;
+        this.whiteList = new ArrayList<>();
     }
 
-    if (checkPosition(endPosition - 1, str)) {
-      if ((StringUtils.isBasicLatin(str.charAt(startPosition))
-          && ' ' == str.charAt(endPosition))) {
-        return endPosition - 1;
-      }
-      return handleSuccessivePeriods(str, startPosition, whitePositions);
+    /**
+     * Constructor.
+     *
+     * @param pattern   end of sentence regex pattern
+     * @param whiteList word containing periods
+     */
+    public EndOfSentenceDetector(Pattern pattern,
+                                 List<String> whiteList) {
+        this.pattern = pattern;
+        this.whiteList = whiteList;
     }
 
-    if (endPosition == str.length()) {
-      // NOTE: period in end of sentence should be the end of the sentence
-      // even if there is NO tailing whitespace.
-      return endPosition - 1;
+    private static boolean checkPosition(int position, String str) {
+        return -1 < position && position < str.length() - 1;
     }
-    return -1;
-  }
 
-  private boolean getEndPositionSkippingWhiteList(int offset,
-      Matcher matcher, Set<Integer> whitePositions) {
-    boolean result = matcher.find(offset);
-    while(result) {
-      int startPosition = matcher.start();
-      int endPosition = matcher.end();
-      boolean containsWhite = false;
-      for (int i = startPosition; i < endPosition; i++) {
-        if (whitePositions.contains(i)) {
-          containsWhite = true;
-          break;
+    /**
+     * Get sentence end position.
+     *
+     * @param str input string
+     * @return position of full stop when there is a full stop, -1 otherwise
+     */
+    public int getSentenceEndPosition(String str) {
+        Set<Integer> nonEndOfSentencePositions =
+                extractNonEndOfSentencePositions(str);
+        return getEndPosition(str, 0, nonEndOfSentencePositions);
+    }
+
+    private int getEndPosition(String str,
+                               int offset, Set<Integer> whitePositions) {
+        int startPosition = -1;
+        int endPosition = -1;
+        Matcher matcher = pattern.matcher(str);
+        boolean matchResult = getEndPositionSkippingWhiteList(offset,
+                matcher, whitePositions);
+        if (matchResult) {
+            startPosition = matcher.start();
+            endPosition = matcher.end();
         }
-      }
-      if (containsWhite) {
-        result = getEndPositionSkippingWhiteList(endPosition,
-            matcher, whitePositions);
-      } else {
-        break;
-      }
-    }
-    return result;
-  }
 
-  // TODO: efficient computing with common prefix search.
-  private Set<Integer> extractNonEndOfSentencePositions(
-      String inputString) {
-    Set<Integer> nonEndOfSentencePositions = new HashSet<>();
-    for (String whiteWord : this.whiteList) {
-      int offset = 0;
-      while(true) {
-        int matchStartPosition = inputString.indexOf(whiteWord, offset);
-        int matchEndPosition = matchStartPosition + whiteWord.length();
-        if (matchStartPosition == -1) {
-          break;
+        if (checkPosition(endPosition - 1, str)) {
+            if ((StringUtils.isBasicLatin(str.charAt(startPosition))
+                    && ' ' == str.charAt(endPosition))) {
+                return endPosition - 1;
+            }
+            return handleSuccessivePeriods(str, startPosition, whitePositions);
         }
-        for (int i = matchStartPosition;
-             i < matchEndPosition; i++) {
-          nonEndOfSentencePositions.add(i);
+
+        if (endPosition == str.length()) {
+            // NOTE: period in end of sentence should be the end of the sentence
+            // even if there is NO tailing whitespace.
+            return endPosition - 1;
         }
-        offset = matchEndPosition;
-      }
-    }
-    return nonEndOfSentencePositions;
-  }
-
-
-  private int handleSuccessivePeriods(String str,
-      int position, Set<Integer> whitePositions) {
-    int nextPosition = position + 1;
-    Matcher matcher = this.pattern.matcher(str);
-    int matchPosition = -1;
-    if (matcher.find(nextPosition)) {
-      matchPosition = matcher.start();
+        return -1;
     }
 
-    if (isNonAlphabetWithoutSucessiveEnd(str, nextPosition, matchPosition)
-        || isNonAlphabetEndOfSentenceWithPartialSentence(str, position, matchPosition)
-        ) {
-      // NOTE: Non Latin languages (especially Asian languages, periods do not
-      // have tailing spaces in the end of sentences)
-      return position;
+    private boolean getEndPositionSkippingWhiteList(int offset,
+                                                    Matcher matcher, Set<Integer> whitePositions) {
+        boolean result = matcher.find(offset);
+        while (result) {
+            int startPosition = matcher.start();
+            int endPosition = matcher.end();
+            boolean containsWhite = false;
+            for (int i = startPosition; i < endPosition; i++) {
+                if (whitePositions.contains(i)) {
+                    containsWhite = true;
+                    break;
+                }
+            }
+            if (containsWhite) {
+                result = getEndPositionSkippingWhiteList(endPosition,
+                        matcher, whitePositions);
+            } else {
+                break;
+            }
+        }
+        return result;
     }
 
-    if (matchPosition == nextPosition) {
-      // NOTE: handling of period in succession
-      if ((position + 1) == str.length() - 1) {
-        return nextPosition;
-      } else {
-        return getEndPosition(str, nextPosition, whitePositions);
-      }
-    } else {
-      return getEndPosition(str, nextPosition, whitePositions);
+    // TODO: efficient computing with common prefix search.
+    private Set<Integer> extractNonEndOfSentencePositions(
+            String inputString) {
+        Set<Integer> nonEndOfSentencePositions = new HashSet<>();
+        for (String whiteWord : this.whiteList) {
+            int offset = 0;
+            while (true) {
+                int matchStartPosition = inputString.indexOf(whiteWord, offset);
+                int matchEndPosition = matchStartPosition + whiteWord.length();
+                if (matchStartPosition == -1) {
+                    break;
+                }
+                for (int i = matchStartPosition;
+                     i < matchEndPosition; i++) {
+                    nonEndOfSentencePositions.add(i);
+                }
+                offset = matchEndPosition;
+            }
+        }
+        return nonEndOfSentencePositions;
     }
-  }
 
-  private boolean isNonAlphabetEndOfSentenceWithPartialSentence(String str, int position, int matchPosition) {
-    return (matchPosition == -1 && (!StringUtils.isBasicLatin(str.charAt(position))));
-  }
+    private int handleSuccessivePeriods(String str,
+                                        int position, Set<Integer> whitePositions) {
+        int nextPosition = position + 1;
+        Matcher matcher = this.pattern.matcher(str);
+        int matchPosition = -1;
+        if (matcher.find(nextPosition)) {
+            matchPosition = matcher.start();
+        }
 
-  private boolean isNonAlphabetWithoutSucessiveEnd(String str, int nextPosition, int matchPosition) {
-    return matchPosition > -1 && (!StringUtils.isBasicLatin(str.charAt(matchPosition)))
-        && matchPosition != nextPosition;
-  }
+        if (isNonAlphabetWithoutSucessiveEnd(str, nextPosition, matchPosition)
+                || isNonAlphabetEndOfSentenceWithPartialSentence(str, position, matchPosition)
+                ) {
+            // NOTE: Non Latin languages (especially Asian languages, periods do not
+            // have tailing spaces in the end of sentences)
+            return position;
+        }
 
-  private static boolean checkPosition(int position, String str) {
-    return -1 < position && position < str.length() - 1;
-  }
+        if (matchPosition == nextPosition) {
+            // NOTE: handling of period in succession
+            if ((position + 1) == str.length() - 1) {
+                return nextPosition;
+            } else {
+                return getEndPosition(str, nextPosition, whitePositions);
+            }
+        } else {
+            return getEndPosition(str, nextPosition, whitePositions);
+        }
+    }
 
-  private List<String> whiteList;
+    private boolean isNonAlphabetEndOfSentenceWithPartialSentence(String str, int position, int matchPosition) {
+        return (matchPosition == -1 && (!StringUtils.isBasicLatin(str.charAt(position))));
+    }
 
-  private Pattern pattern;
+    private boolean isNonAlphabetWithoutSucessiveEnd(String str, int nextPosition, int matchPosition) {
+        return matchPosition > -1 && (!StringUtils.isBasicLatin(str.charAt(matchPosition)))
+                && matchPosition != nextPosition;
+    }
 }

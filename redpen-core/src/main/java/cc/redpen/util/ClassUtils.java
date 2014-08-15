@@ -22,28 +22,28 @@ import java.lang.reflect.Type;
 
 public class ClassUtils {
 
-  static public Type getParameterizedClass(Object obj) {
-    if (obj == null) {
-      return null;
-    }
+    static public Type getParameterizedClass(Object obj) {
+        if (obj == null) {
+            return null;
+        }
 
-    Class clazz = obj.getClass();
-    if (clazz.getGenericInterfaces().length == 0) {
-      return null;
-    }
+        Class clazz = obj.getClass();
+        if (clazz.getGenericInterfaces().length == 0) {
+            return null;
+        }
 
-    Type genericInterface = clazz.getGenericInterfaces()[0];
-    ParameterizedType parameterizedType;
-    try {
-      parameterizedType =
-          ParameterizedType.class.cast(genericInterface);
-    } catch (ClassCastException e) {
-      return null;
-    }
+        Type genericInterface = clazz.getGenericInterfaces()[0];
+        ParameterizedType parameterizedType;
+        try {
+            parameterizedType =
+                    ParameterizedType.class.cast(genericInterface);
+        } catch (ClassCastException e) {
+            return null;
+        }
 
-    if (parameterizedType.getActualTypeArguments().length == 0) {
-      return null;
+        if (parameterizedType.getActualTypeArguments().length == 0) {
+            return null;
+        }
+        return parameterizedType.getActualTypeArguments()[0];
     }
-    return parameterizedType.getActualTypeArguments()[0];
-  }
 }

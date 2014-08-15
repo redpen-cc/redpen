@@ -24,50 +24,50 @@ import java.util.List;
  * Represent List in semi-structured format such as wiki.
  */
 public final class ListBlock {
-  /**
-   * Constructor.
-   */
-  public ListBlock() {
-    super();
-    this.listElements = new ArrayList<>();
-  }
+    private final List<ListElement> listElements;
 
-  /**
-   * Get iterator of list elements.
-   *
-   * @return Iterator of ListElement
-   */
-  public List<ListElement> getListElements() {
-    return listElements;
-  }
+    /**
+     * Constructor.
+     */
+    public ListBlock() {
+        super();
+        this.listElements = new ArrayList<>();
+    }
 
-  /**
-   * Get the number of list elements.
-   *
-   * @return number of list elements
-   */
-  public int getNumberOfListElements() {
-    return listElements.size();
-  }
+    /**
+     * Get iterator of list elements.
+     *
+     * @return Iterator of ListElement
+     */
+    public List<ListElement> getListElements() {
+        return listElements;
+    }
 
-  /**
-   * Get iterator of list elements.
-   *
-   * @return Iterator of ListElement
-   */
-  public ListElement getListElement(int id) {
-    return listElements.get(id);
-  }
+    /**
+     * Get the number of list elements.
+     *
+     * @return number of list elements
+     */
+    public int getNumberOfListElements() {
+        return listElements.size();
+    }
 
-  /**
-   * Append ListElement.
-   *
-   * @param level    indentation level
-   * @param contents contents of list element
-   */
-  public void appendElement(int level, List<Sentence> contents) {
-    listElements.add(new ListElement(level, contents));
-  }
+    /**
+     * Get iterator of list elements.
+     *
+     * @return Iterator of ListElement
+     */
+    public ListElement getListElement(int id) {
+        return listElements.get(id);
+    }
 
-  private final List<ListElement> listElements;
+    /**
+     * Append ListElement.
+     *
+     * @param level    indentation level
+     * @param contents contents of list element
+     */
+    public void appendElement(int level, List<Sentence> contents) {
+        listElements.add(new ListElement(level, contents));
+    }
 }

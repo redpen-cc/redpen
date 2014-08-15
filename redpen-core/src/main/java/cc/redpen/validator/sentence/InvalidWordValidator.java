@@ -34,87 +34,86 @@ import java.util.*;
  * Detect invalid word occurrences.
  */
 public class InvalidWordValidator implements Validator<Sentence> {
-  /**
-   * Constructor.
-   */
-  public InvalidWordValidator() {
-    invalidWords = new HashSet<>();
-  }
+    private static final String DEFAULT_RESOURCE_PATH =
+            "default-resources/invalid-word";
+    private static final Logger LOG =
+            LoggerFactory.getLogger(InvalidWordValidator.class);
+    private Set<String> invalidWords;
 
-  /**
-   * Constructor
-   * @param config Configuration object
-   * @param symbolTable  Character settings
-   * @throws cc.redpen.RedPenException
-   */
-  public InvalidWordValidator(ValidatorConfiguration config,
-      SymbolTable symbolTable)
-      throws RedPenException {
-    initialize(config, symbolTable);
-  }
-
-  public List<ValidationError> validate(Sentence line) {
-    List<ValidationError> result = new ArrayList<>();
-    String content = line.content;
-    //NOTE: only Ascii white space since this validator works for european languages.
-    List<String> words = Arrays.asList(content.split(" "));
-    for (String invalidWord : invalidWords) {
-      if (words.contains(invalidWord)) {
-        result.add(new ValidationError(
-            this.getClass(),
-            "Found invalid Word: \"" + invalidWord + "\"", line));
-      }
-    }
-    return result;
-  }
-
-  /**
-   * Add invalid element. This method is used for testing
-   *
-   * @param invalid invalid word to be added the list
-   */
-  public void addInvalid(String invalid) {
-    invalidWords.add(invalid);
-  }
-
-  private boolean initialize(ValidatorConfiguration conf,
-      SymbolTable symbolTable)
-      throws RedPenException {
-    String lang = symbolTable.getLang();
-    WordListExtractor extractor = new WordListExtractor();
-    ResourceLoader loader = new ResourceLoader(extractor);
-
-    LOG.info("Loading default invalid word dictionary for " +
-        "\"" + lang + "\".");
-    String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
-        + "/invalid-word-" + lang + ".dat";
-    if (loader.loadInternalResource(defaultDictionaryFile)) {
-      LOG.info("Succeeded to load default dictionary.");
-    } else {
-      LOG.info("Failed to load default dictionary.");
+    /**
+     * Constructor.
+     */
+    public InvalidWordValidator() {
+        invalidWords = new HashSet<>();
     }
 
-    String confFile = conf.getAttribute("dictionary");
-    if (confFile == null || confFile.equals("")) {
-      LOG.error("Dictionary file is not specified.");
-    } else {
-      LOG.info("user dictionary file is " + confFile);
-      if (loader.loadExternalFile(confFile)) {
-        LOG.info("Succeeded to load specified user dictionary.");
-      } else {
-        LOG.error("Failed to load user dictionary.");
-      }
+    /**
+     * Constructor
+     *
+     * @param config      Configuration object
+     * @param symbolTable Character settings
+     * @throws cc.redpen.RedPenException
+     */
+    public InvalidWordValidator(ValidatorConfiguration config,
+                                SymbolTable symbolTable)
+            throws RedPenException {
+        initialize(config, symbolTable);
     }
 
-    invalidWords = extractor.get();
-    return true;
-  }
+    public List<ValidationError> validate(Sentence line) {
+        List<ValidationError> result = new ArrayList<>();
+        String content = line.content;
+        //NOTE: only Ascii white space since this validator works for european languages.
+        List<String> words = Arrays.asList(content.split(" "));
+        for (String invalidWord : invalidWords) {
+            if (words.contains(invalidWord)) {
+                result.add(new ValidationError(
+                        this.getClass(),
+                        "Found invalid Word: \"" + invalidWord + "\"", line));
+            }
+        }
+        return result;
+    }
 
-  private static final String DEFAULT_RESOURCE_PATH =
-      "default-resources/invalid-word";
+    /**
+     * Add invalid element. This method is used for testing
+     *
+     * @param invalid invalid word to be added the list
+     */
+    public void addInvalid(String invalid) {
+        invalidWords.add(invalid);
+    }
 
-  private Set<String> invalidWords;
+    private boolean initialize(ValidatorConfiguration conf,
+                               SymbolTable symbolTable)
+            throws RedPenException {
+        String lang = symbolTable.getLang();
+        WordListExtractor extractor = new WordListExtractor();
+        ResourceLoader loader = new ResourceLoader(extractor);
 
-  private static final Logger LOG =
-      LoggerFactory.getLogger(InvalidWordValidator.class);
+        LOG.info("Loading default invalid word dictionary for " +
+                "\"" + lang + "\".");
+        String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
+                + "/invalid-word-" + lang + ".dat";
+        if (loader.loadInternalResource(defaultDictionaryFile)) {
+            LOG.info("Succeeded to load default dictionary.");
+        } else {
+            LOG.info("Failed to load default dictionary.");
+        }
+
+        String confFile = conf.getAttribute("dictionary");
+        if (confFile == null || confFile.equals("")) {
+            LOG.error("Dictionary file is not specified.");
+        } else {
+            LOG.info("user dictionary file is " + confFile);
+            if (loader.loadExternalFile(confFile)) {
+                LOG.info("Succeeded to load specified user dictionary.");
+            } else {
+                LOG.error("Failed to load user dictionary.");
+            }
+        }
+
+        invalidWords = extractor.get();
+        return true;
+    }
 }

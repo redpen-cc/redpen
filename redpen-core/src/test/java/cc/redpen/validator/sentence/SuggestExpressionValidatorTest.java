@@ -17,64 +17,65 @@
  */
 package cc.redpen.validator.sentence;
 
-import static org.junit.Assert.*;
+import cc.redpen.ValidationError;
+import cc.redpen.model.Sentence;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
-import cc.redpen.model.Sentence;
-import cc.redpen.ValidationError;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 
 class SuggestExpressionValidatorForTest extends SuggestExpressionValidator {
-  void loadSynonyms () {
-    Map<String, String> synonymSamples = new HashMap<>();
-    synonymSamples.put("like", "such as");
-    synonymSamples.put("info", "infomation");
-    this.setSynonyms(synonymSamples);
-  }
+    void loadSynonyms() {
+        Map<String, String> synonymSamples = new HashMap<>();
+        synonymSamples.put("like", "such as");
+        synonymSamples.put("info", "infomation");
+        this.setSynonyms(synonymSamples);
+    }
 }
 
 public class SuggestExpressionValidatorTest {
-  @Test
-  public void testSynonym() {
-    SuggestExpressionValidatorForTest synonymValidator = new SuggestExpressionValidatorForTest();
-    synonymValidator.loadSynonyms();
-    Sentence str = new Sentence("it like a piece of a cake.",0);
-    List<ValidationError> error = synonymValidator.validate(str);
-    assertNotNull(error);
-    assertEquals(1, error.size());
-  }
+    @Test
+    public void testSynonym() {
+        SuggestExpressionValidatorForTest synonymValidator = new SuggestExpressionValidatorForTest();
+        synonymValidator.loadSynonyms();
+        Sentence str = new Sentence("it like a piece of a cake.", 0);
+        List<ValidationError> error = synonymValidator.validate(str);
+        assertNotNull(error);
+        assertEquals(1, error.size());
+    }
 
-  @Test
-  public void testWitoutSynonym() {
-    SuggestExpressionValidatorForTest synonymValidator = new SuggestExpressionValidatorForTest();
-    synonymValidator.loadSynonyms();
-    Sentence str = new Sentence("it love a piece of a cake.",0);
-    List<ValidationError> error = synonymValidator.validate(str);
-    assertNotNull(error);
-    assertEquals(0, error.size());
-  }
+    @Test
+    public void testWitoutSynonym() {
+        SuggestExpressionValidatorForTest synonymValidator = new SuggestExpressionValidatorForTest();
+        synonymValidator.loadSynonyms();
+        Sentence str = new Sentence("it love a piece of a cake.", 0);
+        List<ValidationError> error = synonymValidator.validate(str);
+        assertNotNull(error);
+        assertEquals(0, error.size());
+    }
 
-  @Test
-  public void testWithMultipleSynonyms() {
-    SuggestExpressionValidatorForTest synonymValidator = new SuggestExpressionValidatorForTest();
-    synonymValidator.loadSynonyms();
-    Sentence str = new Sentence("it like a the info.",0);
-    List<ValidationError> error = synonymValidator.validate(str);
-    assertNotNull(error);
-    assertEquals(2, error.size());
-  }
+    @Test
+    public void testWithMultipleSynonyms() {
+        SuggestExpressionValidatorForTest synonymValidator = new SuggestExpressionValidatorForTest();
+        synonymValidator.loadSynonyms();
+        Sentence str = new Sentence("it like a the info.", 0);
+        List<ValidationError> error = synonymValidator.validate(str);
+        assertNotNull(error);
+        assertEquals(2, error.size());
+    }
 
-  @Test
-  public void testWitoutZeroLengthSentence() {
-    SuggestExpressionValidatorForTest synonymValidator = new SuggestExpressionValidatorForTest();
-    synonymValidator.loadSynonyms();
-    Sentence str = new Sentence("",0);
-    List<ValidationError> error = synonymValidator.validate(str);
-    assertNotNull(error);
-    assertEquals(0, error.size());
-  }
+    @Test
+    public void testWitoutZeroLengthSentence() {
+        SuggestExpressionValidatorForTest synonymValidator = new SuggestExpressionValidatorForTest();
+        synonymValidator.loadSynonyms();
+        Sentence str = new Sentence("", 0);
+        List<ValidationError> error = synonymValidator.validate(str);
+        assertNotNull(error);
+        assertEquals(0, error.size());
+    }
 }

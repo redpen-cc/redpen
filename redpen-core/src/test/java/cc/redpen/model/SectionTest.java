@@ -22,30 +22,30 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class SectionTest {
-  @Test
-  public void testGetJoinedHeaderFromSectionHasOneSentenceHeader() {
-    Section section = new Section(0, "header");
-    assertEquals("header", section.getJoinedHeaderContents().content);
-    assertEquals(0, section.getJoinedHeaderContents().position);
-  }
+    @Test
+    public void testGetJoinedHeaderFromSectionHasOneSentenceHeader() {
+        Section section = new Section(0, "header");
+        assertEquals("header", section.getJoinedHeaderContents().content);
+        assertEquals(0, section.getJoinedHeaderContents().position);
+    }
 
-  @Test
-  public void testGetJoinedHeaderFromSectionHasMultipleSentenceHeader() {
-    List<Sentence> headers = new ArrayList<>();
-    headers.add(new Sentence("header1.",0));
-    headers.add(new Sentence("header2.",0));
-    Section section = new Section(0, headers);
-    assertEquals("header1. header2.", section.getJoinedHeaderContents().content);
-    assertEquals(0, section.getJoinedHeaderContents().position);
-  }
+    @Test
+    public void testGetJoinedHeaderFromSectionHasMultipleSentenceHeader() {
+        List<Sentence> headers = new ArrayList<>();
+        headers.add(new Sentence("header1.", 0));
+        headers.add(new Sentence("header2.", 0));
+        Section section = new Section(0, headers);
+        assertEquals("header1. header2.", section.getJoinedHeaderContents().content);
+        assertEquals(0, section.getJoinedHeaderContents().position);
+    }
 
-  @Test
-  public void testGetJoinedHeaderFromSectionWithoutHeader() {
-    Section section = new Section(0);
-    assertEquals("", section.getJoinedHeaderContents().content);
-    assertEquals(0, section.getJoinedHeaderContents().position);
-  }
+    @Test
+    public void testGetJoinedHeaderFromSectionWithoutHeader() {
+        Section section = new Section(0);
+        assertEquals("", section.getJoinedHeaderContents().content);
+        assertEquals(0, section.getJoinedHeaderContents().position);
+    }
 }

@@ -26,48 +26,47 @@ import java.util.Set;
  */
 public class WordListExtractor implements ResourceExtractor<Set<String>> {
 
-  /**
-   * Constructor.
-   */
-  public WordListExtractor() {
-    super();
-    wordList = new HashSet<>();
-  }
+    private final Set<String> wordList;
+    private boolean toLowerCase = false;
 
-  /**
-   * Load word list file.
-   *
-   * @param line line in a file
-   * @return 0 when succeeded.
-   */
-  @Override
-  public int load(String line) {
-    if (this.toLowerCase) {
-      line = line.toLowerCase();
+    /**
+     * Constructor.
+     */
+    public WordListExtractor() {
+        super();
+        wordList = new HashSet<>();
     }
-    wordList.add(line);
-    return 0;
-  }
 
-  /**
-   * Get word list.
-   *
-   * @return word list
-   */
-  @Override
-  public Set<String> get() {
-    return wordList;
-  }
+    /**
+     * Load word list file.
+     *
+     * @param line line in a file
+     * @return 0 when succeeded.
+     */
+    @Override
+    public int load(String line) {
+        if (this.toLowerCase) {
+            line = line.toLowerCase();
+        }
+        wordList.add(line);
+        return 0;
+    }
 
-  /**
-   * Add inputs after convert the character to lowercase.
-   */
-  public void setToLowerCase() {
-    this.toLowerCase = true;
-  }
+    /**
+     * Get word list.
+     *
+     * @return word list
+     */
+    @Override
+    public Set<String> get() {
+        return wordList;
+    }
 
-  private final Set<String> wordList;
-
-  private boolean toLowerCase = false;
+    /**
+     * Add inputs after convert the character to lowercase.
+     */
+    public void setToLowerCase() {
+        this.toLowerCase = true;
+    }
 
 }

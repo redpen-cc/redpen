@@ -37,84 +37,83 @@ import java.util.Set;
  * Validate input sentences contain invalid expression.
  */
 public class InvalidExpressionValidator implements Validator<Sentence> {
-  /**
-   * Constructor.
-   */
-  public InvalidExpressionValidator() {
-    invalidExpressions = new HashSet<>();
-  }
+    private static final String DEFAULT_RESOURCE_PATH = "default-resources/invalid-expression";
+    private static final Logger LOG =
+            LoggerFactory.getLogger(InvalidExpressionValidator.class);
+    private Set<String> invalidExpressions;
 
-  /**
-   * Constructor
-   * @param config Configuration object
-   * @param symbolTable  Character settings
-   * @throws cc.redpen.RedPenException
-   */
-  public InvalidExpressionValidator(ValidatorConfiguration config,
-                                    SymbolTable symbolTable)
-      throws RedPenException {
-    initialize(config, symbolTable);
-  }
-
-  public List<ValidationError> validate(Sentence line) {
-    List<ValidationError> result = new ArrayList<>();
-    String str = line.content;
-    for (String w : invalidExpressions) {
-      if (str.contains(w)) {
-        result.add(new ValidationError(
-            this.getClass(),
-            "Found invalid expression: \"" + w + "\"", line));
-      }
-    }
-    return result;
-  }
-
-  /**
-   * Add invalid element. This method is used for testing
-   *
-   * @param invalid invalid expression to be added the list
-   */
-  public void addInvalid(String invalid) {
-    invalidExpressions.add(invalid);
-  }
-
-  private boolean initialize(ValidatorConfiguration conf,
-      SymbolTable symbolTable)
-      throws RedPenException {
-    String lang = symbolTable.getLang();
-    WordListExtractor extractor = new WordListExtractor();
-    ResourceLoader loader = new ResourceLoader(extractor);
-
-    LOG.info("Loading default invalid expression dictionary for " +
-        "\"" + lang + "\".");
-    String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
-        + "/invalid-expression-" + lang + ".dat";
-    if (loader.loadInternalResource(defaultDictionaryFile)) {
-      LOG.info("Succeeded to load default dictionary.");
-    } else {
-      LOG.info("Failed to load default dictionary.");
+    /**
+     * Constructor.
+     */
+    public InvalidExpressionValidator() {
+        invalidExpressions = new HashSet<>();
     }
 
-    String confFile = conf.getAttribute("dictionary");
-    if (confFile == null || confFile.equals("")) {
-      LOG.error("Dictionary file is not specified.");
-    } else {
-      LOG.info("user dictionary file is " + confFile);
-      if (loader.loadExternalFile(confFile)) {
-        LOG.info("Succeeded to load specified user dictionary.");
-      } else {
-        LOG.error("Failed to load user dictionary.");
-      }
+    /**
+     * Constructor
+     *
+     * @param config      Configuration object
+     * @param symbolTable Character settings
+     * @throws cc.redpen.RedPenException
+     */
+    public InvalidExpressionValidator(ValidatorConfiguration config,
+                                      SymbolTable symbolTable)
+            throws RedPenException {
+        initialize(config, symbolTable);
     }
 
-    invalidExpressions = extractor.get();
-    return true;
-  }
+    public List<ValidationError> validate(Sentence line) {
+        List<ValidationError> result = new ArrayList<>();
+        String str = line.content;
+        for (String w : invalidExpressions) {
+            if (str.contains(w)) {
+                result.add(new ValidationError(
+                        this.getClass(),
+                        "Found invalid expression: \"" + w + "\"", line));
+            }
+        }
+        return result;
+    }
 
-  private static final String DEFAULT_RESOURCE_PATH = "default-resources/invalid-expression";
+    /**
+     * Add invalid element. This method is used for testing
+     *
+     * @param invalid invalid expression to be added the list
+     */
+    public void addInvalid(String invalid) {
+        invalidExpressions.add(invalid);
+    }
 
-  private Set<String> invalidExpressions;
+    private boolean initialize(ValidatorConfiguration conf,
+                               SymbolTable symbolTable)
+            throws RedPenException {
+        String lang = symbolTable.getLang();
+        WordListExtractor extractor = new WordListExtractor();
+        ResourceLoader loader = new ResourceLoader(extractor);
 
-  private static final Logger LOG =
-      LoggerFactory.getLogger(InvalidExpressionValidator.class);
+        LOG.info("Loading default invalid expression dictionary for " +
+                "\"" + lang + "\".");
+        String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
+                + "/invalid-expression-" + lang + ".dat";
+        if (loader.loadInternalResource(defaultDictionaryFile)) {
+            LOG.info("Succeeded to load default dictionary.");
+        } else {
+            LOG.info("Failed to load default dictionary.");
+        }
+
+        String confFile = conf.getAttribute("dictionary");
+        if (confFile == null || confFile.equals("")) {
+            LOG.error("Dictionary file is not specified.");
+        } else {
+            LOG.info("user dictionary file is " + confFile);
+            if (loader.loadExternalFile(confFile)) {
+                LOG.info("Succeeded to load specified user dictionary.");
+            } else {
+                LOG.error("Failed to load user dictionary.");
+            }
+        }
+
+        invalidExpressions = extractor.get();
+        return true;
+    }
 }

@@ -19,7 +19,9 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
-import cc.redpen.config.*;
+import cc.redpen.config.Symbol;
+import cc.redpen.config.SymbolTable;
+import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.Validator;
 
@@ -31,48 +33,48 @@ import java.util.Set;
  * Validate if there is invalid characters in sentences.
  */
 public class InvalidSymbolValidator implements Validator<Sentence> {
-  public InvalidSymbolValidator(ValidatorConfiguration config,
-                                SymbolTable symbolTable)
-      throws RedPenException {
-    initialize(symbolTable);
-  }
+    private SymbolTable symbolTable;
 
-  public List<ValidationError> validate(Sentence sentence) {
-    List<ValidationError> errors = new ArrayList<>();
-    Set<String> names = symbolTable.getNames();
-    for (String name : names) {
-      ValidationError error = validateSymbol(sentence, name);
-      if (error != null) {
-        errors.add(error);
-      }
+    public InvalidSymbolValidator(ValidatorConfiguration config,
+                                  SymbolTable symbolTable)
+            throws RedPenException {
+        initialize(symbolTable);
     }
-    return errors;
-  }
 
-  private boolean initialize(SymbolTable symbols)
-      throws RedPenException {
-    this.symbolTable = symbols;
-    return true;
-  }
-
-  protected void setSymbolTable(SymbolTable symbols) {
-    this.symbolTable = symbols;
-  }
-
-  private ValidationError validateSymbol(Sentence sentence, String name) {
-    String sentenceStr = sentence.content;
-    Symbol symbol = symbolTable.getSymbol(name);
-    List<String> invalidCharsList = symbol.getInvalidSymbols();
-    for (String invalidChar : invalidCharsList) {
-      if (sentenceStr.contains(invalidChar)) {
-        return new ValidationError(
-            this.getClass(),
-            "Invalid symbol found: \"" + invalidChar + "\"",
-            sentence);
-      }
+    public List<ValidationError> validate(Sentence sentence) {
+        List<ValidationError> errors = new ArrayList<>();
+        Set<String> names = symbolTable.getNames();
+        for (String name : names) {
+            ValidationError error = validateSymbol(sentence, name);
+            if (error != null) {
+                errors.add(error);
+            }
+        }
+        return errors;
     }
-    return null;
-  }
 
-  private SymbolTable symbolTable;
+    private boolean initialize(SymbolTable symbols)
+            throws RedPenException {
+        this.symbolTable = symbols;
+        return true;
+    }
+
+    protected void setSymbolTable(SymbolTable symbols) {
+        this.symbolTable = symbols;
+    }
+
+    private ValidationError validateSymbol(Sentence sentence, String name) {
+        String sentenceStr = sentence.content;
+        Symbol symbol = symbolTable.getSymbol(name);
+        List<String> invalidCharsList = symbol.getInvalidSymbols();
+        for (String invalidChar : invalidCharsList) {
+            if (sentenceStr.contains(invalidChar)) {
+                return new ValidationError(
+                        this.getClass(),
+                        "Invalid symbol found: \"" + invalidChar + "\"",
+                        sentence);
+            }
+        }
+        return null;
+    }
 }

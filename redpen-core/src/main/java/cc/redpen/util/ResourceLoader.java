@@ -24,37 +24,38 @@ import java.io.InputStream;
  */
 public class ResourceLoader {
 
-  private FileLoader loader = null;
+    private FileLoader loader = null;
 
-  /**
-   * Constructor.
-   * @param resourceExtractor resource extractor.
-   */
-  public ResourceLoader(ResourceExtractor resourceExtractor) {
-    this.loader = new FileLoader(resourceExtractor);
-  }
+    /**
+     * Constructor.
+     *
+     * @param resourceExtractor resource extractor.
+     */
+    public ResourceLoader(ResourceExtractor resourceExtractor) {
+        this.loader = new FileLoader(resourceExtractor);
+    }
 
-  /**
-   * Load a given input file combined with jar package.
-   *
-   * @param inputFile a file included in the jar file
-   * @return true when succeed to load, false otherwise
-   */
-  public boolean loadInternalResource(String inputFile) {
-    InputStream inputStream = getClass()
-        .getClassLoader()
-        .getResourceAsStream(inputFile);
-    return loader.loadFile(inputStream) == 0;
-  }
+    /**
+     * Load a given input file combined with jar package.
+     *
+     * @param inputFile a file included in the jar file
+     * @return true when succeed to load, false otherwise
+     */
+    public boolean loadInternalResource(String inputFile) {
+        InputStream inputStream = getClass()
+                .getClassLoader()
+                .getResourceAsStream(inputFile);
+        return loader.loadFile(inputStream) == 0;
+    }
 
-  /**
-   * Load a given input file  not combined with jar.
-   *
-   * @param inputFile input file not combined with jar
-   * @return true when succeed to load, false otherwise
-   */
-  public boolean loadExternalFile(String inputFile) {
-    return loader.loadFile(inputFile) == 0;
-  }
+    /**
+     * Load a given input file  not combined with jar.
+     *
+     * @param inputFile input file not combined with jar
+     * @return true when succeed to load, false otherwise
+     */
+    public boolean loadExternalFile(String inputFile) {
+        return loader.loadFile(inputFile) == 0;
+    }
 
 }
