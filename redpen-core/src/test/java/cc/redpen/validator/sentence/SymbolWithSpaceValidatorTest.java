@@ -32,7 +32,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class SpaceWithSymbolValidatorTest {
+public class SymbolWithSpaceValidatorTest {
   @Test
   public void testNotNeedSpace() throws DocumentValidatorException {
     DocumentCollection documents = new DocumentCollection.Builder()
@@ -43,7 +43,7 @@ public class SpaceWithSymbolValidatorTest {
         .build();
 
     Configuration conf = new Configuration.Builder()
-        .addValidatorConfig(new ValidatorConfiguration("SpaceWithSymbol"))
+        .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
         .setSymbolTable("en")
         .setSymbol(new Symbol("SLASH", "/"))
         .build();
@@ -67,7 +67,7 @@ public class SpaceWithSymbolValidatorTest {
         .build();
 
     Configuration conf = new Configuration.Builder()
-        .addValidatorConfig(new ValidatorConfiguration("SpaceWithSymbol"))
+        .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
         .setSymbolTable("en")
         .setSymbol(new Symbol("COLON", ":", "", false, true))
         .build();
@@ -91,7 +91,7 @@ public class SpaceWithSymbolValidatorTest {
         .build();
 
     Configuration conf = new Configuration.Builder()
-        .addValidatorConfig(new ValidatorConfiguration("SpaceWithSymbol"))
+        .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
         .setSymbolTable("en")
         .setSymbol(new Symbol("LEFT_PARENTHESIS", "(", "", true, false))
         .build();
@@ -115,7 +115,7 @@ public class SpaceWithSymbolValidatorTest {
         .build();
 
     Configuration conf = new Configuration.Builder()
-        .addValidatorConfig(new ValidatorConfiguration("SpaceWithSymbol"))
+        .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
         .setSymbolTable("en")
         .setSymbol(new Symbol("LEFT_PARENTHESIS", "(", "", true, false))
         .setSymbol(new Symbol("RIGHT_PARENTHESIS", ")", "", false, true))
@@ -140,7 +140,7 @@ public class SpaceWithSymbolValidatorTest {
         .build();
 
     Configuration conf = new Configuration.Builder()
-        .addValidatorConfig(new ValidatorConfiguration("SpaceWithSymbol"))
+        .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
         .setSymbolTable("en")
         .setSymbol(new Symbol("ASTARISK", "*", "", true, true))
         .build();

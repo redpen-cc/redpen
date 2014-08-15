@@ -22,11 +22,11 @@
             <property name="max_length" value="200"/>
         </validator>
         <validator name="InvalidSymbol" />
-        <validator name="SpaceWithSymbol" />
+        <validator name="SymbolWithSpace" />
         <validator name="SectionLength">
             <property name="max_char_num" value="2000"/>
         </validator>
-        <validator name="MaxParagraphNumber" />
+        <validator name="ParagraphNumber" />
     </validator-list>
     <symbol-table lang="en">
         <symbol name="EXCLAMATION_MARK" value="!" invalid-chars="！" after-space="true" />
