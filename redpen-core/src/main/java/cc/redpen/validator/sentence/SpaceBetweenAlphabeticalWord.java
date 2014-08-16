@@ -1,6 +1,9 @@
 package cc.redpen.validator.sentence;
 
+import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
+import cc.redpen.config.SymbolTable;
+import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.StringUtils;
 import cc.redpen.validator.Validator;
@@ -33,5 +36,10 @@ public class SpaceBetweenAlphabeticalWord implements Validator<Sentence> {
             prevCharacter = character;
         }
         return results;
+    }
+
+    @Override
+    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
+        // do nothing
     }
 }

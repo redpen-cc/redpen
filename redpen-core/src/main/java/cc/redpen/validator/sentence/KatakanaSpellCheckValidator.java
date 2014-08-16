@@ -65,16 +65,6 @@ public class KatakanaSpellCheckValidator implements Validator<Sentence> {
      */
     private HashMap<String, Integer> dic = new HashMap<>();
 
-    public KatakanaSpellCheckValidator(ValidatorConfiguration config,
-                                       SymbolTable symbolTable)
-            throws RedPenException {
-        initialize(config, symbolTable);
-    }
-
-    public KatakanaSpellCheckValidator() {
-        super();
-    }
-
     public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> errors = new ArrayList<>();
         List<ValidationError> result;
@@ -127,13 +117,11 @@ public class KatakanaSpellCheckValidator implements Validator<Sentence> {
         return errors;
     }
 
-    private boolean initialize(ValidatorConfiguration conf,
-                               SymbolTable symbolTable)
-            throws RedPenException {
+    @Override
+    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
         //TODO : support the exception word list.
         //TODO : configurable SIMILARITY_RATIO.
         //TODO : configurable MAX_IGNORE_KATAKANA_LENGTH.
-        return true;
     }
 
 }

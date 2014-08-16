@@ -18,7 +18,10 @@
 package cc.redpen.validator;
 
 
+import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
+import cc.redpen.config.SymbolTable;
+import cc.redpen.config.ValidatorConfiguration;
 
 import java.util.List;
 
@@ -34,4 +37,5 @@ public interface Validator<E> {
      */
     List<ValidationError> validate(E block);
 
+    void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException;
 }

@@ -38,18 +38,7 @@ public class SuggestExpressionValidator implements Validator<Sentence> {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(SuggestExpressionValidator.class);
-    private Map<String, String> synonyms;
-
-    public SuggestExpressionValidator() {
-        super();
-        synonyms = new HashMap<>();
-    }
-
-    public SuggestExpressionValidator(ValidatorConfiguration config,
-                                      SymbolTable symbolTable)
-            throws RedPenException {
-        initialize(config);
-    }
+    private Map<String, String> synonyms = new HashMap<>();
 
     public List<ValidationError> validate(Sentence line) {
         List<ValidationError> result = new ArrayList<>();
@@ -68,22 +57,20 @@ public class SuggestExpressionValidator implements Validator<Sentence> {
         return result;
     }
 
-    private boolean initialize(
-            ValidatorConfiguration conf)
-            throws RedPenException {
-        String confFile = conf.getAttribute("invalid_word_file");
+    @Override
+    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
+        String confFile = config.getAttribute("invalid_word_file");
         LOG.info("dictionary file is " + confFile);
         if (confFile == null || confFile.equals("")) {
             LOG.error("dictionary file is not specified");
-            return false;
+            throw new RedPenException("dictionary file is not specified");
         }
         KeyValueDictionaryExtractor extractor = new KeyValueDictionaryExtractor();
         FileLoader loader = new FileLoader(extractor);
         if (loader.loadFile(confFile) != 0) {
-            return false;
+            throw new RedPenException("failed to load KeyValueDictionaryExtractor");
         }
         synonyms = extractor.get();
-        return true;
     }
 
     protected void setSynonyms(Map<String, String> synonymMap) {

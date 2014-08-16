@@ -35,12 +35,6 @@ import java.util.Set;
 public class InvalidSymbolValidator implements Validator<Sentence> {
     private SymbolTable symbolTable;
 
-    public InvalidSymbolValidator(ValidatorConfiguration config,
-                                  SymbolTable symbolTable)
-            throws RedPenException {
-        initialize(symbolTable);
-    }
-
     public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> errors = new ArrayList<>();
         Set<String> names = symbolTable.getNames();
@@ -53,14 +47,9 @@ public class InvalidSymbolValidator implements Validator<Sentence> {
         return errors;
     }
 
-    private boolean initialize(SymbolTable symbols)
-            throws RedPenException {
-        this.symbolTable = symbols;
-        return true;
-    }
-
-    protected void setSymbolTable(SymbolTable symbols) {
-        this.symbolTable = symbols;
+    @Override
+    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
+        this.symbolTable = symbolTable;
     }
 
     private ValidationError validateSymbol(Sentence sentence, String name) {

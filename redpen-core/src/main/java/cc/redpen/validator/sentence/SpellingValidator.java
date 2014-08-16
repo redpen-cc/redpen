@@ -23,30 +23,10 @@ public class SpellingValidator implements Validator<Sentence> {
     private static Set<Character> skipCharacters =
             new HashSet<>(Arrays.asList(skipChars));
     // TODO: replace more memory efficient data structure
-    private Set<String> validWords;
+    private Set<String> validWords = new HashSet<>();
 
-    /**
-     * Constructor.
-     */
-    public SpellingValidator() {
-        this.validWords = new HashSet<>();
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param config      Configuration object
-     * @param symbolTable Character settings
-     * @throws cc.redpen.RedPenException
-     */
-    public SpellingValidator(ValidatorConfiguration config,
-                             SymbolTable symbolTable)
-            throws RedPenException {
-        initialize(config, symbolTable);
-    }
-
-    private boolean initialize(ValidatorConfiguration config,
-                               SymbolTable symbolTable) {
+    @Override
+    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
         String lang = symbolTable.getLang();
         WordListExtractor extractor = new WordListExtractor();
         extractor.setToLowerCase();
@@ -74,7 +54,6 @@ public class SpellingValidator implements Validator<Sentence> {
             }
         }
         validWords = extractor.get();
-        return true;
     }
 
     @Override

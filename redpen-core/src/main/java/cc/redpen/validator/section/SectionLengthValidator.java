@@ -17,6 +17,7 @@
  */
 package cc.redpen.validator.section;
 
+import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
 import cc.redpen.config.SymbolTable;
 import cc.redpen.config.ValidatorConfiguration;
@@ -38,19 +39,6 @@ public class SectionLengthValidator implements Validator<Section> {
     private static final Logger LOG =
             LoggerFactory.getLogger(SectionLengthValidator.class);
     private int maxSectionCharNumber;
-
-    /**
-     * Constructor.
-     */
-    public SectionLengthValidator() {
-        super();
-    }
-
-    public SectionLengthValidator(ValidatorConfiguration conf,
-                                  SymbolTable charTable) {
-        this();
-        loadConfiguration(conf);
-    }
 
     @Override
     public List<ValidationError> validate(Section section) {
@@ -75,16 +63,16 @@ public class SectionLengthValidator implements Validator<Section> {
         return validationErrors;
     }
 
-    private boolean loadConfiguration(ValidatorConfiguration conf) {
-        if (conf.getAttribute("max_char_num") == null) {
+    @Override
+    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
+        if (config.getAttribute("max_char_num") == null) {
             this.maxSectionCharNumber = DEFAULT_MAXIMUM_CHAR_NUMBER_IN_A_SECTION;
             LOG.info("max_char_number was not set.");
             LOG.info("Using the default value of max_char_num.");
         } else {
             this.maxSectionCharNumber = Integer.valueOf(
-                    conf.getAttribute("max_char_num"));
+                    config.getAttribute("max_char_num"));
         }
-        return true;
     }
 
     protected void setMaxSectionLength(int max) {

@@ -37,12 +37,6 @@ public class SymbolWithSpaceValidator implements Validator<Sentence> {
 
     private SymbolTable symbolTable;
 
-    public SymbolWithSpaceValidator(ValidatorConfiguration config,
-                                    SymbolTable symbolTable) throws
-            RedPenException {
-        initialize(symbolTable);
-    }
-
     public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> errors = new ArrayList<>();
         Set<String> names = symbolTable.getNames();
@@ -55,10 +49,9 @@ public class SymbolWithSpaceValidator implements Validator<Sentence> {
         return errors;
     }
 
-    private boolean initialize(SymbolTable symbolConf)
-            throws RedPenException {
-        this.symbolTable = symbolConf;
-        return true;
+    @Override
+    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
+        this.symbolTable = symbolTable;
     }
 
     protected void setSymbolTable(SymbolTable symbols) {

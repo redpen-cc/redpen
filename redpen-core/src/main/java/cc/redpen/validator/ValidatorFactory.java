@@ -46,8 +46,10 @@ public class ValidatorFactory {
                         throw new RuntimeException(validatorClassName + " doesn't implement cc.redpen.validator.Validator");
                     }
 
-                    Constructor<?> constructor = clazz.getConstructor(ValidatorConfiguration.class, SymbolTable.class);
-                    return (Validator<?>) constructor.newInstance(config, symbolTable);
+                    Constructor<?> constructor = clazz.getConstructor();
+                    Validator<?> validator = (Validator<?>) constructor.newInstance();
+                    validator.init(config, symbolTable);
+                    return validator;
                 } catch (ClassNotFoundException ignore) {
                 }
             }

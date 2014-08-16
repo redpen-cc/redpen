@@ -40,27 +40,7 @@ public class InvalidExpressionValidator implements Validator<Sentence> {
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/invalid-expression";
     private static final Logger LOG =
             LoggerFactory.getLogger(InvalidExpressionValidator.class);
-    private Set<String> invalidExpressions;
-
-    /**
-     * Constructor.
-     */
-    public InvalidExpressionValidator() {
-        invalidExpressions = new HashSet<>();
-    }
-
-    /**
-     * Constructor
-     *
-     * @param config      Configuration object
-     * @param symbolTable Character settings
-     * @throws cc.redpen.RedPenException
-     */
-    public InvalidExpressionValidator(ValidatorConfiguration config,
-                                      SymbolTable symbolTable)
-            throws RedPenException {
-        initialize(config, symbolTable);
-    }
+    private Set<String> invalidExpressions = new HashSet<>();
 
     public List<ValidationError> validate(Sentence line) {
         List<ValidationError> result = new ArrayList<>();
@@ -84,9 +64,8 @@ public class InvalidExpressionValidator implements Validator<Sentence> {
         invalidExpressions.add(invalid);
     }
 
-    private boolean initialize(ValidatorConfiguration conf,
-                               SymbolTable symbolTable)
-            throws RedPenException {
+    @Override
+    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
         String lang = symbolTable.getLang();
         WordListExtractor extractor = new WordListExtractor();
         ResourceLoader loader = new ResourceLoader(extractor);
@@ -101,7 +80,7 @@ public class InvalidExpressionValidator implements Validator<Sentence> {
             LOG.info("Failed to load default dictionary.");
         }
 
-        String confFile = conf.getAttribute("dictionary");
+        String confFile = config.getAttribute("dictionary");
         if (confFile == null || confFile.equals("")) {
             LOG.error("Dictionary file is not specified.");
         } else {
@@ -114,6 +93,5 @@ public class InvalidExpressionValidator implements Validator<Sentence> {
         }
 
         invalidExpressions = extractor.get();
-        return true;
     }
 }

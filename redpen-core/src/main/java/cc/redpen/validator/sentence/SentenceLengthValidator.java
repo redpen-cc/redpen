@@ -40,18 +40,7 @@ public class SentenceLengthValidator implements Validator<Sentence> {
     public static final int DEFAULT_MAX_LENGTH = 30;
     private static final Logger LOG =
             LoggerFactory.getLogger(SentenceLengthValidator.class);
-    private int maxLength;
-
-    public SentenceLengthValidator(ValidatorConfiguration config,
-                                   SymbolTable symbolTable)
-            throws RedPenException {
-        initialize(config);
-    }
-
-    public SentenceLengthValidator() {
-        super();
-        this.maxLength = DEFAULT_MAX_LENGTH;
-    }
+    private int maxLength = DEFAULT_MAX_LENGTH;
 
     public List<ValidationError> validate(Sentence line) {
         List<ValidationError> result = new ArrayList<>();
@@ -65,17 +54,15 @@ public class SentenceLengthValidator implements Validator<Sentence> {
         return result;
     }
 
-    private boolean initialize(
-            ValidatorConfiguration conf)
-            throws RedPenException {
-        if (conf.getAttribute("max_length") == null) {
+    @Override
+    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
+        if (config.getAttribute("max_length") == null) {
             this.maxLength = DEFAULT_MAX_LENGTH;
             LOG.info("max_length was not set.");
             LOG.info("Using the default value of max_length.");
         } else {
-            this.maxLength = Integer.valueOf(conf.getAttribute("max_length"));
+            this.maxLength = Integer.valueOf(config.getAttribute("max_length"));
         }
-        return true;
     }
 
     protected void setMaxLength(int max) {

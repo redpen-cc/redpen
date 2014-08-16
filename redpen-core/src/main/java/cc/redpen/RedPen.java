@@ -18,6 +18,7 @@
 package cc.redpen;
 
 import cc.redpen.config.Configuration;
+import cc.redpen.config.SymbolTable;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.distributor.DefaultResultDistributor;
 import cc.redpen.distributor.ResultDistributor;
@@ -231,6 +232,11 @@ public class RedPen implements Validator<Document> {
         sectionValidators.add(validator);
     }
 
+    @Override
+    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
+        // do nothing
+    }
+
     /**
      * Builder for {@link cc.redpen.RedPen}.
      */
@@ -256,5 +262,4 @@ public class RedPen implements Validator<Document> {
             return new RedPen(this);
         }
     }
-
 }

@@ -40,18 +40,7 @@ public class WordNumberValidator implements Validator<Sentence> {
     public static final int DEFAULT_MAXIMUM_WORDS_IN_A_SENTENCE = 30;
     private static final Logger LOG =
             LoggerFactory.getLogger(WordNumberValidator.class);
-    private int maxWordNumber;
-
-    public WordNumberValidator() {
-        super();
-        this.maxWordNumber = DEFAULT_MAXIMUM_WORDS_IN_A_SENTENCE;
-    }
-
-    public WordNumberValidator(ValidatorConfiguration config,
-                               SymbolTable symbolTable)
-            throws RedPenException {
-        initialize(config);
-    }
+    private int maxWordNumber = DEFAULT_MAXIMUM_WORDS_IN_A_SENTENCE;
 
     public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> result = new ArrayList<>();
@@ -68,16 +57,14 @@ public class WordNumberValidator implements Validator<Sentence> {
         return result;
     }
 
-    private boolean initialize(
-            ValidatorConfiguration conf)
-            throws RedPenException {
-        if (conf.getAttribute("max_word_num") == null) {
+    @Override
+    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
+        if (config.getAttribute("max_word_num") == null) {
             this.maxWordNumber = DEFAULT_MAXIMUM_WORDS_IN_A_SENTENCE;
             LOG.info("max_length was not set.");
             LOG.info("Using the default value of max_length.");
         } else {
-            this.maxWordNumber = Integer.valueOf(conf.getAttribute("max_word_num"));
+            this.maxWordNumber = Integer.valueOf(config.getAttribute("max_word_num"));
         }
-        return true;
     }
 }

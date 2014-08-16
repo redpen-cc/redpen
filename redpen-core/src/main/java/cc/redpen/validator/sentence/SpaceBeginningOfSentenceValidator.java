@@ -33,14 +33,6 @@ import java.util.List;
  */
 public class SpaceBeginningOfSentenceValidator implements Validator<Sentence> {
 
-    public SpaceBeginningOfSentenceValidator() {
-    }
-
-    public SpaceBeginningOfSentenceValidator(ValidatorConfiguration config,
-                                             SymbolTable symbolTable)
-            throws RedPenException {
-    }
-
     public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> result = new ArrayList<>();
         String content = sentence.content;
@@ -52,5 +44,10 @@ public class SpaceBeginningOfSentenceValidator implements Validator<Sentence> {
                     sentence));
         }
         return result;
+    }
+
+    @Override
+    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
+        // do nothing
     }
 }

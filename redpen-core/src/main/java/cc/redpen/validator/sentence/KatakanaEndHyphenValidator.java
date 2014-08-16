@@ -61,12 +61,6 @@ public class KatakanaEndHyphenValidator implements Validator<Sentence> {
      */
     private static final char KATAKANA_MIDDLE_DOT = '・';
 
-    public KatakanaEndHyphenValidator(ValidatorConfiguration config,
-                                      SymbolTable symbolTable)
-            throws RedPenException {
-        initialize(config, symbolTable);
-    }
-
     public KatakanaEndHyphenValidator() {
         super();
     }
@@ -111,11 +105,9 @@ public class KatakanaEndHyphenValidator implements Validator<Sentence> {
         return errors;
     }
 
-    private boolean initialize(
-            ValidatorConfiguration conf, SymbolTable symbolTable)
-            throws RedPenException {
+    @Override
+    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
         //TODO support exception word list.
-        return true;
     }
 
 }

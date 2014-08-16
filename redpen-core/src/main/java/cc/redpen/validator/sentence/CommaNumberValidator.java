@@ -45,22 +45,8 @@ public class CommaNumberValidator implements Validator<Sentence> {
     public static final String DEFAULT_COMMA = ",";
     private static final Logger LOG =
             LoggerFactory.getLogger(CommaNumberValidator.class);
-    private int maxCommaNum;
-    private String comma;
-
-    /**
-     * Constructor.
-     */
-    public CommaNumberValidator() {
-        super();
-        maxCommaNum = DEFAULT_MAX_COMMA_NUMBER;
-        comma = DEFAULT_COMMA;
-    }
-
-    public CommaNumberValidator(ValidatorConfiguration config, SymbolTable symbolTable)
-            throws RedPenException {
-        initialize(config, symbolTable);
-    }
+    private int maxCommaNum = DEFAULT_MAX_COMMA_NUMBER;
+    private String comma = DEFAULT_COMMA;
 
     public List<ValidationError> validate(Sentence line) {
         List<ValidationError> result = new ArrayList<>();
@@ -81,13 +67,12 @@ public class CommaNumberValidator implements Validator<Sentence> {
         return result;
     }
 
-    private boolean initialize(ValidatorConfiguration conf,
-                               SymbolTable symbolTable)
-            throws RedPenException {
+    @Override
+    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
         //TODO search parent configurations to get comma settings...
         this.maxCommaNum = DEFAULT_MAX_COMMA_NUMBER;
-        if (conf.getAttribute("max_comma_num") != null) {
-            this.maxCommaNum = Integer.valueOf(conf.getAttribute("max_length"));
+        if (config.getAttribute("max_comma_num") != null) {
+            this.maxCommaNum = Integer.valueOf(config.getAttribute("max_length"));
             LOG.info("Maximum number of comma in one sentence is set to "
                     + this.maxCommaNum);
         } else {
@@ -99,8 +84,7 @@ public class CommaNumberValidator implements Validator<Sentence> {
             this.comma = symbolTable.getSymbol("COMMA").getValue();
             LOG.info("comma is set to \"" + this.comma + "\"");
         } else {
-            this.maxCommaNum = Integer.valueOf(conf.getAttribute("max_length"));
+            this.maxCommaNum = Integer.valueOf(config.getAttribute("max_length"));
         }
-        return true;
     }
 }
