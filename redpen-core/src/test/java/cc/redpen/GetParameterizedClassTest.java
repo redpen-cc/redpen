@@ -15,13 +15,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cc.redpen.util;
+package cc.redpen;
 
 import org.junit.Test;
 
 import java.lang.reflect.Type;
 
 import static org.junit.Assert.assertEquals;
+
+public class GetParameterizedClassTest {
+    @Test
+    public void testGetParameterizedOfStringParameterrizedClass() {
+        Type type = RedPen.getParameterizedClass(new HasString());
+        assertEquals(String.class, type);
+    }
+
+    @Test
+    public void testGetParameterizedOfIntegerParameterrizedClass() {
+        Type type = RedPen.getParameterizedClass(new HasInteger());
+        assertEquals(Integer.class, type);
+    }
+
+    @Test
+    public void testGetParameterizedOfNonGenericClass() {
+        Type type = RedPen.getParameterizedClass("");
+        assertEquals(null, type);
+    }
+
+    @Test
+    public void testGetParameterizedOfNull() {
+        Type type = RedPen.getParameterizedClass(null);
+        assertEquals(null, type);
+    }
+
+}
 
 abstract class Generic<T> {
     abstract T getValue();
@@ -39,31 +66,4 @@ class HasInteger extends Generic<Integer> {
     public Integer getValue() {
         return 1;
     }
-}
-
-public class ClassUtilsTest {
-    @Test
-    public void testGetParameterizedOfStringParameterrizedClass() {
-        Type type = ClassUtils.getParameterizedClass(new HasString());
-        assertEquals(String.class, type);
-    }
-
-    @Test
-    public void testGetParameterizedOfIntegerParameterrizedClass() {
-        Type type = ClassUtils.getParameterizedClass(new HasInteger());
-        assertEquals(Integer.class, type);
-    }
-
-    @Test
-    public void testGetParameterizedOfNonGenericClass() {
-        Type type = ClassUtils.getParameterizedClass("");
-        assertEquals(null, type);
-    }
-
-    @Test
-    public void testGetParameterizedOfNull() {
-        Type type = ClassUtils.getParameterizedClass(null);
-        assertEquals(null, type);
-    }
-
 }

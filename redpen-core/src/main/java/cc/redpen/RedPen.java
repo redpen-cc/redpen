@@ -24,11 +24,11 @@ import cc.redpen.distributor.ResultDistributor;
 import cc.redpen.distributor.ResultDistributorFactory;
 import cc.redpen.formatter.Formatter;
 import cc.redpen.model.*;
-import cc.redpen.util.ClassUtils;
 import cc.redpen.validator.Validator;
 import cc.redpen.validator.ValidatorFactory;
 
 import java.io.PrintStream;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +66,27 @@ public class RedPen extends Validator<Document> {
         sentenceValidators = new ArrayList<>();
     }
 
+    static Type getParameterizedClass(Object obj) {
+        if (obj == null) {
+            return null;
+        }
+
+        Class clazz = obj.getClass();
+        Type genericInterface = clazz.getGenericSuperclass();
+        ParameterizedType parameterizedType;
+        try {
+            parameterizedType =
+                    ParameterizedType.class.cast(genericInterface);
+        } catch (ClassCastException e) {
+            return null;
+        }
+
+        if (parameterizedType.getActualTypeArguments().length == 0) {
+            return null;
+        }
+        return parameterizedType.getActualTypeArguments()[0];
+    }
+
     /**
      * Load validators written in the configuration file.
      */
@@ -81,7 +102,7 @@ public class RedPen extends Validator<Document> {
 
             Validator<?> validator = ValidatorFactory.getInstance(
                     config, configuration.getSymbolTable());
-            Type type = ClassUtils.getParameterizedClass(validator);
+            Type type = getParameterizedClass(validator);
 
             if (type == Sentence.class) {
                 this.sentenceValidators.add((Validator<Sentence>) validator);
