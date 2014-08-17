@@ -28,14 +28,15 @@ import java.util.List;
 /**
  * Validate input document.
  */
-public interface Validator<E> {
+public abstract class Validator<E> {
     /**
      * validate the input document and returns the invalid points.
      *
      * @param block input
      * @return List of ValidationError
      */
-    List<ValidationError> validate(E block);
+    abstract public List<ValidationError> validate(E block);
 
-    void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException;
+    protected void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
+    }
 }

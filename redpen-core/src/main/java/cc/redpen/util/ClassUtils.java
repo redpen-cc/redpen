@@ -28,11 +28,7 @@ public class ClassUtils {
         }
 
         Class clazz = obj.getClass();
-        if (clazz.getGenericInterfaces().length == 0) {
-            return null;
-        }
-
-        Type genericInterface = clazz.getGenericInterfaces()[0];
+        Type genericInterface = clazz.getGenericSuperclass();
         ParameterizedType parameterizedType;
         try {
             parameterizedType =

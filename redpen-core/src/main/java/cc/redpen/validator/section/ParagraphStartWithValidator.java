@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * Validate whether paragraph start as specified.
  */
-public class ParagraphStartWithValidator implements Validator<Section> {
+public class ParagraphStartWithValidator extends Validator<Section> {
     /**
      * Default matter paragraph start with.
      */
@@ -64,7 +64,7 @@ public class ParagraphStartWithValidator implements Validator<Section> {
     }
 
     @Override
-    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
+    protected void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
         if (config.getAttribute("paragraph_start_with") == null) {
             this.beginningOfParagraph = DEFAULT_PARAGRAPH_START_WITH;
             LOG.info("Using the default value of paragraph_start_with.");

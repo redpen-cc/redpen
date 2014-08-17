@@ -31,7 +31,7 @@ import java.util.List;
  * Validate paragraph number. If a section has paragraphs more than specified,
  * This validator reports it.
  */
-public class ParagraphNumberValidator implements Validator<Section> {
+public class ParagraphNumberValidator extends Validator<Section> {
     /**
      * Default maximum number of paragraphs in a section.
      */
@@ -54,7 +54,7 @@ public class ParagraphNumberValidator implements Validator<Section> {
     }
 
     @Override
-    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
+    protected void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
         if (config.getAttribute("max_paragraph_num") == null) {
             this.maxParagraphs = DEFAULT_MAX_PARAGRAPHS_IN_A_SECTION;
         } else {

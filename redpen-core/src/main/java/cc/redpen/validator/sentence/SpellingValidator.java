@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public class SpellingValidator implements Validator<Sentence> {
+public class SpellingValidator extends Validator<Sentence> {
 
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/spellchecker";
     private static final Logger LOG =
@@ -26,7 +26,7 @@ public class SpellingValidator implements Validator<Sentence> {
     private Set<String> validWords = new HashSet<>();
 
     @Override
-    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
+    protected void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
         String lang = symbolTable.getLang();
         WordListExtractor extractor = new WordListExtractor();
         extractor.setToLowerCase();

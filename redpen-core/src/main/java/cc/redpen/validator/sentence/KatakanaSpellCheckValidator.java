@@ -50,7 +50,7 @@ import java.util.List;
  * word is smaller than the threshold, we do not detect
  * the similarity.
  */
-public class KatakanaSpellCheckValidator implements Validator<Sentence> {
+public class KatakanaSpellCheckValidator extends Validator<Sentence> {
     /**
      * The default similarity ratio between the length and the distance.
      */
@@ -118,7 +118,7 @@ public class KatakanaSpellCheckValidator implements Validator<Sentence> {
     }
 
     @Override
-    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
+    protected void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
         //TODO : support the exception word list.
         //TODO : configurable SIMILARITY_RATIO.
         //TODO : configurable MAX_IGNORE_KATAKANA_LENGTH.

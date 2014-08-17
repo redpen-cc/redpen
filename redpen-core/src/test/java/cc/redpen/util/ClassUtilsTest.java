@@ -23,18 +23,18 @@ import java.lang.reflect.Type;
 
 import static org.junit.Assert.assertEquals;
 
-interface Generic<T> {
-    T getValue();
+abstract class Generic<T> {
+    abstract T getValue();
 }
 
-class HasString implements Generic<String> {
+class HasString extends Generic<String> {
     @Override
     public String getValue() {
         return "foobar";
     }
 }
 
-class HasInteger implements Generic<Integer> {
+class HasInteger extends Generic<Integer> {
     @Override
     public Integer getValue() {
         return 1;

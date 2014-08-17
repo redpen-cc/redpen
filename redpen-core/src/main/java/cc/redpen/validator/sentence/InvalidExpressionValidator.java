@@ -36,7 +36,7 @@ import java.util.Set;
 /**
  * Validate input sentences contain invalid expression.
  */
-public class InvalidExpressionValidator implements Validator<Sentence> {
+public class InvalidExpressionValidator extends Validator<Sentence> {
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/invalid-expression";
     private static final Logger LOG =
             LoggerFactory.getLogger(InvalidExpressionValidator.class);
@@ -65,7 +65,7 @@ public class InvalidExpressionValidator implements Validator<Sentence> {
     }
 
     @Override
-    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
+    protected void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
         String lang = symbolTable.getLang();
         WordListExtractor extractor = new WordListExtractor();
         ResourceLoader loader = new ResourceLoader(extractor);

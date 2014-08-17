@@ -33,7 +33,7 @@ import java.util.Set;
  * Validate symbol has before and after symbols. Needed spaces is depend on
  * the symbol and defined in DVCharacterTable.
  */
-public class SymbolWithSpaceValidator implements Validator<Sentence> {
+public class SymbolWithSpaceValidator extends Validator<Sentence> {
 
     private SymbolTable symbolTable;
 
@@ -50,7 +50,7 @@ public class SymbolWithSpaceValidator implements Validator<Sentence> {
     }
 
     @Override
-    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
+    protected void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
         this.symbolTable = symbolTable;
     }
 

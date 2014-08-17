@@ -34,7 +34,7 @@ import java.util.*;
  * If input sentences contain invalid expressions, this validator
  * returns the errors with corrected expressions.
  */
-public class SuggestExpressionValidator implements Validator<Sentence> {
+public class SuggestExpressionValidator extends Validator<Sentence> {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(SuggestExpressionValidator.class);
@@ -58,7 +58,7 @@ public class SuggestExpressionValidator implements Validator<Sentence> {
     }
 
     @Override
-    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
+    protected void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
         String confFile = config.getAttribute("invalid_word_file");
         LOG.info("dictionary file is " + confFile);
         if (confFile == null || confFile.equals("")) {

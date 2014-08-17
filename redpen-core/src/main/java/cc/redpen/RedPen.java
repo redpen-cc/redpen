@@ -18,7 +18,6 @@
 package cc.redpen;
 
 import cc.redpen.config.Configuration;
-import cc.redpen.config.SymbolTable;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.distributor.DefaultResultDistributor;
 import cc.redpen.distributor.ResultDistributor;
@@ -37,7 +36,7 @@ import java.util.List;
 /**
  * Validate all input files using appended Validators.
  */
-public class RedPen implements Validator<Document> {
+public class RedPen extends Validator<Document> {
 
     private final List<Validator<Document>> validators;
     private final List<Validator<Section>> sectionValidators;
@@ -209,15 +208,6 @@ public class RedPen implements Validator<Document> {
     }
 
     /**
-     * Append a specified validator.
-     *
-     * @param validator Validator used in testing
-     */
-    protected void appendValidator(Validator<Document> validator) {
-        this.validators.add(validator);
-    }
-
-    /**
      * Run validation.
      *
      * @param document input
@@ -230,11 +220,6 @@ public class RedPen implements Validator<Document> {
 
     public void appendSectionValidator(Validator<Section> validator) {
         sectionValidators.add(validator);
-    }
-
-    @Override
-    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
-        // do nothing
     }
 
     /**

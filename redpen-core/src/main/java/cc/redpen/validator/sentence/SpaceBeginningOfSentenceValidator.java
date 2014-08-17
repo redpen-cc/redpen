@@ -17,10 +17,7 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
-import cc.redpen.config.SymbolTable;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.Validator;
 
@@ -31,7 +28,7 @@ import java.util.List;
  * Validate input sentences except for first sentence of a paragraph start with
  * a space.
  */
-public class SpaceBeginningOfSentenceValidator implements Validator<Sentence> {
+public class SpaceBeginningOfSentenceValidator extends Validator<Sentence> {
 
     public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> result = new ArrayList<>();
@@ -44,10 +41,5 @@ public class SpaceBeginningOfSentenceValidator implements Validator<Sentence> {
                     sentence));
         }
         return result;
-    }
-
-    @Override
-    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
-        // do nothing
     }
 }

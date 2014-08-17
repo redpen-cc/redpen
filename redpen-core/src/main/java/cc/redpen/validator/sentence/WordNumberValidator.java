@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * Validate input sentences have more words than specified.
  */
-public class WordNumberValidator implements Validator<Sentence> {
+public class WordNumberValidator extends Validator<Sentence> {
     /**
      * Default maximum number of words in one sentence.
      */
@@ -42,6 +42,7 @@ public class WordNumberValidator implements Validator<Sentence> {
             LoggerFactory.getLogger(WordNumberValidator.class);
     private int maxWordNumber = DEFAULT_MAXIMUM_WORDS_IN_A_SENTENCE;
 
+    @Override
     public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> result = new ArrayList<>();
         String content = sentence.content;
@@ -58,7 +59,7 @@ public class WordNumberValidator implements Validator<Sentence> {
     }
 
     @Override
-    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
+    protected void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
         if (config.getAttribute("max_word_num") == null) {
             this.maxWordNumber = DEFAULT_MAXIMUM_WORDS_IN_A_SENTENCE;
             LOG.info("max_length was not set.");

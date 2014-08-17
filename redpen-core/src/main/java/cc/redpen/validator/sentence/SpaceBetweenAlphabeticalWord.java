@@ -1,9 +1,6 @@
 package cc.redpen.validator.sentence;
 
-import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
-import cc.redpen.config.SymbolTable;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.StringUtils;
 import cc.redpen.validator.Validator;
@@ -11,7 +8,7 @@ import cc.redpen.validator.Validator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpaceBetweenAlphabeticalWord implements Validator<Sentence> {
+public class SpaceBetweenAlphabeticalWord extends Validator<Sentence> {
     @Override
     public List<ValidationError> validate(Sentence block) {
         List<ValidationError> results = new ArrayList<>();
@@ -38,8 +35,4 @@ public class SpaceBetweenAlphabeticalWord implements Validator<Sentence> {
         return results;
     }
 
-    @Override
-    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
-        // do nothing
-    }
 }

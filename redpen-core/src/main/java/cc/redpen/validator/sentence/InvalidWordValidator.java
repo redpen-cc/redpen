@@ -33,7 +33,7 @@ import java.util.*;
 /**
  * Detect invalid word occurrences.
  */
-public class InvalidWordValidator implements Validator<Sentence> {
+public class InvalidWordValidator extends Validator<Sentence> {
     private static final String DEFAULT_RESOURCE_PATH =
             "default-resources/invalid-word";
     private static final Logger LOG =
@@ -65,7 +65,7 @@ public class InvalidWordValidator implements Validator<Sentence> {
     }
 
     @Override
-    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
+    protected void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
         String lang = symbolTable.getLang();
         WordListExtractor extractor = new WordListExtractor();
         ResourceLoader loader = new ResourceLoader(extractor);

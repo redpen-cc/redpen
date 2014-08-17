@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * Validate the number of commas in one sentence.
  */
-public class CommaNumberValidator implements Validator<Sentence> {
+public class CommaNumberValidator extends Validator<Sentence> {
     /**
      * Default maximum number of comma.
      */
@@ -68,7 +68,7 @@ public class CommaNumberValidator implements Validator<Sentence> {
     }
 
     @Override
-    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
+    protected void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
         //TODO search parent configurations to get comma settings...
         this.maxCommaNum = DEFAULT_MAX_COMMA_NUMBER;
         if (config.getAttribute("max_comma_num") != null) {

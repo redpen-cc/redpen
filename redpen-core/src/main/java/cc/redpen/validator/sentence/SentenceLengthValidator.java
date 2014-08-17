@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * Validate input sentences contain more characters more than specified.
  */
-public class SentenceLengthValidator implements Validator<Sentence> {
+public class SentenceLengthValidator extends Validator<Sentence> {
     /**
      * Default maximum length of sentences.
      */
@@ -55,7 +55,7 @@ public class SentenceLengthValidator implements Validator<Sentence> {
     }
 
     @Override
-    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
+    protected void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
         if (config.getAttribute("max_length") == null) {
             this.maxLength = DEFAULT_MAX_LENGTH;
             LOG.info("max_length was not set.");

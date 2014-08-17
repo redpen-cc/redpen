@@ -47,7 +47,7 @@ import java.util.List;
  * <p>
  * Note that KatakanaEndHyphenValidator only checks the rules a) and b).
  */
-public class KatakanaEndHyphenValidator implements Validator<Sentence> {
+public class KatakanaEndHyphenValidator extends Validator<Sentence> {
     /**
      * Default Katakana limit length without hypen.
      */
@@ -106,7 +106,7 @@ public class KatakanaEndHyphenValidator implements Validator<Sentence> {
     }
 
     @Override
-    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
+    protected void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
         //TODO support exception word list.
     }
 

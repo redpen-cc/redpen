@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * Validate the length of one section.
  */
-public class SectionLengthValidator implements Validator<Section> {
+public class SectionLengthValidator extends Validator<Section> {
     private static final int DEFAULT_MAXIMUM_CHAR_NUMBER_IN_A_SECTION = 1000;
     private static final Logger LOG =
             LoggerFactory.getLogger(SectionLengthValidator.class);
@@ -64,7 +64,7 @@ public class SectionLengthValidator implements Validator<Section> {
     }
 
     @Override
-    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
+    protected void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
         if (config.getAttribute("max_char_num") == null) {
             this.maxSectionCharNumber = DEFAULT_MAXIMUM_CHAR_NUMBER_IN_A_SECTION;
             LOG.info("max_char_number was not set.");

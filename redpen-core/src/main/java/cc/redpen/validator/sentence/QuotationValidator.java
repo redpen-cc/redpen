@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * Validator to validate quotation characters.
  */
-public class QuotationValidator implements Validator<Sentence> {
+public class QuotationValidator extends Validator<Sentence> {
 
     private static final List<String> DEFAULT_EXCEPTION_SUFFIXES;
 
@@ -86,7 +86,7 @@ public class QuotationValidator implements Validator<Sentence> {
     }
 
     @Override
-    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
+    protected void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
         this.period = DefaultSymbols.getInstance().get(
                 "FULL_STOP").getValue().charAt(0);
 

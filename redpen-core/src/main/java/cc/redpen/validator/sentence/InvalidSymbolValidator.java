@@ -32,7 +32,7 @@ import java.util.Set;
 /**
  * Validate if there is invalid characters in sentences.
  */
-public class InvalidSymbolValidator implements Validator<Sentence> {
+public class InvalidSymbolValidator extends Validator<Sentence> {
     private SymbolTable symbolTable;
 
     public List<ValidationError> validate(Sentence sentence) {
@@ -48,7 +48,7 @@ public class InvalidSymbolValidator implements Validator<Sentence> {
     }
 
     @Override
-    public void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
+    protected void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
         this.symbolTable = symbolTable;
     }
 
