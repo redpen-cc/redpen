@@ -19,8 +19,6 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
-import cc.redpen.config.SymbolTable;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.ResourceLoader;
 import cc.redpen.util.WordListExtractor;
@@ -28,7 +26,12 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Detect invalid word occurrences.
@@ -65,8 +68,8 @@ public class InvalidWordValidator extends Validator<Sentence> {
     }
 
     @Override
-    protected void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
-        String lang = symbolTable.getLang();
+    protected void init() throws RedPenException {
+        String lang = getSymbolTable().getLang();
         WordListExtractor extractor = new WordListExtractor();
         ResourceLoader loader = new ResourceLoader(extractor);
 
@@ -80,17 +83,15 @@ public class InvalidWordValidator extends Validator<Sentence> {
             LOG.info("Failed to load default dictionary.");
         }
 
-        String confFile = config.getAttribute("dictionary");
-        if (confFile == null || confFile.equals("")) {
-            LOG.error("Dictionary file is not specified.");
-        } else {
-            LOG.info("user dictionary file is " + confFile);
-            if (loader.loadExternalFile(confFile)) {
+        Optional<String> confFile = getConfigAttribute("dictionary");
+        confFile.ifPresent(e -> {
+            LOG.info("user dictionary file is " + e);
+            if (loader.loadExternalFile(e)) {
                 LOG.info("Succeeded to load specified user dictionary.");
             } else {
                 LOG.error("Failed to load user dictionary.");
             }
-        }
+        });
 
         invalidWords = extractor.get();
     }

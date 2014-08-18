@@ -19,8 +19,6 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
-import cc.redpen.config.SymbolTable;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
@@ -55,14 +53,8 @@ public class SentenceLengthValidator extends Validator<Sentence> {
     }
 
     @Override
-    protected void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
-        if (config.getAttribute("max_length") == null) {
-            this.maxLength = DEFAULT_MAX_LENGTH;
-            LOG.info("max_length was not set.");
-            LOG.info("Using the default value of max_length.");
-        } else {
-            this.maxLength = Integer.valueOf(config.getAttribute("max_length"));
-        }
+    protected void init() throws RedPenException {
+        this.maxLength = getConfigAttributeAsInt("max_length", DEFAULT_MAX_LENGTH);
     }
 
     protected void setMaxLength(int max) {

@@ -41,7 +41,7 @@ public class ValidatorFactory {
 
                     Constructor<?> constructor = clazz.getConstructor();
                     Validator<?> validator = (Validator<?>) constructor.newInstance();
-                    validator.init(config, symbolTable);
+                    validator.preInit(config, symbolTable);
                     return validator;
                 } catch (ClassNotFoundException ignore) {
                 }

@@ -20,8 +20,6 @@ package cc.redpen.validator.sentence;
 import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
 import cc.redpen.config.Symbol;
-import cc.redpen.config.SymbolTable;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.symbol.DefaultSymbols;
 import cc.redpen.validator.Validator;
@@ -86,15 +84,15 @@ public class QuotationValidator extends Validator<Sentence> {
     }
 
     @Override
-    protected void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
+    protected void init() throws RedPenException {
         this.period = DefaultSymbols.getInstance().get(
                 "FULL_STOP").getValue().charAt(0);
 
-        if (symbolTable.containsSymbol("FULL_STOP")) {
-            this.period = symbolTable.getSymbol("FULL_STOP").getValue().charAt(0);
+        if (getSymbolTable().containsSymbol("FULL_STOP")) {
+            this.period = getSymbolTable().getSymbol("FULL_STOP").getValue().charAt(0);
         }
 
-        setUseAscii(config.getAttribute("use_ascii").equals("true"));
+        setUseAscii(getConfigAttributeAsBoolean("use_ascii", false));
     }
 
     private void setUseAscii(boolean useAscii) {

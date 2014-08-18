@@ -19,8 +19,6 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
-import cc.redpen.config.SymbolTable;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.FileLoader;
 import cc.redpen.util.KeyValueDictionaryExtractor;
@@ -28,7 +26,12 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * If input sentences contain invalid expressions, this validator
@@ -58,19 +61,20 @@ public class SuggestExpressionValidator extends Validator<Sentence> {
     }
 
     @Override
-    protected void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
-        String confFile = config.getAttribute("invalid_word_file");
+    protected void init() throws RedPenException {
+        Optional<String> confFile = getConfigAttribute("invalid_word_file");
         LOG.info("dictionary file is " + confFile);
-        if (confFile == null || confFile.equals("")) {
+        if (!confFile.isPresent()) {
             LOG.error("dictionary file is not specified");
             throw new RedPenException("dictionary file is not specified");
+        } else {
+            KeyValueDictionaryExtractor extractor = new KeyValueDictionaryExtractor();
+            FileLoader loader = new FileLoader(extractor);
+            if (loader.loadFile(confFile.get()) != 0) {
+                throw new RedPenException("failed to load KeyValueDictionaryExtractor");
+            }
+            synonyms = extractor.get();
         }
-        KeyValueDictionaryExtractor extractor = new KeyValueDictionaryExtractor();
-        FileLoader loader = new FileLoader(extractor);
-        if (loader.loadFile(confFile) != 0) {
-            throw new RedPenException("failed to load KeyValueDictionaryExtractor");
-        }
-        synonyms = extractor.get();
     }
 
     protected void setSynonyms(Map<String, String> synonymMap) {

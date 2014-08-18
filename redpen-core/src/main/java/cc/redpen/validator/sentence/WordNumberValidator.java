@@ -19,8 +19,6 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
-import cc.redpen.config.SymbolTable;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
@@ -59,13 +57,7 @@ public class WordNumberValidator extends Validator<Sentence> {
     }
 
     @Override
-    protected void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
-        if (config.getAttribute("max_word_num") == null) {
-            this.maxWordNumber = DEFAULT_MAXIMUM_WORDS_IN_A_SENTENCE;
-            LOG.info("max_length was not set.");
-            LOG.info("Using the default value of max_length.");
-        } else {
-            this.maxWordNumber = Integer.valueOf(config.getAttribute("max_word_num"));
-        }
+    protected void init() throws RedPenException {
+        this.maxWordNumber = getConfigAttributeAsInt("max_word_num", DEFAULT_MAXIMUM_WORDS_IN_A_SENTENCE);
     }
 }

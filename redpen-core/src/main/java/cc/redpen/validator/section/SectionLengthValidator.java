@@ -19,8 +19,6 @@ package cc.redpen.validator.section;
 
 import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
-import cc.redpen.config.SymbolTable;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
@@ -64,15 +62,8 @@ public class SectionLengthValidator extends Validator<Section> {
     }
 
     @Override
-    protected void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
-        if (config.getAttribute("max_char_num") == null) {
-            this.maxSectionCharNumber = DEFAULT_MAXIMUM_CHAR_NUMBER_IN_A_SECTION;
-            LOG.info("max_char_number was not set.");
-            LOG.info("Using the default value of max_char_num.");
-        } else {
-            this.maxSectionCharNumber = Integer.valueOf(
-                    config.getAttribute("max_char_num"));
-        }
+    protected void init() throws RedPenException {
+        this.maxSectionCharNumber = getConfigAttributeAsInt("max_char_num", DEFAULT_MAXIMUM_CHAR_NUMBER_IN_A_SECTION);
     }
 
     protected void setMaxSectionLength(int max) {

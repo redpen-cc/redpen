@@ -19,8 +19,6 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
-import cc.redpen.config.SymbolTable;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.StringUtils;
 import cc.redpen.validator.Validator;
@@ -106,7 +104,7 @@ public class KatakanaEndHyphenValidator extends Validator<Sentence> {
     }
 
     @Override
-    protected void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
+    protected void init() throws RedPenException {
         //TODO support exception word list.
     }
 

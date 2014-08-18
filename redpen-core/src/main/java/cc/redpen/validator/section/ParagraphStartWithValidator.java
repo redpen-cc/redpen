@@ -19,8 +19,6 @@ package cc.redpen.validator.section;
 
 import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
-import cc.redpen.config.SymbolTable;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
@@ -64,12 +62,7 @@ public class ParagraphStartWithValidator extends Validator<Section> {
     }
 
     @Override
-    protected void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
-        if (config.getAttribute("paragraph_start_with") == null) {
-            this.beginningOfParagraph = DEFAULT_PARAGRAPH_START_WITH;
-            LOG.info("Using the default value of paragraph_start_with.");
-        } else {
-            this.beginningOfParagraph = config.getAttribute("paragraph_start_with");
-        }
+    protected void init() throws RedPenException {
+        this.beginningOfParagraph = getConfigAttribute("paragraph_start_with", DEFAULT_PARAGRAPH_START_WITH);
     }
 }

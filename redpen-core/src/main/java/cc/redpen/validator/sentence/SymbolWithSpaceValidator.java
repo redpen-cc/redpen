@@ -17,11 +17,8 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
 import cc.redpen.config.Symbol;
-import cc.redpen.config.SymbolTable;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.Validator;
 
@@ -35,11 +32,9 @@ import java.util.Set;
  */
 public class SymbolWithSpaceValidator extends Validator<Sentence> {
 
-    private SymbolTable symbolTable;
-
     public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> errors = new ArrayList<>();
-        Set<String> names = symbolTable.getNames();
+        Set<String> names = getSymbolTable().getNames();
         for (String name : names) {
             ValidationError error = validateSymbol(sentence, name);
             if (error != null) {
@@ -49,18 +44,9 @@ public class SymbolWithSpaceValidator extends Validator<Sentence> {
         return errors;
     }
 
-    @Override
-    protected void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
-        this.symbolTable = symbolTable;
-    }
-
-    protected void setSymbolTable(SymbolTable symbols) {
-        this.symbolTable = symbols;
-    }
-
     private ValidationError validateSymbol(Sentence sentence, String name) {
         String sentenceStr = sentence.content;
-        Symbol symbol = symbolTable.getSymbol(name);
+        Symbol symbol = getSymbolTable().getSymbol(name);
         if (!symbol.isNeedAfterSpace() && !symbol.isNeedBeforeSpace()) {
             return null;
         }

@@ -19,8 +19,6 @@ package cc.redpen.validator.section;
 
 import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
-import cc.redpen.config.SymbolTable;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Section;
 import cc.redpen.validator.Validator;
 
@@ -54,12 +52,8 @@ public class ParagraphNumberValidator extends Validator<Section> {
     }
 
     @Override
-    protected void init(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
-        if (config.getAttribute("max_paragraph_num") == null) {
-            this.maxParagraphs = DEFAULT_MAX_PARAGRAPHS_IN_A_SECTION;
-        } else {
-            this.maxParagraphs = Integer.valueOf(config.getAttribute("max_paragraph_num"));
-        }
+    protected void init() throws RedPenException {
+        this.maxParagraphs = getConfigAttributeAsInt("max_paragraph_num", DEFAULT_MAX_PARAGRAPHS_IN_A_SECTION);
     }
 
     protected void setMaxParagraphNumber(int max) {
