@@ -17,11 +17,8 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
 import cc.redpen.config.Symbol;
-import cc.redpen.config.SymbolTable;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.Validator;
 
@@ -33,19 +30,11 @@ import java.util.Set;
  * Validate symbol has before and after symbols. Needed spaces is depend on
  * the symbol and defined in DVCharacterTable.
  */
-public class SymbolWithSpaceValidator implements Validator<Sentence> {
-
-    private SymbolTable symbolTable;
-
-    public SymbolWithSpaceValidator(ValidatorConfiguration config,
-                                    SymbolTable symbolTable) throws
-            RedPenException {
-        initialize(symbolTable);
-    }
+public class SymbolWithSpaceValidator extends Validator<Sentence> {
 
     public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> errors = new ArrayList<>();
-        Set<String> names = symbolTable.getNames();
+        Set<String> names = getSymbolTable().getNames();
         for (String name : names) {
             ValidationError error = validateSymbol(sentence, name);
             if (error != null) {
@@ -55,19 +44,9 @@ public class SymbolWithSpaceValidator implements Validator<Sentence> {
         return errors;
     }
 
-    private boolean initialize(SymbolTable symbolConf)
-            throws RedPenException {
-        this.symbolTable = symbolConf;
-        return true;
-    }
-
-    protected void setSymbolTable(SymbolTable symbols) {
-        this.symbolTable = symbols;
-    }
-
     private ValidationError validateSymbol(Sentence sentence, String name) {
         String sentenceStr = sentence.content;
-        Symbol symbol = symbolTable.getSymbol(name);
+        Symbol symbol = getSymbolTable().getSymbol(name);
         if (!symbol.isNeedAfterSpace() && !symbol.isNeedBeforeSpace()) {
             return null;
         }

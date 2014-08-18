@@ -17,9 +17,8 @@
  */
 package cc.redpen.validator.section;
 
+import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
-import cc.redpen.config.SymbolTable;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
@@ -33,7 +32,7 @@ import java.util.List;
 /**
  * Validate whether paragraph start as specified.
  */
-public class ParagraphStartWithValidator implements Validator<Section> {
+public class ParagraphStartWithValidator extends Validator<Section> {
     /**
      * Default matter paragraph start with.
      */
@@ -41,21 +40,7 @@ public class ParagraphStartWithValidator implements Validator<Section> {
     public static final String DEFAULT_PARAGRAPH_START_WITH = " ";
     private static final Logger LOG =
             LoggerFactory.getLogger(ParagraphStartWithValidator.class);
-    private String beginningOfParagraph;
-
-    /**
-     * Constructor.
-     */
-    public ParagraphStartWithValidator() {
-        super();
-        this.beginningOfParagraph = DEFAULT_PARAGRAPH_START_WITH;
-    }
-
-    public ParagraphStartWithValidator(ValidatorConfiguration conf,
-                                       SymbolTable charTable) {
-        this();
-        loadConfiguration(conf);
-    }
+    private String beginningOfParagraph = DEFAULT_PARAGRAPH_START_WITH;
 
     @Override
     public List<ValidationError> validate(Section section) {
@@ -76,14 +61,8 @@ public class ParagraphStartWithValidator implements Validator<Section> {
         return validationErrors;
     }
 
-    private boolean loadConfiguration(ValidatorConfiguration conf) {
-        if (conf.getAttribute("paragraph_start_with") == null) {
-            this.beginningOfParagraph = DEFAULT_PARAGRAPH_START_WITH;
-            LOG.info("Using the default value of paragraph_start_with.");
-        } else {
-            this.beginningOfParagraph = conf.getAttribute("paragraph_start_with");
-        }
-        return true;
+    @Override
+    protected void init() throws RedPenException {
+        this.beginningOfParagraph = getConfigAttribute("paragraph_start_with", DEFAULT_PARAGRAPH_START_WITH);
     }
-
 }

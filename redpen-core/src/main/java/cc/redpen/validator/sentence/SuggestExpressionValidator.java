@@ -19,8 +19,6 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
-import cc.redpen.config.SymbolTable;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.FileLoader;
 import cc.redpen.util.KeyValueDictionaryExtractor;
@@ -28,28 +26,22 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * If input sentences contain invalid expressions, this validator
  * returns the errors with corrected expressions.
  */
-public class SuggestExpressionValidator implements Validator<Sentence> {
+public class SuggestExpressionValidator extends Validator<Sentence> {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(SuggestExpressionValidator.class);
-    private Map<String, String> synonyms;
-
-    public SuggestExpressionValidator() {
-        super();
-        synonyms = new HashMap<>();
-    }
-
-    public SuggestExpressionValidator(ValidatorConfiguration config,
-                                      SymbolTable symbolTable)
-            throws RedPenException {
-        initialize(config);
-    }
+    private Map<String, String> synonyms = new HashMap<>();
 
     public List<ValidationError> validate(Sentence line) {
         List<ValidationError> result = new ArrayList<>();
@@ -68,22 +60,21 @@ public class SuggestExpressionValidator implements Validator<Sentence> {
         return result;
     }
 
-    private boolean initialize(
-            ValidatorConfiguration conf)
-            throws RedPenException {
-        String confFile = conf.getAttribute("invalid_word_file");
+    @Override
+    protected void init() throws RedPenException {
+        Optional<String> confFile = getConfigAttribute("invalid_word_file");
         LOG.info("dictionary file is " + confFile);
-        if (confFile == null || confFile.equals("")) {
+        if (!confFile.isPresent()) {
             LOG.error("dictionary file is not specified");
-            return false;
+            throw new RedPenException("dictionary file is not specified");
+        } else {
+            KeyValueDictionaryExtractor extractor = new KeyValueDictionaryExtractor();
+            FileLoader loader = new FileLoader(extractor);
+            if (loader.loadFile(confFile.get()) != 0) {
+                throw new RedPenException("failed to load KeyValueDictionaryExtractor");
+            }
+            synonyms = extractor.get();
         }
-        KeyValueDictionaryExtractor extractor = new KeyValueDictionaryExtractor();
-        FileLoader loader = new FileLoader(extractor);
-        if (loader.loadFile(confFile) != 0) {
-            return false;
-        }
-        synonyms = extractor.get();
-        return true;
     }
 
     protected void setSynonyms(Map<String, String> synonymMap) {

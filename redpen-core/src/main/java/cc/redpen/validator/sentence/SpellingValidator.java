@@ -2,8 +2,6 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
-import cc.redpen.config.SymbolTable;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.ResourceLoader;
 import cc.redpen.util.WordListExtractor;
@@ -11,9 +9,14 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
-public class SpellingValidator implements Validator<Sentence> {
+public class SpellingValidator extends Validator<Sentence> {
 
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/spellchecker";
     private static final Logger LOG =
@@ -23,31 +26,11 @@ public class SpellingValidator implements Validator<Sentence> {
     private static Set<Character> skipCharacters =
             new HashSet<>(Arrays.asList(skipChars));
     // TODO: replace more memory efficient data structure
-    private Set<String> validWords;
+    private Set<String> validWords = new HashSet<>();
 
-    /**
-     * Constructor.
-     */
-    public SpellingValidator() {
-        this.validWords = new HashSet<>();
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param config      Configuration object
-     * @param symbolTable Character settings
-     * @throws cc.redpen.RedPenException
-     */
-    public SpellingValidator(ValidatorConfiguration config,
-                             SymbolTable symbolTable)
-            throws RedPenException {
-        initialize(config, symbolTable);
-    }
-
-    private boolean initialize(ValidatorConfiguration config,
-                               SymbolTable symbolTable) {
-        String lang = symbolTable.getLang();
+    @Override
+    protected void init() throws RedPenException {
+        String lang = getSymbolTable().getLang();
         WordListExtractor extractor = new WordListExtractor();
         extractor.setToLowerCase();
         ResourceLoader loader = new ResourceLoader(extractor);
@@ -62,19 +45,16 @@ public class SpellingValidator implements Validator<Sentence> {
             LOG.info("Failed to load default dictionary.");
         }
 
-        String confFile = config.getAttribute("dictionary");
-        if (confFile == null || confFile.equals("")) {
-            LOG.error("Dictionary file is not specified.");
-        } else {
-            LOG.info("user dictionary file is " + confFile);
-            if (loader.loadExternalFile(confFile)) {
+        Optional<String> confFile = getConfigAttribute("dictionary");
+        confFile.ifPresent(e -> {
+            LOG.info("user dictionary file is " + e);
+            if (loader.loadExternalFile(e)) {
                 LOG.info("Succeeded to load specified user dictionary.");
             } else {
                 LOG.error("Failed to load user dictionary.");
             }
-        }
+        });
         validWords = extractor.get();
-        return true;
     }
 
     @Override

@@ -17,11 +17,8 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
 import cc.redpen.config.Symbol;
-import cc.redpen.config.SymbolTable;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.Validator;
 
@@ -32,18 +29,11 @@ import java.util.Set;
 /**
  * Validate if there is invalid characters in sentences.
  */
-public class InvalidSymbolValidator implements Validator<Sentence> {
-    private SymbolTable symbolTable;
-
-    public InvalidSymbolValidator(ValidatorConfiguration config,
-                                  SymbolTable symbolTable)
-            throws RedPenException {
-        initialize(symbolTable);
-    }
+public class InvalidSymbolValidator extends Validator<Sentence> {
 
     public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> errors = new ArrayList<>();
-        Set<String> names = symbolTable.getNames();
+        Set<String> names = getSymbolTable().getNames();
         for (String name : names) {
             ValidationError error = validateSymbol(sentence, name);
             if (error != null) {
@@ -53,19 +43,9 @@ public class InvalidSymbolValidator implements Validator<Sentence> {
         return errors;
     }
 
-    private boolean initialize(SymbolTable symbols)
-            throws RedPenException {
-        this.symbolTable = symbols;
-        return true;
-    }
-
-    protected void setSymbolTable(SymbolTable symbols) {
-        this.symbolTable = symbols;
-    }
-
     private ValidationError validateSymbol(Sentence sentence, String name) {
         String sentenceStr = sentence.content;
-        Symbol symbol = symbolTable.getSymbol(name);
+        Symbol symbol = getSymbolTable().getSymbol(name);
         List<String> invalidCharsList = symbol.getInvalidSymbols();
         for (String invalidChar : invalidCharsList) {
             if (sentenceStr.contains(invalidChar)) {

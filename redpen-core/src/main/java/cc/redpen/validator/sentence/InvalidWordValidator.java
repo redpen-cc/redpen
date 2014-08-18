@@ -19,8 +19,6 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
-import cc.redpen.config.SymbolTable;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.ResourceLoader;
 import cc.redpen.util.WordListExtractor;
@@ -28,37 +26,22 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Detect invalid word occurrences.
  */
-public class InvalidWordValidator implements Validator<Sentence> {
+public class InvalidWordValidator extends Validator<Sentence> {
     private static final String DEFAULT_RESOURCE_PATH =
             "default-resources/invalid-word";
     private static final Logger LOG =
             LoggerFactory.getLogger(InvalidWordValidator.class);
-    private Set<String> invalidWords;
-
-    /**
-     * Constructor.
-     */
-    public InvalidWordValidator() {
-        invalidWords = new HashSet<>();
-    }
-
-    /**
-     * Constructor
-     *
-     * @param config      Configuration object
-     * @param symbolTable Character settings
-     * @throws cc.redpen.RedPenException
-     */
-    public InvalidWordValidator(ValidatorConfiguration config,
-                                SymbolTable symbolTable)
-            throws RedPenException {
-        initialize(config, symbolTable);
-    }
+    private Set<String> invalidWords = new HashSet<>();
 
     public List<ValidationError> validate(Sentence line) {
         List<ValidationError> result = new ArrayList<>();
@@ -84,10 +67,9 @@ public class InvalidWordValidator implements Validator<Sentence> {
         invalidWords.add(invalid);
     }
 
-    private boolean initialize(ValidatorConfiguration conf,
-                               SymbolTable symbolTable)
-            throws RedPenException {
-        String lang = symbolTable.getLang();
+    @Override
+    protected void init() throws RedPenException {
+        String lang = getSymbolTable().getLang();
         WordListExtractor extractor = new WordListExtractor();
         ResourceLoader loader = new ResourceLoader(extractor);
 
@@ -101,19 +83,16 @@ public class InvalidWordValidator implements Validator<Sentence> {
             LOG.info("Failed to load default dictionary.");
         }
 
-        String confFile = conf.getAttribute("dictionary");
-        if (confFile == null || confFile.equals("")) {
-            LOG.error("Dictionary file is not specified.");
-        } else {
-            LOG.info("user dictionary file is " + confFile);
-            if (loader.loadExternalFile(confFile)) {
+        Optional<String> confFile = getConfigAttribute("dictionary");
+        confFile.ifPresent(e -> {
+            LOG.info("user dictionary file is " + e);
+            if (loader.loadExternalFile(e)) {
                 LOG.info("Succeeded to load specified user dictionary.");
             } else {
                 LOG.error("Failed to load user dictionary.");
             }
-        }
+        });
 
         invalidWords = extractor.get();
-        return true;
     }
 }

@@ -8,7 +8,7 @@ import cc.redpen.validator.Validator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpaceBetweenAlphabeticalWord implements Validator<Sentence> {
+public class SpaceBetweenAlphabeticalWord extends Validator<Sentence> {
     @Override
     public List<ValidationError> validate(Sentence block) {
         List<ValidationError> results = new ArrayList<>();
@@ -34,4 +34,5 @@ public class SpaceBetweenAlphabeticalWord implements Validator<Sentence> {
         }
         return results;
     }
+
 }

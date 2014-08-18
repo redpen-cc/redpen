@@ -19,8 +19,6 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
-import cc.redpen.config.SymbolTable;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.LevenshteinDistance;
 import cc.redpen.util.StringUtils;
@@ -50,7 +48,7 @@ import java.util.List;
  * word is smaller than the threshold, we do not detect
  * the similarity.
  */
-public class KatakanaSpellCheckValidator implements Validator<Sentence> {
+public class KatakanaSpellCheckValidator extends Validator<Sentence> {
     /**
      * The default similarity ratio between the length and the distance.
      */
@@ -64,16 +62,6 @@ public class KatakanaSpellCheckValidator implements Validator<Sentence> {
      * Katakana word dic with line number.
      */
     private HashMap<String, Integer> dic = new HashMap<>();
-
-    public KatakanaSpellCheckValidator(ValidatorConfiguration config,
-                                       SymbolTable symbolTable)
-            throws RedPenException {
-        initialize(config, symbolTable);
-    }
-
-    public KatakanaSpellCheckValidator() {
-        super();
-    }
 
     public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> errors = new ArrayList<>();
@@ -127,13 +115,11 @@ public class KatakanaSpellCheckValidator implements Validator<Sentence> {
         return errors;
     }
 
-    private boolean initialize(ValidatorConfiguration conf,
-                               SymbolTable symbolTable)
-            throws RedPenException {
+    @Override
+    protected void init() throws RedPenException {
         //TODO : support the exception word list.
         //TODO : configurable SIMILARITY_RATIO.
         //TODO : configurable MAX_IGNORE_KATAKANA_LENGTH.
-        return true;
     }
 
 }

@@ -19,8 +19,6 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
-import cc.redpen.config.SymbolTable;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
@@ -32,7 +30,7 @@ import java.util.List;
 /**
  * Validate input sentences have more words than specified.
  */
-public class WordNumberValidator implements Validator<Sentence> {
+public class WordNumberValidator extends Validator<Sentence> {
     /**
      * Default maximum number of words in one sentence.
      */
@@ -40,19 +38,9 @@ public class WordNumberValidator implements Validator<Sentence> {
     public static final int DEFAULT_MAXIMUM_WORDS_IN_A_SENTENCE = 30;
     private static final Logger LOG =
             LoggerFactory.getLogger(WordNumberValidator.class);
-    private int maxWordNumber;
+    private int maxWordNumber = DEFAULT_MAXIMUM_WORDS_IN_A_SENTENCE;
 
-    public WordNumberValidator() {
-        super();
-        this.maxWordNumber = DEFAULT_MAXIMUM_WORDS_IN_A_SENTENCE;
-    }
-
-    public WordNumberValidator(ValidatorConfiguration config,
-                               SymbolTable symbolTable)
-            throws RedPenException {
-        initialize(config);
-    }
-
+    @Override
     public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> result = new ArrayList<>();
         String content = sentence.content;
@@ -68,16 +56,8 @@ public class WordNumberValidator implements Validator<Sentence> {
         return result;
     }
 
-    private boolean initialize(
-            ValidatorConfiguration conf)
-            throws RedPenException {
-        if (conf.getAttribute("max_word_num") == null) {
-            this.maxWordNumber = DEFAULT_MAXIMUM_WORDS_IN_A_SENTENCE;
-            LOG.info("max_length was not set.");
-            LOG.info("Using the default value of max_length.");
-        } else {
-            this.maxWordNumber = Integer.valueOf(conf.getAttribute("max_word_num"));
-        }
-        return true;
+    @Override
+    protected void init() throws RedPenException {
+        this.maxWordNumber = getConfigAttributeAsInt("max_word_num", DEFAULT_MAXIMUM_WORDS_IN_A_SENTENCE);
     }
 }

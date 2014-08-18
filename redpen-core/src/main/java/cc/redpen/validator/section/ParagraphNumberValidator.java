@@ -17,9 +17,8 @@
  */
 package cc.redpen.validator.section;
 
+import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
-import cc.redpen.config.SymbolTable;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Section;
 import cc.redpen.validator.Validator;
 
@@ -30,23 +29,13 @@ import java.util.List;
  * Validate paragraph number. If a section has paragraphs more than specified,
  * This validator reports it.
  */
-public class ParagraphNumberValidator implements Validator<Section> {
+public class ParagraphNumberValidator extends Validator<Section> {
     /**
      * Default maximum number of paragraphs in a section.
      */
     @SuppressWarnings("WeakerAccess")
     public static final int DEFAULT_MAX_PARAGRAPHS_IN_A_SECTION = 5;
     private int maxParagraphs;
-
-    public ParagraphNumberValidator() {
-        super();
-    }
-
-    public ParagraphNumberValidator(ValidatorConfiguration conf, SymbolTable
-            charTable) {
-        this();
-        loadConfiguration(conf);
-    }
 
     @Override
     public List<ValidationError> validate(Section section) {
@@ -62,13 +51,9 @@ public class ParagraphNumberValidator implements Validator<Section> {
         return validationErrors;
     }
 
-    private boolean loadConfiguration(ValidatorConfiguration conf) {
-        if (conf.getAttribute("max_paragraph_num") == null) {
-            this.maxParagraphs = DEFAULT_MAX_PARAGRAPHS_IN_A_SECTION;
-        } else {
-            this.maxParagraphs = Integer.valueOf(conf.getAttribute("max_paragraph_num"));
-        }
-        return true;
+    @Override
+    protected void init() throws RedPenException {
+        this.maxParagraphs = getConfigAttributeAsInt("max_paragraph_num", DEFAULT_MAX_PARAGRAPHS_IN_A_SECTION);
     }
 
     protected void setMaxParagraphNumber(int max) {

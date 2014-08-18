@@ -19,8 +19,6 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
-import cc.redpen.config.SymbolTable;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
@@ -32,7 +30,7 @@ import java.util.List;
 /**
  * Validate input sentences contain more characters more than specified.
  */
-public class SentenceLengthValidator implements Validator<Sentence> {
+public class SentenceLengthValidator extends Validator<Sentence> {
     /**
      * Default maximum length of sentences.
      */
@@ -40,18 +38,7 @@ public class SentenceLengthValidator implements Validator<Sentence> {
     public static final int DEFAULT_MAX_LENGTH = 30;
     private static final Logger LOG =
             LoggerFactory.getLogger(SentenceLengthValidator.class);
-    private int maxLength;
-
-    public SentenceLengthValidator(ValidatorConfiguration config,
-                                   SymbolTable symbolTable)
-            throws RedPenException {
-        initialize(config);
-    }
-
-    public SentenceLengthValidator() {
-        super();
-        this.maxLength = DEFAULT_MAX_LENGTH;
-    }
+    private int maxLength = DEFAULT_MAX_LENGTH;
 
     public List<ValidationError> validate(Sentence line) {
         List<ValidationError> result = new ArrayList<>();
@@ -65,17 +52,9 @@ public class SentenceLengthValidator implements Validator<Sentence> {
         return result;
     }
 
-    private boolean initialize(
-            ValidatorConfiguration conf)
-            throws RedPenException {
-        if (conf.getAttribute("max_length") == null) {
-            this.maxLength = DEFAULT_MAX_LENGTH;
-            LOG.info("max_length was not set.");
-            LOG.info("Using the default value of max_length.");
-        } else {
-            this.maxLength = Integer.valueOf(conf.getAttribute("max_length"));
-        }
-        return true;
+    @Override
+    protected void init() throws RedPenException {
+        this.maxLength = getConfigAttributeAsInt("max_length", DEFAULT_MAX_LENGTH);
     }
 
     protected void setMaxLength(int max) {

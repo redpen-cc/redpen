@@ -24,11 +24,11 @@ import cc.redpen.distributor.ResultDistributor;
 import cc.redpen.distributor.ResultDistributorFactory;
 import cc.redpen.formatter.Formatter;
 import cc.redpen.model.*;
-import cc.redpen.util.ClassUtils;
 import cc.redpen.validator.Validator;
 import cc.redpen.validator.ValidatorFactory;
 
 import java.io.PrintStream;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ import java.util.List;
 /**
  * Validate all input files using appended Validators.
  */
-public class RedPen implements Validator<Document> {
+public class RedPen extends Validator<Document> {
 
     private final List<Validator<Document>> validators;
     private final List<Validator<Section>> sectionValidators;
@@ -66,6 +66,27 @@ public class RedPen implements Validator<Document> {
         sentenceValidators = new ArrayList<>();
     }
 
+    static Type getParameterizedClass(Object obj) {
+        if (obj == null) {
+            return null;
+        }
+
+        Class clazz = obj.getClass();
+        Type genericInterface = clazz.getGenericSuperclass();
+        ParameterizedType parameterizedType;
+        try {
+            parameterizedType =
+                    ParameterizedType.class.cast(genericInterface);
+        } catch (ClassCastException e) {
+            return null;
+        }
+
+        if (parameterizedType.getActualTypeArguments().length == 0) {
+            return null;
+        }
+        return parameterizedType.getActualTypeArguments()[0];
+    }
+
     /**
      * Load validators written in the configuration file.
      */
@@ -81,7 +102,7 @@ public class RedPen implements Validator<Document> {
 
             Validator<?> validator = ValidatorFactory.getInstance(
                     config, configuration.getSymbolTable());
-            Type type = ClassUtils.getParameterizedClass(validator);
+            Type type = getParameterizedClass(validator);
 
             if (type == Sentence.class) {
                 this.sentenceValidators.add((Validator<Sentence>) validator);
@@ -208,15 +229,6 @@ public class RedPen implements Validator<Document> {
     }
 
     /**
-     * Append a specified validator.
-     *
-     * @param validator Validator used in testing
-     */
-    protected void appendValidator(Validator<Document> validator) {
-        this.validators.add(validator);
-    }
-
-    /**
      * Run validation.
      *
      * @param document input
@@ -256,5 +268,4 @@ public class RedPen implements Validator<Document> {
             return new RedPen(this);
         }
     }
-
 }

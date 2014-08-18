@@ -20,8 +20,6 @@ package cc.redpen.validator.sentence;
 import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
 import cc.redpen.config.Symbol;
-import cc.redpen.config.SymbolTable;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.symbol.DefaultSymbols;
 import cc.redpen.validator.Validator;
@@ -32,7 +30,7 @@ import java.util.List;
 /**
  * Validator to validate quotation characters.
  */
-public class QuotationValidator implements Validator<Sentence> {
+public class QuotationValidator extends Validator<Sentence> {
 
     private static final List<String> DEFAULT_EXCEPTION_SUFFIXES;
 
@@ -42,63 +40,30 @@ public class QuotationValidator implements Validator<Sentence> {
         DEFAULT_EXCEPTION_SUFFIXES.add("m "); // I'm
     }
 
-    private final List<String> exceptionSuffixes;
+    private List<String> exceptionSuffixes = DEFAULT_EXCEPTION_SUFFIXES;
     private Symbol leftSingleQuotationMark;
     private Symbol rightSingleQuotationMark;
     private Symbol leftDoubleQuotationMark;
     private Symbol rightDoubleQuotationMark;
-    private boolean useAscii;
     private Character period;
 
-    /**
-     * Constructor.
-     */
     public QuotationValidator() {
-        super();
-        this.useAscii = false;
-        this.period = DefaultSymbols.getInstance().get(
-                "FULL_STOP").getValue().charAt(0);
-        leftSingleQuotationMark =
-                new Symbol("LEFT_SINGLE_QUOTATION_MARK", "‘", "", true, false);
-        rightSingleQuotationMark =
-                new Symbol("RIGHT_SINGLE_QUOTATION_MARK", "’", "", false, true);
-        leftDoubleQuotationMark =
-                new Symbol("LEFT_DOUBLE_QUOTATION_MARK", "“", "", true, false);
-        rightDoubleQuotationMark =
-                new Symbol("RIGHT_DOUBLE_QUOTATION_MARK", "”", "", false, true);
-        exceptionSuffixes = DEFAULT_EXCEPTION_SUFFIXES;
+        this(false);
+    }
+
+    QuotationValidator(boolean useAscii) {
+        this(useAscii, DefaultSymbols.getInstance().get("FULL_STOP").getValue().charAt(0));
     }
 
     /**
      * Constructor.
      *
-     * @param isUseAscii true when this validator uses ascii setting,
-     *                   false uses the user-defined character settings
-     */
-    public QuotationValidator(boolean isUseAscii) {
-        this();
-        this.useAscii = isUseAscii;
-        if (useAscii) {
-            leftSingleQuotationMark =
-                    new Symbol("LEFT_SINGLE_QUOTATION_MARK", "'", "", true, false);
-            rightSingleQuotationMark =
-                    new Symbol("RIGHT_SINGLE_QUOTATION_MARK", "'", "", false, true);
-            leftDoubleQuotationMark =
-                    new Symbol("LEFT_DOUBLE_QUOTATION_MARK", "\"", "", true, false);
-            rightDoubleQuotationMark =
-                    new Symbol("RIGHT_DOUBLE_QUOTATION_MARK", "\"", "", false, true);
-        }
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param isUseAscii true when this validator uses ascii setting,
+     * @param useAscii true when this validator uses ascii setting,
      *                   false uses the user-defined character settings
      * @param fullStop   period character
      */
-    public QuotationValidator(boolean isUseAscii, Character fullStop) {
-        this(isUseAscii);
+    QuotationValidator(boolean useAscii, Character fullStop) {
+        setUseAscii(useAscii);
         this.period = fullStop;
     }
 
@@ -118,15 +83,20 @@ public class QuotationValidator implements Validator<Sentence> {
         return errors;
     }
 
-    public boolean initialize(
-            ValidatorConfiguration conf, SymbolTable charTable)
-            throws RedPenException {
-        if (charTable.containsSymbol("FULL_STOP")) {
-            this.period = charTable.getSymbol("FULL_STOP").getValue().charAt(0);
+    @Override
+    protected void init() throws RedPenException {
+        this.period = DefaultSymbols.getInstance().get(
+                "FULL_STOP").getValue().charAt(0);
+
+        if (getSymbolTable().containsSymbol("FULL_STOP")) {
+            this.period = getSymbolTable().getSymbol("FULL_STOP").getValue().charAt(0);
         }
 
-        if (conf.getAttribute("use_ascii").equals("true")) {
-            useAscii = true;
+        setUseAscii(getConfigAttributeAsBoolean("use_ascii", false));
+    }
+
+    private void setUseAscii(boolean useAscii) {
+        if (useAscii) {
             leftSingleQuotationMark =
                     new Symbol("LEFT_SINGLE_QUOTATION_MARK", "'", "", true, false);
             rightSingleQuotationMark =
@@ -137,26 +107,15 @@ public class QuotationValidator implements Validator<Sentence> {
                     new Symbol("RIGHT_DOUBLE_QUOTATION_MARK", "\"", "", false, true);
         } else {
             // single quotes
-            if (charTable.containsSymbol("LEFT_SINGLE_QUOTATION_MARK")) {
-                leftSingleQuotationMark =
-                        charTable.getSymbol("LEFT_SINGLE_QUOTATION_MARK");
-            }
-            if (charTable.containsSymbol("RIGHT_SINGLE_QUOTATION_MARK")) {
-                rightSingleQuotationMark =
-                        charTable.getSymbol("RIGHT_SINGLE_QUOTATION_MARK");
-            }
-
-            // single quotes
-            if (charTable.containsSymbol("LEFT_DOUBLE_QUOTATION_MARK")) {
-                leftSingleQuotationMark =
-                        charTable.getSymbol("LEFT_DOUBLE_QUOTATION_MARK");
-            }
-            if (charTable.containsSymbol("RIGHT_DOUBLE_QUOTATION_MARK")) {
-                rightSingleQuotationMark =
-                        charTable.getSymbol("RIGHT_DOUBLE_QUOTATION_MARK");
-            }
+            leftSingleQuotationMark =
+                    new Symbol("LEFT_SINGLE_QUOTATION_MARK", "‘", "", true, false);
+            rightSingleQuotationMark =
+                    new Symbol("RIGHT_SINGLE_QUOTATION_MARK", "’", "", false, true);
+            leftDoubleQuotationMark =
+                    new Symbol("LEFT_DOUBLE_QUOTATION_MARK", "“", "", true, false);
+            rightDoubleQuotationMark =
+                    new Symbol("RIGHT_DOUBLE_QUOTATION_MARK", "”", "", false, true);
         }
-        return true;
     }
 
     private List<ValidationError> checkQuotation(Sentence sentence,

@@ -24,8 +24,9 @@ import java.util.Optional;
 /**
  * Error to report invalid point from Validators.
  */
-public class ValidationError {
+public final class ValidationError implements java.io.Serializable {
 
+    private static final long serialVersionUID = -7759439419047004667L;
     private final int lineNumber;
     private final String message;
     private final String validatorName;
@@ -129,14 +130,28 @@ public class ValidationError {
     }
 
     @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("ValidationError{");
-        sb.append("lineNumber=").append(lineNumber);
-        sb.append(", message='").append(message).append('\'');
-        sb.append(", fileName='").append(fileName).append('\'');
-        sb.append(", sentence=").append(sentence);
-        sb.append(", validatorName='").append(validatorName).append('\'');
-        sb.append('}');
-        return sb.toString();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ValidationError that = (ValidationError) o;
+
+        if (lineNumber != that.lineNumber) return false;
+        if (!fileName.equals(that.fileName)) return false;
+        if (!message.equals(that.message)) return false;
+        if (!sentence.equals(that.sentence)) return false;
+        if (!validatorName.equals(that.validatorName)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = lineNumber;
+        result = 31 * result + message.hashCode();
+        result = 31 * result + validatorName.hashCode();
+        result = 31 * result + fileName.hashCode();
+        result = 31 * result + sentence.hashCode();
+        return result;
     }
 }

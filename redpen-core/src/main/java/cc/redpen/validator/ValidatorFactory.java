@@ -34,20 +34,15 @@ public class ValidatorFactory {
                 String validatorClassName = validatorPackage + "." + config.getConfigurationName() + "Validator";
                 try {
                     Class<?> clazz = Class.forName(validatorClassName);
-                    // ensure the class implements Validator
-                    boolean implementsValidator = false;
-                    for (Class<?> aClass : clazz.getInterfaces()) {
-                        if (aClass.equals(cc.redpen.validator.Validator.class)) {
-                            implementsValidator = true;
-                            break;
-                        }
-                    }
-                    if (!implementsValidator) {
-                        throw new RuntimeException(validatorClassName + " doesn't implement cc.redpen.validator.Validator");
+                    // ensure the class extends Validator
+                    if (!clazz.getSuperclass().equals(cc.redpen.validator.Validator.class)) {
+                        throw new RuntimeException(validatorClassName + " doesn't extend cc.redpen.validator.Validator");
                     }
 
-                    Constructor<?> constructor = clazz.getConstructor(ValidatorConfiguration.class, SymbolTable.class);
-                    return (Validator<?>) constructor.newInstance(config, symbolTable);
+                    Constructor<?> constructor = clazz.getConstructor();
+                    Validator<?> validator = (Validator<?>) constructor.newInstance();
+                    validator.preInit(config, symbolTable);
+                    return validator;
                 } catch (ClassNotFoundException ignore) {
                 }
             }

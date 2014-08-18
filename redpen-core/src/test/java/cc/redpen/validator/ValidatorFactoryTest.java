@@ -13,7 +13,7 @@ import static junit.framework.Assert.fail;
 
 class NotImplementInterfaceValidator {}
 
-class NoConstructorWithConfigsValidator implements Validator<Sentence> {
+class NoConstructorWithConfigsValidator extends Validator<Sentence> {
     @Override
     public List<ValidationError> validate(Sentence block) {
         return null;

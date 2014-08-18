@@ -20,8 +20,6 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
-import cc.redpen.config.SymbolTable;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
@@ -33,7 +31,7 @@ import java.util.List;
 /**
  * Validate the number of commas in one sentence.
  */
-public class CommaNumberValidator implements Validator<Sentence> {
+public class CommaNumberValidator extends Validator<Sentence> {
     /**
      * Default maximum number of comma.
      */
@@ -45,22 +43,8 @@ public class CommaNumberValidator implements Validator<Sentence> {
     public static final String DEFAULT_COMMA = ",";
     private static final Logger LOG =
             LoggerFactory.getLogger(CommaNumberValidator.class);
-    private int maxCommaNum;
-    private String comma;
-
-    /**
-     * Constructor.
-     */
-    public CommaNumberValidator() {
-        super();
-        maxCommaNum = DEFAULT_MAX_COMMA_NUMBER;
-        comma = DEFAULT_COMMA;
-    }
-
-    public CommaNumberValidator(ValidatorConfiguration config, SymbolTable symbolTable)
-            throws RedPenException {
-        initialize(config, symbolTable);
-    }
+    private int maxCommaNum = DEFAULT_MAX_COMMA_NUMBER;
+    private String comma = DEFAULT_COMMA;
 
     public List<ValidationError> validate(Sentence line) {
         List<ValidationError> result = new ArrayList<>();
@@ -81,26 +65,15 @@ public class CommaNumberValidator implements Validator<Sentence> {
         return result;
     }
 
-    private boolean initialize(ValidatorConfiguration conf,
-                               SymbolTable symbolTable)
-            throws RedPenException {
+    @Override
+    protected void init() throws RedPenException {
         //TODO search parent configurations to get comma settings...
-        this.maxCommaNum = DEFAULT_MAX_COMMA_NUMBER;
-        if (conf.getAttribute("max_comma_num") != null) {
-            this.maxCommaNum = Integer.valueOf(conf.getAttribute("max_length"));
-            LOG.info("Maximum number of comma in one sentence is set to "
-                    + this.maxCommaNum);
-        } else {
-            LOG.info("Maximum number of comma in one sentence is not set.");
-            LOG.info("Using the default value.");
-        }
+        this.maxCommaNum = getConfigAttributeAsInt("max_comma_num", DEFAULT_MAX_COMMA_NUMBER);
+
         this.comma = DEFAULT_COMMA;
-        if (symbolTable.containsSymbol("COMMA")) {
-            this.comma = symbolTable.getSymbol("COMMA").getValue();
+        if (getSymbolTable().containsSymbol("COMMA")) {
+            this.comma = getSymbolTable().getSymbol("COMMA").getValue();
             LOG.info("comma is set to \"" + this.comma + "\"");
-        } else {
-            this.maxCommaNum = Integer.valueOf(conf.getAttribute("max_length"));
         }
-        return true;
     }
 }

@@ -19,8 +19,6 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
-import cc.redpen.config.SymbolTable;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.StringUtils;
 import cc.redpen.validator.Validator;
@@ -47,7 +45,7 @@ import java.util.List;
  * <p>
  * Note that KatakanaEndHyphenValidator only checks the rules a) and b).
  */
-public class KatakanaEndHyphenValidator implements Validator<Sentence> {
+public class KatakanaEndHyphenValidator extends Validator<Sentence> {
     /**
      * Default Katakana limit length without hypen.
      */
@@ -60,12 +58,6 @@ public class KatakanaEndHyphenValidator implements Validator<Sentence> {
      * Katakana middle dot character.
      */
     private static final char KATAKANA_MIDDLE_DOT = '・';
-
-    public KatakanaEndHyphenValidator(ValidatorConfiguration config,
-                                      SymbolTable symbolTable)
-            throws RedPenException {
-        initialize(config, symbolTable);
-    }
 
     public KatakanaEndHyphenValidator() {
         super();
@@ -111,11 +103,9 @@ public class KatakanaEndHyphenValidator implements Validator<Sentence> {
         return errors;
     }
 
-    private boolean initialize(
-            ValidatorConfiguration conf, SymbolTable symbolTable)
-            throws RedPenException {
+    @Override
+    protected void init() throws RedPenException {
         //TODO support exception word list.
-        return true;
     }
 
 }
