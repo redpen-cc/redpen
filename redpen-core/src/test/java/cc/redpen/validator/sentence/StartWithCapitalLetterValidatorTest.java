@@ -36,6 +36,13 @@ public class StartWithCapitalLetterValidatorTest {
     }
 
     @Test
+    public void testStartWithWhiteListItemInJapaneseSentence() {
+        StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
+        validator.addWhiteList("iPhone");
+        assertEquals(0, validator.validate(new Sentence("iPhone はカッコイイ．", 0)).size());
+    }
+
+    @Test
     public void testLoadDefaultDictionary() throws RedPenException {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter"))
