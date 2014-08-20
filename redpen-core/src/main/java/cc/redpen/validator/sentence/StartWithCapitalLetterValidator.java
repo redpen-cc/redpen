@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 /**
- * Check if the input sentence start with a captial letter.
+ * Check if the input sentence start with a capital letter.
  */
 public class StartWithCapitalLetterValidator extends Validator<Sentence> {
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/capital-letter-exception-list";
@@ -39,7 +39,7 @@ public class StartWithCapitalLetterValidator extends Validator<Sentence> {
         }
 
         Character headChar = content.charAt(0);
-        if (headChar.isLowerCase(headChar)) {
+        if (Character.isLowerCase(headChar)) {
             results.add(new ValidationError(
                     this.getClass(),
                     "Sentence start with a small character",
@@ -54,7 +54,7 @@ public class StartWithCapitalLetterValidator extends Validator<Sentence> {
         WordListExtractor extractor = new WordListExtractor();
         ResourceLoader loader = new ResourceLoader(extractor);
 
-        LOG.info("Loading default capital letter exception list dictionary ");
+        LOG.info("Loading default capital letter exception dictionary ");
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/default-capital-case-exception-list.dat";
         if (loader.loadInternalResource(defaultDictionaryFile)) {
