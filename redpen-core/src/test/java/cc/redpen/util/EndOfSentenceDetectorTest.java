@@ -55,6 +55,16 @@ public class EndOfSentenceDetectorTest {
         assertEquals(13, detector.getSentenceEndPosition(str));
     }
 
+
+    @Test
+    public void testEndPositionInMultipleSentencesInMultipleLines() {
+        Pattern pattern = Pattern.compile("\\.");
+        String str = "this is a pen.\nthat is not pen.";
+        EndOfSentenceDetector detector = new EndOfSentenceDetector(pattern);
+        assertEquals(13, detector.getSentenceEndPosition(str));
+    }
+
+
     @Test
     public void tesEndPositionForPartialSentence() {
         Pattern pattern = Pattern.compile("\\.");
@@ -139,6 +149,14 @@ public class EndOfSentenceDetectorTest {
     public void tesEndPositionForPartialJapaneseSentence() {
         Pattern pattern = Pattern.compile("。");
         String str = "異なる。たとえば，";
+        EndOfSentenceDetector detector = new EndOfSentenceDetector(pattern);
+        assertEquals(3, detector.getSentenceEndPosition(str));
+    }
+
+    @Test
+    public void tesEndPositionForMultipleJapaneseSentencesSplitWithEndOfPosition() {
+        Pattern pattern = Pattern.compile("。");
+        String str = "異なる。\nたとえば，";
         EndOfSentenceDetector detector = new EndOfSentenceDetector(pattern);
         assertEquals(3, detector.getSentenceEndPosition(str));
     }

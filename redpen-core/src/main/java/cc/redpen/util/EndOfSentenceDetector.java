@@ -85,7 +85,8 @@ public final class EndOfSentenceDetector {
 
         if (checkPosition(endPosition - 1, str)) {
             if ((StringUtils.isBasicLatin(str.charAt(startPosition))
-                    && ' ' == str.charAt(endPosition))) {
+                    && (' ' == str.charAt(endPosition)
+                    || '\n' == str.charAt(endPosition)))) {
                 return endPosition - 1;
             }
             return handleSuccessivePeriods(str, startPosition, whitePositions);
