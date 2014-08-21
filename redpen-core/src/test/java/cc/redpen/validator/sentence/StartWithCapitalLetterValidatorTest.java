@@ -43,6 +43,20 @@ public class StartWithCapitalLetterValidatorTest {
     }
 
     @Test
+    public void testStartWithWhiteSpaceAndThenItemOfWhiteList() {
+        StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
+        validator.addWhiteList("iPhone");
+        assertEquals(0, validator.validate(new Sentence(" iPhone is a mobile computer.", 0)).size());
+    }
+
+    @Test
+    public void testVoid() {
+        StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
+        validator.addWhiteList("iPhone");
+        assertEquals(0, validator.validate(new Sentence("", 0)).size());
+    }
+
+    @Test
     public void testLoadDefaultDictionary() throws RedPenException {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter"))
