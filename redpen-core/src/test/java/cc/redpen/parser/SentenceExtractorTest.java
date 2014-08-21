@@ -143,6 +143,18 @@ public class SentenceExtractorTest {
     }
 
     @Test
+    public void testMultipleSentencesWithSplitInEndOfSentence() {
+        SentenceExtractor extractor = new SentenceExtractor();
+        List<Sentence> outputSentences = new ArrayList<>();
+        String remain = extractor.extract("this is a pen.\nAnother one is not a pen.",
+                outputSentences, 0);
+        assertEquals(2, outputSentences.size());
+        assertEquals("this is a pen.", outputSentences.get(0).content);
+        assertEquals("\nAnother one is not a pen.", outputSentences.get(1).content);
+        assertEquals("", remain);
+    }
+
+    @Test
     public void testMultipleSentencesWithPartialSentence() {
         SentenceExtractor extractor = new SentenceExtractor();
         List<Sentence> outputSentences = new ArrayList<>();
