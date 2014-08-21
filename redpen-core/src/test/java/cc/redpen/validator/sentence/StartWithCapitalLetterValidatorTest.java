@@ -10,7 +10,6 @@ import cc.redpen.model.DocumentCollection;
 import cc.redpen.model.Sentence;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -64,7 +63,7 @@ public class StartWithCapitalLetterValidatorTest {
 
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
-                .addSection(1, new ArrayList<>())
+                .addSection(1)
                 .addParagraph()
                 .addSentence(
                         "mixi is a Japanese company.",

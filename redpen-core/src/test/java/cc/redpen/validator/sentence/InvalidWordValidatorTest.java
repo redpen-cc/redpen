@@ -10,7 +10,6 @@ import cc.redpen.model.DocumentCollection;
 import cc.redpen.model.Sentence;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -42,7 +41,7 @@ public class InvalidWordValidatorTest {
 
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
-                .addSection(1, new ArrayList<>())
+                .addSection(1)
                 .addParagraph()
                 .addSentence(
                         "he is a foolish man.",
@@ -72,7 +71,7 @@ public class InvalidWordValidatorTest {
 
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
-                .addSection(1, new ArrayList<>())
+                .addSection(1)
                 .addParagraph()
                 .addSentence(
                         "こんにちは、群馬にきました。",
