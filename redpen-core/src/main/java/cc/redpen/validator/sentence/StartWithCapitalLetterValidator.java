@@ -38,7 +38,18 @@ public class StartWithCapitalLetterValidator extends Validator<Sentence> {
             return results;
         }
 
-        Character headChar = content.charAt(0);
+        char headChar = '≡';
+        for (char ch: content.toCharArray()) {
+            if (ch != ' ') {
+                headChar = ch;
+            }
+        }
+
+        if (headChar == '≡') {
+            return results;
+        }
+
+        headChar = content.charAt(0);
         if (Character.isLowerCase(headChar)) {
             results.add(new ValidationError(
                     this.getClass(),
