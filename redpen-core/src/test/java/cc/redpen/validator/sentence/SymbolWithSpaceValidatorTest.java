@@ -27,7 +27,6 @@ import cc.redpen.distributor.FakeResultDistributor;
 import cc.redpen.model.DocumentCollection;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -37,7 +36,7 @@ public class SymbolWithSpaceValidatorTest {
     public void testNotNeedSpace() throws RedPenException {
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
-                .addSection(1, new ArrayList<>())
+                .addSection(1)
                 .addParagraph()
                 .addSentence("I like apple/orange", 1)
                 .build();
@@ -61,7 +60,7 @@ public class SymbolWithSpaceValidatorTest {
     public void testNeedAfterSpace() throws RedPenException {
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
-                .addSection(1, new ArrayList<>())
+                .addSection(1)
                 .addParagraph()
                 .addSentence("I like her:yes it is", 1)
                 .build();
@@ -85,7 +84,7 @@ public class SymbolWithSpaceValidatorTest {
     public void testNeedBeforeSpace() throws RedPenException {
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
-                .addSection(1, new ArrayList<>())
+                .addSection(1)
                 .addParagraph()
                 .addSentence("I like her(Nancy)very much.", 1)
                 .build();
@@ -109,7 +108,7 @@ public class SymbolWithSpaceValidatorTest {
     public void testNeedSpaceInMultiplePosition() throws RedPenException {
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
-                .addSection(1, new ArrayList<>())
+                .addSection(1)
                 .addParagraph()
                 .addSentence("I like her(Nancy)very much.", 1)
                 .build();
@@ -134,7 +133,7 @@ public class SymbolWithSpaceValidatorTest {
     public void testReturnOnlyOneForHitBothBeforeAndAfter() throws RedPenException {
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
-                .addSection(1, new ArrayList<>())
+                .addSection(1)
                 .addParagraph()
                 .addSentence("I like 1*10.", 1)
                 .build();

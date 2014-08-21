@@ -27,7 +27,6 @@ import cc.redpen.model.DocumentCollection;
 import cc.redpen.model.Sentence;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -58,7 +57,7 @@ public class InvalidExpressionValidatorTest {
 
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
-                .addSection(1, new ArrayList<>())
+                .addSection(1)
                 .addParagraph()
                 .addSentence(
                         "You know. He is a super man.",
@@ -82,7 +81,7 @@ public class InvalidExpressionValidatorTest {
 
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
-                .addSection(1, new ArrayList<>())
+                .addSection(1)
                 .addParagraph()
                 .addSentence(
                         "明日地球が滅亡するってマジですか。",

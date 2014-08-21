@@ -10,7 +10,6 @@ import cc.redpen.model.DocumentCollection;
 import cc.redpen.model.Sentence;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
@@ -37,7 +36,7 @@ public class SpellingValidatorTest {
 
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
-                .addSection(1, new ArrayList<>())
+                .addSection(1)
                 .addParagraph()
                 .addSentence(
                         "this iz goody",
@@ -61,7 +60,7 @@ public class SpellingValidatorTest {
 
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
-                .addSection(1, new ArrayList<>())
+                .addSection(1)
                 .addParagraph()
                 .addSentence(
                         "This iz goody",
@@ -86,7 +85,7 @@ public class SpellingValidatorTest {
 
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
-                .addSection(1, new ArrayList<>())
+                .addSection(1)
                 .addParagraph()
                 .addSentence(
                         "That is true, but there is a condition",
@@ -110,7 +109,7 @@ public class SpellingValidatorTest {
 
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
-                .addSection(1, new ArrayList<>())
+                .addSection(1)
                 .addParagraph()
                 .addSentence(
                         "That is true.",
@@ -134,7 +133,7 @@ public class SpellingValidatorTest {
 
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
-                .addSection(1, new ArrayList<>())
+                .addSection(1)
                 .addParagraph()
                 .addSentence(
                         "",

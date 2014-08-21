@@ -27,7 +27,6 @@ import cc.redpen.distributor.FakeResultDistributor;
 import cc.redpen.model.DocumentCollection;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -37,7 +36,7 @@ public class InvalidSymbolValidatorTest {
     public void testWithInvalidSymbol() throws RedPenException {
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
-                .addSection(1, new ArrayList<>())
+                .addSection(1)
                 .addParagraph()
                 .addSentence("わたしはカラオケが大好き！", 1)
                 .build();
@@ -61,7 +60,7 @@ public class InvalidSymbolValidatorTest {
     public void testWithoutInvalidSymbol() throws RedPenException {
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
-                .addSection(1, new ArrayList<>())
+                .addSection(1)
                 .addParagraph()
                 .addSentence("I like Karaoke", 1)
                 .build();
@@ -86,7 +85,7 @@ public class InvalidSymbolValidatorTest {
 
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
-                .addSection(1, new ArrayList<>())
+                .addSection(1)
                 .addParagraph()
                 .addSentence("わたしは、カラオケが大好き！", 1) // NOTE: two invalid symbols
                 .build();
