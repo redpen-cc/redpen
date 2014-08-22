@@ -195,12 +195,12 @@ public class RedPen extends Validator<Document> {
     private void preprocessSentences(List<Sentence> sentences) {
         for (Validator<Sentence> sentenceValidator : sentenceValidators) {
             Class<?> clazz = sentenceValidator.getClass();
-            if (!clazz.getSuperclass().equals(cc.redpen.validator.PreProcessor.class)) {
-                return;
-            }
-            PreProcessor<Sentence> preprocessor = (PreProcessor<Sentence>) sentenceValidator;
-            for (Sentence sentence : sentences) {
-                preprocessor.preprocess(sentence);
+            if (clazz.getInterfaces().length > 0 &&
+                    clazz.getInterfaces()[0].equals(cc.redpen.validator.PreProcessor.class)) {
+                PreProcessor<Sentence> preprocessor = (PreProcessor<Sentence>) sentenceValidator;
+                for (Sentence sentence : sentences) {
+                    preprocessor.preprocess(sentence);
+                }
             }
         }
     }
