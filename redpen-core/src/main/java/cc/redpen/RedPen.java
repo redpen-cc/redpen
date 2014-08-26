@@ -24,6 +24,7 @@ import cc.redpen.distributor.ResultDistributor;
 import cc.redpen.distributor.ResultDistributorFactory;
 import cc.redpen.formatter.Formatter;
 import cc.redpen.model.*;
+import cc.redpen.validator.PreProcessor;
 import cc.redpen.validator.Validator;
 import cc.redpen.validator.ValidatorFactory;
 
@@ -162,6 +163,50 @@ public class RedPen extends Validator<Document> {
     private List<ValidationError> runSentenceValidators(
             DocumentCollection documentCollection,
             List<ValidationError> errors) {
+        runSentencePreProcessorsToDocumentCollection(documentCollection, errors);
+        runSentenceValidatorsToDocumentCollection(documentCollection, errors);
+        return errors;
+    }
+
+    private void runSentencePreProcessorsToDocumentCollection(
+            DocumentCollection documentCollection, List<ValidationError> errors) {
+        for (Document document : documentCollection) {
+            for (Section section : document) {
+                applySentencePreProcessorsToSection(document, section);
+            }
+        }
+    }
+
+    private void applySentencePreProcessorsToSection(Document document, Section section) {
+        // apply paragraphs
+        for (Paragraph paragraph : section.getParagraphs()) {
+            preprocessSentences(paragraph.getSentences());
+        }
+        // apply to section header
+        preprocessSentences(section.getHeaderContents());
+        // apply to lists
+        for (ListBlock listBlock : section.getListBlocks()) {
+            for (ListElement listElement : listBlock.getListElements()) {
+                preprocessSentences(listElement.getSentences());
+            }
+        }
+    }
+
+    private void preprocessSentences(List<Sentence> sentences) {
+        for (Validator<Sentence> sentenceValidator : sentenceValidators) {
+            Class<?> clazz = sentenceValidator.getClass();
+            if (clazz.getInterfaces().length > 0 &&
+                    clazz.getInterfaces()[0].equals(cc.redpen.validator.PreProcessor.class)) {
+                PreProcessor<Sentence> preprocessor = (PreProcessor<Sentence>) sentenceValidator;
+                for (Sentence sentence : sentences) {
+                    preprocessor.preprocess(sentence);
+                }
+            }
+        }
+    }
+
+    private void runSentenceValidatorsToDocumentCollection(
+            DocumentCollection documentCollection, List<ValidationError> errors) {
         for (Document document : documentCollection) {
             for (Section section : document) {
                 List<ValidationError> newErrors =
@@ -169,7 +214,6 @@ public class RedPen extends Validator<Document> {
                 errors.addAll(newErrors);
             }
         }
-        return errors;
     }
 
     private List<ValidationError> applySentenceValidationsToSection(
