@@ -127,7 +127,6 @@ public class ContractionValidator extends Validator<Sentence> implements PreProc
         List<ValidationError> errors = new ArrayList<>();
         String [] words = block.content.toLowerCase().split(" ");
         for (String word : words) {
-            System.out.println(foundContractionNum + "\t" + foundNonContractionNum);
             if (foundNonContractionNum >= foundContractionNum
                     && contractions.contains(word)) {
                 errors.add(new ValidationError(
