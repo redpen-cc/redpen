@@ -21,7 +21,6 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -139,8 +138,6 @@ public final class WikiParser extends BasicDocumentParser {
             }
         } catch (IOException e) {
             throw new RedPenException("Failed to parse input document: " + e.getMessage());
-        } finally {
-            IOUtils.closeQuietly(br);
         }
 
         if (remain.length() > 0) {

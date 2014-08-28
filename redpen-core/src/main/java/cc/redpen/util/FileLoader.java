@@ -17,7 +17,6 @@
  */
 package cc.redpen.util;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,54 +42,28 @@ public class FileLoader {
      * Load input file.
      *
      * @param fileName input file name.
-     * @return 0 when succeeded to load, 1 otherwise
      */
-    public int loadFile(String fileName) {
-        InputStream inputStream;
-        try {
-            LOG.warn("input file: " + fileName);
-            inputStream = new FileInputStream(fileName);
-        } catch (IOException e) {
-            LOG.error("IO Error ", e);
-            return 1;
+    public void loadFile(String fileName) throws IOException {
+        try (InputStream inputStream = new FileInputStream(fileName)) {
+            LOG.info("input file: " + fileName);
+            loadFile(inputStream);
         }
-        if (loadFile(inputStream) != 0) {
-            LOG.error("Failed to load file: " + fileName);
-        }
-        IOUtils.closeQuietly(inputStream);
-        return 0;
     }
 
     /**
      * Given a input stream, load the contents.
      *
      * @param inputStream input stream
-     * @return 0 when succeeded to load input stream, 1 otherwise
      */
-    public int loadFile(InputStream inputStream) {
-        if (inputStream == null) {
-            LOG.error("Input Stream is null");
-            return 1;
-        }
-        InputStreamReader inputStreamReader = null;
-        BufferedReader bufferedReader = null;
-        try {
-            inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-            bufferedReader = new BufferedReader(inputStreamReader);
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                if (this.resourceExtractor.load(line) != 0) {
-                    LOG.error("Failed to load line:" + line);
-                    return 1;
-                }
+    public void loadFile(InputStream inputStream) throws IOException {
+            InputStreamReader inputStreamReader =
+                    new InputStreamReader(inputStream, "UTF-8");
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+        String line;
+        while ((line = bufferedReader.readLine()) != null) {
+            if (this.resourceExtractor.load(line) != 0) {
+                throw new IOException("Failed to load line:" + line);
             }
-        } catch (IOException e) {
-            LOG.error("IO Error ", e);
-            return 1;
-        } finally {
-            IOUtils.closeQuietly(bufferedReader);
-            IOUtils.closeQuietly(inputStreamReader);
         }
-        return 0;
     }
 }

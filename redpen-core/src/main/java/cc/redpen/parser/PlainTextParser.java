@@ -75,8 +75,6 @@ public final class PlainTextParser extends BasicDocumentParser {
             }
         } catch (IOException e) {
             throw new RedPenException("Failed to parse", e);
-        } finally {
-            IOUtils.closeQuietly(br);
         }
 
         return builder.getLastDocument();

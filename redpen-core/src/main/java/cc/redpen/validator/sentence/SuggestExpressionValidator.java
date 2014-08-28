@@ -26,6 +26,7 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,15 +64,18 @@ public class SuggestExpressionValidator extends Validator<Sentence> {
     @Override
     protected void init() throws RedPenException {
         Optional<String> confFile = getConfigAttribute("invalid_word_file");
-        LOG.info("dictionary file is " + confFile);
+        LOG.info("Dictionary file is " + confFile);
         if (!confFile.isPresent()) {
-            LOG.error("dictionary file is not specified");
+            LOG.error("Dictionary file is not specified");
             throw new RedPenException("dictionary file is not specified");
         } else {
             KeyValueDictionaryExtractor extractor = new KeyValueDictionaryExtractor();
             FileLoader loader = new FileLoader(extractor);
-            if (loader.loadFile(confFile.get()) != 0) {
-                throw new RedPenException("failed to load KeyValueDictionaryExtractor");
+            try {
+                loader.loadFile(confFile.get());
+            } catch (IOException e) {
+                LOG.error(e.getMessage());
+                throw new RedPenException("Failed to load KeyValueDictionaryExtractor");
             }
             synonyms = extractor.get();
         }

@@ -21,7 +21,6 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.parser.markdown.ToFileContentSerializer;
-import org.apache.commons.io.IOUtils;
 import org.pegdown.Extensions;
 import org.pegdown.ParsingTimeoutException;
 import org.pegdown.PegDownProcessor;
@@ -89,8 +88,6 @@ public class MarkdownParser extends BasicDocumentParser {
             throw new RedPenException("Failed to parse timeout");
         } catch (IOException e) {
             throw new RedPenException("Failed to read lines");
-        } finally {
-            IOUtils.closeQuietly(br);
         }
         return builder.getLastDocument();
     }

@@ -17,6 +17,7 @@
  */
 package cc.redpen.util;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -39,23 +40,24 @@ public class ResourceLoader {
      * Load a given input file combined with jar package.
      *
      * @param inputFile a file included in the jar file
-     * @return true when succeed to load, false otherwise
      */
-    public boolean loadInternalResource(String inputFile) {
+    public void loadInternalResource(String inputFile) throws IOException {
         InputStream inputStream = getClass()
                 .getClassLoader()
                 .getResourceAsStream(inputFile);
-        return loader.loadFile(inputStream) == 0;
+        if (inputStream == null) {
+            throw new IOException("Failed to load input " + inputFile);
+        }
+        loader.loadFile(inputStream);
     }
 
     /**
      * Load a given input file  not combined with jar.
      *
      * @param inputFile input file not combined with jar
-     * @return true when succeed to load, false otherwise
      */
-    public boolean loadExternalFile(String inputFile) {
-        return loader.loadFile(inputFile) == 0;
+    public void loadExternalFile(String inputFile) throws IOException {
+        loader.loadFile(inputFile);
     }
 
 }

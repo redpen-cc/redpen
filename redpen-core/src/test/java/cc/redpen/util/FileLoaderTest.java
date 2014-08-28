@@ -20,6 +20,7 @@ package cc.redpen.util;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Set;
@@ -28,7 +29,7 @@ import static org.junit.Assert.assertEquals;
 
 public class FileLoaderTest {
     @Test
-    public void testCreateWordList() {
+    public void testCreateWordList() throws IOException {
         String sampleWordSet = "Saitama\n";
         sampleWordSet += "Gumma\n";
         sampleWordSet += "Gifu\n";
@@ -36,25 +37,25 @@ public class FileLoaderTest {
         InputStream inputStream = IOUtils.toInputStream(sampleWordSet);
         WordListExtractor ex = new WordListExtractor();
         FileLoader fileLoader = new FileLoader(ex);
-        assertEquals(0, fileLoader.loadFile(inputStream));
+        fileLoader.loadFile(inputStream);
         Set<String> result = ex.get();
         assertEquals(3, result.size());
     }
 
     @Test
-    public void testCreateVacantWordList() {
+    public void testCreateVacantWordList() throws IOException {
         String sampleWordSet = "";
 
         InputStream inputStream = IOUtils.toInputStream(sampleWordSet);
         WordListExtractor ex = new WordListExtractor();
         FileLoader fileLoader = new FileLoader(ex);
-        assertEquals(0, fileLoader.loadFile(inputStream));
+        fileLoader.loadFile(inputStream);
         Set<String> result = ex.get();
         assertEquals(0, result.size());
     }
 
     @Test
-    public void testCreateKeyValueList() {
+    public void testCreateKeyValueList() throws IOException {
         String sampleWordSet = "Saitama\t100\n";
         sampleWordSet += "Gumma\t530000\n";
         sampleWordSet += "Gifu\t1200\n";
@@ -62,7 +63,7 @@ public class FileLoaderTest {
         InputStream inputStream = IOUtils.toInputStream(sampleWordSet);
         KeyValueDictionaryExtractor ex = new KeyValueDictionaryExtractor();
         FileLoader fileLoader = new FileLoader(ex);
-        assertEquals(0, fileLoader.loadFile(inputStream));
+        fileLoader.loadFile(inputStream);
         Map<String, String> result = ex.get();
         assertEquals(3, result.size());
         assertEquals("100", result.get("Saitama"));
@@ -71,21 +72,21 @@ public class FileLoaderTest {
     }
 
     @Test
-    public void testCreateVacantKeyValueList() {
+    public void testCreateVacantKeyValueList() throws IOException {
         String sampleWordSet = "";
         InputStream inputStream = IOUtils.toInputStream(sampleWordSet);
         KeyValueDictionaryExtractor ex = new KeyValueDictionaryExtractor();
         FileLoader fileLoader = new FileLoader(ex);
-        assertEquals(0, fileLoader.loadFile(inputStream));
+        fileLoader.loadFile(inputStream);
         Map<String, String> result = ex.get();
         assertEquals(0, result.size());
     }
 
-    @Test
-    public void testNullStream() {
+    @Test(expected = NullPointerException.class)
+    public void testNullStream() throws IOException {
         InputStream inputStream = null;
         WordListExtractor ex = new WordListExtractor();
         FileLoader fileLoader = new FileLoader(ex);
-        assertEquals(1, fileLoader.loadFile(inputStream));
+        fileLoader.loadFile(inputStream);
     }
 }
