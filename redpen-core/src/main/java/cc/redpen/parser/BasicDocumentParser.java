@@ -44,13 +44,11 @@ public abstract class BasicDocumentParser implements Parser {
     public Document generateDocument(String fileName)
             throws RedPenException {
         Document document ;
-        try {
-            try (InputStream inputStream = this.loadStream(fileName)) {
-                document = this.generateDocument(inputStream);
+        try (InputStream inputStream = this.loadStream(fileName)) {
+            document = this.generateDocument(inputStream);
                 if (document != null) {
                     document.setFileName(fileName);
                 }
-            }
         } catch (IOException e) {
             throw new RedPenException(e);
         }
