@@ -20,7 +20,6 @@ package cc.redpen.parser;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,19 +43,20 @@ public final class PlainTextParser extends BasicDocumentParser {
         super();
     }
 
+    @Override
     public Document generateDocument(InputStream is)
             throws RedPenException {
         builder.addDocument("");
-        BufferedReader br = null;
+
         List<Sentence> headers = new ArrayList<>();
         headers.add(new Sentence("", 0));
         builder.addSection(0, headers);
         builder.addParagraph();
+        BufferedReader br = createReader(is);
+        String remain = "";
+        String line;
+        int lineNum = 0;
         try {
-            br = createReader(is);
-            String remain = "";
-            String line;
-            int lineNum = 0;
             while ((line = br.readLine()) != null) {
                 int periodPosition =
                         this.getSentenceExtractor().getSentenceEndPosition(line);
@@ -70,13 +70,12 @@ public final class PlainTextParser extends BasicDocumentParser {
                 }
                 lineNum++;
             }
-            if (remain.length() > 0) {
-                builder.addSentence(remain, lineNum);
-            }
         } catch (IOException e) {
-            throw new RedPenException("Failed to parse", e);
+            throw new RedPenException(e);
         }
-
+        if (remain.length() > 0) {
+            builder.addSentence(remain, lineNum);
+        }
         return builder.getLastDocument();
     }
 

@@ -83,7 +83,7 @@ public class InvalidWordValidator extends Validator<Sentence> {
         } catch (IOException e) {
             LOG.error(e.getMessage());
             LOG.error("Failed to load default dictionary.");
-            return;
+            throw new RedPenException(e);
         }
         LOG.info("Succeeded to load default dictionary.");
 

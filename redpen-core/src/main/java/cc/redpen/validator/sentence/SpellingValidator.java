@@ -45,6 +45,7 @@ public class SpellingValidator extends Validator<Sentence> {
         } catch (IOException e) {
             LOG.error(e.getMessage());
             LOG.info("Failed to load default dictionary.");
+            throw new RedPenException(e);
         }
         LOG.info("Succeeded to load default dictionary.");
 
@@ -54,7 +55,6 @@ public class SpellingValidator extends Validator<Sentence> {
             try {
                 loader.loadExternalFile(f);
             } catch (IOException e) {
-                LOG.error(e.getMessage());
                 LOG.error("Failed to load user dictionary.");
                 return;
             }

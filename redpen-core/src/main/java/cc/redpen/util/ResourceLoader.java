@@ -42,13 +42,14 @@ public class ResourceLoader {
      * @param inputFile a file included in the jar file
      */
     public void loadInternalResource(String inputFile) throws IOException {
-        InputStream inputStream = getClass()
+        try (InputStream inputStream = getClass()
                 .getClassLoader()
-                .getResourceAsStream(inputFile);
-        if (inputStream == null) {
-            throw new IOException("Failed to load input " + inputFile);
+                .getResourceAsStream(inputFile)) {
+            if (inputStream == null) {
+                throw new IOException("Failed to load input " + inputFile);
+            }
+            loader.loadFile(inputStream);
         }
-        loader.loadFile(inputStream);
     }
 
     /**

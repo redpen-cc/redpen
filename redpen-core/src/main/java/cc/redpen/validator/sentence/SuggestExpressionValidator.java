@@ -74,8 +74,7 @@ public class SuggestExpressionValidator extends Validator<Sentence> {
             try {
                 loader.loadFile(confFile.get());
             } catch (IOException e) {
-                LOG.error(e.getMessage());
-                throw new RedPenException("Failed to load KeyValueDictionaryExtractor");
+                throw new RedPenException("Failed to load KeyValueDictionaryExtractor", e);
             }
             synonyms = extractor.get();
         }

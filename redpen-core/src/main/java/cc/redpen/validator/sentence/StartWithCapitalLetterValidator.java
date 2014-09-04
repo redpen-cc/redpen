@@ -72,8 +72,7 @@ public class StartWithCapitalLetterValidator extends Validator<Sentence> {
         try {
             loader.loadInternalResource(defaultDictionaryFile);
         } catch (IOException e) {
-            LOG.error(e.getMessage());
-            throw new RedPenException("Failed to load default dictionary.");
+            throw new RedPenException("Failed to load default dictionary.", e);
         }
         LOG.info("Succeeded to load default dictionary.");
 
@@ -83,7 +82,6 @@ public class StartWithCapitalLetterValidator extends Validator<Sentence> {
             try {
                 loader.loadExternalFile(f);
             } catch (IOException e) {
-                LOG.error(e.getMessage());
                 LOG.error("Failed to load user dictionary.");
                 return;
             }

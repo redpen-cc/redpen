@@ -76,15 +76,14 @@ public class ConfigurationLoader {
      *
      * @param configFileName input configuration settings
      * @return Validator configuration resources
+     * @throws java.io.IOException
      */
-    public Configuration loadConfiguration(String configFileName) {
+    public Configuration loadConfiguration(String configFileName) throws RedPenException {
         try (InputStream fis = new FileInputStream(configFileName)) {
             return this.loadConfiguration(fis);
         } catch (IOException e) {
-            LOG.error("Failed to load configuration");
-            LOG.error(e.getMessage());
+            throw new RedPenException(e);
         }
-        return null;
     }
 
     /**

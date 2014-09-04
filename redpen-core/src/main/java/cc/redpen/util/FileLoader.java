@@ -17,16 +17,12 @@
  */
 package cc.redpen.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.*;
 
 /**
  * Load file from input file name or stream.
  */
 public class FileLoader {
-    private static final Logger LOG = LoggerFactory.getLogger(FileLoader.class);
     private final ResourceExtractor resourceExtractor;
 
     /**
@@ -45,7 +41,6 @@ public class FileLoader {
      */
     public void loadFile(String fileName) throws IOException {
         try (InputStream inputStream = new FileInputStream(fileName)) {
-            LOG.info("input file: " + fileName);
             loadFile(inputStream);
         }
     }

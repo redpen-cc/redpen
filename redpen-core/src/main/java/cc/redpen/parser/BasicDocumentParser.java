@@ -43,15 +43,16 @@ public abstract class BasicDocumentParser implements Parser {
     @Override
     public Document generateDocument(String fileName)
             throws RedPenException {
-        Document document = null;
-        try (InputStream inputStream = this.loadStream(fileName)) {
-            document = this.generateDocument(inputStream);
-            if (document != null) {
-                document.setFileName(fileName);
+        Document document ;
+        try {
+            try (InputStream inputStream = this.loadStream(fileName)) {
+                document = this.generateDocument(inputStream);
+                if (document != null) {
+                    document.setFileName(fileName);
+                }
             }
         } catch (IOException e) {
-            LOG.error(e.getMessage());
-            LOG.error("Failed to load file " + fileName);
+            throw new RedPenException(e);
         }
         return document;
     }

@@ -76,9 +76,10 @@ public class InvalidExpressionValidator extends Validator<Sentence> {
         try {
             loader.loadInternalResource(defaultDictionaryFile);
         } catch (IOException e) {
-            LOG.info("Failed to load default dictionary.");
-            LOG.info("InvalidExpressionValidator does not support dictionary for "
+            LOG.error("Failed to load default dictionary.");
+            LOG.error("InvalidExpressionValidator does not support dictionary for "
                     + "\"" + lang + "\".");
+            throw new RedPenException(e);
         }
         LOG.info("Succeeded to load default dictionary.");
 

@@ -65,12 +65,16 @@ public class MarkdownParser extends BasicDocumentParser {
 
         try {
             br = createReader(inputStream);
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-                sb.append("\n");
-                // TODO surrogate pair ?
-                charCount += line.length() + 1;
-                lineList.add(charCount);
+            try {
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                    sb.append("\n");
+                    // TODO surrogate pair ?
+                    charCount += line.length() + 1;
+                    lineList.add(charCount);
+                }
+            } catch (IOException e) {
+                throw new RedPenException(e);
             }
 
             List<Sentence> headers = new ArrayList<>();
@@ -86,8 +90,6 @@ public class MarkdownParser extends BasicDocumentParser {
             serializer.toFileContent(rootNode);
         } catch (ParsingTimeoutException e) {
             throw new RedPenException("Failed to parse timeout");
-        } catch (IOException e) {
-            throw new RedPenException("Failed to read lines");
         }
         return builder.getLastDocument();
     }
