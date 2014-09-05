@@ -21,12 +21,14 @@ import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.LevenshteinDistance;
+import cc.redpen.util.ResourceLoader;
 import cc.redpen.util.StringUtils;
+import cc.redpen.util.WordListExtractor;
 import cc.redpen.validator.Validator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Validate the correctness of Katakana word spelling.
@@ -59,9 +61,22 @@ public class KatakanaSpellCheckValidator extends Validator<Sentence> {
      */
     private static final int MAX_IGNORE_KATAKANA_LENGTH = 3;
     /**
+     * Default dictionary for Katakana spell checking.
+     */
+    private static final String DEFAULT_RESOURCE_PATH = "default-resources/katakana";
+    /**
      * Katakana word dic with line number.
      */
     private HashMap<String, Integer> dic = new HashMap<>();
+    /**
+     * Exception word list.
+     */
+    private Set<String> exceptions = new HashSet<>();
+    /**
+     * Logger
+     */
+    private static final Logger LOG =
+            LoggerFactory.getLogger(KatakanaSpellCheckValidator.class);
 
     public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> errors = new ArrayList<>();
@@ -91,7 +106,7 @@ public class KatakanaSpellCheckValidator extends Validator<Sentence> {
         if (katakana.length() <= MAX_IGNORE_KATAKANA_LENGTH) {
             return null;
         }
-        if (dic.containsKey(katakana)) {
+        if (dic.containsKey(katakana) || exceptions.contains(katakana)) {
             return null;
         }
         final int minLsDistance =
@@ -117,7 +132,29 @@ public class KatakanaSpellCheckValidator extends Validator<Sentence> {
 
     @Override
     protected void init() throws RedPenException {
-        //TODO : support the exception word list.
+        WordListExtractor extractor = new WordListExtractor();
+        ResourceLoader loader = new ResourceLoader(extractor);
+
+        LOG.info("Loading default katakana word dictionary");
+        String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
+                + "/katakana-spellcheck.dat";
+        if (loader.loadInternalResource(defaultDictionaryFile)) {
+            LOG.info("Succeeded to load default dictionary.");
+        } else {
+            LOG.info("Failed to load default dictionary.");
+        }
+
+        Optional<String> confFile = getConfigAttribute("dictionary");
+        confFile.ifPresent(e -> {
+            LOG.info("user dictionary file is " + e);
+            if (loader.loadExternalFile(e)) {
+                LOG.info("Succeeded to load specified user dictionary.");
+            } else {
+                LOG.error("Failed to load user dictionary.");
+            }
+        });
+        this.exceptions = extractor.get();
+
         //TODO : configurable SIMILARITY_RATIO.
         //TODO : configurable MAX_IGNORE_KATAKANA_LENGTH.
     }

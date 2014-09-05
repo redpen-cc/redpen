@@ -17,7 +17,13 @@
  */
 package cc.redpen.validator.sentence;
 
+import cc.redpen.RedPen;
+import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
+import cc.redpen.config.Configuration;
+import cc.redpen.config.ValidatorConfiguration;
+import cc.redpen.distributor.FakeResultDistributor;
+import cc.redpen.model.DocumentCollection;
 import cc.redpen.model.Sentence;
 import org.junit.Test;
 
@@ -55,4 +61,27 @@ public class KatakanaSpellCheckValidatorTest {
         // and "フェーズ・アナライシス".
         assertEquals(st.toString(), 1, errors.size());
     }
+
+    @Test
+    public void testLoadDefaultDictionary() throws RedPenException {
+        Configuration config = new Configuration.Builder()
+                .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck"))
+                .setSymbolTable("ja").build();
+
+        DocumentCollection documents = new DocumentCollection.Builder()
+                .addDocument("")
+                .addSection(1)
+                .addParagraph()
+                .addSentence("あのインデクスとこのインデックス", 1)
+                .build();
+
+        RedPen validator = new RedPen.Builder()
+                .setConfiguration(config)
+                .setResultDistributor(new FakeResultDistributor())
+                .build();
+
+        List<ValidationError> errors = validator.check(documents);
+        assertEquals(0, errors.size());
+    }
+
 }
