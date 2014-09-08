@@ -21,7 +21,6 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,6 +88,7 @@ public final class WikiParser extends BasicDocumentParser {
         }
     }
 
+    @Override
     public Document generateDocument(InputStream is)
             throws RedPenException {
         builder.addDocument("");
@@ -104,8 +104,8 @@ public final class WikiParser extends BasicDocumentParser {
         String line;
         int lineNum = 0;
         StringBuilder remain = new StringBuilder();
+        br = createReader(is);
         try {
-            br = createReader(is);
             while ((line = br.readLine()) != null) {
                 prevPattern = currentPattern;
                 List<String> head = new ArrayList<>();
@@ -138,11 +138,8 @@ public final class WikiParser extends BasicDocumentParser {
                 lineNum++;
             }
         } catch (IOException e) {
-            throw new RedPenException("Failed to parse input document: " + e.getMessage());
-        } finally {
-            IOUtils.closeQuietly(br);
+            throw new RedPenException(e);
         }
-
         if (remain.length() > 0) {
             appendLastSentence(lineNum, remain.toString());
         }

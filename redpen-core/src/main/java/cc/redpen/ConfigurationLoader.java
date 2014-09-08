@@ -21,7 +21,6 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.Symbol;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.util.SAXErrorHandler;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -34,7 +33,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -78,17 +76,14 @@ public class ConfigurationLoader {
      *
      * @param configFileName input configuration settings
      * @return Validator configuration resources
+     * @throws java.io.IOException
      */
-    public Configuration loadConfiguration(String configFileName) {
-        InputStream fis = null;
-        try {
-            fis = new FileInputStream(configFileName);
-        } catch (FileNotFoundException e) {
-            LOG.error(e.getMessage());
+    public Configuration loadConfiguration(String configFileName) throws RedPenException {
+        try (InputStream fis = new FileInputStream(configFileName)) {
+            return this.loadConfiguration(fis);
+        } catch (IOException e) {
+            throw new RedPenException(e);
         }
-        Configuration configuration = this.loadConfiguration(fis);
-        IOUtils.closeQuietly(fis);
-        return configuration;
     }
 
     /**

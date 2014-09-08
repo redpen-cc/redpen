@@ -61,9 +61,8 @@ public class InvalidWordValidatorTest {
     /**
      * Assert not throw a exception even when there is no default dictionary.
      *
-     * @throws cc.redpen.RedPenException
      */
-    @Test
+    @Test(expected = RedPenException.class)
     public void testLoadNotExistDefaultDictionary() throws RedPenException {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidWord"))

@@ -47,4 +47,12 @@ public class RedPenException extends Exception {
     public RedPenException(String message, Exception cause) {
         super(message, cause);
     }
+
+    /**
+     * Constructor.
+     * @param causeException seed exception.
+     */
+    public RedPenException(Exception causeException) {
+        this(causeException.getMessage(), causeException);
+    }
 }

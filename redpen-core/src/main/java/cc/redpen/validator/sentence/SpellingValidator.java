@@ -9,6 +9,7 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -39,20 +40,25 @@ public class SpellingValidator extends Validator<Sentence> {
                 "\"" + lang + "\".");
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/spellchecker-" + lang + ".dat";
-        if (loader.loadInternalResource(defaultDictionaryFile)) {
-            LOG.info("Succeeded to load default dictionary.");
-        } else {
+        try {
+            loader.loadInternalResource(defaultDictionaryFile);
+        } catch (IOException e) {
+            LOG.error(e.getMessage());
             LOG.info("Failed to load default dictionary.");
+            throw new RedPenException(e);
         }
+        LOG.info("Succeeded to load default dictionary.");
 
-        Optional<String> confFile = getConfigAttribute("dictionary");
-        confFile.ifPresent(e -> {
-            LOG.info("user dictionary file is " + e);
-            if (loader.loadExternalFile(e)) {
-                LOG.info("Succeeded to load specified user dictionary.");
-            } else {
+        Optional<String> userDictionaryFile = getConfigAttribute("dictionary");
+        userDictionaryFile.ifPresent(f -> {
+            LOG.info("user dictionary file is " + f);
+            try {
+                loader.loadExternalFile(f);
+            } catch (IOException e) {
                 LOG.error("Failed to load user dictionary.");
+                return;
             }
+            LOG.info("Succeeded to load specified user dictionary.");
         });
         validWords = extractor.get();
     }
