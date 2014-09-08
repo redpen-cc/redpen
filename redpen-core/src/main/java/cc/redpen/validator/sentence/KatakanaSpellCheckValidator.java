@@ -28,6 +28,7 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -138,19 +139,20 @@ public class KatakanaSpellCheckValidator extends Validator<Sentence> {
         LOG.info("Loading default katakana word dictionary");
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/katakana-spellcheck.dat";
-        if (loader.loadInternalResource(defaultDictionaryFile)) {
+        try {
+            loader.loadInternalResource(defaultDictionaryFile);
             LOG.info("Succeeded to load default dictionary.");
-        } else {
-            LOG.info("Failed to load default dictionary.");
+        } catch (IOException e) {
+            throw new RedPenException("Failed to load default dictionary.", e);
         }
 
         Optional<String> confFile = getConfigAttribute("dictionary");
         confFile.ifPresent(e -> {
-            LOG.info("user dictionary file is " + e);
-            if (loader.loadExternalFile(e)) {
-                LOG.info("Succeeded to load specified user dictionary.");
-            } else {
-                LOG.error("Failed to load user dictionary.");
+            LOG.info("User dictionary file is " + e);
+            try {
+                loader.loadExternalFile(e);
+            } catch (IOException e1) {
+                LOG.error("Failed to load user dictionary");
             }
         });
         this.exceptions = extractor.get();
