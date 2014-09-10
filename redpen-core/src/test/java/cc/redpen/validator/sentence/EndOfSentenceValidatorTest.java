@@ -32,6 +32,22 @@ public class EndOfSentenceValidatorTest {
     }
 
     @Test
+    public void testInValidEndOfSentenceWithQuestionMark() {
+        EndOfSentenceValidator validator = new EndOfSentenceValidator();
+        List<ValidationError> errors = validator.validate(
+                new Sentence("He said \"Is it right\"?", 0));
+        assertEquals(1, errors.size());
+    }
+
+    @Test
+    public void testVoid() {
+        EndOfSentenceValidator validator = new EndOfSentenceValidator();
+        List<ValidationError> errors = validator.validate(
+                new Sentence("", 0));
+        assertEquals(0, errors.size());
+    }
+
+    @Test
     public void testJapaneseInvalidEndOfSentence() throws RedPenException {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("EndOfSentence"))

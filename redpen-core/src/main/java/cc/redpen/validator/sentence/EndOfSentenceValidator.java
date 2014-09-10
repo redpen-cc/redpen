@@ -17,6 +17,8 @@ public class EndOfSentenceValidator extends Validator<Sentence> {
     private char rightSingleQuotation = '\'';
     private char rightDoubleQuotation = '"';
     private char period = '.';
+    private char questionMark = '?';
+    private char exclamationMark = '!';
 
     @Override
     public List<ValidationError> validate(Sentence block) {
@@ -27,7 +29,9 @@ public class EndOfSentenceValidator extends Validator<Sentence> {
         }
         Character lastCharacter = content.charAt(content.length() - 1);
         Character secondCharacter = content.charAt(content.length() - 2);
-        if (lastCharacter == period) {
+        if (lastCharacter == period
+                || lastCharacter == questionMark
+                || lastCharacter == exclamationMark) {
             if (secondCharacter == rightSingleQuotation
                     || secondCharacter == rightDoubleQuotation) {
                 errors.add(new ValidationError(
@@ -43,6 +47,7 @@ public class EndOfSentenceValidator extends Validator<Sentence> {
         period = getSymbolTable().getSymbol("FULL_STOP").getValue().charAt(0);
         rightSingleQuotation = getSymbolTable().getSymbol("RIGHT_SINGLE_QUOTATION_MARK").getValue().charAt(0);
         rightSingleQuotation = getSymbolTable().getSymbol("RIGHT_DOUBLE_QUOTATION_MARK").getValue().charAt(0);
-
+        questionMark = getSymbolTable().getSymbol("QUESTION_MARK").getValue().charAt(0);
+        exclamationMark = getSymbolTable().getSymbol("EXCLAMATION_MARK").getValue().charAt(0);
     }
 }
