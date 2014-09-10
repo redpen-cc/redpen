@@ -29,6 +29,7 @@ public class JapaneseSymbols extends AbstractSymbols {
     private static AbstractSymbols INSTANCE = new JapaneseSymbols();
 
     public JapaneseSymbols() {
+
         /******************************************************************
          * Common symbols
          ******************************************************************/
@@ -95,29 +96,29 @@ public class JapaneseSymbols extends AbstractSymbols {
         symbols.put("LEFT_SINGLE_QUOTATION_MARK",
                 new Symbol("LEFT_SINGLE_QUOTATION_MARK", "‘", "", false, false));
         symbols.put("RIGHT_SINGLE_QUOTATION_MARK",
-                new Symbol("LEFT_SINGLE_QUOTATION_MARK", "’", "", false, false));
+                new Symbol("RIGHT_SINGLE_QUOTATION_MARK", "’", "", false, false));
         symbols.put("LEFT_DOUBLE_QUOTATION_MARK",
                 new Symbol("LEFT_SINGLE_QUOTATION_MARK", "“", "", false, false));
         symbols.put("RIGHT_DOUBLE_QUOTATION_MARK",
-                new Symbol("LEFT_SINGLE_QUOTATION_MARK", "”", "", false, false));
+                new Symbol("RIGHT_DOUBLE_QUOTATION_MARK", "”", "", false, false));
 
         /******************************************************************
          * Digits
          ******************************************************************/
 
-        symbols.put("DIGIT_ZERO", new Symbol("０", "0", "", false, false));
-        symbols.put("DIGIT_ONE", new Symbol("１", "1", "", false, false));
-        symbols.put("DIGIT_TWO", new Symbol("２", "2", "", false, false));
+        symbols.put("DIGIT_ZERO", new Symbol("DIGIT_ZERO", "0", "", false, false));
+        symbols.put("DIGIT_ONE", new Symbol("DIGIT_ONE", "1", "", false, false));
+        symbols.put("DIGIT_TWO", new Symbol("DIGIT_TWO", "2", "", false, false));
         symbols.put("DIGIT_THREE",
-                new Symbol("３", "3", "", false, false));
-        symbols.put("DIGIT_FOUR", new Symbol("４", "4", "", false, false));
-        symbols.put("DIGIT_FIVE", new Symbol("５", "5", "", false, false));
-        symbols.put("DIGIT_SIX", new Symbol("６", "6", "", false, false));
+                new Symbol("DIGIT_THREE", "3", "", false, false));
+        symbols.put("DIGIT_FOUR", new Symbol("DIGIT_FOUR", "4", "", false, false));
+        symbols.put("DIGIT_FIVE", new Symbol("DIGIT_FIVE", "5", "", false, false));
+        symbols.put("DIGIT_SIX", new Symbol("DIGIT_SIX", "6", "", false, false));
         symbols.put("DIGIT_SEVEN",
-                new Symbol("７", "7", "", false, false));
+                new Symbol("DIGIT_SEVEN", "7", "", false, false));
         symbols.put("DIGIT_EIGHT",
-                new Symbol("８", "8", "", false, false));
-        symbols.put("DIGIT_NINE", new Symbol("９", "9", "", false, false));
+                new Symbol("DIGIT_EIGHT", "8", "", false, false));
+        symbols.put("DIGIT_NINE", new Symbol("DIGIT_NINE", "9", "", false, false));
     }
 
     public static AbstractSymbols getInstance() {
