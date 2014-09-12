@@ -22,11 +22,15 @@ import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
 import cc.redpen.config.SymbolTable;
 import cc.redpen.config.ValidatorConfiguration;
+import cc.redpen.model.Sentence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.MessageFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 /**
  * Validate input document.
@@ -34,7 +38,7 @@ import java.util.Optional;
 public abstract class Validator<E> {
     private static final Logger LOG =
             LoggerFactory.getLogger(Validator.class);
-
+    ResourceBundle errorMessages;
     private ValidatorConfiguration config;
     private SymbolTable symbolTable;
 
@@ -49,7 +53,12 @@ public abstract class Validator<E> {
     final void preInit(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
         this.config = config;
         this.symbolTable = symbolTable;
+        setLocale(Locale.getDefault());
         init();
+    }
+
+    void setLocale(Locale locale) {
+        errorMessages = ResourceBundle.getBundle(this.getClass().getPackage().getName() + ".error-messages", locale);
     }
 
     protected void init() throws RedPenException {
@@ -96,4 +105,25 @@ public abstract class Validator<E> {
     protected SymbolTable getSymbolTable() {
         return symbolTable;
     }
+
+    /**
+     * create a ValidationError for the specified position with default error message
+     *
+     * @param sentenceWithError sentence
+     * @param args
+     * @return
+     */
+    protected ValidationError createValidationError(Sentence sentenceWithError, Object... args) {
+        return new ValidationError(this.getClass(), getLocalizedErrorMessage(args), sentenceWithError);
+
+    }
+
+    private String getLocalizedErrorMessage(Object... args) {
+        return MessageFormat.format(errorMessages.getString(this.getClass().getSimpleName()), args);
+    }
+
+    private String getLocalizedErrorMessage(String key, Object... args) {
+        return MessageFormat.format(errorMessages.getString(this.getClass().getSimpleName() + "." + key), args);
+    }
+
 }
