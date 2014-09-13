@@ -287,6 +287,42 @@ public class RedPen extends Validator<Document> {
         sectionValidators.add(validator);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        RedPen redPen = (RedPen) o;
+
+        if (distributor != null ? !distributor.equals(redPen.distributor) : redPen.distributor != null) return false;
+        if (sectionValidators != null ? !sectionValidators.equals(redPen.sectionValidators) : redPen.sectionValidators != null)
+            return false;
+        if (sentenceValidators != null ? !sentenceValidators.equals(redPen.sentenceValidators) : redPen.sentenceValidators != null)
+            return false;
+        if (validators != null ? !validators.equals(redPen.validators) : redPen.validators != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = validators != null ? validators.hashCode() : 0;
+        result = 31 * result + (sectionValidators != null ? sectionValidators.hashCode() : 0);
+        result = 31 * result + (sentenceValidators != null ? sentenceValidators.hashCode() : 0);
+        result = 31 * result + (distributor != null ? distributor.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "RedPen{" +
+                "validators=" + validators +
+                ", sectionValidators=" + sectionValidators +
+                ", sentenceValidators=" + sentenceValidators +
+                ", distributor=" + distributor +
+                '}';
+    }
+
     /**
      * Builder for {@link cc.redpen.RedPen}.
      */
