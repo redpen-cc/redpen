@@ -3,5 +3,13 @@ language: java
 jdk:
   - oraclejdk8
 
+env:
+  global:
+    - secure:"Dupdb/HgNXKu8kOo7/RcpMCAyEZA8hLw77nVPTxXUo39UUI/ipnbUfRHamiWC2/MCqTEHu+1eReCmuFj2ULk4g+vi/8VYjrmX1TiHwikIFEAGrRRK0VkuWegqloYtXuxa7gtuQ96PWjqJ48op/WYyYvKiH0cFOMHsZOt5cl9PL4="
+
 script:
   - sh ./run_test.sh
+
+after_success:
+  - cd redpen-core/
+  - mvn clean test -DrepoToken=${REPO_TOKEN} jacoco:report coveralls:jacoco
