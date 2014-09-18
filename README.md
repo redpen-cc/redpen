@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/recruit-tech/redpen.svg?branch=master)](https://travis-ci.org/recruit-tech/redpen)
 [![Coverage Status](https://coveralls.io/repos/recruit-tech/redpen/badge.png)](https://coveralls.io/r/recruit-tech/redpen)
-[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/recruit-tech/redpen?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![Gitter chat](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/recruit-tech/redpen)
 RedPen
 =======
 
