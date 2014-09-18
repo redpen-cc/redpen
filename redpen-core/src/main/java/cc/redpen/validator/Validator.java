@@ -27,10 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.MessageFormat;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Validate input document.
@@ -38,10 +35,13 @@ import java.util.ResourceBundle;
 public abstract class Validator<E> {
     private static final Logger LOG =
             LoggerFactory.getLogger(Validator.class);
-    ResourceBundle errorMessages;
+    private Optional<ResourceBundle> errorMessages = Optional.empty();
     private ValidatorConfiguration config;
     private SymbolTable symbolTable;
 
+    public Validator() {
+        setLocale(Locale.getDefault());
+    }
     /**
      * validate the input document and returns the invalid points.
      *
@@ -53,12 +53,15 @@ public abstract class Validator<E> {
     final void preInit(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
         this.config = config;
         this.symbolTable = symbolTable;
-        setLocale(Locale.getDefault());
         init();
     }
 
     void setLocale(Locale locale) {
-        errorMessages = ResourceBundle.getBundle(this.getClass().getPackage().getName() + ".error-messages", locale);
+        try {
+            errorMessages = Optional.ofNullable(ResourceBundle.getBundle(this.getClass().getPackage().getName() + ".error-messages", locale));
+        } catch (MissingResourceException ignore) {
+        }
+
     }
 
     protected void init() throws RedPenException {
@@ -110,20 +113,41 @@ public abstract class Validator<E> {
      * create a ValidationError for the specified position with default error message
      *
      * @param sentenceWithError sentence
-     * @param args
-     * @return
+     * @param args objects to format
+     * @return ValidationError with localized message
      */
     protected ValidationError createValidationError(Sentence sentenceWithError, Object... args) {
         return new ValidationError(this.getClass(), getLocalizedErrorMessage(args), sentenceWithError);
 
     }
 
+    /**
+     * returns localized default error message formatted with argument
+     *
+     * @param args objects to format
+     * @return localized error message
+     */
     private String getLocalizedErrorMessage(Object... args) {
-        return MessageFormat.format(errorMessages.getString(this.getClass().getSimpleName()), args);
+        if (errorMessages.isPresent()) {
+            return MessageFormat.format(errorMessages.get().getString(this.getClass().getSimpleName()), args);
+        } else {
+            throw new AssertionError("message resource not found.");
+        }
     }
 
+    /**
+     * returns localized error message for the given key formatted with argument
+     *
+     * @param key  message key
+     * @param args objects to format
+     * @return localized error message
+     */
     private String getLocalizedErrorMessage(String key, Object... args) {
-        return MessageFormat.format(errorMessages.getString(this.getClass().getSimpleName() + "." + key), args);
+        if (errorMessages.isPresent()) {
+            return MessageFormat.format(errorMessages.get().getString(this.getClass().getSimpleName() + "." + key), args);
+        } else {
+            throw new AssertionError("message resource not found.");
+        }
     }
 
 }
