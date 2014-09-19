@@ -28,18 +28,15 @@ import java.util.List;
  * Validate input sentences except for first sentence of a paragraph start with
  * a space.
  */
-public class SpaceBeginningOfSentenceValidator extends Validator<Sentence> {
+final public class SpaceBeginningOfSentenceValidator extends Validator<Sentence> {
 
     public List<ValidationError> validate(Sentence sentence) {
-        List<ValidationError> result = new ArrayList<>();
+        List<ValidationError> validationErrors = new ArrayList<>();
         String content = sentence.content;
         if (!sentence.isFirstSentence && content.length() > 0
                 && !String.valueOf(content.charAt(0)).equals(" ")) {
-            result.add(new ValidationError(
-                    this.getClass(),
-                    "Space not exist the beginning of sentence.",
-                    sentence));
+            validationErrors.add(createValidationError(sentence));
         }
-        return result;
+        return validationErrors;
     }
 }

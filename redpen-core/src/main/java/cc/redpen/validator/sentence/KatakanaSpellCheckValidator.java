@@ -51,7 +51,7 @@ import java.util.*;
  * word is smaller than the threshold, we do not detect
  * the similarity.
  */
-public class KatakanaSpellCheckValidator extends Validator<Sentence> {
+final public class KatakanaSpellCheckValidator extends Validator<Sentence> {
     /**
      * The default similarity ratio between the length and the distance.
      */
@@ -117,12 +117,7 @@ public class KatakanaSpellCheckValidator extends Validator<Sentence> {
         for (String key : dic.keySet()) {
             if (LevenshteinDistance.getDistance(key, katakana) <= minLsDistance) {
                 found = true;
-                errors.add(new ValidationError(
-                        this.getClass(),
-                        "Found a Katakana word: \"" + katakana + "\""
-                                + ", which is similar to \"" + key + "\""
-                                + " at postion " + dic.get(key).toString() + ".",
-                        sentence));
+                errors.add(createValidationError(sentence, katakana, key, dic.get(key).toString()));
             }
         }
         if (!found) {
@@ -161,4 +156,31 @@ public class KatakanaSpellCheckValidator extends Validator<Sentence> {
         //TODO : configurable MAX_IGNORE_KATAKANA_LENGTH.
     }
 
+    @Override
+    public String toString() {
+        return "KatakanaSpellCheckValidator{" +
+                "dic=" + dic +
+                ", exceptions=" + exceptions +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        KatakanaSpellCheckValidator that = (KatakanaSpellCheckValidator) o;
+
+        if (dic != null ? !dic.equals(that.dic) : that.dic != null) return false;
+        if (exceptions != null ? !exceptions.equals(that.exceptions) : that.exceptions != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = dic != null ? dic.hashCode() : 0;
+        result = 31 * result + (exceptions != null ? exceptions.hashCode() : 0);
+        return result;
+    }
 }

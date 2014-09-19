@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * Validate input sentences contain more characters more than specified.
  */
-public class SentenceLengthValidator extends Validator<Sentence> {
+final public class SentenceLengthValidator extends Validator<Sentence> {
     /**
      * Default maximum length of sentences.
      */
@@ -41,15 +41,11 @@ public class SentenceLengthValidator extends Validator<Sentence> {
     private int maxLength = DEFAULT_MAX_LENGTH;
 
     public List<ValidationError> validate(Sentence line) {
-        List<ValidationError> result = new ArrayList<>();
+        List<ValidationError> validationErrors = new ArrayList<>();
         if (line.content.length() > maxLength) {
-            result.add(new ValidationError(
-                    this.getClass(),
-                    "The length of the line exceeds the maximum "
-                            + String.valueOf(line.content.length()) + ".",
-                    line));
+            validationErrors.add(createValidationError(line, line.content.length()));
         }
-        return result;
+        return validationErrors;
     }
 
     @Override
@@ -57,7 +53,39 @@ public class SentenceLengthValidator extends Validator<Sentence> {
         this.maxLength = getConfigAttributeAsInt("max_length", DEFAULT_MAX_LENGTH);
     }
 
+    /**
+     * Set maximum length of sentence.
+     *
+     * @param maxLength max limit of sentence length
+     */
+    protected void setLengthLimit(int maxLength) {
+        this.setMaxLength(maxLength);
+    }
+
     protected void setMaxLength(int max) {
         this.maxLength = max;
+    }
+
+    @Override
+    public String toString() {
+        return "SentenceLengthValidator{" +
+                "maxLength=" + maxLength +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SentenceLengthValidator that = (SentenceLengthValidator) o;
+
+        return maxLength == that.maxLength;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return maxLength;
     }
 }

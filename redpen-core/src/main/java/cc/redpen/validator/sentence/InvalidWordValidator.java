@@ -37,7 +37,7 @@ import java.util.Set;
 /**
  * Detect invalid word occurrences.
  */
-public class InvalidWordValidator extends Validator<Sentence> {
+final public class InvalidWordValidator extends Validator<Sentence> {
     private static final String DEFAULT_RESOURCE_PATH =
             "default-resources/invalid-word";
     private static final Logger LOG =
@@ -51,9 +51,7 @@ public class InvalidWordValidator extends Validator<Sentence> {
         List<String> words = Arrays.asList(content.split(" "));
         for (String invalidWord : invalidWords) {
             if (words.contains(invalidWord)) {
-                result.add(new ValidationError(
-                        this.getClass(),
-                        "Found invalid Word: \"" + invalidWord + "\"", line));
+                result.add(createValidationError(line, invalidWord));
             }
         }
         return result;
@@ -101,5 +99,29 @@ public class InvalidWordValidator extends Validator<Sentence> {
         });
 
         invalidWords = extractor.get();
+    }
+
+    @Override
+    public String toString() {
+        return "InvalidWordValidator{" +
+                "invalidWords=" + invalidWords +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        InvalidWordValidator that = (InvalidWordValidator) o;
+
+        if (invalidWords != null ? !invalidWords.equals(that.invalidWords) : that.invalidWords != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return invalidWords != null ? invalidWords.hashCode() : 0;
     }
 }

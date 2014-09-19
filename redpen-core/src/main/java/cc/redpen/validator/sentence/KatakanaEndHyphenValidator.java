@@ -45,7 +45,7 @@ import java.util.List;
  * <p>
  * Note that KatakanaEndHyphenValidator only checks the rules a) and b).
  */
-public class KatakanaEndHyphenValidator extends Validator<Sentence> {
+final public class KatakanaEndHyphenValidator extends Validator<Sentence> {
     /**
      * Default Katakana limit length without hypen.
      */
@@ -63,7 +63,7 @@ public class KatakanaEndHyphenValidator extends Validator<Sentence> {
         super();
     }
 
-    public static boolean isKatakanaEndHyphen(StringBuffer katakana) {
+    public static boolean isKatakanaEndHyphen(StringBuilder katakana) {
         return (DEFAULT_KATAKANA_LIMIT_LENGTH < katakana.length()
                 && katakana.charAt(katakana.length() - 1) == HYPHEN);
     }
@@ -71,7 +71,7 @@ public class KatakanaEndHyphenValidator extends Validator<Sentence> {
     public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> errors = new ArrayList<>();
         List<ValidationError> result;
-        StringBuffer katakana = new StringBuffer("");
+        StringBuilder katakana = new StringBuilder("");
         for (int i = 0; i < sentence.content.length(); i++) {
             char c = sentence.content.charAt(i);
             if (StringUtils.isKatakana(c) && c != KATAKANA_MIDDLE_DOT) {
@@ -92,13 +92,10 @@ public class KatakanaEndHyphenValidator extends Validator<Sentence> {
     }
 
     private List<ValidationError> checkKatakanaEndHyphen(Sentence sentence,
-                                                         StringBuffer katakana) {
+                                                         StringBuilder katakana) {
         List<ValidationError> errors = new ArrayList<>();
         if (isKatakanaEndHyphen(katakana)) {
-            errors.add(new ValidationError(
-                    this.getClass(),
-                    "Invalid Katakana end hypen found \"" + katakana.toString() + "\"",
-                    sentence));
+            errors.add(createValidationError(sentence, katakana.toString()));
         }
         return errors;
     }

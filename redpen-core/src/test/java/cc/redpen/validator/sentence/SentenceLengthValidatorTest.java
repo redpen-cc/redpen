@@ -26,16 +26,10 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-class SentenceLengthValidatorForTest extends SentenceLengthValidator {
-    protected void setLengthLimit(int maxLength) {
-        this.setMaxLength(maxLength);
-    }
-}
-
 public class SentenceLengthValidatorTest {
     @Test
     public void testWithLongSentence() {
-        SentenceLengthValidatorForTest validator = new SentenceLengthValidatorForTest();
+        SentenceLengthValidator validator = new SentenceLengthValidator();
         validator.setLengthLimit(30);
         Sentence str = new Sentence("this is a very long long long long long long"
                 + "long long long long long long sentence.", 0);
@@ -46,7 +40,7 @@ public class SentenceLengthValidatorTest {
 
     @Test
     public void testWithShortSentence() {
-        SentenceLengthValidatorForTest validator = new SentenceLengthValidatorForTest();
+        SentenceLengthValidator validator = new SentenceLengthValidator();
         validator.setLengthLimit(30);
         Sentence str = new Sentence("this is a sentence.", 0);
         List<ValidationError> error = validator.validate(str);
@@ -56,7 +50,7 @@ public class SentenceLengthValidatorTest {
 
     @Test
     public void testWithZeroLengthSentence() {
-        SentenceLengthValidatorForTest validator = new SentenceLengthValidatorForTest();
+        SentenceLengthValidator validator = new SentenceLengthValidator();
         validator.setLengthLimit(30);
         Sentence str = new Sentence("", 0);
         List<ValidationError> error = validator.validate(str);

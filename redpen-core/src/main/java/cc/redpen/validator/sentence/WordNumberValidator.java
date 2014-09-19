@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * Validate input sentences have more words than specified.
  */
-public class WordNumberValidator extends Validator<Sentence> {
+final public class WordNumberValidator extends Validator<Sentence> {
     /**
      * Default maximum number of words in one sentence.
      */
@@ -42,22 +42,40 @@ public class WordNumberValidator extends Validator<Sentence> {
 
     @Override
     public List<ValidationError> validate(Sentence sentence) {
-        List<ValidationError> result = new ArrayList<>();
+        List<ValidationError> validationErrors = new ArrayList<>();
         String content = sentence.content;
         String[] wordList = content.split(" ");
         int wordNum = wordList.length;
         if (wordNum > maxWordNumber) {
-            result.add(new ValidationError(
-                    this.getClass(),
-                    "The number of the words exceeds the maximum "
-                            + String.valueOf(wordNum), sentence
-            ));
+            validationErrors.add(createValidationError(sentence, wordNum));
         }
-        return result;
+        return validationErrors;
     }
 
     @Override
     protected void init() throws RedPenException {
         this.maxWordNumber = getConfigAttributeAsInt("max_word_num", DEFAULT_MAXIMUM_WORDS_IN_A_SENTENCE);
+    }
+
+    @Override
+    public String toString() {
+        return "WordNumberValidator{" +
+                "maxWordNumber=" + maxWordNumber +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WordNumberValidator that = (WordNumberValidator) o;
+
+        return maxWordNumber == that.maxWordNumber;
+    }
+
+    @Override
+    public int hashCode() {
+        return maxWordNumber;
     }
 }

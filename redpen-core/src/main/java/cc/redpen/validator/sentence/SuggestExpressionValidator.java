@@ -33,32 +33,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * If input sentences contain invalid expressions, this validator
  * returns the errors with corrected expressions.
  */
-public class SuggestExpressionValidator extends Validator<Sentence> {
+final public class SuggestExpressionValidator extends Validator<Sentence> {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(SuggestExpressionValidator.class);
     private Map<String, String> synonyms = new HashMap<>();
 
     public List<ValidationError> validate(Sentence line) {
-        List<ValidationError> result = new ArrayList<>();
+        List<ValidationError> validationErrors = new ArrayList<>();
         String str = line.content;
         Set<String> invalidWords = synonyms.keySet();
-        for (String w : invalidWords) {
-            if (str.contains(w)) {
-                result.add(new ValidationError(
-                        this.getClass(),
-                        "Found invalid word, \"" + w + "\". "
-                                + "Use the synonym of the word \""
-                                + synonyms.get(w) + "\" instead.", line
-                ));
-            }
-        }
-        return result;
+        validationErrors.addAll(invalidWords.stream().filter(str::contains)
+                .map(w -> createValidationError(line, w, synonyms.get(w))).collect(Collectors.toList()));
+        return validationErrors;
     }
 
     @Override
@@ -82,5 +75,28 @@ public class SuggestExpressionValidator extends Validator<Sentence> {
 
     protected void setSynonyms(Map<String, String> synonymMap) {
         this.synonyms = synonymMap;
+    }
+
+    @Override
+    public String toString() {
+        return "SuggestExpressionValidator{" +
+                "synonyms=" + synonyms +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SuggestExpressionValidator that = (SuggestExpressionValidator) o;
+
+        return !(synonyms != null ? !synonyms.equals(that.synonyms) : that.synonyms != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return synonyms != null ? synonyms.hashCode() : 0;
     }
 }

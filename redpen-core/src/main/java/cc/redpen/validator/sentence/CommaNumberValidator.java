@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * Validate the number of commas in one sentence.
  */
-public class CommaNumberValidator extends Validator<Sentence> {
+final public class CommaNumberValidator extends Validator<Sentence> {
     /**
      * Default maximum number of comma.
      */
@@ -47,7 +47,7 @@ public class CommaNumberValidator extends Validator<Sentence> {
     private String comma = DEFAULT_COMMA;
 
     public List<ValidationError> validate(Sentence line) {
-        List<ValidationError> result = new ArrayList<>();
+        List<ValidationError> validationErrors = new ArrayList<>();
         String content = line.content;
         int commaCount = 0;
         int position = 0;
@@ -57,12 +57,9 @@ public class CommaNumberValidator extends Validator<Sentence> {
             content = content.substring(position + 1, content.length());
         }
         if (maxCommaNum < commaCount) {
-            result.add(new ValidationError(
-                    this.getClass(),
-                    "The number of comma is exceeds the maximum \""
-                            + String.valueOf(commaCount) + "\".", line));
+            validationErrors.add(createValidationError(line, commaCount));
         }
-        return result;
+        return validationErrors;
     }
 
     @Override
@@ -75,5 +72,31 @@ public class CommaNumberValidator extends Validator<Sentence> {
             this.comma = getSymbolTable().getSymbol("COMMA").getValue();
             LOG.info("comma is set to \"" + this.comma + "\"");
         }
+    }
+
+    @Override
+    public String toString() {
+        return "CommaNumberValidator{" +
+                "maxCommaNum=" + maxCommaNum +
+                ", comma='" + comma + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CommaNumberValidator that = (CommaNumberValidator) o;
+
+        return maxCommaNum == that.maxCommaNum && !(comma != null ? !comma.equals(that.comma) : that.comma != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = maxCommaNum;
+        result = 31 * result + (comma != null ? comma.hashCode() : 0);
+        return result;
     }
 }
