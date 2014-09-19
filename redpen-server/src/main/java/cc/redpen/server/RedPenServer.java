@@ -32,22 +32,15 @@ import java.io.InputStream;
  */
 public class RedPenServer {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(RedPenServer.class);
-    static String DEFAULT_INTERNAL_CONFIG_PATH = "/conf/redpen-conf.xml";
-    private static RedPenServer redPenServer = null;
+    private static final Logger LOG = LoggerFactory.getLogger(RedPenServer.class);
 
     private RedPen redPen;
 
     private Configuration config;
 
-    private RedPenServer() throws RedPenException {
+    public RedPenServer(String confPath) throws RedPenException {
         ConfigurationLoader configLoader = new ConfigurationLoader();
-        String confPath = System.getProperty("redpen.conf.path", DEFAULT_INTERNAL_CONFIG_PATH);
-
-        InputStream inputConfigStream = getClass()
-                .getClassLoader()
-                .getResourceAsStream(confPath);
+        InputStream inputConfigStream = RedPenServer.class.getResourceAsStream(confPath);
 
         if (inputConfigStream == null) {
             LOG.info("Loading config from specified config file: " +
@@ -61,19 +54,6 @@ public class RedPenServer {
         redPen = new RedPen.Builder()
                 .setConfiguration(config)
                 .build();
-    }
-
-    public static RedPenServer getInstance() throws
-            RedPenException {
-        if (redPenServer == null) {
-            initialize();
-        }
-        return redPenServer;
-    }
-
-    public static synchronized void initialize() throws RedPenException {
-        LOG.info("Initializing Document Validator");
-        redPenServer = new RedPenServer();
     }
 
     public RedPen getRedPen() {

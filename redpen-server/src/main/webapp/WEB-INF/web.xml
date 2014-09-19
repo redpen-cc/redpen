@@ -10,12 +10,6 @@
         <param-value>/conf/redpen-conf.xml</param-value>
     </context-param>
 
-    <listener>
-        <listener-class>
-            cc.redpen.server.RedPenInitializer
-        </listener-class>
-    </listener>
-
     <!-- Wink SDK servlet configuration. This servlet handles HTTP requests of
     SDK web service on application server. -->
     <servlet>
