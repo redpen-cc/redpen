@@ -1,6 +1,5 @@
 package cc.redpen.server.api;
 
-import cc.redpen.server.RedPenInitializer;
 import org.apache.wink.common.http.HttpStatus;
 import org.apache.wink.common.internal.application.ApplicationFileLoader;
 import org.apache.wink.server.internal.servlet.MockServletInvocationTest;
@@ -10,15 +9,11 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 import javax.ws.rs.core.MediaType;
 import java.io.FileNotFoundException;
 import java.util.Set;
 
 public class RedPenResourceTest extends MockServletInvocationTest {
-
-    private ServletContextListener listner = new RedPenInitializer();
 
     @Override
     protected void setUp() throws Exception {
@@ -47,7 +42,6 @@ public class RedPenResourceTest extends MockServletInvocationTest {
         request.setContent(("textarea=foobar").getBytes());
         MockServletContext context = new MockServletContext();
         context.addInitParameter("redpen.conf.path", "conf/redpen-conf.xml");
-        listner.contextInitialized(new ServletContextEvent(context));
         MockHttpServletResponse response = invoke(request);
 
         assertEquals("HTTP status", HttpStatus.OK.getCode(), response.getStatus());
@@ -61,7 +55,6 @@ public class RedPenResourceTest extends MockServletInvocationTest {
         request.setContent(("textarea=foobar.foobar").getBytes()); //NOTE: need space between periods.
         MockServletContext context = new MockServletContext();
         context.addInitParameter("redpen.conf.path", "conf/redpen-conf.xml");
-        listner.contextInitialized(new ServletContextEvent(context));
         MockHttpServletResponse response = invoke(request);
 
         assertEquals("HTTP status", HttpStatus.OK.getCode(), response.getStatus());
@@ -76,7 +69,6 @@ public class RedPenResourceTest extends MockServletInvocationTest {
         request.setContent(("").getBytes()); //NOTE: need space between periods.
         MockServletContext context = new MockServletContext();
         context.addInitParameter("redpen.conf.path", "conf/redpen-conf.xml");
-        listner.contextInitialized(new ServletContextEvent(context));
         MockHttpServletResponse response = invoke(request);
 
         assertEquals("HTTP status", HttpStatus.OK.getCode(), response.getStatus());
@@ -88,7 +80,6 @@ public class RedPenResourceTest extends MockServletInvocationTest {
         request.setContent(("textarea=").getBytes()); //NOTE: need space between periods.
         MockServletContext context = new MockServletContext();
         context.addInitParameter("redpen.conf.path", "conf/redpen-conf.xml");
-        listner.contextInitialized(new ServletContextEvent(context));
         MockHttpServletResponse response = invoke(request);
 
         assertEquals("HTTP status", HttpStatus.OK.getCode(), response.getStatus());

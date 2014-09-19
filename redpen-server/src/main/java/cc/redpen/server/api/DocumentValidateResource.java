@@ -31,7 +31,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import javax.ws.rs.*;
+import javax.servlet.ServletContext;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
@@ -47,7 +53,33 @@ public class DocumentValidateResource {
     private static final Logger LOG = LogManager.getLogger(
             DocumentValidateResource.class
     );
+    private final static String DEFAULT_INTERNAL_CONFIG_PATH = "/conf/redpen-conf.xml";
+    @Context
+    private ServletContext context;
+    private RedPenServer server = null;
 
+    private RedPenServer getServer() {
+        if (server == null) {
+            LOG.info("Starting Document Validator Server.");
+            String configPath = null;
+            if (context != null) {
+                configPath = context.getInitParameter("redpen.conf.path");
+            }
+            // if config path is not set, fallback to default config path
+            if (configPath == null) {
+                configPath = DEFAULT_INTERNAL_CONFIG_PATH;
+            }
+
+            LOG.info("Config Path is set to " + "\"" + configPath + "\"");
+            try {
+                server = new RedPenServer(configPath);
+                LOG.info("Document Validator Server is running.");
+            } catch (RedPenException e) {
+                LOG.error("Could not initialize Document Validator Server: ", e);
+            }
+        }
+        return server;
+    }
     @Path("/validate")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -55,7 +87,7 @@ public class DocumentValidateResource {
             JSONException, RedPenException, UnsupportedEncodingException {
 
         LOG.info("Validating document");
-        RedPenServer server = RedPenServer.getInstance();
+        RedPenServer server = getServer();
         JSONObject json = new JSONObject();
 
         json.put("document", document);
