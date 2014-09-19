@@ -18,13 +18,13 @@
 
 package cc.redpen.server.api;
 
+import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
 import cc.redpen.ValidationError;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.parser.DocumentParserFactory;
 import cc.redpen.parser.Parser;
-import cc.redpen.server.RedPenServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
@@ -56,10 +56,10 @@ public class DocumentValidateResource {
     private final static String DEFAULT_INTERNAL_CONFIG_PATH = "/conf/redpen-conf.xml";
     @Context
     private ServletContext context;
-    private RedPenServer server = null;
+    private RedPen redPen = null;
 
-    private RedPenServer getServer() {
-        if (server == null) {
+    private RedPen getRedPen() {
+        if (redPen == null) {
             LOG.info("Starting Document Validator Server.");
             String configPath = null;
             if (context != null) {
@@ -72,13 +72,14 @@ public class DocumentValidateResource {
 
             LOG.info("Config Path is set to " + "\"" + configPath + "\"");
             try {
-                server = new RedPenServer(configPath);
+                redPen = new RedPen.Builder().setConfigPath(configPath).build();
                 LOG.info("Document Validator Server is running.");
             } catch (RedPenException e) {
-                LOG.error("Could not initialize Document Validator Server: ", e);
+                LOG.error("Unable to initialize RedPen", e);
+                throw new ExceptionInInitializerError(e);
             }
         }
-        return server;
+        return redPen;
     }
     @Path("/validate")
     @POST
@@ -87,20 +88,20 @@ public class DocumentValidateResource {
             JSONException, RedPenException, UnsupportedEncodingException {
 
         LOG.info("Validating document");
-        RedPenServer server = getServer();
+        RedPen server = getRedPen();
         JSONObject json = new JSONObject();
 
         json.put("document", document);
 
         Parser parser = DocumentParserFactory.generate(
-                Parser.Type.PLAIN, server.getConfig(), new DocumentCollection.Builder());
+                Parser.Type.PLAIN, server.getConfiguration(), new DocumentCollection.Builder());
         Document fileContent = parser.generateDocument(new
                 ByteArrayInputStream(document.getBytes("UTF-8")));
 
         DocumentCollection d = new DocumentCollection();
         d.addDocument(fileContent);
 
-        List<ValidationError> errors = server.getRedPen().check(d);
+        List<ValidationError> errors = server.check(d);
 
         JSONArray jsonErrors = new JSONArray();
 
