@@ -4,3 +4,5 @@
 * Jun Ohtani <johtani _at_ gmail.com>
 * Christian Moen <cm _at_atilika.com>
 * Gaute Lambertsen <gl _at_ atilika.com>
+* Yusuke Yamamoto <yusuke at mac.com>
+* Shintaro Katafuchi <hot.chemistry21 at gmail.com>
