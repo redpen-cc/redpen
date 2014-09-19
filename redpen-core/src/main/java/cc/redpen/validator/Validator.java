@@ -27,7 +27,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 /**
  * Validate input document.
@@ -35,6 +39,8 @@ import java.util.*;
 public abstract class Validator<E> {
     private static final Logger LOG =
             LoggerFactory.getLogger(Validator.class);
+    private final static ResourceBundle.Control fallbackControl =
+            ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_DEFAULT);
     private Optional<ResourceBundle> errorMessages = Optional.empty();
     private ValidatorConfiguration config;
     private SymbolTable symbolTable;
@@ -42,6 +48,7 @@ public abstract class Validator<E> {
     public Validator() {
         setLocale(Locale.getDefault());
     }
+
     /**
      * validate the input document and returns the invalid points.
      *
@@ -58,7 +65,9 @@ public abstract class Validator<E> {
 
     void setLocale(Locale locale) {
         try {
-            errorMessages = Optional.ofNullable(ResourceBundle.getBundle(this.getClass().getPackage().getName() + ".error-messages", locale));
+            // getPackage() would return null for default package
+            String packageName = this.getClass().getPackage() != null ? this.getClass().getPackage().getName() : "";
+            errorMessages = Optional.ofNullable(ResourceBundle.getBundle(packageName + ".error-messages", locale, fallbackControl));
         } catch (MissingResourceException ignore) {
         }
 
@@ -113,12 +122,48 @@ public abstract class Validator<E> {
      * create a ValidationError for the specified position with default error message
      *
      * @param sentenceWithError sentence
-     * @param args objects to format
+     * @param args              objects to format
      * @return ValidationError with localized message
      */
     protected ValidationError createValidationError(Sentence sentenceWithError, Object... args) {
         return new ValidationError(this.getClass(), getLocalizedErrorMessage(args), sentenceWithError);
 
+    }
+
+    /**
+     * create a ValidationError for the specified position with specified message key
+     *
+     * @param messageKey        messageKey
+     * @param sentenceWithError sentence
+     * @param args              objects to format
+     * @return ValidationError with localized message
+     */
+    protected ValidationError createValidationError(String messageKey, Sentence sentenceWithError, Object... args) {
+        return new ValidationError(this.getClass(), getLocalizedErrorMessage(messageKey, args), sentenceWithError);
+
+    }
+
+    /**
+     * create a ValidationError for the specified position with default error message
+     *
+     * @param lineNumber line number
+     * @param args       objects to format
+     * @return ValidationError with localized message
+     */
+    protected ValidationError createValidationError(int lineNumber, Object... args) {
+        return new ValidationError(this.getClass(), getLocalizedErrorMessage(args), lineNumber);
+    }
+
+    /**
+     * create a ValidationError for the specified position with specified message key
+     *
+     * @param messageKey messageKey
+     * @param lineNumber line number
+     * @param args       objects to format
+     * @return ValidationError with localized message
+     */
+    protected ValidationError createValidationError(String messageKey, int lineNumber, Object... args) {
+        return new ValidationError(this.getClass(), getLocalizedErrorMessage(messageKey, args), lineNumber);
     }
 
     /**
