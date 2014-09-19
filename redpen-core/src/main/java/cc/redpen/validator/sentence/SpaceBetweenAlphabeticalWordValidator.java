@@ -16,18 +16,12 @@ public class SpaceBetweenAlphabeticalWordValidator extends Validator<Sentence> {
             if (!StringUtils.isBasicLatin(prevCharacter)
                     && StringUtils.isBasicLatin(character)
                     && character != ' ') {
-                results.add(new ValidationError(
-                        this.getClass(),
-                        "Space does not exit before alphabetical word.",
-                        block));
+                results.add(createValidationError(block, "before"));
             } else if (
                     !StringUtils.isBasicLatin(character)
                             && StringUtils.isBasicLatin(prevCharacter)
                             && prevCharacter != ' ') {
-                results.add(new ValidationError(
-                        this.getClass(),
-                        "Space does not exit after alphabetical word.",
-                        block));
+                results.add(createValidationError(block, "after"));
             }
             prevCharacter = character;
         }
