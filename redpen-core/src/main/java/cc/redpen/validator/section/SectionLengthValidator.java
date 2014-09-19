@@ -50,13 +50,7 @@ public class SectionLengthValidator extends Validator<Section> {
         }
 
         if (sectionCharNumber > maxSectionCharNumber) {
-            ValidationError error = new ValidationError(
-                    this.getClass(),
-                    "The number of the character in the section exceeds the maximum \""
-                            + String.valueOf(sectionCharNumber) + "\".",
-                    section.getJoinedHeaderContents()
-            );
-            validationErrors.add(error);
+            validationErrors.add(createValidationError(section.getJoinedHeaderContents(), sectionCharNumber));
         }
         return validationErrors;
     }
