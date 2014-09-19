@@ -32,27 +32,23 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Validate input sentences contain invalid expression.
  */
-public class InvalidExpressionValidator extends Validator<Sentence> {
+final public class InvalidExpressionValidator extends Validator<Sentence> {
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/invalid-expression";
     private static final Logger LOG =
             LoggerFactory.getLogger(InvalidExpressionValidator.class);
     private Set<String> invalidExpressions = new HashSet<>();
 
     public List<ValidationError> validate(Sentence line) {
-        List<ValidationError> result = new ArrayList<>();
+        List<ValidationError> validationErrors = new ArrayList<>();
         String str = line.content;
-        for (String w : invalidExpressions) {
-            if (str.contains(w)) {
-                result.add(new ValidationError(
-                        this.getClass(),
-                        "Found invalid expression: \"" + w + "\"", line));
-            }
-        }
-        return result;
+        validationErrors.addAll(invalidExpressions.stream().filter(str::contains)
+                .map(w -> createValidationError(line, w)).collect(Collectors.toList()));
+        return validationErrors;
     }
 
     /**
@@ -96,5 +92,28 @@ public class InvalidExpressionValidator extends Validator<Sentence> {
         });
 
         invalidExpressions = extractor.get();
+    }
+
+    @Override
+    public String toString() {
+        return "InvalidExpressionValidator{" +
+                "invalidExpressions=" + invalidExpressions +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        InvalidExpressionValidator that = (InvalidExpressionValidator) o;
+
+        return !(invalidExpressions != null ? !invalidExpressions.equals(that.invalidExpressions) : that.invalidExpressions != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return invalidExpressions != null ? invalidExpressions.hashCode() : 0;
     }
 }

@@ -29,7 +29,7 @@ import java.util.Set;
 /**
  * Validate if there is invalid characters in sentences.
  */
-public class InvalidSymbolValidator extends Validator<Sentence> {
+final public class InvalidSymbolValidator extends Validator<Sentence> {
 
     public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> errors = new ArrayList<>();
@@ -49,10 +49,7 @@ public class InvalidSymbolValidator extends Validator<Sentence> {
         List<String> invalidCharsList = symbol.getInvalidSymbols();
         for (String invalidChar : invalidCharsList) {
             if (sentenceStr.contains(invalidChar)) {
-                return new ValidationError(
-                        this.getClass(),
-                        "Invalid symbol found: \"" + invalidChar + "\"",
-                        sentence);
+                return createValidationError(sentence, invalidChar);
             }
         }
         return null;

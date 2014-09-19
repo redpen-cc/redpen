@@ -15,7 +15,7 @@ import java.util.*;
 /**
  * Check if the input sentence start with a capital letter.
  */
-public class StartWithCapitalLetterValidator extends Validator<Sentence> {
+final public class StartWithCapitalLetterValidator extends Validator<Sentence> {
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/capital-letter-exception-list";
     private Set<String> whiteList;
     private static final Logger LOG =
@@ -31,12 +31,12 @@ public class StartWithCapitalLetterValidator extends Validator<Sentence> {
 
     @Override
     public List<ValidationError> validate(Sentence block) {
-        List<ValidationError> results = new ArrayList<>();
+        List<ValidationError> validationErrors = new ArrayList<>();
         String content = block.content;
         String[] words = content.split(" ");
 
         if (this.whiteList.contains(words[0])) {
-            return results;
+            return validationErrors;
         }
 
         char headChar = '≡';
@@ -47,18 +47,14 @@ public class StartWithCapitalLetterValidator extends Validator<Sentence> {
         }
 
         if (headChar == '≡') {
-            return results;
+            return validationErrors;
         }
 
         headChar = content.charAt(0);
         if (Character.isLowerCase(headChar)) {
-            results.add(new ValidationError(
-                    this.getClass(),
-                    "Sentence start with a small character",
-                    block
-            ));
+            validationErrors.add(createValidationError(block, headChar));
         }
-        return results;
+        return validationErrors;
     }
 
     @Override
@@ -89,5 +85,28 @@ public class StartWithCapitalLetterValidator extends Validator<Sentence> {
         });
 
         whiteList = extractor.get();
+    }
+
+    @Override
+    public String toString() {
+        return "StartWithCapitalLetterValidator{" +
+                "whiteList=" + whiteList +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        StartWithCapitalLetterValidator that = (StartWithCapitalLetterValidator) o;
+
+        return !(whiteList != null ? !whiteList.equals(that.whiteList) : that.whiteList != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return whiteList != null ? whiteList.hashCode() : 0;
     }
 }

@@ -12,7 +12,7 @@ import java.util.List;
  * This validator check if the style end of sentence is American style.
  * @see <a herf="http://grammar.ccc.commnet.edu/grammar/marks/quotation.htm">Description of quotation marks</a>
  */
-public class EndOfSentenceValidator extends Validator<Sentence> {
+final public class EndOfSentenceValidator extends Validator<Sentence> {
 
     private char rightSingleQuotation = '\'';
     private char rightDoubleQuotation = '"';
@@ -22,10 +22,10 @@ public class EndOfSentenceValidator extends Validator<Sentence> {
 
     @Override
     public List<ValidationError> validate(Sentence block) {
-        List<ValidationError> errors = new ArrayList<>();
+        List<ValidationError> validationErrors = new ArrayList<>();
         String content = block.content;
         if (content.length() < 2) {
-            return errors;
+            return validationErrors;
         }
         Character lastCharacter = content.charAt(content.length() - 1);
         Character secondCharacter = content.charAt(content.length() - 2);
@@ -34,12 +34,10 @@ public class EndOfSentenceValidator extends Validator<Sentence> {
                 || lastCharacter == exclamationMark) {
             if (secondCharacter == rightSingleQuotation
                     || secondCharacter == rightDoubleQuotation) {
-                errors.add(new ValidationError(
-                        this.getClass(),
-                        "Invalid end of sentence",block));
+                validationErrors.add(createValidationError(block, secondCharacter+lastCharacter));
             }
         }
-        return errors;
+        return validationErrors;
     }
 
     @Override
@@ -49,5 +47,42 @@ public class EndOfSentenceValidator extends Validator<Sentence> {
         rightSingleQuotation = getSymbolTable().getSymbol("RIGHT_DOUBLE_QUOTATION_MARK").getValue().charAt(0);
         questionMark = getSymbolTable().getSymbol("QUESTION_MARK").getValue().charAt(0);
         exclamationMark = getSymbolTable().getSymbol("EXCLAMATION_MARK").getValue().charAt(0);
+    }
+
+    @Override
+    public String toString() {
+        return "EndOfSentenceValidator{" +
+                "rightSingleQuotation=" + rightSingleQuotation +
+                ", rightDoubleQuotation=" + rightDoubleQuotation +
+                ", period=" + period +
+                ", questionMark=" + questionMark +
+                ", exclamationMark=" + exclamationMark +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        EndOfSentenceValidator that = (EndOfSentenceValidator) o;
+
+        if (exclamationMark != that.exclamationMark) return false;
+        if (period != that.period) return false;
+        if (questionMark != that.questionMark) return false;
+        if (rightDoubleQuotation != that.rightDoubleQuotation) return false;
+        if (rightSingleQuotation != that.rightSingleQuotation) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) rightSingleQuotation;
+        result = 31 * result + (int) rightDoubleQuotation;
+        result = 31 * result + (int) period;
+        result = 31 * result + (int) questionMark;
+        result = 31 * result + (int) exclamationMark;
+        return result;
     }
 }

@@ -19,6 +19,7 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.ValidationError;
 import cc.redpen.model.Sentence;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -29,52 +30,47 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 
-class SuggestExpressionValidatorForTest extends SuggestExpressionValidator {
-    void loadSynonyms() {
+public class SuggestExpressionValidatorTest {
+
+    private SuggestExpressionValidator suggestExpressionValidator;
+
+    @Before
+    public void init() {
+        suggestExpressionValidator = new SuggestExpressionValidator();
         Map<String, String> synonymSamples = new HashMap<>();
         synonymSamples.put("like", "such as");
         synonymSamples.put("info", "infomation");
-        this.setSynonyms(synonymSamples);
+        suggestExpressionValidator.setSynonyms(synonymSamples);
     }
-}
 
-public class SuggestExpressionValidatorTest {
     @Test
     public void testSynonym() {
-        SuggestExpressionValidatorForTest synonymValidator = new SuggestExpressionValidatorForTest();
-        synonymValidator.loadSynonyms();
         Sentence str = new Sentence("it like a piece of a cake.", 0);
-        List<ValidationError> error = synonymValidator.validate(str);
+        List<ValidationError> error = suggestExpressionValidator.validate(str);
         assertNotNull(error);
         assertEquals(1, error.size());
     }
 
     @Test
     public void testWitoutSynonym() {
-        SuggestExpressionValidatorForTest synonymValidator = new SuggestExpressionValidatorForTest();
-        synonymValidator.loadSynonyms();
         Sentence str = new Sentence("it love a piece of a cake.", 0);
-        List<ValidationError> error = synonymValidator.validate(str);
+        List<ValidationError> error = suggestExpressionValidator.validate(str);
         assertNotNull(error);
         assertEquals(0, error.size());
     }
 
     @Test
     public void testWithMultipleSynonyms() {
-        SuggestExpressionValidatorForTest synonymValidator = new SuggestExpressionValidatorForTest();
-        synonymValidator.loadSynonyms();
         Sentence str = new Sentence("it like a the info.", 0);
-        List<ValidationError> error = synonymValidator.validate(str);
+        List<ValidationError> error = suggestExpressionValidator.validate(str);
         assertNotNull(error);
         assertEquals(2, error.size());
     }
 
     @Test
     public void testWitoutZeroLengthSentence() {
-        SuggestExpressionValidatorForTest synonymValidator = new SuggestExpressionValidatorForTest();
-        synonymValidator.loadSynonyms();
         Sentence str = new Sentence("", 0);
-        List<ValidationError> error = synonymValidator.validate(str);
+        List<ValidationError> error = suggestExpressionValidator.validate(str);
         assertNotNull(error);
         assertEquals(0, error.size());
     }

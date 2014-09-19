@@ -65,7 +65,7 @@ public class SpellingValidator extends Validator<Sentence> {
 
     @Override
     public List<ValidationError> validate(Sentence line) {
-        List<ValidationError> result = new ArrayList<>();
+        List<ValidationError> validationErrors = new ArrayList<>();
         String str = normalize(line);
         String[] words = str.split(" ");
         for (String word : words) {
@@ -74,12 +74,10 @@ public class SpellingValidator extends Validator<Sentence> {
             }
 
             if (!this.validWords.contains(word)) {
-                result.add(new ValidationError(
-                        this.getClass(),
-                        "Found misspelled word: \"" + word + "\"", line));
+                validationErrors.add(createValidationError(line));
             }
         }
-        return result;
+        return validationErrors;
     }
 
     private String normalize(Sentence line) {
@@ -99,5 +97,28 @@ public class SpellingValidator extends Validator<Sentence> {
      */
     public void addWord(String word) {
         validWords.add(word);
+    }
+
+    @Override
+    public String toString() {
+        return "SpellingValidator{" +
+                "validWords=" + validWords +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SpellingValidator that = (SpellingValidator) o;
+
+        return !(validWords != null ? !validWords.equals(that.validWords) : that.validWords != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return validWords != null ? validWords.hashCode() : 0;
     }
 }

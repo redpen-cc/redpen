@@ -31,7 +31,7 @@ import java.util.Set;
  * Validate English contraction in the input document.
  * NOTE: this validator works only for English documents.
  */
-public class ContractionValidator extends Validator<Sentence> implements PreProcessor<Sentence> {
+final public class ContractionValidator extends Validator<Sentence> implements PreProcessor<Sentence> {
     private int foundContractionNum = 0;
     private int foundNonContractionNum = 0;
 
@@ -124,18 +124,15 @@ public class ContractionValidator extends Validator<Sentence> implements PreProc
 
     @Override
     public List<ValidationError> validate(Sentence block) {
-        List<ValidationError> errors = new ArrayList<>();
+        List<ValidationError> validationErrors = new ArrayList<>();
         String [] words = block.content.toLowerCase().split(" ");
         for (String word : words) {
             if (foundNonContractionNum >= foundContractionNum
                     && contractions.contains(word)) {
-                errors.add(new ValidationError(
-                        this.getClass(),
-                        "Found contraction: \"" + word + "\"",
-                        block));
+                validationErrors.add(createValidationError(block, word));
             }
         }
-        return errors;
+        return validationErrors;
     }
 
     @Override
@@ -148,5 +145,31 @@ public class ContractionValidator extends Validator<Sentence> implements PreProc
                 foundNonContractionNum += 1;
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ContractionValidator{" +
+                "foundContractionNum=" + foundContractionNum +
+                ", foundNonContractionNum=" + foundNonContractionNum +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ContractionValidator that = (ContractionValidator) o;
+
+        return foundContractionNum == that.foundContractionNum && foundNonContractionNum == that.foundNonContractionNum;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = foundContractionNum;
+        result = 31 * result + foundNonContractionNum;
+        return result;
     }
 }
