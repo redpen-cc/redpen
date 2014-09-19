@@ -23,8 +23,6 @@ import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.Validator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,14 +30,12 @@ import java.util.List;
 /**
  * Validate whether paragraph start as specified.
  */
-public class ParagraphStartWithValidator extends Validator<Section> {
+final public class ParagraphStartWithValidator extends Validator<Section> {
     /**
      * Default matter paragraph start with.
      */
     @SuppressWarnings("WeakerAccess")
     public static final String DEFAULT_PARAGRAPH_START_WITH = " ";
-    private static final Logger LOG =
-            LoggerFactory.getLogger(ParagraphStartWithValidator.class);
     private String beginningOfParagraph = DEFAULT_PARAGRAPH_START_WITH;
 
     @Override
@@ -51,10 +47,8 @@ public class ParagraphStartWithValidator extends Validator<Section> {
             }
             Sentence firstSentence = currentParagraph.getSentence(0);
             if (firstSentence.content.indexOf(this.beginningOfParagraph) != 0) {
-                validationErrors.add(new ValidationError(
-                        this.getClass(),
-                        "Found invalid beginning of paragraph: \"",
-                        firstSentence));
+                validationErrors.add(createValidationError(section.getJoinedHeaderContents(),
+                        firstSentence.content.charAt(0)));
             }
         }
 
@@ -64,5 +58,21 @@ public class ParagraphStartWithValidator extends Validator<Section> {
     @Override
     protected void init() throws RedPenException {
         this.beginningOfParagraph = getConfigAttribute("paragraph_start_with", DEFAULT_PARAGRAPH_START_WITH);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ParagraphStartWithValidator that = (ParagraphStartWithValidator) o;
+
+        return !(beginningOfParagraph != null ? !beginningOfParagraph.equals(that.beginningOfParagraph) : that.beginningOfParagraph != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return beginningOfParagraph != null ? beginningOfParagraph.hashCode() : 0;
     }
 }

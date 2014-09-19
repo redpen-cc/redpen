@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * Validate the length of one section.
  */
-public class SectionLengthValidator extends Validator<Section> {
+final public class SectionLengthValidator extends Validator<Section> {
     private static final int DEFAULT_MAXIMUM_CHAR_NUMBER_IN_A_SECTION = 1000;
     private static final Logger LOG =
             LoggerFactory.getLogger(SectionLengthValidator.class);
@@ -64,4 +64,27 @@ public class SectionLengthValidator extends Validator<Section> {
         this.maxSectionCharNumber = max;
     }
 
+    @Override
+    public String toString() {
+        return "SectionLengthValidator{" +
+                "maxSectionCharNumber=" + maxSectionCharNumber +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SectionLengthValidator that = (SectionLengthValidator) o;
+
+        if (maxSectionCharNumber != that.maxSectionCharNumber) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return maxSectionCharNumber;
+    }
 }

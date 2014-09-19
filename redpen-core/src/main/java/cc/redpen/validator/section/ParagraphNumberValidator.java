@@ -29,7 +29,7 @@ import java.util.List;
  * Validate paragraph number. If a section has paragraphs more than specified,
  * This validator reports it.
  */
-public class ParagraphNumberValidator extends Validator<Section> {
+final public class ParagraphNumberValidator extends Validator<Section> {
     /**
      * Default maximum number of paragraphs in a section.
      */
@@ -42,11 +42,7 @@ public class ParagraphNumberValidator extends Validator<Section> {
         List<ValidationError> validationErrors = new ArrayList<>();
         int paragraphNumber = section.getNumberOfParagraphs();
         if (maxParagraphs < paragraphNumber) {
-            validationErrors.add(new ValidationError(
-                    this.getClass(),
-                    "The number of the paragraphs exceeds the maximum "
-                            + String.valueOf(paragraphNumber), section.getHeaderContent(0)));
-            return validationErrors;
+            validationErrors.add(createValidationError(section.getJoinedHeaderContents(), paragraphNumber));
         }
         return validationErrors;
     }
@@ -54,6 +50,28 @@ public class ParagraphNumberValidator extends Validator<Section> {
     @Override
     protected void init() throws RedPenException {
         this.maxParagraphs = getConfigAttributeAsInt("max_paragraph_num", DEFAULT_MAX_PARAGRAPHS_IN_A_SECTION);
+    }
+
+    @Override
+    public String toString() {
+        return "ParagraphNumberValidator{" +
+                "maxParagraphs=" + maxParagraphs +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ParagraphNumberValidator that = (ParagraphNumberValidator) o;
+
+        return maxParagraphs == that.maxParagraphs;
+    }
+
+    @Override
+    public int hashCode() {
+        return maxParagraphs;
     }
 
     protected void setMaxParagraphNumber(int max) {
