@@ -21,14 +21,21 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.distributor.DefaultResultDistributor;
 import cc.redpen.distributor.ResultDistributor;
-import cc.redpen.distributor.ResultDistributorFactory;
-import cc.redpen.formatter.Formatter;
-import cc.redpen.model.*;
+import cc.redpen.model.Document;
+import cc.redpen.model.DocumentCollection;
+import cc.redpen.model.ListBlock;
+import cc.redpen.model.ListElement;
+import cc.redpen.model.Paragraph;
+import cc.redpen.model.Section;
+import cc.redpen.model.Sentence;
 import cc.redpen.validator.PreProcessor;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import cc.redpen.validator.ValidatorFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -39,33 +46,18 @@ import java.util.List;
  * Validate all input files using appended Validators.
  */
 public class RedPen extends Validator<Document> {
+    private static final Logger LOG = LoggerFactory.getLogger(RedPen.class);
 
-    private final List<Validator<Document>> validators;
-    private final List<Validator<Section>> sectionValidators;
-    private final List<Validator<Sentence>> sentenceValidators;
-    private ResultDistributor distributor;
+    private final List<Validator<Document>> validators = new ArrayList<>();
+    private final List<Validator<Section>> sectionValidators = new ArrayList<>();
+    private final List<Validator<Sentence>> sentenceValidators = new ArrayList<>();
+    private final ResultDistributor distributor;
+    private final Configuration configuration;
 
-    private RedPen(Builder builder) throws RedPenException {
-        Configuration configuration = builder.configuration;
-        this.distributor = builder.distributor;
-
-        validators = new ArrayList<>();
-        sectionValidators = new ArrayList<>();
-        sentenceValidators = new ArrayList<>();
-
-        loadValidators(configuration);
-    }
-
-    /**
-     * Constructor only for testing.
-     */
-    protected RedPen() {
-        this.distributor = ResultDistributorFactory
-                .createDistributor(Formatter.Type.PLAIN,
-                        System.out);
-        this.validators = new ArrayList<>();
-        sectionValidators = new ArrayList<>();
-        sentenceValidators = new ArrayList<>();
+    private RedPen(Configuration configuration, ResultDistributor distributor) throws RedPenException {
+        this.configuration = configuration;
+        this.distributor = distributor;
+        loadValidators();
     }
 
     static Type getParameterizedClass(Object obj) {
@@ -89,18 +81,21 @@ public class RedPen extends Validator<Document> {
         return parameterizedType.getActualTypeArguments()[0];
     }
 
+    public Configuration getConfiguration() {
+        return this.configuration;
+    }
+
     /**
      * Load validators written in the configuration file.
      */
     @SuppressWarnings("unchecked")
-    private void loadValidators(Configuration configuration)
+    private void loadValidators()
             throws RedPenException {
         if (configuration == null) {
             throw new IllegalStateException("Configuration object is null");
         }
 
-        for (ValidatorConfiguration config : configuration
-                .getValidatorConfigs()) {
+        for (ValidatorConfiguration config : configuration.getValidatorConfigs()) {
 
             Validator<?> validator = ValidatorFactory.getInstance(
                     config, configuration.getSymbolTable());
@@ -340,13 +335,30 @@ public class RedPen extends Validator<Document> {
             return this;
         }
 
+        public Builder setConfigPath(String configPath) throws RedPenException {
+            ConfigurationLoader configLoader = new ConfigurationLoader();
+            InputStream inputConfigStream = RedPen.class.getResourceAsStream(configPath);
+
+            if (inputConfigStream == null) {
+                LOG.info("Loading config from specified config file: \"{}\"", configPath);
+                configuration = configLoader.loadConfiguration(configPath);
+            } else {
+                LOG.info("Loading config from default configuration");
+                configuration = configLoader.loadConfiguration(inputConfigStream);
+            }
+            return this;
+        }
+
         public Builder setResultDistributor(ResultDistributor distributor) {
             this.distributor = distributor;
             return this;
         }
 
         public RedPen build() throws RedPenException {
-            return new RedPen(this);
+            if (configuration == null) {
+                throw new IllegalStateException("Configuration not set.");
+            }
+            return new RedPen(configuration, distributor);
         }
     }
 }
