@@ -18,12 +18,12 @@
 package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
-import cc.redpen.ValidationError;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.LevenshteinDistance;
 import cc.redpen.util.ResourceLoader;
 import cc.redpen.util.StringUtils;
 import cc.redpen.util.WordListExtractor;
+import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,6 +66,11 @@ final public class KatakanaSpellCheckValidator extends Validator<Sentence> {
      */
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/katakana";
     /**
+     * Logger
+     */
+    private static final Logger LOG =
+            LoggerFactory.getLogger(KatakanaSpellCheckValidator.class);
+    /**
      * Katakana word dic with line number.
      */
     private HashMap<String, Integer> dic = new HashMap<>();
@@ -73,11 +78,6 @@ final public class KatakanaSpellCheckValidator extends Validator<Sentence> {
      * Exception word list.
      */
     private Set<String> exceptions = new HashSet<>();
-    /**
-     * Logger
-     */
-    private static final Logger LOG =
-            LoggerFactory.getLogger(KatakanaSpellCheckValidator.class);
 
     public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> errors = new ArrayList<>();

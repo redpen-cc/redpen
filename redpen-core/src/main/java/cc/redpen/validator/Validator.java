@@ -19,7 +19,6 @@ package cc.redpen.validator;
 
 
 import cc.redpen.RedPenException;
-import cc.redpen.ValidationError;
 import cc.redpen.config.SymbolTable;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
@@ -27,11 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.MessageFormat;
-import java.util.List;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Validate input document.
@@ -126,8 +121,7 @@ public abstract class Validator<E> {
      * @return ValidationError with localized message
      */
     protected ValidationError createValidationError(Sentence sentenceWithError, Object... args) {
-        return new ValidationError(this.getClass(), getLocalizedErrorMessage(args), sentenceWithError);
-
+        return new ValidationError(this.getClass(), getLocalizedErrorMessage(Optional.empty(), args), sentenceWithError);
     }
 
     /**
@@ -139,8 +133,7 @@ public abstract class Validator<E> {
      * @return ValidationError with localized message
      */
     protected ValidationError createValidationError(String messageKey, Sentence sentenceWithError, Object... args) {
-        return new ValidationError(this.getClass(), getLocalizedErrorMessage(messageKey, args), sentenceWithError);
-
+        return new ValidationError(this.getClass(), getLocalizedErrorMessage(Optional.of(messageKey), args), sentenceWithError);
     }
 
     /**
@@ -151,7 +144,7 @@ public abstract class Validator<E> {
      * @return ValidationError with localized message
      */
     protected ValidationError createValidationError(int lineNumber, Object... args) {
-        return new ValidationError(this.getClass(), getLocalizedErrorMessage(args), lineNumber);
+        return new ValidationError(this.getClass(), getLocalizedErrorMessage(Optional.empty(), args), lineNumber);
     }
 
     /**
@@ -163,21 +156,7 @@ public abstract class Validator<E> {
      * @return ValidationError with localized message
      */
     protected ValidationError createValidationError(String messageKey, int lineNumber, Object... args) {
-        return new ValidationError(this.getClass(), getLocalizedErrorMessage(messageKey, args), lineNumber);
-    }
-
-    /**
-     * returns localized default error message formatted with argument
-     *
-     * @param args objects to format
-     * @return localized error message
-     */
-    private String getLocalizedErrorMessage(Object... args) {
-        if (errorMessages.isPresent()) {
-            return MessageFormat.format(errorMessages.get().getString(this.getClass().getSimpleName()), args);
-        } else {
-            throw new AssertionError("message resource not found.");
-        }
+        return new ValidationError(this.getClass(), getLocalizedErrorMessage(Optional.of(messageKey), args), lineNumber);
     }
 
     /**
@@ -187,9 +166,10 @@ public abstract class Validator<E> {
      * @param args objects to format
      * @return localized error message
      */
-    private String getLocalizedErrorMessage(String key, Object... args) {
+    private String getLocalizedErrorMessage(Optional<String> key, Object... args) {
         if (errorMessages.isPresent()) {
-            return MessageFormat.format(errorMessages.get().getString(this.getClass().getSimpleName() + "." + key), args);
+            String suffix = key.isPresent() ? "." + key.get() : "";
+            return MessageFormat.format(errorMessages.get().getString(this.getClass().getSimpleName() + suffix), args);
         } else {
             throw new AssertionError("message resource not found.");
         }

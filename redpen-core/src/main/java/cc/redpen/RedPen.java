@@ -29,6 +29,7 @@ import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.PreProcessor;
+import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import cc.redpen.validator.ValidatorFactory;
 import org.slf4j.Logger;

@@ -1,21 +1,16 @@
 package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
-import cc.redpen.ValidationError;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.ResourceLoader;
 import cc.redpen.util.WordListExtractor;
+import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class SpellingValidator extends Validator<Sentence> {
 

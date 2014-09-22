@@ -17,18 +17,21 @@
  */
 package cc.redpen.distributor;
 
-import cc.redpen.ValidationError;
 import cc.redpen.formatter.PlainFormatter;
+import cc.redpen.model.Sentence;
+import cc.redpen.validator.ValidationError;
+import cc.redpen.validator.Validator;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.junit.Assert.*;
 
-public class DefaultResultDistributorTest {
+public class DefaultResultDistributorTest extends Validator<Sentence> {
     @Test
     public void testFlushHeaderWithPlainFormatter() {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -66,7 +69,7 @@ public class DefaultResultDistributorTest {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         DefaultResultDistributor distributor = new DefaultResultDistributor(os);
         distributor.setFormatter(new PlainFormatter());
-        ValidationError error = new ValidationError(this.getClass(), "foobar", -1);
+        ValidationError error = createValidationError(-1);
         distributor.flushResult(error);
         String result = null;
         try {
@@ -94,4 +97,8 @@ public class DefaultResultDistributorTest {
         distributor.setFormatter(new PlainFormatter());
     }
 
+    @Override
+    public List<ValidationError> validate(Sentence block) {
+        return null;
+    }
 }

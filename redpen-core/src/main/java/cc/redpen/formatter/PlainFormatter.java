@@ -17,7 +17,7 @@
  */
 package cc.redpen.formatter;
 
-import cc.redpen.ValidationError;
+import cc.redpen.validator.ValidationError;
 
 /**
  * Format input error into a string message.

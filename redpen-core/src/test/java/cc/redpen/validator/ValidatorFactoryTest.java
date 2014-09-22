@@ -1,7 +1,6 @@
 package cc.redpen.validator;
 
 import cc.redpen.RedPenException;
-import cc.redpen.ValidationError;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;

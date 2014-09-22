@@ -18,7 +18,6 @@
 package cc.redpen.validator;
 
 import cc.redpen.RedPenException;
-import cc.redpen.ValidationError;
 import cc.redpen.model.Sentence;
 import org.junit.Test;
 

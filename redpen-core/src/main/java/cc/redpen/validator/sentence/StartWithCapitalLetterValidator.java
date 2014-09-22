@@ -1,10 +1,10 @@
 package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
-import cc.redpen.ValidationError;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.ResourceLoader;
 import cc.redpen.util.WordListExtractor;
+import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,16 +17,16 @@ import java.util.*;
  */
 final public class StartWithCapitalLetterValidator extends Validator<Sentence> {
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/capital-letter-exception-list";
-    private Set<String> whiteList;
     private static final Logger LOG =
             LoggerFactory.getLogger(SpellingValidator.class);
-
-    public boolean addWhiteList(String item) {
-        return whiteList.add(item);
-    }
+    private Set<String> whiteList;
 
     public StartWithCapitalLetterValidator() {
         this.whiteList = new HashSet<>();
+    }
+
+    public boolean addWhiteList(String item) {
+        return whiteList.add(item);
     }
 
     @Override

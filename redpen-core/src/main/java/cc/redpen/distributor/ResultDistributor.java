@@ -17,8 +17,8 @@
  */
 package cc.redpen.distributor;
 
-import cc.redpen.ValidationError;
 import cc.redpen.formatter.Formatter;
+import cc.redpen.validator.ValidationError;
 
 /**
  * ResultDistributor flush the errors reported from Validators.

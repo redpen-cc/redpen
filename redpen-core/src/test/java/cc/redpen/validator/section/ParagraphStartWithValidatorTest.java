@@ -17,9 +17,9 @@
  */
 package cc.redpen.validator.section;
 
-import cc.redpen.ValidationError;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
+import cc.redpen.validator.ValidationError;
 import org.junit.Test;
 
 import java.util.List;

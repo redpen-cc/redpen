@@ -18,10 +18,10 @@
 package cc.redpen.validator.section;
 
 import cc.redpen.RedPenException;
-import cc.redpen.ValidationError;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
+import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
 import java.util.ArrayList;

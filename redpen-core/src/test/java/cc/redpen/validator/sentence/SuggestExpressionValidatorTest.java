@@ -17,8 +17,8 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.ValidationError;
 import cc.redpen.model.Sentence;
+import cc.redpen.validator.ValidationError;
 import org.junit.Before;
 import org.junit.Test;
 
