@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cc.redpen;
+package cc.redpen.validator;
 
 import cc.redpen.model.Sentence;
 
@@ -40,7 +40,7 @@ public final class ValidationError implements java.io.Serializable {
      * @param errorMessage    error message
      * @param errorLineNumber error position (line number)
      */
-    public ValidationError(Class validatorClass,
+    ValidationError(Class validatorClass,
                            String errorMessage, int errorLineNumber) {
         this.lineNumber = errorLineNumber;
         this.message = errorMessage;
@@ -54,7 +54,7 @@ public final class ValidationError implements java.io.Serializable {
      * @param errorMessage      error message
      * @param sentenceWithError sentence containing validation error
      */
-    public ValidationError(Class validatorClass,
+    ValidationError(Class validatorClass,
                            String errorMessage,
                            Sentence sentenceWithError) {
         this(validatorClass, errorMessage, sentenceWithError.position);
@@ -153,5 +153,16 @@ public final class ValidationError implements java.io.Serializable {
         result = 31 * result + fileName.hashCode();
         result = 31 * result + sentence.hashCode();
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "ValidationError{" +
+                "lineNumber=" + lineNumber +
+                ", message='" + message + '\'' +
+                ", validatorName='" + validatorName + '\'' +
+                ", fileName=" + fileName +
+                ", sentence=" + sentence +
+                '}';
     }
 }

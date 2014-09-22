@@ -25,6 +25,7 @@ import cc.redpen.distributor.ResultDistributorFactory;
 import cc.redpen.formatter.Formatter;
 import cc.redpen.model.*;
 import cc.redpen.validator.PreProcessor;
+import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import cc.redpen.validator.ValidatorFactory;
 

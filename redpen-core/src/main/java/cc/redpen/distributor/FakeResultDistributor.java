@@ -17,8 +17,8 @@
  */
 package cc.redpen.distributor;
 
-import cc.redpen.ValidationError;
 import cc.redpen.formatter.Formatter;
+import cc.redpen.validator.ValidationError;
 
 /**
  * FakeResultDistributor does nothing. this class is just for testing.

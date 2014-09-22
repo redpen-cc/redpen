@@ -19,12 +19,12 @@
 package cc.redpen.server.api;
 
 import cc.redpen.RedPenException;
-import cc.redpen.ValidationError;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.parser.DocumentParserFactory;
 import cc.redpen.parser.Parser;
 import cc.redpen.server.RedPenServer;
+import cc.redpen.validator.ValidationError;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
@@ -32,11 +32,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.servlet.ServletContext;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;

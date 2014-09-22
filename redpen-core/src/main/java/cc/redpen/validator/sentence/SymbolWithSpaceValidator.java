@@ -17,9 +17,9 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.ValidationError;
 import cc.redpen.config.Symbol;
 import cc.redpen.model.Sentence;
+import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
 import java.util.ArrayList;
@@ -56,18 +56,11 @@ public class SymbolWithSpaceValidator extends Validator<Sentence> {
         if (position != -1) {
             if (position > 0 && symbol.isNeedBeforeSpace()
                     && !Character.isWhitespace(sentenceStr.charAt(position - 1))) {
-                return new ValidationError(
-                        this.getClass(),
-                        "Need white space before symbol (" + symbol.getName()
-                                + "): " + sentenceStr.charAt(position) + ".",
-                        sentence);
+                return createValidationError(sentence, symbol.getName(), sentenceStr.charAt(position));
             } else if (position < sentenceStr.length() - 1
                     && symbol.isNeedAfterSpace()
                     && !Character.isWhitespace(sentenceStr.charAt(position + 1))) {
-                return new ValidationError(
-                        this.getClass(),
-                        "Need white space after symbol (" + symbol.getName()
-                                + "): " + sentenceStr.charAt(position), sentence);
+                return createValidationError(sentence, symbol.getName(), sentenceStr.charAt(position));
             }
         }
         return null;

@@ -17,7 +17,7 @@
  */
 package cc.redpen.formatter;
 
-import cc.redpen.ValidationError;
+import cc.redpen.validator.ValidationError;
 
 /**
  * This interface is for classes to define output format of

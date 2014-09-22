@@ -1,8 +1,8 @@
 package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
-import cc.redpen.ValidationError;
 import cc.redpen.model.Sentence;
+import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
 import java.util.ArrayList;

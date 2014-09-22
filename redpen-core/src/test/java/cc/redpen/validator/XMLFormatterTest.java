@@ -15,10 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cc.redpen.util;
+package cc.redpen.validator;
 
 import cc.redpen.RedPenException;
-import cc.redpen.ValidationError;
 import cc.redpen.formatter.XMLFormatter;
 import cc.redpen.model.Sentence;
 import org.junit.Test;

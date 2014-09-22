@@ -18,7 +18,7 @@
 package cc.redpen.formatter;
 
 import cc.redpen.RedPenException;
-import cc.redpen.ValidationError;
+import cc.redpen.validator.ValidationError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;

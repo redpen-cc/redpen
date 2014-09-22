@@ -17,9 +17,9 @@
  */
 package cc.redpen.distributor;
 
-import cc.redpen.ValidationError;
 import cc.redpen.formatter.Formatter;
 import cc.redpen.formatter.PlainFormatter;
+import cc.redpen.validator.ValidationError;
 
 import java.io.OutputStream;
 import java.io.PrintStream;

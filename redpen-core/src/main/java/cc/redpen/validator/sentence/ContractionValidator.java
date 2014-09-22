@@ -17,9 +17,9 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.ValidationError;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.PreProcessor;
+import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
 import java.util.ArrayList;
@@ -32,12 +32,8 @@ import java.util.Set;
  * NOTE: this validator works only for English documents.
  */
 final public class ContractionValidator extends Validator<Sentence> implements PreProcessor<Sentence> {
-    private int foundContractionNum = 0;
-    private int foundNonContractionNum = 0;
-
     private static final Set<String> contractions;
     private static final Set<String> nonContractions;
-
     static {
         contractions = new HashSet<>();
         contractions.add("aren't");
@@ -93,7 +89,6 @@ final public class ContractionValidator extends Validator<Sentence> implements P
         contractions.add("you're");
         contractions.add("you've");
     }
-
     static {
         nonContractions = new HashSet<>();
         nonContractions.add("are");
@@ -121,6 +116,9 @@ final public class ContractionValidator extends Validator<Sentence> implements P
         nonContractions.add("would");
         nonContractions.add("you");
     }
+
+    private int foundContractionNum = 0;
+    private int foundNonContractionNum = 0;
 
     @Override
     public List<ValidationError> validate(Sentence block) {

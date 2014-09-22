@@ -19,12 +19,12 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
-import cc.redpen.ValidationError;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.distributor.FakeResultDistributor;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.model.Sentence;
+import cc.redpen.validator.ValidationError;
 import org.junit.Test;
 
 import java.util.ArrayList;
