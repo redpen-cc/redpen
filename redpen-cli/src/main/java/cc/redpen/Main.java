@@ -27,11 +27,18 @@ import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Class containing main method called from command line.
  */
 public final class Main {
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
+
+    private static final String PROGRAM = "redpen-cli";
+
+    private static final String VERSION = "0.6";
 
     private Main() {
         super();
@@ -39,33 +46,28 @@ public final class Main {
 
     public static void main(String[] args) throws RedPenException {
         Options options = new Options();
-        options.addOption("h", "help", false, "help");
+        options.addOption("h", "help", false, "Displays this help information and exits");
 
         OptionBuilder.withLongOpt("format");
-        OptionBuilder.withDescription("input data format");
+        OptionBuilder.withDescription("Input file format");
         OptionBuilder.hasArg();
         OptionBuilder.withArgName("FORMAT");
         options.addOption(OptionBuilder.create("f"));
 
-        OptionBuilder.withLongOpt("input");
-        OptionBuilder.withDescription("input file");
-        OptionBuilder.hasOptionalArgs();
-        OptionBuilder.withArgName("INPUT FILE");
-        options.addOption(OptionBuilder.create("i"));
-
         OptionBuilder.withLongOpt("conf");
-        OptionBuilder.withDescription("configuration file");
+        OptionBuilder.withDescription("Configuration file (Required)");
         OptionBuilder.hasArg();
+        OptionBuilder.withArgName("CONF FILE");
         options.addOption(OptionBuilder.create("c"));
 
         OptionBuilder.withLongOpt("result-format");
-        OptionBuilder.withDescription("output result format");
+        OptionBuilder.withDescription("Output result format");
         OptionBuilder.hasArg();
         OptionBuilder.withArgName("RESULT FORMAT");
         options.addOption(OptionBuilder.create("r"));
 
         options.addOption("v", "version", false,
-                "print the version information and exit");
+            "Displays version information and exits");
 
         CommandLineParser parser = new BasicParser();
         CommandLine commandLine = null;
@@ -79,7 +81,6 @@ public final class Main {
         }
 
         String inputFormat = "plain";
-        String[] inputFileNames = null;
         String configFileName = "";
         String resultFormat = "plain";
         Parser.Type parserType;
@@ -90,14 +91,11 @@ public final class Main {
             System.exit(0);
         }
         if (commandLine.hasOption("v")) {
-            System.out.println("1.0");
+            System.out.println(VERSION);
             System.exit(0);
         }
         if (commandLine.hasOption("f")) {
             inputFormat = commandLine.getOptionValue("f");
-        }
-        if (commandLine.hasOption("i")) {
-            inputFileNames = commandLine.getOptionValues("i");
         }
         if (commandLine.hasOption("c")) {
             configFileName = commandLine.getOptionValue("c");
@@ -105,6 +103,8 @@ public final class Main {
         if (commandLine.hasOption("r")) {
             resultFormat = commandLine.getOptionValue("r");
         }
+
+        String[] inputFileNames = commandLine.getArgs();
 
         ConfigurationLoader configLoader = new ConfigurationLoader();
         Configuration conf = configLoader.loadConfiguration(configFileName);
@@ -117,19 +117,19 @@ public final class Main {
         outputFormat = Formatter.Type.valueOf(resultFormat.toUpperCase());
 
         DocumentCollection documentCollection =
-                DocumentGenerator.generate(inputFileNames, conf, parserType);
+            DocumentGenerator.generate(inputFileNames, conf, parserType);
 
         if (documentCollection == null) {
             LOG.error("Failed to create a DocumentCollection object");
             System.exit(-1);
         }
         ResultDistributor distributor =
-                ResultDistributorFactory.createDistributor(outputFormat, System.out);
+            ResultDistributorFactory.createDistributor(outputFormat, System.out);
 
         RedPen redPen = new RedPen.Builder()
-                .setConfiguration(conf)
-                .setResultDistributor(distributor)
-                .build();
+            .setConfiguration(conf)
+            .setResultDistributor(distributor)
+            .build();
 
         redPen.check(documentCollection);
 
@@ -138,6 +138,7 @@ public final class Main {
 
     private static void printHelp(Options opt) {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("ParseArgs", opt);
+        formatter.setWidth(100);
+        formatter.printHelp(PROGRAM + " -c <CONF FILE> <INPUT FILE> [<INPUT FILE>]", opt);
     }
 }
