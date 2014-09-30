@@ -1,8 +1,8 @@
-function httpPost(url, data) {
+function httpPost(url, data, lang) {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open('POST', url, false);
     xmlHttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xmlHttp.send("textarea=" + data);
+    xmlHttp.send("lang=" + lang + "&textarea=" + data);
     return xmlHttp;
 }
 
@@ -10,9 +10,9 @@ function getElement(id) {
     return document.getElementById(id);
 }
 
-function validateDocument() {
+function validateDocument(lang) {
     var doc = getElement('textarea').value;
-    var xmlHttp = httpPost('rest/document/validate', doc);
+    var xmlHttp = httpPost('rest/document/validate', doc, lang);
     var response_data = xmlHttp.responseText;
     var result = eval('(' + response_data + ')');
     var errors = result['errors'];

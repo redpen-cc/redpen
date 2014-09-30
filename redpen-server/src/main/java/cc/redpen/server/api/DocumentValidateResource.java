@@ -38,7 +38,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Resource to validate documents.
@@ -52,39 +54,54 @@ public class DocumentValidateResource {
     private final static String DEFAULT_INTERNAL_CONFIG_PATH = "/conf/redpen-conf.xml";
     @Context
     private ServletContext context;
-    private RedPen redPen = null;
 
-    private RedPen getRedPen() {
-        if (redPen == null) {
-            LOG.info("Starting Document Validator Server.");
-            String configPath = null;
-            if (context != null) {
-                configPath = context.getInitParameter("redpen.conf.path");
-            }
-            // if config path is not set, fallback to default config path
-            if (configPath == null) {
-                configPath = DEFAULT_INTERNAL_CONFIG_PATH;
-            }
+    private Map<String, RedPen> langRedPenMap = new HashMap<>();
 
-            LOG.info("Config Path is set to " + "\"" + configPath + "\"");
-            try {
-                redPen = new RedPen.Builder().setConfigPath(configPath).build();
-                LOG.info("Document Validator Server is running.");
-            } catch (RedPenException e) {
-                LOG.error("Unable to initialize RedPen", e);
-                throw new ExceptionInInitializerError(e);
+    private RedPen getRedPen(String lang) {
+        if (langRedPenMap.size() == 0) {
+            synchronized (this) {
+                if (langRedPenMap.size() == 0) {
+                    LOG.info("Starting Document Validator Server.");
+                    try {
+                        RedPen japaneseRedPen = new RedPen.Builder().setConfigPath("/conf/redpen-conf-ja.xml").build();
+                        langRedPenMap.put("ja", japaneseRedPen);
+                        RedPen englishRedPen = new RedPen.Builder().setConfigPath(DEFAULT_INTERNAL_CONFIG_PATH).build();
+                        langRedPenMap.put("en", englishRedPen);
+                        langRedPenMap.put("", englishRedPen);
+
+                        String configPath;
+                        if (context != null) {
+                            configPath = context.getInitParameter("redpen.conf.path");
+                            if (configPath != null) {
+                                LOG.info("Config Path is set to \"{}\"", configPath);
+                                RedPen defaultRedPen = new RedPen.Builder().setConfigPath(configPath).build();
+                                langRedPenMap.put("", defaultRedPen);
+                            } else {
+                                // if config path is not set, fallback to default config path
+                                LOG.info("Config Path is set to \"{}\"", DEFAULT_INTERNAL_CONFIG_PATH);
+                            }
+                        }
+                        LOG.info("Document Validator Server is running.");
+                    } catch (RedPenException e) {
+                        LOG.error("Unable to initialize RedPen", e);
+                        throw new ExceptionInInitializerError(e);
+                    }
+                }
             }
         }
-        return redPen;
+        return langRedPenMap.getOrDefault(lang, langRedPenMap.get(""));
     }
+
     @Path("/validate")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response validateDocument(@FormParam("textarea") @DefaultValue("") String document) throws
-            JSONException, RedPenException, UnsupportedEncodingException {
+    public Response validateDocument(@FormParam("textarea") @DefaultValue("") String document,
+                                     @FormParam("lang") @DefaultValue("en") String lang)
+            throws JSONException, RedPenException, UnsupportedEncodingException {
 
         LOG.info("Validating document");
-        RedPen server = getRedPen();
+        RedPen server = getRedPen(lang);
+        System.out.println(document);
         JSONObject json = new JSONObject();
 
         json.put("document", document);
