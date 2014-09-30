@@ -122,6 +122,20 @@ public class DocumentCollectionTest {
         assertEquals("list2", doc.getFile(0).getSection(0).getListBlock(0).getListElement(2).getSentence(0).content);
     }
 
+    @Test
+    public void testSentenceIsTokenized() {
+        DocumentCollection doc = new DocumentCollection
+                .Builder().addDocument("foobar")
+                .addSection(0)
+                .addSectionHeader("baz")
+                .addParagraph()
+                .addSentence("This is a foobar.", 0)
+                .build();
+        assertEquals(1, doc.getNumberOfDocuments());
+        assertEquals(1, doc.getFile(0).getNumberOfSections());
+        assertEquals(4, doc.getFile(0).getSection(0).getParagraph(0).getSentence(0).tokens.size());
+    }
+
     @Test(expected = IllegalStateException.class)
     public void testCreateSectionBeforeDocument() {
         DocumentCollection doc = new DocumentCollection.Builder()
