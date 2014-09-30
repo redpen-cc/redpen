@@ -136,6 +136,20 @@ public class DocumentCollectionTest {
         assertEquals(4, doc.getFile(0).getSection(0).getParagraph(0).getSentence(0).tokens.size());
     }
 
+    @Test
+    public void testJapaneseSentenceIsTokenized() {
+        DocumentCollection doc = new DocumentCollection
+                .Builder("ja").addDocument("今日")
+                .addSection(0)
+                .addSectionHeader("天気")
+                .addParagraph()
+                .addSentence("今日は晴天だ。", 0)
+                .build();
+        assertEquals(1, doc.getNumberOfDocuments());
+        assertEquals(1, doc.getFile(0).getNumberOfSections());
+        assertEquals(5, doc.getFile(0).getSection(0).getParagraph(0).getSentence(0).tokens.size());
+    }
+
     @Test(expected = IllegalStateException.class)
     public void testCreateSectionBeforeDocument() {
         DocumentCollection doc = new DocumentCollection.Builder()

@@ -30,5 +30,21 @@ public class JapaneseTokenizerTest {
         List<TokenElement> tokens = tokenizer.tokenize("今日も晴天だ。");
         assertEquals(5, tokens.size());
         assertEquals("今日", tokens.get(0).getSurface());
+        assertEquals("名詞", tokens.get(0).getTags().get(0));
+        assertEquals("も", tokens.get(1).getSurface());
+        assertEquals("助詞", tokens.get(1).getTags().get(0));
+        assertEquals("晴天", tokens.get(2).getSurface());
+        assertEquals("名詞", tokens.get(2).getTags().get(0));
+        assertEquals("だ", tokens.get(3).getSurface());
+        assertEquals("助動詞", tokens.get(3).getTags().get(0));
+        assertEquals("。", tokens.get(4).getSurface());
+        assertEquals("記号", tokens.get(4).getTags().get(0));
+    }
+
+    @Test
+    public void testTokenizeVoid() {
+        JapaneseTokenizer tokenizer = new JapaneseTokenizer();
+        List<TokenElement> tokens = tokenizer.tokenize("");
+        assertEquals(0, tokens.size());
     }
 }

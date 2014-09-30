@@ -20,5 +20,11 @@ package cc.redpen.tokenizer;
 import java.util.List;
 
 public interface RedPenTokenizer {
-    List<TokenElement> tokenize(String content);
+    /**
+     * Tokenize input sentence into tokens.
+     *
+     * @param sentence input sentence
+     * @return a set of tokens in the input sentence
+     */
+    List<TokenElement> tokenize(String sentence);
 }

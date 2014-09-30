@@ -17,6 +17,7 @@
  */
 package cc.redpen.model;
 
+import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.tokenizer.RedPenTokenizer;
 import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 
@@ -97,10 +98,15 @@ public final class DocumentCollection implements Iterable<Document> {
             this.tokenizer = new WhiteSpaceTokenizer();
         }
 
-
         public Builder(String lang) {
             this.collection = new DocumentCollection();
-            this.tokenizer = new WhiteSpaceTokenizer(); // TODO: create language specific tokenizer
+            switch (lang) {
+                case "ja":
+                    this.tokenizer = new JapaneseTokenizer();
+                    break;
+                default:
+                    this.tokenizer = new WhiteSpaceTokenizer();
+            }
         }
 
         /**
