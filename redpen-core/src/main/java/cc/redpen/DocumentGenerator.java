@@ -42,7 +42,7 @@ public final class DocumentGenerator {
                                        Configuration configuration,
                                        Parser.Type format) throws RedPenException {
         DocumentCollection.Builder documentBuilder =
-                new DocumentCollection.Builder();
+                new DocumentCollection.Builder(configuration.getSymbolTable().getLang());
         Parser parser = DocumentParserFactory.generate(format,
                 configuration, documentBuilder);
 

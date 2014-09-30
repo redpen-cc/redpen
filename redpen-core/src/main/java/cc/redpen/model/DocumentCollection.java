@@ -17,6 +17,10 @@
  */
 package cc.redpen.model;
 
+import cc.redpen.tokenizer.JapaneseTokenizer;
+import cc.redpen.tokenizer.RedPenTokenizer;
+import cc.redpen.tokenizer.WhiteSpaceTokenizer;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -85,10 +89,24 @@ public final class DocumentCollection implements Iterable<Document> {
      * not only testing but also implementing parsers.
      */
     public static class Builder {
+        private final RedPenTokenizer tokenizer;
+
         private DocumentCollection collection;
 
         public Builder() {
             this.collection = new DocumentCollection();
+            this.tokenizer = new WhiteSpaceTokenizer();
+        }
+
+        public Builder(String lang) {
+            this.collection = new DocumentCollection();
+            switch (lang) {
+                case "ja":
+                    this.tokenizer = new JapaneseTokenizer();
+                    break;
+                default:
+                    this.tokenizer = new WhiteSpaceTokenizer();
+            }
         }
 
         /**
@@ -241,16 +259,17 @@ public final class DocumentCollection implements Iterable<Document> {
             }
             Section lastSection = lastDocument.getSection(
                     lastDocument.getNumberOfSections() - 1);
-
             if (lastSection.getNumberOfParagraphs() == 0) {
                 addParagraph(); // Note: add paragraph automatically
             }
             Paragraph lastParagraph = lastSection.getParagraph(
                     lastSection.getNumberOfParagraphs() - 1);
+
             lastParagraph.appendSentence(sentence);
             if (lastParagraph.getNumberOfSentences() == 1) {
                 sentence.isFirstSentence = true;
             }
+            sentence.tokens = tokenizer.tokenize(sentence.content);
             return this;
         }
 
