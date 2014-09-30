@@ -26,16 +26,16 @@ import static org.junit.Assert.assertEquals;
 public class WhiteSpaceTokenizerTest {
     @Test
     public void testTokenize() {
-        Tokenizer tokenizer = new WhiteSpaceTokenizer();
-        List<Token> results = tokenizer.tokenize("this is a pen.");
+        RedPenTokenizer tokenizer = new WhiteSpaceTokenizer();
+        List<TokenElement> results = tokenizer.tokenize("this is a pen.");
         assertEquals(4, results.size());
-        assertEquals("this", results.get(0).getContent());
+        assertEquals("this", results.get(0).getSurface());
         assertEquals(0, results.get(0).getTags().size());
-        assertEquals("is", results.get(1).getContent());
+        assertEquals("is", results.get(1).getSurface());
         assertEquals(0, results.get(1).getTags().size());
-        assertEquals("a", results.get(2).getContent());
+        assertEquals("a", results.get(2).getSurface());
         assertEquals(0, results.get(2).getTags().size());
-        assertEquals("pen.", results.get(3).getContent());
+        assertEquals("pen.", results.get(3).getSurface());
         assertEquals(0, results.get(3).getTags().size());
     }
 }

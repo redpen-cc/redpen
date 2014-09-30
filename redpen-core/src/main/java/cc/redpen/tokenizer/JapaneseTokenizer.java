@@ -17,19 +17,27 @@
  */
 package cc.redpen.tokenizer;
 
+import org.atilika.kuromoji.Token;
+import org.atilika.kuromoji.Tokenizer;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class WhiteSpaceTokenizer implements RedPenTokenizer {
-    public WhiteSpaceTokenizer() {}
+public class JapaneseTokenizer implements RedPenTokenizer {
+
+    private Tokenizer tokenizer;
+
+    public JapaneseTokenizer() {
+        this.tokenizer = Tokenizer.builder().build();
+    }
 
     @Override
     public List<TokenElement> tokenize(String content) {
-        List<TokenElement> resultTokens = new ArrayList<>();
-        String [] words = content.split(" ");
-        for (String word : words) {
-            resultTokens.add(new TokenElement(word));
+        List<TokenElement> tokens = new ArrayList<>();
+        for (Token token : tokenizer.tokenize(content)) {
+            tokens.add(new TokenElement(token.getSurfaceForm(), Arrays.asList(token.getAllFeaturesArray())));
         }
-        return resultTokens;
+        return tokens;
     }
 }

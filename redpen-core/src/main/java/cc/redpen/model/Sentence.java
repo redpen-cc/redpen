@@ -17,7 +17,7 @@
  */
 package cc.redpen.model;
 
-import cc.redpen.tokenizer.Token;
+import cc.redpen.tokenizer.TokenElement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +51,7 @@ public final class Sentence {
      *
      * Note: the contents of the tokens are added in DocumentCollectionBuilder
      */
-    public List<Token> tokens;
+    public List<TokenElement> tokens;
 
     /**
      * Constructor.

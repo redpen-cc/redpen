@@ -20,16 +20,31 @@ package cc.redpen.tokenizer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WhiteSpaceTokenizer implements RedPenTokenizer {
-    public WhiteSpaceTokenizer() {}
+public class TokenElement {
+    final private String surface;
 
-    @Override
-    public List<TokenElement> tokenize(String content) {
-        List<TokenElement> resultTokens = new ArrayList<>();
-        String [] words = content.split(" ");
-        for (String word : words) {
-            resultTokens.add(new TokenElement(word));
-        }
-        return resultTokens;
+    final private List<String> tags;
+
+    public TokenElement(String word) {
+        surface = word;
+        tags = new ArrayList<>();
+    }
+
+    public TokenElement(String word, String tag) {
+        this(word);
+        tags.add(tag);
+    }
+
+    public TokenElement(String word, List<String> tagList) {
+        this(word);
+        tags.addAll(tagList);
+    }
+
+    public String getSurface() {
+        return surface;
+    }
+
+    public List<String> getTags() {
+        return tags;
     }
 }

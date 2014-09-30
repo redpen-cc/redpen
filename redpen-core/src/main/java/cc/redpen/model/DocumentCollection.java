@@ -17,7 +17,7 @@
  */
 package cc.redpen.model;
 
-import cc.redpen.tokenizer.Tokenizer;
+import cc.redpen.tokenizer.RedPenTokenizer;
 import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 
 import java.util.ArrayList;
@@ -88,7 +88,7 @@ public final class DocumentCollection implements Iterable<Document> {
      * not only testing but also implementing parsers.
      */
     public static class Builder {
-        private final Tokenizer tokenizer;
+        private final RedPenTokenizer tokenizer;
 
         private DocumentCollection collection;
 

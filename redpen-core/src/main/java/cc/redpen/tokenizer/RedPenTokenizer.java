@@ -19,6 +19,6 @@ package cc.redpen.tokenizer;
 
 import java.util.List;
 
-public interface Tokenizer {
-    List<Token> tokenize(String content);
+public interface RedPenTokenizer {
+    List<TokenElement> tokenize(String content);
 }

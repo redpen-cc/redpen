@@ -17,34 +17,18 @@
  */
 package cc.redpen.tokenizer;
 
-import java.util.ArrayList;
+import org.junit.Test;
+
 import java.util.List;
 
-public class Token {
-    final private String content;
+import static org.junit.Assert.assertEquals;
 
-    final private List<String> tags;
-
-    public Token(String word) {
-        content = word;
-        tags = new ArrayList<>();
-    }
-
-    public Token(String word, String tag) {
-        this(word);
-        tags.add(tag);
-    }
-
-    public Token(String word, List<String> tagList) {
-        this(word);
-        tags.addAll(tagList);
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public List<String> getTags() {
-        return tags;
+public class JapaneseTokenizerTest {
+    @Test
+    public void testTokenize() {
+        JapaneseTokenizer tokenizer = new JapaneseTokenizer();
+        List<TokenElement> tokens = tokenizer.tokenize("今日も晴天だ。");
+        assertEquals(5, tokens.size());
+        assertEquals("今日", tokens.get(0).getSurface());
     }
 }
