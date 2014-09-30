@@ -1,76 +1,46 @@
-#!/bin/bash
+#!/bin/sh
+##
+## RedPen startup script
+##
 
-VERSION=0.1
-RUN_SCRIPT="$(basename "${0}")"
-DV_HOME=${DV_HOME:-`dirname "$this"`}
-MAIN_CLASS="cc.redpen.Main"
+SCRIPT="$0"
 
-usage() {
-    echo "Usage: $RUN_SCRIPT [OPTIONS] INPUT-FILES"
-    echo
-    echo "Options:"
-    echo "  -c, --configuration [CONFIG_FILE]"
-    echo "  -f, --input-format [INPUT-FORMAT (Default plain)]"
-    echo "  -r, --result-format [RESULT-FORMAT (Default plain)]"
-    echo "  -h, --help"
-    echo
-}
+# SCRIPT may be an arbitrarily deep series of symlinks. Loop until we have the concrete path.
+while [ -h "$SCRIPT" ] ; do
+  ls=`ls -ld "$SCRIPT"`
+  # Drop everything prior to ->
+  link=`expr "$ls" : '.*-> \(.*\)$'`
+  if expr "$link" : '/.*' > /dev/null; then
+    SCRIPT="$link"
+  else
+    SCRIPT=`dirname "$SCRIPT"`/"$link"
+  fi
+done
 
-main() {
-    if [ $# -lt 1 ]; then
-	usage; exit 1;
-    fi
+# Find RedPen home
+REDPEN_HOME=`dirname "$SCRIPT"`/..
 
-    INPUT_FORMAT="plain"
-    RESULT_FORMAT="plain"
-    for OPT in "$@"
-    do
-       case "$OPT" in
-            '-h'|'--help' )
-                usage
-                exit 0
-                ;;
-            '-c'|'--config' )
-                if [[ -z "$2" ]] || [[ "$2" =~ ^-+ ]]; then
-                    echo "$RUN_SCRIPT: option requires an argument -- $1" 1>&2
-                fi
-                CONFIG_FILE=$"$2"
-                shift 2
-                ;;
-            '-f'|'--input-format' )
-                if [[ -z "$2" ]] || [[ "$2" =~ ^-+ ]]; then
-                    echo "$RUN_SCRIPT: option requires an argument -- $1" 1>&2
-                fi
-                INPUT_FORMAT="$2"
-                shift 2
-                ;;
-            '-r'|'--result-format' )
-                if [[ -z "$2" ]] || [[ "$2" =~ ^-+ ]]; then
-                    echo "$RUN_SCRIPT: option requires an argument -- $1" 1>&2
-                fi
-                RESULT_FORMAT="$2"
-                shift 2
-                ;;
-            '--version' )
-                echo "Version: $VERSION"
-                exit 0
-                ;;
-            -*)
-                echo "$RUN_SCRIPT: illegal option -- '$(echo $1 | sed 's/^-*//')'" 1>&2
-                exit 1
-                ;;
-        esac
-    done
-    INPUT_FILES="$@"
+# Make REDPEN_HOME absolute
+REDPEN_HOME=`cd "$REDPEN_HOME"; pwd`
 
-    # add jars to class path
-    DV_CLASSPATH=lib
-    for f in $DV_HOME/lib/*; do
-	DV_CLASSPATH=$DV_CLASSPATH:$f
-    done
-    export CLASSPATH=$DV_CLASSPATH:$CLASSPATH
 
-    java ${MAIN_CLASS} --conf ${CONFIG_FILE} --format ${INPUT_FORMAT} --input ${INPUT_FILES} --result-format ${RESULT_FORMAT}
-}
+REDPEN_CLASSPATH=REDPEN_HOME/conf:$REDPEN_HOME/lib/*
 
-[ ${#BASH_SOURCE[@]} = 1 ] && main "$@"
+if [ -z "$JAVA_HOME" ]; then
+    echo "Error: JAVA_HOME is not defined. Can not start RedPen" 1>&2
+    exit 1
+fi
+
+JAVA_OPTS="$JAVA_OPTS"
+
+JAVA_CMD="$JAVA_HOME/bin/java"
+
+if [ ! -x "$JAVA_CMD" ]; then
+    echo "Error: $JAVA_CMD is not execututable. Can not start RedPen" 1>&2
+    exit 1
+fi
+
+exec "$JAVA_CMD" $JAVA_OPTS \
+  -classpath "$REDPEN_CLASSPATH" \
+  cc.redpen.Main \
+  "$@"

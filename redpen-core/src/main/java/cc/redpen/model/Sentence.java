@@ -17,6 +17,8 @@
  */
 package cc.redpen.model;
 
+import cc.redpen.tokenizer.TokenElement;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +47,13 @@ public final class Sentence {
     public boolean isFirstSentence;
 
     /**
+     * A list of tokens.
+     *
+     * Note: the contents of the tokens are added in DocumentCollectionBuilder
+     */
+    public List<TokenElement> tokens;
+
+    /**
      * Constructor.
      *
      * @param sentenceContent  content of sentence
@@ -56,6 +65,6 @@ public final class Sentence {
         this.position = sentencePosition;
         this.isFirstSentence = false;
         this.links = new ArrayList<>();
+        this.tokens = new ArrayList<>();
     }
-
 }
