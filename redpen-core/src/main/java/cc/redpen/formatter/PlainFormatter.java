@@ -17,6 +17,7 @@
  */
 package cc.redpen.formatter;
 
+import cc.redpen.RedPenException;
 import cc.redpen.validator.ValidationError;
 
 /**
@@ -25,7 +26,7 @@ import cc.redpen.validator.ValidationError;
 public class PlainFormatter implements Formatter {
 
     @Override
-    public String convertError(ValidationError error) {
+    public String convertError(ValidationError error) throws RedPenException {
         StringBuilder str = new StringBuilder();
 
         str.append("ValidationError[");

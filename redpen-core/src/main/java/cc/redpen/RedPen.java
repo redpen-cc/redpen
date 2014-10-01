@@ -134,10 +134,22 @@ public class RedPen extends Validator<Document> {
             errors = validateDocument(document);
             for (ValidationError error : errors) {
                 error.setFileName(document.getFileName());
-                distributor.flushResult(error);
+                flushError(error);
             }
         }
         return errors;
+    }
+
+    private void flushError(ValidationError error) {
+        /**
+         * When the flush of input error is failed, the output process continues skipping the failed error.
+         */
+        try {
+            distributor.flushError(error);
+        } catch (RedPenException e) {
+            LOG.error("Failed to flush error: " + error.toString());
+            LOG.error("Skipping to flush this error...");
+        }
     }
 
     private List<ValidationError> runSectionValidators(
@@ -148,7 +160,7 @@ public class RedPen extends Validator<Document> {
                 List<ValidationError> newErrors = validateSection(section);
                 for (ValidationError error : newErrors) {
                     error.setFileName(document.getFileName());
-                    distributor.flushResult(error);
+                    flushError(error);
                 }
                 errors.addAll(newErrors);
             }
@@ -231,7 +243,7 @@ public class RedPen extends Validator<Document> {
         }
         for (ValidationError error : newErrors) {
             error.setFileName(document.getFileName());
-            distributor.flushResult(error);
+            flushError(error);
         }
         return newErrors;
     }
@@ -277,10 +289,6 @@ public class RedPen extends Validator<Document> {
     @Override
     public List<ValidationError> validate(Document document) {
         return null;
-    }
-
-    public void appendSectionValidator(Validator<Section> validator) {
-        sectionValidators.add(validator);
     }
 
     @Override
