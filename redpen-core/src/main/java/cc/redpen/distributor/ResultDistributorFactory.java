@@ -17,7 +17,6 @@
  */
 package cc.redpen.distributor;
 
-import cc.redpen.RedPenException;
 import cc.redpen.formatter.Formatter;
 import cc.redpen.formatter.PlainFormatter;
 import cc.redpen.formatter.XMLFormatter;
@@ -58,21 +57,15 @@ public final class ResultDistributorFactory {
         ResultDistributor distributor = new DefaultResultDistributor(output);
 
         LOG.info("Creating Distributor...");
-        try {
-            switch (outputFormat) {
-                case PLAIN:
-                    distributor.setFormatter(new PlainFormatter());
-                    break;
-                case XML:
-                    distributor.setFormatter(new XMLFormatter());
-                    break;
-                default:
-                    LOG.error("No specified distributor...");
-                    return null;
-            }
-        } catch (RedPenException e) {
-            LOG.error(e.getMessage());
-            return null;
+        switch (outputFormat) {
+            case PLAIN:
+                distributor.setFormatter(new PlainFormatter());
+                break;
+            case XML:
+                distributor.setFormatter(new XMLFormatter());
+                break;
+            default:
+                throw new RuntimeException("There is not such formatter: " + outputFormat);
         }
         return distributor;
     }

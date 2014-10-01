@@ -17,6 +17,7 @@
  */
 package cc.redpen.distributor;
 
+import cc.redpen.RedPenException;
 import cc.redpen.formatter.Formatter;
 import cc.redpen.validator.ValidationError;
 
@@ -41,7 +42,7 @@ public interface ResultDistributor {
      * @param err error reported from a Validator
      * @return 0 succeeded, otherwise 1
      */
-    int flushResult(ValidationError err);
+    int flushError(ValidationError err) throws RedPenException;
 
     /**
      * Set Formatter object.

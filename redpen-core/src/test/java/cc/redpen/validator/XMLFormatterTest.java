@@ -36,7 +36,7 @@ import static org.junit.Assert.fail;
 public class XMLFormatterTest {
 
     @Test
-    public void testConvertValidationError() {
+    public void testConvertValidationError() throws RedPenException {
         ValidationError error = new ValidationError(
                 this.getClass(),
                 "Fatal Error",
@@ -44,6 +44,7 @@ public class XMLFormatterTest {
         error.setFileName("foobar.md");
         XMLFormatter formatter = createXMLFormatter();
         String resultString = formatter.convertError(error);
+
         Document document = extractDocument(resultString);
         assertEquals(1, document.getElementsByTagName("error").getLength());
         assertEquals(1, document.getElementsByTagName("message").getLength());
@@ -64,7 +65,7 @@ public class XMLFormatterTest {
     }
 
     @Test
-    public void testConvertValidationErrorWithoutFileName() {
+    public void testConvertValidationErrorWithoutFileName() throws RedPenException {
         ValidationError error = new ValidationError(this.getClass(), "Fatal Error", 0);
         XMLFormatter formatter = createXMLFormatter();
         String resultString = formatter.convertError(error);
@@ -83,10 +84,11 @@ public class XMLFormatterTest {
     }
 
     @Test
-    public void testConvertValidationErrorWithoutLineNumAndFileName() {
+    public void testConvertValidationErrorWithoutLineNumAndFileName() throws RedPenException {
         ValidationError error = new ValidationError(this.getClass(), "Fatal Error", -1);
         XMLFormatter formatter = createXMLFormatter();
         String resultString = formatter.convertError(error);
+
         Document document = extractDocument(resultString);
         assertEquals(1, document.getElementsByTagName("error").getLength());
         assertEquals(1, document.getElementsByTagName("message").getLength());
@@ -124,14 +126,7 @@ public class XMLFormatterTest {
     }
 
     private XMLFormatter createXMLFormatter() {
-        XMLFormatter formatter = null;
-        try {
-            formatter = new XMLFormatter();
-        } catch (RedPenException e) {
-            fail();
-            e.printStackTrace();
-        }
-        return formatter;
+        return new XMLFormatter();
     }
 
 }

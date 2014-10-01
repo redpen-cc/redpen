@@ -17,6 +17,7 @@
  */
 package cc.redpen.distributor;
 
+import cc.redpen.RedPenException;
 import cc.redpen.formatter.Formatter;
 import cc.redpen.formatter.PlainFormatter;
 import cc.redpen.validator.ValidationError;
@@ -46,8 +47,7 @@ public class DefaultResultDistributor implements ResultDistributor {
         try {
             writer = new PrintStream(os, true, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException("Specified output stream is illegal: "
-                    + e.getMessage());
+            throw new IllegalStateException(e);
         }
         myFormatter = new PlainFormatter();
     }
@@ -64,8 +64,7 @@ public class DefaultResultDistributor implements ResultDistributor {
         try {
             writer = new PrintStream(ps, true, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException("Specified output stream is illegal: "
-                    + e.getMessage());
+            throw new IllegalStateException(e);
         }
         myFormatter = new PlainFormatter();
     }
@@ -75,9 +74,9 @@ public class DefaultResultDistributor implements ResultDistributor {
      *
      * @param err validation error
      */
-    public int flushResult(ValidationError err) {
+    public int flushError(ValidationError err) throws RedPenException {
         if (err == null) {
-            throw new IllegalArgumentException("argument ValidationError is null");
+            throw new RedPenException("argument ValidationError is null");
         }
         writer.println(myFormatter.convertError(err));
         writer.flush();

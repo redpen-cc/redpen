@@ -44,26 +44,23 @@ public class XMLFormatter implements Formatter {
 
     /**
      * Constructor.
-     *
-     * @throws cc.redpen.RedPenException when failed to create Formatter
      */
-    public XMLFormatter() throws RedPenException {
+    public XMLFormatter() {
         super();
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         try {
             this.db = dbf.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
-            throw new RedPenException(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
     @Override
-    public String convertError(ValidationError error) {
+    public String convertError(ValidationError error) throws RedPenException {
         // create dom
         Document doc = db.newDocument();
         Element errorElement = doc.createElement("error");
         doc.appendChild(errorElement);
-
 
         Element validatorElement = doc.createElement("validator");
         errorElement.appendChild(validatorElement);
@@ -95,9 +92,6 @@ public class XMLFormatter implements Formatter {
 
         // create a transformer
         Transformer transformer = createTransformer();
-        if (transformer == null) {
-            throw new IllegalStateException("Failed to create XML Transformer");
-        }
 
         // convert the result dom into a string
         StringWriter writer = new StringWriter();
@@ -106,7 +100,7 @@ public class XMLFormatter implements Formatter {
         try {
             transformer.transform(source, result);
         } catch (TransformerException e) {
-            e.printStackTrace();
+            throw new RedPenException(e);
         }
         return writer.toString();
     }
@@ -119,8 +113,8 @@ public class XMLFormatter implements Formatter {
         try {
             transformer = tf.newTransformer();
         } catch (TransformerConfigurationException e) {
-            LOG.error(e.getMessage());
-            return null;
+            LOG.error("Failed to create Transformer object");
+            throw new RuntimeException(e);
         }
         transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
         return transformer;

@@ -32,7 +32,7 @@ public class FakeResultDistributor implements ResultDistributor {
     }
 
     @Override
-    public int flushResult(ValidationError err) {
+    public int flushError(ValidationError err) {
         return 0;
     }
 

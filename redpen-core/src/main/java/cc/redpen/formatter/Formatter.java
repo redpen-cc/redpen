@@ -17,6 +17,7 @@
  */
 package cc.redpen.formatter;
 
+import cc.redpen.RedPenException;
 import cc.redpen.validator.ValidationError;
 
 /**
@@ -30,7 +31,7 @@ public interface Formatter {
      * @param error object containing file and line number information.
      * @return error message
      */
-    String convertError(ValidationError error);
+    String convertError(ValidationError error) throws RedPenException;
 
     /**
      * Return the header block of semi-structured format.
@@ -51,7 +52,6 @@ public interface Formatter {
      */
     enum Type {
         PLAIN,
-
         XML
     }
 }
