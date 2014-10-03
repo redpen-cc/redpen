@@ -39,7 +39,7 @@ import java.util.List;
  * <p>
  * Markdown Syntax @see http://daringfireball.net/projects/markdown/
  */
-public class MarkdownParser extends BasicDocumentParser {
+public class MarkdownParser extends BaseDocumentParser {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(MarkdownParser.class);

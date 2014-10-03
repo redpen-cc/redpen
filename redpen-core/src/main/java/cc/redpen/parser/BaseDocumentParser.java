@@ -34,17 +34,20 @@ import java.util.List;
  * Abstract Parser class containing common procedures to
  * implements the concrete Parser classes.
  */
-public abstract class BasicDocumentParser implements Parser {
+public abstract class BaseDocumentParser implements Parser {
     private static final Logger LOG = LoggerFactory.getLogger(
-            BasicDocumentParser.class);
+            BaseDocumentParser.class);
     protected DocumentCollection.Builder builder;
     private SentenceExtractor sentenceExtractor;
 
     @Override
     public Document generateDocument(String fileName)
             throws RedPenException {
+        if (fileName == null || fileName.equals("")) {
+            throw new RedPenException("input file was not specified.");
+        }
         Document document ;
-        try (InputStream inputStream = this.loadStream(fileName)) {
+        try (InputStream inputStream = new FileInputStream(fileName)) {
             document = this.generateDocument(inputStream);
                 if (document != null) {
                     document.setFileName(fileName);
@@ -155,21 +158,6 @@ public abstract class BasicDocumentParser implements Parser {
                     "does not support UTF-8 encoding", e);
         }
         return br;
-    }
-
-    protected final InputStream loadStream(String fileName)
-            throws RedPenException {
-        InputStream inputStream;
-        if (fileName == null || fileName.equals("")) {
-            throw new RedPenException("input file was not specified.");
-        } else {
-            try {
-                inputStream = new FileInputStream(fileName);
-            } catch (FileNotFoundException e) {
-                throw new RedPenException("Input file is not found", e);
-            }
-        }
-        return inputStream;
     }
 
     /**
