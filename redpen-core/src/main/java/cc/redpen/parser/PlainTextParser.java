@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * Parser for plain text file.
  */
-public final class PlainTextParser extends BasicDocumentParser {
+public final class PlainTextParser extends BaseDocumentParser {
     private static final Logger LOG =
             LoggerFactory.getLogger(PlainTextParser.class);
 
