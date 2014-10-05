@@ -19,8 +19,8 @@ package cc.redpen;
 
 import cc.redpen.config.Configuration;
 import cc.redpen.model.DocumentCollection;
+import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.DocumentParserFactory;
-import cc.redpen.parser.Parser;
 import org.apache.commons.io.IOUtils;
 
 import java.io.InputStream;
@@ -41,11 +41,11 @@ public class SampleDocumentGenerator {
      * @return DocumentCollection object
      */
     public static DocumentCollection generateOneFileDocument(String docString,
-                                                             Parser.Type type) throws RedPenException {
+                                                             DocumentParser.Type type) throws RedPenException {
         Configuration configuration = new Configuration.Builder()
                 .setSymbolTable("en").build();
         DocumentCollection.Builder builder = new DocumentCollection.Builder();
-        Parser parser = DocumentParserFactory.generate(type, configuration, builder);
+        DocumentParser parser = DocumentParserFactory.generate(type, configuration, builder);
         InputStream stream = IOUtils.toInputStream(docString);
         parser.generateDocument(stream);
         return builder.build();

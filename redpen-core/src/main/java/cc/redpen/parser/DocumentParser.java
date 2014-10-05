@@ -25,9 +25,9 @@ import cc.redpen.model.DocumentCollection;
 import java.io.InputStream;
 
 /**
- * Parser generates Document from input.
+ * DocumentParser generates Document from input.
  */
-public interface Parser {
+public interface DocumentParser {
     /**
      * Given input stream, return Document instance from a stream.
      *

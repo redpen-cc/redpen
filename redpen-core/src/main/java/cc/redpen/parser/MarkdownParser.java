@@ -25,8 +25,6 @@ import org.pegdown.Extensions;
 import org.pegdown.ParsingTimeoutException;
 import org.pegdown.PegDownProcessor;
 import org.pegdown.ast.RootNode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -41,8 +39,6 @@ import java.util.List;
  */
 public class MarkdownParser extends BaseDocumentParser {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(MarkdownParser.class);
     private PegDownProcessor pegDownProcessor = new PegDownProcessor(
             Extensions.HARDWRAPS
                     + Extensions.AUTOLINKS
@@ -61,22 +57,21 @@ public class MarkdownParser extends BaseDocumentParser {
         String line;
         int charCount = 0;
         List<Integer> lineList = new ArrayList<>();
-        BufferedReader br = null;
+        BufferedReader br = createReader(inputStream);
 
         try {
-            br = createReader(inputStream);
-            try {
-                while ((line = br.readLine()) != null) {
-                    sb.append(line);
-                    sb.append("\n");
-                    // TODO surrogate pair ?
-                    charCount += line.length() + 1;
-                    lineList.add(charCount);
-                }
-            } catch (IOException e) {
-                throw new RedPenException(e);
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+                sb.append("\n");
+                // TODO surrogate pair ?
+                charCount += line.length() + 1;
+                lineList.add(charCount);
             }
+        } catch (IOException e) {
+            throw new RedPenException(e);
+        }
 
+        try {
             List<Sentence> headers = new ArrayList<>();
             headers.add(new Sentence("", 0));
             builder.addSection(0, headers);
@@ -89,7 +84,7 @@ public class MarkdownParser extends BaseDocumentParser {
                             lineList, this.getSentenceExtractor());
             serializer.toFileContent(rootNode);
         } catch (ParsingTimeoutException e) {
-            throw new RedPenException("Failed to parse timeout");
+            throw new RedPenException("Failed to parse timeout: ", e);
         }
         return builder.getLastDocument();
     }

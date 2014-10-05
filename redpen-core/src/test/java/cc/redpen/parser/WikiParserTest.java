@@ -28,7 +28,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
-import static cc.redpen.parser.Parser.Type.WIKI;
+import static cc.redpen.parser.DocumentParser.Type.WIKI;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -557,8 +557,8 @@ public class WikiParserTest {
         assertEquals(2, firstParagraph.getNumberOfSentences());
     }
 
-    private Parser loadParser(Configuration configuration) {
-        Parser parser = null;
+    private DocumentParser loadParser(Configuration configuration) {
+        DocumentParser parser = null;
         try {
             parser = DocumentParserFactory.generate(WIKI, configuration,
                     new DocumentCollection.Builder());
@@ -579,7 +579,7 @@ public class WikiParserTest {
             fail();
         }
 
-        Parser parser = loadParser(conf);
+        DocumentParser parser = loadParser(conf);
         try {
             return parser.generateDocument(inputDocumentStream);
         } catch (RedPenException e) {
@@ -592,7 +592,7 @@ public class WikiParserTest {
             String inputDocumentString) {
         ValidatorConfiguration conf = new ValidatorConfiguration("dummy");
         Configuration.Builder builder = new Configuration.Builder();
-        Parser parser = loadParser(builder.build());
+        DocumentParser parser = loadParser(builder.build());
         InputStream is;
         try {
             is = new ByteArrayInputStream(inputDocumentString.getBytes("utf-8"));

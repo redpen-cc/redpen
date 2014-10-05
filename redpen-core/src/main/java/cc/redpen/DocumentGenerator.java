@@ -19,8 +19,8 @@ package cc.redpen;
 
 import cc.redpen.config.Configuration;
 import cc.redpen.model.DocumentCollection;
+import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.DocumentParserFactory;
-import cc.redpen.parser.Parser;
 
 /**
  * Generate DocumentCollection object loading input file.
@@ -40,10 +40,10 @@ public final class DocumentGenerator {
      */
     static DocumentCollection generate(String[] inputFileNames,
                                        Configuration configuration,
-                                       Parser.Type format) throws RedPenException {
+                                       DocumentParser.Type format) throws RedPenException {
         DocumentCollection.Builder documentBuilder =
                 new DocumentCollection.Builder(configuration.getSymbolTable().getLang());
-        Parser parser = DocumentParserFactory.generate(format,
+        DocumentParser parser = DocumentParserFactory.generate(format,
                 configuration, documentBuilder);
 
         for (String inputFileName : inputFileNames) {

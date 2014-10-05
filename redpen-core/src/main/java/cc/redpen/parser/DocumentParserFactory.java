@@ -38,11 +38,11 @@ public final class DocumentParserFactory {
      * @return Parser implementation object
      * @throws cc.redpen.RedPenException when failed to generate Parser instance or no specified parser implementation.
      */
-    public static Parser generate(Parser.Type parserType,
+    public static DocumentParser generate(DocumentParser.Type parserType,
                                   Configuration configuration,
                                   DocumentCollection.Builder documentBuilder)
             throws RedPenException {
-        Parser docparser;
+        DocumentParser docparser;
         switch (parserType) {
             case PLAIN:
                 docparser = new PlainTextParser();
