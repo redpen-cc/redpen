@@ -82,4 +82,28 @@ final public class DoubledWordValidator extends Validator<Sentence> {
         });
         skipList = extractor.get();
     }
+
+    @Override
+    public String toString() {
+        return "DoubledWordValidator{" +
+                "skipList=" + skipList +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DoubledWordValidator that = (DoubledWordValidator) o;
+
+        if (skipList != null ? !skipList.equals(that.skipList) : that.skipList != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return skipList != null ? skipList.hashCode() : 0;
+    }
 }
