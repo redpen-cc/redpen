@@ -57,12 +57,12 @@ public final class DocumentCollection implements Iterable<Document> {
     }
 
     /**
-     * Get a file specifying with the file id.
+     * Get a file specifying with the Document id.
      *
-     * @param id id of file
-     * @return a file
+     * @param id id of Document
+     * @return a document
      */
-    public Document getFile(int id) {
+    public Document getDocument(int id) {
         return documents.get(id);
     }
 
@@ -129,7 +129,7 @@ public final class DocumentCollection implements Iterable<Document> {
             if (collection.size() == 0) {
                 return null;
             }
-            return collection.getFile(collection.size() - 1);
+            return collection.getDocument(collection.size() - 1);
         }
 
         /**
@@ -141,7 +141,7 @@ public final class DocumentCollection implements Iterable<Document> {
             if (collection.size() == 0) {
                 return null;
             }
-            Document lastDocument = collection.getFile(collection.size() - 1);
+            Document lastDocument = collection.getDocument(collection.size() - 1);
 
             if (lastDocument.getNumberOfSections() == 0) {
                 return null;
@@ -173,7 +173,7 @@ public final class DocumentCollection implements Iterable<Document> {
             if (collection.size() == 0) {
                 throw new IllegalStateException("DocumentCollection does no have any document");
             }
-            Document lastDocument = collection.getFile(collection.size() - 1);
+            Document lastDocument = collection.getDocument(collection.size() - 1);
             lastDocument.appendSection(new Section(level, header));
             return this;
         }
@@ -200,7 +200,7 @@ public final class DocumentCollection implements Iterable<Document> {
             if (collection.size() == 0) {
                 throw new IllegalStateException("DocumentCollection does no have any document");
             }
-            Document lastDocument = collection.getFile(collection.size() - 1);
+            Document lastDocument = collection.getDocument(collection.size() - 1);
             Section lastSection = lastDocument.getLastSection();
             if (null == lastSection) {
                 throw new IllegalStateException("Document does not have any section");
@@ -219,7 +219,7 @@ public final class DocumentCollection implements Iterable<Document> {
             if (collection.size() == 0) {
                 throw new IllegalStateException("DocumentCollection does no have any document");
             }
-            Document lastDocument = collection.getFile(collection.size() - 1);
+            Document lastDocument = collection.getDocument(collection.size() - 1);
             if (lastDocument.getNumberOfSections() == 0) {
                 throw new IllegalStateException("No section to add paragraph");
             }
@@ -253,7 +253,7 @@ public final class DocumentCollection implements Iterable<Document> {
             if (collection.size() == 0) {
                 throw new IllegalStateException("DocumentCollection does no have any document");
             }
-            Document lastDocument = collection.getFile(collection.size() - 1);
+            Document lastDocument = collection.getDocument(collection.size() - 1);
             if (lastDocument.getNumberOfSections() == 0) {
                 throw new IllegalStateException("No section to add a sentence");
             }
@@ -282,7 +282,7 @@ public final class DocumentCollection implements Iterable<Document> {
             if (collection.size() == 0) {
                 throw new IllegalStateException("DocumentCollection does no have any document");
             }
-            Document lastDocument = collection.getFile(collection.size() - 1);
+            Document lastDocument = collection.getDocument(collection.size() - 1);
 
             if (lastDocument.getNumberOfSections() == 0) {
                 throw new IllegalStateException("No section to add a sentence");
@@ -304,7 +304,7 @@ public final class DocumentCollection implements Iterable<Document> {
             if (collection.size() == 0) {
                 throw new IllegalStateException("DocumentCollection does no have any document");
             }
-            Document lastDocument = collection.getFile(collection.size() - 1);
+            Document lastDocument = collection.getDocument(collection.size() - 1);
 
             if (lastDocument.getNumberOfSections() == 0) {
                 throw new IllegalStateException("No section to add a sentence");

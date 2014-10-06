@@ -25,7 +25,7 @@ public class StartWithCapitalLetterValidatorTest {
                         1)
                 .build();
         StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
-        assertEquals(1, validator.validate(documents.getFile(0).getLastSection().getParagraph(0).getSentence(0)).size());
+        assertEquals(1, validator.validate(documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0)).size());
     }
 
     @Test
@@ -39,7 +39,7 @@ public class StartWithCapitalLetterValidatorTest {
                         1)
                 .build();
         StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
-        assertEquals(0, validator.validate(documents.getFile(0).getLastSection().getParagraph(0).getSentence(0)).size());
+        assertEquals(0, validator.validate(documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0)).size());
     }
 
     @Test
@@ -54,7 +54,7 @@ public class StartWithCapitalLetterValidatorTest {
                 .build();
         StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
         validator.addWhiteList("iPhone");
-        assertEquals(0, validator.validate(documents.getFile(0).getLastSection().getParagraph(0).getSentence(0)).size());
+        assertEquals(0, validator.validate(documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0)).size());
     }
 
     @Test
@@ -69,7 +69,7 @@ public class StartWithCapitalLetterValidatorTest {
                 .build();
         StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
         validator.addWhiteList("iPhone");
-        assertEquals(0, validator.validate(documents.getFile(0).getLastSection().getParagraph(0).getSentence(0)).size());
+        assertEquals(0, validator.validate(documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0)).size());
     }
 
     @Test
@@ -84,7 +84,7 @@ public class StartWithCapitalLetterValidatorTest {
                 .build();
         StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
         validator.addWhiteList("iPhone");
-        assertEquals(0, validator.validate(documents.getFile(0).getLastSection().getParagraph(0).getSentence(0)).size());
+        assertEquals(0, validator.validate(documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0)).size());
     }
 
     @Test
@@ -99,7 +99,7 @@ public class StartWithCapitalLetterValidatorTest {
                 .build();
         StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
         validator.addWhiteList("iPhone");
-        assertEquals(0, validator.validate(documents.getFile(0).getLastSection().getParagraph(0).getSentence(0)).size());
+        assertEquals(0, validator.validate(documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0)).size());
     }
 
     @Test

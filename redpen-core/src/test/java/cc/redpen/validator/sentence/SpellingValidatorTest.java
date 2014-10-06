@@ -31,7 +31,7 @@ public class SpellingValidatorTest {
         validator.addWord("a");
         validator.addWord("pen");
         List<ValidationError> errors = validator.validate(
-                documents.getFile(0).getLastSection().getParagraph(0).getSentence(0));
+                documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0));
         assertEquals(1, errors.size());
     }
 

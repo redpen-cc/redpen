@@ -39,15 +39,6 @@ public final class Document implements Iterable<Section> {
     }
 
     /**
-     * Get Iterator for Section in the Document.
-     *
-     * @return Iterator of Section list
-     */
-    public Iterator<Section> getSections() {
-        return sections.iterator();
-    }
-
-    /**
      * Add a Section.
      *
      * @param section a section in file content

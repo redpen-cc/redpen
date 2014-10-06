@@ -18,7 +18,6 @@
 package cc.redpen.model;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -82,15 +81,6 @@ public final class Section {
         this.subsections = new ArrayList<>();
         this.paragraphs = new ArrayList<>();
         this.lists = new ArrayList<>();
-    }
-
-    /**
-     * Get the iterator of subsections.
-     *
-     * @return Iterator of Section
-     */
-    public Iterator<Section> getSubSections() {
-        return subsections.iterator();
     }
 
     /**
@@ -216,15 +206,6 @@ public final class Section {
     }
 
     /**
-     * Get last subsection.
-     *
-     * @return last subsection in this section
-     */
-    public Section getLastSubsection() {
-        return subsections.get(subsections.size() - 1);
-    }
-
-    /**
      * Get the iterator of paragraphs of section.
      *
      * @return Iterator of Paragraph
@@ -252,38 +233,6 @@ public final class Section {
         paragraphs.add(pragraph);
     }
 
-    /**
-     * Append sentence.
-     *
-     * @param line    sentence
-     * @param lineNum sentence number
-     */
-    public void appendSentence(String line, int lineNum) {
-        if (paragraphs.size() == 0) {
-            appendParagraph(new Paragraph());
-        }
-        Paragraph currentBlock = paragraphs.get(paragraphs.size() - 1);
-        currentBlock.appendSentence(line, lineNum);
-        if (currentBlock.getNumberOfSentences() == 1) {
-            currentBlock.getSentence(0).isFirstSentence = true;
-        }
-    }
-
-    /**
-     * Append sentence.
-     *
-     * @param sentence sentence to append
-     */
-    public void appendSentence(Sentence sentence) {
-        if (paragraphs.size() == 0) {
-            appendParagraph(new Paragraph());
-        }
-        Paragraph currentBlock = paragraphs.get(paragraphs.size() - 1);
-        currentBlock.appendSentence(sentence);
-        if (currentBlock.getNumberOfSentences() == 1) {
-            currentBlock.getSentence(0).isFirstSentence = true;
-        }
-    }
 
     /**
      * Append List.
@@ -309,15 +258,6 @@ public final class Section {
      */
     public int getNumberOfLists() {
         return lists.size();
-    }
-
-    /**
-     * Get last list block.
-     *
-     * @return last list block in the section
-     */
-    public ListBlock getLastListBlock() {
-        return lists.get(lists.size() - 1);
     }
 
     /**

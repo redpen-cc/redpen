@@ -16,18 +16,18 @@ public class DocumentCollectionTest {
                 .build();
 
         assertEquals(1, doc.getNumberOfDocuments());
-        assertEquals(1, doc.getFile(0).getNumberOfSections());
-        assertEquals(0, doc.getFile(0).getSection(0).getLevel());
-        assertEquals("Foobar", doc.getFile(0).getFileName());
-        assertEquals("baz", doc.getFile(0).getSection(0).getHeaderContent(0).content);
-        assertEquals(1, doc.getFile(0).getSection(0).getNumberOfParagraphs());
-        assertEquals(2, doc.getFile(0).getSection(0).getParagraph(0).getNumberOfSentences());
-        assertEquals("sentence0", doc.getFile(0).getSection(0).getParagraph(0).getSentence(0).content);
-        assertEquals(true, doc.getFile(0).getSection(0).getParagraph(0).getSentence(0).isFirstSentence);
-        assertEquals(0, doc.getFile(0).getSection(0).getParagraph(0).getSentence(0).position);
-        assertEquals("sentence1", doc.getFile(0).getSection(0).getParagraph(0).getSentence(1).content);
-        assertEquals(false, doc.getFile(0).getSection(0).getParagraph(0).getSentence(1).isFirstSentence);
-        assertEquals(1, doc.getFile(0).getSection(0).getParagraph(0).getSentence(1).position);
+        assertEquals(1, doc.getDocument(0).getNumberOfSections());
+        assertEquals(0, doc.getDocument(0).getSection(0).getLevel());
+        assertEquals("Foobar", doc.getDocument(0).getFileName());
+        assertEquals("baz", doc.getDocument(0).getSection(0).getHeaderContent(0).content);
+        assertEquals(1, doc.getDocument(0).getSection(0).getNumberOfParagraphs());
+        assertEquals(2, doc.getDocument(0).getSection(0).getParagraph(0).getNumberOfSentences());
+        assertEquals("sentence0", doc.getDocument(0).getSection(0).getParagraph(0).getSentence(0).content);
+        assertEquals(true, doc.getDocument(0).getSection(0).getParagraph(0).getSentence(0).isFirstSentence);
+        assertEquals(0, doc.getDocument(0).getSection(0).getParagraph(0).getSentence(0).position);
+        assertEquals("sentence1", doc.getDocument(0).getSection(0).getParagraph(0).getSentence(1).content);
+        assertEquals(false, doc.getDocument(0).getSection(0).getParagraph(0).getSentence(1).isFirstSentence);
+        assertEquals(1, doc.getDocument(0).getSection(0).getParagraph(0).getSentence(1).position);
     }
 
     @Test
@@ -35,7 +35,7 @@ public class DocumentCollectionTest {
         DocumentCollection doc = new DocumentCollection
                 .Builder().addDocument("Foobar").build();
         assertEquals(1, doc.getNumberOfDocuments());
-        assertEquals(0, doc.getFile(0).getNumberOfSections());
+        assertEquals(0, doc.getDocument(0).getNumberOfSections());
     }
 
     @Test
@@ -58,32 +58,32 @@ public class DocumentCollectionTest {
         assertEquals(2, doc.getNumberOfDocuments());
 
         // first document
-        assertEquals(1, doc.getFile(0).getNumberOfSections());
-        assertEquals("doc1", doc.getFile(0).getFileName());
-        assertEquals("sec1", doc.getFile(0).getSection(0).getHeaderContent(0).content);
-        assertEquals(0, doc.getFile(0).getSection(0).getLevel());
-        assertEquals(1, doc.getFile(0).getSection(0).getNumberOfParagraphs());
-        assertEquals(2, doc.getFile(0).getSection(0).getParagraph(0).getNumberOfSentences());
-        assertEquals("sentence00", doc.getFile(0).getSection(0).getParagraph(0).getSentence(0).content);
-        assertEquals(true, doc.getFile(0).getSection(0).getParagraph(0).getSentence(0).isFirstSentence);
-        assertEquals(0, doc.getFile(0).getSection(0).getParagraph(0).getSentence(0).position);
-        assertEquals("sentence01", doc.getFile(0).getSection(0).getParagraph(0).getSentence(1).content);
-        assertEquals(false, doc.getFile(0).getSection(0).getParagraph(0).getSentence(1).isFirstSentence);
-        assertEquals(1, doc.getFile(0).getSection(0).getParagraph(0).getSentence(1).position);
+        assertEquals(1, doc.getDocument(0).getNumberOfSections());
+        assertEquals("doc1", doc.getDocument(0).getFileName());
+        assertEquals("sec1", doc.getDocument(0).getSection(0).getHeaderContent(0).content);
+        assertEquals(0, doc.getDocument(0).getSection(0).getLevel());
+        assertEquals(1, doc.getDocument(0).getSection(0).getNumberOfParagraphs());
+        assertEquals(2, doc.getDocument(0).getSection(0).getParagraph(0).getNumberOfSentences());
+        assertEquals("sentence00", doc.getDocument(0).getSection(0).getParagraph(0).getSentence(0).content);
+        assertEquals(true, doc.getDocument(0).getSection(0).getParagraph(0).getSentence(0).isFirstSentence);
+        assertEquals(0, doc.getDocument(0).getSection(0).getParagraph(0).getSentence(0).position);
+        assertEquals("sentence01", doc.getDocument(0).getSection(0).getParagraph(0).getSentence(1).content);
+        assertEquals(false, doc.getDocument(0).getSection(0).getParagraph(0).getSentence(1).isFirstSentence);
+        assertEquals(1, doc.getDocument(0).getSection(0).getParagraph(0).getSentence(1).position);
 
         // second document
-        assertEquals(1, doc.getFile(1).getNumberOfSections());
-        assertEquals("doc2", doc.getFile(1).getFileName());
-        assertEquals("sec2", doc.getFile(1).getSection(0).getHeaderContent(0).content);
-        assertEquals(0, doc.getFile(1).getSection(0).getLevel());
-        assertEquals(1, doc.getFile(1).getSection(0).getNumberOfParagraphs());
-        assertEquals(2, doc.getFile(1).getSection(0).getParagraph(0).getNumberOfSentences());
-        assertEquals("sentence10", doc.getFile(1).getSection(0).getParagraph(0).getSentence(0).content);
-        assertEquals(true, doc.getFile(1).getSection(0).getParagraph(0).getSentence(0).isFirstSentence);
-        assertEquals(0, doc.getFile(1).getSection(0).getParagraph(0).getSentence(0).position);
-        assertEquals("sentence11", doc.getFile(1).getSection(0).getParagraph(0).getSentence(1).content);
-        assertEquals(false, doc.getFile(1).getSection(0).getParagraph(0).getSentence(1).isFirstSentence);
-        assertEquals(1, doc.getFile(1).getSection(0).getParagraph(0).getSentence(1).position);
+        assertEquals(1, doc.getDocument(1).getNumberOfSections());
+        assertEquals("doc2", doc.getDocument(1).getFileName());
+        assertEquals("sec2", doc.getDocument(1).getSection(0).getHeaderContent(0).content);
+        assertEquals(0, doc.getDocument(1).getSection(0).getLevel());
+        assertEquals(1, doc.getDocument(1).getSection(0).getNumberOfParagraphs());
+        assertEquals(2, doc.getDocument(1).getSection(0).getParagraph(0).getNumberOfSentences());
+        assertEquals("sentence10", doc.getDocument(1).getSection(0).getParagraph(0).getSentence(0).content);
+        assertEquals(true, doc.getDocument(1).getSection(0).getParagraph(0).getSentence(0).isFirstSentence);
+        assertEquals(0, doc.getDocument(1).getSection(0).getParagraph(0).getSentence(0).position);
+        assertEquals("sentence11", doc.getDocument(1).getSection(0).getParagraph(0).getSentence(1).content);
+        assertEquals(false, doc.getDocument(1).getSection(0).getParagraph(0).getSentence(1).isFirstSentence);
+        assertEquals(1, doc.getDocument(1).getSection(0).getParagraph(0).getSentence(1).position);
     }
 
     @Test
@@ -101,25 +101,25 @@ public class DocumentCollectionTest {
                 .build();
 
         assertEquals(1, doc.getNumberOfDocuments());
-        assertEquals(1, doc.getFile(0).getNumberOfSections());
-        assertEquals(0, doc.getFile(0).getSection(0).getLevel());
-        assertEquals("Foobar", doc.getFile(0).getFileName());
-        assertEquals("baz", doc.getFile(0).getSection(0).getHeaderContent(0).content);
-        assertEquals(1, doc.getFile(0).getSection(0).getNumberOfParagraphs());
-        assertEquals("sentence0", doc.getFile(0).getSection(0).getParagraph(0).getSentence(0).content);
-        assertEquals(true, doc.getFile(0).getSection(0).getParagraph(0).getSentence(0).isFirstSentence);
-        assertEquals(0, doc.getFile(0).getSection(0).getParagraph(0).getSentence(0).position);
-        assertEquals("sentence1", doc.getFile(0).getSection(0).getParagraph(0).getSentence(1).content);
-        assertEquals(false, doc.getFile(0).getSection(0).getParagraph(0).getSentence(1).isFirstSentence);
-        assertEquals(1, doc.getFile(0).getSection(0).getParagraph(0).getSentence(1).position);
-        assertEquals(1, doc.getFile(0).getSection(0).getNumberOfLists());
-        assertEquals(3, doc.getFile(0).getSection(0).getListBlock(0).getNumberOfListElements());
-        assertEquals(0, doc.getFile(0).getSection(0).getListBlock(0).getListElement(0).getLevel());
-        assertEquals("list0", doc.getFile(0).getSection(0).getListBlock(0).getListElement(0).getSentence(0).content);
-        assertEquals(0, doc.getFile(0).getSection(0).getListBlock(0).getListElement(1).getLevel());
-        assertEquals("list1", doc.getFile(0).getSection(0).getListBlock(0).getListElement(1).getSentence(0).content);
-        assertEquals(1, doc.getFile(0).getSection(0).getListBlock(0).getListElement(2).getLevel());
-        assertEquals("list2", doc.getFile(0).getSection(0).getListBlock(0).getListElement(2).getSentence(0).content);
+        assertEquals(1, doc.getDocument(0).getNumberOfSections());
+        assertEquals(0, doc.getDocument(0).getSection(0).getLevel());
+        assertEquals("Foobar", doc.getDocument(0).getFileName());
+        assertEquals("baz", doc.getDocument(0).getSection(0).getHeaderContent(0).content);
+        assertEquals(1, doc.getDocument(0).getSection(0).getNumberOfParagraphs());
+        assertEquals("sentence0", doc.getDocument(0).getSection(0).getParagraph(0).getSentence(0).content);
+        assertEquals(true, doc.getDocument(0).getSection(0).getParagraph(0).getSentence(0).isFirstSentence);
+        assertEquals(0, doc.getDocument(0).getSection(0).getParagraph(0).getSentence(0).position);
+        assertEquals("sentence1", doc.getDocument(0).getSection(0).getParagraph(0).getSentence(1).content);
+        assertEquals(false, doc.getDocument(0).getSection(0).getParagraph(0).getSentence(1).isFirstSentence);
+        assertEquals(1, doc.getDocument(0).getSection(0).getParagraph(0).getSentence(1).position);
+        assertEquals(1, doc.getDocument(0).getSection(0).getNumberOfLists());
+        assertEquals(3, doc.getDocument(0).getSection(0).getListBlock(0).getNumberOfListElements());
+        assertEquals(0, doc.getDocument(0).getSection(0).getListBlock(0).getListElement(0).getLevel());
+        assertEquals("list0", doc.getDocument(0).getSection(0).getListBlock(0).getListElement(0).getSentence(0).content);
+        assertEquals(0, doc.getDocument(0).getSection(0).getListBlock(0).getListElement(1).getLevel());
+        assertEquals("list1", doc.getDocument(0).getSection(0).getListBlock(0).getListElement(1).getSentence(0).content);
+        assertEquals(1, doc.getDocument(0).getSection(0).getListBlock(0).getListElement(2).getLevel());
+        assertEquals("list2", doc.getDocument(0).getSection(0).getListBlock(0).getListElement(2).getSentence(0).content);
     }
 
     @Test
@@ -132,8 +132,8 @@ public class DocumentCollectionTest {
                 .addSentence("This is a foobar.", 0)
                 .build();
         assertEquals(1, doc.getNumberOfDocuments());
-        assertEquals(1, doc.getFile(0).getNumberOfSections());
-        assertEquals(4, doc.getFile(0).getSection(0).getParagraph(0).getSentence(0).tokens.size());
+        assertEquals(1, doc.getDocument(0).getNumberOfSections());
+        assertEquals(4, doc.getDocument(0).getSection(0).getParagraph(0).getSentence(0).tokens.size());
     }
 
     @Test
@@ -146,8 +146,8 @@ public class DocumentCollectionTest {
                 .addSentence("今日は晴天だ。", 0)
                 .build();
         assertEquals(1, doc.getNumberOfDocuments());
-        assertEquals(1, doc.getFile(0).getNumberOfSections());
-        assertEquals(5, doc.getFile(0).getSection(0).getParagraph(0).getSentence(0).tokens.size());
+        assertEquals(1, doc.getDocument(0).getNumberOfSections());
+        assertEquals(5, doc.getDocument(0).getSection(0).getParagraph(0).getSentence(0).tokens.size());
     }
 
     @Test(expected = IllegalStateException.class)
