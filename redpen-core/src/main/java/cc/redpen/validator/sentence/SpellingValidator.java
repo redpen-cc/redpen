@@ -2,6 +2,7 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
+import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.util.ResourceLoader;
 import cc.redpen.util.WordListExtractor;
 import cc.redpen.validator.ValidationError;
@@ -61,23 +62,22 @@ public class SpellingValidator extends Validator<Sentence> {
     @Override
     public List<ValidationError> validate(Sentence line) {
         List<ValidationError> validationErrors = new ArrayList<>();
-        String str = normalize(line);
-        String[] words = str.split(" ");
-        for (String word : words) {
-            if (word.length() == 0) {
+        for (TokenElement token : line.tokens) {
+            String surface = normalize(token.getSurface());
+            if (surface.length() == 0) {
                 continue;
             }
 
-            if (!this.validWords.contains(word)) {
+            if (!this.validWords.contains(surface)) {
                 validationErrors.add(createValidationError(line));
             }
         }
         return validationErrors;
     }
 
-    private String normalize(Sentence line) {
-        StringBuilder builder = new StringBuilder(line.content.length());
-        for (Character ch : line.content.toCharArray()) {
+    private String normalize(String line) {
+        StringBuilder builder = new StringBuilder(line.length());
+        for (Character ch : line.toCharArray()) {
             if (!skipCharacters.contains(ch)) {
                 builder.append(Character.toLowerCase(ch));
             }
