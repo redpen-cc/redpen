@@ -38,7 +38,7 @@ import static org.junit.Assert.fail;
 
 public class PlainTextParserTest {
 
-    private Parser parser = null;
+    private DocumentParser parser = null;
 
     private List<Paragraph> extractParagraphs(Section section) {
         List<Paragraph> paragraphs = new ArrayList<>();
@@ -80,7 +80,7 @@ public class PlainTextParserTest {
                         new ValidatorConfiguration("SentenceLength").addAttribute("max_length", "10"))
                 .build();
         try {
-            parser = DocumentParserFactory.generate(Parser.Type.PLAIN, configuration, new DocumentCollection.Builder());
+            parser = DocumentParserFactory.generate(DocumentParser.Type.PLAIN, configuration, new DocumentCollection.Builder());
         } catch (RedPenException e1) {
             e1.printStackTrace();
             fail();
@@ -176,7 +176,7 @@ public class PlainTextParserTest {
 
     @Test(expected = RedPenException.class)
     public void testNullInitialize() throws Exception {
-        DocumentParserFactory.generate(Parser.Type.PLAIN, null,
+        DocumentParserFactory.generate(DocumentParser.Type.PLAIN, null,
                 new DocumentCollection.Builder());
     }
 

@@ -22,13 +22,10 @@ import cc.redpen.distributor.ResultDistributor;
 import cc.redpen.distributor.ResultDistributorFactory;
 import cc.redpen.formatter.Formatter;
 import cc.redpen.model.DocumentCollection;
-import cc.redpen.parser.Parser;
+import cc.redpen.parser.DocumentParser;
 import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Class containing main method called from command line.
@@ -83,7 +80,7 @@ public final class Main {
         String inputFormat = "plain";
         String configFileName = "";
         String resultFormat = "plain";
-        Parser.Type parserType;
+        DocumentParser.Type parserType;
         Formatter.Type outputFormat;
 
         if (commandLine.hasOption("h")) {
@@ -113,7 +110,7 @@ public final class Main {
             System.exit(-1);
         }
 
-        parserType = Parser.Type.valueOf(inputFormat.toUpperCase());
+        parserType = DocumentParser.Type.valueOf(inputFormat.toUpperCase());
         outputFormat = Formatter.Type.valueOf(resultFormat.toUpperCase());
 
         DocumentCollection documentCollection =

@@ -22,8 +22,8 @@ import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
+import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.DocumentParserFactory;
-import cc.redpen.parser.Parser;
 import cc.redpen.validator.ValidationError;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -106,8 +106,8 @@ public class DocumentValidateResource {
 
         json.put("document", document);
 
-        Parser parser = DocumentParserFactory.generate(
-                Parser.Type.PLAIN, server.getConfiguration(), new DocumentCollection.Builder());
+        DocumentParser parser = DocumentParserFactory.generate(
+                DocumentParser.Type.PLAIN, server.getConfiguration(), new DocumentCollection.Builder());
         Document fileContent = parser.generateDocument(new
                 ByteArrayInputStream(document.getBytes("UTF-8")));
 

@@ -20,7 +20,7 @@ package cc.redpen;
 import cc.redpen.model.DocumentCollection;
 import org.junit.Test;
 
-import static cc.redpen.parser.Parser.Type.*;
+import static cc.redpen.parser.DocumentParser.Type.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 

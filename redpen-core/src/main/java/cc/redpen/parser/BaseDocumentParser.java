@@ -34,7 +34,7 @@ import java.util.List;
  * Abstract Parser class containing common procedures to
  * implements the concrete Parser classes.
  */
-public abstract class BaseDocumentParser implements Parser {
+public abstract class BaseDocumentParser implements DocumentParser {
     private static final Logger LOG = LoggerFactory.getLogger(
             BaseDocumentParser.class);
     protected DocumentCollection.Builder builder;

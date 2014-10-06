@@ -28,7 +28,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
-import static cc.redpen.parser.Parser.Type.MARKDOWN;
+import static cc.redpen.parser.DocumentParser.Type.MARKDOWN;
 import static org.junit.Assert.*;
 
 public class MarkdownParserTest {
@@ -39,14 +39,14 @@ public class MarkdownParserTest {
 
     @Test(expected = RedPenException.class)
     public void testNullDocument() throws Exception {
-        Parser parser = loadParser(new Configuration.Builder().build());
+        DocumentParser parser = loadParser(new Configuration.Builder().build());
         InputStream is = null;
         parser.generateDocument(is);
     }
 
     @Test(expected = RedPenException.class)
     public void testNullFileName() throws Exception {
-        Parser parser = loadParser(new Configuration.Builder().build());
+        DocumentParser parser = loadParser(new Configuration.Builder().build());
         String fileName = null;
         parser.generateDocument(fileName);
     }
@@ -460,8 +460,8 @@ public class MarkdownParserTest {
     }
 
 
-    private Parser loadParser(Configuration configuration) {
-        Parser parser = null;
+    private DocumentParser loadParser(Configuration configuration) {
+        DocumentParser parser = null;
         try {
             parser = DocumentParserFactory.generate(MARKDOWN, configuration,
                     new DocumentCollection.Builder());
@@ -482,7 +482,7 @@ public class MarkdownParserTest {
             fail();
         }
 
-        Parser parser = loadParser(config);
+        DocumentParser parser = loadParser(config);
 
         try {
             return parser.generateDocument(inputDocumentStream);
@@ -494,7 +494,7 @@ public class MarkdownParserTest {
 
     private Document createFileContent(
             String inputDocumentString) {
-        Parser parser = loadParser(new Configuration.Builder().build());
+        DocumentParser parser = loadParser(new Configuration.Builder().build());
         InputStream is;
         try {
             is = new ByteArrayInputStream(inputDocumentString.getBytes("utf-8"));
