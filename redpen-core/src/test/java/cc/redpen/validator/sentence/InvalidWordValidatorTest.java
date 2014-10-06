@@ -6,7 +6,6 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.distributor.FakeResultDistributor;
 import cc.redpen.model.DocumentCollection;
-import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import org.junit.Test;
 
@@ -19,17 +18,35 @@ public class InvalidWordValidatorTest {
 
     @Test
     public void testSimpleRun() {
+        DocumentCollection documents = new DocumentCollection.Builder()
+                .addDocument("")
+                .addSection(1)
+                .addParagraph()
+                .addSentence(
+                        "He is a foolish guy.",
+                        1)
+                .build();
+
         InvalidWordValidator validator = new InvalidWordValidator();
         validator.addInvalid("foolish");
-        List<ValidationError> errors = validator.validate(new Sentence("He is a foolish guy.", 0));
+        List<ValidationError> errors = validator.validate(documents.getFile(0).getLastSection().getParagraph(0).getSentence(0));
         assertEquals(1, errors.size());
     }
 
     @Test
     public void testVoid() {
+        DocumentCollection documents = new DocumentCollection.Builder()
+                .addDocument("")
+                .addSection(1)
+                .addParagraph()
+                .addSentence(
+                        "",
+                        1)
+                .build();
+
         InvalidWordValidator validator = new InvalidWordValidator();
         validator.addInvalid("foolish");
-        List<ValidationError> errors = validator.validate(new Sentence("", 0));
+        List<ValidationError> errors = validator.validate(documents.getFile(0).getLastSection().getParagraph(0).getSentence(0));
         assertEquals(0, errors.size());
     }
 

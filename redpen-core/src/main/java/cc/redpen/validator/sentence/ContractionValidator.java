@@ -18,6 +18,7 @@
 package cc.redpen.validator.sentence;
 
 import cc.redpen.model.Sentence;
+import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.validator.PreProcessor;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
@@ -123,11 +124,11 @@ final public class ContractionValidator extends Validator<Sentence> implements P
     @Override
     public List<ValidationError> validate(Sentence block) {
         List<ValidationError> validationErrors = new ArrayList<>();
-        String [] words = block.content.toLowerCase().split(" ");
-        for (String word : words) {
+        for (TokenElement token : block.tokens) {
+            String surface = token.getSurface().toLowerCase();
             if (foundNonContractionNum >= foundContractionNum
-                    && contractions.contains(word)) {
-                validationErrors.add(createValidationError(block, word));
+                    && contractions.contains(surface)) {
+                validationErrors.add(createValidationError(block, surface));
             }
         }
         return validationErrors;
@@ -135,11 +136,11 @@ final public class ContractionValidator extends Validator<Sentence> implements P
 
     @Override
     public void preprocess(Sentence block) {
-        String [] words = block.content.toLowerCase().split(" ");
-        for (String word : words) {
-            if (contractions.contains(word)) {
+        for (TokenElement token : block.tokens) {
+            String surface = token.getSurface().toLowerCase();
+            if (contractions.contains(surface)) {
                 foundContractionNum += 1;
-            } else if (nonContractions.contains(word)) {
+            } else if (nonContractions.contains(surface)) {
                 foundNonContractionNum += 1;
             }
         }

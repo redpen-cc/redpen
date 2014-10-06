@@ -2,6 +2,7 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
+import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.util.ResourceLoader;
 import cc.redpen.util.WordListExtractor;
 import cc.redpen.validator.ValidationError;
@@ -33,9 +34,8 @@ final public class StartWithCapitalLetterValidator extends Validator<Sentence> {
     public List<ValidationError> validate(Sentence block) {
         List<ValidationError> validationErrors = new ArrayList<>();
         String content = block.content;
-        String[] words = content.split(" ");
-
-        if (this.whiteList.contains(words[0])) {
+        List<TokenElement> tokens = block.tokens;
+        if (tokens.size() == 0 || this.whiteList.contains(tokens.get(0).getSurface())) {
             return validationErrors;
         }
 

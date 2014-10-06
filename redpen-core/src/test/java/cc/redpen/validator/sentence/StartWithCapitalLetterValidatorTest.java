@@ -6,7 +6,6 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.distributor.FakeResultDistributor;
 import cc.redpen.model.DocumentCollection;
-import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import org.junit.Test;
 
@@ -17,42 +16,90 @@ import static org.junit.Assert.assertEquals;
 public class StartWithCapitalLetterValidatorTest {
     @Test
     public void testDetectStartWithSmallCharacter() {
+        DocumentCollection documents = new DocumentCollection.Builder()
+                .addDocument("")
+                .addSection(1)
+                .addParagraph()
+                .addSentence(
+                        "this is it.",
+                        1)
+                .build();
         StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
-        assertEquals(1, validator.validate(new Sentence("this is it.", 0)).size());
+        assertEquals(1, validator.validate(documents.getFile(0).getLastSection().getParagraph(0).getSentence(0)).size());
     }
 
     @Test
     public void testDetectStartWithCapitalCharacter() {
+        DocumentCollection documents = new DocumentCollection.Builder()
+                .addDocument("")
+                .addSection(1)
+                .addParagraph()
+                .addSentence(
+                        "This is it.",
+                        1)
+                .build();
         StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
-        assertEquals(0, validator.validate(new Sentence("This is it.", 0)).size());
+        assertEquals(0, validator.validate(documents.getFile(0).getLastSection().getParagraph(0).getSentence(0)).size());
     }
 
     @Test
     public void testStartWithElementOfWhiteList() {
+        DocumentCollection documents = new DocumentCollection.Builder()
+                .addDocument("")
+                .addSection(1)
+                .addParagraph()
+                .addSentence(
+                        "iPhone is a mobile computer.",
+                        1)
+                .build();
         StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
         validator.addWhiteList("iPhone");
-        assertEquals(0, validator.validate(new Sentence("iPhone is a mobile computer.", 0)).size());
+        assertEquals(0, validator.validate(documents.getFile(0).getLastSection().getParagraph(0).getSentence(0)).size());
     }
 
     @Test
     public void testStartWithWhiteListItemInJapaneseSentence() {
+        DocumentCollection documents = new DocumentCollection.Builder()
+                .addDocument("")
+                .addSection(1)
+                .addParagraph()
+                .addSentence(
+                        "iPhone はカッコイイ．",
+                        1)
+                .build();
         StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
         validator.addWhiteList("iPhone");
-        assertEquals(0, validator.validate(new Sentence("iPhone はカッコイイ．", 0)).size());
+        assertEquals(0, validator.validate(documents.getFile(0).getLastSection().getParagraph(0).getSentence(0)).size());
     }
 
     @Test
     public void testStartWithWhiteSpaceAndThenItemOfWhiteList() {
+        DocumentCollection documents = new DocumentCollection.Builder()
+                .addDocument("")
+                .addSection(1)
+                .addParagraph()
+                .addSentence(
+                        " iPhone is a mobile computer.",
+                        1)
+                .build();
         StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
         validator.addWhiteList("iPhone");
-        assertEquals(0, validator.validate(new Sentence(" iPhone is a mobile computer.", 0)).size());
+        assertEquals(0, validator.validate(documents.getFile(0).getLastSection().getParagraph(0).getSentence(0)).size());
     }
 
     @Test
     public void testVoid() {
+        DocumentCollection documents = new DocumentCollection.Builder()
+                .addDocument("")
+                .addSection(1)
+                .addParagraph()
+                .addSentence(
+                        "",
+                        1)
+                .build();
         StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
         validator.addWhiteList("iPhone");
-        assertEquals(0, validator.validate(new Sentence("", 0)).size());
+        assertEquals(0, validator.validate(documents.getFile(0).getLastSection().getParagraph(0).getSentence(0)).size());
     }
 
     @Test

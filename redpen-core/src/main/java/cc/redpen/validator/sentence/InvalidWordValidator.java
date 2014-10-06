@@ -19,6 +19,7 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
+import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.util.ResourceLoader;
 import cc.redpen.util.WordListExtractor;
 import cc.redpen.validator.ValidationError;
@@ -44,9 +45,9 @@ final public class InvalidWordValidator extends Validator<Sentence> {
         String content = line.content;
         //NOTE: only Ascii white space since this validator works for european languages.
         List<String> words = Arrays.asList(content.split(" "));
-        for (String invalidWord : invalidWords) {
-            if (words.contains(invalidWord)) {
-                result.add(createValidationError(line, invalidWord));
+        for (TokenElement token : line.tokens) {
+            if (invalidWords.contains(token.getSurface())) {
+                result.add(createValidationError(line, token.getSurface()));
             }
         }
         return result;
