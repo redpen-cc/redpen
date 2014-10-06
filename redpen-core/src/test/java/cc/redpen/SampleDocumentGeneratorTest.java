@@ -33,11 +33,11 @@ public class SampleDocumentGeneratorTest {
                 PLAIN);
         assertNotNull(doc);
         assertEquals(1, doc.size());
-        assertEquals(1, doc.getFile(0).getNumberOfSections());
-        assertEquals(1, doc.getFile(0).getSection(0).getNumberOfParagraphs());
-        assertEquals(1, doc.getFile(0).getSection(0).getParagraph(0)
+        assertEquals(1, doc.getDocument(0).getNumberOfSections());
+        assertEquals(1, doc.getDocument(0).getSection(0).getNumberOfParagraphs());
+        assertEquals(1, doc.getDocument(0).getSection(0).getParagraph(0)
                 .getNumberOfSentences());
-        assertEquals("Gekioko pun pun maru means very very angry.", doc.getFile(0).getSection(0)
+        assertEquals("Gekioko pun pun maru means very very angry.", doc.getDocument(0).getSection(0)
                 .getParagraph(0).getSentence(0).content);
     }
 
@@ -50,12 +50,12 @@ public class SampleDocumentGeneratorTest {
                 WIKI);
         assertNotNull(doc);
         assertEquals(1, doc.size());
-        assertEquals(2, doc.getFile(0).getNumberOfSections());
-        assertEquals("About Gekioko.", doc.getFile(0).getSection(1).getHeaderContent(0).content);
-        assertEquals(1, doc.getFile(0).getSection(1).getNumberOfParagraphs());
-        assertEquals(1, doc.getFile(0).getSection(1).getParagraph(0)
+        assertEquals(2, doc.getDocument(0).getNumberOfSections());
+        assertEquals("About Gekioko.", doc.getDocument(0).getSection(1).getHeaderContent(0).content);
+        assertEquals(1, doc.getDocument(0).getSection(1).getNumberOfParagraphs());
+        assertEquals(1, doc.getDocument(0).getSection(1).getParagraph(0)
                 .getNumberOfSentences());
-        assertEquals("Gekioko pun pun maru means very very angry.", doc.getFile(0).getSection(1)
+        assertEquals("Gekioko pun pun maru means very very angry.", doc.getDocument(0).getSection(1)
                 .getParagraph(0).getSentence(0).content);
     }
 
@@ -68,12 +68,12 @@ public class SampleDocumentGeneratorTest {
                 MARKDOWN);
         assertNotNull(doc);
         assertEquals(1, doc.size());
-        assertEquals(2, doc.getFile(0).getNumberOfSections());
-        assertEquals("About Gekioko.", doc.getFile(0).getSection(1).getHeaderContent(0).content);
-        assertEquals(1, doc.getFile(0).getSection(1).getNumberOfParagraphs());
-        assertEquals(1, doc.getFile(0).getSection(1).getParagraph(0)
+        assertEquals(2, doc.getDocument(0).getNumberOfSections());
+        assertEquals("About Gekioko.", doc.getDocument(0).getSection(1).getHeaderContent(0).content);
+        assertEquals(1, doc.getDocument(0).getSection(1).getNumberOfParagraphs());
+        assertEquals(1, doc.getDocument(0).getSection(1).getParagraph(0)
                 .getNumberOfSentences());
-        assertEquals("Gekioko pun pun maru means very very angry.", doc.getFile(0).getSection(1)
+        assertEquals("Gekioko pun pun maru means very very angry.", doc.getDocument(0).getSection(1)
                 .getParagraph(0).getSentence(0).content);
     }
 

@@ -29,7 +29,7 @@ public class InvalidWordValidatorTest {
 
         InvalidWordValidator validator = new InvalidWordValidator();
         validator.addInvalid("foolish");
-        List<ValidationError> errors = validator.validate(documents.getFile(0).getLastSection().getParagraph(0).getSentence(0));
+        List<ValidationError> errors = validator.validate(documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0));
         assertEquals(1, errors.size());
     }
 
@@ -46,7 +46,7 @@ public class InvalidWordValidatorTest {
 
         InvalidWordValidator validator = new InvalidWordValidator();
         validator.addInvalid("foolish");
-        List<ValidationError> errors = validator.validate(documents.getFile(0).getLastSection().getParagraph(0).getSentence(0));
+        List<ValidationError> errors = validator.validate(documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0));
         assertEquals(0, errors.size());
     }
 
