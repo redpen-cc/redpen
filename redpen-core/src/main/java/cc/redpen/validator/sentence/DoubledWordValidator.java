@@ -55,7 +55,7 @@ final public class DoubledWordValidator extends Validator<Sentence> {
         String lang = getSymbolTable().getLang();
         WordListExtractor extractor = new WordListExtractor();
         ResourceLoader loader = new ResourceLoader(extractor);
-        LOG.info("Loading default invalid expression dictionary for " +
+        LOG.info("Loading default doubled word skip list dictionary for " +
                 "\"" + lang + "\".");
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/doubled-word-skiplist-" + lang + ".dat";
@@ -63,7 +63,7 @@ final public class DoubledWordValidator extends Validator<Sentence> {
             loader.loadInternalResource(defaultDictionaryFile);
         } catch (IOException e) {
             LOG.error("Failed to load default dictionary.");
-            LOG.error("InvalidExpressionValidator does not support dictionary for "
+            LOG.error("DoubledWordValidator does not support dictionary for "
                     + "\"" + lang + "\".");
             throw new RedPenException(e);
         }
