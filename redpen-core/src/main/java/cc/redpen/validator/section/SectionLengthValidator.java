@@ -57,7 +57,7 @@ final public class SectionLengthValidator extends Validator<Section> {
 
     @Override
     protected void init() throws RedPenException {
-        this.maxSectionCharNumber = getConfigAttributeAsInt("max_char_num", DEFAULT_MAXIMUM_CHAR_NUMBER_IN_A_SECTION);
+        this.maxSectionCharNumber = getConfigAttributeAsInt("max_num", DEFAULT_MAXIMUM_CHAR_NUMBER_IN_A_SECTION);
     }
 
     protected void setMaxSectionLength(int max) {

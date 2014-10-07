@@ -57,7 +57,7 @@ final public class ParagraphStartWithValidator extends Validator<Section> {
 
     @Override
     protected void init() throws RedPenException {
-        this.beginningOfParagraph = getConfigAttribute("paragraph_start_with", DEFAULT_PARAGRAPH_START_WITH);
+        this.beginningOfParagraph = getConfigAttribute("start_from", DEFAULT_PARAGRAPH_START_WITH);
     }
 
     @Override

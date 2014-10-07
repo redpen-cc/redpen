@@ -75,7 +75,7 @@ final public class InvalidExpressionValidator extends Validator<Sentence> {
         }
         LOG.info("Succeeded to load default dictionary.");
 
-        Optional<String> confFile = getConfigAttribute("dictionary");
+        Optional<String> confFile = getConfigAttribute("dict");
         confFile.ifPresent(f -> {
             LOG.info("user dictionary file is " + f);
             try {

@@ -141,7 +141,7 @@ final public class KatakanaSpellCheckValidator extends Validator<Sentence> {
             throw new RedPenException("Failed to load default dictionary.", e);
         }
 
-        Optional<String> confFile = getConfigAttribute("dictionary");
+        Optional<String> confFile = getConfigAttribute("dict");
         confFile.ifPresent(e -> {
             LOG.info("User dictionary file is " + e);
             try {

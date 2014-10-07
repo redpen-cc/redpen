@@ -49,7 +49,7 @@ final public class ParagraphNumberValidator extends Validator<Section> {
 
     @Override
     protected void init() throws RedPenException {
-        this.maxParagraphs = getConfigAttributeAsInt("max_paragraph_num", DEFAULT_MAX_PARAGRAPHS_IN_A_SECTION);
+        this.maxParagraphs = getConfigAttributeAsInt("max_num", DEFAULT_MAX_PARAGRAPHS_IN_A_SECTION);
     }
 
     @Override

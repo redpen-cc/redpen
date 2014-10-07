@@ -50,7 +50,7 @@ final public class SentenceLengthValidator extends Validator<Sentence> {
 
     @Override
     protected void init() throws RedPenException {
-        this.maxLength = getConfigAttributeAsInt("max_length", DEFAULT_MAX_LENGTH);
+        this.maxLength = getConfigAttributeAsInt("max_len", DEFAULT_MAX_LENGTH);
     }
 
     /**

@@ -51,7 +51,7 @@ final public class SuggestExpressionValidator extends Validator<Sentence> {
 
     @Override
     protected void init() throws RedPenException {
-        Optional<String> confFile = getConfigAttribute("invalid_word_file");
+        Optional<String> confFile = getConfigAttribute("dict");
         LOG.info("Dictionary file is " + confFile);
         if (!confFile.isPresent()) {
             LOG.error("Dictionary file is not specified");

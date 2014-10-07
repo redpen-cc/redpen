@@ -52,7 +52,7 @@ final public class WordNumberValidator extends Validator<Sentence> {
 
     @Override
     protected void init() throws RedPenException {
-        this.maxWordNumber = getConfigAttributeAsInt("max_word_num", DEFAULT_MAXIMUM_WORDS_IN_A_SENTENCE);
+        this.maxWordNumber = getConfigAttributeAsInt("max_num", DEFAULT_MAXIMUM_WORDS_IN_A_SENTENCE);
     }
 
     @Override
