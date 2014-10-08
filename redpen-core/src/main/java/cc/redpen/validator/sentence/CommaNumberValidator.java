@@ -65,7 +65,7 @@ final public class CommaNumberValidator extends Validator<Sentence> {
     @Override
     protected void init() throws RedPenException {
         //TODO search parent configurations to get comma settings...
-        this.maxCommaNum = getConfigAttributeAsInt("max_comma_num", DEFAULT_MAX_COMMA_NUMBER);
+        this.maxCommaNum = getConfigAttributeAsInt("max_num", DEFAULT_MAX_COMMA_NUMBER);
 
         this.comma = DEFAULT_COMMA;
         if (getSymbolTable().containsSymbol("COMMA")) {

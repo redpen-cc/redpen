@@ -45,7 +45,7 @@ public class SpellingValidator extends Validator<Sentence> {
         }
         LOG.info("Succeeded to load default dictionary.");
 
-        Optional<String> userDictionaryFile = getConfigAttribute("dictionary");
+        Optional<String> userDictionaryFile = getConfigAttribute("dict");
         userDictionaryFile.ifPresent(f -> {
             LOG.info("user dictionary file is " + f);
             try {

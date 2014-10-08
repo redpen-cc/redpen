@@ -1,7 +1,7 @@
 <redpen-conf>
     <validator-list>
         <validator name="SentenceLength">
-            <property name="max_length" value="200"/>
+            <property name="max_len" value="200"/>
         </validator>
         <validator name="InvalidSymbol"/>
         <validator name="SymbolWithSpace"/>
