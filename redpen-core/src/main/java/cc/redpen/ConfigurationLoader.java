@@ -76,7 +76,7 @@ public class ConfigurationLoader {
      *
      * @param configFileName input configuration settings
      * @return Validator configuration resources
-     * @throws java.io.IOException
+     * @throws cc.redpen.RedPenException
      */
     public Configuration loadConfiguration(String configFileName) throws RedPenException {
         try (InputStream fis = new FileInputStream(configFileName)) {
@@ -130,7 +130,7 @@ public class ConfigurationLoader {
     }
 
     private void extractValidatorConfigurations(NodeList validatorElementList) {
-        ValidatorConfiguration currentConfiguration = null;
+        ValidatorConfiguration currentConfiguration;
         for (int i = 0; i < validatorElementList.getLength(); i++) {
             Node nNode = validatorElementList.item(i);
             if (nNode.getNodeType() != Node.ELEMENT_NODE) {

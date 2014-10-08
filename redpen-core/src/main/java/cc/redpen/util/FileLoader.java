@@ -17,6 +17,10 @@
  */
 package cc.redpen.util;
 
+import cc.redpen.RedPenException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 
 /**
@@ -24,6 +28,8 @@ import java.io.*;
  */
 public class FileLoader {
     private final ResourceExtractor resourceExtractor;
+    private static final Logger LOG =
+            LoggerFactory.getLogger(ResourceExtractor.class);
 
     /**
      * Constructor.
@@ -56,9 +62,13 @@ public class FileLoader {
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
         String line;
         while ((line = bufferedReader.readLine()) != null) {
-            if (this.resourceExtractor.load(line) != 0) {
-                throw new IOException("Failed to load line:" + line);
+            try {
+                this.resourceExtractor.load(line);
+            } catch (RedPenException e) {
+                LOG.error(e.getMessage()); // just skip to load the line
+                LOG.error("Skip to load line...");
             }
+
         }
     }
 }

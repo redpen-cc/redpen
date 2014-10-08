@@ -17,6 +17,8 @@
  */
 package cc.redpen.util;
 
+import cc.redpen.RedPenException;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,13 +43,12 @@ public class KeyValueDictionaryExtractor implements ResourceExtractor<Map<String
      * @return 0 when succeeded to load, 1 otherwise
      */
     @Override
-    public int load(String line) {
+    public void load(String line) throws RedPenException {
         String[] result = line.split("\t");
         if (result.length != 2) {
-            return 1;
+            throw new RedPenException("Invalid line: " +  line);
         }
         map.put(result[0], result[1]);
-        return 0;
     }
 
     @Override

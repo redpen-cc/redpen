@@ -17,6 +17,8 @@
  */
 package cc.redpen.util;
 
+import cc.redpen.RedPenException;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,7 +27,6 @@ import java.util.Set;
  * FileLoader.
  */
 public class WordListExtractor implements ResourceExtractor<Set<String>> {
-
     private final Set<String> wordList;
     private boolean toLowerCase = false;
 
@@ -44,12 +45,11 @@ public class WordListExtractor implements ResourceExtractor<Set<String>> {
      * @return 0 when succeeded.
      */
     @Override
-    public int load(String line) {
+    public void load(String line) throws RedPenException {
         if (this.toLowerCase) {
             line = line.toLowerCase();
         }
         wordList.add(line);
-        return 0;
     }
 
     /**

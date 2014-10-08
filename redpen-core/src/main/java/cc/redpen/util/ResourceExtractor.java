@@ -17,6 +17,8 @@
  */
 package cc.redpen.util;
 
+import cc.redpen.RedPenException;
+
 /**
  * ResourceExtractor is called from FileLoader. To support a file format,
  * we create a class implementing ResourceExtractor.
@@ -26,9 +28,8 @@ public interface ResourceExtractor<E> {
      * load line.
      *
      * @param line line in a file
-     * @return 0 when succeeded, otherwise 1
      */
-    int load(String line);
+    void load(String line) throws RedPenException;
 
     /**
      * Get the loaded container.
