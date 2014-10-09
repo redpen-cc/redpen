@@ -20,6 +20,8 @@ package cc.redpen.formatter;
 import cc.redpen.RedPenException;
 import cc.redpen.validator.ValidationError;
 
+import java.util.Optional;
+
 /**
  * This interface is for classes to define output format of
  * reported ValidationError objects.
@@ -38,14 +40,14 @@ public interface Formatter {
      *
      * @return header block
      */
-    String header();
+    Optional<String> header();
 
     /**
      * Return the footer block of semi-structured format.
      *
-     * @return
+     * @return footer block
      */
-    String footer();
+    Optional<String> footer();
 
     /**
      * the type of formatter using ResultDistributorFactory.

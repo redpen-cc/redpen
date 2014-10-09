@@ -32,6 +32,7 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.StringWriter;
+import java.util.Optional;
 
 /**
  * XML Output formatter.
@@ -121,12 +122,12 @@ public class XMLFormatter implements Formatter {
     }
 
     @Override
-    public String header() {
-        return "<validation-result>";
+    public Optional<String> header() {
+        return Optional.ofNullable("<validation-result>");
     }
 
     @Override
-    public String footer() {
-        return "</validation-result>";
+    public Optional<String> footer(){
+        return Optional.ofNullable("</validation-result>");
     }
 }

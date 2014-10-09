@@ -40,14 +40,13 @@ public interface ResultDistributor {
      * Flush given ValidationError.
      *
      * @param err error reported from a Validator
-     * @return 0 succeeded, otherwise 1
      */
-    int flushError(ValidationError err) throws RedPenException;
+    void flushError(ValidationError err) throws RedPenException;
 
     /**
      * Set Formatter object.
      *
-     * @param formatter
+     * @param formatter flush result with tye specified format
      */
     void setFormatter(Formatter formatter);
 }

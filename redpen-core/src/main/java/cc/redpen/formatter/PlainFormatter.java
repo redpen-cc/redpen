@@ -20,6 +20,8 @@ package cc.redpen.formatter;
 import cc.redpen.RedPenException;
 import cc.redpen.validator.ValidationError;
 
+import java.util.Optional;
+
 /**
  * Format input error into a string message.
  */
@@ -40,13 +42,13 @@ public class PlainFormatter implements Formatter {
     }
 
     @Override
-    public String header() {
-        return null;
+    public Optional<String> header() {
+        return Optional.ofNullable(null);
     }
 
     @Override
-    public String footer() {
-        return null;
+    public Optional<String> footer() {
+        return Optional.ofNullable(null);
     }
 
 }
