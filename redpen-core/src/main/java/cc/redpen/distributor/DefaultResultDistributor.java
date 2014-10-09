@@ -25,6 +25,7 @@ import cc.redpen.validator.ValidationError;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Optional;
 
 /**
  * An implementation of ResultDistributor which flush the result into
@@ -74,30 +75,24 @@ public class DefaultResultDistributor implements ResultDistributor {
      *
      * @param err validation error
      */
-    public int flushError(ValidationError err) throws RedPenException {
+    public void flushError(ValidationError err) throws RedPenException {
         if (err == null) {
             throw new RedPenException("argument ValidationError is null");
         }
         writer.println(myFormatter.convertError(err));
         writer.flush();
-        return 0;
     }
 
     @Override
     public void flushHeader() {
-        String header = myFormatter.header();
-        if (header != null) {
-            writer.println(header);
-        }
+        Optional<String> header = myFormatter.header();
+        header.ifPresent(h -> writer.println(header));
     }
 
     @Override
     public void flushFooter() {
-        String footer = myFormatter.footer();
-        if (footer != null) {
-            writer.println(footer);
-            writer.flush();
-        }
+        Optional<String> footer = myFormatter.footer();
+        footer.ifPresent(h -> writer.println(footer));
     }
 
     @Override
