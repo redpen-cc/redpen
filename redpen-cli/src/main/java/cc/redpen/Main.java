@@ -23,9 +23,12 @@ import cc.redpen.distributor.ResultDistributorFactory;
 import cc.redpen.formatter.Formatter;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.parser.DocumentParser;
+import cc.redpen.validator.ValidationError;
 import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * Class containing main method called from command line.
@@ -37,10 +40,17 @@ public final class Main {
 
     private static final String VERSION = "0.6";
 
+    private static final int EDEFAULT_LIMIT = 1;
+
     private Main() {
         super();
     }
 
+    /**
+     * When the errors reported by RedPen is more than the specified limit, this method returns 1 otherwise return 0.
+     * @param args arguments
+     * @throws RedPenException
+     */
     public static void main(String[] args) throws RedPenException {
         Options options = new Options();
         options.addOption("h", "help", false, "Displays this help information and exits");
@@ -63,12 +73,17 @@ public final class Main {
         OptionBuilder.withArgName("RESULT FORMAT");
         options.addOption(OptionBuilder.create("r"));
 
+        OptionBuilder.withLongOpt("limit");
+        OptionBuilder.withDescription("error limit number");
+        OptionBuilder.hasArg();
+        OptionBuilder.withArgName("LIMIT NUMBER");
+        options.addOption(OptionBuilder.create("l"));
+
         options.addOption("v", "version", false,
             "Displays version information and exits");
 
         CommandLineParser parser = new BasicParser();
         CommandLine commandLine = null;
-
         try {
             commandLine = parser.parse(options, args);
         } catch (ParseException e) {
@@ -80,6 +95,7 @@ public final class Main {
         String inputFormat = "plain";
         String configFileName = "";
         String resultFormat = "plain";
+        int limit = EDEFAULT_LIMIT;
         DocumentParser.Type parserType;
         Formatter.Type outputFormat;
 
@@ -99,6 +115,9 @@ public final class Main {
         }
         if (commandLine.hasOption("r")) {
             resultFormat = commandLine.getOptionValue("r");
+        }
+        if (commandLine.hasOption("l")) {
+            limit = Integer.valueOf(commandLine.getOptionValue("l"));
         }
 
         String[] inputFileNames = commandLine.getArgs();
@@ -128,14 +147,18 @@ public final class Main {
             .setResultDistributor(distributor)
             .build();
 
-        redPen.check(documentCollection);
-
-        System.exit(0);
+        List<ValidationError> errors = redPen.check(documentCollection);
+        if (errors.size() > limit) {
+            LOG.error("The number of errors \"{}\" is larger than specified (limit is \"{}\").", errors.size(), limit);
+            System.exit(1);
+        } else {
+            System.exit(0);
+        }
     }
 
     private static void printHelp(Options opt) {
         HelpFormatter formatter = new HelpFormatter();
         formatter.setWidth(100);
-        formatter.printHelp(PROGRAM + " -c <CONF FILE> <INPUT FILE> [<INPUT FILE>]", opt);
+        formatter.printHelp(PROGRAM + " [Options] [<INPUT FILE>]", opt);
     }
 }
