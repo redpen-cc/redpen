@@ -159,6 +159,6 @@ public final class Main {
     private static void printHelp(Options opt) {
         HelpFormatter formatter = new HelpFormatter();
         formatter.setWidth(100);
-        formatter.printHelp(PROGRAM + " -c <CONF FILE> <INPUT FILE> [<INPUT FILE>]", opt);
+        formatter.printHelp(PROGRAM + " [Options] [<INPUT FILE>]", opt);
     }
 }
