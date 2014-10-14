@@ -18,6 +18,8 @@
 package cc.redpen.tokenizer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public final class TokenElement {
@@ -27,17 +29,17 @@ public final class TokenElement {
 
     public TokenElement(String word) {
         surface = word;
-        tags = new ArrayList<>();
+        tags = Collections.unmodifiableList(new ArrayList<>());
     }
 
     public TokenElement(String word, String tag) {
-        this(word);
-        tags.add(tag);
+        surface = word;
+        tags = Collections.unmodifiableList(Arrays.asList(tag));
     }
 
     public TokenElement(String word, List<String> tagList) {
-        this(word);
-        tags.addAll(tagList);
+        surface = word;
+        tags = Collections.unmodifiableList(tagList);
     }
 
     public String getSurface() {
