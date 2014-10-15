@@ -20,8 +20,8 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>sample/doc</directory>
-            <outputDirectory>/doc</outputDirectory>
+            <directory>sample/sample-doc</directory>
+            <outputDirectory>/sample-doc</outputDirectory>
             <includes>
                 <include>**/*</include>
             </includes>
