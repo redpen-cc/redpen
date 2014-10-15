@@ -5,7 +5,7 @@
     <parent>
         <artifactId>redpen</artifactId>
         <groupId>cc.redpen</groupId>
-        <version>0.6</version>
+        <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -110,7 +110,7 @@
         <dependency>
             <groupId>cc.redpen</groupId>
             <artifactId>redpen-core</artifactId>
-            <version>0.6</version>
+            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.wink</groupId>
