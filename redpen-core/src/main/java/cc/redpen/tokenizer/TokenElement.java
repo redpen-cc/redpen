@@ -17,27 +17,29 @@
  */
 package cc.redpen.tokenizer;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public final class TokenElement {
+public final class TokenElement implements Serializable {
+    private static final long serialVersionUID = -7779529873101010570L;
     final private String surface;
 
     final private List<String> tags;
 
-    public TokenElement(String word) {
+    TokenElement(String word) {
         surface = word;
         tags = Collections.unmodifiableList(new ArrayList<>());
     }
 
-    public TokenElement(String word, String tag) {
+    TokenElement(String word, String tag) {
         surface = word;
         tags = Collections.unmodifiableList(Arrays.asList(tag));
     }
 
-    public TokenElement(String word, List<String> tagList) {
+    TokenElement(String word, List<String> tagList) {
         surface = word;
         tags = Collections.unmodifiableList(tagList);
     }
@@ -48,15 +50,6 @@ public final class TokenElement {
 
     public List<String> getTags() {
         return tags;
-    }
-
-
-    @Override
-    public String toString() {
-        return "TokenElement{" +
-                "surface='" + surface + '\'' +
-                ", tags=" + tags +
-                '}';
     }
 
     @Override
@@ -77,5 +70,13 @@ public final class TokenElement {
         int result = surface != null ? surface.hashCode() : 0;
         result = 31 * result + (tags != null ? tags.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "TokenElement{" +
+                "surface='" + surface + '\'' +
+                ", tags=" + tags +
+                '}';
     }
 }
