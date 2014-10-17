@@ -120,9 +120,7 @@ public class DocumentValidateResource {
 
         for (ValidationError error : errors) {
             JSONObject jsonError = new JSONObject();
-            if (error.getSentence().isPresent()) {
-                jsonError.put("sentence", error.getSentence().get().content);
-            }
+            jsonError.put("sentence", error.getSentence().content);
             jsonError.put("message", error.getMessage());
             jsonErrors.put(jsonError);
         }

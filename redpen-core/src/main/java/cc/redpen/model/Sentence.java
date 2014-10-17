@@ -19,27 +19,27 @@ package cc.redpen.model;
 
 import cc.redpen.tokenizer.TokenElement;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Sentence block in a Document.
  */
-public final class Sentence {
+public final class Sentence implements Serializable {
+    private static final long serialVersionUID = 8001875796889119504L;
     /**
      * Links (including internal and external ones).
      */
     public final List<String> links;
     /**
+     * Sentence position in a file.
+     */
+    public final int position;
+    /**
      * Content of string.
      */
     public String content;
-
-    /**
-     * Sentence position in a file.
-     */
-    public int position;
-
     /**
      * Flag for knowing if the sentence is the first sentence
      * of a block, such as paragraph, list, header.
@@ -66,5 +66,42 @@ public final class Sentence {
         this.isFirstSentence = false;
         this.links = new ArrayList<>();
         this.tokens = new ArrayList<>();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Sentence sentence = (Sentence) o;
+
+        if (isFirstSentence != sentence.isFirstSentence) return false;
+        if (position != sentence.position) return false;
+        if (content != null ? !content.equals(sentence.content) : sentence.content != null) return false;
+        if (links != null ? !links.equals(sentence.links) : sentence.links != null) return false;
+        if (tokens != null ? !tokens.equals(sentence.tokens) : sentence.tokens != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = links != null ? links.hashCode() : 0;
+        result = 31 * result + (content != null ? content.hashCode() : 0);
+        result = 31 * result + position;
+        result = 31 * result + (isFirstSentence ? 1 : 0);
+        result = 31 * result + (tokens != null ? tokens.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Sentence{" +
+                "links=" + links +
+                ", content='" + content + '\'' +
+                ", position=" + position +
+                ", isFirstSentence=" + isFirstSentence +
+                ", tokens=" + tokens +
+                '}';
     }
 }

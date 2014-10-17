@@ -85,11 +85,9 @@ public class XMLFormatter implements Formatter {
         Text lineNum = doc.createTextNode(Integer.toString(error.getLineNumber()));
         lineNumberElement.appendChild(lineNum);
 
-        error.getSentence().ifPresent(e -> {
-            Element sentenceElement = doc.createElement("sentence");
-            errorElement.appendChild(sentenceElement);
-            sentenceElement.appendChild(doc.createTextNode(e.content));
-        });
+        Element sentenceElement = doc.createElement("sentence");
+        errorElement.appendChild(sentenceElement);
+        sentenceElement.appendChild(doc.createTextNode(error.getSentence().content));
 
         // create a transformer
         Transformer transformer = createTransformer();
@@ -127,7 +125,7 @@ public class XMLFormatter implements Formatter {
     }
 
     @Override
-    public Optional<String> footer(){
+    public Optional<String> footer() {
         return Optional.ofNullable("</validation-result>");
     }
 }

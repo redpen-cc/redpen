@@ -66,7 +66,7 @@ public class XMLFormatterTest {
 
     @Test
     public void testConvertValidationErrorWithoutFileName() throws RedPenException {
-        ValidationError error = new ValidationError(this.getClass(), "Fatal Error", 0);
+        ValidationError error = new ValidationError(this.getClass(), "Fatal Error", new Sentence("text", 0));
         XMLFormatter formatter = createXMLFormatter();
         String resultString = formatter.convertError(error);
         Document document = extractDocument(resultString);
@@ -85,7 +85,7 @@ public class XMLFormatterTest {
 
     @Test
     public void testConvertValidationErrorWithoutLineNumAndFileName() throws RedPenException {
-        ValidationError error = new ValidationError(this.getClass(), "Fatal Error", -1);
+        ValidationError error = new ValidationError(this.getClass(), "Fatal Error", new Sentence("text", -1));
         XMLFormatter formatter = createXMLFormatter();
         String resultString = formatter.convertError(error);
 

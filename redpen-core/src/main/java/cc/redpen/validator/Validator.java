@@ -137,29 +137,6 @@ public abstract class Validator<E> {
     }
 
     /**
-     * create a ValidationError for the specified position with default error message
-     *
-     * @param lineNumber line number
-     * @param args       objects to format
-     * @return ValidationError with localized message
-     */
-    protected ValidationError createValidationError(int lineNumber, Object... args) {
-        return new ValidationError(this.getClass(), getLocalizedErrorMessage(Optional.empty(), args), lineNumber);
-    }
-
-    /**
-     * create a ValidationError for the specified position with specified message key
-     *
-     * @param messageKey messageKey
-     * @param lineNumber line number
-     * @param args       objects to format
-     * @return ValidationError with localized message
-     */
-    protected ValidationError createValidationError(String messageKey, int lineNumber, Object... args) {
-        return new ValidationError(this.getClass(), getLocalizedErrorMessage(Optional.of(messageKey), args), lineNumber);
-    }
-
-    /**
      * returns localized error message for the given key formatted with argument
      *
      * @param key  message key

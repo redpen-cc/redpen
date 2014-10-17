@@ -70,7 +70,7 @@ public class DefaultResultDistributorTest extends Validator<Sentence> {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         DefaultResultDistributor distributor = new DefaultResultDistributor(os);
         distributor.setFormatter(new PlainFormatter());
-        ValidationError error = createValidationError(-1);
+        ValidationError error = createValidationError(new Sentence("sentence", 1));
         distributor.flushError(error);
         String result = null;
         try {
