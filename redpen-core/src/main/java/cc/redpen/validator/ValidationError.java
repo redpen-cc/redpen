@@ -27,25 +27,10 @@ import java.util.Optional;
 public final class ValidationError implements java.io.Serializable {
 
     private static final long serialVersionUID = -7759439419047004667L;
-    private final int lineNumber;
     private final String message;
     private final String validatorName;
     private Optional<String> fileName = Optional.empty();
-    private Optional<Sentence> sentence = Optional.empty();
-
-    /**
-     * Constructor.
-     *
-     * @param validatorClass  validator class
-     * @param errorMessage    error message
-     * @param errorLineNumber error position (line number)
-     */
-    ValidationError(Class validatorClass,
-                           String errorMessage, int errorLineNumber) {
-        this.lineNumber = errorLineNumber;
-        this.message = errorMessage;
-        this.validatorName = validatorClass.getSimpleName();
-    }
+    private Sentence sentence;
 
     /**
      * Constructor.
@@ -57,8 +42,9 @@ public final class ValidationError implements java.io.Serializable {
     ValidationError(Class validatorClass,
                            String errorMessage,
                            Sentence sentenceWithError) {
-        this(validatorClass, errorMessage, sentenceWithError.position);
-        this.sentence = Optional.of(sentenceWithError);
+        this.message = errorMessage;
+        this.validatorName = validatorClass.getSimpleName();
+        this.sentence = sentenceWithError;
     }
 
     /**
@@ -67,7 +53,7 @@ public final class ValidationError implements java.io.Serializable {
      * @return the number of line
      */
     public int getLineNumber() {
-        return lineNumber;
+        return sentence.position;
     }
 
     /**
@@ -102,7 +88,7 @@ public final class ValidationError implements java.io.Serializable {
      *
      * @return sentence
      */
-    public Optional<Sentence> getSentence() {
+    public Sentence getSentence() {
         return sentence;
     }
 
@@ -112,7 +98,7 @@ public final class ValidationError implements java.io.Serializable {
      * @param sentenceWithError sentenceWithError containing validation error
      */
     public void setSentence(Sentence sentenceWithError) {
-        this.sentence = Optional.of(sentenceWithError);
+        this.sentence = sentenceWithError;
     }
 
     /**
@@ -129,40 +115,4 @@ public final class ValidationError implements java.io.Serializable {
         }
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ValidationError that = (ValidationError) o;
-
-        if (lineNumber != that.lineNumber) return false;
-        if (!fileName.equals(that.fileName)) return false;
-        if (!message.equals(that.message)) return false;
-        if (!sentence.equals(that.sentence)) return false;
-        if (!validatorName.equals(that.validatorName)) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = lineNumber;
-        result = 31 * result + message.hashCode();
-        result = 31 * result + validatorName.hashCode();
-        result = 31 * result + fileName.hashCode();
-        result = 31 * result + sentence.hashCode();
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "ValidationError{" +
-                "lineNumber=" + lineNumber +
-                ", message='" + message + '\'' +
-                ", validatorName='" + validatorName + '\'' +
-                ", fileName=" + fileName +
-                ", sentence=" + sentence +
-                '}';
-    }
 }

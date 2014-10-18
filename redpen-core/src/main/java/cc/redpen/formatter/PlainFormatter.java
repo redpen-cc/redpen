@@ -37,7 +37,7 @@ public class PlainFormatter implements Formatter {
         error.getFileName().ifPresent(e -> str.append(e).append(" : "));
         str.append(error.getLineNumber()).append(" (")
                 .append(error.getMessage()).append(")]");
-        error.getSentence().ifPresent(e -> str.append(" at line: ").append(e.content));
+        str.append(" at line: ").append(error.getSentence().content);
         return str.toString();
     }
 

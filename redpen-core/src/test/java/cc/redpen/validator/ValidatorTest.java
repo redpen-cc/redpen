@@ -35,15 +35,11 @@ public class ValidatorTest {
         List<ValidationError> validationErrors = validationErrorMessageTest.validate(new Sentence("sentence", 1));
         assertEquals("error str:sentence 1:1 2:2 3:3", validationErrors.get(0).getMessage());
         assertEquals("with Key :sentence", validationErrors.get(1).getMessage());
-        assertEquals("error str:lineNumber 1:1 2:2 3:3", validationErrors.get(2).getMessage());
-        assertEquals("with Key :lineNumber", validationErrors.get(3).getMessage());
 
         validationErrorMessageTest.setLocale(Locale.JAPAN);
         validationErrors = validationErrorMessageTest.validate(new Sentence("sentence", 1));
         assertEquals("エラー ストリング:sentence 1:1 2:2 3:3", validationErrors.get(0).getMessage());
         assertEquals("キー指定 :sentence", validationErrors.get(1).getMessage());
-        assertEquals("エラー ストリング:lineNumber 1:1 2:2 3:3", validationErrors.get(2).getMessage());
-        assertEquals("キー指定 :lineNumber", validationErrors.get(3).getMessage());
 
     }
 }
