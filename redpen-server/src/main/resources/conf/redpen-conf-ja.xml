@@ -1,4 +1,4 @@
-<redpen-conf  lang="ja">
+<redpen-conf lang="ja">
     <validators>
         <validator name="SentenceLength">
             <property name="max_len" value="100"/>
@@ -10,13 +10,8 @@
             <property name="max_num" value="1500"/>
         </validator>
         <validator name="ParagraphNumber"/>
+        <validator name="DoubledWord" />
+        <validator name="SpaceBetweenAlphabeticalWord" />
+        <validator name="CommaNumber" />
     </validators>
-    <symbols>
-        <symbol name="EXCLAMATION_MARK" value="!" invalid-chars="！" after-space="true"/>
-        <symbol name="LEFT_QUOTATION_MARK" value="\'" invalid-chars="“" before-space="true"/>
-        <symbol name="RIGHT_QUOTATION_MARK" value="\'" invalid-chars="”" after-space="true"/>
-        <symbol name="NUMBER_SIGN" value="#" invalid-chars="＃" after-space="true"/>
-        <symbol name="FULL_STOP" value="。" invalid-chars="．." after-space="true"/>
-        <symbol name="COMMA" value="、" invalid-chars="," after-space="true"/>
-    </symbols>
 </redpen-conf>

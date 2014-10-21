@@ -10,8 +10,8 @@
             <property name="max_num" value="1500"/>
         </validator>
         <validator name="ParagraphNumber"/>
-	<validator name="DoubledWord" />
-	<validator name="SpaceBetweenAlphabeticalWord" />
-	<validator name="CommaNumber" />
+        <validator name="DoubledWord" />
+        <validator name="SpaceBetweenAlphabeticalWord" />
+        <validator name="CommaNumber" />
     </validators>
 </redpen-conf>
