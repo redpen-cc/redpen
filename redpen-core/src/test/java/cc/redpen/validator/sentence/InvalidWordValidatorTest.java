@@ -54,7 +54,7 @@ public class InvalidWordValidatorTest {
     public void testLoadDefaultDictionary() throws RedPenException {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidWord"))
-                .setSymbolTable("en").build();
+                .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
@@ -83,7 +83,7 @@ public class InvalidWordValidatorTest {
     public void testLoadNotExistDefaultDictionary() throws RedPenException {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidWord"))
-                .setSymbolTable("ja").build(); // NOTE: no dictionary for japanese or other languages whose words are not split by white space.
+                .setLanguage("ja").build(); // NOTE: no dictionary for japanese or other languages whose words are not split by white space.
 
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")

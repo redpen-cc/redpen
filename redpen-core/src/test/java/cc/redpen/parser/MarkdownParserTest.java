@@ -431,7 +431,7 @@ public class MarkdownParserTest {
         String sampleText = "埼玉は東京の北に存在する。";
         sampleText += "大きなベッドタウンであり、多くの人が住んでいる。";
         Configuration conf = new Configuration.Builder()
-                .setSymbolTable("ja").build();
+                .setLanguage("ja").build();
 
         Document doc = createFileContent(sampleText, conf);
         Section firstSections = doc.getSection(0);
@@ -444,7 +444,7 @@ public class MarkdownParserTest {
         String sampleText = "それは異なる．たとえば，\\n" +
                 "以下のとおりである．";
         Configuration conf = new Configuration.Builder()
-                .setSymbolTable("ja")
+                .setLanguage("ja")
                 .setSymbol(new Symbol("FULL_STOP", "．", "."))
                 .setSymbol(new Symbol("COMMA", "，", "、"))
                 .build();

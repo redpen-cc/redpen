@@ -16,7 +16,7 @@
   ~ limitations under the License.
   -->
 
-<redpen-conf>
+<redpen-conf lang="en">
     <validator-list>
         <validator name="SentenceLength">
             <property name="max_len" value="200"/>
@@ -28,7 +28,7 @@
         </validator>
         <validator name="ParagraphNumber"/>
     </validator-list>
-    <symbol-table lang="en">
+    <symbol-table>
         <symbol name="EXCLAMATION_MARK" value="!" invalid-chars="！" after-space="true"/>
         <symbol name="LEFT_QUOTATION_MARK" value="\'" invalid-chars="“" before-space="true"/>
         <symbol name="RIGHT_QUOTATION_MARK" value="\'" invalid-chars="”" after-space="true"/>

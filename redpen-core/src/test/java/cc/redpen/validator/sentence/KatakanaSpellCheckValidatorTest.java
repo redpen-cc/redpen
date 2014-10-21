@@ -66,7 +66,7 @@ public class KatakanaSpellCheckValidatorTest {
     public void testLoadDefaultDictionary() throws RedPenException {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck"))
-                .setSymbolTable("ja").build();
+                .setLanguage("ja").build();
 
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")

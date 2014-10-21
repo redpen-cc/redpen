@@ -106,7 +106,7 @@ public class StartWithCapitalLetterValidatorTest {
     public void testLoadDefaultDictionary() throws RedPenException {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter"))
-                .setSymbolTable("en").build();
+                .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")

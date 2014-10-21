@@ -43,7 +43,7 @@ public class SampleDocumentGenerator {
     public static DocumentCollection generateOneFileDocument(String docString,
                                                              DocumentParser.Type type) throws RedPenException {
         Configuration configuration = new Configuration.Builder()
-                .setSymbolTable("en").build();
+                .setLanguage("en").build();
         DocumentCollection.Builder builder = new DocumentCollection.Builder();
         DocumentParser parser = DocumentParserFactory.generate(type, configuration, builder);
         InputStream stream = IOUtils.toInputStream(docString);

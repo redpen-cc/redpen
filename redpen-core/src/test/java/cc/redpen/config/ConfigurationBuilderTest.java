@@ -13,7 +13,7 @@ public class ConfigurationBuilderTest {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .addValidatorConfig(new ValidatorConfiguration("SentenceLength"))
-                .setSymbolTable("en").build();
+                .setLanguage("en").build();
 
         assertEquals(2, config.getValidatorConfigs().size());
         assertNotNull(config.getSymbolTable());
@@ -61,7 +61,7 @@ public class ConfigurationBuilderTest {
     public void testBuildConfigurationSpecifyingLanguage() {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
-                .setSymbolTable("ja")
+                .setLanguage("ja")
                 .build();
 
         assertNotNull(config.getSymbolTable());
@@ -73,7 +73,7 @@ public class ConfigurationBuilderTest {
     public void testBuildConfigurationOverrideSymbolSetting() {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
-                .setSymbolTable("ja")
+                .setLanguage("ja")
                 .setSymbol("FULL_STOP", ".")
                 .build();
 
@@ -86,7 +86,7 @@ public class ConfigurationBuilderTest {
     public void testBuildConfigurationOverrideAddInvalidSymbolSetting() {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
-                .setSymbolTable("ja")
+                .setLanguage("ja")
                 .addInvalidPattern("FULL_STOP", "●")
                 .build();
 
@@ -101,7 +101,7 @@ public class ConfigurationBuilderTest {
     public void testBuildConfigurationAccessingSymbolByValue() {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
-                .setSymbolTable("ja")
+                .setLanguage("ja")
                 .addInvalidPattern("FULL_STOP", "●")
                 .build();
 
