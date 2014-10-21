@@ -56,7 +56,7 @@ public class JapaneseSymbols extends AbstractSymbols {
                 new Symbol("ASTERISK", "＊", "*", false, false));
         symbols.put("COMMA", new Symbol("COMMA", "、", ",", false, false));
         symbols.put("FULL_STOP",
-                new Symbol("FULL_STOP", "。", ".", false, false));
+                new Symbol("FULL_STOP", "。", ".．", false, false));
         symbols.put("PLUS_SIGN",
                 new Symbol("PLUS_SIGN", "＋", "+", false, false));
         symbols.put("HYPHEN_SIGN",
