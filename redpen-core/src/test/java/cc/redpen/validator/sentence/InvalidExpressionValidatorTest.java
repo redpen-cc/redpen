@@ -53,7 +53,7 @@ public class InvalidExpressionValidatorTest {
     public void testLoadDefaultDictionary() throws RedPenException {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
-                .setSymbolTable("en").build();
+                .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
@@ -77,7 +77,7 @@ public class InvalidExpressionValidatorTest {
     public void testLoadJapaneseDefaultDictionary() throws RedPenException {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
-                .setSymbolTable("ja").build();
+                .setLanguage("ja").build();
 
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")

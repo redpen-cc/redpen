@@ -43,7 +43,7 @@ public class SymbolWithSpaceValidatorTest {
 
         Configuration conf = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
-                .setSymbolTable("en")
+                .setLanguage("en")
                 .setSymbol(new Symbol("SLASH", "/"))
                 .build();
 
@@ -67,7 +67,7 @@ public class SymbolWithSpaceValidatorTest {
 
         Configuration conf = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
-                .setSymbolTable("en")
+                .setLanguage("en")
                 .setSymbol(new Symbol("COLON", ":", "", false, true))
                 .build();
 
@@ -91,7 +91,7 @@ public class SymbolWithSpaceValidatorTest {
 
         Configuration conf = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
-                .setSymbolTable("en")
+                .setLanguage("en")
                 .setSymbol(new Symbol("LEFT_PARENTHESIS", "(", "", true, false))
                 .build();
 
@@ -115,7 +115,7 @@ public class SymbolWithSpaceValidatorTest {
 
         Configuration conf = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
-                .setSymbolTable("en")
+                .setLanguage("en")
                 .setSymbol(new Symbol("LEFT_PARENTHESIS", "(", "", true, false))
                 .setSymbol(new Symbol("RIGHT_PARENTHESIS", ")", "", false, true))
                 .build();
@@ -140,7 +140,7 @@ public class SymbolWithSpaceValidatorTest {
 
         Configuration conf = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
-                .setSymbolTable("en")
+                .setLanguage("en")
                 .setSymbol(new Symbol("ASTARISK", "*", "", true, true))
                 .build();
 

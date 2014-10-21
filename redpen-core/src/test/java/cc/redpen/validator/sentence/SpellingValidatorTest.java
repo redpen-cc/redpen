@@ -39,7 +39,7 @@ public class SpellingValidatorTest {
     public void testLoadDefaultDictionary() throws RedPenException {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("Spelling"))
-                .setSymbolTable("en").build();
+                .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
@@ -63,7 +63,7 @@ public class SpellingValidatorTest {
     public void testUpperCase() throws RedPenException {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("Spelling"))
-                .setSymbolTable("en").build();
+                .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
@@ -88,7 +88,7 @@ public class SpellingValidatorTest {
     public void testSkipCharacterCase() throws RedPenException {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("Spelling"))
-                .setSymbolTable("en").build();
+                .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
@@ -112,7 +112,7 @@ public class SpellingValidatorTest {
     public void testEndPeriod() throws RedPenException {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("Spelling"))
-                .setSymbolTable("en").build();
+                .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
@@ -136,7 +136,7 @@ public class SpellingValidatorTest {
     public void testVoid() throws RedPenException {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("Spelling"))
-                .setSymbolTable("en").build();
+                .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")

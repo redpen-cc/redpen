@@ -35,7 +35,7 @@ public class ContractionValidatorTest {
     public void testContraction() throws RedPenException {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("Contraction"))
-                .setSymbolTable("en").build();
+                .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
@@ -59,7 +59,7 @@ public class ContractionValidatorTest {
     public void testNoContraction() throws RedPenException {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("Contraction"))
-                .setSymbolTable("en").build();
+                .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
@@ -83,7 +83,7 @@ public class ContractionValidatorTest {
     public void testUpperCaseContraction() throws RedPenException {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("Contraction"))
-                .setSymbolTable("en").build();
+                .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
@@ -110,7 +110,7 @@ public class ContractionValidatorTest {
     public void testManyContractions() throws RedPenException {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("Contraction"))
-                .setSymbolTable("en").build();
+                .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")

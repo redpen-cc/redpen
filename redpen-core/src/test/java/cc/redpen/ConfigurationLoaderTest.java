@@ -30,16 +30,16 @@ public class ConfigurationLoaderTest {
     @Test
     public void testLoadConfiguration() {
         String sampleConfigString =
-                "<redpen-conf>" +
-                        "<validator-list>" +
+                "<redpen-conf lang=\"en\">" +
+                        "<validators>" +
                         "<validator name=\"SentenceLength\">" +
                         "<property name=\"max_length\" value=\"200\" />" +
                         "</validator>" +
                         "<validator name=\"MaxParagraphNumber\" />" +
-                        "</validator-list>" +
-                        "<symbol-table lang=\"en\">" +
+                        "</validators>" +
+                        "<symbols>" +
                         "<symbol name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\" after-space=\"true\" />" +
-                        "</symbol-table>" +
+                        "</symbols>" +
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
@@ -65,15 +65,52 @@ public class ConfigurationLoaderTest {
     }
 
     @Test
-    public void testNewLoadConfigurationWithoutSymbolTableConfig() {
+    public void testLoadJapaneseConfiguration() {
         String sampleConfigString =
-                "<redpen-conf>" +
-                        "<validator-list>" +
+                "<redpen-conf lang=\"ja\">" +
+                        "<validators>" +
                         "<validator name=\"SentenceLength\">" +
                         "<property name=\"max_length\" value=\"200\" />" +
                         "</validator>" +
                         "<validator name=\"MaxParagraphNumber\" />" +
-                        "</validator-list>" +
+                        "</validators>" +
+                        "<symbols>" +
+                        "<symbol name=\"EXCLAMATION_MARK\" value=\"！\" invalid-chars=\"!\" after-space=\"true\" />" +
+                        "</symbols>" +
+                        "</redpen-conf>";
+
+        ConfigurationLoader configurationLoader = new ConfigurationLoader();
+        InputStream stream = IOUtils.toInputStream(sampleConfigString);
+        Configuration configuration = configurationLoader.loadConfiguration(stream);
+        IOUtils.closeQuietly(stream);
+
+        assertNotNull(configuration);
+        assertEquals(2, configuration.getValidatorConfigs().size());
+        assertEquals("SentenceLength",
+                configuration.getValidatorConfigs().get(0).getConfigurationName());
+        assertEquals("200",
+                configuration.getValidatorConfigs().get(0).getAttribute("max_length"));
+        assertEquals("MaxParagraphNumber",
+                configuration.getValidatorConfigs().get(1).getConfigurationName());
+        assertNotNull(configuration.getSymbolTable());
+        assertEquals("！", configuration.getSymbolTable()
+                .getSymbol("EXCLAMATION_MARK").getValue());
+        assertEquals(1, configuration.getSymbolTable()
+                .getSymbol("EXCLAMATION_MARK").getInvalidSymbols().size());
+        assertEquals("!", configuration.getSymbolTable()
+                .getSymbol("EXCLAMATION_MARK").getInvalidSymbols().get(0));
+    }
+
+    @Test
+    public void testNewLoadConfigurationWithoutSymbolTableConfig() {
+        String sampleConfigString =
+                "<redpen-conf>" +
+                        "<validators>" +
+                        "<validator name=\"SentenceLength\">" +
+                        "<property name=\"max_length\" value=\"200\" />" +
+                        "</validator>" +
+                        "<validator name=\"MaxParagraphNumber\" />" +
+                        "</validators>" +
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
@@ -95,15 +132,14 @@ public class ConfigurationLoaderTest {
     @Test
     public void testNewLoadConfigurationWithoutSymbolTableConfigContent() {
         String sampleConfigString =
-                "<redpen-conf>" +
-                        "<validator-list>" +
+                "<redpen-conf lang=\"en\">" +
+                        "<validators>" +
                         "<validator name=\"SentenceLength\">" +
                         "<property name=\"max_length\" value=\"200\" />" +
                         "</validator>" +
                         "<validator name=\"MaxParagraphNumber\" />" +
-                        "</validator-list>" +
-                        "<symbol-table lang=\"en\">" +
-                        "</symbol-table>" +
+                        "</validators>" +
+                        "<symbols/>" +
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
@@ -125,10 +161,10 @@ public class ConfigurationLoaderTest {
     @Test
     public void testNewLoadConfigurationWithoutValidatorConfig() {
         String sampleConfigString =
-                "<redpen-conf>" +
-                        "<symbol-table lang=\"en\">" +
+                "<redpen-conf lang=\"en\">" +
+                        "<symbols>" +
                         "<symbol name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\" after-space=\"true\" />" +
-                        "</symbol-table>" +
+                        "</symbols>" +
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
@@ -141,12 +177,12 @@ public class ConfigurationLoaderTest {
     @Test
     public void testNewLoadConfigurationWithoutValidatorConfigContent() {
         String sampleConfigString =
-                "<redpen-conf>" +
-                        "<validator-list>" +
-                        "</validator-list>" +
-                        "<symbol-table lang=\"en\">" +
+                "<redpen-conf lang=\"en\">" +
+                        "<validators>" +
+                        "</validators>" +
+                        "<symbols>" +
                         "<symbol name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\" after-space=\"true\" />" +
-                        "</symbol-table>" +
+                        "</symbols>" +
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
@@ -170,16 +206,16 @@ public class ConfigurationLoaderTest {
     @Test
     public void testNewLoadInvalidConfiguration() {
         String sampleConfigString =
-                "<redpen-conf>" +
-                        "<validator-list>" +
+                "<redpen-conf lang=\"en\">" +
+                        "<validators>" +
                         "<validator name=\"SentenceLength\">" +
                         "<property name=\"max_length\" value=\"200\" />" +
                         "</validator>" +
                         "<validator name=\"MaxParagraphNumber\" />" +
-                        "</validator-list>" +
-                        "<symbol-table lang=\"en\">" +
+                        "</validators>" +
+                        "<symbols>" +
                         "<symbol name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\" after-space=\"true\" />" +
-                        "</symbol-table>" +
+                        "</symbols>" +
                         "<redpen-conf>";  // NOTE: Invalid xml since slash should be exist.
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
@@ -193,14 +229,14 @@ public class ConfigurationLoaderTest {
     @Test
     public void testSpaceConfiguration() {
         String sampleConfigString =
-                "<redpen-conf>" +
-                        "<validator-list>" +
+                "<redpen-conf lang=\"en\">" +
+                        "<validators>" +
                         "<validator name=\"SentenceLength\" />" +
                         "<validator name=\"MaxParagraphNumber\" />" +
-                        "</validator-list>" +
-                        "<symbol-table lang=\"en\">" +
+                        "</validators>" +
+                        "<symbols>" +
                         "<symbol name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\" after-space=\"true\" />" +
-                        "</symbol-table>" +
+                        "</symbols>" +
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
@@ -225,14 +261,14 @@ public class ConfigurationLoaderTest {
     @Test
     public void testConfigurationWithoutSpaceSetting() {
         String sampleConfigString =
-                "<redpen-conf>" +
-                        "<validator-list>" +
+                "<redpen-conf lang=\"en\">" +
+                        "<validators>" +
                         "<validator name=\"SentenceLength\" />" +
                         "<validator name=\"MaxParagraphNumber\" />" +
-                        "</validator-list>" +
-                        "<symbol-table lang=\"en\">" +
+                        "</validators>" +
+                        "<symbols>" +
                         "<symbol name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\" />" +
-                        "</symbol-table>" +
+                        "</symbols>" +
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
@@ -258,14 +294,14 @@ public class ConfigurationLoaderTest {
     @Test
     public void testConfigurationMultipleInvalids() {
         String sampleConfigString =
-                "<redpen-conf>" +
-                        "<validator-list>" +
+                "<redpen-conf lang=\"en\">" +
+                        "<validators>" +
                         "<validator name=\"SentenceLength\" />" +
                         "<validator name=\"MaxParagraphNumber\" />" +
-                        "</validator-list>" +
-                        "<symbol-table lang=\"en\">" +
+                        "</validators>" +
+                        "<symbols>" +
                         "<symbol name=\"LEFT_QUOTATION_MARK\" value=\"\'\" invalid-chars=\"‘’\"/>" +
-                        "</symbol-table>" +
+                        "</symbols>" +
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
@@ -286,14 +322,14 @@ public class ConfigurationLoaderTest {
     @Test
     public void testSymbolConfigurationWithoutInvalid() {
         String sampleConfigString =
-                "<redpen-conf>" +
-                        "<validator-list>" +
+                "<redpen-conf lang=\"en\">" +
+                        "<validators>" +
                         "<validator name=\"SentenceLength\" />" +
                         "<validator name=\"MaxParagraphNumber\" />" +
-                        "</validator-list>" +
-                        "<symbol-table lang=\"en\">" +
+                        "</validators>" +
+                        "<symbols>" +
                         "<symbol name=\"EXCLAMATION_MARK\" value=\"!\" />" +
-                        "</symbol-table>" +
+                        "</symbols>" +
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
@@ -316,14 +352,14 @@ public class ConfigurationLoaderTest {
     @Test
     public void testAccessNotRegisteredSymbol() {
         String sampleConfigString =
-                "<redpen-conf>" +
-                        "<validator-list>" +
+                "<redpen-conf lang=\"en\">" +
+                        "<validators>" +
                         "<validator name=\"SentenceLength\" />" +
                         "<validator name=\"MaxParagraphNumber\" />" +
-                        "</validator-list>" +
-                        "<symbol-table lang=\"en\">" +
+                        "</validators>" +
+                        "<symbols>" +
                         "<symbol name=\"EXCLAMATION_MARK\" value=\"!\" />" +
-                        "</symbol-table>" +
+                        "</symbols>" +
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
@@ -341,14 +377,14 @@ public class ConfigurationLoaderTest {
     @Test
     public void testConfigurationWithMisspelledBlock() {
         String sampleConfigString =
-                "<redpen-conf>" +
-                        "<validator-list>" +
+                "<redpen-conf lang=\"en\">" +
+                        "<validators>" +
                         "<validator name=\"SentenceLength\" />" +
                         "<validator name=\"MaxParagraphNumber\" />" +
-                        "</validator-list>" +
-                        "<symbol-table lang=\"en\">" +
+                        "</validators>" +
+                        "<symbols>" +
                         "<charcc name=\"EXCLAMATION_MARK\" value=\"!\" />" +
-                        "</symbol-table>" +
+                        "</symbols>" +
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
@@ -362,19 +398,19 @@ public class ConfigurationLoaderTest {
     @Test(expected = IllegalStateException.class)
     public void testSymbolConfigurationWithoutName() {
         String sampleConfigString =
-                "<redpen-conf>" +
-                        "<validator-list>" +
+                "<redpen-conf lang=\"en\">" +
+                        "<validators>" +
                         "<validator name=\"SentenceLength\" />" +
                         "<validator name=\"MaxParagraphNumber\" />" +
-                        "</validator-list>" +
-                        "<symbol-table lang=\"en\">" +
+                        "</validators>" +
+                        "<symbols>" +
                         "<symbol value=\"!\" invalid-chars=\"！\"/>" + //NOTE: NO NAME!
-                        "</symbol-table>" +
+                        "</symbols>" +
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
         InputStream stream = IOUtils.toInputStream(sampleConfigString);
-        Configuration configuration = configurationLoader.loadConfiguration(stream);
+        configurationLoader.loadConfiguration(stream);
         IOUtils.closeQuietly(stream);
     }
 

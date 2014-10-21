@@ -35,7 +35,7 @@ public class DoubledWordValidatorTest {
     public void testDoubledWord() throws RedPenException {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("DoubledWord"))
-                .setSymbolTable("en").build();
+                .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
@@ -59,7 +59,7 @@ public class DoubledWordValidatorTest {
     public void testDoubledSkipListWord() throws RedPenException {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("DoubledWord"))
-                .setSymbolTable("en").build();
+                .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder()
                 .addDocument("")
@@ -83,7 +83,7 @@ public class DoubledWordValidatorTest {
     public void testDoubledWordInJapaneseSentence() throws RedPenException {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("DoubledWord"))
-                .setSymbolTable("ja").build();
+                .setLanguage("ja").build();
 
         DocumentCollection documents = new DocumentCollection.Builder("ja") // TODO fix redundant language settings
                 .addDocument("")

@@ -103,9 +103,19 @@ public class ConfigurationLoader {
         configBuilder = new Configuration.Builder();
         Element rootElement = getRootNode(doc, "redpen-conf");
 
+        Node langNode = rootElement.getAttributes().getNamedItem("lang");
+        String language = "en";
+        if (langNode != null) {
+            language = langNode.getNodeValue();
+            LOG.info("Language is set to \"{}\"", language);
+        } else {
+            LOG.warn("No language configuration...");
+            LOG.info("Set language to en");
+        }
+
         // extract validator configurations
         NodeList validatorConfigElementList =
-                getSpecifiedNodeList(rootElement, "validator-list");
+                getSpecifiedNodeList(rootElement, "validators");
         if (validatorConfigElementList == null) {
             LOG.error("There is no validator-list block");
             return null;
@@ -120,11 +130,11 @@ public class ConfigurationLoader {
 
         // extract symbol configurations
         NodeList symbolTableConfigElementList =
-                getSpecifiedNodeList(rootElement, "symbol-table");
+                getSpecifiedNodeList(rootElement, "symbols");
         if (symbolTableConfigElementList == null) {
-            configBuilder.setSymbolTable("en");
+            configBuilder.setLanguage("en");
         } else {
-            extractSymbolConfig(symbolTableConfigElementList);
+            extractSymbolConfig(symbolTableConfigElementList, language);
         }
         return configBuilder.build();
     }
@@ -167,11 +177,8 @@ public class ConfigurationLoader {
         }
     }
 
-    private void extractSymbolConfig(NodeList symbolTableConfigElementList) {
-        String language
-                = symbolTableConfigElementList.item(0).
-                getAttributes().getNamedItem("lang").getNodeValue();
-        configBuilder.setSymbolTable(language);
+    private void extractSymbolConfig(NodeList symbolTableConfigElementList, String language) {
+        configBuilder.setLanguage(language);
 
         NodeList symbolTableElementList =
                 getSpecifiedNodeList((Element)

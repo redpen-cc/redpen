@@ -43,7 +43,7 @@ public class InvalidSymbolValidatorTest {
 
         Configuration conf = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
-                .setSymbolTable("en")
+                .setLanguage("en")
                 .setSymbol(new Symbol("EXCLAMATION_MARK", "!", "！"))
                 .build();
 
@@ -67,7 +67,7 @@ public class InvalidSymbolValidatorTest {
 
         Configuration conf = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
-                .setSymbolTable("en")
+                .setLanguage("en")
                 .setSymbol(new Symbol("EXCLAMATION_MARK", "!", "！"))
                 .build();
 
@@ -92,7 +92,7 @@ public class InvalidSymbolValidatorTest {
 
         Configuration conf = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
-                .setSymbolTable("en")
+                .setLanguage("en")
                 .setSymbol(new Symbol("EXCLAMATION_MARK", "!", "！"))
                 .setSymbol(new Symbol("COMMA", ",", "、"))
                 .build();

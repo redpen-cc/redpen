@@ -92,7 +92,7 @@ public final class Configuration {
             return symbolTable;
         }
 
-        public Builder setSymbolTable(String lang) {
+        public Builder setLanguage(String lang) {
             this.symbolTable = loadLanguageDefaultSymbolTable(lang);
             return this;
         }
