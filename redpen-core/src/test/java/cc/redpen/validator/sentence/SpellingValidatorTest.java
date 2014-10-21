@@ -109,6 +109,30 @@ public class SpellingValidatorTest {
     }
 
     @Test
+    public void testUserSkipList() throws RedPenException {
+        Configuration config = new Configuration.Builder()
+                .addValidatorConfig(new ValidatorConfiguration("Spelling").addAttribute("list", "abeshi,baz"))
+                .setLanguage("en").build();
+
+        DocumentCollection documents = new DocumentCollection.Builder()
+                .addDocument("")
+                .addSection(1)
+                .addParagraph()
+                .addSentence(
+                        "Abeshi is a word used in a comic.",
+                        1)
+                .build();
+
+        RedPen validator = new RedPen.Builder()
+                .setConfiguration(config)
+                .setResultDistributor(new FakeResultDistributor())
+                .build();
+
+        List<ValidationError> errors = validator.check(documents);
+        assertEquals(0, errors.size());
+    }
+
+    @Test
     public void testEndPeriod() throws RedPenException {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("Spelling"))

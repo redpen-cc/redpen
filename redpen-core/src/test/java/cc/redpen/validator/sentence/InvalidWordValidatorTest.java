@@ -75,6 +75,31 @@ public class InvalidWordValidatorTest {
         assertTrue(errors.get(0).getMessage().contains("foolish"));
     }
 
+
+    @Test
+    public void testLoadUserDictionary() throws RedPenException {
+        Configuration config = new Configuration.Builder()
+                .addValidatorConfig(new ValidatorConfiguration("InvalidWord").addAttribute("list", "boom,domo"))
+                .setLanguage("en").build();
+
+        DocumentCollection documents = new DocumentCollection.Builder()
+                .addDocument("")
+                .addSection(1)
+                .addParagraph()
+                .addSentence(
+                        "Domo is a greeting word in Japan.",
+                        1)
+                .build();
+
+        RedPen validator = new RedPen.Builder()
+                .setConfiguration(config)
+                .setResultDistributor(new FakeResultDistributor())
+                .build();
+
+        List<ValidationError> errors = validator.check(documents);
+        assertEquals(1, errors.size());
+    }
+
     /**
      * Assert not throw a exception even when there is no default dictionary.
      *
