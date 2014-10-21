@@ -132,7 +132,7 @@ public class ConfigurationLoader {
         NodeList symbolTableConfigElementList =
                 getSpecifiedNodeList(rootElement, "symbols");
         if (symbolTableConfigElementList == null) {
-            configBuilder.setLanguage("en");
+            configBuilder.setLanguage(language);
         } else {
             extractSymbolConfig(symbolTableConfigElementList, language);
         }

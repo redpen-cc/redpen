@@ -36,46 +36,44 @@ public final class DefaultSymbols extends AbstractSymbols {
 
         symbols.put("SPACE", new Symbol("SPACE", " ", "", false, false));
         symbols.put("EXCLAMATION_MARK",
-                new Symbol("EXCLAMATION_MARK", "!", "", false, false));
+                new Symbol("EXCLAMATION_MARK", "!", "！", false, false));
         symbols.put("NUMBER_SIGN",
-                new Symbol("NUMBER_SIGN", "#", "", false, false));
+                new Symbol("NUMBER_SIGN", "#", "＃", false, false));
         symbols.put("DOLLAR_SIGN",
-                new Symbol("DOLLAR_SIGN", "$", "", false, false));
+                new Symbol("DOLLAR_SIGN", "$", "＄", false, false));
         symbols.put("PERCENT_SIGN",
-                new Symbol("PERCENT_SIGN", "%", "", false, false));
+                new Symbol("PERCENT_SIGN", "%", "％", false, false));
         symbols.put("QUESTION_MARK",
-                new Symbol("QUESTION_MARK", "?", "", false, false));
+                new Symbol("QUESTION_MARK", "?", "？", false, false));
         symbols.put("AMPERSAND",
-                new Symbol("AMPERSAND", "&", "", false, false));
+                new Symbol("AMPERSAND", "&", "＆", false, false));
         symbols.put("LEFT_PARENTHESIS",
-                new Symbol("LEFT_PARENTHESIS", "(", "", false, false));
+                new Symbol("LEFT_PARENTHESIS", "(", "（", false, false));
         symbols.put("RIGHT_PARENTHESIS",
-                new Symbol("RIGHT_PARENTHESIS", ")", "", false, false));
+                new Symbol("RIGHT_PARENTHESIS", ")", "）", false, false));
         symbols.put("ASTERISK",
-                new Symbol("ASTERISK", ",", "", false, false));
-        symbols.put("COMMA", new Symbol("COMMA", ",", "", false, false));
-        symbols.put("COMMENT",
-                new Symbol("COMMENT", "#", "", false, false));
+                new Symbol("ASTERISK", "*", "＊", false, false));
+        symbols.put("COMMA", new Symbol("COMMA", ",", "，、", false, false));
         symbols.put("FULL_STOP",
-                new Symbol("FULL_STOP", ".", "", false, false));
+                new Symbol("FULL_STOP", ".", "．。", false, false));
         symbols.put("PLUS_SIGN",
-                new Symbol("PLUS_SIGN", "+", "", false, false));
+                new Symbol("PLUS_SIGN", "+", "＋", false, false));
         symbols.put("HYPHEN_SIGN",
-                new Symbol("HYPHEN_SIGN", "-", "", false, false));
+                new Symbol("HYPHEN_SIGN", "-", "ー", false, false));
         symbols.put("MINUS_SIGN",
-                new Symbol("MINUS_SIGN", "-", "", false, false));
-        symbols.put("SLASH", new Symbol("SLASH", "/", "", false, false));
-        symbols.put("COLON", new Symbol("COLON", ":", "", false, false));
+                new Symbol("MINUS_SIGN", "-", "ー", false, false));
+        symbols.put("SLASH", new Symbol("SLASH", "/", "／", false, false));
+        symbols.put("COLON", new Symbol("COLON", ":", "：", false, false));
         symbols.put("SEMICOLON",
-                new Symbol("SEMICOLON", ";", "", false, false));
+                new Symbol("SEMICOLON", ";", "；", false, false));
         symbols.put("LESS_THAN_SIGN",
-                new Symbol("LESS_THAN_SIGN", "<", "", false, false));
+                new Symbol("LESS_THAN_SIGN", "<", "＜", false, false));
         symbols.put("EQUAL_SIGN",
-                new Symbol("EQUAL_SIGN", "=", "", false, false));
+                new Symbol("EQUAL_SIGN", "=", "＝", false, false));
         symbols.put("GREATER_THAN_SIGN",
-                new Symbol("GREATER_THAN_SIGN", ">", "", false, false));
+                new Symbol("GREATER_THAN_SIGN", ">", "＞", false, false));
         symbols.put("AT_MARK",
-                new Symbol("AT_MARK", "@", "", false, false));
+                new Symbol("AT_MARK", "@", "＠", false, false));
         symbols.put("LEFT_SQUARE_BRACKET",
                 new Symbol("LEFT_SQUARE_BRACKET", "[", "", false, false));
         symbols.put("RIGHT_SQUARE_BRACKET",
@@ -87,13 +85,13 @@ public final class DefaultSymbols extends AbstractSymbols {
         symbols.put("LOW_LINE",
                 new Symbol("LOW_LINE", "_", "", false, false));
         symbols.put("LEFT_CURLY_BRACKET",
-                new Symbol("LEFT_CURLY_BRACKET", "{", "", false, false));
+                new Symbol("LEFT_CURLY_BRACKET", "{", "｛", false, false));
         symbols.put("RIGHT_CURLY_BRACKET",
-                new Symbol("RIGHT_CURLY_BRACKET", "}", "", false, false));
+                new Symbol("RIGHT_CURLY_BRACKET", "}", "｝", false, false));
         symbols.put("VERTICAL_BAR",
-                new Symbol("VERTICAL_BAR", "|", "", false, false));
+                new Symbol("VERTICAL_BAR", "|", "｜", false, false));
         symbols.put("TILDE",
-                new Symbol("TILDE", "~", "", false, false));
+                new Symbol("TILDE", "~", "〜", false, false));
         symbols.put("LEFT_SINGLE_QUOTATION_MARK",
                 new Symbol("LEFT_SINGLE_QUOTATION_MARK", "'", "", false, false));
         symbols.put("RIGHT_SINGLE_QUOTATION_MARK",

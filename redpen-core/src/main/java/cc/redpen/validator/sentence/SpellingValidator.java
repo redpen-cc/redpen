@@ -69,7 +69,7 @@ public class SpellingValidator extends Validator<Sentence> {
             }
 
             if (!this.validWords.contains(surface)) {
-                validationErrors.add(createValidationError(line));
+                validationErrors.add(createValidationError(line, surface));
             }
         }
         return validationErrors;

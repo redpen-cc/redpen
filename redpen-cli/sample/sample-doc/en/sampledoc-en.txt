@@ -4,4 +4,4 @@ To provide a unified perspective on the two link analysis measures, this thesis 
 
 In contrast to these methods, we address new relatedness measures that overcome two limitation of traditional relatedness measures. These relatedness measures also defined as kernels. By introducing a new parameterization, we obtain a link analysis measures that are intermediate between global importance andthe extended relatedness measure.
 
-Next, we extend our keme1-based.link analysis based on generative process of links (citations). This method overcomes a problem in our keme1-based link analysis.
+Next, we'll extend our keme1-based.link analysis based on generative process of links (citations). This method overcomes a problem in our keme1-based link analysis.
