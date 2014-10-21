@@ -34,6 +34,11 @@ final public class DoubledWordValidator extends Validator<Sentence> {
     private static final Logger LOG =
             LoggerFactory.getLogger(DoubledWordValidator.class);
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/doubled-word";
+
+    public DoubledWordValidator() {
+        this.skipList = new HashSet<>();
+    }
+
     private Set<String> skipList;
 
     @Override
@@ -69,6 +74,13 @@ final public class DoubledWordValidator extends Validator<Sentence> {
         }
         LOG.info("Succeeded to load default dictionary.");
 
+        Optional<String> skipListStr = getConfigAttribute("list");
+        skipListStr.ifPresent(f -> {
+            LOG.info("User defined skip list found.");
+            skipList.addAll(Arrays.asList(f.split(",")));
+            LOG.info("Succeeded to add elements of user defined skip list.");
+        });
+
         Optional<String> confFile = getConfigAttribute("dict");
         confFile.ifPresent(f -> {
             LOG.info("user dictionary file is " + f);
@@ -80,7 +92,7 @@ final public class DoubledWordValidator extends Validator<Sentence> {
             }
             LOG.info("Succeeded to load specified user dictionary.");
         });
-        skipList = extractor.get();
+        skipList.addAll(extractor.get());
     }
 
     @Override

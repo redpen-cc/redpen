@@ -45,6 +45,13 @@ public class SpellingValidator extends Validator<Sentence> {
         }
         LOG.info("Succeeded to load default dictionary.");
 
+        Optional<String> listStr = getConfigAttribute("list");
+        listStr.ifPresent(f -> {
+            LOG.info("User defined valid word list found.");
+            validWords.addAll(Arrays.asList(f.split(",")));
+            LOG.info("Succeeded to add elements of user defined list.");
+        });
+
         Optional<String> userDictionaryFile = getConfigAttribute("dict");
         userDictionaryFile.ifPresent(f -> {
             LOG.info("user dictionary file is " + f);
@@ -56,7 +63,7 @@ public class SpellingValidator extends Validator<Sentence> {
             }
             LOG.info("Succeeded to load specified user dictionary.");
         });
-        validWords = extractor.get();
+        validWords.addAll(extractor.get());
     }
 
     @Override

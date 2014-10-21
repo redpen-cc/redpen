@@ -80,6 +80,31 @@ public class DoubledWordValidatorTest {
     }
 
     @Test
+    public void testDoubledUserDefinedSkipWord() throws RedPenException {
+        Configuration config = new Configuration.Builder()
+                .addValidatorConfig(new ValidatorConfiguration("DoubledWord")
+                        .addAttribute("list", "redpen,tool"))
+                .setLanguage("en").build();
+
+        DocumentCollection documents = new DocumentCollection.Builder()
+                .addDocument("")
+                .addSection(1)
+                .addParagraph()
+                .addSentence(
+                        "RedPen is RedPen right?",
+                        1)
+                .build();
+
+        RedPen validator = new RedPen.Builder()
+                .setConfiguration(config)
+                .setResultDistributor(new FakeResultDistributor())
+                .build();
+
+        List<ValidationError> errors = validator.check(documents);
+        assertEquals(0, errors.size());
+    }
+
+    @Test
     public void testDoubledWordInJapaneseSentence() throws RedPenException {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("DoubledWord"))

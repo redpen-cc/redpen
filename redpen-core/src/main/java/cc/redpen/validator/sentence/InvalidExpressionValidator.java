@@ -75,6 +75,13 @@ final public class InvalidExpressionValidator extends Validator<Sentence> {
         }
         LOG.info("Succeeded to load default dictionary.");
 
+        Optional<String> listStr = getConfigAttribute("list");
+        listStr.ifPresent(f -> {
+            LOG.info("User defined invalid expression list found.");
+            invalidExpressions.addAll(Arrays.asList(f.split(",")));
+            LOG.info("Succeeded to add elements of user defined list.");
+        });
+
         Optional<String> confFile = getConfigAttribute("dict");
         confFile.ifPresent(f -> {
             LOG.info("user dictionary file is " + f);
@@ -87,7 +94,7 @@ final public class InvalidExpressionValidator extends Validator<Sentence> {
             LOG.info("Succeeded to load specified user dictionary.");
         });
 
-        invalidExpressions = extractor.get();
+        invalidExpressions.addAll(extractor.get());
     }
 
     @Override
@@ -105,7 +112,6 @@ final public class InvalidExpressionValidator extends Validator<Sentence> {
         InvalidExpressionValidator that = (InvalidExpressionValidator) o;
 
         return !(invalidExpressions != null ? !invalidExpressions.equals(that.invalidExpressions) : that.invalidExpressions != null);
-
     }
 
     @Override

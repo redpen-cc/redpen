@@ -42,11 +42,9 @@ final public class InvalidWordValidator extends Validator<Sentence> {
 
     public List<ValidationError> validate(Sentence line) {
         List<ValidationError> result = new ArrayList<>();
-        String content = line.content;
         //NOTE: only Ascii white space since this validator works for european languages.
-        List<String> words = Arrays.asList(content.split(" "));
         for (TokenElement token : line.tokens) {
-            if (invalidWords.contains(token.getSurface())) {
+            if (invalidWords.contains(token.getSurface().toLowerCase())) {
                 result.add(createValidationError(line, token.getSurface()));
             }
         }
@@ -81,6 +79,13 @@ final public class InvalidWordValidator extends Validator<Sentence> {
         }
         LOG.info("Succeeded to load default dictionary.");
 
+        Optional<String> listStr = getConfigAttribute("list");
+        listStr.ifPresent(f -> {
+            LOG.info("User defined invalid expression list found.");
+            invalidWords.addAll(Arrays.asList(f.split(",")));
+            LOG.info("Succeeded to add elements of user defined list.");
+        });
+
         Optional<String> confFile = getConfigAttribute("dict");
         confFile.ifPresent(f -> {
             LOG.info("user dictionary file is " + f);
@@ -94,7 +99,7 @@ final public class InvalidWordValidator extends Validator<Sentence> {
             LOG.info("Succeeded to load specified user dictionary.");
         });
 
-        invalidWords = extractor.get();
+        invalidWords.addAll(extractor.get());
     }
 
     @Override

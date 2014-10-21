@@ -96,4 +96,29 @@ public class InvalidExpressionValidatorTest {
         List<ValidationError> errors = validator.check(documents);
         assertEquals(1, errors.size());
     }
+
+
+    @Test
+    public void testLoadJapaneseInvalidList() throws RedPenException {
+        Configuration config = new Configuration.Builder()
+                .addValidatorConfig(new ValidatorConfiguration("InvalidExpression").addAttribute("list", "うふぉ,ガチ"))
+                .setLanguage("ja").build();
+
+        DocumentCollection documents = new DocumentCollection.Builder()
+                .addDocument("")
+                .addSection(1)
+                .addParagraph()
+                .addSentence(
+                        "うふぉっ本当ですか？",
+                        1)
+                .build();
+
+        RedPen validator = new RedPen.Builder()
+                .setConfiguration(config)
+                .setResultDistributor(new FakeResultDistributor())
+                .build();
+
+        List<ValidationError> errors = validator.check(documents);
+        assertEquals(1, errors.size());
+    }
 }
