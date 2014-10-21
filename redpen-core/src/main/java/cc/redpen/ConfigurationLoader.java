@@ -115,7 +115,7 @@ public class ConfigurationLoader {
 
         // extract validator configurations
         NodeList validatorConfigElementList =
-                getSpecifiedNodeList(rootElement, "validator-list");
+                getSpecifiedNodeList(rootElement, "validators");
         if (validatorConfigElementList == null) {
             LOG.error("There is no validator-list block");
             return null;
@@ -130,7 +130,7 @@ public class ConfigurationLoader {
 
         // extract symbol configurations
         NodeList symbolTableConfigElementList =
-                getSpecifiedNodeList(rootElement, "symbol-table");
+                getSpecifiedNodeList(rootElement, "symbols");
         if (symbolTableConfigElementList == null) {
             configBuilder.setLanguage("en");
         } else {
