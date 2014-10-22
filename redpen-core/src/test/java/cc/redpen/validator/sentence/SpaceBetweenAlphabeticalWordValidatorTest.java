@@ -40,4 +40,12 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
                 validator.validate(new Sentence("This Coke is cold", 0));
         assertEquals(0, errors.size());
     }
+
+    @Test
+    public void testLatinSymbolWithoutSpace() {
+        SpaceBetweenAlphabeticalWordValidator validator = new SpaceBetweenAlphabeticalWordValidator();
+        List<ValidationError> errors =
+                validator.validate(new Sentence("きょうは,コーラを飲みたい。", 0));
+        assertEquals(0, errors.size());
+    }
 }

@@ -15,13 +15,13 @@ public class SpaceBetweenAlphabeticalWordValidator extends Validator<Sentence> {
         for (char character : block.content.toCharArray()) {
             if (!StringUtils.isBasicLatin(prevCharacter)
                     && StringUtils.isBasicLatin(character)
-                    && character != ' ') {
-                results.add(createValidationError(block, "before"));
+                    && Character.isLetter(character)) {
+                results.add(createValidationError("Before", block));
             } else if (
                     !StringUtils.isBasicLatin(character)
                             && StringUtils.isBasicLatin(prevCharacter)
-                            && prevCharacter != ' ') {
-                results.add(createValidationError(block, "after"));
+                            && Character.isLetter(prevCharacter)) {
+                results.add(createValidationError("After", block));
             }
             prevCharacter = character;
         }
