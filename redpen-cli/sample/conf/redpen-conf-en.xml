@@ -10,7 +10,8 @@
         </validator>
         <validator name="ParagraphNumber"/>
         <validator name="Spelling"/>
-	<validator name="Contraction" />
-	<validator name="DoubledWord" />
+        <validator name="Contraction" />
+        <validator name="DoubledWord" />
+        <validator name="SuccessiveWord" />
     </validators>
 </redpen-conf>
