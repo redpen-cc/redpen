@@ -13,5 +13,6 @@
         <validator name="DoubledWord" />
         <validator name="SpaceBetweenAlphabeticalWord" />
         <validator name="CommaNumber" />
+        <validator name="SuccessiveWord" />
     </validators>
 </redpen-conf>
