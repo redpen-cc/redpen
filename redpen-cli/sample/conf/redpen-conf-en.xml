@@ -13,5 +13,7 @@
         <validator name="Contraction" />
         <validator name="DoubledWord" />
         <validator name="SuccessiveWord" />
+        <validator name="EndOfSentence" />
+        <validator name="SpaceBeginningOfSentence" />
     </validators>
 </redpen-conf>
