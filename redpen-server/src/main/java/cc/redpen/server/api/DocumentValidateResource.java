@@ -25,11 +25,11 @@ import cc.redpen.model.DocumentCollection;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.DocumentParserFactory;
 import cc.redpen.validator.ValidationError;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.*;
@@ -48,7 +48,7 @@ import java.util.Map;
 @Path("/document")
 public class DocumentValidateResource {
 
-    private static final Logger LOG = LogManager.getLogger(
+    private static final Logger LOG = LoggerFactory.getLogger(
             DocumentValidateResource.class
     );
     private final static String DEFAULT_INTERNAL_CONFIG_PATH = "/conf/redpen-conf.xml";
