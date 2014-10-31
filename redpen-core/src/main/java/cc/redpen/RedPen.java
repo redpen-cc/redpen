@@ -171,21 +171,21 @@ public class RedPen extends Validator<Document> {
     private List<ValidationError> runSentenceValidators(
             DocumentCollection documentCollection,
             List<ValidationError> errors) {
-        runSentencePreProcessorsToDocumentCollection(documentCollection, errors);
+        runSentencePreProcessorsToDocumentCollection(documentCollection);
         runSentenceValidatorsToDocumentCollection(documentCollection, errors);
         return errors;
     }
 
     private void runSentencePreProcessorsToDocumentCollection(
-            DocumentCollection documentCollection, List<ValidationError> errors) {
+            DocumentCollection documentCollection) {
         for (Document document : documentCollection) {
             for (Section section : document) {
-                applySentencePreProcessorsToSection(document, section);
+                applySentencePreProcessorsToSection(section);
             }
         }
     }
 
-    private void applySentencePreProcessorsToSection(Document document, Section section) {
+    private void applySentencePreProcessorsToSection(Section section) {
         // apply paragraphs
         for (Paragraph paragraph : section.getParagraphs()) {
             preprocessSentences(paragraph.getSentences());
@@ -202,13 +202,9 @@ public class RedPen extends Validator<Document> {
 
     private void preprocessSentences(List<Sentence> sentences) {
         for (Validator<Sentence> sentenceValidator : sentenceValidators) {
-            Class<?> clazz = sentenceValidator.getClass();
-            if (clazz.getInterfaces().length > 0 &&
-                    clazz.getInterfaces()[0].equals(cc.redpen.validator.PreProcessor.class)) {
+            if(sentenceValidator instanceof PreProcessor){
                 PreProcessor<Sentence> preprocessor = (PreProcessor<Sentence>) sentenceValidator;
-                for (Sentence sentence : sentences) {
-                    preprocessor.preprocess(sentence);
-                }
+                sentences.forEach(preprocessor::preprocess);
             }
         }
     }
