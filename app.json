@@ -1,7 +1,7 @@
 {
   "name": "RedPen",
-  "description": "RedPen is a proofreading tool to help writers or programmers who write technical documents or manuals that need to adhere to a writing standard. RedPen automates the verifications of input documents written in natural languages (NOT computer languages such as C++ or Java).",
-  "logo": "http://redpen.bigram.org/img/logo/logo-001.png",
+  "description": "RedPen is a proofreading tool to help writers or programmers who write technical documents or manuals.",
+  "logo": "http://redpen.cc/img/logo/logo-001.png",
   "success_url": "/",
   "keywords": [
     "redpen",
