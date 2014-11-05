@@ -60,8 +60,6 @@ public final class DefaultSymbols extends AbstractSymbols {
                 new Symbol("PLUS_SIGN", "+", "＋", false, false));
         symbols.put("HYPHEN_SIGN",
                 new Symbol("HYPHEN_SIGN", "-", "ー", false, false));
-        symbols.put("MINUS_SIGN",
-                new Symbol("MINUS_SIGN", "-", "ー", false, false));
         symbols.put("SLASH", new Symbol("SLASH", "/", "／", false, false));
         symbols.put("COLON", new Symbol("COLON", ":", "：", false, false));
         symbols.put("SEMICOLON",

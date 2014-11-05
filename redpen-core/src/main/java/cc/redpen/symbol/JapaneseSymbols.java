@@ -54,15 +54,13 @@ public class JapaneseSymbols extends AbstractSymbols {
                 new Symbol("RIGHT_PARENTHESIS", "）", ")", false, false));
         symbols.put("ASTERISK",
                 new Symbol("ASTERISK", "＊", "*", false, false));
-        symbols.put("COMMA", new Symbol("COMMA", "、", ",", false, false));
+        symbols.put("COMMA", new Symbol("COMMA", "、", ",，", false, false));
         symbols.put("FULL_STOP",
                 new Symbol("FULL_STOP", "。", ".．", false, false));
         symbols.put("PLUS_SIGN",
                 new Symbol("PLUS_SIGN", "＋", "+", false, false));
         symbols.put("HYPHEN_SIGN",
                 new Symbol("HYPHEN_SIGN", "ー", "-", false, false));
-        symbols.put("MINUS_SIGN",
-                new Symbol("MINUS_SIGN", "ー", "-", false, false));
         symbols.put("SLASH", new Symbol("SLASH", "／", "/", false, false));
         symbols.put("COLON", new Symbol("COLON", "：", ":", false, false));
         symbols.put("SEMICOLON",
