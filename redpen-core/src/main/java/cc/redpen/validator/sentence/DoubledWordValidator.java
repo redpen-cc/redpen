@@ -76,8 +76,9 @@ final public class DoubledWordValidator extends Validator<Sentence> {
 
         Optional<String> skipListStr = getConfigAttribute("list");
         skipListStr.ifPresent(f -> {
-            LOG.info("User defined skip list found.");
-            skipList.addAll(Arrays.asList(f.split(",")));
+            String normalized = f.toLowerCase();
+            LOG.info("Found user defined skip list.");
+            skipList.addAll(Arrays.asList(normalized.split(",")));
             LOG.info("Succeeded to add elements of user defined skip list.");
         });
 
