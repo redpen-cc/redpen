@@ -45,7 +45,7 @@ import java.util.List;
 /**
  * Validate all input files using appended Validators.
  */
-public class RedPen extends Validator<Document> {
+public class RedPen {
     private static final Logger LOG = LoggerFactory.getLogger(RedPen.class);
 
     private final List<Validator<Document>> validators = new ArrayList<>();
@@ -274,17 +274,6 @@ public class RedPen extends Validator<Document> {
             }
         }
         return errors;
-    }
-
-    /**
-     * Run validation.
-     *
-     * @param document input
-     * @return set of errors
-     */
-    @Override
-    public List<ValidationError> validate(Document document) {
-        return null;
     }
 
     @Override
