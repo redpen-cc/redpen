@@ -48,7 +48,7 @@ import java.util.List;
 public class RedPen extends Validator<Document> {
     private static final Logger LOG = LoggerFactory.getLogger(RedPen.class);
 
-    private final List<Validator<Document>> validators = new ArrayList<>();
+    private final List<Validator<Document>> documentValidators = new ArrayList<>();
     private final List<Validator<Section>> sectionValidators = new ArrayList<>();
     private final List<Validator<Sentence>> sentenceValidators = new ArrayList<>();
     private final ResultDistributor distributor;
@@ -105,6 +105,8 @@ public class RedPen extends Validator<Document> {
                 this.sentenceValidators.add((Validator<Sentence>) validator);
             } else if (type == Section.class) {
                 this.sectionValidators.add((Validator<Section>) validator);
+            } else if (type == Document.class) {
+                this.documentValidators.add((Validator<Document>) validator);
             } else {
                 throw new IllegalStateException("No validator for " + type + " block.");
             }
@@ -246,7 +248,7 @@ public class RedPen extends Validator<Document> {
 
     private List<ValidationError> validateDocument(Document document) {
         List<ValidationError> errors = new ArrayList<>();
-        for (Validator<Document> validator : validators) {
+        for (Validator<Document> validator : documentValidators) {
             errors.addAll(validator.validate(document));
         }
         return errors;
@@ -299,14 +301,14 @@ public class RedPen extends Validator<Document> {
             return false;
         if (sentenceValidators != null ? !sentenceValidators.equals(redPen.sentenceValidators) : redPen.sentenceValidators != null)
             return false;
-        if (validators != null ? !validators.equals(redPen.validators) : redPen.validators != null) return false;
+        if (documentValidators != null ? !documentValidators.equals(redPen.documentValidators) : redPen.documentValidators != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = validators != null ? validators.hashCode() : 0;
+        int result = documentValidators != null ? documentValidators.hashCode() : 0;
         result = 31 * result + (sectionValidators != null ? sectionValidators.hashCode() : 0);
         result = 31 * result + (sentenceValidators != null ? sentenceValidators.hashCode() : 0);
         result = 31 * result + (distributor != null ? distributor.hashCode() : 0);
@@ -316,7 +318,7 @@ public class RedPen extends Validator<Document> {
     @Override
     public String toString() {
         return "RedPen{" +
-                "validators=" + validators +
+                "documentValidators=" + documentValidators +
                 ", sectionValidators=" + sectionValidators +
                 ", sentenceValidators=" + sentenceValidators +
                 ", distributor=" + distributor +
