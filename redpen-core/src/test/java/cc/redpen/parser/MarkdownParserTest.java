@@ -426,6 +426,24 @@ public class MarkdownParserTest {
         assertEquals(5, h2Section.getHeaderContent(0).position);
     }
 
+    /**
+     * Note: currently redpen just skip the contents of table.
+     * In the future, we will add validators on table size or table contents.
+     */
+    @Test
+    public void testDocumentWithListWithTable()
+            throws UnsupportedEncodingException {
+        String sampleText = "";
+        sampleText += "# Table\n\n" +
+        "|--------|-------|\n" +
+        "|Cool    | Shit  |\n" +
+        "|is this | really\n";
+
+        Document doc = createFileContent(sampleText);
+        Section lastSection = doc.getSection(doc.getNumberOfSections() - 1);
+        assertEquals(0, lastSection.getNumberOfParagraphs());
+    }
+
     @Test
     public void testGenerateJapaneseDocument() {
         String sampleText = "埼玉は東京の北に存在する。";

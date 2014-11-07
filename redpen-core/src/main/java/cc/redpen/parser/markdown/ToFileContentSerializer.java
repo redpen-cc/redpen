@@ -44,18 +44,13 @@ public class ToFileContentSerializer implements Visitor {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(ToFileContentSerializer.class);
-    private final Map<String, ReferenceNode> references =
-            new HashMap<String, ReferenceNode>();
-    private final Map<String, String> abbreviations =
-            new HashMap<String, String>();
+    private final Map<String, ReferenceNode> references = new HashMap<>();
     private DocumentCollection.Builder builder = null;
     private SentenceExtractor sentenceExtractor;
     private int itemDepth = 0;
     private List<Integer> lineList = null;
     // TODO multi period character not supported
-    private String period;
-    private List<CandidateSentence> candidateSentences =
-            new ArrayList<CandidateSentence>();
+    private List<CandidateSentence> candidateSentences = new ArrayList<>();
     private Printer printer = new Printer();
 
     /**
@@ -177,7 +172,7 @@ public class ToFileContentSerializer implements Visitor {
     }
 
     private Sentence addExtractedSentences(List<Sentence> newSentences,
-                                           List<String> remainLinks, List<Sentence> currentSentences) {
+            List<String> remainLinks, List<Sentence> currentSentences) {
         Sentence currentSentence;
         newSentences.addAll(currentSentences);
         currentSentence = currentSentences.get(currentSentences.size() - 1);
@@ -232,13 +227,11 @@ public class ToFileContentSerializer implements Visitor {
         }
     }
 
-    @Override
     public void visit(AbbreviationNode abbreviationNode) {
         // current not implement
 
     }
 
-    @Override
     public void visit(AutoLinkNode autoLinkNode) {
         // TODO GitHub Markdown Extension
         addCandidateSentence(
@@ -246,23 +239,19 @@ public class ToFileContentSerializer implements Visitor {
                 autoLinkNode.getText(), autoLinkNode.getText());
     }
 
-    @Override
     public void visit(BlockQuoteNode blockQuoteNode) {
         visitChildren(blockQuoteNode);
     }
 
-    @Override
     public void visit(CodeNode codeNode) {
         addCandidateSentence(lineNumberFromStartIndex(
                 codeNode.getStartIndex()), codeNode.getText());
     }
 
-    @Override
     public void visit(ExpImageNode expImageNode) {
         // TODO exp image not implement
     }
 
-    @Override
     public void visit(ExpLinkNode expLinkNode) {
         // title attribute don't use
         String linkName = printChildrenToString(expLinkNode);
@@ -273,13 +262,11 @@ public class ToFileContentSerializer implements Visitor {
         lastCandidateSentence.setLink(expLinkNode.url);
     }
 
-    @Override
     public void visit(HeaderNode headerNode) {
         appendSection(headerNode);
     }
 
     // list part
-    @Override
     public void visit(BulletListNode bulletListNode) {
         //FIXME test and validate
         // TODO handle bulletListNode and orderdListNode
@@ -295,7 +282,6 @@ public class ToFileContentSerializer implements Visitor {
         itemDepth--;
     }
 
-    @Override
     public void visit(OrderedListNode orderedListNode) {
         // TODO handle bulletListNode and orderdListNode
         if (itemDepth == 0) {
@@ -310,8 +296,6 @@ public class ToFileContentSerializer implements Visitor {
         itemDepth--;
     }
 
-
-    @Override
     public void visit(ListItemNode listItemNode) {
         visitChildren(listItemNode);
         List<Sentence> sentences = createSentenceList();
@@ -322,14 +306,12 @@ public class ToFileContentSerializer implements Visitor {
     }
 
 
-    @Override
     public void visit(ParaNode paraNode) {
         builder.addParagraph();
         visitChildren(paraNode);
         fixSentence();
     }
 
-    @Override
     public void visit(RootNode rootNode) {
         // create refNode reference map
         for (ReferenceNode refNode : rootNode.getReferences()) {
@@ -344,7 +326,6 @@ public class ToFileContentSerializer implements Visitor {
         visitChildren(rootNode);
     }
 
-    @Override
     public void visit(SimpleNode simpleNode) {
         //TODO validate detail
         switch (simpleNode.getType()) {
@@ -375,7 +356,6 @@ public class ToFileContentSerializer implements Visitor {
         }
     }
 
-    @Override
     public void visit(SpecialTextNode specialTextNode) {
         // TODO to sentence
         addCandidateSentence(
@@ -383,18 +363,14 @@ public class ToFileContentSerializer implements Visitor {
                         specialTextNode.getStartIndex()), specialTextNode.getText());
     }
 
-    @Override
     public void visit(StrikeNode strikeNode) {
         visitChildren(strikeNode);
     }
 
-    @Override
     public void visit(StrongEmphSuperNode strongEmphSuperNode) {
         visitChildren(strongEmphSuperNode);
     }
 
-
-    @Override
     public void visit(TextNode textNode) {
         // to sentence, if sentence breaker appear
         // append remain sentence, if sentence breaker not appear
@@ -406,31 +382,25 @@ public class ToFileContentSerializer implements Visitor {
     }
 
     // code block
-    @Override
     public void visit(VerbatimNode verbatimNode) {
         // paragraph?
         // FIXME implement
         // TODO remove tag
     }
 
-
-    @Override
     public void visit(QuotedNode quotedNode) {
         //TODO quoted not implement
     }
 
-    @Override
     public void visit(ReferenceNode referenceNode) {
         //TODO reference node not implement
     }
 
-    @Override
     public void visit(RefImageNode refImageNode) {
         // TODO reference image require implement
         // to expand sentence
     }
 
-    @Override
     public void visit(RefLinkNode refLinkNode) {
         // TODO reference link require implement
         // to expand sentence
@@ -459,88 +429,73 @@ public class ToFileContentSerializer implements Visitor {
     }
 
     // html part
-    @Override
+
     public void visit(HtmlBlockNode htmlBlockNode) {
         // TODO html block not implement
     }
 
-    @Override
+
     public void visit(InlineHtmlNode inlineHtmlNode) {
         // TODO inline html not implement
     }
 
-    @Override
     public void visit(MailLinkNode mailLinkNode) {
         // TODO mail link not implement.
     }
 
-    @Override
     public void visit(WikiLinkNode wikiLinkNode) {
         // TODO not supported
         // no handle
     }
 
-    @Override
     public void visit(SuperNode superNode) {
         visitChildren(superNode);
     }
 
-    @Override
     public void visit(Node node) {
         // not necessary implement, for pegdown parser plugin
     }
 
     // handle definition list
-    @Override
     public void visit(DefinitionListNode definitionListNode) {
         // TODO dl tag not implement
     }
 
-    @Override
     public void visit(DefinitionNode definitionNode) {
         // TODO dt tag not implement
     }
 
-    @Override
     public void visit(DefinitionTermNode definitionTermNode) {
         // TODO dd tag not implement
     }
 
     // handle Table contents
     // current not implemented
-    @Override
     public void visit(TableBodyNode tableBodyNode) {
         // TODO not implement
     }
-
-    @Override
     public void visit(TableCaptionNode tableCaptionNode) {
         // TODO not implement
     }
 
-    @Override
     public void visit(TableCellNode tableCellNode) {
         // TODO not implement
     }
 
-    @Override
     public void visit(TableColumnNode tableColumnNode) {
         // TODO not implement
     }
 
-    @Override
     public void visit(TableHeaderNode tableHeaderNode) {
         // TODO not implement
     }
 
-    @Override
     public void visit(TableNode tableNode) {
         // TODO not implement
+        visitChildren(tableNode);
     }
 
-    @Override
     public void visit(TableRowNode tableRowNode) {
         // TODO not implement
     }
-
 }

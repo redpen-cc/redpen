@@ -42,7 +42,8 @@ public class MarkdownParser extends BaseDocumentParser {
     private PegDownProcessor pegDownProcessor = new PegDownProcessor(
             Extensions.HARDWRAPS
                     + Extensions.AUTOLINKS
-                    + Extensions.FENCED_CODE_BLOCKS);
+                    + Extensions.FENCED_CODE_BLOCKS
+                    + Extensions.TABLES);
 
     MarkdownParser() {
         super();
