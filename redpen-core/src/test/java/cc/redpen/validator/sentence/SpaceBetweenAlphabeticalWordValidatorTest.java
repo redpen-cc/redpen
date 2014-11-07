@@ -1,5 +1,11 @@
 package cc.redpen.validator.sentence;
 
+import cc.redpen.RedPen;
+import cc.redpen.RedPenException;
+import cc.redpen.config.Configuration;
+import cc.redpen.config.ValidatorConfiguration;
+import cc.redpen.distributor.FakeResultDistributor;
+import cc.redpen.model.DocumentCollection;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import org.junit.Test;
@@ -46,6 +52,54 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
         SpaceBetweenAlphabeticalWordValidator validator = new SpaceBetweenAlphabeticalWordValidator();
         List<ValidationError> errors =
                 validator.validate(new Sentence("きょうは,コーラを飲みたい。", 0));
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void testWithParenthesis() throws RedPenException {
+        Configuration config = new Configuration.Builder()
+                .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
+                .setLanguage("ja").build();
+
+        DocumentCollection documents = new DocumentCollection.Builder()
+                .addDocument("")
+                .addSection(1)
+                .addParagraph()
+                .addSentence(
+                        "きょうは（Coke）を飲みたい。",
+                        1)
+                .build();
+
+        RedPen validator = new RedPen.Builder()
+                .setConfiguration(config)
+                .setResultDistributor(new FakeResultDistributor())
+                .build();
+
+        List<ValidationError> errors = validator.check(documents);
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void testWithComma() throws RedPenException {
+        Configuration config = new Configuration.Builder()
+                .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
+                .setLanguage("ja").build();
+
+        DocumentCollection documents = new DocumentCollection.Builder()
+                .addDocument("")
+                .addSection(1)
+                .addParagraph()
+                .addSentence(
+                        "きょうは、Coke を飲みたい。",
+                        1)
+                .build();
+
+        RedPen validator = new RedPen.Builder()
+                .setConfiguration(config)
+                .setResultDistributor(new FakeResultDistributor())
+                .build();
+
+        List<ValidationError> errors = validator.check(documents);
         assertEquals(0, errors.size());
     }
 }
