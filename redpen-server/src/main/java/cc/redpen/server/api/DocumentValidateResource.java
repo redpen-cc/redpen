@@ -20,10 +20,8 @@ package cc.redpen.server.api;
 
 import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
-import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.parser.DocumentParser;
-import cc.redpen.parser.DocumentParserFactory;
 import cc.redpen.validator.ValidationError;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +34,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
@@ -106,7 +103,7 @@ public class DocumentValidateResource {
         json.put("document", document);
 
         DocumentCollection documents = new DocumentCollection();
-        documents.addDocument(redPen.parse(DocumentParser.Type.PLAIN, document));
+        documents.addDocument(redPen.parse(DocumentParser.PLAIN, document));
 
         List<ValidationError> errors = redPen.validate(documents).get(documents.getDocument(0));
 

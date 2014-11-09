@@ -27,7 +27,6 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
@@ -115,11 +114,8 @@ public class XMLFormatterTest {
 
         Document document = null;
         try {
-            document = docBuilder.parse(new ByteArrayInputStream(resultString.getBytes()));
-        } catch (SAXException e) {
-            e.printStackTrace();
-            fail();
-        } catch (IOException e) {
+            document = docBuilder.parse(resultString);
+        } catch (SAXException | IOException e) {
             e.printStackTrace();
             fail();
         }

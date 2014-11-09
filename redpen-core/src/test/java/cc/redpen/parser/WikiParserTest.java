@@ -17,20 +17,16 @@
  */
 package cc.redpen.parser;
 
+import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
-import static cc.redpen.parser.DocumentParser.Type.WIKI;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class WikiParserTest {
 
@@ -557,31 +553,11 @@ public class WikiParserTest {
         assertEquals(2, firstParagraph.getNumberOfSentences());
     }
 
-    private DocumentParser loadParser(Configuration configuration) {
-        DocumentParser parser = null;
-        try {
-            parser = DocumentParserFactory.generate(WIKI, configuration,
-                    new DocumentCollection.Builder());
-        } catch (RedPenException e1) {
-            fail();
-            e1.printStackTrace();
-        }
-        return parser;
-    }
-
     private Document createFileContent(String inputDocumentString,
                                        Configuration conf) {
-        InputStream inputDocumentStream = null;
+        DocumentParser parser = DocumentParser.WIKI;
         try {
-            inputDocumentStream =
-                    new ByteArrayInputStream(inputDocumentString.getBytes("utf-8"));
-        } catch (UnsupportedEncodingException e1) {
-            fail();
-        }
-
-        DocumentParser parser = loadParser(conf);
-        try {
-            return parser.parse(inputDocumentStream);
+            return parser.parse(inputDocumentString, RedPen.getSentenceExtractor(conf), new DocumentCollection.Builder(conf.getLang()));
         } catch (RedPenException e) {
             e.printStackTrace();
             return null;
@@ -590,19 +566,11 @@ public class WikiParserTest {
 
     private Document createFileContent(
             String inputDocumentString) {
-        ValidatorConfiguration conf = new ValidatorConfiguration("dummy");
-        Configuration.Builder builder = new Configuration.Builder();
-        DocumentParser parser = loadParser(builder.build());
-        InputStream is;
-        try {
-            is = new ByteArrayInputStream(inputDocumentString.getBytes("utf-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return null;
-        }
+        Configuration conf = new Configuration.Builder().build();
+        DocumentParser parser = DocumentParser.WIKI;
         Document doc = null;
         try {
-            doc = parser.parse(is);
+            doc = parser.parse(inputDocumentString, RedPen.getSentenceExtractor(conf), new DocumentCollection.Builder(conf.getLang()));
         } catch (RedPenException e) {
             e.printStackTrace();
         }

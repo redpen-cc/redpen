@@ -17,6 +17,7 @@
  */
 package cc.redpen.parser;
 
+import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
@@ -27,10 +28,6 @@ import cc.redpen.model.Section;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,15 +56,10 @@ public class PlainTextParserTest {
     }
 
     private Document generateDocument(String sampleText) {
-        InputStream is = null;
-        try {
-            is = new ByteArrayInputStream(sampleText.getBytes("utf-8"));
-        } catch (UnsupportedEncodingException e1) {
-            fail();
-        }
         Document doc = null;
+        Configuration configuration = new Configuration.Builder().build();
         try {
-            doc = parser.parse(is);
+            doc = parser.parse(sampleText, RedPen.getSentenceExtractor(configuration), new DocumentCollection.Builder(configuration.getLang()));
         } catch (RedPenException e) {
             fail();
         }
@@ -80,12 +72,7 @@ public class PlainTextParserTest {
                 .addValidatorConfig(
                         new ValidatorConfiguration("SentenceLength").addAttribute("max_length", "10"))
                 .build();
-        try {
-            parser = DocumentParserFactory.generate(DocumentParser.Type.PLAIN, configuration, new DocumentCollection.Builder());
-        } catch (RedPenException e1) {
-            e1.printStackTrace();
-            fail();
-        }
+            parser = DocumentParser.PLAIN;
     }
 
     @Test
@@ -175,14 +162,4 @@ public class PlainTextParserTest {
         assertEquals(0, calcLineNum(section));
     }
 
-    @Test(expected = RedPenException.class)
-    public void testNullInitialize() throws Exception {
-        DocumentParserFactory.generate(DocumentParser.Type.PLAIN, null,
-                new DocumentCollection.Builder());
-    }
-
-    @Test(expected = RedPenException.class)
-    public void testNullFileName() throws Exception {
-        parser.parse(new File("no_exist_files"));
-    }
 }

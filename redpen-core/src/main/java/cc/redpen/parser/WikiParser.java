@@ -19,6 +19,7 @@ package cc.redpen.parser;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
+import cc.redpen.model.DocumentCollection;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
 import org.slf4j.Logger;
@@ -89,15 +90,15 @@ public final class WikiParser extends BaseDocumentParser {
     }
 
     @Override
-    public Document parse(InputStream is)
+    public Document parse(InputStream is, SentenceExtractor sentenceExtractor, DocumentCollection.Builder documentBuilder)
             throws RedPenException {
-        builder.addDocument("");
-        BufferedReader br = null;
+        documentBuilder.addDocument("");
+        BufferedReader br;
 
         // for sentences right below the beginning of document
         List<Sentence> headers = new ArrayList<>();
         headers.add(new Sentence("", 0));
-        builder.addSection(0, headers);
+        documentBuilder.addSection(0, headers);
 
         // begin parsing
         LinePattern prevPattern, currentPattern = LinePattern.VOID;
@@ -115,23 +116,23 @@ public final class WikiParser extends BaseDocumentParser {
                     }
                 } else if (check(HEADER_PATTERN, line, head)) {
                     currentPattern = LinePattern.HEADER;
-                    appendSection(head, lineNum);
+                    appendSection(head, lineNum, sentenceExtractor, documentBuilder);
                 } else if (check(LIST_PATTERN, line, head)) {
                     currentPattern = LinePattern.LIST;
-                    appendListElement(prevPattern, head, lineNum);
+                    appendListElement(prevPattern, head, lineNum, sentenceExtractor,documentBuilder);
                 } else if (check(NUMBERED_LIST_PATTERN, line, head)) {
                     currentPattern = LinePattern.LIST;
-                    appendListElement(prevPattern, head, lineNum);
+                    appendListElement(prevPattern, head, lineNum, sentenceExtractor,documentBuilder);
                 } else if (check(BEGIN_COMMENT_PATTERN, line, head)) {
                     if (!check(END_COMMENT_PATTERN, line, head)) { // skip comment
                         currentPattern = LinePattern.COMMENT;
                     }
                 } else if (line.equals("")) { // new paragraph content
-                    builder.addParagraph();
+                    documentBuilder.addParagraph();
                 } else { // usual sentence.
                     currentPattern = LinePattern.SENTENCE;
                     String remainStr = appendSentencesIntoSection(lineNum,
-                            remain.append(line).toString());
+                            remain.append(line).toString(), sentenceExtractor, documentBuilder);
                     remain.delete(0, remain.length());
                     remain.append(remainStr);
                 }
@@ -141,18 +142,18 @@ public final class WikiParser extends BaseDocumentParser {
             throw new RedPenException(e);
         }
         if (remain.length() > 0) {
-            appendLastSentence(lineNum, remain.toString());
+            appendLastSentence(lineNum, remain.toString(), documentBuilder);
         }
-        return builder.getLastDocument();
+        return documentBuilder.getLastDocument();
     }
 
     private void appendListElement(LinePattern prevPattern,
-                                   List<String> head, int lineNum) {
+                                   List<String> head, int lineNum, SentenceExtractor sentenceExtractor, DocumentCollection.Builder builder) {
         if (prevPattern != LinePattern.LIST) {
             builder.addListBlock();
         }
         List<Sentence> outputSentences = new ArrayList<>();
-        String remainSentence = obtainSentences(0, head.get(1), outputSentences);
+        String remainSentence = obtainSentences(0, head.get(1), outputSentences, sentenceExtractor);
         builder.addListElement(extractListLevel(head.get(0)),
                 outputSentences);
         // NOTE: for list content without period
@@ -161,11 +162,11 @@ public final class WikiParser extends BaseDocumentParser {
         }
     }
 
-    private Section appendSection(List<String> head, int lineNum) {
+    private Section appendSection(List<String> head, int lineNum, SentenceExtractor sentenceExtractor, DocumentCollection.Builder builder) {
         Integer level = Integer.valueOf(head.get(0));
         List<Sentence> outputSentences = new ArrayList<>();
         String remainHeader =
-                obtainSentences(lineNum, head.get(1), outputSentences);
+                obtainSentences(lineNum, head.get(1), outputSentences, sentenceExtractor);
         // NOTE: for header without period
         if (remainHeader != null && remainHeader.length() > 0) {
             outputSentences.add(new Sentence(remainHeader, lineNum));
@@ -186,7 +187,7 @@ public final class WikiParser extends BaseDocumentParser {
         return currentSection;
     }
 
-    private void appendLastSentence(int lineNum, String remain) {
+    private void appendLastSentence(int lineNum, String remain, DocumentCollection.Builder builder) {
         Sentence sentence = new Sentence(remain, lineNum);
         parseSentence(sentence); // extract inline elements
         builder.addSentence(sentence);
@@ -266,17 +267,17 @@ public final class WikiParser extends BaseDocumentParser {
     }
 
     private String obtainSentences(int lineNum, String line,
-                                   List<Sentence> outputSentences) {
-        String remain = getSentenceExtractor().extract(line, outputSentences, lineNum);
+                                   List<Sentence> outputSentences, SentenceExtractor sentenceExtractor) {
+        String remain = sentenceExtractor.extract(line, outputSentences, lineNum);
         for (Sentence sentence : outputSentences) {
             parseSentence(sentence); // extract inline elements
         }
         return remain;
     }
 
-    private String appendSentencesIntoSection(int lineNum, String line) {
+    private String appendSentencesIntoSection(int lineNum, String line, SentenceExtractor sentenceExtractor, DocumentCollection.Builder builder) {
         List<Sentence> outputSentences = new ArrayList<>();
-        String remain = obtainSentences(lineNum, line, outputSentences);
+        String remain = obtainSentences(lineNum, line, outputSentences, sentenceExtractor);
 
         for (Sentence sentence : outputSentences) {
             builder.addSentence(sentence);

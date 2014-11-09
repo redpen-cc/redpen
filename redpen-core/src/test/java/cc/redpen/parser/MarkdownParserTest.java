@@ -17,6 +17,7 @@
  */
 package cc.redpen.parser;
 
+import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.Symbol;
@@ -24,12 +25,9 @@ import cc.redpen.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
-import static cc.redpen.parser.DocumentParser.Type.MARKDOWN;
 import static org.junit.Assert.*;
 
 public class MarkdownParserTest {
@@ -40,16 +38,10 @@ public class MarkdownParserTest {
 
     @Test(expected = RedPenException.class)
     public void testNullDocument() throws Exception {
-        DocumentParser parser = loadParser(new Configuration.Builder().build());
+        Configuration configuration = new Configuration.Builder().build();
+        DocumentParser parser = DocumentParser.MARKDOWN;
         InputStream is = null;
-        parser.parse(is);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void testNullFileName() throws Exception {
-        DocumentParser parser = loadParser(new Configuration.Builder().build());
-        String file = null;
-        parser.parse(new File(file));
+        parser.parse(is, RedPen.getSentenceExtractor(configuration), new DocumentCollection.Builder(configuration.getLang()));
     }
 
     @Test
@@ -436,9 +428,9 @@ public class MarkdownParserTest {
             throws UnsupportedEncodingException {
         String sampleText = "";
         sampleText += "# Table\n\n" +
-        "|--------|-------|\n" +
-        "|Cool    | Shit  |\n" +
-        "|is this | really\n";
+                "|--------|-------|\n" +
+                "|Cool    | Shit  |\n" +
+                "|is this | really\n";
 
         Document doc = createFileContent(sampleText);
         Section lastSection = doc.getSection(doc.getNumberOfSections() - 1);
@@ -479,52 +471,24 @@ public class MarkdownParserTest {
     }
 
 
-    private DocumentParser loadParser(Configuration configuration) {
-        DocumentParser parser = null;
-        try {
-            parser = DocumentParserFactory.generate(MARKDOWN, configuration,
-                    new DocumentCollection.Builder());
-        } catch (RedPenException e1) {
-            fail();
-            e1.printStackTrace();
-        }
-        return parser;
-    }
-
     private Document createFileContent(String inputDocumentString,
                                        Configuration config) {
-        InputStream inputDocumentStream = null;
-        try {
-            inputDocumentStream =
-                    new ByteArrayInputStream(inputDocumentString.getBytes("utf-8"));
-        } catch (UnsupportedEncodingException e1) {
-            fail();
-        }
-
-        DocumentParser parser = loadParser(config);
+        DocumentParser parser = DocumentParser.MARKDOWN;
 
         try {
-            return parser.parse(inputDocumentStream);
+            return parser.parse(inputDocumentString, RedPen.getSentenceExtractor(config), new DocumentCollection.Builder(config.getLang()));
         } catch (RedPenException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    private Document createFileContent(
-            String inputDocumentString) {
-        DocumentParser parser = loadParser(new Configuration.Builder().build());
-        InputStream is;
-        try {
-            is = new ByteArrayInputStream(inputDocumentString.getBytes("utf-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            fail();
-            return null;
-        }
+    private Document createFileContent(String inputDocumentString) {
+        DocumentParser parser = DocumentParser.MARKDOWN;
         Document doc = null;
         try {
-            doc = parser.parse(is);
+            Configuration configuration = new Configuration.Builder().build();
+            doc = parser.parse(inputDocumentString, RedPen.getSentenceExtractor(configuration), new DocumentCollection.Builder(configuration.getLang()));
         } catch (RedPenException e) {
             e.printStackTrace();
             fail();

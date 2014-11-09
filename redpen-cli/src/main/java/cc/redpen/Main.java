@@ -83,10 +83,10 @@ public final class Main {
         options.addOption("v", "version", false,
             "Displays version information and exits");
 
-        CommandLineParser parser = new BasicParser();
+        CommandLineParser commandLineParser = new BasicParser();
         CommandLine commandLine = null;
         try {
-            commandLine = parser.parse(options, args);
+            commandLine = commandLineParser.parse(options, args);
         } catch (ParseException e) {
             LOG.error("Error occurred in parsing command line options ");
             printHelp(options);
@@ -97,7 +97,6 @@ public final class Main {
         String configFileName = "";
         String resultFormat = "plain";
         int limit = EDEFAULT_LIMIT;
-        DocumentParser.Type parserType;
         Formatter.Type outputFormat;
 
         if (commandLine.hasOption("h")) {
@@ -134,7 +133,7 @@ public final class Main {
             System.exit(-1);
         }
 
-        parserType = DocumentParser.Type.valueOf(inputFormat.toUpperCase());
+        DocumentParser parser = DocumentParser.of(inputFormat);
         outputFormat = Formatter.Type.valueOf(resultFormat.toUpperCase());
 
         ResultDistributor distributor =
@@ -144,7 +143,7 @@ public final class Main {
             .setConfiguration(conf)
             .setResultDistributor(distributor)
             .build();
-        DocumentCollection documents = redPen.parse(parserType, inputFiles);
+        DocumentCollection documents = redPen.parse(parser, inputFiles);
         if (documents == null) {
             LOG.error("Failed to create a DocumentCollection object");
             System.exit(-1);

@@ -18,17 +18,12 @@
 package cc.redpen.parser;
 
 import cc.redpen.RedPenException;
-import cc.redpen.config.Configuration;
-import cc.redpen.config.SymbolTable;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
-import cc.redpen.symbol.DefaultSymbols;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Abstract Parser class containing common procedures to
@@ -37,27 +32,22 @@ import java.util.List;
 public abstract class BaseDocumentParser implements DocumentParser {
     private static final Logger LOG = LoggerFactory.getLogger(
             BaseDocumentParser.class);
-    protected DocumentCollection.Builder builder;
-    private SentenceExtractor sentenceExtractor;
 
 
     @Override
-    public Document parse(String content) throws RedPenException{
+    public Document parse(String content, SentenceExtractor sentenceExtractor, DocumentCollection.Builder documentBuilder) throws RedPenException{
         try {
-            return parse(new ByteArrayInputStream(content.getBytes("UTF-8")));
+            return parse(new ByteArrayInputStream(content.getBytes("UTF-8")), sentenceExtractor, documentBuilder);
         } catch (UnsupportedEncodingException shouldNeverHappen) {
             throw new RuntimeException(shouldNeverHappen);
         }
     }
 
     @Override
-    public Document parse(File file) throws RedPenException {
-        if (file == null || "".equals(file)) {
-            throw new RedPenException("input file was not specified.");
-        }
+    public Document parse(File file, SentenceExtractor sentenceExtractor, DocumentCollection.Builder documentBuilder) throws RedPenException {
         Document document ;
         try (InputStream inputStream = new FileInputStream(file)) {
-            document = this.parse(inputStream);
+            document = this.parse(inputStream, sentenceExtractor, documentBuilder);
                 if (document != null) {
                     document.setFileName(file.getName());
                 }
@@ -65,85 +55,6 @@ public abstract class BaseDocumentParser implements DocumentParser {
             throw new RedPenException(e);
         }
         return document;
-    }
-
-    /**
-     * Given configuration , return basic configuration settings.
-     *
-     * @param configuration   object containing configuration settings
-     * @param documentBuilder Builder object of DocumentCollection
-     */
-    public final void initialize(Configuration configuration,
-                                 DocumentCollection.Builder documentBuilder) throws
-            RedPenException {
-        if (configuration == null) {
-            throw new RedPenException("Given configuration is null");
-        }
-        if (configuration.getSymbolTable() == null) {
-            throw new RedPenException(
-                    "Character table in the given configuration is null");
-        }
-
-        SymbolTable symbolTable = configuration.getSymbolTable();
-        List<String> periods = extractPeriods(symbolTable);
-        List<String> rightQuotations = extractRightQuotations(symbolTable);
-
-        this.sentenceExtractor = new SentenceExtractor(periods, rightQuotations);
-        this.builder = documentBuilder;
-    }
-
-    private List<String> extractRightQuotations(SymbolTable symbolTable) {
-        List<String> rightQuotations = new ArrayList<>();
-        if (symbolTable.containsSymbol("RIGHT_SINGLE_QUOTATION_MARK")) {
-            rightQuotations.add(
-                    symbolTable.getSymbol("RIGHT_SINGLE_QUOTATION_MARK").getValue());
-        } else {
-            rightQuotations.add(
-                    DefaultSymbols.getInstance().get("RIGHT_SINGLE_QUOTATION_MARK").getValue());
-        }
-        if (symbolTable.containsSymbol("RIGHT_DOUBLE_QUOTATION_MARK")) {
-            rightQuotations.add(
-                    symbolTable.getSymbol("RIGHT_DOUBLE_QUOTATION_MARK").getValue());
-        } else {
-            rightQuotations.add(
-                    DefaultSymbols.getInstance().get("RIGHT_DOUBLE_QUOTATION_MARK").getValue());
-        }
-        for (String rightQuotation : rightQuotations) {
-            LOG.info("\"" + rightQuotation + "\" is added as a end of right quotation character.");
-        }
-        return rightQuotations;
-    }
-
-    private List<String> extractPeriods(SymbolTable symbolTable) {
-        List<String> periods = new ArrayList<>();
-        if (symbolTable.containsSymbol("FULL_STOP")) {
-            periods.add(
-                    symbolTable.getSymbol("FULL_STOP").getValue());
-        } else {
-            periods.add(
-                    DefaultSymbols.getInstance().get("FULL_STOP").getValue());
-        }
-
-        if (symbolTable.containsSymbol("QUESTION_MARK")) {
-            periods.add(
-                    symbolTable.getSymbol("QUESTION_MARK").getValue());
-        } else {
-            periods.add(
-                    DefaultSymbols.getInstance().get("QUESTION_MARK").getValue());
-        }
-
-        if (symbolTable.containsSymbol("EXCLAMATION_MARK")) {
-            periods.add(
-                    symbolTable.getSymbol("EXCLAMATION_MARK").getValue());
-        } else {
-            periods.add(
-                    DefaultSymbols.getInstance().get("EXCLAMATION_MARK").getValue());
-        }
-
-        for (String period : periods) {
-            LOG.info("\"" + period + "\" is added as a end of sentence character");
-        }
-        return periods;
     }
 
     /**
@@ -169,12 +80,4 @@ public abstract class BaseDocumentParser implements DocumentParser {
         return br;
     }
 
-    /**
-     * Get SentenceExtractor object.
-     *
-     * @return sentence extractor object
-     */
-    protected SentenceExtractor getSentenceExtractor() {
-        return sentenceExtractor;
-    }
 }

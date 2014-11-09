@@ -18,18 +18,14 @@
 package cc.redpen;
 
 import cc.redpen.config.Configuration;
+import cc.redpen.config.SymbolTable;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.distributor.DefaultResultDistributor;
 import cc.redpen.distributor.ResultDistributor;
-import cc.redpen.model.Document;
-import cc.redpen.model.DocumentCollection;
-import cc.redpen.model.ListBlock;
-import cc.redpen.model.ListElement;
-import cc.redpen.model.Paragraph;
-import cc.redpen.model.Section;
-import cc.redpen.model.Sentence;
+import cc.redpen.model.*;
 import cc.redpen.parser.DocumentParser;
-import cc.redpen.parser.DocumentParserFactory;
+import cc.redpen.parser.SentenceExtractor;
+import cc.redpen.symbol.DefaultSymbols;
 import cc.redpen.validator.PreProcessor;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
@@ -37,13 +33,15 @@ import cc.redpen.validator.ValidatorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Validate all input files using appended Validators.
@@ -317,48 +315,103 @@ public class RedPen {
 
     /**
      * parses given inputstream
-     * @param type DocumentParser type
+     * @param parser DocumentParser parser
      * @param InputStream content to parse
      * @return parsed document
      * @throws RedPenException
      */
-    public Document parse(DocumentParser.Type type, InputStream InputStream) throws RedPenException {
-        DocumentParser parser = DocumentParserFactory.generate(type, this.configuration, new DocumentCollection.Builder(configuration.getLang()));
-        return parser.parse(InputStream);
+    public Document parse(DocumentParser parser, InputStream InputStream) throws RedPenException {
+        return parser.parse(InputStream, getSentenceExtractor(this.configuration), new DocumentCollection.Builder(configuration.getLang()));
     }
 
     /**
      * parses given content
-     * @param type DocumentParser type
+     * @param parser DocumentParser parser
      * @param content content to parse
      * @return parsed document
      * @throws RedPenException
      */
-    public Document parse(DocumentParser.Type type, String content) throws RedPenException {
-        DocumentParser parser = DocumentParserFactory.generate(type, this.configuration, new DocumentCollection.Builder(configuration.getLang()));
-        return parser.parse(content);
+    public Document parse(DocumentParser parser, String content) throws RedPenException {
+        return parser.parse(content, getSentenceExtractor(this.configuration), new DocumentCollection.Builder(configuration.getLang()));
     }
 
     /**
      * parses given files
-     * @param type DocumentParser type
+     * @param parser DocumentParser parser
      * @param files files to parse
      * @return parsed documents
      * @throws RedPenException
      */
-    public DocumentCollection parse(DocumentParser.Type type, File[] files) throws RedPenException {
+    public DocumentCollection parse(DocumentParser parser, File[] files) throws RedPenException {
         DocumentCollection.Builder documentBuilder =
                 new DocumentCollection.Builder(configuration.getLang());
-        DocumentParser parser = DocumentParserFactory.generate(type,
-                configuration, documentBuilder);
-
         for (File file : files) {
-            parser.parse(file);
+            parser.parse(file, getSentenceExtractor(this.configuration), documentBuilder);
         }
         // @TODO extract summary information to validate documentCollection effectively
         return documentBuilder.build();
     }
-    /**
+
+    public static SentenceExtractor getSentenceExtractor(Configuration configuration){
+        SymbolTable symbolTable = configuration.getSymbolTable();
+        List<String> periods = extractPeriods(symbolTable);
+        List<String> rightQuotations = extractRightQuotations(symbolTable);
+        return new SentenceExtractor(periods, rightQuotations);
+    }
+
+    private static List<String> extractRightQuotations(SymbolTable symbolTable) {
+        List<String> rightQuotations = new ArrayList<>();
+        if (symbolTable.containsSymbol("RIGHT_SINGLE_QUOTATION_MARK")) {
+            rightQuotations.add(
+                    symbolTable.getSymbol("RIGHT_SINGLE_QUOTATION_MARK").getValue());
+        } else {
+            rightQuotations.add(
+                    DefaultSymbols.getInstance().get("RIGHT_SINGLE_QUOTATION_MARK").getValue());
+        }
+        if (symbolTable.containsSymbol("RIGHT_DOUBLE_QUOTATION_MARK")) {
+            rightQuotations.add(
+                    symbolTable.getSymbol("RIGHT_DOUBLE_QUOTATION_MARK").getValue());
+        } else {
+            rightQuotations.add(
+                    DefaultSymbols.getInstance().get("RIGHT_DOUBLE_QUOTATION_MARK").getValue());
+        }
+        for (String rightQuotation : rightQuotations) {
+            LOG.info("\"" + rightQuotation + "\" is added as a end of right quotation character.");
+        }
+        return rightQuotations;
+    }
+
+    private static List<String> extractPeriods(SymbolTable symbolTable) {
+        List<String> periods = new ArrayList<>();
+        if (symbolTable.containsSymbol("FULL_STOP")) {
+            periods.add(
+                    symbolTable.getSymbol("FULL_STOP").getValue());
+        } else {
+            periods.add(
+                    DefaultSymbols.getInstance().get("FULL_STOP").getValue());
+        }
+
+        if (symbolTable.containsSymbol("QUESTION_MARK")) {
+            periods.add(
+                    symbolTable.getSymbol("QUESTION_MARK").getValue());
+        } else {
+            periods.add(
+                    DefaultSymbols.getInstance().get("QUESTION_MARK").getValue());
+        }
+
+        if (symbolTable.containsSymbol("EXCLAMATION_MARK")) {
+            periods.add(
+                    symbolTable.getSymbol("EXCLAMATION_MARK").getValue());
+        } else {
+            periods.add(
+                    DefaultSymbols.getInstance().get("EXCLAMATION_MARK").getValue());
+        }
+
+        for (String period : periods) {
+            LOG.info("\"" + period + "\" is added as a end of sentence character");
+        }
+        return periods;
+    }    /**
      * Builder for {@link cc.redpen.RedPen}.
      */
     public static class Builder {
