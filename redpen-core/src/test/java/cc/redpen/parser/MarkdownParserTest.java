@@ -41,14 +41,14 @@ public class MarkdownParserTest {
     public void testNullDocument() throws Exception {
         DocumentParser parser = loadParser(new Configuration.Builder().build());
         InputStream is = null;
-        parser.generateDocument(is);
+        parser.parse(is);
     }
 
     @Test(expected = RedPenException.class)
     public void testNullFileName() throws Exception {
         DocumentParser parser = loadParser(new Configuration.Builder().build());
         String fileName = null;
-        parser.generateDocument(fileName);
+        parser.parse(fileName);
     }
 
     @Test
@@ -503,7 +503,7 @@ public class MarkdownParserTest {
         DocumentParser parser = loadParser(config);
 
         try {
-            return parser.generateDocument(inputDocumentStream);
+            return parser.parse(inputDocumentStream);
         } catch (RedPenException e) {
             e.printStackTrace();
             return null;
@@ -523,7 +523,7 @@ public class MarkdownParserTest {
         }
         Document doc = null;
         try {
-            doc = parser.generateDocument(is);
+            doc = parser.parse(is);
         } catch (RedPenException e) {
             e.printStackTrace();
             fail();

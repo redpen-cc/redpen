@@ -41,14 +41,14 @@ public abstract class BaseDocumentParser implements DocumentParser {
     private SentenceExtractor sentenceExtractor;
 
     @Override
-    public Document generateDocument(String fileName)
+    public Document parse(String fileName)
             throws RedPenException {
         if (fileName == null || fileName.equals("")) {
             throw new RedPenException("input file was not specified.");
         }
         Document document ;
         try (InputStream inputStream = new FileInputStream(fileName)) {
-            document = this.generateDocument(inputStream);
+            document = this.parse(inputStream);
                 if (document != null) {
                     document.setFileName(fileName);
                 }

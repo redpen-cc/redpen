@@ -581,7 +581,7 @@ public class WikiParserTest {
 
         DocumentParser parser = loadParser(conf);
         try {
-            return parser.generateDocument(inputDocumentStream);
+            return parser.parse(inputDocumentStream);
         } catch (RedPenException e) {
             e.printStackTrace();
             return null;
@@ -602,7 +602,7 @@ public class WikiParserTest {
         }
         Document doc = null;
         try {
-            doc = parser.generateDocument(is);
+            doc = parser.parse(is);
         } catch (RedPenException e) {
             e.printStackTrace();
         }
