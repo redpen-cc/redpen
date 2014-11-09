@@ -54,10 +54,12 @@ public class RedPen {
     private final List<Validator<Sentence>> sentenceValidators = new ArrayList<>();
     private final ResultDistributor distributor;
     private final Configuration configuration;
+    private final SentenceExtractor sentenceExtractor;
 
     private RedPen(Configuration configuration, ResultDistributor distributor) throws RedPenException {
         this.configuration = configuration;
         this.distributor = distributor;
+        this.sentenceExtractor = getSentenceExtractor(this.configuration);
         loadValidators();
     }
 
@@ -123,7 +125,7 @@ public class RedPen {
     public Map<Document, List<ValidationError>> validate(DocumentCollection documentCollection) {
         distributor.flushHeader();
         Map<Document, List<ValidationError>> docErrorsMap = new HashMap<>();
-        documentCollection.forEach(e-> docErrorsMap.put(e, new ArrayList<>()));
+        documentCollection.forEach(e -> docErrorsMap.put(e, new ArrayList<>()));
         runDocumentValidators(documentCollection, docErrorsMap);
         runSectionValidators(documentCollection, docErrorsMap);
         runSentenceValidators(documentCollection, docErrorsMap);
@@ -204,7 +206,7 @@ public class RedPen {
 
     private void preprocessSentences(List<Sentence> sentences) {
         for (Validator<Sentence> sentenceValidator : sentenceValidators) {
-            if(sentenceValidator instanceof PreProcessor){
+            if (sentenceValidator instanceof PreProcessor) {
                 PreProcessor<Sentence> preprocessor = (PreProcessor<Sentence>) sentenceValidator;
                 sentences.forEach(preprocessor::preprocess);
             }
@@ -289,7 +291,8 @@ public class RedPen {
             return false;
         if (sentenceValidators != null ? !sentenceValidators.equals(redPen.sentenceValidators) : redPen.sentenceValidators != null)
             return false;
-        if (documentValidators != null ? !documentValidators.equals(redPen.documentValidators) : redPen.documentValidators != null) return false;
+        if (documentValidators != null ? !documentValidators.equals(redPen.documentValidators) : redPen.documentValidators != null)
+            return false;
 
         return true;
     }
@@ -315,30 +318,33 @@ public class RedPen {
 
     /**
      * parses given inputstream
-     * @param parser DocumentParser parser
+     *
+     * @param parser      DocumentParser parser
      * @param InputStream content to parse
      * @return parsed document
      * @throws RedPenException
      */
     public Document parse(DocumentParser parser, InputStream InputStream) throws RedPenException {
-        return parser.parse(InputStream, getSentenceExtractor(this.configuration), new DocumentCollection.Builder(configuration.getLang()));
+        return parser.parse(InputStream, sentenceExtractor, new DocumentCollection.Builder(configuration.getLang()));
     }
 
     /**
      * parses given content
-     * @param parser DocumentParser parser
+     *
+     * @param parser  DocumentParser parser
      * @param content content to parse
      * @return parsed document
      * @throws RedPenException
      */
     public Document parse(DocumentParser parser, String content) throws RedPenException {
-        return parser.parse(content, getSentenceExtractor(this.configuration), new DocumentCollection.Builder(configuration.getLang()));
+        return parser.parse(content, sentenceExtractor, new DocumentCollection.Builder(configuration.getLang()));
     }
 
     /**
      * parses given files
+     *
      * @param parser DocumentParser parser
-     * @param files files to parse
+     * @param files  files to parse
      * @return parsed documents
      * @throws RedPenException
      */
@@ -346,13 +352,13 @@ public class RedPen {
         DocumentCollection.Builder documentBuilder =
                 new DocumentCollection.Builder(configuration.getLang());
         for (File file : files) {
-            parser.parse(file, getSentenceExtractor(this.configuration), documentBuilder);
+            parser.parse(file, sentenceExtractor, documentBuilder);
         }
         // @TODO extract summary information to validate documentCollection effectively
         return documentBuilder.build();
     }
 
-    static SentenceExtractor getSentenceExtractor(Configuration configuration){
+    static SentenceExtractor getSentenceExtractor(Configuration configuration) {
         SymbolTable symbolTable = configuration.getSymbolTable();
         List<String> periods = extractPeriods(symbolTable);
         List<String> rightQuotations = extractRightQuotations(symbolTable);
@@ -411,7 +417,9 @@ public class RedPen {
             LOG.info("\"" + period + "\" is added as a end of sentence character");
         }
         return periods;
-    }    /**
+    }
+
+    /**
      * Builder for {@link cc.redpen.RedPen}.
      */
     public static class Builder {
