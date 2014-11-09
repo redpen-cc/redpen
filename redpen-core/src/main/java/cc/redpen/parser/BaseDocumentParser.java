@@ -40,17 +40,26 @@ public abstract class BaseDocumentParser implements DocumentParser {
     protected DocumentCollection.Builder builder;
     private SentenceExtractor sentenceExtractor;
 
+
     @Override
-    public Document parse(String fileName)
-            throws RedPenException {
-        if (fileName == null || fileName.equals("")) {
+    public Document parse(String content) throws RedPenException{
+        try {
+            return parse(new ByteArrayInputStream(content.getBytes("UTF-8")));
+        } catch (UnsupportedEncodingException shouldNeverHappen) {
+            throw new RuntimeException(shouldNeverHappen);
+        }
+    }
+
+    @Override
+    public Document parse(File file) throws RedPenException {
+        if (file == null || "".equals(file)) {
             throw new RedPenException("input file was not specified.");
         }
         Document document ;
-        try (InputStream inputStream = new FileInputStream(fileName)) {
+        try (InputStream inputStream = new FileInputStream(file)) {
             document = this.parse(inputStream);
                 if (document != null) {
-                    document.setFileName(fileName);
+                    document.setFileName(file.getName());
                 }
         } catch (IOException e) {
             throw new RedPenException(e);

@@ -100,21 +100,15 @@ public class DocumentValidateResource {
             throws JSONException, RedPenException, UnsupportedEncodingException {
 
         LOG.info("Validating document");
-        RedPen server = getRedPen(lang);
-        System.out.println(document);
+        RedPen redPen = getRedPen(lang);
         JSONObject json = new JSONObject();
 
         json.put("document", document);
 
-        DocumentParser parser = DocumentParserFactory.generate(
-                DocumentParser.Type.PLAIN, server.getConfiguration(), new DocumentCollection.Builder(lang));
-        Document fileContent = parser.parse(new
-                ByteArrayInputStream(document.getBytes("UTF-8")));
+        DocumentCollection documentCollection = new DocumentCollection();
+        documentCollection.addDocument(redPen.parse(DocumentParser.Type.PLAIN, document));
 
-        DocumentCollection d = new DocumentCollection();
-        d.addDocument(fileContent);
-
-        List<ValidationError> errors = server.validate(d);
+        List<ValidationError> errors = redPen.validate(documentCollection);
 
         JSONArray jsonErrors = new JSONArray();
 

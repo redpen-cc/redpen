@@ -28,6 +28,7 @@ import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -121,6 +122,10 @@ public final class Main {
         }
 
         String[] inputFileNames = commandLine.getArgs();
+        File[] inputFiles = new File[inputFileNames.length];
+        for (int i = 0; i < inputFileNames.length; i++) {
+            inputFiles[i] = new File(inputFileNames[i]);
+        }
 
         ConfigurationLoader configLoader = new ConfigurationLoader();
         Configuration conf = configLoader.loadConfiguration(configFileName);
@@ -132,13 +137,6 @@ public final class Main {
         parserType = DocumentParser.Type.valueOf(inputFormat.toUpperCase());
         outputFormat = Formatter.Type.valueOf(resultFormat.toUpperCase());
 
-        DocumentCollection documentCollection =
-            DocumentGenerator.generate(inputFileNames, conf, parserType);
-
-        if (documentCollection == null) {
-            LOG.error("Failed to create a DocumentCollection object");
-            System.exit(-1);
-        }
         ResultDistributor distributor =
             ResultDistributorFactory.createDistributor(outputFormat, System.out);
 
@@ -146,6 +144,11 @@ public final class Main {
             .setConfiguration(conf)
             .setResultDistributor(distributor)
             .build();
+        DocumentCollection documentCollection = redPen.parse(parserType, inputFiles);
+        if (documentCollection == null) {
+            LOG.error("Failed to create a DocumentCollection object");
+            System.exit(-1);
+        }
 
         List<ValidationError> errors = redPen.validate(documentCollection);
         if (errors.size() > limit) {

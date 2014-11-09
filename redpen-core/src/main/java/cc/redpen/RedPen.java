@@ -28,6 +28,8 @@ import cc.redpen.model.ListElement;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
+import cc.redpen.parser.DocumentParser;
+import cc.redpen.parser.DocumentParserFactory;
 import cc.redpen.validator.PreProcessor;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
@@ -35,6 +37,8 @@ import cc.redpen.validator.ValidatorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.lang.reflect.ParameterizedType;
@@ -314,6 +318,49 @@ public class RedPen {
                 '}';
     }
 
+    /**
+     * parses given inputstream
+     * @param type DocumentParser type
+     * @param InputStream content to parse
+     * @return parsed document
+     * @throws RedPenException
+     */
+    public Document parse(DocumentParser.Type type, InputStream InputStream) throws RedPenException {
+        DocumentParser parser = DocumentParserFactory.generate(type, this.configuration, new DocumentCollection.Builder(configuration.getLang()));
+        return parser.parse(InputStream);
+    }
+
+    /**
+     * parses given content
+     * @param type DocumentParser type
+     * @param content content to parse
+     * @return parsed document
+     * @throws RedPenException
+     */
+    public Document parse(DocumentParser.Type type, String content) throws RedPenException {
+        DocumentParser parser = DocumentParserFactory.generate(type, this.configuration, new DocumentCollection.Builder(configuration.getLang()));
+        return parser.parse(content);
+    }
+
+    /**
+     * parses given files
+     * @param type DocumentParser type
+     * @param files files to parse
+     * @return parsed documents
+     * @throws RedPenException
+     */
+    public DocumentCollection parse(DocumentParser.Type type, File[] files) throws RedPenException {
+        DocumentCollection.Builder documentBuilder =
+                new DocumentCollection.Builder(configuration.getLang());
+        DocumentParser parser = DocumentParserFactory.generate(type,
+                configuration, documentBuilder);
+
+        for (File file : files) {
+            parser.parse(file);
+        }
+        // @TODO extract summary information to validate documentCollection effectively
+        return documentBuilder.build();
+    }
     /**
      * Builder for {@link cc.redpen.RedPen}.
      */

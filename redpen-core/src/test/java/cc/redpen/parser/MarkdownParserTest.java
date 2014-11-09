@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
@@ -44,11 +45,11 @@ public class MarkdownParserTest {
         parser.parse(is);
     }
 
-    @Test(expected = RedPenException.class)
+    @Test(expected = NullPointerException.class)
     public void testNullFileName() throws Exception {
         DocumentParser parser = loadParser(new Configuration.Builder().build());
-        String fileName = null;
-        parser.parse(fileName);
+        String file = null;
+        parser.parse(new File(file));
     }
 
     @Test

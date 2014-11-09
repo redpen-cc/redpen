@@ -28,6 +28,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -182,6 +183,6 @@ public class PlainTextParserTest {
 
     @Test(expected = RedPenException.class)
     public void testNullFileName() throws Exception {
-        parser.parse("no_exist_files");
+        parser.parse(new File("no_exist_files"));
     }
 }

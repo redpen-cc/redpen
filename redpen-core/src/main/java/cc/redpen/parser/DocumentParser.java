@@ -22,6 +22,7 @@ import cc.redpen.config.Configuration;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
 
+import java.io.File;
 import java.io.InputStream;
 
 /**
@@ -35,18 +36,25 @@ public interface DocumentParser {
      * @return a generated file content
      * @throws cc.redpen.RedPenException if Parser failed to parse input.
      */
-    Document parse(InputStream io)
-            throws RedPenException;
+    Document parse(InputStream io) throws RedPenException;
+
+    /**
+     * Given content, return Document instance for the specified file.
+     *
+     * @param content input content
+     * @return a generated file content
+     * @throws cc.redpen.RedPenException if Parser failed to parse input.
+     */
+    Document parse(String content) throws RedPenException;
 
     /**
      * Given input file name, return Document instance for the specified file.
      *
-     * @param fileName input file name
+     * @param file input file
      * @return a generated file content
      * @throws cc.redpen.RedPenException if Parser failed to parse input.
      */
-    Document parse(String fileName)
-            throws RedPenException;
+    Document parse(File file) throws RedPenException;
 
     /**
      * Initialize parser.
