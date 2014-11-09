@@ -2,6 +2,8 @@ package cc.redpen.model;
 
 import org.junit.Test;
 
+import java.util.Optional;
+
 import static org.junit.Assert.assertEquals;
 
 public class DocumentCollectionTest {
@@ -18,7 +20,7 @@ public class DocumentCollectionTest {
         assertEquals(1, doc.getNumberOfDocuments());
         assertEquals(1, doc.getDocument(0).getNumberOfSections());
         assertEquals(0, doc.getDocument(0).getSection(0).getLevel());
-        assertEquals("Foobar", doc.getDocument(0).getFileName());
+        assertEquals(Optional.of("Foobar"), doc.getDocument(0).getFileName());
         assertEquals("baz", doc.getDocument(0).getSection(0).getHeaderContent(0).content);
         assertEquals(1, doc.getDocument(0).getSection(0).getNumberOfParagraphs());
         assertEquals(2, doc.getDocument(0).getSection(0).getParagraph(0).getNumberOfSentences());
@@ -59,7 +61,7 @@ public class DocumentCollectionTest {
 
         // first document
         assertEquals(1, doc.getDocument(0).getNumberOfSections());
-        assertEquals("doc1", doc.getDocument(0).getFileName());
+        assertEquals(Optional.of("doc1"), doc.getDocument(0).getFileName());
         assertEquals("sec1", doc.getDocument(0).getSection(0).getHeaderContent(0).content);
         assertEquals(0, doc.getDocument(0).getSection(0).getLevel());
         assertEquals(1, doc.getDocument(0).getSection(0).getNumberOfParagraphs());
@@ -73,7 +75,7 @@ public class DocumentCollectionTest {
 
         // second document
         assertEquals(1, doc.getDocument(1).getNumberOfSections());
-        assertEquals("doc2", doc.getDocument(1).getFileName());
+        assertEquals(Optional.of("doc2"), doc.getDocument(1).getFileName());
         assertEquals("sec2", doc.getDocument(1).getSection(0).getHeaderContent(0).content);
         assertEquals(0, doc.getDocument(1).getSection(0).getLevel());
         assertEquals(1, doc.getDocument(1).getSection(0).getNumberOfParagraphs());
@@ -103,7 +105,7 @@ public class DocumentCollectionTest {
         assertEquals(1, doc.getNumberOfDocuments());
         assertEquals(1, doc.getDocument(0).getNumberOfSections());
         assertEquals(0, doc.getDocument(0).getSection(0).getLevel());
-        assertEquals("Foobar", doc.getDocument(0).getFileName());
+        assertEquals(Optional.of("Foobar"), doc.getDocument(0).getFileName());
         assertEquals("baz", doc.getDocument(0).getSection(0).getHeaderContent(0).content);
         assertEquals(1, doc.getDocument(0).getSection(0).getNumberOfParagraphs());
         assertEquals("sentence0", doc.getDocument(0).getSection(0).getParagraph(0).getSentence(0).content);

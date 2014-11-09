@@ -20,14 +20,15 @@ package cc.redpen.model;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Document represents a file with many elements
  * such as sentences, lists and headers.
  */
-public final class Document implements Iterable<Section> {
+public class Document implements Iterable<Section> {
     private final List<Section> sections;
-    private String fileName;
+    private Optional<String> fileName;
 
     /**
      * Constructor.
@@ -35,7 +36,7 @@ public final class Document implements Iterable<Section> {
     public Document() {
         super();
         sections = new ArrayList<>();
-        fileName = "";
+        fileName = Optional.empty();
     }
 
     /**
@@ -84,7 +85,7 @@ public final class Document implements Iterable<Section> {
      *
      * @return file name
      */
-    public String getFileName() {
+    public Optional<String> getFileName() {
         return fileName;
     }
 
@@ -94,7 +95,7 @@ public final class Document implements Iterable<Section> {
      * @param name file name
      */
     public void setFileName(String name) {
-        this.fileName = name;
+        this.fileName = Optional.of(name);
     }
 
     @Override

@@ -144,13 +144,12 @@ public final class Main {
             .setConfiguration(conf)
             .setResultDistributor(distributor)
             .build();
-        DocumentCollection documentCollection = redPen.parse(parserType, inputFiles);
-        if (documentCollection == null) {
+        DocumentCollection documents = redPen.parse(parserType, inputFiles);
+        if (documents == null) {
             LOG.error("Failed to create a DocumentCollection object");
             System.exit(-1);
         }
-
-        List<ValidationError> errors = redPen.validate(documentCollection);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.getDocument(0));
         if (errors.size() > limit) {
             LOG.error("The number of errors \"{}\" is larger than specified (limit is \"{}\").", errors.size(), limit);
             System.exit(1);

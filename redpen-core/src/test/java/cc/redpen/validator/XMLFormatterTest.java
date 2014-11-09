@@ -41,9 +41,10 @@ public class XMLFormatterTest {
                 this.getClass(),
                 "Fatal Error",
                 new Sentence("This is a sentence", 0));
-        error.setFileName("foobar.md");
         XMLFormatter formatter = createXMLFormatter();
-        String resultString = formatter.convertError(error);
+        cc.redpen.model.Document document1 = new cc.redpen.model.Document();
+        document1.setFileName("foobar.md");
+        String resultString = formatter.convertError(document1, error);
 
         Document document = extractDocument(resultString);
         assertEquals(1, document.getElementsByTagName("error").getLength());
@@ -68,7 +69,7 @@ public class XMLFormatterTest {
     public void testConvertValidationErrorWithoutFileName() throws RedPenException {
         ValidationError error = new ValidationError(this.getClass(), "Fatal Error", new Sentence("text", 0));
         XMLFormatter formatter = createXMLFormatter();
-        String resultString = formatter.convertError(error);
+        String resultString = formatter.convertError(new cc.redpen.model.Document(), error);
         Document document = extractDocument(resultString);
         assertEquals(1, document.getElementsByTagName("error").getLength());
         assertEquals(1, document.getElementsByTagName("message").getLength());
@@ -87,7 +88,7 @@ public class XMLFormatterTest {
     public void testConvertValidationErrorWithoutLineNumAndFileName() throws RedPenException {
         ValidationError error = new ValidationError(this.getClass(), "Fatal Error", new Sentence("text", -1));
         XMLFormatter formatter = createXMLFormatter();
-        String resultString = formatter.convertError(error);
+        String resultString = formatter.convertError(new cc.redpen.model.Document(), error);
 
         Document document = extractDocument(resultString);
         assertEquals(1, document.getElementsByTagName("error").getLength());

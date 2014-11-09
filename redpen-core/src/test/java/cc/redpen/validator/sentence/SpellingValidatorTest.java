@@ -5,11 +5,13 @@ import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.distributor.FakeResultDistributor;
+import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.validator.ValidationError;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -55,8 +57,8 @@ public class SpellingValidatorTest {
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
 
-        List<ValidationError> errors = redPen.validate(documents);
-        assertEquals(1, errors.size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        assertEquals(1, errors.get(documents.getDocument(0)).size());
     }
 
     @Test
@@ -79,8 +81,8 @@ public class SpellingValidatorTest {
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
 
-        List<ValidationError> errors = redPen.validate(documents);
-        assertEquals(1, errors.size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        assertEquals(1, errors.get(documents.getDocument(0)).size());
     }
 
 
@@ -104,8 +106,8 @@ public class SpellingValidatorTest {
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
 
-        List<ValidationError> errors = redPen.validate(documents);
-        assertEquals(0, errors.size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        assertEquals(0, errors.get(documents.getDocument(0)).size());
     }
 
     @Test
@@ -128,8 +130,8 @@ public class SpellingValidatorTest {
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
 
-        List<ValidationError> errors = redPen.validate(documents);
-        assertEquals(0, errors.size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        assertEquals(0, errors.get(documents.getDocument(0)).size());
     }
 
     @Test
@@ -152,8 +154,8 @@ public class SpellingValidatorTest {
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
 
-        List<ValidationError> errors = redPen.validate(documents);
-        assertEquals(0, errors.size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        assertEquals(0, errors.get(documents.getDocument(0)).size());
     }
 
     @Test
@@ -176,7 +178,7 @@ public class SpellingValidatorTest {
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
 
-        List<ValidationError> errors = redPen.validate(documents);
-        assertEquals(0, errors.size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        assertEquals(0, errors.get(documents.getDocument(0)).size());
     }
 }

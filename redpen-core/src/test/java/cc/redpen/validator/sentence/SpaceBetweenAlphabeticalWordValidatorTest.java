@@ -5,12 +5,15 @@ import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.distributor.FakeResultDistributor;
+import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
+import junit.framework.Assert;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -75,8 +78,8 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
 
-        List<ValidationError> errors = redPen.validate(documents);
-        assertEquals(0, errors.size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        Assert.assertEquals(0, errors.get(documents.getDocument(0)).size());
     }
 
     @Test
@@ -99,7 +102,7 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
 
-        List<ValidationError> errors = redPen.validate(documents);
-        assertEquals(0, errors.size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        Assert.assertEquals(0, errors.get(documents.getDocument(0)).size());
     }
 }

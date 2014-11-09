@@ -57,7 +57,7 @@ public class XMLFormatter implements Formatter {
     }
 
     @Override
-    public String convertError(ValidationError error) throws RedPenException {
+    public String convertError(cc.redpen.model.Document document, ValidationError error) throws RedPenException {
         // create dom
         Document doc = db.newDocument();
         Element errorElement = doc.createElement("error");
@@ -73,7 +73,7 @@ public class XMLFormatter implements Formatter {
         Text content = doc.createTextNode(error.getMessage());
         contentElement.appendChild(content);
 
-        error.getFileName().ifPresent(e -> {
+        document.getFileName().ifPresent(e -> {
             Element fileNameElement = doc.createElement("file");
             errorElement.appendChild(fileNameElement);
             Text fileName = doc.createTextNode(e);

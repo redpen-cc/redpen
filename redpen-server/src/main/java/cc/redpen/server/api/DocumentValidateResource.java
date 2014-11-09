@@ -105,10 +105,10 @@ public class DocumentValidateResource {
 
         json.put("document", document);
 
-        DocumentCollection documentCollection = new DocumentCollection();
-        documentCollection.addDocument(redPen.parse(DocumentParser.Type.PLAIN, document));
+        DocumentCollection documents = new DocumentCollection();
+        documents.addDocument(redPen.parse(DocumentParser.Type.PLAIN, document));
 
-        List<ValidationError> errors = redPen.validate(documentCollection);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.getDocument(0));
 
         JSONArray jsonErrors = new JSONArray();
 

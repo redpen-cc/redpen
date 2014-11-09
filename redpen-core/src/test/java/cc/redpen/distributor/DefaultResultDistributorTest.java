@@ -19,6 +19,7 @@ package cc.redpen.distributor;
 
 import cc.redpen.RedPenException;
 import cc.redpen.formatter.PlainFormatter;
+import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
@@ -71,7 +72,7 @@ public class DefaultResultDistributorTest extends Validator<Sentence> {
         DefaultResultDistributor distributor = new DefaultResultDistributor(os);
         distributor.setFormatter(new PlainFormatter());
         ValidationError error = createValidationError(new Sentence("sentence", 1));
-        distributor.flushError(error);
+        distributor.flushError(new Document(), error);
         String result = null;
         try {
             result = new String(os.toByteArray(), "UTF-8");
@@ -89,7 +90,7 @@ public class DefaultResultDistributorTest extends Validator<Sentence> {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         DefaultResultDistributor distributor = new DefaultResultDistributor(os);
         distributor.setFormatter(new PlainFormatter());
-        distributor.flushError(null);
+        distributor.flushError(new Document(), null);
     }
 
     @Test(expected = IllegalArgumentException.class)
