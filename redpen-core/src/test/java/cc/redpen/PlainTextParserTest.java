@@ -15,16 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cc.redpen.parser;
+package cc.redpen;
 
-import cc.redpen.RedPen;
-import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
+import cc.redpen.parser.DocumentParser;
 import org.junit.Before;
 import org.junit.Test;
 

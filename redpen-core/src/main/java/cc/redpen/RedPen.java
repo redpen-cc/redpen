@@ -352,7 +352,7 @@ public class RedPen {
         return documentBuilder.build();
     }
 
-    public static SentenceExtractor getSentenceExtractor(Configuration configuration){
+    static SentenceExtractor getSentenceExtractor(Configuration configuration){
         SymbolTable symbolTable = configuration.getSymbolTable();
         List<String> periods = extractPeriods(symbolTable);
         List<String> rightQuotations = extractRightQuotations(symbolTable);
