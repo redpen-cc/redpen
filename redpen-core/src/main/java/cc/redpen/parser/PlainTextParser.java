@@ -44,7 +44,7 @@ public final class PlainTextParser extends BaseDocumentParser {
     }
 
     @Override
-    public Document generateDocument(InputStream is)
+    public Document parse(InputStream is)
             throws RedPenException {
         builder.addDocument("");
 

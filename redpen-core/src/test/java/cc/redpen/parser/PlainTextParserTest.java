@@ -66,7 +66,7 @@ public class PlainTextParserTest {
         }
         Document doc = null;
         try {
-            doc = parser.generateDocument(is);
+            doc = parser.parse(is);
         } catch (RedPenException e) {
             fail();
         }
@@ -182,6 +182,6 @@ public class PlainTextParserTest {
 
     @Test(expected = RedPenException.class)
     public void testNullFileName() throws Exception {
-        parser.generateDocument("no_exist_files");
+        parser.parse("no_exist_files");
     }
 }

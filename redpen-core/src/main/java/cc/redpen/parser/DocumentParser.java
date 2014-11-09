@@ -35,7 +35,7 @@ public interface DocumentParser {
      * @return a generated file content
      * @throws cc.redpen.RedPenException if Parser failed to parse input.
      */
-    Document generateDocument(InputStream io)
+    Document parse(InputStream io)
             throws RedPenException;
 
     /**
@@ -45,7 +45,7 @@ public interface DocumentParser {
      * @return a generated file content
      * @throws cc.redpen.RedPenException if Parser failed to parse input.
      */
-    Document generateDocument(String fileName)
+    Document parse(String fileName)
             throws RedPenException;
 
     /**

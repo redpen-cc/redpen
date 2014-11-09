@@ -47,7 +47,7 @@ public final class DocumentGenerator {
                 configuration, documentBuilder);
 
         for (String inputFileName : inputFileNames) {
-            parser.generateDocument(inputFileName);
+            parser.parse(inputFileName);
         }
         // @TODO extract summary information to validate documentCollection effectively
         return documentBuilder.build();

@@ -47,7 +47,7 @@ public class SampleDocumentGenerator {
         DocumentCollection.Builder builder = new DocumentCollection.Builder();
         DocumentParser parser = DocumentParserFactory.generate(type, configuration, builder);
         InputStream stream = IOUtils.toInputStream(docString);
-        parser.generateDocument(stream);
+        parser.parse(stream);
         return builder.build();
     }
 }

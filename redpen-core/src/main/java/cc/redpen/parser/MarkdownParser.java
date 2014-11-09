@@ -50,7 +50,7 @@ public class MarkdownParser extends BaseDocumentParser {
     }
 
     @Override
-    public Document generateDocument(InputStream inputStream)
+    public Document parse(InputStream inputStream)
             throws RedPenException {
         builder.addDocument("");
 
