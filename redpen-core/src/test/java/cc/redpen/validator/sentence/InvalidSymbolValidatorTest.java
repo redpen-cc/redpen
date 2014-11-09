@@ -47,12 +47,12 @@ public class InvalidSymbolValidatorTest {
                 .setSymbol(new Symbol("EXCLAMATION_MARK", "!", "！"))
                 .build();
 
-        RedPen validator = new RedPen.Builder()
+        RedPen redPen = new RedPen.Builder()
                 .setConfiguration(conf)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
 
-        List<ValidationError> errors = validator.check(documents);
+        List<ValidationError> errors = redPen.validate(documents);
         assertEquals(1, errors.size());
     }
 
@@ -71,12 +71,12 @@ public class InvalidSymbolValidatorTest {
                 .setSymbol(new Symbol("EXCLAMATION_MARK", "!", "！"))
                 .build();
 
-        RedPen validator = new RedPen.Builder()
+        RedPen redPen = new RedPen.Builder()
                 .setConfiguration(conf)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
 
-        List<ValidationError> errors = validator.check(documents);
+        List<ValidationError> errors = redPen.validate(documents);
         assertEquals(0, errors.size());
     }
 
@@ -97,12 +97,12 @@ public class InvalidSymbolValidatorTest {
                 .setSymbol(new Symbol("COMMA", ",", "、"))
                 .build();
 
-        RedPen validator = new RedPen.Builder()
+        RedPen redPen = new RedPen.Builder()
                 .setConfiguration(conf)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
 
-        List<ValidationError> errors = validator.check(documents);
+        List<ValidationError> errors = redPen.validate(documents);
         assertEquals(2, errors.size());
     }
 }

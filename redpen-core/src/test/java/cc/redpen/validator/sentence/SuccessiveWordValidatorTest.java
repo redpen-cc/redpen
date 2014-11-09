@@ -29,12 +29,12 @@ public class SuccessiveWordValidatorTest {
                         1)
                 .build();
 
-        RedPen validator = new RedPen.Builder()
+        RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
 
-        List<ValidationError> errors = validator.check(documents);
+        List<ValidationError> errors = redPen.validate(documents);
         assertEquals(1, errors.size());
     }
 
@@ -53,12 +53,12 @@ public class SuccessiveWordValidatorTest {
                         1)
                 .build();
 
-        RedPen validator = new RedPen.Builder()
+        RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
 
-        List<ValidationError> errors = validator.check(documents);
+        List<ValidationError> errors = redPen.validate(documents);
         assertEquals(1, errors.size());
     }
 
@@ -77,12 +77,12 @@ public class SuccessiveWordValidatorTest {
                         1)
                 .build();
 
-        RedPen validator = new RedPen.Builder()
+        RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
 
-        List<ValidationError> errors = validator.check(documents);
+        List<ValidationError> errors = redPen.validate(documents);
         assertEquals(0, errors.size());
     }
 }

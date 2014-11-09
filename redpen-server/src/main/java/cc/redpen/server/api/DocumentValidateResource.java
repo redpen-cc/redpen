@@ -114,7 +114,7 @@ public class DocumentValidateResource {
         DocumentCollection d = new DocumentCollection();
         d.addDocument(fileContent);
 
-        List<ValidationError> errors = server.check(d);
+        List<ValidationError> errors = server.validate(d);
 
         JSONArray jsonErrors = new JSONArray();
 

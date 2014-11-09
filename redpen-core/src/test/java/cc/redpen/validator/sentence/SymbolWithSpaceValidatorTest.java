@@ -47,12 +47,12 @@ public class SymbolWithSpaceValidatorTest {
                 .setSymbol(new Symbol("SLASH", "/"))
                 .build();
 
-        RedPen validator = new RedPen.Builder()
+        RedPen redPen = new RedPen.Builder()
                 .setConfiguration(conf)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
 
-        List<ValidationError> errors = validator.check(documents);
+        List<ValidationError> errors = redPen.validate(documents);
         assertEquals(0, errors.size());
     }
 
@@ -71,12 +71,12 @@ public class SymbolWithSpaceValidatorTest {
                 .setSymbol(new Symbol("COLON", ":", "", false, true))
                 .build();
 
-        RedPen validator = new RedPen.Builder()
+        RedPen redPen = new RedPen.Builder()
                 .setConfiguration(conf)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
 
-        List<ValidationError> errors = validator.check(documents);
+        List<ValidationError> errors = redPen.validate(documents);
         assertEquals(1, errors.size());
     }
 
@@ -95,12 +95,12 @@ public class SymbolWithSpaceValidatorTest {
                 .setSymbol(new Symbol("LEFT_PARENTHESIS", "(", "", true, false))
                 .build();
 
-        RedPen validator = new RedPen.Builder()
+        RedPen redPen = new RedPen.Builder()
                 .setConfiguration(conf)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
 
-        List<ValidationError> errors = validator.check(documents);
+        List<ValidationError> errors = redPen.validate(documents);
         assertEquals(1, errors.size());
     }
 
@@ -120,12 +120,12 @@ public class SymbolWithSpaceValidatorTest {
                 .setSymbol(new Symbol("RIGHT_PARENTHESIS", ")", "", false, true))
                 .build();
 
-        RedPen validator = new RedPen.Builder()
+        RedPen redPen = new RedPen.Builder()
                 .setConfiguration(conf)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
 
-        List<ValidationError> errors = validator.check(documents);
+        List<ValidationError> errors = redPen.validate(documents);
         assertEquals(2, errors.size());
     }
 
@@ -144,12 +144,12 @@ public class SymbolWithSpaceValidatorTest {
                 .setSymbol(new Symbol("ASTARISK", "*", "", true, true))
                 .build();
 
-        RedPen validator = new RedPen.Builder()
+        RedPen redPen = new RedPen.Builder()
                 .setConfiguration(conf)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
 
-        List<ValidationError> errors = validator.check(documents);
+        List<ValidationError> errors = redPen.validate(documents);
         assertEquals(1, errors.size());
     }
 }

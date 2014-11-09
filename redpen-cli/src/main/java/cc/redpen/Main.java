@@ -147,7 +147,7 @@ public final class Main {
             .setResultDistributor(distributor)
             .build();
 
-        List<ValidationError> errors = redPen.check(documentCollection);
+        List<ValidationError> errors = redPen.validate(documentCollection);
         if (errors.size() > limit) {
             LOG.error("The number of errors \"{}\" is larger than specified (limit is \"{}\").", errors.size(), limit);
             System.exit(1);
