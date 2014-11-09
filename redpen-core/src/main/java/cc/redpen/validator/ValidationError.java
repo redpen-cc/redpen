@@ -29,7 +29,7 @@ public final class ValidationError implements java.io.Serializable {
     private static final long serialVersionUID = -7759439419047004667L;
     private final String message;
     private final String validatorName;
-    private Sentence sentence;
+    private final Sentence sentence;
 
     /**
      * Constructor.
@@ -71,15 +71,6 @@ public final class ValidationError implements java.io.Serializable {
      */
     public Sentence getSentence() {
         return sentence;
-    }
-
-    /**
-     * Set sentenceWithError contains the error.
-     *
-     * @param sentenceWithError sentenceWithError containing validation error
-     */
-    public void setSentence(Sentence sentenceWithError) {
-        this.sentence = sentenceWithError;
     }
 
     /**
