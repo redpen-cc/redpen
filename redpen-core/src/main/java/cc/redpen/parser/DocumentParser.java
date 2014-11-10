@@ -18,10 +18,10 @@
 package cc.redpen.parser;
 
 import cc.redpen.RedPenException;
-import cc.redpen.config.Configuration;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
 
+import java.io.File;
 import java.io.InputStream;
 
 /**
@@ -35,48 +35,43 @@ public interface DocumentParser {
      * @return a generated file content
      * @throws cc.redpen.RedPenException if Parser failed to parse input.
      */
-    Document parse(InputStream io)
+    Document parse(InputStream io, SentenceExtractor sentenceExtractor, DocumentCollection.Builder documentBuilder)
+            throws RedPenException;
+
+    /**
+     * Given content, return Document instance for the specified file.
+     *
+     * @param content input content
+     * @return a generated file content
+     * @throws cc.redpen.RedPenException if Parser failed to parse input.
+     */
+    Document parse(String content, SentenceExtractor sentenceExtractor, DocumentCollection.Builder documentBuilder)
             throws RedPenException;
 
     /**
      * Given input file name, return Document instance for the specified file.
      *
-     * @param fileName input file name
+     * @param file input file
      * @return a generated file content
      * @throws cc.redpen.RedPenException if Parser failed to parse input.
      */
-    Document parse(String fileName)
+    Document parse(File file, SentenceExtractor sentenceExtractor, DocumentCollection.Builder documentBuilder)
             throws RedPenException;
 
-    /**
-     * Initialize parser.
-     *
-     * @param configuration   configuration
-     * @param documentBuilder
-     * @throws cc.redpen.RedPenException if the configurations loading failed
-     */
-    void initialize(Configuration configuration,
-                    DocumentCollection.Builder documentBuilder) throws RedPenException;
+    public static final DocumentParser PLAIN = new PlainTextParser();
+    public static final DocumentParser WIKI = new WikiParser();
+    public static final DocumentParser MARKDOWN = new MarkdownParser();
 
-    /**
-     * the type of parser using DocumentParserFactory.
-     */
-    enum Type {
-
-        /**
-         * plain text parser.
-         */
-        PLAIN,
-
-        /**
-         * wiki parser.
-         */
-        WIKI,
-
-        /**
-         * markdown parser.
-         */
-        MARKDOWN
-
+    static DocumentParser of(String parserType) {
+        switch (parserType.toUpperCase()){
+            case "PLAIN" :
+                return PLAIN;
+            case "WIKI" :
+                return WIKI;
+            case "MARKDOWN":
+                return MARKDOWN;
+            default :
+                throw new IllegalArgumentException("no such parser for :" + parserType);
+        }
     }
 }

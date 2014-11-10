@@ -22,11 +22,14 @@ import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.distributor.FakeResultDistributor;
+import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.validator.ValidationError;
+import junit.framework.Assert;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -46,13 +49,13 @@ public class ContractionValidatorTest {
                 .addSentence("he's also a business man.", 3)
                 .build();
 
-        RedPen validator = new RedPen.Builder()
+        RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
 
-        List<ValidationError> errors = validator.check(documents);
-        assertEquals(1, errors.size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        Assert.assertEquals(1, errors.get(documents.getDocument(0)).size());
     }
 
     @Test
@@ -70,13 +73,13 @@ public class ContractionValidatorTest {
                 .addSentence("he is a business man.", 3)
                 .build();
 
-        RedPen validator = new RedPen.Builder()
+        RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
 
-        List<ValidationError> errors = validator.check(documents);
-        assertEquals(0, errors.size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        Assert.assertEquals(0, errors.get(documents.getDocument(0)).size());
     }
 
     @Test
@@ -94,13 +97,13 @@ public class ContractionValidatorTest {
                 .addSentence("He's also a business man.", 3)
                 .build();
 
-        RedPen validator = new RedPen.Builder()
+        RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
 
-        List<ValidationError> errors = validator.check(documents);
-        assertEquals(1, errors.size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        Assert.assertEquals(1, errors.get(documents.getDocument(0)).size());
     }
 
     /**
@@ -121,12 +124,12 @@ public class ContractionValidatorTest {
                 .addSentence("he is a business man.", 3)
                 .build();
 
-        RedPen validator = new RedPen.Builder()
+        RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
 
-        List<ValidationError> errors = validator.check(documents);
-        assertEquals(0, errors.size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        Assert.assertEquals(0, errors.get(documents.getDocument(0)).size());
     }
 }

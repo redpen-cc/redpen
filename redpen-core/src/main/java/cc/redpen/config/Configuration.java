@@ -31,19 +31,20 @@ public final class Configuration {
     private final SymbolTable symbolTable;
     private final List<ValidatorConfiguration> validatorConfigs =
             new ArrayList<>();
+    private String lang;
 
     /**
      * Constructor.
      *
-     * @param builder Configuration builder
      */
-    public Configuration(Builder builder) {
-        if (builder.symbolTable == null) {
+    Configuration(SymbolTable symbolTable, List<ValidatorConfiguration> validatorConfigs, String lang) {
+        if (symbolTable == null) {
             this.symbolTable = new SymbolTable();
         } else {
-            this.symbolTable = builder.symbolTable;
+            this.symbolTable = symbolTable;
         }
-        this.validatorConfigs.addAll(builder.validatorConfigs);
+        this.validatorConfigs.addAll(validatorConfigs);
+        this.lang = lang;
     }
 
     /**
@@ -65,6 +66,14 @@ public final class Configuration {
     }
 
     /**
+     * returns language targeted by this configuration
+     * @return language
+     */
+    public String getLang() {
+        return lang;
+    }
+
+    /**
      * Builder class of Configuration.
      */
     public static class Builder {
@@ -72,6 +81,7 @@ public final class Configuration {
                 new ArrayList<>();
         private SymbolTable symbolTable;
 
+        private String lang = "en";
         private static SymbolTable loadLanguageDefaultSymbolTable(
                 String lang) {
             SymbolTable symbolTable = new SymbolTable();
@@ -94,6 +104,7 @@ public final class Configuration {
 
         public Builder setLanguage(String lang) {
             this.symbolTable = loadLanguageDefaultSymbolTable(lang);
+            this.lang = lang;
             return this;
         }
 
@@ -119,7 +130,7 @@ public final class Configuration {
         }
 
         public Configuration build() {
-            return new Configuration(this);
+            return new Configuration(this.symbolTable, this.validatorConfigs, this.lang);
         }
     }
 }

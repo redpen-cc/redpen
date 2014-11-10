@@ -20,7 +20,6 @@ package cc.redpen;
 import cc.redpen.config.Configuration;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.parser.DocumentParser;
-import cc.redpen.parser.DocumentParserFactory;
 import org.apache.commons.io.IOUtils;
 
 import java.io.InputStream;
@@ -37,17 +36,16 @@ public class SampleDocumentGenerator {
      * needed please use DocumentGenerator class.
      *
      * @param docString input document string
-     * @param type      document syntax: wiki, markdown or plain
+     * @param parser    document syntax: wiki, markdown or plain
      * @return DocumentCollection object
      */
     public static DocumentCollection generateOneFileDocument(String docString,
-                                                             DocumentParser.Type type) throws RedPenException {
+                                                             DocumentParser parser) throws RedPenException {
         Configuration configuration = new Configuration.Builder()
                 .setLanguage("en").build();
         DocumentCollection.Builder builder = new DocumentCollection.Builder();
-        DocumentParser parser = DocumentParserFactory.generate(type, configuration, builder);
         InputStream stream = IOUtils.toInputStream(docString);
-        parser.parse(stream);
+        parser.parse(stream, RedPen.getSentenceExtractor(configuration), builder);
         return builder.build();
     }
 }

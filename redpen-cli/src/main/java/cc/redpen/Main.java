@@ -28,6 +28,7 @@ import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -82,10 +83,10 @@ public final class Main {
         options.addOption("v", "version", false,
             "Displays version information and exits");
 
-        CommandLineParser parser = new BasicParser();
+        CommandLineParser commandLineParser = new BasicParser();
         CommandLine commandLine = null;
         try {
-            commandLine = parser.parse(options, args);
+            commandLine = commandLineParser.parse(options, args);
         } catch (ParseException e) {
             LOG.error("Error occurred in parsing command line options ");
             printHelp(options);
@@ -96,7 +97,6 @@ public final class Main {
         String configFileName = "";
         String resultFormat = "plain";
         int limit = EDEFAULT_LIMIT;
-        DocumentParser.Type parserType;
         Formatter.Type outputFormat;
 
         if (commandLine.hasOption("h")) {
@@ -121,6 +121,10 @@ public final class Main {
         }
 
         String[] inputFileNames = commandLine.getArgs();
+        File[] inputFiles = new File[inputFileNames.length];
+        for (int i = 0; i < inputFileNames.length; i++) {
+            inputFiles[i] = new File(inputFileNames[i]);
+        }
 
         ConfigurationLoader configLoader = new ConfigurationLoader();
         Configuration conf = configLoader.loadConfiguration(configFileName);
@@ -129,16 +133,9 @@ public final class Main {
             System.exit(-1);
         }
 
-        parserType = DocumentParser.Type.valueOf(inputFormat.toUpperCase());
+        DocumentParser parser = DocumentParser.of(inputFormat);
         outputFormat = Formatter.Type.valueOf(resultFormat.toUpperCase());
 
-        DocumentCollection documentCollection =
-            DocumentGenerator.generate(inputFileNames, conf, parserType);
-
-        if (documentCollection == null) {
-            LOG.error("Failed to create a DocumentCollection object");
-            System.exit(-1);
-        }
         ResultDistributor distributor =
             ResultDistributorFactory.createDistributor(outputFormat, System.out);
 
@@ -146,8 +143,12 @@ public final class Main {
             .setConfiguration(conf)
             .setResultDistributor(distributor)
             .build();
-
-        List<ValidationError> errors = redPen.check(documentCollection);
+        DocumentCollection documents = redPen.parse(parser, inputFiles);
+        if (documents == null) {
+            LOG.error("Failed to create a DocumentCollection object");
+            System.exit(-1);
+        }
+        List<ValidationError> errors = redPen.validate(documents).get(documents.getDocument(0));
         if (errors.size() > limit) {
             LOG.error("The number of errors \"{}\" is larger than specified (limit is \"{}\").", errors.size(), limit);
             System.exit(1);

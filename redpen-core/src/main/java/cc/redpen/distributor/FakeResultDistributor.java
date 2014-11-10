@@ -18,6 +18,7 @@
 package cc.redpen.distributor;
 
 import cc.redpen.formatter.Formatter;
+import cc.redpen.model.Document;
 import cc.redpen.validator.ValidationError;
 
 /**
@@ -32,7 +33,7 @@ public class FakeResultDistributor implements ResultDistributor {
     }
 
     @Override
-    public void flushError(ValidationError err) {}
+    public void flushError(Document document, ValidationError err) {}
 
     @Override
     public void setFormatter(Formatter formatter) {

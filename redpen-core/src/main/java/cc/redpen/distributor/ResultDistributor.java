@@ -19,7 +19,10 @@ package cc.redpen.distributor;
 
 import cc.redpen.RedPenException;
 import cc.redpen.formatter.Formatter;
+import cc.redpen.model.Document;
 import cc.redpen.validator.ValidationError;
+
+import java.util.Optional;
 
 /**
  * ResultDistributor flush the errors reported from Validators.
@@ -41,7 +44,7 @@ public interface ResultDistributor {
      *
      * @param err error reported from a Validator
      */
-    void flushError(ValidationError err) throws RedPenException;
+    void flushError(Document document, ValidationError err) throws RedPenException;
 
     /**
      * Set Formatter object.

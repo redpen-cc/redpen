@@ -20,6 +20,7 @@ package cc.redpen.validator;
 import cc.redpen.RedPenException;
 import cc.redpen.formatter.XMLFormatter;
 import cc.redpen.model.Sentence;
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -27,7 +28,6 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
@@ -41,9 +41,10 @@ public class XMLFormatterTest {
                 this.getClass(),
                 "Fatal Error",
                 new Sentence("This is a sentence", 0));
-        error.setFileName("foobar.md");
         XMLFormatter formatter = createXMLFormatter();
-        String resultString = formatter.convertError(error);
+        cc.redpen.model.Document document1 = new cc.redpen.model.Document();
+        document1.setFileName("foobar.md");
+        String resultString = formatter.convertError(document1, error);
 
         Document document = extractDocument(resultString);
         assertEquals(1, document.getElementsByTagName("error").getLength());
@@ -68,7 +69,7 @@ public class XMLFormatterTest {
     public void testConvertValidationErrorWithoutFileName() throws RedPenException {
         ValidationError error = new ValidationError(this.getClass(), "Fatal Error", new Sentence("text", 0));
         XMLFormatter formatter = createXMLFormatter();
-        String resultString = formatter.convertError(error);
+        String resultString = formatter.convertError(new cc.redpen.model.Document(), error);
         Document document = extractDocument(resultString);
         assertEquals(1, document.getElementsByTagName("error").getLength());
         assertEquals(1, document.getElementsByTagName("message").getLength());
@@ -87,7 +88,7 @@ public class XMLFormatterTest {
     public void testConvertValidationErrorWithoutLineNumAndFileName() throws RedPenException {
         ValidationError error = new ValidationError(this.getClass(), "Fatal Error", new Sentence("text", -1));
         XMLFormatter formatter = createXMLFormatter();
-        String resultString = formatter.convertError(error);
+        String resultString = formatter.convertError(new cc.redpen.model.Document(), error);
 
         Document document = extractDocument(resultString);
         assertEquals(1, document.getElementsByTagName("error").getLength());
@@ -114,11 +115,8 @@ public class XMLFormatterTest {
 
         Document document = null;
         try {
-            document = docBuilder.parse(new ByteArrayInputStream(resultString.getBytes()));
-        } catch (SAXException e) {
-            e.printStackTrace();
-            fail();
-        } catch (IOException e) {
+            document = docBuilder.parse(IOUtils.toInputStream(resultString));
+        } catch (SAXException | IOException e) {
             e.printStackTrace();
             fail();
         }

@@ -20,10 +20,8 @@ package cc.redpen.server.api;
 
 import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
-import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.parser.DocumentParser;
-import cc.redpen.parser.DocumentParserFactory;
 import cc.redpen.validator.ValidationError;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +34,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
@@ -100,21 +97,15 @@ public class DocumentValidateResource {
             throws JSONException, RedPenException, UnsupportedEncodingException {
 
         LOG.info("Validating document");
-        RedPen server = getRedPen(lang);
-        System.out.println(document);
+        RedPen redPen = getRedPen(lang);
         JSONObject json = new JSONObject();
 
         json.put("document", document);
 
-        DocumentParser parser = DocumentParserFactory.generate(
-                DocumentParser.Type.PLAIN, server.getConfiguration(), new DocumentCollection.Builder(lang));
-        Document fileContent = parser.parse(new
-                ByteArrayInputStream(document.getBytes("UTF-8")));
+        DocumentCollection documents = new DocumentCollection();
+        documents.addDocument(redPen.parse(DocumentParser.PLAIN, document));
 
-        DocumentCollection d = new DocumentCollection();
-        d.addDocument(fileContent);
-
-        List<ValidationError> errors = server.check(d);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.getDocument(0));
 
         JSONArray jsonErrors = new JSONArray();
 

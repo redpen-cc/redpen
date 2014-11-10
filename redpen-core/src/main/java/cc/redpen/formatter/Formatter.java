@@ -18,6 +18,7 @@
 package cc.redpen.formatter;
 
 import cc.redpen.RedPenException;
+import cc.redpen.model.Document;
 import cc.redpen.validator.ValidationError;
 
 import java.util.Optional;
@@ -30,10 +31,11 @@ public interface Formatter {
     /**
      * Convert ValidationError into a string to flush a error message.
      *
+     * @param document document associated with the validation error
      * @param error object containing file and line number information.
      * @return error message
      */
-    String convertError(ValidationError error) throws RedPenException;
+    String convertError(Document document, ValidationError error) throws RedPenException;
 
     /**
      * Return the header block of semi-structured format.

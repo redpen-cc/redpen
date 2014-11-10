@@ -20,6 +20,7 @@ package cc.redpen.distributor;
 import cc.redpen.RedPenException;
 import cc.redpen.formatter.Formatter;
 import cc.redpen.formatter.PlainFormatter;
+import cc.redpen.model.Document;
 import cc.redpen.validator.ValidationError;
 
 import java.io.OutputStream;
@@ -75,11 +76,11 @@ public class DefaultResultDistributor implements ResultDistributor {
      *
      * @param err validation error
      */
-    public void flushError(ValidationError err) throws RedPenException {
+    public void flushError(Document document, ValidationError err) throws RedPenException {
         if (err == null) {
             throw new RedPenException("argument ValidationError is null");
         }
-        writer.println(myFormatter.convertError(err));
+        writer.println(myFormatter.convertError(document, err));
         writer.flush();
     }
 

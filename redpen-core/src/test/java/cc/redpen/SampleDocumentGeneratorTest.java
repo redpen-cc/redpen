@@ -18,9 +18,9 @@
 package cc.redpen;
 
 import cc.redpen.model.DocumentCollection;
+import cc.redpen.parser.DocumentParser;
 import org.junit.Test;
 
-import static cc.redpen.parser.DocumentParser.Type.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -30,7 +30,7 @@ public class SampleDocumentGeneratorTest {
         String sampleText = "";
         sampleText += "Gekioko pun pun maru means very very angry.\n";
         DocumentCollection doc = SampleDocumentGenerator.generateOneFileDocument(sampleText,
-                PLAIN);
+                DocumentParser.PLAIN);
         assertNotNull(doc);
         assertEquals(1, doc.size());
         assertEquals(1, doc.getDocument(0).getNumberOfSections());
@@ -47,7 +47,7 @@ public class SampleDocumentGeneratorTest {
         sampleText += "h1. About Gekioko.\n";
         sampleText += "Gekioko pun pun maru means very very angry.\n";
         DocumentCollection doc = SampleDocumentGenerator.generateOneFileDocument(sampleText,
-                WIKI);
+                DocumentParser.WIKI);
         assertNotNull(doc);
         assertEquals(1, doc.size());
         assertEquals(2, doc.getDocument(0).getNumberOfSections());
@@ -65,7 +65,7 @@ public class SampleDocumentGeneratorTest {
         sampleText += "# About Gekioko.\n";
         sampleText += "Gekioko pun pun maru means very very angry.\n";
         DocumentCollection doc = SampleDocumentGenerator.generateOneFileDocument(sampleText,
-                MARKDOWN);
+                DocumentParser.MARKDOWN);
         assertNotNull(doc);
         assertEquals(1, doc.size());
         assertEquals(2, doc.getDocument(0).getNumberOfSections());
@@ -79,6 +79,6 @@ public class SampleDocumentGeneratorTest {
 
     @Test(expected = NullPointerException.class)
     public void testInputNullDocument() throws RedPenException {
-        SampleDocumentGenerator.generateOneFileDocument(null, MARKDOWN);
+        SampleDocumentGenerator.generateOneFileDocument(null, DocumentParser.MARKDOWN);
     }
 }

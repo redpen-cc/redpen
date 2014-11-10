@@ -19,6 +19,7 @@ package cc.redpen.parser;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
+import cc.redpen.model.DocumentCollection;
 import cc.redpen.model.Sentence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +33,7 @@ import java.util.List;
 /**
  * Parser for plain text file.
  */
-public final class PlainTextParser extends BaseDocumentParser {
+final class PlainTextParser extends BaseDocumentParser {
     private static final Logger LOG =
             LoggerFactory.getLogger(PlainTextParser.class);
 
@@ -44,29 +45,28 @@ public final class PlainTextParser extends BaseDocumentParser {
     }
 
     @Override
-    public Document parse(InputStream is)
+    public Document parse(InputStream is, SentenceExtractor sentenceExtractor, DocumentCollection.Builder documentBuilder)
             throws RedPenException {
-        builder.addDocument("");
+        documentBuilder.addDocument("");
 
         List<Sentence> headers = new ArrayList<>();
         headers.add(new Sentence("", 0));
-        builder.addSection(0, headers);
-        builder.addParagraph();
+        documentBuilder.addSection(0, headers);
+        documentBuilder.addParagraph();
         BufferedReader br = createReader(is);
         String remain = "";
         String line;
         int lineNum = 0;
         try {
             while ((line = br.readLine()) != null) {
-                int periodPosition =
-                        this.getSentenceExtractor().getSentenceEndPosition(line);
+                int periodPosition = sentenceExtractor.getSentenceEndPosition(line);
                 if (line.equals("")) {
-                    builder.addParagraph();
+                    documentBuilder.addParagraph();
                 } else if (periodPosition == -1) {
                     remain = remain + line;
                 } else {
                     remain =
-                            this.extractSentences(lineNum, remain + line);
+                            this.extractSentences(lineNum, remain + line, sentenceExtractor, documentBuilder);
                 }
                 lineNum++;
             }
@@ -74,13 +74,13 @@ public final class PlainTextParser extends BaseDocumentParser {
             throw new RedPenException(e);
         }
         if (remain.length() > 0) {
-            builder.addSentence(remain, lineNum);
+            documentBuilder.addSentence(remain, lineNum);
         }
-        return builder.getLastDocument();
+        return documentBuilder.getLastDocument();
     }
 
-    private String extractSentences(int lineNum, String line) {
-        int periodPosition = getSentenceExtractor().getSentenceEndPosition(line);
+    private String extractSentences(int lineNum, String line, SentenceExtractor sentenceExtractor, DocumentCollection.Builder builder) {
+        int periodPosition = sentenceExtractor.getSentenceEndPosition(line);
         if (periodPosition == -1) {
             return line;
         } else {
@@ -88,7 +88,7 @@ public final class PlainTextParser extends BaseDocumentParser {
                 builder.addSentence(
                         line.substring(0, periodPosition + 1), lineNum);
                 line = line.substring(periodPosition + 1, line.length());
-                periodPosition = getSentenceExtractor().getSentenceEndPosition(line);
+                periodPosition = sentenceExtractor.getSentenceEndPosition(line);
                 if (periodPosition == -1) {
                     return line;
                 }

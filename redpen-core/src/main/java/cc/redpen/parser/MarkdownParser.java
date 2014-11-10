@@ -19,6 +19,7 @@ package cc.redpen.parser;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
+import cc.redpen.model.DocumentCollection;
 import cc.redpen.model.Sentence;
 import cc.redpen.parser.markdown.ToFileContentSerializer;
 import org.pegdown.Extensions;
@@ -37,7 +38,7 @@ import java.util.List;
  * <p>
  * Markdown Syntax @see http://daringfireball.net/projects/markdown/
  */
-public class MarkdownParser extends BaseDocumentParser {
+final class MarkdownParser extends BaseDocumentParser {
 
     private PegDownProcessor pegDownProcessor = new PegDownProcessor(
             Extensions.HARDWRAPS
@@ -50,9 +51,9 @@ public class MarkdownParser extends BaseDocumentParser {
     }
 
     @Override
-    public Document parse(InputStream inputStream)
+    public Document parse(InputStream inputStream, SentenceExtractor sentenceExtractor, DocumentCollection.Builder documentBuilder)
             throws RedPenException {
-        builder.addDocument("");
+        documentBuilder.addDocument("");
 
         StringBuilder sb = new StringBuilder();
         String line;
@@ -75,18 +76,18 @@ public class MarkdownParser extends BaseDocumentParser {
         try {
             List<Sentence> headers = new ArrayList<>();
             headers.add(new Sentence("", 0));
-            builder.addSection(0, headers);
+            documentBuilder.addSection(0, headers);
 
             // TODO create document after parsing... overhead...
             RootNode rootNode =
                     pegDownProcessor.parseMarkdown(sb.toString().toCharArray());
             ToFileContentSerializer serializer =
-                    new ToFileContentSerializer(builder,
-                            lineList, this.getSentenceExtractor());
+                    new ToFileContentSerializer(documentBuilder,
+                            lineList, sentenceExtractor);
             serializer.toFileContent(rootNode);
         } catch (ParsingTimeoutException e) {
             throw new RedPenException("Failed to parse timeout: ", e);
         }
-        return builder.getLastDocument();
+        return documentBuilder.getLastDocument();
     }
 }

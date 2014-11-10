@@ -29,8 +29,7 @@ public final class ValidationError implements java.io.Serializable {
     private static final long serialVersionUID = -7759439419047004667L;
     private final String message;
     private final String validatorName;
-    private Optional<String> fileName = Optional.empty();
-    private Sentence sentence;
+    private final Sentence sentence;
 
     /**
      * Constructor.
@@ -66,39 +65,12 @@ public final class ValidationError implements java.io.Serializable {
     }
 
     /**
-     * Get file name.
-     *
-     * @return file name
-     */
-    public Optional<String> getFileName() {
-        return fileName;
-    }
-
-    /**
-     * Set file name.
-     *
-     * @param errorFileName file name in which the error occurs
-     */
-    public void setFileName(String errorFileName) {
-        this.fileName = Optional.of(errorFileName);
-    }
-
-    /**
      * Get sentence containing the error.
      *
      * @return sentence
      */
     public Sentence getSentence() {
         return sentence;
-    }
-
-    /**
-     * Set sentenceWithError contains the error.
-     *
-     * @param sentenceWithError sentenceWithError containing validation error
-     */
-    public void setSentence(Sentence sentenceWithError) {
-        this.sentence = sentenceWithError;
     }
 
     /**

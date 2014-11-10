@@ -18,6 +18,7 @@
 package cc.redpen.formatter;
 
 import cc.redpen.RedPenException;
+import cc.redpen.model.Document;
 import cc.redpen.validator.ValidationError;
 
 import java.util.Optional;
@@ -28,13 +29,13 @@ import java.util.Optional;
 public class PlainFormatter implements Formatter {
 
     @Override
-    public String convertError(ValidationError error) throws RedPenException {
+    public String convertError(Document document, ValidationError error) throws RedPenException {
         StringBuilder str = new StringBuilder();
 
         str.append("ValidationError[");
         str.append(error.getValidatorName());
         str.append("][");
-        error.getFileName().ifPresent(e -> str.append(e).append(" : "));
+        document.getFileName().ifPresent(e -> str.append(e).append(" : "));
         str.append(error.getLineNumber()).append(" (")
                 .append(error.getMessage()).append(")]");
         str.append(" at line: ").append(error.getSentence().content);

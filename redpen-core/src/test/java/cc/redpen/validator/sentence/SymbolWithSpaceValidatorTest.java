@@ -23,11 +23,14 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.Symbol;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.distributor.FakeResultDistributor;
+import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.validator.ValidationError;
+import junit.framework.Assert;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -47,13 +50,13 @@ public class SymbolWithSpaceValidatorTest {
                 .setSymbol(new Symbol("SLASH", "/"))
                 .build();
 
-        RedPen validator = new RedPen.Builder()
+        RedPen redPen = new RedPen.Builder()
                 .setConfiguration(conf)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
 
-        List<ValidationError> errors = validator.check(documents);
-        assertEquals(0, errors.size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        Assert.assertEquals(0, errors.get(documents.getDocument(0)).size());
     }
 
     @Test
@@ -71,13 +74,13 @@ public class SymbolWithSpaceValidatorTest {
                 .setSymbol(new Symbol("COLON", ":", "", false, true))
                 .build();
 
-        RedPen validator = new RedPen.Builder()
+        RedPen redPen = new RedPen.Builder()
                 .setConfiguration(conf)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
 
-        List<ValidationError> errors = validator.check(documents);
-        assertEquals(1, errors.size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        Assert.assertEquals(1, errors.get(documents.getDocument(0)).size());
     }
 
     @Test
@@ -95,13 +98,13 @@ public class SymbolWithSpaceValidatorTest {
                 .setSymbol(new Symbol("LEFT_PARENTHESIS", "(", "", true, false))
                 .build();
 
-        RedPen validator = new RedPen.Builder()
+        RedPen redPen = new RedPen.Builder()
                 .setConfiguration(conf)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
 
-        List<ValidationError> errors = validator.check(documents);
-        assertEquals(1, errors.size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        Assert.assertEquals(1, errors.get(documents.getDocument(0)).size());
     }
 
     @Test
@@ -120,13 +123,13 @@ public class SymbolWithSpaceValidatorTest {
                 .setSymbol(new Symbol("RIGHT_PARENTHESIS", ")", "", false, true))
                 .build();
 
-        RedPen validator = new RedPen.Builder()
+        RedPen redPen = new RedPen.Builder()
                 .setConfiguration(conf)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
 
-        List<ValidationError> errors = validator.check(documents);
-        assertEquals(2, errors.size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        Assert.assertEquals(2, errors.get(documents.getDocument(0)).size());
     }
 
     @Test
@@ -144,12 +147,12 @@ public class SymbolWithSpaceValidatorTest {
                 .setSymbol(new Symbol("ASTARISK", "*", "", true, true))
                 .build();
 
-        RedPen validator = new RedPen.Builder()
+        RedPen redPen = new RedPen.Builder()
                 .setConfiguration(conf)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
 
-        List<ValidationError> errors = validator.check(documents);
-        assertEquals(1, errors.size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        Assert.assertEquals(1, errors.get(documents.getDocument(0)).size());
     }
 }
