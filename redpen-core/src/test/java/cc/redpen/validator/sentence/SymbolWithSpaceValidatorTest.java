@@ -25,7 +25,6 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.distributor.FakeResultDistributor;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
-import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -37,7 +36,7 @@ public class SymbolWithSpaceValidatorTest {
     @Test
     public void testNotNeedSpace() throws RedPenException {
         DocumentCollection documents = new DocumentCollection.Builder().addDocument(
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("I like apple/orange", 1)
@@ -61,7 +60,7 @@ public class SymbolWithSpaceValidatorTest {
     @Test
     public void testNeedAfterSpace() throws RedPenException {
         DocumentCollection documents = new DocumentCollection.Builder().addDocument(
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("I like her:yes it is", 1)
@@ -85,7 +84,7 @@ public class SymbolWithSpaceValidatorTest {
     @Test
     public void testNeedBeforeSpace() throws RedPenException {
         DocumentCollection documents = new DocumentCollection.Builder().addDocument(
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("I like her(Nancy)very much.", 1)
@@ -109,7 +108,7 @@ public class SymbolWithSpaceValidatorTest {
     @Test
     public void testNeedSpaceInMultiplePosition() throws RedPenException {
         DocumentCollection documents = new DocumentCollection.Builder().addDocument(
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("I like her(Nancy)very much.", 1)
@@ -134,7 +133,7 @@ public class SymbolWithSpaceValidatorTest {
     @Test
     public void testReturnOnlyOneForHitBothBeforeAndAfter() throws RedPenException {
         DocumentCollection documents = new DocumentCollection.Builder().addDocument(
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("I like 1*10.", 1)

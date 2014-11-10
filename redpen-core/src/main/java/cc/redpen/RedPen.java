@@ -133,6 +133,18 @@ public class RedPen {
         return docErrorsMap;
     }
 
+    /**
+     * Validate the input document collection.
+     *
+     * @param document document to be validated
+     * @return list of validation errors
+     */
+    public List<ValidationError> validate(Document document) {
+        DocumentCollection documents = new DocumentCollection.Builder().addDocument(document).build();
+        Map<Document, List<ValidationError>> documentListMap = validate(documents);
+        return documentListMap.get(document);
+    }
+
     private void runDocumentValidators(
             DocumentCollection documentCollection,
             Map<Document, List<ValidationError>> docErrorsMap) {

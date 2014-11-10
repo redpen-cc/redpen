@@ -8,7 +8,6 @@ import cc.redpen.distributor.FakeResultDistributor;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.tokenizer.JapaneseTokenizer;
-import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -22,7 +21,7 @@ public class StartWithCapitalLetterValidatorTest {
     @Test
     public void testDetectStartWithSmallCharacter() {
         DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument(new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                .addDocument(new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("this is it.", 1)
@@ -34,7 +33,7 @@ public class StartWithCapitalLetterValidatorTest {
     @Test
     public void testDetectStartWithCapitalCharacter() {
         DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument(new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                .addDocument(new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("This is it.", 1)
@@ -46,7 +45,7 @@ public class StartWithCapitalLetterValidatorTest {
     @Test
     public void testStartWithElementOfWhiteList() {
         DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument(new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                .addDocument(new Document.DocumentBuilder()
                         .addSection(1)
                          .addParagraph()
                          .addSentence("iPhone is a mobile computer.", 1)
@@ -72,7 +71,7 @@ public class StartWithCapitalLetterValidatorTest {
     @Test
     public void testStartWithWhiteSpaceAndThenItemOfWhiteList() {
         DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument(new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                .addDocument(new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(" iPhone is a mobile computer.", 1)
@@ -85,7 +84,7 @@ public class StartWithCapitalLetterValidatorTest {
     @Test
     public void testVoid() {
         DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument(new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                .addDocument(new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("", 1)
@@ -102,7 +101,7 @@ public class StartWithCapitalLetterValidatorTest {
                 .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument(new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                .addDocument(new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("mixi is a Japanese company.", 1)

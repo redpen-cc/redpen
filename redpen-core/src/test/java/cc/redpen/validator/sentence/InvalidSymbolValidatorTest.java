@@ -26,7 +26,6 @@ import cc.redpen.distributor.FakeResultDistributor;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.tokenizer.JapaneseTokenizer;
-import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -62,7 +61,7 @@ public class InvalidSymbolValidatorTest {
     @Test
     public void testWithoutInvalidSymbol() throws RedPenException {
         DocumentCollection documents = new DocumentCollection.Builder().addDocument(
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("I like Karaoke", 1)
@@ -87,7 +86,7 @@ public class InvalidSymbolValidatorTest {
     public void testWithoutMultipleInvalidSymbol() throws RedPenException {
 
         DocumentCollection documents = new DocumentCollection.Builder().addDocument(
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("わたしは、カラオケが大好き！", 1) // NOTE: two invalid symbols

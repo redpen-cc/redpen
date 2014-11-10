@@ -18,7 +18,9 @@
 package cc.redpen.model;
 
 import cc.redpen.tokenizer.RedPenTokenizer;
+import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -28,25 +30,18 @@ import java.util.Optional;
  * Document represents a file with many elements
  * such as sentences, lists and headers.
  */
-public class Document implements Iterable<Section> {
+public class Document implements Iterable<Section>, Serializable {
+
+    private static final long serialVersionUID = 1628589004095293831L;
     private final List<Section> sections;
-    Optional<String> fileName;
+    private final Optional<String> fileName;
 
     /**
      * Constructor.
      */
-    public Document() {
-        sections = new ArrayList<>();
-        fileName = Optional.empty();
-    }
-
-    /**
-     * Add a Section.
-     *
-     * @param section a section in file content
-     */
-    public void appendSection(Section section) {
-        sections.add(section);
+    public Document(List<Section> sections, Optional<String> fileName) {
+        this.sections = sections;
+        this.fileName = fileName;
     }
 
     /**
@@ -123,21 +118,39 @@ public class Document implements Iterable<Section> {
                 '}';
     }
 
-    public static class DocumentBuilder extends Document {
+    public static class DocumentBuilder {
         private final RedPenTokenizer tokenizer;
         boolean built = false;
+        private final List<Section> sections;
+        Optional<String> fileName;
+
+        public DocumentBuilder() {
+            this(new WhiteSpaceTokenizer());
+        }
 
         public DocumentBuilder(RedPenTokenizer tokenizer) {
-            super();
+            sections = new ArrayList<>();
+            fileName = Optional.empty();
             this.tokenizer = tokenizer;
         }
 
-        public void addSentence(Sentence sentence) {
+        /**
+         * Add a Section.
+         *
+         * @param section a section in file content
+         */
+        public DocumentBuilder appendSection(Section section) {
             ensureNotBuilt();
-            if (getNumberOfSections() == 0) {
+            sections.add(section);
+            return this;
+        }
+
+        public DocumentBuilder addSentence(Sentence sentence) {
+            ensureNotBuilt();
+            if (sections.size() == 0) {
                 throw new IllegalStateException("No section to add a sentence");
             }
-            Section lastSection = getSection(getNumberOfSections() - 1);
+            Section lastSection = getSection(sections.size() - 1);
             if (lastSection.getNumberOfParagraphs() == 0) {
                 addParagraph(); // Note: add paragraph automatically
             }
@@ -149,6 +162,30 @@ public class Document implements Iterable<Section> {
                 sentence.isFirstSentence = true;
             }
             sentence.tokens = tokenizer.tokenize(sentence.content);
+            return this;
+        }
+
+        /**
+         * Get last Section.
+         *
+         * @return last section in the Document
+         */
+        public Section getLastSection() {
+            Section section = null;
+            if (sections.size() > 0) {
+                section = sections.get(sections.size() - 1);
+            }
+            return section;
+        }
+
+        /**
+         * Get the specified section.
+         *
+         * @param id section id
+         * @return a section with specified id
+         */
+        public Section getSection(int id) {
+            return sections.get(id);
         }
 
         /**
@@ -158,10 +195,10 @@ public class Document implements Iterable<Section> {
          */
         public DocumentBuilder addParagraph() {
             ensureNotBuilt();
-            if (getNumberOfSections() == 0) {
+            if (sections.size() == 0) {
                 throw new IllegalStateException("No section to add paragraph");
             }
-            Section lastSection = getSection(getNumberOfSections() - 1);
+            Section lastSection = getSection(sections.size() - 1);
             lastSection.appendParagraph(new Paragraph());
             return this;
         }
@@ -172,10 +209,10 @@ public class Document implements Iterable<Section> {
          */
         public DocumentBuilder addListBlock() {
             ensureNotBuilt();
-            if (getNumberOfSections() == 0) {
+            if (sections.size() == 0) {
                 throw new IllegalStateException("No section to add a sentence");
             }
-            Section lastSection = getSection(getNumberOfSections() - 1);
+            Section lastSection = getSection(sections.size() - 1);
             lastSection.appendListBlock();
             return this;
         }
@@ -188,10 +225,10 @@ public class Document implements Iterable<Section> {
          */
         public DocumentBuilder addListElement(int level, List<Sentence> contents) {
             ensureNotBuilt();
-            if (getNumberOfSections() == 0) {
+            if (sections.size() == 0) {
                 throw new IllegalStateException("No section to add a sentence");
             }
-            Section lastSection = getSection(getNumberOfSections() - 1);
+            Section lastSection = getSection(sections.size() - 1);
             lastSection.appendListElement(level, contents);
             return this;
         }
@@ -287,7 +324,7 @@ public class Document implements Iterable<Section> {
 
         public Document build() {
             built = true;
-            return this;
+            return new Document(sections, fileName);
         }
     }
 

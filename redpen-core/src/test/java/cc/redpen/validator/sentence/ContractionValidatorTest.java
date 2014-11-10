@@ -24,7 +24,6 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.distributor.FakeResultDistributor;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
-import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -40,7 +39,7 @@ public class ContractionValidatorTest {
                 .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder().addDocument(
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("he is a super man.", 1)
@@ -64,7 +63,7 @@ public class ContractionValidatorTest {
                 .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder().addDocument(
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("he is a super man.", 1)
@@ -88,7 +87,7 @@ public class ContractionValidatorTest {
                 .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder().addDocument(
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("He is a super man.", 1)
@@ -115,7 +114,7 @@ public class ContractionValidatorTest {
                 .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder().addDocument(
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("he's a super man.", 1)

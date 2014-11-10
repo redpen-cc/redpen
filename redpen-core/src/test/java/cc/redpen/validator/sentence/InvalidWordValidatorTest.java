@@ -8,7 +8,6 @@ import cc.redpen.distributor.FakeResultDistributor;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.tokenizer.JapaneseTokenizer;
-import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -24,7 +23,7 @@ public class InvalidWordValidatorTest {
     @Test
     public void testSimpleRun() {
         DocumentCollection documents = new DocumentCollection.Builder().addDocument(
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(
@@ -41,7 +40,7 @@ public class InvalidWordValidatorTest {
     @Test
     public void testVoid() {
         DocumentCollection documents = new DocumentCollection.Builder().addDocument(
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(
@@ -62,7 +61,7 @@ public class InvalidWordValidatorTest {
                 .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder().addDocument(
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("he is a foolish man.", 1)
@@ -86,7 +85,7 @@ public class InvalidWordValidatorTest {
                 .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder().addDocument(
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("Domo is a greeting word in Japan.", 1)

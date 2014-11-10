@@ -25,7 +25,6 @@ import cc.redpen.distributor.FakeResultDistributor;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.tokenizer.JapaneseTokenizer;
-import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -41,7 +40,7 @@ public class DoubledWordValidatorTest {
                 .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder().addDocument(
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("the good item is a good example.", 1)
@@ -63,7 +62,7 @@ public class DoubledWordValidatorTest {
                 .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder().addDocument(
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("That is true, as far as I know.", 1)
@@ -86,7 +85,7 @@ public class DoubledWordValidatorTest {
                 .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder().addDocument(
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("RedPen is RedPen right?", 1)
@@ -109,7 +108,7 @@ public class DoubledWordValidatorTest {
                 .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder().addDocument(
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("redPen is redPen right?", 1)

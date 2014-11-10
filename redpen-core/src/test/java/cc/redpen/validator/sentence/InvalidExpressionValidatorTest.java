@@ -26,7 +26,6 @@ import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.JapaneseTokenizer;
-import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -61,7 +60,7 @@ public class InvalidExpressionValidatorTest {
                 .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder().addDocument(
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(

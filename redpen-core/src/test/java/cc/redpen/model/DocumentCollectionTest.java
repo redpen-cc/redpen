@@ -1,7 +1,6 @@
 package cc.redpen.model;
 
 import cc.redpen.tokenizer.JapaneseTokenizer;
-import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import org.junit.Test;
 
 import java.util.Optional;
@@ -12,7 +11,7 @@ public class DocumentCollectionTest {
     @Test
     public void testCreateDocumentCollection() {
         DocumentCollection doc = new DocumentCollection.Builder().addDocument(
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                new Document.DocumentBuilder()
                         .setFileName("Foobar")
                         .addSection(0)
                         .addSectionHeader("baz")
@@ -39,7 +38,7 @@ public class DocumentCollectionTest {
     @Test
     public void testVoidCreateDocument() {
         DocumentCollection doc = new DocumentCollection.Builder().addDocument(
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                new Document.DocumentBuilder()
                         .setFileName("Foobar").build()).build();
         assertEquals(1, doc.getNumberOfDocuments());
         assertEquals(0, doc.getDocument(0).getNumberOfSections());
@@ -48,14 +47,14 @@ public class DocumentCollectionTest {
     @Test
     public void testDocumentCollectionWithMultipleDocument() {
         DocumentCollection doc = new DocumentCollection.Builder().addDocument(
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                new Document.DocumentBuilder()
                         .setFileName("doc1")
                         .addSection(0)
                         .addSectionHeader("sec1")
                         .addParagraph()
                         .addSentence("sentence00", 0)
                         .addSentence("sentence01", 1).build())
-                .addDocument(new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                .addDocument(new Document.DocumentBuilder()
                         .setFileName("doc2")
                         .addSection(0)
                         .addSectionHeader("sec2")
@@ -98,7 +97,7 @@ public class DocumentCollectionTest {
     @Test
     public void testCreateDocumentWithList() {
         DocumentCollection doc = new DocumentCollection.Builder().addDocument(
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                new Document.DocumentBuilder()
                         .setFileName("Foobar")
                         .addSection(0)
                         .addSectionHeader("baz")
@@ -136,7 +135,7 @@ public class DocumentCollectionTest {
     @Test
     public void testSentenceIsTokenized() {
         DocumentCollection doc = new DocumentCollection.Builder().addDocument(
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                new Document.DocumentBuilder()
                         .setFileName("foobar")
                         .addSection(0)
                         .addSectionHeader("baz")

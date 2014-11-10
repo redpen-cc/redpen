@@ -8,7 +8,6 @@ import cc.redpen.distributor.FakeResultDistributor;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.tokenizer.JapaneseTokenizer;
-import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -24,7 +23,7 @@ public class SuccessiveWordValidatorTest {
                 .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument(new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                .addDocument(new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(
@@ -70,7 +69,7 @@ public class SuccessiveWordValidatorTest {
                 .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument(new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                .addDocument(new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()
                 .addSentence( "the item is a item good.", 1)
