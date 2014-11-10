@@ -20,6 +20,7 @@ package cc.redpen.validator;
 import cc.redpen.RedPenException;
 import cc.redpen.formatter.XMLFormatter;
 import cc.redpen.model.Sentence;
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -114,7 +115,7 @@ public class XMLFormatterTest {
 
         Document document = null;
         try {
-            document = docBuilder.parse(resultString);
+            document = docBuilder.parse(IOUtils.toInputStream(resultString));
         } catch (SAXException | IOException e) {
             e.printStackTrace();
             fail();
