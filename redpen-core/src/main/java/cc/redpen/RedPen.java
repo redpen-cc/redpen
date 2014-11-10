@@ -325,7 +325,7 @@ public class RedPen {
      * @throws RedPenException
      */
     public Document parse(DocumentParser parser, InputStream InputStream) throws RedPenException {
-        return parser.parse(InputStream, sentenceExtractor, new DocumentCollection.Builder(configuration.getLang()));
+        return parser.parse(InputStream, sentenceExtractor, configuration.getTokenizer());
     }
 
     /**
@@ -337,7 +337,7 @@ public class RedPen {
      * @throws RedPenException
      */
     public Document parse(DocumentParser parser, String content) throws RedPenException {
-        return parser.parse(content, sentenceExtractor, new DocumentCollection.Builder(configuration.getLang()));
+        return parser.parse(content, sentenceExtractor, configuration.getTokenizer());
     }
 
     /**
@@ -350,9 +350,9 @@ public class RedPen {
      */
     public DocumentCollection parse(DocumentParser parser, File[] files) throws RedPenException {
         DocumentCollection.Builder documentBuilder =
-                new DocumentCollection.Builder(configuration.getLang());
+                new DocumentCollection.Builder();
         for (File file : files) {
-            parser.parse(file, sentenceExtractor, documentBuilder);
+            documentBuilder.addDocument(parser.parse(file, sentenceExtractor, configuration.getTokenizer()));
         }
         // @TODO extract summary information to validate documentCollection effectively
         return documentBuilder.build();

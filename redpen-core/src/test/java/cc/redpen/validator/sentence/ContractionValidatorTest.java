@@ -24,14 +24,13 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.distributor.FakeResultDistributor;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
+import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
 import org.junit.Test;
 
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
 
 public class ContractionValidatorTest {
     @Test
@@ -40,14 +39,14 @@ public class ContractionValidatorTest {
                 .addValidatorConfig(new ValidatorConfiguration("Contraction"))
                 .setLanguage("en").build();
 
-        DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence("he is a super man.", 1)
-                .addSentence("he is not a bat man.", 2)
-                .addSentence("he's also a business man.", 3)
-                .build();
+        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("he is a super man.", 1)
+                        .addSentence("he is not a bat man.", 2)
+                        .addSentence("he's also a business man.", 3)
+                        .build()).build();
 
         RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)
@@ -64,14 +63,14 @@ public class ContractionValidatorTest {
                 .addValidatorConfig(new ValidatorConfiguration("Contraction"))
                 .setLanguage("en").build();
 
-        DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence("he is a super man.", 1)
-                .addSentence("he is not a bat man.", 2)
-                .addSentence("he is a business man.", 3)
-                .build();
+        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("he is a super man.", 1)
+                        .addSentence("he is not a bat man.", 2)
+                        .addSentence("he is a business man.", 3)
+                        .build()).build();
 
         RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)
@@ -88,14 +87,14 @@ public class ContractionValidatorTest {
                 .addValidatorConfig(new ValidatorConfiguration("Contraction"))
                 .setLanguage("en").build();
 
-        DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence("He is a super man.", 1)
-                .addSentence("He is not a bat man.", 2)
-                .addSentence("He's also a business man.", 3)
-                .build();
+        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("He is a super man.", 1)
+                        .addSentence("He is not a bat man.", 2)
+                        .addSentence("He's also a business man.", 3)
+                        .build()).build();
 
         RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)
@@ -115,14 +114,14 @@ public class ContractionValidatorTest {
                 .addValidatorConfig(new ValidatorConfiguration("Contraction"))
                 .setLanguage("en").build();
 
-        DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence("he's a super man.", 1)
-                .addSentence("he's not a bat man.", 2)
-                .addSentence("he is a business man.", 3)
-                .build();
+        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("he's a super man.", 1)
+                        .addSentence("he's not a bat man.", 2)
+                        .addSentence("he is a business man.", 3)
+                        .build()).build();
 
         RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)

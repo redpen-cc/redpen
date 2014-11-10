@@ -20,7 +20,6 @@ package cc.redpen;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
-import cc.redpen.model.DocumentCollection;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.parser.DocumentParser;
@@ -58,7 +57,7 @@ public class PlainTextParserTest {
         Document doc = null;
         Configuration configuration = new Configuration.Builder().build();
         try {
-            doc = parser.parse(sampleText, RedPen.getSentenceExtractor(configuration), new DocumentCollection.Builder(configuration.getLang()));
+            doc = parser.parse(sampleText, RedPen.getSentenceExtractor(configuration), configuration.getTokenizer());
         } catch (RedPenException e) {
             fail();
         }

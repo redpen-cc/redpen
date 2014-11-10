@@ -19,9 +19,10 @@ package cc.redpen.parser;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
-import cc.redpen.model.DocumentCollection;
+import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
 import cc.redpen.parser.markdown.ToFileContentSerializer;
+import cc.redpen.tokenizer.RedPenTokenizer;
 import org.pegdown.Extensions;
 import org.pegdown.ParsingTimeoutException;
 import org.pegdown.PegDownProcessor;
@@ -32,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Parser for Markdown format.<br/>
@@ -51,9 +53,10 @@ final class MarkdownParser extends BaseDocumentParser {
     }
 
     @Override
-    public Document parse(InputStream inputStream, SentenceExtractor sentenceExtractor, DocumentCollection.Builder documentBuilder)
+    public Document parse(InputStream inputStream, Optional<String> fileName, SentenceExtractor sentenceExtractor, RedPenTokenizer tokenizer)
             throws RedPenException {
-        documentBuilder.addDocument("");
+        Document.DocumentBuilder documentBuilder = new Document.DocumentBuilder(tokenizer);
+        fileName.ifPresent(documentBuilder::setFileName);
 
         StringBuilder sb = new StringBuilder();
         String line;
@@ -76,9 +79,9 @@ final class MarkdownParser extends BaseDocumentParser {
         try {
             List<Sentence> headers = new ArrayList<>();
             headers.add(new Sentence("", 0));
-            documentBuilder.addSection(0, headers);
+            documentBuilder.appendSection(new Section(0, headers));
 
-            // TODO create document after parsing... overhead...
+            // TODO create documentBuilder after parsing... overhead...
             RootNode rootNode =
                     pegDownProcessor.parseMarkdown(sb.toString().toCharArray());
             ToFileContentSerializer serializer =
@@ -88,6 +91,6 @@ final class MarkdownParser extends BaseDocumentParser {
         } catch (ParsingTimeoutException e) {
             throw new RedPenException("Failed to parse timeout: ", e);
         }
-        return documentBuilder.getLastDocument();
+        return documentBuilder.build();
     }
 }

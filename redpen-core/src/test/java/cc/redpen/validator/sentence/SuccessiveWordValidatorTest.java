@@ -7,14 +7,14 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.distributor.FakeResultDistributor;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
+import cc.redpen.tokenizer.JapaneseTokenizer;
+import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
 import org.junit.Test;
 
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
 
 public class SuccessiveWordValidatorTest {
     @Test
@@ -24,13 +24,13 @@ public class SuccessiveWordValidatorTest {
                 .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence(
-                        "the item is is a good.",
-                        1)
-                .build();
+                .addDocument(new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(
+                                "the item is is a good.",
+                                1)
+                        .build()).build();
 
         RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)
@@ -47,14 +47,12 @@ public class SuccessiveWordValidatorTest {
                 .addValidatorConfig(new ValidatorConfiguration("SuccessiveWord"))
                 .setLanguage("ja").build();
 
-        DocumentCollection documents = new DocumentCollection.Builder("ja") // TODO: fix
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence(
-                        "私はは嬉しい.",
-                        1)
-                .build();
+        DocumentCollection documents = new DocumentCollection.Builder() // TODO: fix
+                .addDocument(new Document.DocumentBuilder(new JapaneseTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("私はは嬉しい.", 1)
+                        .build()).build();
 
         RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)
@@ -72,13 +70,11 @@ public class SuccessiveWordValidatorTest {
                 .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
+                .addDocument(new Document.DocumentBuilder(new WhiteSpaceTokenizer())
                 .addSection(1)
                 .addParagraph()
-                .addSentence(
-                        "the item is a item good.",
-                        1)
-                .build();
+                .addSentence( "the item is a item good.", 1)
+                .build()).build();
 
         RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)

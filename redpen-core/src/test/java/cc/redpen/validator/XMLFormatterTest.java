@@ -20,6 +20,7 @@ package cc.redpen.validator;
 import cc.redpen.RedPenException;
 import cc.redpen.formatter.XMLFormatter;
 import cc.redpen.model.Sentence;
+import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -42,7 +43,7 @@ public class XMLFormatterTest {
                 "Fatal Error",
                 new Sentence("This is a sentence", 0));
         XMLFormatter formatter = createXMLFormatter();
-        cc.redpen.model.Document document1 = new cc.redpen.model.Document();
+        cc.redpen.model.Document.DocumentBuilder document1 = new cc.redpen.model.Document.DocumentBuilder(new WhiteSpaceTokenizer());
         document1.setFileName("foobar.md");
         String resultString = formatter.convertError(document1, error);
 

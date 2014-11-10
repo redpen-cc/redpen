@@ -7,6 +7,8 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.distributor.FakeResultDistributor;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
+import cc.redpen.tokenizer.JapaneseTokenizer;
+import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -21,14 +23,14 @@ public class InvalidWordValidatorTest {
 
     @Test
     public void testSimpleRun() {
-        DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence(
-                        "He is a foolish guy.",
-                        1)
-                .build();
+        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(
+                                "He is a foolish guy.",
+                                1)
+                        .build()).build();
 
         InvalidWordValidator validator = new InvalidWordValidator();
         validator.addInvalid("foolish");
@@ -38,14 +40,14 @@ public class InvalidWordValidatorTest {
 
     @Test
     public void testVoid() {
-        DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence(
-                        "",
-                        1)
-                .build();
+        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(
+                                "",
+                                1)
+                        .build()).build();
 
         InvalidWordValidator validator = new InvalidWordValidator();
         validator.addInvalid("foolish");
@@ -59,14 +61,12 @@ public class InvalidWordValidatorTest {
                 .addValidatorConfig(new ValidatorConfiguration("InvalidWord"))
                 .setLanguage("en").build();
 
-        DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence(
-                        "he is a foolish man.",
-                        1)
-                .build();
+        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("he is a foolish man.", 1)
+                        .build()).build();
 
         RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)
@@ -85,14 +85,12 @@ public class InvalidWordValidatorTest {
                 .addValidatorConfig(new ValidatorConfiguration("InvalidWord").addAttribute("list", "boom,domo"))
                 .setLanguage("en").build();
 
-        DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence(
-                        "Domo is a greeting word in Japan.",
-                        1)
-                .build();
+        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("Domo is a greeting word in Japan.", 1)
+                        .build()).build();
 
         RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)
@@ -113,14 +111,12 @@ public class InvalidWordValidatorTest {
                 .addValidatorConfig(new ValidatorConfiguration("InvalidWord"))
                 .setLanguage("ja").build(); // NOTE: no dictionary for japanese or other languages whose words are not split by white space.
 
-        DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence(
-                        "こんにちは、群馬にきました。",
-                        1)
-                .build();
+        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+                new Document.DocumentBuilder(new JapaneseTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("こんにちは、群馬にきました。", 1)
+                        .build()).build();
 
         RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)

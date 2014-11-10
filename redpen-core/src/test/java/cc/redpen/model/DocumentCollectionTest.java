@@ -1,5 +1,7 @@
 package cc.redpen.model;
 
+import cc.redpen.tokenizer.JapaneseTokenizer;
+import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import org.junit.Test;
 
 import java.util.Optional;
@@ -9,13 +11,15 @@ import static org.junit.Assert.assertEquals;
 public class DocumentCollectionTest {
     @Test
     public void testCreateDocumentCollection() {
-        DocumentCollection doc = new DocumentCollection.Builder().addDocument("Foobar")
-                .addSection(0)
-                .addSectionHeader("baz")
-                .addParagraph()
-                .addSentence("sentence0", 0)
-                .addSentence("sentence1", 1)
-                .build();
+        DocumentCollection doc = new DocumentCollection.Builder().addDocument(
+                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                        .setFileName("Foobar")
+                        .addSection(0)
+                        .addSectionHeader("baz")
+                        .addParagraph()
+                        .addSentence("sentence0", 0)
+                        .addSentence("sentence1", 1)
+                        .build()).build();
 
         assertEquals(1, doc.getNumberOfDocuments());
         assertEquals(1, doc.getDocument(0).getNumberOfSections());
@@ -34,28 +38,31 @@ public class DocumentCollectionTest {
 
     @Test
     public void testVoidCreateDocument() {
-        DocumentCollection doc = new DocumentCollection
-                .Builder().addDocument("Foobar").build();
+        DocumentCollection doc = new DocumentCollection.Builder().addDocument(
+                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                        .setFileName("Foobar").build()).build();
         assertEquals(1, doc.getNumberOfDocuments());
         assertEquals(0, doc.getDocument(0).getNumberOfSections());
     }
 
     @Test
     public void testDocumentCollectionWithMultipleDocument() {
-        DocumentCollection doc = new DocumentCollection.Builder()
-                .addDocument("doc1")
-                .addSection(0)
-                .addSectionHeader("sec1")
-                .addParagraph()
-                .addSentence("sentence00", 0)
-                .addSentence("sentence01", 1)
-                .addDocument("doc2")
-                .addSection(0)
-                .addSectionHeader("sec2")
-                .addParagraph()
-                .addSentence("sentence10", 0)
-                .addSentence("sentence11", 1)
-                .build();
+        DocumentCollection doc = new DocumentCollection.Builder().addDocument(
+                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                        .setFileName("doc1")
+                        .addSection(0)
+                        .addSectionHeader("sec1")
+                        .addParagraph()
+                        .addSentence("sentence00", 0)
+                        .addSentence("sentence01", 1).build())
+                .addDocument(new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                        .setFileName("doc2")
+                        .addSection(0)
+                        .addSectionHeader("sec2")
+                        .addParagraph()
+                        .addSentence("sentence10", 0)
+                        .addSentence("sentence11", 1)
+                        .build()).build();
 
         assertEquals(2, doc.getNumberOfDocuments());
 
@@ -90,17 +97,19 @@ public class DocumentCollectionTest {
 
     @Test
     public void testCreateDocumentWithList() {
-        DocumentCollection doc = new DocumentCollection.Builder().addDocument("Foobar")
-                .addSection(0)
-                .addSectionHeader("baz")
-                .addParagraph()
-                .addSentence("sentence0", 0)
-                .addSentence("sentence1", 1)
-                .addListBlock()
-                .addListElement(0, "list0")
-                .addListElement(0, "list1")
-                .addListElement(1, "list2")
-                .build();
+        DocumentCollection doc = new DocumentCollection.Builder().addDocument(
+                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                        .setFileName("Foobar")
+                        .addSection(0)
+                        .addSectionHeader("baz")
+                        .addParagraph()
+                        .addSentence("sentence0", 0)
+                        .addSentence("sentence1", 1)
+                        .addListBlock()
+                        .addListElement(0, "list0")
+                        .addListElement(0, "list1")
+                        .addListElement(1, "list2")
+                        .build()).build();
 
         assertEquals(1, doc.getNumberOfDocuments());
         assertEquals(1, doc.getDocument(0).getNumberOfSections());
@@ -126,13 +135,14 @@ public class DocumentCollectionTest {
 
     @Test
     public void testSentenceIsTokenized() {
-        DocumentCollection doc = new DocumentCollection
-                .Builder().addDocument("foobar")
-                .addSection(0)
-                .addSectionHeader("baz")
-                .addParagraph()
-                .addSentence("This is a foobar.", 0)
-                .build();
+        DocumentCollection doc = new DocumentCollection.Builder().addDocument(
+                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                        .setFileName("foobar")
+                        .addSection(0)
+                        .addSectionHeader("baz")
+                        .addParagraph()
+                        .addSentence("This is a foobar.", 0)
+                        .build()).build();
         assertEquals(1, doc.getNumberOfDocuments());
         assertEquals(1, doc.getDocument(0).getNumberOfSections());
         assertEquals(4, doc.getDocument(0).getSection(0).getParagraph(0).getSentence(0).tokens.size());
@@ -140,50 +150,17 @@ public class DocumentCollectionTest {
 
     @Test
     public void testJapaneseSentenceIsTokenized() {
-        DocumentCollection doc = new DocumentCollection
-                .Builder("ja").addDocument("今日")
-                .addSection(0)
-                .addSectionHeader("天気")
-                .addParagraph()
-                .addSentence("今日は晴天だ。", 0)
-                .build();
+        DocumentCollection doc = new DocumentCollection.Builder().addDocument(
+                new Document.DocumentBuilder(new JapaneseTokenizer())
+                        .setFileName("今日")
+                        .addSection(0)
+                        .addSectionHeader("天気")
+                        .addParagraph()
+                        .addSentence("今日は晴天だ。", 0)
+                        .build()).build();
         assertEquals(1, doc.getNumberOfDocuments());
         assertEquals(1, doc.getDocument(0).getNumberOfSections());
         assertEquals(5, doc.getDocument(0).getSection(0).getParagraph(0).getSentence(0).tokens.size());
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void testCreateSectionBeforeDocument() {
-        DocumentCollection doc = new DocumentCollection.Builder()
-                .addSection(0)
-                .addDocument("Foobar")
-                .build();
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void testCreateParagraphBeforeSection() {
-        DocumentCollection doc = new DocumentCollection.Builder()
-                .addDocument("Foobar")
-                .addParagraph()
-                .addSection(0)
-                .build();
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void testCreateListBlockBeforeSection() {
-        DocumentCollection doc = new DocumentCollection.Builder()
-                .addDocument("Foobar")
-                .addListBlock()
-                .addSection(0)
-                .build();
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void testCreateListElementBeforeListBlock() {
-        DocumentCollection doc = new DocumentCollection.Builder()
-                .addDocument("Foobar")
-                .addListElement(0, "foo")
-                .addListBlock()
-                .build();
-    }
 }

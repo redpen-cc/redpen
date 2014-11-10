@@ -25,6 +25,8 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.distributor.FakeResultDistributor;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
+import cc.redpen.tokenizer.JapaneseTokenizer;
+import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -32,17 +34,15 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-
 public class InvalidSymbolValidatorTest {
     @Test
     public void testWithInvalidSymbol() throws RedPenException {
-        DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence("わたしはカラオケが大好き！", 1)
-                .build();
+        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+                new Document.DocumentBuilder(new JapaneseTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("わたしはカラオケが大好き！", 1)
+                        .build()).build();
 
         Configuration conf = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
@@ -61,12 +61,12 @@ public class InvalidSymbolValidatorTest {
 
     @Test
     public void testWithoutInvalidSymbol() throws RedPenException {
-        DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence("I like Karaoke", 1)
-                .build();
+        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("I like Karaoke", 1)
+                        .build()).build();
 
         Configuration conf = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
@@ -86,12 +86,12 @@ public class InvalidSymbolValidatorTest {
     @Test
     public void testWithoutMultipleInvalidSymbol() throws RedPenException {
 
-        DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence("わたしは、カラオケが大好き！", 1) // NOTE: two invalid symbols
-                .build();
+        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("わたしは、カラオケが大好き！", 1) // NOTE: two invalid symbols
+                        .build()).build();
 
         Configuration conf = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))

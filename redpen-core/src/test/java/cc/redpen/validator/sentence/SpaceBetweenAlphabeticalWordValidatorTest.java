@@ -8,6 +8,7 @@ import cc.redpen.distributor.FakeResultDistributor;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.model.Sentence;
+import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -64,14 +65,12 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
                 .setLanguage("ja").build();
 
-        DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence(
-                        "きょうは（Coke）を飲みたい。",
-                        1)
-                .build();
+        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+                new Document.DocumentBuilder(new JapaneseTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("きょうは（Coke）を飲みたい。", 1)
+                        .build()).build();
 
         RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)
@@ -88,14 +87,12 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
                 .setLanguage("ja").build();
 
-        DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence(
-                        "きょうは、Coke を飲みたい。",
-                        1)
-                .build();
+        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+                new Document.DocumentBuilder(new JapaneseTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("きょうは、Coke を飲みたい。", 1)
+                        .build()).build();
 
         RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)

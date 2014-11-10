@@ -17,6 +17,8 @@
  */
 package cc.redpen.model;
 
+import cc.redpen.tokenizer.RedPenTokenizer;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -28,13 +30,12 @@ import java.util.Optional;
  */
 public class Document implements Iterable<Section> {
     private final List<Section> sections;
-    private Optional<String> fileName;
+    Optional<String> fileName;
 
     /**
      * Constructor.
      */
     public Document() {
-        super();
         sections = new ArrayList<>();
         fileName = Optional.empty();
     }
@@ -89,17 +90,206 @@ public class Document implements Iterable<Section> {
         return fileName;
     }
 
-    /**
-     * Set file name.
-     *
-     * @param name file name
-     */
-    public void setFileName(String name) {
-        this.fileName = Optional.of(name);
-    }
-
     @Override
     public Iterator<Section> iterator() {
         return sections.iterator();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Document sections1 = (Document) o;
+
+        if (fileName != null ? !fileName.equals(sections1.fileName) : sections1.fileName != null) return false;
+        if (sections != null ? !sections.equals(sections1.sections) : sections1.sections != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = sections != null ? sections.hashCode() : 0;
+        result = 31 * result + (fileName != null ? fileName.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Document{" +
+                "sections=" + sections +
+                ", fileName=" + fileName +
+                '}';
+    }
+
+    public static class DocumentBuilder extends Document {
+        private final RedPenTokenizer tokenizer;
+        boolean built = false;
+
+        public DocumentBuilder(RedPenTokenizer tokenizer) {
+            super();
+            this.tokenizer = tokenizer;
+        }
+
+        public void addSentence(Sentence sentence) {
+            ensureNotBuilt();
+            if (getNumberOfSections() == 0) {
+                throw new IllegalStateException("No section to add a sentence");
+            }
+            Section lastSection = getSection(getNumberOfSections() - 1);
+            if (lastSection.getNumberOfParagraphs() == 0) {
+                addParagraph(); // Note: add paragraph automatically
+            }
+            Paragraph lastParagraph = lastSection.getParagraph(
+                    lastSection.getNumberOfParagraphs() - 1);
+
+            lastParagraph.appendSentence(sentence);
+            if (lastParagraph.getNumberOfSentences() == 1) {
+                sentence.isFirstSentence = true;
+            }
+            sentence.tokens = tokenizer.tokenize(sentence.content);
+        }
+
+        /**
+         * Add paragraph to document.
+         *
+         * @return builder
+         */
+        public DocumentBuilder addParagraph() {
+            ensureNotBuilt();
+            if (getNumberOfSections() == 0) {
+                throw new IllegalStateException("No section to add paragraph");
+            }
+            Section lastSection = getSection(getNumberOfSections() - 1);
+            lastSection.appendParagraph(new Paragraph());
+            return this;
+        }
+
+
+        /**
+         * Add a new list block.
+         */
+        public DocumentBuilder addListBlock() {
+            ensureNotBuilt();
+            if (getNumberOfSections() == 0) {
+                throw new IllegalStateException("No section to add a sentence");
+            }
+            Section lastSection = getSection(getNumberOfSections() - 1);
+            lastSection.appendListBlock();
+            return this;
+        }
+
+        /**
+         * Add list element to the last list block.
+         *
+         * @param level    indentation level
+         * @param contents content of list element
+         */
+        public DocumentBuilder addListElement(int level, List<Sentence> contents) {
+            ensureNotBuilt();
+            if (getNumberOfSections() == 0) {
+                throw new IllegalStateException("No section to add a sentence");
+            }
+            Section lastSection = getSection(getNumberOfSections() - 1);
+            lastSection.appendListElement(level, contents);
+            return this;
+        }
+
+        /**
+         * Add list element to the last list block.
+         *
+         * @param level indentation level
+         * @param str   content of list element
+         * @return builder
+         * NOTE: parameter str is not split into more than one Sentence object.
+         */
+        public DocumentBuilder addListElement(int level, String str) {
+            ensureNotBuilt();
+            List<Sentence> elementSentence = new ArrayList<>();
+            elementSentence.add(new Sentence(str, 0));
+            this.addListElement(level, elementSentence);
+            return this;
+        }
+
+        /**
+         * Add a section to the document.
+         *
+         * @param level  section level
+         * @param header header contents
+         */
+        public DocumentBuilder addSection(int level, List<Sentence> header) {
+            ensureNotBuilt();
+            appendSection(new Section(level, header));
+            return this;
+        }
+
+        /**
+         * Add section header content to the last section.
+         *
+         * @param header header content
+         * @return builder
+         * NOTE: parameter header is not split into more than one Sentence object.
+         */
+        public DocumentBuilder addSectionHeader(String header) {
+            ensureNotBuilt();
+            Section lastSection = getLastSection();
+            if (null == lastSection) {
+                throw new IllegalStateException("Document does not have any section");
+            }
+            List<Sentence> headers = lastSection.getHeaderContents();
+            headers.add(new Sentence(header, headers.size()));
+            return this;
+        }
+
+        /**
+         * Add a section without header content.
+         *
+         * @param level section level
+         * @return builder
+         */
+        public DocumentBuilder addSection(int level) {
+            ensureNotBuilt();
+            addSection(level, new ArrayList<>());
+            return this;
+        }
+
+
+        /**
+         * Add sentence to document.
+         *
+         * @param content    sentence content
+         * @param lineNumber line number
+         * @return builder
+         */
+        public DocumentBuilder addSentence(String content, int lineNumber) {
+            ensureNotBuilt();
+            addSentence(new Sentence(content, lineNumber));
+            return this;
+        }
+
+        /**
+         * Set file name.
+         *
+         * @param name file name
+         */
+        public DocumentBuilder setFileName(String name) {
+            ensureNotBuilt();
+            this.fileName = Optional.of(name);
+            return this;
+        }
+
+        private void ensureNotBuilt() {
+            if (built) {
+                throw new IllegalStateException("already built");
+            }
+        }
+
+        public Document build() {
+            built = true;
+            return this;
+        }
+    }
+
+
 }

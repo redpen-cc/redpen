@@ -19,7 +19,10 @@ package cc.redpen;
 
 import cc.redpen.config.Configuration;
 import cc.redpen.config.Symbol;
-import cc.redpen.model.*;
+import cc.redpen.model.Document;
+import cc.redpen.model.ListBlock;
+import cc.redpen.model.Paragraph;
+import cc.redpen.model.Section;
 import cc.redpen.parser.DocumentParser;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,7 +43,7 @@ public class MarkdownParserTest {
         Configuration configuration = new Configuration.Builder().build();
         DocumentParser parser = DocumentParser.MARKDOWN;
         InputStream is = null;
-        parser.parse(is, RedPen.getSentenceExtractor(configuration), new DocumentCollection.Builder(configuration.getLang()));
+        parser.parse(is, RedPen.getSentenceExtractor(configuration), configuration.getTokenizer());
     }
 
     @Test
@@ -475,7 +478,7 @@ public class MarkdownParserTest {
         DocumentParser parser = DocumentParser.MARKDOWN;
 
         try {
-            return parser.parse(inputDocumentString, RedPen.getSentenceExtractor(config), new DocumentCollection.Builder(config.getLang()));
+            return parser.parse(inputDocumentString, RedPen.getSentenceExtractor(config), config.getTokenizer());
         } catch (RedPenException e) {
             e.printStackTrace();
             return null;
@@ -487,7 +490,7 @@ public class MarkdownParserTest {
         Document doc = null;
         try {
             Configuration configuration = new Configuration.Builder().build();
-            doc = parser.parse(inputDocumentString, RedPen.getSentenceExtractor(configuration), new DocumentCollection.Builder(configuration.getLang()));
+            doc = parser.parse(inputDocumentString, RedPen.getSentenceExtractor(configuration), configuration.getTokenizer());
         } catch (RedPenException e) {
             e.printStackTrace();
             fail();

@@ -18,7 +18,6 @@ package cc.redpen.parser.markdown;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
-import cc.redpen.model.DocumentCollection;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
 import cc.redpen.parser.SentenceExtractor;
@@ -45,7 +44,7 @@ public class ToFileContentSerializer implements Visitor {
     private static final Logger LOG =
             LoggerFactory.getLogger(ToFileContentSerializer.class);
     private final Map<String, ReferenceNode> references = new HashMap<>();
-    private DocumentCollection.Builder builder = null;
+    private Document.DocumentBuilder builder = null;
     private SentenceExtractor sentenceExtractor;
     private int itemDepth = 0;
     private List<Integer> lineList = null;
@@ -60,7 +59,7 @@ public class ToFileContentSerializer implements Visitor {
      * @param listOfLineNumber the list of line number
      * @param extractor        utility object to extract a sentence list
      */
-    public ToFileContentSerializer(DocumentCollection.Builder docBuilder,
+    public ToFileContentSerializer(Document.DocumentBuilder docBuilder,
                                    List<Integer> listOfLineNumber,
                                    SentenceExtractor extractor) {
         this.builder = docBuilder;
@@ -91,7 +90,7 @@ public class ToFileContentSerializer implements Visitor {
             LOG.error("Fail to traverse RootNode.");
             throw new RedPenException("Fail to traverse RootNode.", e);
         }
-        return builder.getLastDocument();
+        return builder.build();
     }
 
     private void fixSentence() {
@@ -219,7 +218,7 @@ public class ToFileContentSerializer implements Visitor {
 
         // 3. create new Section
         Section currentSection = builder.getLastSection();
-        builder.addSection(headerNode.getLevel(), headerContents);
+        builder.appendSection(new Section(headerNode.getLevel(), headerContents));
         //FIXME move this validate process to addChild
         if (!addChild(currentSection, builder.getLastSection())) {
             LOG.warn("Failed to add parent for a Section: "

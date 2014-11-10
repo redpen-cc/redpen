@@ -7,6 +7,8 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.distributor.FakeResultDistributor;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
+import cc.redpen.tokenizer.JapaneseTokenizer;
+import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -20,13 +22,11 @@ public class StartWithCapitalLetterValidatorTest {
     @Test
     public void testDetectStartWithSmallCharacter() {
         DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence(
-                        "this is it.",
-                        1)
-                .build();
+                .addDocument(new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("this is it.", 1)
+                        .build()).build();
         StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
         assertEquals(1, validator.validate(documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0)).size());
     }
@@ -34,13 +34,11 @@ public class StartWithCapitalLetterValidatorTest {
     @Test
     public void testDetectStartWithCapitalCharacter() {
         DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence(
-                        "This is it.",
-                        1)
-                .build();
+                .addDocument(new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("This is it.", 1)
+                        .build()).build();
         StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
         assertEquals(0, validator.validate(documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0)).size());
     }
@@ -48,13 +46,11 @@ public class StartWithCapitalLetterValidatorTest {
     @Test
     public void testStartWithElementOfWhiteList() {
         DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence(
-                        "iPhone is a mobile computer.",
-                        1)
-                .build();
+                .addDocument(new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                        .addSection(1)
+                         .addParagraph()
+                         .addSentence("iPhone is a mobile computer.", 1)
+                         .build()).build();
         StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
         validator.addWhiteList("iPhone");
         assertEquals(0, validator.validate(documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0)).size());
@@ -63,13 +59,11 @@ public class StartWithCapitalLetterValidatorTest {
     @Test
     public void testStartWithWhiteListItemInJapaneseSentence() {
         DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence(
-                        "iPhone はカッコイイ．",
-                        1)
-                .build();
+                .addDocument(new Document.DocumentBuilder(new JapaneseTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("iPhone はカッコイイ．", 1)
+                        .build()).build();
         StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
         validator.addWhiteList("iPhone");
         assertEquals(0, validator.validate(documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0)).size());
@@ -78,13 +72,11 @@ public class StartWithCapitalLetterValidatorTest {
     @Test
     public void testStartWithWhiteSpaceAndThenItemOfWhiteList() {
         DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence(
-                        " iPhone is a mobile computer.",
-                        1)
-                .build();
+                .addDocument(new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(" iPhone is a mobile computer.", 1)
+                        .build()).build();
         StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
         validator.addWhiteList("iPhone");
         assertEquals(0, validator.validate(documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0)).size());
@@ -93,13 +85,11 @@ public class StartWithCapitalLetterValidatorTest {
     @Test
     public void testVoid() {
         DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence(
-                        "",
-                        1)
-                .build();
+                .addDocument(new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("", 1)
+                        .build()).build();
         StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
         validator.addWhiteList("iPhone");
         assertEquals(0, validator.validate(documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0)).size());
@@ -112,13 +102,11 @@ public class StartWithCapitalLetterValidatorTest {
                 .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence(
-                        "mixi is a Japanese company.",
-                        1)
-                .build();
+                .addDocument(new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("mixi is a Japanese company.", 1)
+                        .build()).build();
 
         RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)
