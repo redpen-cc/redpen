@@ -17,11 +17,14 @@
  */
 package cc.redpen.config;
 
+import cc.redpen.symbol.DefaultSymbols;
 import cc.redpen.symbol.SymbolType;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import static cc.redpen.symbol.SymbolType.FULL_STOP;
 
 /**
  * Configuration table of characters used in {@link cc.redpen.RedPen}.
@@ -85,8 +88,9 @@ public final class SymbolTable {
      * @return character when exist, null when the specified
      * character does not exist
      */
-    public boolean containsSymbol(SymbolType name) {
-        return this.symbolDictionary.get(name) != null;
+    public String getValueOrFallbackToDefault(SymbolType name) {
+        Symbol symbol = this.symbolDictionary.get(name);
+        return symbol != null ? symbol.getValue() : DefaultSymbols.getInstance().get(FULL_STOP).getValue();
     }
 
     /**

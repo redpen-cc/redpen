@@ -20,6 +20,7 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
+import cc.redpen.symbol.DefaultSymbols;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
@@ -42,11 +43,10 @@ final public class CommaNumberValidator extends Validator<Sentence> {
     /**
      * Default comma character.
      */
-    public static final String DEFAULT_COMMA = ",";
     private static final Logger LOG =
             LoggerFactory.getLogger(CommaNumberValidator.class);
     private int maxCommaNum = DEFAULT_MAX_COMMA_NUMBER;
-    private String comma = DEFAULT_COMMA;
+    private String comma = DefaultSymbols.getInstance().get(COMMA).getValue();
 
     public List<ValidationError> validate(Sentence line) {
         List<ValidationError> validationErrors = new ArrayList<>();
@@ -66,14 +66,8 @@ final public class CommaNumberValidator extends Validator<Sentence> {
 
     @Override
     protected void init() throws RedPenException {
-        //TODO search parent configurations to get comma settings...
         this.maxCommaNum = getConfigAttributeAsInt("max_num", DEFAULT_MAX_COMMA_NUMBER);
-
-        this.comma = DEFAULT_COMMA;
-        if (getSymbolTable().containsSymbol(COMMA)) {
-            this.comma = getSymbolTable().getSymbol(COMMA).getValue();
-            LOG.info("comma is set to \"" + this.comma + "\"");
-        }
+        this.comma = getSymbolTable().getValueOrFallbackToDefault(COMMA);
     }
 
     @Override

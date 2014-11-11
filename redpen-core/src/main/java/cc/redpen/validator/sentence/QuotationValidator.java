@@ -87,11 +87,7 @@ public class QuotationValidator extends Validator<Sentence> {
 
     @Override
     protected void init() throws RedPenException {
-        this.period = DefaultSymbols.getInstance().get(FULL_STOP).getValue().charAt(0);
-
-        if (getSymbolTable().containsSymbol(FULL_STOP)) {
-            this.period = getSymbolTable().getSymbol(FULL_STOP).getValue().charAt(0);
-        }
+        this.period = getSymbolTable().getValueOrFallbackToDefault(FULL_STOP).charAt(0);
 
         setUseAscii(getConfigAttributeAsBoolean("use_ascii", false));
     }
