@@ -18,9 +18,10 @@
 package cc.redpen;
 
 import cc.redpen.config.Configuration;
-import cc.redpen.config.Symbol;
 import org.junit.Test;
 
+import static cc.redpen.symbol.SymbolType.EXCLAMATION_MARK;
+import static cc.redpen.symbol.SymbolType.LEFT_SINGLE_QUOTATION_MARK;
 import static org.junit.Assert.*;
 
 public class ConfigurationLoaderTest {
@@ -52,11 +53,11 @@ public class ConfigurationLoaderTest {
                 configuration.getValidatorConfigs().get(1).getConfigurationName());
         assertNotNull(configuration.getSymbolTable());
         assertEquals("!", configuration.getSymbolTable()
-                .getSymbol("EXCLAMATION_MARK").getValue());
+                .getSymbol(EXCLAMATION_MARK).getValue());
         assertEquals(1, configuration.getSymbolTable()
-                .getSymbol("EXCLAMATION_MARK").getInvalidSymbols().size());
+                .getSymbol(EXCLAMATION_MARK).getInvalidSymbols().size());
         assertEquals("！", configuration.getSymbolTable()
-                .getSymbol("EXCLAMATION_MARK").getInvalidSymbols().get(0));
+                .getSymbol(EXCLAMATION_MARK).getInvalidSymbols().get(0));
     }
 
     @Test
@@ -87,11 +88,11 @@ public class ConfigurationLoaderTest {
                 configuration.getValidatorConfigs().get(1).getConfigurationName());
         assertNotNull(configuration.getSymbolTable());
         assertEquals("！", configuration.getSymbolTable()
-                .getSymbol("EXCLAMATION_MARK").getValue());
+                .getSymbol(EXCLAMATION_MARK).getValue());
         assertEquals(1, configuration.getSymbolTable()
-                .getSymbol("EXCLAMATION_MARK").getInvalidSymbols().size());
+                .getSymbol(EXCLAMATION_MARK).getInvalidSymbols().size());
         assertEquals("!", configuration.getSymbolTable()
-                .getSymbol("EXCLAMATION_MARK").getInvalidSymbols().get(0));
+                .getSymbol(EXCLAMATION_MARK).getInvalidSymbols().get(0));
     }
 
     @Test
@@ -117,7 +118,7 @@ public class ConfigurationLoaderTest {
                 configuration.getValidatorConfigs().get(1).getConfigurationName());
         assertNotNull(configuration.getSymbolTable());
         assertEquals("!", configuration.getSymbolTable()
-                .getSymbol("EXCLAMATION_MARK").getValue());
+                .getSymbol(EXCLAMATION_MARK).getValue());
     }
 
     @Test
@@ -144,7 +145,7 @@ public class ConfigurationLoaderTest {
                 configuration.getValidatorConfigs().get(1).getConfigurationName());
         assertNotNull(configuration.getSymbolTable());
         assertEquals("!", configuration.getSymbolTable()
-                .getSymbol("EXCLAMATION_MARK").getValue());
+                .getSymbol(EXCLAMATION_MARK).getValue());
     }
 
     @Test
@@ -225,15 +226,15 @@ public class ConfigurationLoaderTest {
         assertNotNull(configuration);
 
         assertEquals("!", configuration.getSymbolTable()
-                .getSymbol("EXCLAMATION_MARK").getValue());
+                .getSymbol(EXCLAMATION_MARK).getValue());
         assertEquals(1, configuration.getSymbolTable()
-                .getSymbol("EXCLAMATION_MARK").getInvalidSymbols().size());
+                .getSymbol(EXCLAMATION_MARK).getInvalidSymbols().size());
         assertEquals("！", configuration.getSymbolTable()
-                .getSymbol("EXCLAMATION_MARK").getInvalidSymbols().get(0));
+                .getSymbol(EXCLAMATION_MARK).getInvalidSymbols().get(0));
         assertEquals(false, configuration.getSymbolTable()
-                .getSymbol("EXCLAMATION_MARK").isNeedBeforeSpace());
+                .getSymbol(EXCLAMATION_MARK).isNeedBeforeSpace());
         assertEquals(true, configuration.getSymbolTable()
-                .getSymbol("EXCLAMATION_MARK").isNeedAfterSpace());
+                .getSymbol(EXCLAMATION_MARK).isNeedAfterSpace());
     }
 
     @Test
@@ -255,15 +256,15 @@ public class ConfigurationLoaderTest {
         assertNotNull(configuration);
 
         assertEquals("!", configuration.getSymbolTable()
-                .getSymbol("EXCLAMATION_MARK").getValue());
+                .getSymbol(EXCLAMATION_MARK).getValue());
         assertEquals(1, configuration.getSymbolTable()
-                .getSymbol("EXCLAMATION_MARK").getInvalidSymbols().size());
+                .getSymbol(EXCLAMATION_MARK).getInvalidSymbols().size());
         assertEquals("！", configuration.getSymbolTable()
-                .getSymbol("EXCLAMATION_MARK").getInvalidSymbols().get(0));
+                .getSymbol(EXCLAMATION_MARK).getInvalidSymbols().get(0));
         assertEquals(false, configuration.getSymbolTable()
-                .getSymbol("EXCLAMATION_MARK").isNeedBeforeSpace());
+                .getSymbol(EXCLAMATION_MARK).isNeedBeforeSpace());
         assertEquals(false, configuration.getSymbolTable()
-                .getSymbol("EXCLAMATION_MARK").isNeedAfterSpace());
+                .getSymbol(EXCLAMATION_MARK).isNeedAfterSpace());
     }
 
 
@@ -276,7 +277,7 @@ public class ConfigurationLoaderTest {
                         "<validator name=\"MaxParagraphNumber\" />" +
                         "</validators>" +
                         "<symbols>" +
-                        "<symbol name=\"LEFT_QUOTATION_MARK\" value=\"\'\" invalid-chars=\"‘’\"/>" +
+                        "<symbol name=\"LEFT_SINGLE_QUOTATION_MARK\" value=\"\'\" invalid-chars=\"‘’\"/>" +
                         "</symbols>" +
                         "</redpen-conf>";
 
@@ -286,11 +287,11 @@ public class ConfigurationLoaderTest {
         assertNotNull(configuration);
 
         assertEquals("\'", configuration.getSymbolTable()
-                .getSymbol("LEFT_QUOTATION_MARK").getValue());
+                .getSymbol(LEFT_SINGLE_QUOTATION_MARK).getValue());
         assertEquals(2, configuration.getSymbolTable()
-                .getSymbol("LEFT_QUOTATION_MARK").getInvalidSymbols().size());
-        assertEquals("‘", configuration.getSymbolTable().getSymbol("LEFT_QUOTATION_MARK").getInvalidSymbols().get(0));
-        assertEquals("’", configuration.getSymbolTable().getSymbol("LEFT_QUOTATION_MARK").getInvalidSymbols().get(1));
+                .getSymbol(LEFT_SINGLE_QUOTATION_MARK).getInvalidSymbols().size());
+        assertEquals("‘", configuration.getSymbolTable().getSymbol(LEFT_SINGLE_QUOTATION_MARK).getInvalidSymbols().get(0));
+        assertEquals("’", configuration.getSymbolTable().getSymbol(LEFT_SINGLE_QUOTATION_MARK).getInvalidSymbols().get(1));
     }
 
     @Test
@@ -312,13 +313,13 @@ public class ConfigurationLoaderTest {
         assertNotNull(configuration);
 
         assertEquals("!", configuration.getSymbolTable()
-                .getSymbol("EXCLAMATION_MARK").getValue());
+                .getSymbol(EXCLAMATION_MARK).getValue());
         assertEquals(0, configuration.getSymbolTable()
-                .getSymbol("EXCLAMATION_MARK").getInvalidSymbols().size());
+                .getSymbol(EXCLAMATION_MARK).getInvalidSymbols().size());
         assertEquals(false, configuration.getSymbolTable()
-                .getSymbol("EXCLAMATION_MARK").isNeedBeforeSpace());
+                .getSymbol(EXCLAMATION_MARK).isNeedBeforeSpace());
         assertEquals(false, configuration.getSymbolTable()
-                .getSymbol("EXCLAMATION_MARK").isNeedAfterSpace());
+                .getSymbol(EXCLAMATION_MARK).isNeedAfterSpace());
     }
 
     @Test
@@ -338,9 +339,9 @@ public class ConfigurationLoaderTest {
         Configuration configuration = configurationLoader.loadFromString(sampleConfigString);
 
         assertNotNull(configuration);
-        // NOTE: HADOOP_CHARACTER does not exist even in default settings
-        Symbol ch = configuration.getSymbolTable().getSymbol("HADOOP_CHARACTER");
-        assertNull(ch);
+//        // NOTE: HADOOP_CHARACTER does not exist even in default settings
+//        Symbol ch = configuration.getSymbolTable().getSymbol(HADOOP_CHARACTER);
+//        assertNull(ch);
     }
 
 

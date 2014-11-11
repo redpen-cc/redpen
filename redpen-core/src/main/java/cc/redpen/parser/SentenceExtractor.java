@@ -27,6 +27,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static cc.redpen.symbol.SymbolType.*;
+
 /**
  * Utility Class to extract a Sentence list from given String.
  */
@@ -48,12 +50,12 @@ public final class SentenceExtractor {
     public SentenceExtractor() {
         AbstractSymbols symbols = DefaultSymbols.getInstance();
 
-        fullStopList.add(symbols.get("FULL_STOP").getValue());
-        fullStopList.add(symbols.get("QUESTION_MARK").getValue());
-        fullStopList.add(symbols.get("EXCLAMATION_MARK").getValue());
+        fullStopList.add(symbols.get(FULL_STOP).getValue());
+        fullStopList.add(symbols.get(QUESTION_MARK).getValue());
+        fullStopList.add(symbols.get(EXCLAMATION_MARK).getValue());
 
-        rightQuotationList.add(symbols.get("RIGHT_SINGLE_QUOTATION_MARK").getValue());
-        rightQuotationList.add(symbols.get("RIGHT_DOUBLE_QUOTATION_MARK").getValue());
+        rightQuotationList.add(symbols.get(RIGHT_SINGLE_QUOTATION_MARK).getValue());
+        rightQuotationList.add(symbols.get(RIGHT_DOUBLE_QUOTATION_MARK).getValue());
 
         this.fullStopPattern = Pattern.compile(
                 this.constructEndSentencePattern());

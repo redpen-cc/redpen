@@ -17,6 +17,9 @@
  */
 package cc.redpen.config;
 
+import cc.redpen.symbol.SymbolType;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,8 +27,9 @@ import java.util.List;
 /**
  * Represent a character settings.
  */
-public final class Symbol {
-    private String name;
+public final class Symbol implements Serializable {
+    private static final long serialVersionUID = 3826499136262740992L;
+    private SymbolType name;
     private String value;
     private List<String> invalidChars;
     private boolean needBeforeSpace;
@@ -34,11 +38,11 @@ public final class Symbol {
     /**
      * Constructor.
      *
-     * @param charName  name of target character
+     * @param symbolType  name of target character
      * @param charValue character
      */
-    public Symbol(String charName, String charValue) {
-        this.name = charName;
+    public Symbol(SymbolType symbolType, String charValue) {
+        this.name = symbolType;
         this.value = charValue;
         this.invalidChars = new ArrayList<>();
         this.needBeforeSpace = false;
@@ -48,13 +52,13 @@ public final class Symbol {
     /**
      * Constructor.
      *
-     * @param charName        name of target character
+     * @param symbolType        name of target character
      * @param charValue       character
      * @param invalidCharsStr list of invalid characters
      */
-    public Symbol(String charName, String charValue,
+    public Symbol(SymbolType symbolType, String charValue,
                   String invalidCharsStr) {
-        this(charName, charValue);
+        this(symbolType, charValue);
         if (invalidCharsStr.length() > 0) {
             this.invalidChars.addAll
                     (Arrays.asList(invalidCharsStr.split("(?!^)")));
@@ -64,15 +68,15 @@ public final class Symbol {
     /**
      * Constructor.
      *
-     * @param charName        name of target character
+     * @param symbolType        name of target character
      * @param charValue       character
      * @param invalidCharsStr list of invalid characters
      * @param haveBeforeSpace flag to have a space before the character
      * @param haveAfterSpace  flag to have a pace after the character
      */
-    public Symbol(String charName, String charValue, String invalidCharsStr,
+    public Symbol(SymbolType symbolType, String charValue, String invalidCharsStr,
                   boolean haveBeforeSpace, boolean haveAfterSpace) {
-        this(charName, charValue, invalidCharsStr);
+        this(symbolType, charValue, invalidCharsStr);
         this.needBeforeSpace = haveBeforeSpace;
         this.needAfterSpace = haveAfterSpace;
     }
@@ -82,17 +86,8 @@ public final class Symbol {
      *
      * @return character name
      */
-    public String getName() {
+    public SymbolType getType() {
         return name;
-    }
-
-    /**
-     * Set name of character.
-     *
-     * @param charName name of character
-     */
-    public void setName(String charName) {
-        this.name = charName;
     }
 
     /**
@@ -105,30 +100,12 @@ public final class Symbol {
     }
 
     /**
-     * Set value of character.
-     *
-     * @param charValue
-     */
-    public void setValue(String charValue) {
-        this.value = charValue;
-    }
-
-    /**
      * Get invalid characters.
      *
      * @return a list of invalid characters
      */
     public List<String> getInvalidSymbols() {
         return invalidChars;
-    }
-
-    /**
-     * Set invalid characters.
-     *
-     * @param invalidCharList list of invalid characters
-     */
-    public void setInvalidChars(List<String> invalidCharList) {
-        this.invalidChars = invalidCharList;
     }
 
     /**
@@ -141,15 +118,6 @@ public final class Symbol {
     }
 
     /**
-     * Set the flag to know the character should have a space.
-     *
-     * @param beforeSpace the character should have a space before it
-     */
-    public void setNeedBeforeSpace(boolean beforeSpace) {
-        this.needBeforeSpace = beforeSpace;
-    }
-
-    /**
      * Get the flag to know the character should have a space.
      *
      * @return flag to determine the character should have a space after it
@@ -158,17 +126,45 @@ public final class Symbol {
         return needAfterSpace;
     }
 
-    /**
-     * Set the flag to know the character should have a space.
-     *
-     * @param afterSpace the character should have a space after it
-     */
-    public void setNeedAfterSpace(boolean afterSpace) {
-        this.needAfterSpace = afterSpace;
-    }
-
     public void addInvalid(String invalid) {
         this.invalidChars.add(invalid);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Symbol symbol = (Symbol) o;
+
+        if (needAfterSpace != symbol.needAfterSpace) return false;
+        if (needBeforeSpace != symbol.needBeforeSpace) return false;
+        if (invalidChars != null ? !invalidChars.equals(symbol.invalidChars) : symbol.invalidChars != null)
+            return false;
+        if (name != null ? !name.equals(symbol.name) : symbol.name != null) return false;
+        if (value != null ? !value.equals(symbol.value) : symbol.value != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (value != null ? value.hashCode() : 0);
+        result = 31 * result + (invalidChars != null ? invalidChars.hashCode() : 0);
+        result = 31 * result + (needBeforeSpace ? 1 : 0);
+        result = 31 * result + (needAfterSpace ? 1 : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Symbol{" +
+                "name='" + name + '\'' +
+                ", value='" + value + '\'' +
+                ", invalidChars=" + invalidChars +
+                ", needBeforeSpace=" + needBeforeSpace +
+                ", needAfterSpace=" + needAfterSpace +
+                '}';
+    }
 }

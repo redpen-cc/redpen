@@ -20,6 +20,7 @@ package cc.redpen.config;
 import cc.redpen.symbol.AbstractSymbols;
 import cc.redpen.symbol.DefaultSymbols;
 import cc.redpen.symbol.JapaneseSymbols;
+import cc.redpen.symbol.SymbolType;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.tokenizer.RedPenTokenizer;
 import cc.redpen.tokenizer.WhiteSpaceTokenizer;
@@ -114,7 +115,7 @@ public final class Configuration {
                 symbolTable.setLang("en");
             }
 
-            for (String symbolName : symbolSettings) {
+            for (SymbolType symbolName : symbolSettings) {
                 Symbol symbol = symbolSettings.get(symbolName);
                 symbolTable.override(symbol);
             }
@@ -132,13 +133,13 @@ public final class Configuration {
             return this;
         }
 
-        public Builder setSymbol(String name, String value) {
-            this.symbolTable.override(new Symbol(name, value));
+        public Builder setSymbol(SymbolType symbolType, String value) {
+            this.symbolTable.override(new Symbol(symbolType, value));
             return this;
         }
 
-        public Builder addInvalidPattern(String name, String invalid) {
-            Symbol symbol = this.symbolTable.getSymbol(name);
+        public Builder addInvalidPattern(SymbolType symbolType, String invalid) {
+            Symbol symbol = this.symbolTable.getSymbol(symbolType);
             symbol.addInvalid(invalid);
             return this;
         }
@@ -149,6 +150,9 @@ public final class Configuration {
         }
 
         public Configuration build() {
+            if (symbolTable == null) {
+                setLanguage("en");
+            }
             return new Configuration(this.symbolTable, this.validatorConfigs, this.lang);
         }
     }

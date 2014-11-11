@@ -8,6 +8,7 @@ import cc.redpen.validator.Validator;
 
 import java.util.ArrayList;
 import java.util.List;
+import static cc.redpen.symbol.SymbolType.*;
 
 public class SpaceBetweenAlphabeticalWordValidator extends Validator<Sentence> {
     private char leftParenthesis = '(';
@@ -36,8 +37,8 @@ public class SpaceBetweenAlphabeticalWordValidator extends Validator<Sentence> {
 
     @Override
     protected void init() throws RedPenException {
-        leftParenthesis = getSymbolTable().getSymbol("LEFT_PARENTHESIS").getValue().charAt(0);
-        rightParenthesis = getSymbolTable().getSymbol("RIGHT_PARENTHESIS").getValue().charAt(0);
-        comma = getSymbolTable().getSymbol("COMMA").getValue().charAt(0);
+        leftParenthesis = getSymbolTable().getSymbol(LEFT_PARENTHESIS).getValue().charAt(0);
+        rightParenthesis = getSymbolTable().getSymbol(RIGHT_PARENTHESIS).getValue().charAt(0);
+        comma = getSymbolTable().getSymbol(COMMA).getValue().charAt(0);
     }
 }

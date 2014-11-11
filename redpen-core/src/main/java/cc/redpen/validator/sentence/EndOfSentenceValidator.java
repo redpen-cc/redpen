@@ -8,6 +8,8 @@ import cc.redpen.validator.Validator;
 import java.util.ArrayList;
 import java.util.List;
 
+import static cc.redpen.symbol.SymbolType.*;
+
 /**
  * This validator check if the style end of sentence is American style.
  * @see <a herf="http://grammar.ccc.commnet.edu/grammar/marks/quotation.htm">Description of quotation marks</a>
@@ -42,11 +44,11 @@ final public class EndOfSentenceValidator extends Validator<Sentence> {
 
     @Override
     protected void init() throws RedPenException {
-        period = getSymbolTable().getSymbol("FULL_STOP").getValue().charAt(0);
-        rightSingleQuotation = getSymbolTable().getSymbol("RIGHT_SINGLE_QUOTATION_MARK").getValue().charAt(0);
-        rightDoubleQuotation = getSymbolTable().getSymbol("RIGHT_DOUBLE_QUOTATION_MARK").getValue().charAt(0);
-        questionMark = getSymbolTable().getSymbol("QUESTION_MARK").getValue().charAt(0);
-        exclamationMark = getSymbolTable().getSymbol("EXCLAMATION_MARK").getValue().charAt(0);
+        period = getSymbolTable().getSymbol(FULL_STOP).getValue().charAt(0);
+        rightSingleQuotation = getSymbolTable().getSymbol(RIGHT_SINGLE_QUOTATION_MARK).getValue().charAt(0);
+        rightDoubleQuotation = getSymbolTable().getSymbol(RIGHT_DOUBLE_QUOTATION_MARK).getValue().charAt(0);
+        questionMark = getSymbolTable().getSymbol(QUESTION_MARK).getValue().charAt(0);
+        exclamationMark = getSymbolTable().getSymbol(EXCLAMATION_MARK).getValue().charAt(0);
     }
 
     @Override

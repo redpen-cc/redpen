@@ -21,6 +21,7 @@ package cc.redpen.config;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 /**
@@ -64,5 +65,12 @@ public class ConfigurationTest {
                 .addValidatorConfig(new ValidatorConfiguration("MaxParagraphNumber"))
                 .addValidatorConfig(new ValidatorConfiguration("ParagraphStartWith")).build();
         assertEquals(3, configuration.getValidatorConfigs().size());
+    }
+
+    @Test
+    public void testSymbolTableWithoutLanguageSetting() throws Exception {
+        Configuration configuration = new Configuration.Builder().build(); // NOTE: load "en" setting when lang is not specified
+        assertEquals("en", configuration.getLang());
+        assertNotNull(configuration.getLang());
     }
 }
