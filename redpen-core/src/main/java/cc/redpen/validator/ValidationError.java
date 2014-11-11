@@ -19,8 +19,6 @@ package cc.redpen.validator;
 
 import cc.redpen.model.Sentence;
 
-import java.util.Optional;
-
 /**
  * Error to report invalid point from Validators.
  */

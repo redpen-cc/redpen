@@ -22,7 +22,13 @@ import cc.redpen.config.SymbolTable;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.distributor.DefaultResultDistributor;
 import cc.redpen.distributor.ResultDistributor;
-import cc.redpen.model.*;
+import cc.redpen.model.Document;
+import cc.redpen.model.DocumentCollection;
+import cc.redpen.model.ListBlock;
+import cc.redpen.model.ListElement;
+import cc.redpen.model.Paragraph;
+import cc.redpen.model.Section;
+import cc.redpen.model.Sentence;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.symbol.DefaultSymbols;
@@ -63,57 +69,46 @@ public class RedPen {
         loadValidators();
     }
 
-    static Type getParameterizedClass(Object obj) {
-        if (obj == null) {
-            return null;
-        }
-
-        Class clazz = obj.getClass();
-        Type genericInterface = clazz.getGenericSuperclass();
-        ParameterizedType parameterizedType;
-        try {
-            parameterizedType =
-                    ParameterizedType.class.cast(genericInterface);
-        } catch (ClassCastException e) {
-            return null;
-        }
-
-        if (parameterizedType.getActualTypeArguments().length == 0) {
-            return null;
-        }
-        return parameterizedType.getActualTypeArguments()[0];
-    }
-
-    public Configuration getConfiguration() {
-        return this.configuration;
+    /**
+     * parses given inputstream
+     *
+     * @param parser      DocumentParser parser
+     * @param InputStream content to parse
+     * @return parsed document
+     * @throws RedPenException
+     */
+    public Document parse(DocumentParser parser, InputStream InputStream) throws RedPenException {
+        return parser.parse(InputStream, sentenceExtractor, configuration.getTokenizer());
     }
 
     /**
-     * Load validators written in the configuration file.
+     * parses given content
+     *
+     * @param parser  DocumentParser parser
+     * @param content content to parse
+     * @return parsed document
+     * @throws RedPenException
      */
-    @SuppressWarnings("unchecked")
-    private void loadValidators()
-            throws RedPenException {
-        if (configuration == null) {
-            throw new IllegalStateException("Configuration object is null");
+    public Document parse(DocumentParser parser, String content) throws RedPenException {
+        return parser.parse(content, sentenceExtractor, configuration.getTokenizer());
+    }
+
+    /**
+     * parses given files
+     *
+     * @param parser DocumentParser parser
+     * @param files  files to parse
+     * @return parsed documents
+     * @throws RedPenException
+     */
+    public DocumentCollection parse(DocumentParser parser, File[] files) throws RedPenException {
+        DocumentCollection.Builder documentBuilder =
+                new DocumentCollection.Builder();
+        for (File file : files) {
+            documentBuilder.addDocument(parser.parse(file, sentenceExtractor, configuration.getTokenizer()));
         }
-
-        for (ValidatorConfiguration config : configuration.getValidatorConfigs()) {
-
-            Validator<?> validator = ValidatorFactory.getInstance(
-                    config, configuration.getSymbolTable());
-            Type type = getParameterizedClass(validator);
-
-            if (type == Sentence.class) {
-                this.sentenceValidators.add((Validator<Sentence>) validator);
-            } else if (type == Section.class) {
-                this.sectionValidators.add((Validator<Section>) validator);
-            } else if (type == Document.class) {
-                this.documentValidators.add((Validator<Document>) validator);
-            } else {
-                throw new IllegalStateException("No validator for " + type + " block.");
-            }
-        }
+        // @TODO extract summary information to validate documentCollection effectively
+        return documentBuilder.build();
     }
 
     /**
@@ -143,6 +138,55 @@ public class RedPen {
         DocumentCollection documents = new DocumentCollection.Builder().addDocument(document).build();
         Map<Document, List<ValidationError>> documentListMap = validate(documents);
         return documentListMap.get(document);
+    }
+
+    static Type getParameterizedClass(Object obj) {
+        if (obj == null) {
+            return null;
+        }
+
+        Class clazz = obj.getClass();
+        Type genericInterface = clazz.getGenericSuperclass();
+        ParameterizedType parameterizedType;
+        try {
+            parameterizedType =
+                    ParameterizedType.class.cast(genericInterface);
+        } catch (ClassCastException e) {
+            return null;
+        }
+
+        if (parameterizedType.getActualTypeArguments().length == 0) {
+            return null;
+        }
+        return parameterizedType.getActualTypeArguments()[0];
+    }
+
+    /**
+     * Load validators written in the configuration file.
+     */
+    @SuppressWarnings("unchecked")
+    private void loadValidators()
+            throws RedPenException {
+        if (configuration == null) {
+            throw new IllegalStateException("Configuration object is null");
+        }
+
+        for (ValidatorConfiguration config : configuration.getValidatorConfigs()) {
+
+            Validator<?> validator = ValidatorFactory.getInstance(
+                    config, configuration.getSymbolTable());
+            Type type = getParameterizedClass(validator);
+
+            if (type == Sentence.class) {
+                this.sentenceValidators.add((Validator<Sentence>) validator);
+            } else if (type == Section.class) {
+                this.sectionValidators.add((Validator<Section>) validator);
+            } else if (type == Document.class) {
+                this.documentValidators.add((Validator<Document>) validator);
+            } else {
+                throw new IllegalStateException("No validator for " + type + " block.");
+            }
+        }
     }
 
     private void runDocumentValidators(
@@ -326,48 +370,6 @@ public class RedPen {
                 ", sentenceValidators=" + sentenceValidators +
                 ", distributor=" + distributor +
                 '}';
-    }
-
-    /**
-     * parses given inputstream
-     *
-     * @param parser      DocumentParser parser
-     * @param InputStream content to parse
-     * @return parsed document
-     * @throws RedPenException
-     */
-    public Document parse(DocumentParser parser, InputStream InputStream) throws RedPenException {
-        return parser.parse(InputStream, sentenceExtractor, configuration.getTokenizer());
-    }
-
-    /**
-     * parses given content
-     *
-     * @param parser  DocumentParser parser
-     * @param content content to parse
-     * @return parsed document
-     * @throws RedPenException
-     */
-    public Document parse(DocumentParser parser, String content) throws RedPenException {
-        return parser.parse(content, sentenceExtractor, configuration.getTokenizer());
-    }
-
-    /**
-     * parses given files
-     *
-     * @param parser DocumentParser parser
-     * @param files  files to parse
-     * @return parsed documents
-     * @throws RedPenException
-     */
-    public DocumentCollection parse(DocumentParser parser, File[] files) throws RedPenException {
-        DocumentCollection.Builder documentBuilder =
-                new DocumentCollection.Builder();
-        for (File file : files) {
-            documentBuilder.addDocument(parser.parse(file, sentenceExtractor, configuration.getTokenizer()));
-        }
-        // @TODO extract summary information to validate documentCollection effectively
-        return documentBuilder.build();
     }
 
     static SentenceExtractor getSentenceExtractor(Configuration configuration) {

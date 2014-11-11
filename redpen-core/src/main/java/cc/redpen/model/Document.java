@@ -62,7 +62,7 @@ public class Document implements Iterable<Section>, Serializable {
      *
      * @return size of sections
      */
-    public int getNumberOfSections() {
+    public int size() {
         return sections.size();
     }
 

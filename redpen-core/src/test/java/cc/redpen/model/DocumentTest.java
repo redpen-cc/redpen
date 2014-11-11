@@ -12,7 +12,7 @@ public class DocumentTest {
     public void testCreateDocument() {
         Document doc = new Document.DocumentBuilder()
                         .setFileName("Foobar").build();
-        assertEquals(0, doc.getNumberOfSections());
+        assertEquals(0, doc.size());
     }
 
     @Test
@@ -30,7 +30,7 @@ public class DocumentTest {
                 .addListElement(1, "list2")
                 .build();
 
-        assertEquals(1, doc.getNumberOfSections());
+        assertEquals(1, doc.size());
         assertEquals(0, doc.getSection(0).getLevel());
         assertEquals(Optional.of("Foobar"), doc.getFileName());
         assertEquals("baz", doc.getSection(0).getHeaderContent(0).content);
@@ -60,7 +60,7 @@ public class DocumentTest {
                 .addParagraph()
                 .addSentence("This is a foobar.", 0)
                 .build();
-        assertEquals(1, doc.getNumberOfSections());
+        assertEquals(1, doc.size());
         assertEquals(4, doc.getSection(0).getParagraph(0).getSentence(0).tokens.size());
     }
 
@@ -73,7 +73,7 @@ public class DocumentTest {
                 .addParagraph()
                 .addSentence("今日は晴天だ。", 0)
                 .build();
-        assertEquals(1, doc.getNumberOfSections());
+        assertEquals(1, doc.size());
         assertEquals(5, doc.getSection(0).getParagraph(0).getSentence(0).tokens.size());
     }
 

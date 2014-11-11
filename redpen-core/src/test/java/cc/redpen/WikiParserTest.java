@@ -55,7 +55,7 @@ public class WikiParserTest {
         sampleText += "The word also have posive meaning. Hower it is a bit wired.";
 
         Document doc = createFileContent(sampleText);
-        assertEquals(3, doc.getNumberOfSections());
+        assertEquals(3, doc.size());
         // first section
         final Section firstSection = doc.getSection(0);
         assertEquals(1, firstSection.getHeaderContentsListSize());
@@ -79,7 +79,7 @@ public class WikiParserTest {
         assertEquals(true, secondSection.getParagraph(1).getSentence(0).isFirstSentence);
 
         // last section
-        Section lastSection = doc.getSection(doc.getNumberOfSections() - 1);
+        Section lastSection = doc.getSection(doc.size() - 1);
         assertEquals(1, lastSection.getNumberOfLists());
         assertEquals(5, lastSection.getListBlock(0).getNumberOfListElements());
         assertEquals(2, lastSection.getNumberOfParagraphs());
@@ -454,7 +454,7 @@ public class WikiParserTest {
         sampleText += "The word also have posive meaning. Hower it is a bit wired.";
 
         Document doc = createFileContent(sampleText);
-        Section lastSection = doc.getSection(doc.getNumberOfSections() - 1);
+        Section lastSection = doc.getSection(doc.size() - 1);
         assertEquals(2, lastSection.getHeaderContentsListSize());
         assertEquals("About Gunma.", lastSection.getHeaderContent(0).content);
         assertEquals(" About Saitama.", lastSection.getHeaderContent(1).content);
@@ -469,7 +469,7 @@ public class WikiParserTest {
         sampleText += "The word also have posive meaning. Hower it is a bit wired.";
 
         Document doc = createFileContent(sampleText);
-        Section lastSection = doc.getSection(doc.getNumberOfSections() - 1);
+        Section lastSection = doc.getSection(doc.size() - 1);
         assertEquals(1, lastSection.getHeaderContentsListSize());
         assertEquals("About Gunma", lastSection.getHeaderContent(0).content);
     }
@@ -483,7 +483,7 @@ public class WikiParserTest {
         sampleText += "- The word also have posive meaning. Hower it is a bit wired.";
 
         Document doc = createFileContent(sampleText);
-        Section lastSection = doc.getSection(doc.getNumberOfSections() - 1);
+        Section lastSection = doc.getSection(doc.size() - 1);
         ListBlock listBlock = lastSection.getListBlock(0);
         assertEquals(2, listBlock.getNumberOfListElements());
         assertEquals(1, listBlock.getListElement(0).getNumberOfSentences());
@@ -503,7 +503,7 @@ public class WikiParserTest {
         sampleText += "- Gunma is located at west of Saitama\n";
 
         Document doc = createFileContent(sampleText);
-        Section lastSection = doc.getSection(doc.getNumberOfSections() - 1);
+        Section lastSection = doc.getSection(doc.size() - 1);
         ListBlock listBlock = lastSection.getListBlock(0);
         assertEquals(1, listBlock.getNumberOfListElements());
         assertEquals(1, listBlock.getListElement(0).getNumberOfSentences());
@@ -522,7 +522,7 @@ public class WikiParserTest {
         sampleText += "Gumma is very beautiful";
 
         Document doc = createFileContent(sampleText);
-        assertEquals(3, doc.getNumberOfSections());
+        assertEquals(3, doc.size());
         Section rootSection = doc.getSection(0);
         Section h1Section = doc.getSection(1);
         Section h2Section = doc.getSection(2);

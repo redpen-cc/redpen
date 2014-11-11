@@ -33,7 +33,7 @@ public class SampleDocumentGeneratorTest {
                 DocumentParser.PLAIN);
         assertNotNull(doc);
         assertEquals(1, doc.size());
-        assertEquals(1, doc.getDocument(0).getNumberOfSections());
+        assertEquals(1, doc.getDocument(0).size());
         assertEquals(1, doc.getDocument(0).getSection(0).getNumberOfParagraphs());
         assertEquals(1, doc.getDocument(0).getSection(0).getParagraph(0)
                 .getNumberOfSentences());
@@ -50,7 +50,7 @@ public class SampleDocumentGeneratorTest {
                 DocumentParser.WIKI);
         assertNotNull(doc);
         assertEquals(1, doc.size());
-        assertEquals(2, doc.getDocument(0).getNumberOfSections());
+        assertEquals(2, doc.getDocument(0).size());
         assertEquals("About Gekioko.", doc.getDocument(0).getSection(1).getHeaderContent(0).content);
         assertEquals(1, doc.getDocument(0).getSection(1).getNumberOfParagraphs());
         assertEquals(1, doc.getDocument(0).getSection(1).getParagraph(0)
@@ -68,7 +68,7 @@ public class SampleDocumentGeneratorTest {
                 DocumentParser.MARKDOWN);
         assertNotNull(doc);
         assertEquals(1, doc.size());
-        assertEquals(2, doc.getDocument(0).getNumberOfSections());
+        assertEquals(2, doc.getDocument(0).size());
         assertEquals("About Gekioko.", doc.getDocument(0).getSection(1).getHeaderContent(0).content);
         assertEquals(1, doc.getDocument(0).getSection(1).getNumberOfParagraphs());
         assertEquals(1, doc.getDocument(0).getSection(1).getParagraph(0)
