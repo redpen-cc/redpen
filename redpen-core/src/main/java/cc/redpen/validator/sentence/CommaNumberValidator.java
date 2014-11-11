@@ -28,6 +28,8 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+import static cc.redpen.symbol.SymbolType.COMMA;
+
 /**
  * Validate the number of commas in one sentence.
  */
@@ -68,8 +70,8 @@ final public class CommaNumberValidator extends Validator<Sentence> {
         this.maxCommaNum = getConfigAttributeAsInt("max_num", DEFAULT_MAX_COMMA_NUMBER);
 
         this.comma = DEFAULT_COMMA;
-        if (getSymbolTable().containsSymbol("COMMA")) {
-            this.comma = getSymbolTable().getSymbol("COMMA").getValue();
+        if (getSymbolTable().containsSymbol(COMMA)) {
+            this.comma = getSymbolTable().getSymbol(COMMA).getValue();
             LOG.info("comma is set to \"" + this.comma + "\"");
         }
     }

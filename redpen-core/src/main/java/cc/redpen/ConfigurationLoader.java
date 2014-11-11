@@ -20,6 +20,7 @@ package cc.redpen;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.Symbol;
 import cc.redpen.config.ValidatorConfiguration;
+import cc.redpen.symbol.SymbolType;
 import cc.redpen.util.SAXErrorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +56,7 @@ public final class ConfigurationLoader {
             throw new IllegalStateException("Found element does not have name and value attribute...");
         }
         return new Symbol(
-                element.getAttribute("name"),
+                SymbolType.valueOf(element.getAttribute("name")),
                 element.getAttribute("value"),
                 element.getAttribute("invalid-chars"),
                 Boolean.parseBoolean(element.getAttribute("before-space")),
@@ -65,13 +66,14 @@ public final class ConfigurationLoader {
 
     /**
      * parse the input stream. stream will be closed.
+     *
      * @param input stream
      * @return
      * @throws RedPenException
      */
-    private static Document toDocument(InputStream input) throws RedPenException{
+    private static Document toDocument(InputStream input) throws RedPenException {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        try(BufferedInputStream bis = new BufferedInputStream(input)) {
+        try (BufferedInputStream bis = new BufferedInputStream(input)) {
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             dBuilder.setErrorHandler(new SAXErrorHandler());
             return dBuilder.parse(bis);

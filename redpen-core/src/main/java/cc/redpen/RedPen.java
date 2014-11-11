@@ -49,6 +49,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static cc.redpen.symbol.SymbolType.*;
+
 /**
  * Validate all input files using appended Validators.
  */
@@ -381,19 +383,19 @@ public class RedPen {
 
     private static List<String> extractRightQuotations(SymbolTable symbolTable) {
         List<String> rightQuotations = new ArrayList<>();
-        if (symbolTable.containsSymbol("RIGHT_SINGLE_QUOTATION_MARK")) {
+        if (symbolTable.containsSymbol(RIGHT_SINGLE_QUOTATION_MARK)) {
             rightQuotations.add(
-                    symbolTable.getSymbol("RIGHT_SINGLE_QUOTATION_MARK").getValue());
+                    symbolTable.getSymbol(RIGHT_SINGLE_QUOTATION_MARK).getValue());
         } else {
             rightQuotations.add(
-                    DefaultSymbols.getInstance().get("RIGHT_SINGLE_QUOTATION_MARK").getValue());
+                    DefaultSymbols.getInstance().get(RIGHT_SINGLE_QUOTATION_MARK).getValue());
         }
-        if (symbolTable.containsSymbol("RIGHT_DOUBLE_QUOTATION_MARK")) {
+        if (symbolTable.containsSymbol(RIGHT_DOUBLE_QUOTATION_MARK)) {
             rightQuotations.add(
-                    symbolTable.getSymbol("RIGHT_DOUBLE_QUOTATION_MARK").getValue());
+                    symbolTable.getSymbol(RIGHT_DOUBLE_QUOTATION_MARK).getValue());
         } else {
             rightQuotations.add(
-                    DefaultSymbols.getInstance().get("RIGHT_DOUBLE_QUOTATION_MARK").getValue());
+                    DefaultSymbols.getInstance().get(RIGHT_DOUBLE_QUOTATION_MARK).getValue());
         }
         for (String rightQuotation : rightQuotations) {
             LOG.info("\"" + rightQuotation + "\" is added as a end of right quotation character.");
@@ -403,28 +405,28 @@ public class RedPen {
 
     private static List<String> extractPeriods(SymbolTable symbolTable) {
         List<String> periods = new ArrayList<>();
-        if (symbolTable.containsSymbol("FULL_STOP")) {
+        if (symbolTable.containsSymbol(FULL_STOP)) {
             periods.add(
-                    symbolTable.getSymbol("FULL_STOP").getValue());
+                    symbolTable.getSymbol(FULL_STOP).getValue());
         } else {
             periods.add(
-                    DefaultSymbols.getInstance().get("FULL_STOP").getValue());
+                    DefaultSymbols.getInstance().get(FULL_STOP).getValue());
         }
 
-        if (symbolTable.containsSymbol("QUESTION_MARK")) {
+        if (symbolTable.containsSymbol(QUESTION_MARK)) {
             periods.add(
-                    symbolTable.getSymbol("QUESTION_MARK").getValue());
+                    symbolTable.getSymbol(QUESTION_MARK).getValue());
         } else {
             periods.add(
-                    DefaultSymbols.getInstance().get("QUESTION_MARK").getValue());
+                    DefaultSymbols.getInstance().get(QUESTION_MARK).getValue());
         }
 
-        if (symbolTable.containsSymbol("EXCLAMATION_MARK")) {
+        if (symbolTable.containsSymbol(EXCLAMATION_MARK)) {
             periods.add(
-                    symbolTable.getSymbol("EXCLAMATION_MARK").getValue());
+                    symbolTable.getSymbol(EXCLAMATION_MARK).getValue());
         } else {
             periods.add(
-                    DefaultSymbols.getInstance().get("EXCLAMATION_MARK").getValue());
+                    DefaultSymbols.getInstance().get(EXCLAMATION_MARK).getValue());
         }
 
         for (String period : periods) {

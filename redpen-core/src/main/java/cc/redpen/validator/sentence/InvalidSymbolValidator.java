@@ -19,6 +19,7 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.config.Symbol;
 import cc.redpen.model.Sentence;
+import cc.redpen.symbol.SymbolType;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
@@ -33,9 +34,9 @@ final public class InvalidSymbolValidator extends Validator<Sentence> {
 
     public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> errors = new ArrayList<>();
-        Set<String> names = getSymbolTable().getNames();
-        for (String name : names) {
-            ValidationError error = validateSymbol(sentence, name);
+        Set<SymbolType> symbolTypes = getSymbolTable().getNames();
+        for (SymbolType symbolType : symbolTypes) {
+            ValidationError error = validateSymbol(sentence, symbolType);
             if (error != null) {
                 errors.add(error);
             }
@@ -43,9 +44,9 @@ final public class InvalidSymbolValidator extends Validator<Sentence> {
         return errors;
     }
 
-    private ValidationError validateSymbol(Sentence sentence, String name) {
+    private ValidationError validateSymbol(Sentence sentence, SymbolType symbolType) {
         String sentenceStr = sentence.content;
-        Symbol symbol = getSymbolTable().getSymbol(name);
+        Symbol symbol = getSymbolTable().getSymbol(symbolType);
         List<String> invalidCharsList = symbol.getInvalidSymbols();
         for (String invalidChar : invalidCharsList) {
             if (sentenceStr.contains(invalidChar)) {

@@ -28,10 +28,9 @@ import java.util.Map;
 /**
  * Base class of the symbol settings.
  */
-public abstract class AbstractSymbols implements Iterable<String> {
+public abstract class AbstractSymbols implements Iterable<SymbolType> {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractSymbols.class);
-    private final Map<String, Symbol> symbolTable
-            = new HashMap<>();
+    private final Map<SymbolType, Symbol> symbolTable = new HashMap<>();
 
     /**
      * Get the specified character or symbol.
@@ -39,7 +38,7 @@ public abstract class AbstractSymbols implements Iterable<String> {
      * @param name name of symbol
      * @return specified character
      */
-    public Symbol get(String name) {
+    public Symbol get(SymbolType name) {
         if (!symbolTable.containsKey(name)) {
             LOG.info(name + " is not defined in DefaultSymbols.");
             return null;
@@ -48,11 +47,11 @@ public abstract class AbstractSymbols implements Iterable<String> {
     }
 
     @Override
-    public Iterator<String> iterator() {
+    public Iterator<SymbolType> iterator() {
         return symbolTable.keySet().iterator();
     }
 
-    protected Map<String, Symbol> getSymbolTable() {
+    protected Map<SymbolType, Symbol> getSymbolTable() {
         return symbolTable;
     }
 }

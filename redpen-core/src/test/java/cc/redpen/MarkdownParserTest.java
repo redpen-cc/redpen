@@ -30,6 +30,8 @@ import org.junit.Test;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
+import static cc.redpen.symbol.SymbolType.COMMA;
+import static cc.redpen.symbol.SymbolType.FULL_STOP;
 import static org.junit.Assert.*;
 
 public class MarkdownParserTest {
@@ -458,8 +460,8 @@ public class MarkdownParserTest {
                 "以下のとおりである．";
         Configuration conf = new Configuration.Builder()
                 .setLanguage("ja")
-                .setSymbol(new Symbol("FULL_STOP", "．", "."))
-                .setSymbol(new Symbol("COMMA", "，", "、"))
+                .setSymbol(new Symbol(FULL_STOP, "．", "."))
+                .setSymbol(new Symbol(COMMA, "，", "、"))
                 .build();
 
         Document doc = createFileContent(sampleText, conf);

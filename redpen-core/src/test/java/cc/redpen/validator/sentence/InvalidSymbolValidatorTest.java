@@ -33,6 +33,9 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Map;
 
+import static cc.redpen.symbol.SymbolType.COMMA;
+import static cc.redpen.symbol.SymbolType.EXCLAMATION_MARK;
+
 public class InvalidSymbolValidatorTest {
     @Test
     public void testWithInvalidSymbol() throws RedPenException {
@@ -46,7 +49,7 @@ public class InvalidSymbolValidatorTest {
         Configuration conf = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
                 .setLanguage("en")
-                .setSymbol(new Symbol("EXCLAMATION_MARK", "!", "！"))
+                .setSymbol(new Symbol(EXCLAMATION_MARK, "!", "！"))
                 .build();
 
         RedPen redPen = new RedPen.RedPenBuilder()
@@ -70,7 +73,7 @@ public class InvalidSymbolValidatorTest {
         Configuration conf = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
                 .setLanguage("en")
-                .setSymbol(new Symbol("EXCLAMATION_MARK", "!", "！"))
+                .setSymbol(new Symbol(EXCLAMATION_MARK, "!", "！"))
                 .build();
 
         RedPen redPen = new RedPen.RedPenBuilder()
@@ -95,8 +98,8 @@ public class InvalidSymbolValidatorTest {
         Configuration conf = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
                 .setLanguage("en")
-                .setSymbol(new Symbol("EXCLAMATION_MARK", "!", "！"))
-                .setSymbol(new Symbol("COMMA", ",", "、"))
+                .setSymbol(new Symbol(EXCLAMATION_MARK, "!", "！"))
+                .setSymbol(new Symbol(COMMA, ",", "、"))
                 .build();
 
         RedPen redPen = new RedPen.RedPenBuilder()

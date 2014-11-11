@@ -17,6 +17,8 @@
  */
 package cc.redpen.config;
 
+import cc.redpen.symbol.SymbolType;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -25,7 +27,7 @@ import java.util.Set;
  * Configuration table of characters used in {@link cc.redpen.RedPen}.
  */
 public final class SymbolTable {
-    private final Map<String, Symbol> symbolDictionary;
+    private final Map<SymbolType, Symbol> symbolDictionary;
     private final Map<String, Symbol> valueDictionary;
     private String lang;
 
@@ -52,7 +54,7 @@ public final class SymbolTable {
      *
      * @return names of characters
      */
-    public Set<String> getNames() {
+    public Set<SymbolType> getNames() {
         return this.symbolDictionary.keySet();
     }
 
@@ -62,7 +64,7 @@ public final class SymbolTable {
      * @param name character name
      * @return character containing the settings
      */
-    public Symbol getSymbol(String name) {
+    public Symbol getSymbol(SymbolType name) {
         return this.symbolDictionary.get(name);
     }
 
@@ -77,22 +79,13 @@ public final class SymbolTable {
     }
 
     /**
-     * Get all elements of character dictionary.
-     *
-     * @return character dictionary
-     */
-    public Map<String, Symbol> getSymbolDictionary() {
-        return symbolDictionary;
-    }
-
-    /**
      * Detect the specified character is exit in the dictionary.
      *
      * @param name character name
      * @return character when exist, null when the specified
      * character does not exist
      */
-    public boolean containsSymbol(String name) {
+    public boolean containsSymbol(SymbolType name) {
         return this.symbolDictionary.get(name) != null;
     }
 
@@ -113,7 +106,7 @@ public final class SymbolTable {
      * @param symbol symbol configuration
      */
     public void override(Symbol symbol) {
-        symbolDictionary.put(symbol.getName(), symbol);
+        symbolDictionary.put(symbol.getType(), symbol);
         valueDictionary.put(symbol.getValue(), symbol);
     }
 

@@ -2,6 +2,7 @@ package cc.redpen.config;
 
 import org.junit.Test;
 
+import static cc.redpen.symbol.SymbolType.FULL_STOP;
 import static org.junit.Assert.*;
 
 /**
@@ -65,8 +66,8 @@ public class ConfigurationRedPenBuilderTest {
                 .build();
 
         assertNotNull(config.getSymbolTable());
-        assertNotNull(config.getSymbolTable().getSymbol("FULL_STOP"));
-        assertEquals("。", config.getSymbolTable().getSymbol("FULL_STOP").getValue());
+        assertNotNull(config.getSymbolTable().getSymbol(FULL_STOP));
+        assertEquals("。", config.getSymbolTable().getSymbol(FULL_STOP).getValue());
     }
 
     @Test
@@ -74,12 +75,12 @@ public class ConfigurationRedPenBuilderTest {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .setLanguage("ja")
-                .setSymbol("FULL_STOP", ".")
+                .setSymbol(FULL_STOP, ".")
                 .build();
 
         assertNotNull(config.getSymbolTable());
-        assertNotNull(config.getSymbolTable().getSymbol("FULL_STOP"));
-        assertEquals(".", config.getSymbolTable().getSymbol("FULL_STOP").getValue());
+        assertNotNull(config.getSymbolTable().getSymbol(FULL_STOP));
+        assertEquals(".", config.getSymbolTable().getSymbol(FULL_STOP).getValue());
     }
 
     @Test
@@ -87,14 +88,14 @@ public class ConfigurationRedPenBuilderTest {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .setLanguage("ja")
-                .addInvalidPattern("FULL_STOP", "●")
+                .addInvalidPattern(FULL_STOP, "●")
                 .build();
 
         assertNotNull(config.getSymbolTable());
-        assertNotNull(config.getSymbolTable().getSymbol("FULL_STOP"));
-        assertEquals("。", config.getSymbolTable().getSymbol("FULL_STOP").getValue());
+        assertNotNull(config.getSymbolTable().getSymbol(FULL_STOP));
+        assertEquals("。", config.getSymbolTable().getSymbol(FULL_STOP).getValue());
         assertTrue(config.getSymbolTable()
-                .getSymbol("FULL_STOP").getInvalidSymbols().contains("●"));
+                .getSymbol(FULL_STOP).getInvalidSymbols().contains("●"));
     }
 
     @Test
@@ -102,14 +103,14 @@ public class ConfigurationRedPenBuilderTest {
         Configuration config = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .setLanguage("ja")
-                .addInvalidPattern("FULL_STOP", "●")
+                .addInvalidPattern(FULL_STOP, "●")
                 .build();
 
         assertNotNull(config.getSymbolTable());
-        assertNotNull(config.getSymbolTable().getSymbol("FULL_STOP"));
-        assertEquals("。", config.getSymbolTable().getSymbol("FULL_STOP").getValue());
+        assertNotNull(config.getSymbolTable().getSymbol(FULL_STOP));
+        assertEquals("。", config.getSymbolTable().getSymbol(FULL_STOP).getValue());
         assertTrue(config.getSymbolTable()
-                .getSymbol("FULL_STOP").getInvalidSymbols().contains("●"));
+                .getSymbol(FULL_STOP).getInvalidSymbols().contains("●"));
         assertTrue(config.getSymbolTable().containsSymbolByValue("。"));
         assertTrue(config.getSymbolTable()
                 .getSymbolByValue("。").getInvalidSymbols().contains("●"));
