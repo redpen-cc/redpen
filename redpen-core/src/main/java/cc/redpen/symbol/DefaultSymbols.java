@@ -93,11 +93,11 @@ public final class DefaultSymbols extends AbstractSymbols {
         symbols.put("LEFT_SINGLE_QUOTATION_MARK",
                 new Symbol("LEFT_SINGLE_QUOTATION_MARK", "'", "", false, false));
         symbols.put("RIGHT_SINGLE_QUOTATION_MARK",
-                new Symbol("LEFT_SINGLE_QUOTATION_MARK", "'", "", false, false));
+                new Symbol("RIGHT_SINGLE_QUOTATION_MARK", "'", "", false, false));
         symbols.put("LEFT_DOUBLE_QUOTATION_MARK",
-                new Symbol("LEFT_SINGLE_QUOTATION_MARK", "\"", "", false, false));
+                new Symbol("LEFT_DOUBLE_QUOTATION_MARK", "\"", "", false, false));
         symbols.put("RIGHT_DOUBLE_QUOTATION_MARK",
-                new Symbol("LEFT_SINGLE_QUOTATION_MARK", "\"", "", false, false));
+                new Symbol("RIGHT_DOUBLE_QUOTATION_MARK", "\"", "", false, false));
 
         /******************************************************************
          * Digits
