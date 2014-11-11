@@ -76,10 +76,6 @@ public final class DocumentCollection implements Iterable<Document> {
         return documents.iterator();
     }
 
-    public int getNumberOfDocuments() {
-        return documents.size();
-    }
-
     /**
      * Builder for DocumentCollection. This class is used to create a document in
      * not only testing but also implementing parsers.

@@ -25,7 +25,6 @@ import java.util.HashMap;
 public final class ValidatorConfiguration {
     private final String configurationName;
     private final HashMap<String, String> attributes;
-    private ValidatorConfiguration parentConfiguration;
 
     /**
      * Constructor.
@@ -35,19 +34,6 @@ public final class ValidatorConfiguration {
     public ValidatorConfiguration(String name) {
         this.configurationName = name;
         this.attributes = new HashMap<>();
-        this.parentConfiguration = null;
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param name   name configuration settings
-     * @param parent parent Configuration object
-     */
-    public ValidatorConfiguration(String name, ValidatorConfiguration parent) {
-        this.configurationName = name;
-        this.attributes = new HashMap<>();
-        this.parentConfiguration = parent;
     }
 
     /**
@@ -57,13 +43,6 @@ public final class ValidatorConfiguration {
      * @return value of the specified attribute
      */
     public String getAttribute(String name) {
-        if (!this.attributes.containsKey(name)) {
-            if (this.parentConfiguration != null) {
-                return parentConfiguration.getAttribute(name);
-            } else {
-                return null;
-            }
-        }
         return this.attributes.get(name);
     }
 
@@ -88,21 +67,4 @@ public final class ValidatorConfiguration {
         return this;
     }
 
-    /**
-     * Get Parent configuration.
-     *
-     * @return Parent configuration
-     */
-    public ValidatorConfiguration getParent() {
-        return this.parentConfiguration;
-    }
-
-    /**
-     * Set the parent configuration.
-     *
-     * @param parent parent Configuration object
-     */
-    public void setParent(ValidatorConfiguration parent) {
-        this.parentConfiguration = parent;
-    }
 }

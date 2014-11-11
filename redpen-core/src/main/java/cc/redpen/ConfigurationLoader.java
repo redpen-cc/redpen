@@ -149,7 +149,7 @@ public class ConfigurationLoader {
             Element element = (Element) nNode;
             if (element.getNodeName().equals("validator")) {
                 currentConfiguration =
-                        new ValidatorConfiguration(element.getAttribute("name"), null);
+                        new ValidatorConfiguration(element.getAttribute("name"));
                 configBuilder.addValidatorConfig(currentConfiguration);
                 NodeList propertyElementList = nNode.getChildNodes();
                 extractProperties(currentConfiguration, propertyElementList);

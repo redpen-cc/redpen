@@ -47,15 +47,6 @@ public abstract class AbstractSymbols implements Iterable<String> {
         return symbolTable.get(name);
     }
 
-    /**
-     * Return all the names of registered characters.
-     *
-     * @return all names of characters
-     */
-    public Iterator<String> getAllSymbolNames() {
-        return symbolTable.keySet().iterator();
-    }
-
     @Override
     public Iterator<String> iterator() {
         return symbolTable.keySet().iterator();

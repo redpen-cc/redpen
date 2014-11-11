@@ -19,8 +19,8 @@ public class DocumentCollectionTest {
                         .addSentence("sentence1", 1)
                         .build()).build();
 
-        assertEquals(1, doc.getNumberOfDocuments());
-        assertEquals(1, doc.getDocument(0).getNumberOfSections());
+        assertEquals(1, doc.size());
+        assertEquals(1, doc.getDocument(0).size());
         assertEquals(0, doc.getDocument(0).getSection(0).getLevel());
         assertEquals(Optional.of("Foobar"), doc.getDocument(0).getFileName());
         assertEquals("baz", doc.getDocument(0).getSection(0).getHeaderContent(0).content);
@@ -53,10 +53,10 @@ public class DocumentCollectionTest {
                         .addSentence("sentence11", 1)
                         .build()).build();
 
-        assertEquals(2, doc.getNumberOfDocuments());
+        assertEquals(2, doc.size());
 
         // first document
-        assertEquals(1, doc.getDocument(0).getNumberOfSections());
+        assertEquals(1, doc.getDocument(0).size());
         assertEquals(Optional.of("doc1"), doc.getDocument(0).getFileName());
         assertEquals("sec1", doc.getDocument(0).getSection(0).getHeaderContent(0).content);
         assertEquals(0, doc.getDocument(0).getSection(0).getLevel());
@@ -70,7 +70,7 @@ public class DocumentCollectionTest {
         assertEquals(1, doc.getDocument(0).getSection(0).getParagraph(0).getSentence(1).position);
 
         // second document
-        assertEquals(1, doc.getDocument(1).getNumberOfSections());
+        assertEquals(1, doc.getDocument(1).size());
         assertEquals(Optional.of("doc2"), doc.getDocument(1).getFileName());
         assertEquals("sec2", doc.getDocument(1).getSection(0).getHeaderContent(0).content);
         assertEquals(0, doc.getDocument(1).getSection(0).getLevel());

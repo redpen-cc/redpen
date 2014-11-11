@@ -22,8 +22,6 @@ import cc.redpen.formatter.Formatter;
 import cc.redpen.model.Document;
 import cc.redpen.validator.ValidationError;
 
-import java.util.Optional;
-
 /**
  * ResultDistributor flush the errors reported from Validators.
  */
