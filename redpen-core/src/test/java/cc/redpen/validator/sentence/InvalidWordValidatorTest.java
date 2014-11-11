@@ -67,7 +67,7 @@ public class InvalidWordValidatorTest {
                         .addSentence("he is a foolish man.", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
@@ -91,7 +91,7 @@ public class InvalidWordValidatorTest {
                         .addSentence("Domo is a greeting word in Japan.", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
@@ -117,7 +117,7 @@ public class InvalidWordValidatorTest {
                         .addSentence("こんにちは、群馬にきました。", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();

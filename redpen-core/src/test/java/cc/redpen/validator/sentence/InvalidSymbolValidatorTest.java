@@ -49,7 +49,7 @@ public class InvalidSymbolValidatorTest {
                 .setSymbol(new Symbol("EXCLAMATION_MARK", "!", "！"))
                 .build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(conf)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
@@ -73,7 +73,7 @@ public class InvalidSymbolValidatorTest {
                 .setSymbol(new Symbol("EXCLAMATION_MARK", "!", "！"))
                 .build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(conf)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
@@ -99,7 +99,7 @@ public class InvalidSymbolValidatorTest {
                 .setSymbol(new Symbol("COMMA", ",", "、"))
                 .build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(conf)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();

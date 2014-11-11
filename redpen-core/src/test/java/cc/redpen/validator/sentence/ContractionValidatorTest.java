@@ -47,7 +47,7 @@ public class ContractionValidatorTest {
                         .addSentence("he's also a business man.", 3)
                         .build()).build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
@@ -71,7 +71,7 @@ public class ContractionValidatorTest {
                         .addSentence("he is a business man.", 3)
                         .build()).build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
@@ -95,7 +95,7 @@ public class ContractionValidatorTest {
                         .addSentence("He's also a business man.", 3)
                         .build()).build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
@@ -122,7 +122,7 @@ public class ContractionValidatorTest {
                         .addSentence("he is a business man.", 3)
                         .build()).build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();

@@ -31,7 +31,7 @@ public class SuccessiveWordValidatorTest {
                                 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
@@ -53,7 +53,7 @@ public class SuccessiveWordValidatorTest {
                         .addSentence("私はは嬉しい.", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
@@ -75,7 +75,7 @@ public class SuccessiveWordValidatorTest {
                 .addSentence( "the item is a item good.", 1)
                 .build()).build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();

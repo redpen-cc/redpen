@@ -68,7 +68,7 @@ public class InvalidExpressionValidatorTest {
                                 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
@@ -90,7 +90,7 @@ public class InvalidExpressionValidatorTest {
                         .addSentence("明日地球が滅亡するってマジですか。", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
@@ -113,7 +113,7 @@ public class InvalidExpressionValidatorTest {
                         .addSentence("うふぉっ本当ですか？", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();

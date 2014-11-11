@@ -72,7 +72,7 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
                         .addSentence("きょうは（Coke）を飲みたい。", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
@@ -94,7 +94,7 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
                         .addSentence("きょうは、Coke を飲みたい。", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();

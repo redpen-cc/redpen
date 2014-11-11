@@ -19,16 +19,13 @@ package cc.redpen;
 
 import cc.redpen.config.Configuration;
 import cc.redpen.config.Symbol;
-import org.apache.commons.io.IOUtils;
 import org.junit.Test;
-
-import java.io.InputStream;
 
 import static org.junit.Assert.*;
 
 public class ConfigurationLoaderTest {
     @Test
-    public void testLoadConfiguration() {
+    public void testLoadConfiguration() throws RedPenException{
         String sampleConfigString =
                 "<redpen-conf lang=\"en\">" +
                         "<validators>" +
@@ -43,9 +40,7 @@ public class ConfigurationLoaderTest {
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        InputStream stream = IOUtils.toInputStream(sampleConfigString);
-        Configuration configuration = configurationLoader.loadConfiguration(stream);
-        IOUtils.closeQuietly(stream);
+        Configuration configuration = configurationLoader.loadConfigurationFromString(sampleConfigString);
 
         assertNotNull(configuration);
         assertEquals(2, configuration.getValidatorConfigs().size());
@@ -65,7 +60,7 @@ public class ConfigurationLoaderTest {
     }
 
     @Test
-    public void testLoadJapaneseConfiguration() {
+    public void testLoadJapaneseConfiguration() throws RedPenException{
         String sampleConfigString =
                 "<redpen-conf lang=\"ja\">" +
                         "<validators>" +
@@ -80,9 +75,7 @@ public class ConfigurationLoaderTest {
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        InputStream stream = IOUtils.toInputStream(sampleConfigString);
-        Configuration configuration = configurationLoader.loadConfiguration(stream);
-        IOUtils.closeQuietly(stream);
+        Configuration configuration = configurationLoader.loadConfigurationFromString(sampleConfigString);
 
         assertNotNull(configuration);
         assertEquals(2, configuration.getValidatorConfigs().size());
@@ -102,7 +95,7 @@ public class ConfigurationLoaderTest {
     }
 
     @Test
-    public void testNewLoadConfigurationWithoutSymbolTableConfig() {
+    public void testNewLoadConfigurationWithoutSymbolTableConfig() throws RedPenException{
         String sampleConfigString =
                 "<redpen-conf>" +
                         "<validators>" +
@@ -114,9 +107,7 @@ public class ConfigurationLoaderTest {
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        InputStream stream = IOUtils.toInputStream(sampleConfigString);
-        Configuration configuration = configurationLoader.loadConfiguration(stream);
-        IOUtils.closeQuietly(stream);
+        Configuration configuration = configurationLoader.loadConfigurationFromString(sampleConfigString);
 
         assertNotNull(configuration);
         assertEquals(2, configuration.getValidatorConfigs().size());
@@ -130,7 +121,7 @@ public class ConfigurationLoaderTest {
     }
 
     @Test
-    public void testNewLoadConfigurationWithoutSymbolTableConfigContent() {
+    public void testNewLoadConfigurationWithoutSymbolTableConfigContent() throws RedPenException{
         String sampleConfigString =
                 "<redpen-conf lang=\"en\">" +
                         "<validators>" +
@@ -143,9 +134,7 @@ public class ConfigurationLoaderTest {
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        InputStream stream = IOUtils.toInputStream(sampleConfigString);
-        Configuration configuration = configurationLoader.loadConfiguration(stream);
-        IOUtils.closeQuietly(stream);
+        Configuration configuration = configurationLoader.loadConfigurationFromString(sampleConfigString);
 
         assertNotNull(configuration);
         assertEquals(2, configuration.getValidatorConfigs().size());
@@ -159,7 +148,7 @@ public class ConfigurationLoaderTest {
     }
 
     @Test
-    public void testNewLoadConfigurationWithoutValidatorConfig() {
+    public void testNewLoadConfigurationWithoutValidatorConfig() throws RedPenException {
         String sampleConfigString =
                 "<redpen-conf lang=\"en\">" +
                         "<symbols>" +
@@ -168,14 +157,12 @@ public class ConfigurationLoaderTest {
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        InputStream stream = IOUtils.toInputStream(sampleConfigString);
-        Configuration configuration = configurationLoader.loadConfiguration(stream);
+        Configuration configuration = configurationLoader.loadConfigurationFromString(sampleConfigString);
         assertNull(configuration);
-        IOUtils.closeQuietly(stream);
     }
 
     @Test
-    public void testNewLoadConfigurationWithoutValidatorConfigContent() {
+    public void testNewLoadConfigurationWithoutValidatorConfigContent() throws RedPenException{
         String sampleConfigString =
                 "<redpen-conf lang=\"en\">" +
                         "<validators>" +
@@ -186,25 +173,21 @@ public class ConfigurationLoaderTest {
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        InputStream stream = IOUtils.toInputStream(sampleConfigString);
-        Configuration configuration = configurationLoader.loadConfiguration(stream);
+        Configuration configuration = configurationLoader.loadConfigurationFromString(sampleConfigString);
         assertNotNull(configuration);
-        IOUtils.closeQuietly(stream);
     }
 
     @Test
-    public void testVoidConfig() {
+    public void testVoidConfig() throws RedPenException{
         String sampleConfigString =
                 "<redpen-conf></redpen-conf>";
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        InputStream stream = IOUtils.toInputStream(sampleConfigString);
-        Configuration configuration = configurationLoader.loadConfiguration(stream);
+        Configuration configuration = configurationLoader.loadConfigurationFromString(sampleConfigString);
         assertNull(configuration);
-        IOUtils.closeQuietly(stream);
     }
 
-    @Test
-    public void testNewLoadInvalidConfiguration() {
+    @Test(expected = RedPenException.class)
+    public void testNewLoadInvalidConfiguration() throws RedPenException{
         String sampleConfigString =
                 "<redpen-conf lang=\"en\">" +
                         "<validators>" +
@@ -219,15 +202,12 @@ public class ConfigurationLoaderTest {
                         "<redpen-conf>";  // NOTE: Invalid xml since slash should be exist.
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        InputStream stream = IOUtils.toInputStream(sampleConfigString);
-        Configuration configuration = configurationLoader.loadConfiguration(stream);
-        IOUtils.closeQuietly(stream);
-
-        assertNull(configuration);
+        // expecting RedPenException
+        configurationLoader.loadConfigurationFromString(sampleConfigString);
     }
 
     @Test
-    public void testSpaceConfiguration() {
+    public void testSpaceConfiguration() throws RedPenException{
         String sampleConfigString =
                 "<redpen-conf lang=\"en\">" +
                         "<validators>" +
@@ -240,9 +220,7 @@ public class ConfigurationLoaderTest {
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        InputStream stream = IOUtils.toInputStream(sampleConfigString);
-        Configuration configuration = configurationLoader.loadConfiguration(stream);
-        IOUtils.closeQuietly(stream);
+        Configuration configuration = configurationLoader.loadConfigurationFromString(sampleConfigString);
 
         assertNotNull(configuration);
 
@@ -259,7 +237,7 @@ public class ConfigurationLoaderTest {
     }
 
     @Test
-    public void testConfigurationWithoutSpaceSetting() {
+    public void testConfigurationWithoutSpaceSetting() throws RedPenException{
         String sampleConfigString =
                 "<redpen-conf lang=\"en\">" +
                         "<validators>" +
@@ -272,9 +250,7 @@ public class ConfigurationLoaderTest {
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        InputStream stream = IOUtils.toInputStream(sampleConfigString);
-        Configuration configuration = configurationLoader.loadConfiguration(stream);
-        IOUtils.closeQuietly(stream);
+        Configuration configuration = configurationLoader.loadConfigurationFromString(sampleConfigString);
 
         assertNotNull(configuration);
 
@@ -292,7 +268,7 @@ public class ConfigurationLoaderTest {
 
 
     @Test
-    public void testConfigurationMultipleInvalids() {
+    public void testConfigurationMultipleInvalids() throws RedPenException{
         String sampleConfigString =
                 "<redpen-conf lang=\"en\">" +
                         "<validators>" +
@@ -305,9 +281,7 @@ public class ConfigurationLoaderTest {
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        InputStream stream = IOUtils.toInputStream(sampleConfigString);
-        Configuration configuration = configurationLoader.loadConfiguration(stream);
-        IOUtils.closeQuietly(stream);
+        Configuration configuration = configurationLoader.loadConfigurationFromString(sampleConfigString);
 
         assertNotNull(configuration);
 
@@ -320,7 +294,7 @@ public class ConfigurationLoaderTest {
     }
 
     @Test
-    public void testSymbolConfigurationWithoutInvalid() {
+    public void testSymbolConfigurationWithoutInvalid() throws RedPenException{
         String sampleConfigString =
                 "<redpen-conf lang=\"en\">" +
                         "<validators>" +
@@ -333,9 +307,7 @@ public class ConfigurationLoaderTest {
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        InputStream stream = IOUtils.toInputStream(sampleConfigString);
-        Configuration configuration = configurationLoader.loadConfiguration(stream);
-        IOUtils.closeQuietly(stream);
+        Configuration configuration = configurationLoader.loadConfigurationFromString(sampleConfigString);
 
         assertNotNull(configuration);
 
@@ -350,7 +322,7 @@ public class ConfigurationLoaderTest {
     }
 
     @Test
-    public void testAccessNotRegisteredSymbol() {
+    public void testAccessNotRegisteredSymbol() throws RedPenException{
         String sampleConfigString =
                 "<redpen-conf lang=\"en\">" +
                         "<validators>" +
@@ -363,9 +335,7 @@ public class ConfigurationLoaderTest {
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        InputStream stream = IOUtils.toInputStream(sampleConfigString);
-        Configuration configuration = configurationLoader.loadConfiguration(stream);
-        IOUtils.closeQuietly(stream);
+        Configuration configuration = configurationLoader.loadConfigurationFromString(sampleConfigString);
 
         assertNotNull(configuration);
         // NOTE: HADOOP_CHARACTER does not exist even in default settings
@@ -375,7 +345,7 @@ public class ConfigurationLoaderTest {
 
 
     @Test
-    public void testConfigurationWithMisspelledBlock() {
+    public void testConfigurationWithMisspelledBlock() throws RedPenException{
         String sampleConfigString =
                 "<redpen-conf lang=\"en\">" +
                         "<validators>" +
@@ -388,15 +358,13 @@ public class ConfigurationLoaderTest {
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        InputStream stream = IOUtils.toInputStream(sampleConfigString);
-        Configuration configuration = configurationLoader.loadConfiguration(stream);
-        IOUtils.closeQuietly(stream);
+        Configuration configuration = configurationLoader.loadConfigurationFromString(sampleConfigString);
         assertNotNull(configuration); //FIXME: should be null or throw a exception. This will be fixed with issue #133.
         assertNotNull(configuration.getSymbolTable());
     }
 
     @Test(expected = IllegalStateException.class)
-    public void testSymbolConfigurationWithoutName() {
+    public void testSymbolConfigurationWithoutName() throws RedPenException{
         String sampleConfigString =
                 "<redpen-conf lang=\"en\">" +
                         "<validators>" +
@@ -409,9 +377,7 @@ public class ConfigurationLoaderTest {
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        InputStream stream = IOUtils.toInputStream(sampleConfigString);
-        configurationLoader.loadConfiguration(stream);
-        IOUtils.closeQuietly(stream);
+        configurationLoader.loadConfigurationFromString(sampleConfigString);
     }
 
 }

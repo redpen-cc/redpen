@@ -17,14 +17,19 @@
  */
 package cc.redpen;
 
-import cc.redpen.config.Configuration;
 import cc.redpen.distributor.ResultDistributor;
 import cc.redpen.distributor.ResultDistributorFactory;
 import cc.redpen.formatter.Formatter;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.validator.ValidationError;
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.BasicParser;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -126,21 +131,14 @@ public final class Main {
             inputFiles[i] = new File(inputFileNames[i]);
         }
 
-        ConfigurationLoader configLoader = new ConfigurationLoader();
-        Configuration conf = configLoader.loadConfiguration(configFileName);
-        if (conf == null) {
-            LOG.error("Failed to initialize the RedPen configuration.");
-            System.exit(-1);
-        }
-
         DocumentParser parser = DocumentParser.of(inputFormat);
         outputFormat = Formatter.Type.valueOf(resultFormat.toUpperCase());
 
         ResultDistributor distributor =
             ResultDistributorFactory.createDistributor(outputFormat, System.out);
 
-        RedPen redPen = new RedPen.Builder()
-            .setConfiguration(conf)
+        RedPen redPen = new RedPen.RedPenBuilder()
+            .setConfigFile(new File(configFileName))
             .setResultDistributor(distributor)
             .build();
         DocumentCollection documents = redPen.parse(parser, inputFiles);

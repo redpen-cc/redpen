@@ -62,9 +62,9 @@ public class RedPenResource {
                 if (langRedPenMap.size() == 0) {
                     LOG.info("Starting Document Validator Server.");
                     try {
-                        RedPen japaneseRedPen = new RedPen.Builder().setConfigPath("/conf/redpen-conf-ja.xml").build();
+                        RedPen japaneseRedPen = new RedPen.RedPenBuilder().setConfigResourcePath("/conf/redpen-conf-ja.xml").build();
                         langRedPenMap.put("ja", japaneseRedPen);
-                        RedPen englishRedPen = new RedPen.Builder().setConfigPath(DEFAULT_INTERNAL_CONFIG_PATH).build();
+                        RedPen englishRedPen = new RedPen.RedPenBuilder().setConfigResourcePath(DEFAULT_INTERNAL_CONFIG_PATH).build();
                         langRedPenMap.put("en", englishRedPen);
                         langRedPenMap.put("", englishRedPen);
 
@@ -73,7 +73,7 @@ public class RedPenResource {
                             configPath = context.getInitParameter("redpen.conf.path");
                             if (configPath != null) {
                                 LOG.info("Config Path is set to \"{}\"", configPath);
-                                RedPen defaultRedPen = new RedPen.Builder().setConfigPath(configPath).build();
+                                RedPen defaultRedPen = new RedPen.RedPenBuilder().setConfigResourcePath(configPath).build();
                                 langRedPenMap.put("", defaultRedPen);
                             } else {
                                 // if config path is not set, fallback to default config path
