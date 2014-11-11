@@ -150,6 +150,9 @@ public final class Configuration {
         }
 
         public Configuration build() {
+            if (symbolTable == null) {
+                setLanguage("en");
+            }
             return new Configuration(this.symbolTable, this.validatorConfigs, this.lang);
         }
     }
