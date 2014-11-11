@@ -20,9 +20,6 @@ package cc.redpen;
 import cc.redpen.config.Configuration;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.parser.DocumentParser;
-import org.apache.commons.io.IOUtils;
-
-import java.io.InputStream;
 
 /**
  * Generate DocumentCollection objects from String. This class are applied
@@ -44,9 +41,8 @@ public class SampleDocumentGenerator {
         Configuration configuration = new Configuration.Builder()
                 .setLanguage("en").build();
         DocumentCollection.Builder builder = new DocumentCollection.Builder();
-        InputStream stream = IOUtils.toInputStream(docString);
         builder.addDocument(
-                parser.parse(stream, RedPen.getSentenceExtractor(configuration), configuration.getTokenizer()));
+                parser.parse(docString, RedPen.getSentenceExtractor(configuration), configuration.getTokenizer()));
         return builder.build();
     }
 }

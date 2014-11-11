@@ -436,7 +436,7 @@ public class RedPen {
     /**
      * Builder for {@link cc.redpen.RedPen}.
      */
-    public static class Builder {
+    public static class RedPenBuilder {
 
         private Configuration configuration;
 
@@ -444,26 +444,24 @@ public class RedPen {
                 new PrintStream(System.out)
         );
 
-        public Builder setConfiguration(Configuration configuration) {
+        public RedPenBuilder setConfiguration(Configuration configuration) {
             this.configuration = configuration;
             return this;
         }
 
-        public Builder setConfigPath(String configPath) throws RedPenException {
+        public RedPenBuilder setConfigFile(File configFile) throws RedPenException {
             ConfigurationLoader configLoader = new ConfigurationLoader();
-            InputStream inputConfigStream = RedPen.class.getResourceAsStream(configPath);
-
-            if (inputConfigStream == null) {
-                LOG.info("Loading config from specified config file: \"{}\"", configPath);
-                configuration = configLoader.loadConfiguration(configPath);
-            } else {
-                LOG.info("Loading config from default configuration");
-                configuration = configLoader.loadConfiguration(inputConfigStream);
-            }
+            configuration = configLoader.load(configFile);
             return this;
         }
 
-        public Builder setResultDistributor(ResultDistributor distributor) {
+        public RedPenBuilder setConfigResourcePath(String configPath) throws RedPenException {
+            ConfigurationLoader configLoader = new ConfigurationLoader();
+            configuration = configLoader.loadFromResource(configPath);
+            return this;
+        }
+
+        public RedPenBuilder setResultDistributor(ResultDistributor distributor) {
             this.distributor = distributor;
             return this;
         }

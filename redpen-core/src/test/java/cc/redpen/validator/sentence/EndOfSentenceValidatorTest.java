@@ -64,7 +64,7 @@ public class EndOfSentenceValidatorTest {
                         .addSentence("彼は言った，“今日は誕生日”。", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();

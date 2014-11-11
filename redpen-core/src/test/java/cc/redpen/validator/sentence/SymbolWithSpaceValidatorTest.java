@@ -48,7 +48,7 @@ public class SymbolWithSpaceValidatorTest {
                 .setSymbol(new Symbol("SLASH", "/"))
                 .build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(conf)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
@@ -72,7 +72,7 @@ public class SymbolWithSpaceValidatorTest {
                 .setSymbol(new Symbol("COLON", ":", "", false, true))
                 .build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(conf)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
@@ -96,7 +96,7 @@ public class SymbolWithSpaceValidatorTest {
                 .setSymbol(new Symbol("LEFT_PARENTHESIS", "(", "", true, false))
                 .build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(conf)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
@@ -121,7 +121,7 @@ public class SymbolWithSpaceValidatorTest {
                 .setSymbol(new Symbol("RIGHT_PARENTHESIS", ")", "", false, true))
                 .build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(conf)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
@@ -145,7 +145,7 @@ public class SymbolWithSpaceValidatorTest {
                 .setSymbol(new Symbol("ASTARISK", "*", "", true, true))
                 .build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(conf)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();

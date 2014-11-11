@@ -17,9 +17,9 @@
  */
 package cc.redpen.util;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -34,10 +34,9 @@ public class FileLoaderTest {
         sampleWordSet += "Gumma\n";
         sampleWordSet += "Gifu\n";
 
-        InputStream inputStream = IOUtils.toInputStream(sampleWordSet);
         WordListExtractor ex = new WordListExtractor();
         FileLoader fileLoader = new FileLoader(ex);
-        fileLoader.loadFile(inputStream);
+        fileLoader.loadFile(new ByteArrayInputStream(sampleWordSet.getBytes("UTF-8")));
         Set<String> result = ex.get();
         assertEquals(3, result.size());
     }
@@ -46,10 +45,9 @@ public class FileLoaderTest {
     public void testCreateVacantWordList() throws IOException {
         String sampleWordSet = "";
 
-        InputStream inputStream = IOUtils.toInputStream(sampleWordSet);
         WordListExtractor ex = new WordListExtractor();
         FileLoader fileLoader = new FileLoader(ex);
-        fileLoader.loadFile(inputStream);
+        fileLoader.loadFile(new ByteArrayInputStream(sampleWordSet.getBytes("UTF-8")));
         Set<String> result = ex.get();
         assertEquals(0, result.size());
     }
@@ -60,10 +58,9 @@ public class FileLoaderTest {
         sampleWordSet += "Gumma\t530000\n";
         sampleWordSet += "Gifu\t1200\n";
 
-        InputStream inputStream = IOUtils.toInputStream(sampleWordSet);
         KeyValueDictionaryExtractor ex = new KeyValueDictionaryExtractor();
         FileLoader fileLoader = new FileLoader(ex);
-        fileLoader.loadFile(inputStream);
+        fileLoader.loadFile(new ByteArrayInputStream(sampleWordSet.getBytes("UTF-8")));
         Map<String, String> result = ex.get();
         assertEquals(3, result.size());
         assertEquals("100", result.get("Saitama"));
@@ -74,10 +71,9 @@ public class FileLoaderTest {
     @Test
     public void testCreateVacantKeyValueList() throws IOException {
         String sampleWordSet = "";
-        InputStream inputStream = IOUtils.toInputStream(sampleWordSet);
         KeyValueDictionaryExtractor ex = new KeyValueDictionaryExtractor();
         FileLoader fileLoader = new FileLoader(ex);
-        fileLoader.loadFile(inputStream);
+        fileLoader.loadFile(new ByteArrayInputStream(sampleWordSet.getBytes("UTF-8")));
         Map<String, String> result = ex.get();
         assertEquals(0, result.size());
     }

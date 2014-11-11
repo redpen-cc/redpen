@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 /**
  * Tests for creating Configuration object with the Builder.
  */
-public class ConfigurationBuilderTest {
+public class ConfigurationRedPenBuilderTest {
     @Test
     public void testBuildSimpleConfiguration() {
         Configuration config = new Configuration.Builder()

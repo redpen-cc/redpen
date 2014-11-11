@@ -21,7 +21,6 @@ import cc.redpen.RedPenException;
 import cc.redpen.formatter.XMLFormatter;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.WhiteSpaceTokenizer;
-import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -29,6 +28,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
@@ -118,7 +118,7 @@ public class XMLFormatterTest {
 
         Document document = null;
         try {
-            document = docBuilder.parse(IOUtils.toInputStream(resultString));
+            document = docBuilder.parse(new ByteArrayInputStream(resultString.getBytes("UTF-8")));
         } catch (SAXException | IOException e) {
             e.printStackTrace();
             fail();

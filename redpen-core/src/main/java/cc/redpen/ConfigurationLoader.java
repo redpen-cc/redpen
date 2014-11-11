@@ -32,16 +32,20 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 
 import static cc.redpen.config.Configuration.Builder;
 
 /**
  * Load the central configuration of {@link cc.redpen.RedPen}.
  */
-public class ConfigurationLoader {
+public final class ConfigurationLoader {
     private static final Logger LOG =
             LoggerFactory.getLogger(ConfigurationLoader.class);
     private Builder configBuilder = new Builder();
@@ -58,46 +62,78 @@ public class ConfigurationLoader {
                 Boolean.parseBoolean(element.getAttribute("after-space")));
     }
 
-    protected static Document parseConfigurationString(InputStream input) {
+
+    /**
+     * parse the input stream. stream will be closed.
+     * @param input stream
+     * @return
+     * @throws RedPenException
+     */
+    private static Document toDocument(InputStream input) throws RedPenException{
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        Document doc = null;
-        try {
+        try(BufferedInputStream bis = new BufferedInputStream(input)) {
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             dBuilder.setErrorHandler(new SAXErrorHandler());
-            doc = dBuilder.parse(input);
+            return dBuilder.parse(bis);
         } catch (SAXException | IOException | ParserConfigurationException e) {
-            LOG.error(e.getMessage());
+            throw new RedPenException(e);
         }
-        return doc;
     }
 
     /**
      * load {@link cc.redpen.RedPen} settings.
      *
-     * @param configFileName input configuration settings
+     * @param configFile input configuration file
      * @return Validator configuration resources
      * @throws cc.redpen.RedPenException
      */
-    public Configuration loadConfiguration(String configFileName) throws RedPenException {
-        try (InputStream fis = new FileInputStream(configFileName)) {
-            return this.loadConfiguration(fis);
+    public Configuration load(File configFile) throws RedPenException {
+        LOG.info("Loading config from specified config file: \"{}\"", configFile.getAbsolutePath());
+        try (InputStream fis = new FileInputStream(configFile)) {
+            return this.load(fis);
         } catch (IOException e) {
             throw new RedPenException(e);
         }
     }
 
     /**
+     * load {@link cc.redpen.RedPen} settings.
+     *
+     * @param resourcePath input configuration path
+     * @return Validator configuration resources
+     * @throws cc.redpen.RedPenException
+     */
+    public Configuration loadFromResource(String resourcePath) throws RedPenException {
+        InputStream inputConfigStream = Configuration.class.getResourceAsStream(resourcePath);
+        return load(inputConfigStream);
+    }
+
+    /**
+     * load {@link cc.redpen.RedPen} settings.
+     *
+     * @param configString configuration as String
+     * @return Validator configuration resources
+     * @throws cc.redpen.RedPenException
+     */
+    public Configuration loadFromString(String configString) throws RedPenException {
+        try {
+            return load(new ByteArrayInputStream(configString.getBytes("UTF-8")));
+        } catch (UnsupportedEncodingException e) {
+            throw new RedPenException(e);
+        }
+    }
+
+    /**
      * load {@link cc.redpen.RedPen} configuration.
+     * Provided stream will be closed.
      *
      * @param stream input configuration settings
      * @return Configuration loaded from input stream
-     * NOTE: return null when failed to create Configuration
      */
-    public Configuration loadConfiguration(InputStream stream) {
-        Document doc = parseConfigurationString(stream);
+    public Configuration load(InputStream stream) throws RedPenException {
+        Document doc = toDocument(stream);
         if (doc == null) {
-            LOG.error("Failed to parse configuration string");
-            return null;
+            throw new RedPenException("stream is null");
         }
 
         configBuilder = new Configuration.Builder();

@@ -48,7 +48,7 @@ public class SpellingValidatorTest {
                         .addSentence("this iz goody", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
@@ -70,7 +70,7 @@ public class SpellingValidatorTest {
                         .addSentence("This iz goody", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
@@ -93,7 +93,7 @@ public class SpellingValidatorTest {
                         .addSentence("That is true, but there is a condition", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
@@ -115,7 +115,7 @@ public class SpellingValidatorTest {
                         .addSentence("Abeshi is a word used in a comic.", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
@@ -137,7 +137,7 @@ public class SpellingValidatorTest {
                         .addSentence("That is true.", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
@@ -159,7 +159,7 @@ public class SpellingValidatorTest {
                         .addSentence("", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.Builder()
+        RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(config)
                 .setResultDistributor(new FakeResultDistributor())
                 .build();
