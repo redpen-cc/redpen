@@ -87,10 +87,10 @@ public final class ConfigurationLoader {
      * @return Validator configuration resources
      * @throws cc.redpen.RedPenException
      */
-    public Configuration loadConfiguration(File configFile) throws RedPenException {
+    public Configuration load(File configFile) throws RedPenException {
         LOG.info("Loading config from specified config file: \"{}\"", configFile.getAbsolutePath());
         try (InputStream fis = new FileInputStream(configFile)) {
-            return this.loadConfiguration(fis);
+            return this.load(fis);
         } catch (IOException e) {
             throw new RedPenException(e);
         }
@@ -103,9 +103,9 @@ public final class ConfigurationLoader {
      * @return Validator configuration resources
      * @throws cc.redpen.RedPenException
      */
-    public Configuration loadConfigurationFromResource(String resourcePath) throws RedPenException {
+    public Configuration loadFromResource(String resourcePath) throws RedPenException {
         InputStream inputConfigStream = Configuration.class.getResourceAsStream(resourcePath);
-        return loadConfiguration(inputConfigStream);
+        return load(inputConfigStream);
     }
 
     /**
@@ -115,9 +115,9 @@ public final class ConfigurationLoader {
      * @return Validator configuration resources
      * @throws cc.redpen.RedPenException
      */
-    public Configuration loadConfigurationFromString(String configString) throws RedPenException {
+    public Configuration loadFromString(String configString) throws RedPenException {
         try {
-            return loadConfiguration(new ByteArrayInputStream(configString.getBytes("UTF-8")));
+            return load(new ByteArrayInputStream(configString.getBytes("UTF-8")));
         } catch (UnsupportedEncodingException e) {
             throw new RedPenException(e);
         }
@@ -130,7 +130,7 @@ public final class ConfigurationLoader {
      * @param stream input configuration settings
      * @return Configuration loaded from input stream
      */
-    public Configuration loadConfiguration(InputStream stream) throws RedPenException {
+    public Configuration load(InputStream stream) throws RedPenException {
         Document doc = toDocument(stream);
         if (doc == null) {
             throw new RedPenException("stream is null");

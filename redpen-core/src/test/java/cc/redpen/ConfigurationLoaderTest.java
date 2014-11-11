@@ -40,7 +40,7 @@ public class ConfigurationLoaderTest {
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        Configuration configuration = configurationLoader.loadConfigurationFromString(sampleConfigString);
+        Configuration configuration = configurationLoader.loadFromString(sampleConfigString);
 
         assertNotNull(configuration);
         assertEquals(2, configuration.getValidatorConfigs().size());
@@ -75,7 +75,7 @@ public class ConfigurationLoaderTest {
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        Configuration configuration = configurationLoader.loadConfigurationFromString(sampleConfigString);
+        Configuration configuration = configurationLoader.loadFromString(sampleConfigString);
 
         assertNotNull(configuration);
         assertEquals(2, configuration.getValidatorConfigs().size());
@@ -107,7 +107,7 @@ public class ConfigurationLoaderTest {
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        Configuration configuration = configurationLoader.loadConfigurationFromString(sampleConfigString);
+        Configuration configuration = configurationLoader.loadFromString(sampleConfigString);
 
         assertNotNull(configuration);
         assertEquals(2, configuration.getValidatorConfigs().size());
@@ -134,7 +134,7 @@ public class ConfigurationLoaderTest {
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        Configuration configuration = configurationLoader.loadConfigurationFromString(sampleConfigString);
+        Configuration configuration = configurationLoader.loadFromString(sampleConfigString);
 
         assertNotNull(configuration);
         assertEquals(2, configuration.getValidatorConfigs().size());
@@ -157,7 +157,7 @@ public class ConfigurationLoaderTest {
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        Configuration configuration = configurationLoader.loadConfigurationFromString(sampleConfigString);
+        Configuration configuration = configurationLoader.loadFromString(sampleConfigString);
         assertNull(configuration);
     }
 
@@ -173,7 +173,7 @@ public class ConfigurationLoaderTest {
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        Configuration configuration = configurationLoader.loadConfigurationFromString(sampleConfigString);
+        Configuration configuration = configurationLoader.loadFromString(sampleConfigString);
         assertNotNull(configuration);
     }
 
@@ -182,7 +182,7 @@ public class ConfigurationLoaderTest {
         String sampleConfigString =
                 "<redpen-conf></redpen-conf>";
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        Configuration configuration = configurationLoader.loadConfigurationFromString(sampleConfigString);
+        Configuration configuration = configurationLoader.loadFromString(sampleConfigString);
         assertNull(configuration);
     }
 
@@ -203,7 +203,7 @@ public class ConfigurationLoaderTest {
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
         // expecting RedPenException
-        configurationLoader.loadConfigurationFromString(sampleConfigString);
+        configurationLoader.loadFromString(sampleConfigString);
     }
 
     @Test
@@ -220,7 +220,7 @@ public class ConfigurationLoaderTest {
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        Configuration configuration = configurationLoader.loadConfigurationFromString(sampleConfigString);
+        Configuration configuration = configurationLoader.loadFromString(sampleConfigString);
 
         assertNotNull(configuration);
 
@@ -250,7 +250,7 @@ public class ConfigurationLoaderTest {
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        Configuration configuration = configurationLoader.loadConfigurationFromString(sampleConfigString);
+        Configuration configuration = configurationLoader.loadFromString(sampleConfigString);
 
         assertNotNull(configuration);
 
@@ -281,7 +281,7 @@ public class ConfigurationLoaderTest {
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        Configuration configuration = configurationLoader.loadConfigurationFromString(sampleConfigString);
+        Configuration configuration = configurationLoader.loadFromString(sampleConfigString);
 
         assertNotNull(configuration);
 
@@ -307,7 +307,7 @@ public class ConfigurationLoaderTest {
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        Configuration configuration = configurationLoader.loadConfigurationFromString(sampleConfigString);
+        Configuration configuration = configurationLoader.loadFromString(sampleConfigString);
 
         assertNotNull(configuration);
 
@@ -335,7 +335,7 @@ public class ConfigurationLoaderTest {
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        Configuration configuration = configurationLoader.loadConfigurationFromString(sampleConfigString);
+        Configuration configuration = configurationLoader.loadFromString(sampleConfigString);
 
         assertNotNull(configuration);
         // NOTE: HADOOP_CHARACTER does not exist even in default settings
@@ -358,7 +358,7 @@ public class ConfigurationLoaderTest {
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        Configuration configuration = configurationLoader.loadConfigurationFromString(sampleConfigString);
+        Configuration configuration = configurationLoader.loadFromString(sampleConfigString);
         assertNotNull(configuration); //FIXME: should be null or throw a exception. This will be fixed with issue #133.
         assertNotNull(configuration.getSymbolTable());
     }
@@ -377,7 +377,7 @@ public class ConfigurationLoaderTest {
                         "</redpen-conf>";
 
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
-        configurationLoader.loadConfigurationFromString(sampleConfigString);
+        configurationLoader.loadFromString(sampleConfigString);
     }
 
 }

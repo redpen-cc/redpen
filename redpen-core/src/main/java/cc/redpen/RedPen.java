@@ -451,13 +451,13 @@ public class RedPen {
 
         public RedPenBuilder setConfigFile(File configFile) throws RedPenException {
             ConfigurationLoader configLoader = new ConfigurationLoader();
-            configuration = configLoader.loadConfiguration(configFile);
+            configuration = configLoader.load(configFile);
             return this;
         }
 
         public RedPenBuilder setConfigResourcePath(String configPath) throws RedPenException {
             ConfigurationLoader configLoader = new ConfigurationLoader();
-            configuration = configLoader.loadConfigurationFromResource(configPath);
+            configuration = configLoader.loadFromResource(configPath);
             return this;
         }
 
