@@ -32,17 +32,15 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-
 public class SymbolWithSpaceValidatorTest {
     @Test
     public void testNotNeedSpace() throws RedPenException {
-        DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence("I like apple/orange", 1)
-                .build();
+        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+                new Document.DocumentBuilder()
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("I like apple/orange", 1)
+                        .build()).build();
 
         Configuration conf = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
@@ -61,12 +59,12 @@ public class SymbolWithSpaceValidatorTest {
 
     @Test
     public void testNeedAfterSpace() throws RedPenException {
-        DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence("I like her:yes it is", 1)
-                .build();
+        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+                new Document.DocumentBuilder()
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("I like her:yes it is", 1)
+                        .build()).build();
 
         Configuration conf = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
@@ -85,12 +83,12 @@ public class SymbolWithSpaceValidatorTest {
 
     @Test
     public void testNeedBeforeSpace() throws RedPenException {
-        DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence("I like her(Nancy)very much.", 1)
-                .build();
+        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+                new Document.DocumentBuilder()
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("I like her(Nancy)very much.", 1)
+                        .build()).build();
 
         Configuration conf = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
@@ -109,12 +107,12 @@ public class SymbolWithSpaceValidatorTest {
 
     @Test
     public void testNeedSpaceInMultiplePosition() throws RedPenException {
-        DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence("I like her(Nancy)very much.", 1)
-                .build();
+        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+                new Document.DocumentBuilder()
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("I like her(Nancy)very much.", 1)
+                        .build()).build();
 
         Configuration conf = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
@@ -134,12 +132,12 @@ public class SymbolWithSpaceValidatorTest {
 
     @Test
     public void testReturnOnlyOneForHitBothBeforeAndAfter() throws RedPenException {
-        DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence("I like 1*10.", 1)
-                .build();
+        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+                new Document.DocumentBuilder()
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("I like 1*10.", 1)
+                        .build()).build();
 
         Configuration conf = new Configuration.Builder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))

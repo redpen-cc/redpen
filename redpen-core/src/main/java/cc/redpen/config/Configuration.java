@@ -20,6 +20,9 @@ package cc.redpen.config;
 import cc.redpen.symbol.AbstractSymbols;
 import cc.redpen.symbol.DefaultSymbols;
 import cc.redpen.symbol.JapaneseSymbols;
+import cc.redpen.tokenizer.JapaneseTokenizer;
+import cc.redpen.tokenizer.RedPenTokenizer;
+import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +35,7 @@ public final class Configuration {
     private final List<ValidatorConfiguration> validatorConfigs =
             new ArrayList<>();
     private String lang;
+    private RedPenTokenizer tokenizer;
 
     /**
      * Constructor.
@@ -45,6 +49,13 @@ public final class Configuration {
         }
         this.validatorConfigs.addAll(validatorConfigs);
         this.lang = lang;
+        switch (lang) {
+            case "ja":
+                this.tokenizer = new JapaneseTokenizer();
+                break;
+            default:
+                this.tokenizer = new WhiteSpaceTokenizer();
+        }
     }
 
     /**
@@ -71,6 +82,14 @@ public final class Configuration {
      */
     public String getLang() {
         return lang;
+    }
+
+    /**
+     * returns Tokenizer aasociated with this configuration
+     * @return tokenizer
+     */
+    public RedPenTokenizer getTokenizer() {
+        return tokenizer;
     }
 
     /**

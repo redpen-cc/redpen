@@ -45,7 +45,8 @@ public class SampleDocumentGenerator {
                 .setLanguage("en").build();
         DocumentCollection.Builder builder = new DocumentCollection.Builder();
         InputStream stream = IOUtils.toInputStream(docString);
-        parser.parse(stream, RedPen.getSentenceExtractor(configuration), builder);
+        builder.addDocument(
+                parser.parse(stream, RedPen.getSentenceExtractor(configuration), configuration.getTokenizer()));
         return builder.build();
     }
 }

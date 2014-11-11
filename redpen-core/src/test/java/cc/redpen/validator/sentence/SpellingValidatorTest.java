@@ -20,13 +20,11 @@ public class SpellingValidatorTest {
     @Test
     public void testValidate() throws Exception {
         DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence(
-                        "this iz a pen",
-                        1)
-                .build();
+                .addDocument(new Document.DocumentBuilder()
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("this iz a pen", 1)
+                        .build()).build();
 
         SpellingValidator validator = new SpellingValidator();
         validator.addWord("this");
@@ -44,13 +42,11 @@ public class SpellingValidatorTest {
                 .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence(
-                        "this iz goody",
-                        1)
-                .build();
+                .addDocument(new Document.DocumentBuilder()
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("this iz goody", 1)
+                        .build()).build();
 
         RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)
@@ -68,13 +64,11 @@ public class SpellingValidatorTest {
                 .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence(
-                        "This iz goody",
-                        1)
-                .build();
+                .addDocument(new Document.DocumentBuilder()
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("This iz goody", 1)
+                        .build()).build();
 
         RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)
@@ -93,13 +87,11 @@ public class SpellingValidatorTest {
                 .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence(
-                        "That is true, but there is a condition",
-                        1)
-                .build();
+                .addDocument(new Document.DocumentBuilder()
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("That is true, but there is a condition", 1)
+                        .build()).build();
 
         RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)
@@ -117,13 +109,11 @@ public class SpellingValidatorTest {
                 .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence(
-                        "Abeshi is a word used in a comic.",
-                        1)
-                .build();
+                .addDocument(new Document.DocumentBuilder()
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("Abeshi is a word used in a comic.", 1)
+                        .build()).build();
 
         RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)
@@ -141,13 +131,11 @@ public class SpellingValidatorTest {
                 .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence(
-                        "That is true.",
-                        1)
-                .build();
+                .addDocument(new Document.DocumentBuilder()
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("That is true.", 1)
+                        .build()).build();
 
         RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)
@@ -165,13 +153,11 @@ public class SpellingValidatorTest {
                 .setLanguage("en").build();
 
         DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence(
-                        "",
-                        1)
-                .build();
+                .addDocument(new Document.DocumentBuilder()
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("", 1)
+                        .build()).build();
 
         RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)

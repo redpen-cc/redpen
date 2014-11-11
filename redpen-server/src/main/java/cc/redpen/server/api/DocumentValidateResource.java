@@ -20,7 +20,7 @@ package cc.redpen.server.api;
 
 import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
-import cc.redpen.model.DocumentCollection;
+import cc.redpen.model.Document;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.validator.ValidationError;
 import org.json.JSONArray;
@@ -102,10 +102,9 @@ public class DocumentValidateResource {
 
         json.put("document", document);
 
-        DocumentCollection documents = new DocumentCollection();
-        documents.addDocument(redPen.parse(DocumentParser.PLAIN, document));
+        Document parsedDocument = redPen.parse(DocumentParser.PLAIN, document);
 
-        List<ValidationError> errors = redPen.validate(documents).get(documents.getDocument(0));
+        List<ValidationError> errors = redPen.validate(parsedDocument);
 
         JSONArray jsonErrors = new JSONArray();
 

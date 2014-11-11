@@ -25,6 +25,7 @@ import cc.redpen.distributor.FakeResultDistributor;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.model.Sentence;
+import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -58,14 +59,14 @@ public class InvalidExpressionValidatorTest {
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .setLanguage("en").build();
 
-        DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence(
-                        "You know. He is a super man.",
-                        1)
-                .build();
+        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+                new Document.DocumentBuilder()
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(
+                                "You know. He is a super man.",
+                                1)
+                        .build()).build();
 
         RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)
@@ -82,14 +83,12 @@ public class InvalidExpressionValidatorTest {
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .setLanguage("ja").build();
 
-        DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence(
-                        "明日地球が滅亡するってマジですか。",
-                        1)
-                .build();
+        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+                new Document.DocumentBuilder(new JapaneseTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("明日地球が滅亡するってマジですか。", 1)
+                        .build()).build();
 
         RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)
@@ -107,14 +106,12 @@ public class InvalidExpressionValidatorTest {
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression").addAttribute("list", "うふぉ,ガチ"))
                 .setLanguage("ja").build();
 
-        DocumentCollection documents = new DocumentCollection.Builder()
-                .addDocument("")
-                .addSection(1)
-                .addParagraph()
-                .addSentence(
-                        "うふぉっ本当ですか？",
-                        1)
-                .build();
+        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+                new Document.DocumentBuilder(new JapaneseTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("うふぉっ本当ですか？", 1)
+                        .build()).build();
 
         RedPen redPen = new RedPen.Builder()
                 .setConfiguration(config)

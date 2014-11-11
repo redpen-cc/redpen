@@ -19,11 +19,12 @@ package cc.redpen.parser;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
-import cc.redpen.model.DocumentCollection;
+import cc.redpen.tokenizer.RedPenTokenizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.util.Optional;
 
 /**
  * Abstract Parser class containing common procedures to
@@ -35,26 +36,21 @@ public abstract class BaseDocumentParser implements DocumentParser {
 
 
     @Override
-    public Document parse(String content, SentenceExtractor sentenceExtractor, DocumentCollection.Builder documentBuilder) throws RedPenException{
+    public Document parse(String content, SentenceExtractor sentenceExtractor, RedPenTokenizer tokenizer) throws RedPenException {
         try {
-            return parse(new ByteArrayInputStream(content.getBytes("UTF-8")), sentenceExtractor, documentBuilder);
+            return parse(new ByteArrayInputStream(content.getBytes("UTF-8")), sentenceExtractor, tokenizer);
         } catch (UnsupportedEncodingException shouldNeverHappen) {
             throw new RuntimeException(shouldNeverHappen);
         }
     }
 
     @Override
-    public Document parse(File file, SentenceExtractor sentenceExtractor, DocumentCollection.Builder documentBuilder) throws RedPenException {
-        Document document ;
+    public Document parse(File file, SentenceExtractor sentenceExtractor, RedPenTokenizer tokenizer) throws RedPenException {
         try (InputStream inputStream = new FileInputStream(file)) {
-            document = this.parse(inputStream, sentenceExtractor, documentBuilder);
-                if (document != null) {
-                    document.setFileName(file.getName());
-                }
+            return parse(inputStream, Optional.of(file.getName()), sentenceExtractor, tokenizer);
         } catch (IOException e) {
             throw new RedPenException(e);
         }
-        return document;
     }
 
     /**

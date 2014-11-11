@@ -19,10 +19,11 @@ package cc.redpen.parser;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
-import cc.redpen.model.DocumentCollection;
+import cc.redpen.tokenizer.RedPenTokenizer;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Optional;
 
 /**
  * DocumentParser generates Document from input.
@@ -31,11 +32,22 @@ public interface DocumentParser {
     /**
      * Given input stream, return Document instance from a stream.
      *
+     * @return a generated file content
+     * @throws cc.redpen.RedPenException if Parser failed to parse input.
+     */
+    public default Document parse(InputStream is, SentenceExtractor sentenceExtractor, RedPenTokenizer tokenizer)
+            throws RedPenException {
+        return this.parse(is, Optional.empty(), sentenceExtractor,tokenizer);
+    }
+
+    /**
+     * Given input stream, return Document instance from a stream.
+     *
      * @param io input stream containing input content
      * @return a generated file content
      * @throws cc.redpen.RedPenException if Parser failed to parse input.
      */
-    Document parse(InputStream io, SentenceExtractor sentenceExtractor, DocumentCollection.Builder documentBuilder)
+    Document parse(InputStream io, Optional<String> fileName, SentenceExtractor sentenceExtractor, RedPenTokenizer tokenizer)
             throws RedPenException;
 
     /**
@@ -45,7 +57,7 @@ public interface DocumentParser {
      * @return a generated file content
      * @throws cc.redpen.RedPenException if Parser failed to parse input.
      */
-    Document parse(String content, SentenceExtractor sentenceExtractor, DocumentCollection.Builder documentBuilder)
+    Document parse(String content, SentenceExtractor sentenceExtractor, RedPenTokenizer tokenizer)
             throws RedPenException;
 
     /**
@@ -55,7 +67,7 @@ public interface DocumentParser {
      * @return a generated file content
      * @throws cc.redpen.RedPenException if Parser failed to parse input.
      */
-    Document parse(File file, SentenceExtractor sentenceExtractor, DocumentCollection.Builder documentBuilder)
+    Document parse(File file, SentenceExtractor sentenceExtractor, RedPenTokenizer tokenizer)
             throws RedPenException;
 
     public static final DocumentParser PLAIN = new PlainTextParser();

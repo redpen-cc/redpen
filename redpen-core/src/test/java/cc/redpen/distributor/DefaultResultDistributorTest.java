@@ -72,7 +72,7 @@ public class DefaultResultDistributorTest extends Validator<Sentence> {
         DefaultResultDistributor distributor = new DefaultResultDistributor(os);
         distributor.setFormatter(new PlainFormatter());
         ValidationError error = createValidationError(new Sentence("sentence", 1));
-        distributor.flushError(new Document(), error);
+        distributor.flushError(new Document.DocumentBuilder().build(), error);
         String result = null;
         try {
             result = new String(os.toByteArray(), "UTF-8");
@@ -90,7 +90,7 @@ public class DefaultResultDistributorTest extends Validator<Sentence> {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         DefaultResultDistributor distributor = new DefaultResultDistributor(os);
         distributor.setFormatter(new PlainFormatter());
-        distributor.flushError(new Document(), null);
+        distributor.flushError(new Document.DocumentBuilder().build(), null);
     }
 
     @Test(expected = IllegalArgumentException.class)

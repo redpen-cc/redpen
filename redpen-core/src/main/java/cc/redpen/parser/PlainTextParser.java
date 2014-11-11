@@ -19,8 +19,8 @@ package cc.redpen.parser;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
-import cc.redpen.model.DocumentCollection;
 import cc.redpen.model.Sentence;
+import cc.redpen.tokenizer.RedPenTokenizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Parser for plain text file.
@@ -45,9 +46,10 @@ final class PlainTextParser extends BaseDocumentParser {
     }
 
     @Override
-    public Document parse(InputStream is, SentenceExtractor sentenceExtractor, DocumentCollection.Builder documentBuilder)
+    public Document parse(InputStream is, Optional<String> fileName, SentenceExtractor sentenceExtractor, RedPenTokenizer tokenizer)
             throws RedPenException {
-        documentBuilder.addDocument("");
+        Document.DocumentBuilder documentBuilder = new Document.DocumentBuilder(tokenizer);
+        fileName.ifPresent(documentBuilder::setFileName);
 
         List<Sentence> headers = new ArrayList<>();
         headers.add(new Sentence("", 0));
@@ -76,10 +78,10 @@ final class PlainTextParser extends BaseDocumentParser {
         if (remain.length() > 0) {
             documentBuilder.addSentence(remain, lineNum);
         }
-        return documentBuilder.getLastDocument();
+        return documentBuilder.build();
     }
 
-    private String extractSentences(int lineNum, String line, SentenceExtractor sentenceExtractor, DocumentCollection.Builder builder) {
+    private String extractSentences(int lineNum, String line, SentenceExtractor sentenceExtractor, Document.DocumentBuilder builder) {
         int periodPosition = sentenceExtractor.getSentenceEndPosition(line);
         if (periodPosition == -1) {
             return line;

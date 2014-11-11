@@ -57,8 +57,7 @@ public class ParagraphNumberValidatorTest {
         Section section = new Section(0);
         section.appendParagraph(new Paragraph());
 
-        Document document = new Document();
-        document.appendSection(section);
+        Document document = new Document.DocumentBuilder().appendSection(section).build();
 
         List<ValidationError> errors = validator.validate(section);
         assertEquals(0, errors.size());
