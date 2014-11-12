@@ -18,17 +18,10 @@
 package cc.redpen;
 
 import cc.redpen.config.Configuration;
-import cc.redpen.config.SymbolTable;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.distributor.DefaultResultDistributor;
 import cc.redpen.distributor.ResultDistributor;
-import cc.redpen.model.Document;
-import cc.redpen.model.DocumentCollection;
-import cc.redpen.model.ListBlock;
-import cc.redpen.model.ListElement;
-import cc.redpen.model.Paragraph;
-import cc.redpen.model.Section;
-import cc.redpen.model.Sentence;
+import cc.redpen.model.*;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.validator.PreProcessor;
@@ -48,8 +41,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static cc.redpen.config.SymbolType.*;
-
 /**
  * Validate all input files using appended Validators.
  */
@@ -66,7 +57,7 @@ public class RedPen {
     private RedPen(Configuration configuration, ResultDistributor distributor) throws RedPenException {
         this.configuration = configuration;
         this.distributor = distributor;
-        this.sentenceExtractor = getSentenceExtractor(this.configuration);
+        this.sentenceExtractor = new SentenceExtractor(this.configuration.getSymbolTable());
         loadValidators();
     }
 
@@ -371,37 +362,6 @@ public class RedPen {
                 ", sentenceValidators=" + sentenceValidators +
                 ", distributor=" + distributor +
                 '}';
-    }
-
-    static SentenceExtractor getSentenceExtractor(Configuration configuration) {
-        SymbolTable symbolTable = configuration.getSymbolTable();
-        List<String> periods = extractPeriods(symbolTable);
-        List<String> rightQuotations = extractRightQuotations(symbolTable);
-        return new SentenceExtractor(periods, rightQuotations);
-    }
-
-    private static List<String> extractRightQuotations(SymbolTable symbolTable) {
-        List<String> rightQuotations = new ArrayList<>();
-        rightQuotations.add(symbolTable.getValueOrFallbackToDefault(RIGHT_SINGLE_QUOTATION_MARK));
-        rightQuotations.add(symbolTable.getValueOrFallbackToDefault(RIGHT_DOUBLE_QUOTATION_MARK));
-        for (String rightQuotation : rightQuotations) {
-            LOG.info("\"" + rightQuotation + "\" is added as a end of right quotation character.");
-        }
-        return rightQuotations;
-    }
-
-    private static List<String> extractPeriods(SymbolTable symbolTable) {
-        List<String> periods = new ArrayList<>();
-        periods.add(symbolTable.getValueOrFallbackToDefault(FULL_STOP));
-
-        periods.add(symbolTable.getValueOrFallbackToDefault(QUESTION_MARK));
-
-        periods.add(symbolTable.getValueOrFallbackToDefault(EXCLAMATION_MARK));
-
-        for (String period : periods) {
-            LOG.info("\"" + period + "\" is added as a end of sentence character");
-        }
-        return periods;
     }
 
     /**

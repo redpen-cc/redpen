@@ -23,6 +23,7 @@ import cc.redpen.model.ListBlock;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.parser.DocumentParser;
+import cc.redpen.parser.SentenceExtractor;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -559,7 +560,7 @@ public class WikiParserTest {
                                        Configuration conf) {
         DocumentParser parser = DocumentParser.WIKI;
         try {
-            return parser.parse(inputDocumentString, RedPen.getSentenceExtractor(conf), conf.getTokenizer());
+            return parser.parse(inputDocumentString, new SentenceExtractor(conf.getSymbolTable()), conf.getTokenizer());
         } catch (RedPenException e) {
             e.printStackTrace();
             return null;
@@ -572,7 +573,7 @@ public class WikiParserTest {
         DocumentParser parser = DocumentParser.WIKI;
         Document doc = null;
         try {
-            doc = parser.parse(inputDocumentString, RedPen.getSentenceExtractor(conf), conf.getTokenizer());
+            doc = parser.parse(inputDocumentString, new SentenceExtractor(conf.getSymbolTable()), conf.getTokenizer());
         } catch (RedPenException e) {
             e.printStackTrace();
         }

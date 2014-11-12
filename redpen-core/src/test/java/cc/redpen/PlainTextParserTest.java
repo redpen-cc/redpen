@@ -23,6 +23,7 @@ import cc.redpen.model.Document;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.parser.DocumentParser;
+import cc.redpen.parser.SentenceExtractor;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -57,7 +58,7 @@ public class PlainTextParserTest {
         Document doc = null;
         Configuration configuration = new Configuration.ConfigurationBuilder().build();
         try {
-            doc = parser.parse(sampleText, RedPen.getSentenceExtractor(configuration), configuration.getTokenizer());
+            doc = parser.parse(sampleText, new SentenceExtractor(configuration.getSymbolTable()), configuration.getTokenizer());
         } catch (RedPenException e) {
             fail();
         }

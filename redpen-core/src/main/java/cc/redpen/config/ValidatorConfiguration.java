@@ -60,10 +60,22 @@ public final class ValidatorConfiguration {
      *
      * @param name  attribute name
      * @param value attribute value
-     * @retrun this object
+     * @return this object
      */
     public ValidatorConfiguration addAttribute(String name, String value) {
         attributes.put(name, value);
+        return this;
+    }
+
+    /**
+     * Add an attribute.
+     *
+     * @param name  attribute name
+     * @param value attribute value
+     * @return this object
+     */
+    public ValidatorConfiguration addAttribute(String name, boolean value) {
+        attributes.put(name, String.valueOf(value));
         return this;
     }
 

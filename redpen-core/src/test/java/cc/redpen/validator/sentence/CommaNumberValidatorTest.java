@@ -17,8 +17,11 @@
  */
 package cc.redpen.validator.sentence;
 
+import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
+import cc.redpen.validator.Validator;
+import cc.redpen.validator.ValidatorFactory;
 import org.junit.Test;
 
 import java.util.List;
@@ -29,8 +32,8 @@ import static org.junit.Assert.assertNotNull;
 public class CommaNumberValidatorTest {
 
     @Test
-    public void testWithSentenceContainingManyCommas() {
-        CommaNumberValidator commaNumberValidator = new CommaNumberValidator();
+    public void testWithSentenceContainingManyCommas() throws RedPenException {
+        Validator commaNumberValidator = ValidatorFactory.getInstance("CommaNumber");
         String content = "is it true, not true, but it should be ture, right, or not right.";
         Sentence str = new Sentence(content, 0);
         List<ValidationError> errors = commaNumberValidator.validate(str);
@@ -40,8 +43,8 @@ public class CommaNumberValidatorTest {
     }
 
     @Test
-    public void testWithtSentenceWithoutComma() {
-        CommaNumberValidator commaNumberValidator = new CommaNumberValidator();
+    public void testWithtSentenceWithoutComma() throws RedPenException {
+        Validator commaNumberValidator = ValidatorFactory.getInstance("CommaNumber");
         String content = "is it true.";
         Sentence str = new Sentence(content, 0);
         List<ValidationError> errors = commaNumberValidator.validate(str);
@@ -50,8 +53,8 @@ public class CommaNumberValidatorTest {
     }
 
     @Test
-    public void testWithtZeroLengthSentence() {
-        CommaNumberValidator commaNumberValidator = new CommaNumberValidator();
+    public void testWithtZeroLengthSentence() throws RedPenException {
+        Validator commaNumberValidator = ValidatorFactory.getInstance("CommaNumber");
         String content = "";
         Sentence str = new Sentence(content, 0);
         List<ValidationError> errors = commaNumberValidator.validate(str);

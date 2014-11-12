@@ -19,7 +19,6 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.config.Symbol;
-import cc.redpen.config.Symbols;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
@@ -48,26 +47,6 @@ public class QuotationValidator extends Validator<Sentence> {
     private Symbol leftDoubleQuotationMark;
     private Symbol rightDoubleQuotationMark;
     private Character period;
-
-    public QuotationValidator() {
-        this(false);
-    }
-
-    QuotationValidator(boolean useAscii) {
-        this(useAscii, Symbols.DEFAULT_SYMBOLS.get(FULL_STOP).getValue().charAt(0));
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param useAscii true when this validator uses ascii setting,
-     *                 false uses the user-defined character settings
-     * @param fullStop period character
-     */
-    QuotationValidator(boolean useAscii, Character fullStop) {
-        setUseAscii(useAscii);
-        this.period = fullStop;
-    }
 
     @Override
     public List<ValidationError> validate(Sentence sentence) {
