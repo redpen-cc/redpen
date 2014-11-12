@@ -19,8 +19,8 @@ package cc.redpen;
 
 import cc.redpen.config.Configuration;
 import cc.redpen.config.Symbol;
+import cc.redpen.config.SymbolType;
 import cc.redpen.config.ValidatorConfiguration;
-import cc.redpen.symbol.SymbolType;
 import cc.redpen.util.SAXErrorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +41,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
-import static cc.redpen.config.Configuration.Builder;
+import static cc.redpen.config.Configuration.ConfigurationBuilder;
 
 /**
  * Load the central configuration of {@link cc.redpen.RedPen}.
@@ -49,7 +49,7 @@ import static cc.redpen.config.Configuration.Builder;
 public final class ConfigurationLoader {
     private static final Logger LOG =
             LoggerFactory.getLogger(ConfigurationLoader.class);
-    private Builder configBuilder = new Builder();
+    private ConfigurationBuilder configBuilder = new ConfigurationBuilder();
 
     private static Symbol createSymbol(Element element) {
         if (!element.hasAttribute("name") || !element.hasAttribute("value")) {
@@ -138,7 +138,7 @@ public final class ConfigurationLoader {
             throw new RedPenException("stream is null");
         }
 
-        configBuilder = new Configuration.Builder();
+        configBuilder = new ConfigurationBuilder();
         Element rootElement = getRootNode(doc, "redpen-conf");
 
         Node langNode = rootElement.getAttributes().getNamedItem("lang");

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package cc.redpen.symbol;
+package cc.redpen.config;
 
 public enum SymbolType {
     AMPERSAND,

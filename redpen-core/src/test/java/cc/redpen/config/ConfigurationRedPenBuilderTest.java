@@ -2,7 +2,7 @@ package cc.redpen.config;
 
 import org.junit.Test;
 
-import static cc.redpen.symbol.SymbolType.FULL_STOP;
+import static cc.redpen.config.SymbolType.FULL_STOP;
 import static org.junit.Assert.*;
 
 /**
@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 public class ConfigurationRedPenBuilderTest {
     @Test
     public void testBuildSimpleConfiguration() {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .addValidatorConfig(new ValidatorConfiguration("SentenceLength"))
                 .setLanguage("en").build();
@@ -26,7 +26,7 @@ public class ConfigurationRedPenBuilderTest {
 
     @Test
     public void testBuildConfigurationWithoutSymbolTable() {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
 
@@ -40,7 +40,7 @@ public class ConfigurationRedPenBuilderTest {
 
     @Test
     public void testBuildConfigurationAddingProperties() {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression")
                         .addAttribute("dict", "./foobar.dict"))
                 .addValidatorConfig(new ValidatorConfiguration("SentenceLength")
@@ -60,7 +60,7 @@ public class ConfigurationRedPenBuilderTest {
 
     @Test
     public void testBuildConfigurationSpecifyingLanguage() {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .setLanguage("ja")
                 .build();
@@ -72,7 +72,7 @@ public class ConfigurationRedPenBuilderTest {
 
     @Test
     public void testBuildConfigurationOverrideSymbolSetting() {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .setLanguage("ja")
                 .setSymbol(FULL_STOP, ".")
@@ -85,7 +85,7 @@ public class ConfigurationRedPenBuilderTest {
 
     @Test
     public void testBuildConfigurationOverrideAddInvalidSymbolSetting() {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .setLanguage("ja")
                 .addInvalidPattern(FULL_STOP, "●")
@@ -100,7 +100,7 @@ public class ConfigurationRedPenBuilderTest {
 
     @Test
     public void testBuildConfigurationAccessingSymbolByValue() {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .setLanguage("ja")
                 .addInvalidPattern(FULL_STOP, "●")

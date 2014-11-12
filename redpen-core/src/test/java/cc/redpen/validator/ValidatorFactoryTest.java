@@ -22,7 +22,7 @@ class NoConstructorWithConfigsValidator extends Validator<Sentence> {
 public class ValidatorFactoryTest {
     @Test
     public void testCreateValidator() {
-        Configuration conf = new Configuration.Builder()
+        Configuration conf = new Configuration.ConfigurationBuilder()
                 .setLanguage("en")
                 .addValidatorConfig(new ValidatorConfiguration("SentenceLength"))
                 .build();
@@ -36,7 +36,7 @@ public class ValidatorFactoryTest {
 
     @Test(expected = RedPenException.class)
     public void testThrowExceptionWhenCreateNonExistValidator() throws RedPenException {
-        Configuration conf = new Configuration.Builder()
+        Configuration conf = new Configuration.ConfigurationBuilder()
                 .setLanguage("en")
                 .addValidatorConfig(new ValidatorConfiguration("Foobar"))
                 .build();
@@ -46,7 +46,7 @@ public class ValidatorFactoryTest {
 
     @Test(expected = RuntimeException.class)
     public void testThrowExceptionWhenCreateValidatorNotImplementsInterface() throws RedPenException {
-        Configuration conf = new Configuration.Builder()
+        Configuration conf = new Configuration.ConfigurationBuilder()
                 .setLanguage("en")
                 .addValidatorConfig(new ValidatorConfiguration("NotImplementInterface"))
                 .build();
@@ -56,7 +56,7 @@ public class ValidatorFactoryTest {
 
     @Test(expected = RuntimeException.class)
     public void testThrowExceptionWhenCreateValidatorWithoutConstructorWithConfigs() throws RedPenException {
-        Configuration conf = new Configuration.Builder()
+        Configuration conf = new Configuration.ConfigurationBuilder()
                 .setLanguage("en")
                 .addValidatorConfig(new ValidatorConfiguration("NoConstructorWithConfigs"))
                 .build();

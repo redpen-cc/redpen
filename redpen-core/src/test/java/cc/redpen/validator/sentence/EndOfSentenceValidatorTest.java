@@ -53,7 +53,7 @@ public class EndOfSentenceValidatorTest {
 
     @Test
     public void testJapaneseInvalidEndOfSentence() throws RedPenException {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("EndOfSentence"))
                 .setLanguage("ja").build();
 

@@ -20,9 +20,7 @@ package cc.redpen.config;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * Test for Configuration Structure
@@ -32,7 +30,7 @@ public class ConfigurationTest {
     @Test
     public void testSentenceValidatorConfiguration() throws Exception {
 
-        Configuration configuration = new Configuration.Builder()
+        Configuration configuration = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("SentenceLength"))
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBeginningOfSentence"))
@@ -52,7 +50,7 @@ public class ConfigurationTest {
         // NOTE: not throw a exception even when adding a non exist validator.
         // The errors occurs when creating the added non existing validator instance.
         try {
-            new Configuration.Builder()
+            new Configuration.ConfigurationBuilder()
                     .addValidatorConfig(new ValidatorConfiguration("ThereIsNoSuchValidator")).build();
         } catch (Exception e) {
             fail();
@@ -61,7 +59,7 @@ public class ConfigurationTest {
 
     @Test
     public void testSectionValidatorConfiguration() throws Exception {
-        Configuration configuration = new Configuration.Builder().addValidatorConfig(new ValidatorConfiguration("SectionLength"))
+        Configuration configuration = new Configuration.ConfigurationBuilder().addValidatorConfig(new ValidatorConfiguration("SectionLength"))
                 .addValidatorConfig(new ValidatorConfiguration("MaxParagraphNumber"))
                 .addValidatorConfig(new ValidatorConfiguration("ParagraphStartWith")).build();
         assertEquals(3, configuration.getValidatorConfigs().size());
@@ -69,7 +67,7 @@ public class ConfigurationTest {
 
     @Test
     public void testSymbolTableWithoutLanguageSetting() throws Exception {
-        Configuration configuration = new Configuration.Builder().build(); // NOTE: load "en" setting when lang is not specified
+        Configuration configuration = new Configuration.ConfigurationBuilder().build(); // NOTE: load "en" setting when lang is not specified
         assertEquals("en", configuration.getLang());
         assertNotNull(configuration.getLang());
     }

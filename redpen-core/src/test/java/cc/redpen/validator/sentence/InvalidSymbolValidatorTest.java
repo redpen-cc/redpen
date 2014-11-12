@@ -33,8 +33,8 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Map;
 
-import static cc.redpen.symbol.SymbolType.COMMA;
-import static cc.redpen.symbol.SymbolType.EXCLAMATION_MARK;
+import static cc.redpen.config.SymbolType.COMMA;
+import static cc.redpen.config.SymbolType.EXCLAMATION_MARK;
 
 public class InvalidSymbolValidatorTest {
     @Test
@@ -46,7 +46,7 @@ public class InvalidSymbolValidatorTest {
                         .addSentence("わたしはカラオケが大好き！", 1)
                         .build()).build();
 
-        Configuration conf = new Configuration.Builder()
+        Configuration conf = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
                 .setLanguage("en")
                 .setSymbol(new Symbol(EXCLAMATION_MARK, "!", "！"))
@@ -70,7 +70,7 @@ public class InvalidSymbolValidatorTest {
                         .addSentence("I like Karaoke", 1)
                         .build()).build();
 
-        Configuration conf = new Configuration.Builder()
+        Configuration conf = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
                 .setLanguage("en")
                 .setSymbol(new Symbol(EXCLAMATION_MARK, "!", "！"))
@@ -95,7 +95,7 @@ public class InvalidSymbolValidatorTest {
                         .addSentence("わたしは、カラオケが大好き！", 1) // NOTE: two invalid symbols
                         .build()).build();
 
-        Configuration conf = new Configuration.Builder()
+        Configuration conf = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
                 .setLanguage("en")
                 .setSymbol(new Symbol(EXCLAMATION_MARK, "!", "！"))

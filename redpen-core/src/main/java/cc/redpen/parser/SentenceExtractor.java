@@ -17,9 +17,8 @@
  */
 package cc.redpen.parser;
 
+import cc.redpen.config.Symbols;
 import cc.redpen.model.Sentence;
-import cc.redpen.symbol.AbstractSymbols;
-import cc.redpen.symbol.DefaultSymbols;
 import cc.redpen.util.EndOfSentenceDetector;
 
 import java.util.ArrayList;
@@ -27,7 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static cc.redpen.symbol.SymbolType.*;
+import static cc.redpen.config.SymbolType.*;
 
 /**
  * Utility Class to extract a Sentence list from given String.
@@ -48,7 +47,7 @@ public final class SentenceExtractor {
      * Default Constructor.
      */
     public SentenceExtractor() {
-        AbstractSymbols symbols = DefaultSymbols.getInstance();
+        Symbols symbols = Symbols.DEFAULT_SYMBOLS;
 
         fullStopList.add(symbols.get(FULL_STOP).getValue());
         fullStopList.add(symbols.get(QUESTION_MARK).getValue());

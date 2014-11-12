@@ -37,7 +37,7 @@ public class SpellingValidatorTest {
 
     @Test
     public void testLoadDefaultDictionary() throws RedPenException {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("Spelling"))
                 .setLanguage("en").build();
 
@@ -59,7 +59,7 @@ public class SpellingValidatorTest {
 
     @Test
     public void testUpperCase() throws RedPenException {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("Spelling"))
                 .setLanguage("en").build();
 
@@ -82,7 +82,7 @@ public class SpellingValidatorTest {
 
     @Test
     public void testSkipCharacterCase() throws RedPenException {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("Spelling"))
                 .setLanguage("en").build();
 
@@ -104,7 +104,7 @@ public class SpellingValidatorTest {
 
     @Test
     public void testUserSkipList() throws RedPenException {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("Spelling").addAttribute("list", "abeshi,baz"))
                 .setLanguage("en").build();
 
@@ -126,7 +126,7 @@ public class SpellingValidatorTest {
 
     @Test
     public void testEndPeriod() throws RedPenException {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("Spelling"))
                 .setLanguage("en").build();
 
@@ -148,7 +148,7 @@ public class SpellingValidatorTest {
 
     @Test
     public void testVoid() throws RedPenException {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("Spelling"))
                 .setLanguage("en").build();
 

@@ -18,7 +18,7 @@ import java.util.Map;
 public class SuccessiveWordValidatorTest {
     @Test
     public void testDetectSuccessiveWord() throws RedPenException {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("SuccessiveWord"))
                 .setLanguage("en").build();
 
@@ -42,7 +42,7 @@ public class SuccessiveWordValidatorTest {
 
     @Test
     public void testDetectJapaneseSuccessiveWord() throws RedPenException {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("SuccessiveWord"))
                 .setLanguage("ja").build();
 
@@ -64,7 +64,7 @@ public class SuccessiveWordValidatorTest {
 
     @Test
     public void testNonSuccessiveDoubledWord() throws RedPenException {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("SuccessiveWord"))
                 .setLanguage("en").build();
 

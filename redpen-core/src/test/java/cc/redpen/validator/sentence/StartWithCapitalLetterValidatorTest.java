@@ -96,7 +96,7 @@ public class StartWithCapitalLetterValidatorTest {
 
     @Test
     public void testLoadDefaultDictionary() throws RedPenException {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter"))
                 .setLanguage("en").build();
 

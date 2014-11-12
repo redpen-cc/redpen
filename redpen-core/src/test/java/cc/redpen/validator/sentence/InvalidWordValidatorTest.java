@@ -56,7 +56,7 @@ public class InvalidWordValidatorTest {
 
     @Test
     public void testLoadDefaultDictionary() throws RedPenException {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidWord"))
                 .setLanguage("en").build();
 
@@ -80,7 +80,7 @@ public class InvalidWordValidatorTest {
 
     @Test
     public void testLoadUserDictionary() throws RedPenException {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidWord").addAttribute("list", "boom,domo"))
                 .setLanguage("en").build();
 
@@ -106,7 +106,7 @@ public class InvalidWordValidatorTest {
      */
     @Test(expected = RedPenException.class)
     public void testLoadNotExistDefaultDictionary() throws RedPenException {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidWord"))
                 .setLanguage("ja").build(); // NOTE: no dictionary for japanese or other languages whose words are not split by white space.
 

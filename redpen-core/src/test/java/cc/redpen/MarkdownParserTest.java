@@ -30,8 +30,8 @@ import org.junit.Test;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
-import static cc.redpen.symbol.SymbolType.COMMA;
-import static cc.redpen.symbol.SymbolType.FULL_STOP;
+import static cc.redpen.config.SymbolType.COMMA;
+import static cc.redpen.config.SymbolType.FULL_STOP;
 import static org.junit.Assert.*;
 
 public class MarkdownParserTest {
@@ -42,7 +42,7 @@ public class MarkdownParserTest {
 
     @Test(expected = RedPenException.class)
     public void testNullDocument() throws Exception {
-        Configuration configuration = new Configuration.Builder().build();
+        Configuration configuration = new Configuration.ConfigurationBuilder().build();
         DocumentParser parser = DocumentParser.MARKDOWN;
         InputStream is = null;
         parser.parse(is, RedPen.getSentenceExtractor(configuration), configuration.getTokenizer());
@@ -445,7 +445,7 @@ public class MarkdownParserTest {
     public void testGenerateJapaneseDocument() {
         String sampleText = "埼玉は東京の北に存在する。";
         sampleText += "大きなベッドタウンであり、多くの人が住んでいる。";
-        Configuration conf = new Configuration.Builder()
+        Configuration conf = new Configuration.ConfigurationBuilder()
                 .setLanguage("ja").build();
 
         Document doc = createFileContent(sampleText, conf);
@@ -458,7 +458,7 @@ public class MarkdownParserTest {
     public void testGenerateJapaneseWithMultipleSentencesInOneLine() {
         String sampleText = "それは異なる．たとえば，\\n" +
                 "以下のとおりである．";
-        Configuration conf = new Configuration.Builder()
+        Configuration conf = new Configuration.ConfigurationBuilder()
                 .setLanguage("ja")
                 .setSymbol(new Symbol(FULL_STOP, "．", "."))
                 .setSymbol(new Symbol(COMMA, "，", "、"))
@@ -491,7 +491,7 @@ public class MarkdownParserTest {
         DocumentParser parser = DocumentParser.MARKDOWN;
         Document doc = null;
         try {
-            Configuration configuration = new Configuration.Builder().build();
+            Configuration configuration = new Configuration.ConfigurationBuilder().build();
             doc = parser.parse(inputDocumentString, RedPen.getSentenceExtractor(configuration), configuration.getTokenizer());
         } catch (RedPenException e) {
             e.printStackTrace();

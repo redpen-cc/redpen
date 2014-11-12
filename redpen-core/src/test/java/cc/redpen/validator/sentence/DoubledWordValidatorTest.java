@@ -35,7 +35,7 @@ import java.util.Map;
 public class DoubledWordValidatorTest {
     @Test
     public void testDoubledWord() throws RedPenException {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("DoubledWord"))
                 .setLanguage("en").build();
 
@@ -57,7 +57,7 @@ public class DoubledWordValidatorTest {
 
     @Test
     public void testDoubledSkipListWord() throws RedPenException {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("DoubledWord"))
                 .setLanguage("en").build();
 
@@ -79,7 +79,7 @@ public class DoubledWordValidatorTest {
 
     @Test
     public void testDoubledUserDefinedSkipWord() throws RedPenException {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("DoubledWord")
                         .addAttribute("list", "redpen,tool"))
                 .setLanguage("en").build();
@@ -102,7 +102,7 @@ public class DoubledWordValidatorTest {
 
     @Test
     public void testDoubledUserDefinedSkipWordWithoutNormalization() throws RedPenException {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("DoubledWord")
                         .addAttribute("list", "RedPen,Tool"))
                 .setLanguage("en").build();
@@ -125,7 +125,7 @@ public class DoubledWordValidatorTest {
 
     @Test
     public void testDoubledWordInJapaneseSentence() throws RedPenException {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("DoubledWord"))
                 .setLanguage("ja").build();
 

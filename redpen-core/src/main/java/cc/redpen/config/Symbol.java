@@ -17,8 +17,6 @@
  */
 package cc.redpen.config;
 
-import cc.redpen.symbol.SymbolType;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,11 +27,11 @@ import java.util.List;
  */
 public final class Symbol implements Serializable {
     private static final long serialVersionUID = 3826499136262740992L;
-    private SymbolType name;
-    private String value;
-    private List<String> invalidChars;
-    private boolean needBeforeSpace;
-    private boolean needAfterSpace;
+    private final SymbolType name;
+    private final String value;
+    private final List<String> invalidChars;
+    private final boolean needBeforeSpace;
+    private final boolean needAfterSpace;
 
     /**
      * Constructor.
@@ -42,11 +40,7 @@ public final class Symbol implements Serializable {
      * @param charValue character
      */
     public Symbol(SymbolType symbolType, String charValue) {
-        this.name = symbolType;
-        this.value = charValue;
-        this.invalidChars = new ArrayList<>();
-        this.needBeforeSpace = false;
-        this.needAfterSpace = false;
+        this(symbolType, charValue, "", false, false);
     }
 
     /**
@@ -56,13 +50,8 @@ public final class Symbol implements Serializable {
      * @param charValue       character
      * @param invalidCharsStr list of invalid characters
      */
-    public Symbol(SymbolType symbolType, String charValue,
-                  String invalidCharsStr) {
-        this(symbolType, charValue);
-        if (invalidCharsStr.length() > 0) {
-            this.invalidChars.addAll
-                    (Arrays.asList(invalidCharsStr.split("(?!^)")));
-        }
+    public Symbol(SymbolType symbolType, String charValue, String invalidCharsStr) {
+        this(symbolType, charValue, invalidCharsStr, false, false);
     }
 
     /**
@@ -76,7 +65,13 @@ public final class Symbol implements Serializable {
      */
     public Symbol(SymbolType symbolType, String charValue, String invalidCharsStr,
                   boolean haveBeforeSpace, boolean haveAfterSpace) {
-        this(symbolType, charValue, invalidCharsStr);
+        this.name = symbolType;
+        this.value = charValue;
+        this.invalidChars = new ArrayList<>(charValue.length());
+        if (invalidCharsStr.length() > 0) {
+            this.invalidChars.addAll
+                    (Arrays.asList(invalidCharsStr.split("(?!^)")));
+        }
         this.needBeforeSpace = haveBeforeSpace;
         this.needAfterSpace = haveAfterSpace;
     }

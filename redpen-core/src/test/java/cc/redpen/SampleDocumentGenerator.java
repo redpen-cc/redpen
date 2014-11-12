@@ -38,7 +38,7 @@ public class SampleDocumentGenerator {
      */
     public static DocumentCollection generateOneFileDocument(String docString,
                                                              DocumentParser parser) throws RedPenException {
-        Configuration configuration = new Configuration.Builder()
+        Configuration configuration = new Configuration.ConfigurationBuilder()
                 .setLanguage("en").build();
         DocumentCollection.Builder builder = new DocumentCollection.Builder();
         builder.addDocument(

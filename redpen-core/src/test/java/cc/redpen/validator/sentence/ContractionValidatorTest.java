@@ -34,7 +34,7 @@ import java.util.Map;
 public class ContractionValidatorTest {
     @Test
     public void testContraction() throws RedPenException {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("Contraction"))
                 .setLanguage("en").build();
 
@@ -58,7 +58,7 @@ public class ContractionValidatorTest {
 
     @Test
     public void testNoContraction() throws RedPenException {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("Contraction"))
                 .setLanguage("en").build();
 
@@ -82,7 +82,7 @@ public class ContractionValidatorTest {
 
     @Test
     public void testUpperCaseContraction() throws RedPenException {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("Contraction"))
                 .setLanguage("en").build();
 
@@ -109,7 +109,7 @@ public class ContractionValidatorTest {
      */
     @Test
     public void testManyContractions() throws RedPenException {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("Contraction"))
                 .setLanguage("en").build();
 

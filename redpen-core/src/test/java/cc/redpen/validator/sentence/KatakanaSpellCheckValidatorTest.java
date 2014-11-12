@@ -68,7 +68,7 @@ public class KatakanaSpellCheckValidatorTest {
 
     @Test
     public void testLoadDefaultDictionary() throws RedPenException {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck"))
                 .setLanguage("ja").build();
 

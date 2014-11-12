@@ -32,7 +32,7 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Map;
 
-import static cc.redpen.symbol.SymbolType.*;
+import static cc.redpen.config.SymbolType.*;
 
 public class SymbolWithSpaceValidatorTest {
     @Test
@@ -44,7 +44,7 @@ public class SymbolWithSpaceValidatorTest {
                         .addSentence("I like apple/orange", 1)
                         .build()).build();
 
-        Configuration conf = new Configuration.Builder()
+        Configuration conf = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
                 .setLanguage("en")
                 .setSymbol(new Symbol(SLASH, "/"))
@@ -68,7 +68,7 @@ public class SymbolWithSpaceValidatorTest {
                         .addSentence("I like her:yes it is", 1)
                         .build()).build();
 
-        Configuration conf = new Configuration.Builder()
+        Configuration conf = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
                 .setLanguage("en")
                 .setSymbol(new Symbol(COLON, ":", "", false, true))
@@ -92,7 +92,7 @@ public class SymbolWithSpaceValidatorTest {
                         .addSentence("I like her(Nancy)very much.", 1)
                         .build()).build();
 
-        Configuration conf = new Configuration.Builder()
+        Configuration conf = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
                 .setLanguage("en")
                 .setSymbol(new Symbol(LEFT_PARENTHESIS, "(", "", true, false))
@@ -116,7 +116,7 @@ public class SymbolWithSpaceValidatorTest {
                         .addSentence("I like her(Nancy)very much.", 1)
                         .build()).build();
 
-        Configuration conf = new Configuration.Builder()
+        Configuration conf = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
                 .setLanguage("en")
                 .setSymbol(new Symbol(LEFT_PARENTHESIS, "(", "", true, false))
@@ -141,7 +141,7 @@ public class SymbolWithSpaceValidatorTest {
                         .addSentence("I like 1*10.", 1)
                         .build()).build();
 
-        Configuration conf = new Configuration.Builder()
+        Configuration conf = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
                 .setLanguage("en")
                 .setSymbol(new Symbol(ASTERISK, "*", "", true, true))
