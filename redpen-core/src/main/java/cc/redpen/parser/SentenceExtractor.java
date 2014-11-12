@@ -99,7 +99,7 @@ public final class SentenceExtractor {
         return rightQuotations;
     }
 
-    private void generateQutotationPattern(
+    private void generateQuotationPattern(
             List<String> endCharacters, StringBuilder patternString, String quotation) {
         for (String endChar : endCharacters) {
             String pattern;
@@ -193,7 +193,7 @@ public final class SentenceExtractor {
         }
         StringBuilder patternString = new StringBuilder();
         for (String rightQuotation : rightQuotationList) {
-            generateQutotationPattern(this.fullStopList, patternString, rightQuotation);
+            generateQuotationPattern(this.fullStopList, patternString, rightQuotation);
         }
         generateSimplePattern(this.fullStopList, patternString);
         return Pattern.compile(patternString.toString());
