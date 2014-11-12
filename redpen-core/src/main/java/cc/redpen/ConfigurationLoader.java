@@ -19,8 +19,8 @@ package cc.redpen;
 
 import cc.redpen.config.Configuration;
 import cc.redpen.config.Symbol;
+import cc.redpen.config.SymbolType;
 import cc.redpen.config.ValidatorConfiguration;
-import cc.redpen.symbol.SymbolType;
 import cc.redpen.util.SAXErrorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

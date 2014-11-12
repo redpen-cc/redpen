@@ -2,7 +2,7 @@ package cc.redpen.config;
 
 import org.junit.Test;
 
-import static cc.redpen.symbol.SymbolType.FULL_STOP;
+import static cc.redpen.config.SymbolType.FULL_STOP;
 import static org.junit.Assert.*;
 
 /**

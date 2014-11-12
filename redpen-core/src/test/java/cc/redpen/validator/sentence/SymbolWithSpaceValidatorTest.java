@@ -32,7 +32,7 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Map;
 
-import static cc.redpen.symbol.SymbolType.*;
+import static cc.redpen.config.SymbolType.*;
 
 public class SymbolWithSpaceValidatorTest {
     @Test

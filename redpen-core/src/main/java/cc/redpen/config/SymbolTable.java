@@ -17,21 +17,21 @@
  */
 package cc.redpen.config;
 
-import cc.redpen.symbol.DefaultSymbols;
-import cc.redpen.symbol.SymbolType;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static cc.redpen.symbol.SymbolType.FULL_STOP;
+import static cc.redpen.config.SymbolType.FULL_STOP;
 
 /**
  * Configuration table of characters used in {@link cc.redpen.RedPen}.
  */
-public final class SymbolTable {
-    private final Map<SymbolType, Symbol> symbolDictionary;
-    private final Map<String, Symbol> valueDictionary;
+public final class SymbolTable implements Serializable{
+    private static final long serialVersionUID = 1612920745151501631L;
+    private final Map<SymbolType, Symbol> symbolDictionary = new HashMap<>();
+    private final Map<String, Symbol> valueDictionary = new HashMap<>();
     private String lang;
 
     /**
@@ -39,17 +39,6 @@ public final class SymbolTable {
      */
     public SymbolTable() {
         super();
-        symbolDictionary = new HashMap<>();
-        valueDictionary = new HashMap<>();
-    }
-
-    /**
-     * Return the size of character Dictionary.
-     *
-     * @return size of registered character
-     */
-    public int getSizeDictionarySize() {
-        return this.symbolDictionary.size();
     }
 
     /**
@@ -90,7 +79,7 @@ public final class SymbolTable {
      */
     public String getValueOrFallbackToDefault(SymbolType name) {
         Symbol symbol = this.symbolDictionary.get(name);
-        return symbol != null ? symbol.getValue() : DefaultSymbols.getInstance().get(FULL_STOP).getValue();
+        return symbol != null ? symbol.getValue() : Symbols.DEFAULT_SYMBOLS.get(FULL_STOP).getValue();
     }
 
     /**
@@ -122,4 +111,39 @@ public final class SymbolTable {
         this.lang = lang;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        SymbolTable that = (SymbolTable) o;
+
+        if (lang != null ? !lang.equals(that.lang) : that.lang != null)
+            return false;
+        if (symbolDictionary != null ? !symbolDictionary.equals(that.symbolDictionary) : that.symbolDictionary != null)
+            return false;
+        if (valueDictionary != null ? !valueDictionary.equals(that.valueDictionary) : that.valueDictionary != null)
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = symbolDictionary != null ? symbolDictionary.hashCode() : 0;
+        result = 31 * result + (valueDictionary != null ? valueDictionary.hashCode() : 0);
+        result = 31 * result + (lang != null ? lang.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "SymbolTable{" +
+                "symbolDictionary=" + symbolDictionary +
+                ", valueDictionary=" + valueDictionary +
+                ", lang='" + lang + '\'' +
+                '}';
+    }
 }

@@ -8,7 +8,8 @@ import cc.redpen.validator.Validator;
 
 import java.util.ArrayList;
 import java.util.List;
-import static cc.redpen.symbol.SymbolType.*;
+
+import static cc.redpen.config.SymbolType.*;
 
 public class SpaceBetweenAlphabeticalWordValidator extends Validator<Sentence> {
     private char leftParenthesis = '(';

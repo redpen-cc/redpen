@@ -17,10 +17,6 @@
  */
 package cc.redpen.config;
 
-import cc.redpen.symbol.AbstractSymbols;
-import cc.redpen.symbol.DefaultSymbols;
-import cc.redpen.symbol.JapaneseSymbols;
-import cc.redpen.symbol.SymbolType;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.tokenizer.RedPenTokenizer;
 import cc.redpen.tokenizer.WhiteSpaceTokenizer;
@@ -106,12 +102,12 @@ public final class Configuration {
                 String lang) {
             SymbolTable symbolTable = new SymbolTable();
 
-            AbstractSymbols symbolSettings;
+            Symbols symbolSettings;
             if (lang.equals("ja")) {
-                symbolSettings = JapaneseSymbols.getInstance();
+                symbolSettings = Symbols.JAPANESE_SYMBOLS;
                 symbolTable.setLang("ja");
             } else {
-                symbolSettings = DefaultSymbols.getInstance();
+                symbolSettings = Symbols.DEFAULT_SYMBOLS;
                 symbolTable.setLang("en");
             }
 

@@ -18,8 +18,8 @@
 package cc.redpen.validator.sentence;
 
 import cc.redpen.config.Symbol;
+import cc.redpen.config.SymbolType;
 import cc.redpen.model.Sentence;
-import cc.redpen.symbol.SymbolType;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 

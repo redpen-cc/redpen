@@ -19,15 +19,15 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.config.Symbol;
+import cc.redpen.config.Symbols;
 import cc.redpen.model.Sentence;
-import cc.redpen.symbol.DefaultSymbols;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static cc.redpen.symbol.SymbolType.*;
+import static cc.redpen.config.SymbolType.*;
 
 /**
  * Validator to validate quotation characters.
@@ -54,7 +54,7 @@ public class QuotationValidator extends Validator<Sentence> {
     }
 
     QuotationValidator(boolean useAscii) {
-        this(useAscii, DefaultSymbols.getInstance().get(FULL_STOP).getValue().charAt(0));
+        this(useAscii, Symbols.DEFAULT_SYMBOLS.get(FULL_STOP).getValue().charAt(0));
     }
 
     /**

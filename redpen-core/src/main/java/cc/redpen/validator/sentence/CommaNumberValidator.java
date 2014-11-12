@@ -19,8 +19,8 @@ package cc.redpen.validator.sentence;
 
 
 import cc.redpen.RedPenException;
+import cc.redpen.config.Symbols;
 import cc.redpen.model.Sentence;
-import cc.redpen.symbol.DefaultSymbols;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cc.redpen.symbol.SymbolType.COMMA;
+import static cc.redpen.config.SymbolType.COMMA;
 
 /**
  * Validate the number of commas in one sentence.
@@ -46,7 +46,7 @@ final public class CommaNumberValidator extends Validator<Sentence> {
     private static final Logger LOG =
             LoggerFactory.getLogger(CommaNumberValidator.class);
     private int maxCommaNum = DEFAULT_MAX_COMMA_NUMBER;
-    private String comma = DefaultSymbols.getInstance().get(COMMA).getValue();
+    private String comma = Symbols.DEFAULT_SYMBOLS.get(COMMA).getValue();
 
     public List<ValidationError> validate(Sentence line) {
         List<ValidationError> validationErrors = new ArrayList<>();

@@ -20,8 +20,8 @@ package cc.redpen;
 import cc.redpen.config.Configuration;
 import org.junit.Test;
 
-import static cc.redpen.symbol.SymbolType.EXCLAMATION_MARK;
-import static cc.redpen.symbol.SymbolType.LEFT_SINGLE_QUOTATION_MARK;
+import static cc.redpen.config.SymbolType.EXCLAMATION_MARK;
+import static cc.redpen.config.SymbolType.LEFT_SINGLE_QUOTATION_MARK;
 import static org.junit.Assert.*;
 
 public class ConfigurationLoaderTest {

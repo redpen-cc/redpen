@@ -33,8 +33,8 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Map;
 
-import static cc.redpen.symbol.SymbolType.COMMA;
-import static cc.redpen.symbol.SymbolType.EXCLAMATION_MARK;
+import static cc.redpen.config.SymbolType.COMMA;
+import static cc.redpen.config.SymbolType.EXCLAMATION_MARK;
 
 public class InvalidSymbolValidatorTest {
     @Test

@@ -30,8 +30,8 @@ import org.junit.Test;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
-import static cc.redpen.symbol.SymbolType.COMMA;
-import static cc.redpen.symbol.SymbolType.FULL_STOP;
+import static cc.redpen.config.SymbolType.COMMA;
+import static cc.redpen.config.SymbolType.FULL_STOP;
 import static org.junit.Assert.*;
 
 public class MarkdownParserTest {
