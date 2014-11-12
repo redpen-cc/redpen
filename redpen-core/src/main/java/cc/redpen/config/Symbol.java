@@ -18,9 +18,6 @@
 package cc.redpen.config;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Represent a character settings.
@@ -29,7 +26,7 @@ public final class Symbol implements Serializable {
     private static final long serialVersionUID = 3826499136262740992L;
     private final SymbolType name;
     private final String value;
-    private final List<String> invalidChars;
+    private final char[] invalidChars;
     private final boolean needBeforeSpace;
     private final boolean needAfterSpace;
 
@@ -67,11 +64,7 @@ public final class Symbol implements Serializable {
                   boolean haveBeforeSpace, boolean haveAfterSpace) {
         this.name = symbolType;
         this.value = charValue;
-        this.invalidChars = new ArrayList<>(charValue.length());
-        if (invalidCharsStr.length() > 0) {
-            this.invalidChars.addAll
-                    (Arrays.asList(invalidCharsStr.split("(?!^)")));
-        }
+        this.invalidChars = invalidCharsStr.toCharArray();
         this.needBeforeSpace = haveBeforeSpace;
         this.needAfterSpace = haveAfterSpace;
     }
@@ -99,7 +92,7 @@ public final class Symbol implements Serializable {
      *
      * @return a list of invalid characters
      */
-    public List<String> getInvalidSymbols() {
+    public char[] getInvalidChars() {
         return invalidChars;
     }
 
@@ -119,10 +112,6 @@ public final class Symbol implements Serializable {
      */
     public boolean isNeedAfterSpace() {
         return needAfterSpace;
-    }
-
-    public void addInvalid(String invalid) {
-        this.invalidChars.add(invalid);
     }
 
     @Override

@@ -19,7 +19,6 @@ package cc.redpen.validator.sentence;
 
 
 import cc.redpen.RedPenException;
-import cc.redpen.config.Symbols;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
@@ -35,18 +34,13 @@ import static cc.redpen.config.SymbolType.COMMA;
  * Validate the number of commas in one sentence.
  */
 final public class CommaNumberValidator extends Validator<Sentence> {
+    private static final Logger LOG = LoggerFactory.getLogger(CommaNumberValidator.class);
     /**
      * Default maximum number of comma.
      */
-    public static final int DEFAULT_MAX_COMMA_NUMBER = 3;
-
-    /**
-     * Default comma character.
-     */
-    private static final Logger LOG =
-            LoggerFactory.getLogger(CommaNumberValidator.class);
+    private static final int DEFAULT_MAX_COMMA_NUMBER = 3;
     private int maxCommaNum = DEFAULT_MAX_COMMA_NUMBER;
-    private String comma = Symbols.DEFAULT_SYMBOLS.get(COMMA).getValue();
+    private String comma;
 
     public List<ValidationError> validate(Sentence line) {
         List<ValidationError> validationErrors = new ArrayList<>();
@@ -71,14 +65,6 @@ final public class CommaNumberValidator extends Validator<Sentence> {
     }
 
     @Override
-    public String toString() {
-        return "CommaNumberValidator{" +
-                "maxCommaNum=" + maxCommaNum +
-                ", comma='" + comma + '\'' +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -95,4 +81,13 @@ final public class CommaNumberValidator extends Validator<Sentence> {
         result = 31 * result + (comma != null ? comma.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "CommaNumberValidator{" +
+                "maxCommaNum=" + maxCommaNum +
+                ", comma='" + comma + '\'' +
+                '}';
+    }
+
 }

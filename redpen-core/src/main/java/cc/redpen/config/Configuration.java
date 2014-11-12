@@ -90,30 +90,18 @@ public final class Configuration {
      * Builder class of Configuration.
      */
     public static class ConfigurationBuilder {
-        private final List<ValidatorConfiguration> validatorConfigs =
-                new ArrayList<>();
+        private final List<ValidatorConfiguration> validatorConfigs = new ArrayList<>();
+        private final List<Symbol> customSymbols = new ArrayList<>();
+
         private String lang = "en";
-        private SymbolTable symbolTable = new SymbolTable(lang);
 
         public ConfigurationBuilder setLanguage(String lang) {
-            this.symbolTable = new SymbolTable(lang);
             this.lang = lang;
             return this;
         }
 
         public ConfigurationBuilder setSymbol(Symbol symbol) {
-            this.symbolTable.override(symbol);
-            return this;
-        }
-
-        public ConfigurationBuilder setSymbol(SymbolType symbolType, String value) {
-            this.symbolTable.override(new Symbol(symbolType, value));
-            return this;
-        }
-
-        public ConfigurationBuilder addInvalidPattern(SymbolType symbolType, String invalid) {
-            Symbol symbol = this.symbolTable.getSymbol(symbolType);
-            symbol.addInvalid(invalid);
+            customSymbols.add(symbol);
             return this;
         }
 
@@ -123,7 +111,7 @@ public final class Configuration {
         }
 
         public Configuration build() {
-            return new Configuration(symbolTable, this.validatorConfigs, this.lang);
+            return new Configuration(new SymbolTable(lang, customSymbols), this.validatorConfigs, this.lang);
         }
     }
 }

@@ -20,6 +20,7 @@ package cc.redpen;
 import cc.redpen.config.Configuration;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.parser.DocumentParser;
+import cc.redpen.parser.SentenceExtractor;
 
 /**
  * Generate DocumentCollection objects from String. This class are applied
@@ -42,7 +43,7 @@ public class SampleDocumentGenerator {
                 .setLanguage("en").build();
         DocumentCollection.Builder builder = new DocumentCollection.Builder();
         builder.addDocument(
-                parser.parse(docString, RedPen.getSentenceExtractor(configuration), configuration.getTokenizer()));
+                parser.parse(docString, new SentenceExtractor(configuration.getSymbolTable()), configuration.getTokenizer()));
         return builder.build();
     }
 }

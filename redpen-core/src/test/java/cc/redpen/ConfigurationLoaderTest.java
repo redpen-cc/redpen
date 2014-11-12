@@ -55,9 +55,9 @@ public class ConfigurationLoaderTest {
         assertEquals("!", configuration.getSymbolTable()
                 .getSymbol(EXCLAMATION_MARK).getValue());
         assertEquals(1, configuration.getSymbolTable()
-                .getSymbol(EXCLAMATION_MARK).getInvalidSymbols().size());
-        assertEquals("！", configuration.getSymbolTable()
-                .getSymbol(EXCLAMATION_MARK).getInvalidSymbols().get(0));
+                .getSymbol(EXCLAMATION_MARK).getInvalidChars().length);
+        assertEquals('！', configuration.getSymbolTable()
+                .getSymbol(EXCLAMATION_MARK).getInvalidChars()[0]);
     }
 
     @Test
@@ -90,9 +90,9 @@ public class ConfigurationLoaderTest {
         assertEquals("！", configuration.getSymbolTable()
                 .getSymbol(EXCLAMATION_MARK).getValue());
         assertEquals(1, configuration.getSymbolTable()
-                .getSymbol(EXCLAMATION_MARK).getInvalidSymbols().size());
-        assertEquals("!", configuration.getSymbolTable()
-                .getSymbol(EXCLAMATION_MARK).getInvalidSymbols().get(0));
+                .getSymbol(EXCLAMATION_MARK).getInvalidChars().length);
+        assertEquals('!', configuration.getSymbolTable()
+                .getSymbol(EXCLAMATION_MARK).getInvalidChars()[0]);
     }
 
     @Test
@@ -228,9 +228,9 @@ public class ConfigurationLoaderTest {
         assertEquals("!", configuration.getSymbolTable()
                 .getSymbol(EXCLAMATION_MARK).getValue());
         assertEquals(1, configuration.getSymbolTable()
-                .getSymbol(EXCLAMATION_MARK).getInvalidSymbols().size());
-        assertEquals("！", configuration.getSymbolTable()
-                .getSymbol(EXCLAMATION_MARK).getInvalidSymbols().get(0));
+                .getSymbol(EXCLAMATION_MARK).getInvalidChars().length);
+        assertEquals('！', configuration.getSymbolTable()
+                .getSymbol(EXCLAMATION_MARK).getInvalidChars()[0]);
         assertEquals(false, configuration.getSymbolTable()
                 .getSymbol(EXCLAMATION_MARK).isNeedBeforeSpace());
         assertEquals(true, configuration.getSymbolTable()
@@ -258,9 +258,9 @@ public class ConfigurationLoaderTest {
         assertEquals("!", configuration.getSymbolTable()
                 .getSymbol(EXCLAMATION_MARK).getValue());
         assertEquals(1, configuration.getSymbolTable()
-                .getSymbol(EXCLAMATION_MARK).getInvalidSymbols().size());
-        assertEquals("！", configuration.getSymbolTable()
-                .getSymbol(EXCLAMATION_MARK).getInvalidSymbols().get(0));
+                .getSymbol(EXCLAMATION_MARK).getInvalidChars().length);
+        assertEquals('！', configuration.getSymbolTable()
+                .getSymbol(EXCLAMATION_MARK).getInvalidChars()[0]);
         assertEquals(false, configuration.getSymbolTable()
                 .getSymbol(EXCLAMATION_MARK).isNeedBeforeSpace());
         assertEquals(false, configuration.getSymbolTable()
@@ -289,9 +289,9 @@ public class ConfigurationLoaderTest {
         assertEquals("\'", configuration.getSymbolTable()
                 .getSymbol(LEFT_SINGLE_QUOTATION_MARK).getValue());
         assertEquals(2, configuration.getSymbolTable()
-                .getSymbol(LEFT_SINGLE_QUOTATION_MARK).getInvalidSymbols().size());
-        assertEquals("‘", configuration.getSymbolTable().getSymbol(LEFT_SINGLE_QUOTATION_MARK).getInvalidSymbols().get(0));
-        assertEquals("’", configuration.getSymbolTable().getSymbol(LEFT_SINGLE_QUOTATION_MARK).getInvalidSymbols().get(1));
+                .getSymbol(LEFT_SINGLE_QUOTATION_MARK).getInvalidChars().length);
+        assertEquals('‘', configuration.getSymbolTable().getSymbol(LEFT_SINGLE_QUOTATION_MARK).getInvalidChars()[0]);
+        assertEquals('’', configuration.getSymbolTable().getSymbol(LEFT_SINGLE_QUOTATION_MARK).getInvalidChars()[1]);
     }
 
     @Test
@@ -315,7 +315,7 @@ public class ConfigurationLoaderTest {
         assertEquals("!", configuration.getSymbolTable()
                 .getSymbol(EXCLAMATION_MARK).getValue());
         assertEquals(0, configuration.getSymbolTable()
-                .getSymbol(EXCLAMATION_MARK).getInvalidSymbols().size());
+                .getSymbol(EXCLAMATION_MARK).getInvalidChars().length);
         assertEquals(false, configuration.getSymbolTable()
                 .getSymbol(EXCLAMATION_MARK).isNeedBeforeSpace());
         assertEquals(false, configuration.getSymbolTable()

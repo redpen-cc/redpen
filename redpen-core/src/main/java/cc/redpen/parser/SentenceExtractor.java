@@ -17,9 +17,12 @@
  */
 package cc.redpen.parser;
 
-import cc.redpen.config.Symbols;
+import cc.redpen.config.Configuration;
+import cc.redpen.config.SymbolTable;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.EndOfSentenceDetector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,11 +35,13 @@ import static cc.redpen.config.SymbolType.*;
  * Utility Class to extract a Sentence list from given String.
  */
 public final class SentenceExtractor {
+
+    private static final Logger LOG = LoggerFactory.getLogger(SentenceExtractor.class);
     private Pattern fullStopPattern;
     private List<String> fullStopList = new ArrayList<>();
     private List<String> rightQuotationList = new ArrayList<>();
     // TODO make white words configurable.
-    private List<String> whiteWords = generateUmList("Mr.",
+    private static final List<String> WHITE_WORDS = generateUmList("Mr.",
             "Mrs.", "Dr.", "genn.ai", "Co., Ltd.", "Miss.", "a.m.",
             "U.S.A.", "Jan.", "Feb.", "Mar.", "Apr.",
             "May.", "Jun.", "Jul.", "Aug.", "Sep.", "Oct.",
@@ -44,57 +49,57 @@ public final class SentenceExtractor {
     private EndOfSentenceDetector endOfSentenceDetector;
 
     /**
-     * Default Constructor.
-     */
-    public SentenceExtractor() {
-        Symbols symbols = Symbols.DEFAULT_SYMBOLS;
-
-        fullStopList.add(symbols.get(FULL_STOP).getValue());
-        fullStopList.add(symbols.get(QUESTION_MARK).getValue());
-        fullStopList.add(symbols.get(EXCLAMATION_MARK).getValue());
-
-        rightQuotationList.add(symbols.get(RIGHT_SINGLE_QUOTATION_MARK).getValue());
-        rightQuotationList.add(symbols.get(RIGHT_DOUBLE_QUOTATION_MARK).getValue());
-
-        this.fullStopPattern = Pattern.compile(
-                this.constructEndSentencePattern());
-
-        this.endOfSentenceDetector = new EndOfSentenceDetector(
-                this.fullStopPattern, this.whiteWords);
-    }
-
-    /**
      * Constructor.
      *
      * @param fullStopList set of end of sentence characters
      */
-    public SentenceExtractor(List<String> fullStopList) {
-        this();
-        this.fullStopList = fullStopList;
-        this.fullStopPattern = Pattern.compile(
-                this.constructEndSentencePattern());
-
-        this.endOfSentenceDetector = new EndOfSentenceDetector(
-                this.fullStopPattern, this.whiteWords);
+    SentenceExtractor(List<String> fullStopList) {
+        this(fullStopList, extractRightQuotations(new Configuration.ConfigurationBuilder().build().getSymbolTable()));
     }
 
     /**
      * Constructor.
      *
-     * @param fullStopList       set of end of sentence characters
-     * @param rightQuotationList set of right quotation characters
+     * @param symbolTable symbolTable
      */
-    public SentenceExtractor(List<String> fullStopList,
-                             List<String> rightQuotationList) {
-        this.fullStopList = fullStopList;
-        this.rightQuotationList = rightQuotationList;
-        this.fullStopPattern = Pattern.compile(
-                this.constructEndSentencePattern());
-        this.endOfSentenceDetector = new EndOfSentenceDetector(
-                this.fullStopPattern, this.whiteWords);
+    public SentenceExtractor(SymbolTable symbolTable) {
+        this(extractPeriods(symbolTable), extractRightQuotations(symbolTable));
     }
 
-    private static void generateQutotationPattern(
+    /**
+     * Constructor.
+     */
+    SentenceExtractor(List<String> fullStopList, List<String> rightQuotationList) {
+        this.fullStopList = fullStopList;
+        this.rightQuotationList = rightQuotationList;
+        this.fullStopPattern = this.constructEndSentencePattern();
+        this.endOfSentenceDetector = new EndOfSentenceDetector(
+                this.fullStopPattern, this.WHITE_WORDS);
+    }
+
+    private static List<String> extractPeriods(SymbolTable symbolTable) {
+        List<String> periods = new ArrayList<>();
+        periods.add(symbolTable.getValueOrFallbackToDefault(FULL_STOP));
+        periods.add(symbolTable.getValueOrFallbackToDefault(QUESTION_MARK));
+        periods.add(symbolTable.getValueOrFallbackToDefault(EXCLAMATION_MARK));
+
+        for (String period : periods) {
+            LOG.info("\"" + period + "\" is added as a end of sentence character");
+        }
+        return periods;
+    }
+
+    private static List<String> extractRightQuotations(SymbolTable symbolTable) {
+        List<String> rightQuotations = new ArrayList<>();
+        rightQuotations.add(symbolTable.getValueOrFallbackToDefault(RIGHT_SINGLE_QUOTATION_MARK));
+        rightQuotations.add(symbolTable.getValueOrFallbackToDefault(RIGHT_DOUBLE_QUOTATION_MARK));
+        for (String rightQuotation : rightQuotations) {
+            LOG.info("\"" + rightQuotation + "\" is added as a end of right quotation character.");
+        }
+        return rightQuotations;
+    }
+
+    private void generateQutotationPattern(
             List<String> endCharacters, StringBuilder patternString, String quotation) {
         for (String endChar : endCharacters) {
             String pattern;
@@ -103,8 +108,8 @@ public final class SentenceExtractor {
         }
     }
 
-    private static void generateSimplePattern(List<String> endCharacters,
-                                              StringBuilder patternString) {
+    private void generateSimplePattern(List<String> endCharacters,
+                                       StringBuilder patternString) {
 
         for (String endChar : endCharacters) {
             endChar = handleSpecialCharacter(endChar);
@@ -112,8 +117,8 @@ public final class SentenceExtractor {
         }
     }
 
-    private static void appendPattern(StringBuilder patternString,
-                                      String newPattern) {
+    private void appendPattern(StringBuilder patternString,
+                               String newPattern) {
         if (patternString.length() > 0) {
             patternString.append("|");
         }
@@ -146,10 +151,8 @@ public final class SentenceExtractor {
      * @param position        line number
      * @return remaining line
      */
-    public String extract(String line,
-                          List<Sentence> outputSentences, int position) {
-        int periodPosition =
-                endOfSentenceDetector.getSentenceEndPosition(line);
+    public String extract(String line, List<Sentence> outputSentences, int position) {
+        int periodPosition = endOfSentenceDetector.getSentenceEndPosition(line);
         if (periodPosition == -1) {
             return line;
         } else {
@@ -159,8 +162,7 @@ public final class SentenceExtractor {
                 outputSentences.add(sentence);
                 line = line.substring(periodPosition + 1,
                         line.length());
-                periodPosition =
-                        endOfSentenceDetector.getSentenceEndPosition(line);
+                periodPosition = endOfSentenceDetector.getSentenceEndPosition(line);
                 if (periodPosition == -1) {
                     return line;
                 }
@@ -185,7 +187,7 @@ public final class SentenceExtractor {
      *
      * @return regex pattern to detect end sentences
      */
-    protected String constructEndSentencePattern() {
+    Pattern constructEndSentencePattern() {
         if (this.fullStopList == null || this.fullStopList.size() == 0) {
             throw new IllegalArgumentException("No end character is specified");
         }
@@ -194,6 +196,6 @@ public final class SentenceExtractor {
             generateQutotationPattern(this.fullStopList, patternString, rightQuotation);
         }
         generateSimplePattern(this.fullStopList, patternString);
-        return patternString.toString();
+        return Pattern.compile(patternString.toString());
     }
 }

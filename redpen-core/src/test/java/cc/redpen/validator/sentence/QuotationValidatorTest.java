@@ -17,8 +17,15 @@
  */
 package cc.redpen.validator.sentence;
 
+import cc.redpen.RedPenException;
+import cc.redpen.config.Configuration;
+import cc.redpen.config.Symbol;
+import cc.redpen.config.SymbolType;
+import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
+import cc.redpen.validator.Validator;
+import cc.redpen.validator.ValidatorFactory;
 import org.junit.Test;
 
 import java.util.List;
@@ -28,9 +35,8 @@ import static org.junit.Assert.assertNotNull;
 
 public class QuotationValidatorTest {
     @Test
-    public void testDoubleQuotationMakrs() {
-        QuotationValidator validator =
-                new QuotationValidator();
+    public void testDoubleQuotationMakrs() throws RedPenException {
+        Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said “That is true”.", 0);
         List<ValidationError> errors = validator.validate(str);
         assertNotNull(errors);
@@ -38,9 +44,8 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testSingleQuotationMakrs() {
-        QuotationValidator validator =
-                new QuotationValidator();
+    public void testSingleQuotationMakrs() throws RedPenException {
+        Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said ‘that is true’.", 0);
         List<ValidationError> errors = validator.validate(str);
         assertNotNull(errors);
@@ -48,9 +53,8 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testDoubleQuotationMakrWithoutRight() {
-        QuotationValidator validator =
-                new QuotationValidator();
+    public void testDoubleQuotationMakrWithoutRight() throws RedPenException {
+        Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said “That is true.", 0);
         List<ValidationError> errors = validator.validate(str);
         assertNotNull(errors);
@@ -58,9 +62,8 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testSingleQuotationMakrWithoutRight() {
-        QuotationValidator validator =
-                new QuotationValidator();
+    public void testSingleQuotationMakrWithoutRight() throws RedPenException {
+        Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said ‘that is true.", 0);
         List<ValidationError> errors = validator.validate(str);
         assertNotNull(errors);
@@ -68,9 +71,8 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testDoubleQuotationMakrWithoutLeft() {
-        QuotationValidator validator =
-                new QuotationValidator();
+    public void testDoubleQuotationMakrWithoutLeft() throws RedPenException {
+        Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said That is true”.", 0);
         List<ValidationError> errors = validator.validate(str);
         assertNotNull(errors);
@@ -78,9 +80,8 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testSingleQuotationMakrkWithoutLeft() {
-        QuotationValidator validator =
-                new QuotationValidator();
+    public void testSingleQuotationMakrkWithoutLeft() throws RedPenException {
+        Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said that is true’.", 0);
         List<ValidationError> errors = validator.validate(str);
         assertNotNull(errors);
@@ -88,9 +89,8 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testExceptionCase() {
-        QuotationValidator validator =
-                new QuotationValidator();
+    public void testExceptionCase() throws RedPenException {
+        Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I’m a jedi knight.", 0);
         List<ValidationError> errors = validator.validate(str);
         assertNotNull(errors);
@@ -98,9 +98,8 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testQuotedExceptionCase() {
-        QuotationValidator validator =
-                new QuotationValidator();
+    public void testQuotedExceptionCase() throws RedPenException {
+        Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("he said ‘I’m a jedi knight’.", 0);
         List<ValidationError> errors = validator.validate(str);
         assertNotNull(errors);
@@ -108,9 +107,8 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testDoubleLeftSingleQuotationMakrk() {
-        QuotationValidator validator =
-                new QuotationValidator();
+    public void testDoubleLeftSingleQuotationMakrk() throws RedPenException {
+        Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said ‘that is true‘.", 0);
         List<ValidationError> errors = validator.validate(str);
         assertNotNull(errors);
@@ -118,9 +116,8 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testDoubleLeftDoubleQuotationMakrk() {
-        QuotationValidator validator =
-                new QuotationValidator();
+    public void testDoubleLeftDoubleQuotationMakrk() throws RedPenException {
+        Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said “that is true.“", 0);
         List<ValidationError> errors = validator.validate(str);
         assertNotNull(errors);
@@ -128,9 +125,8 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testDoubleRightSingleQuotationMakrk() {
-        QuotationValidator validator =
-                new QuotationValidator();
+    public void testDoubleRightSingleQuotationMakrk() throws RedPenException {
+        Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said ’that is true’.", 0);
         List<ValidationError> errors = validator.validate(str);
         assertNotNull(errors);
@@ -138,9 +134,8 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testDoubleRightDoubleQuotationMakrk() {
-        QuotationValidator validator =
-                new QuotationValidator();
+    public void testDoubleRightDoubleQuotationMakrk() throws RedPenException {
+        Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said ”that is true”.", 0);
         List<ValidationError> errors = validator.validate(str);
         assertNotNull(errors);
@@ -148,9 +143,12 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testAsciiExceptionCase() {
-        QuotationValidator validator =
-                new QuotationValidator(true);
+    public void testAsciiExceptionCase() throws RedPenException {
+        Configuration conf = new Configuration.ConfigurationBuilder()
+                .setLanguage("en")
+                .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", false))
+                .build();
+        Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
         Sentence str = new Sentence("I'm a jedi knight.", 0);
         List<ValidationError> errors = validator.validate(str);
         assertNotNull(errors);
@@ -158,9 +156,12 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testAsciiDoubleQuotationMakrk() {
-        QuotationValidator validator =
-                new QuotationValidator(true);
+    public void testAsciiDoubleQuotationMakrk() throws RedPenException {
+        Configuration conf = new Configuration.ConfigurationBuilder()
+                .setLanguage("en")
+                .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", false))
+                .build();
+        Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
         Sentence str = new Sentence("I said \"that is true\".", 0);
         List<ValidationError> errors = validator.validate(str);
         assertNotNull(errors);
@@ -168,9 +169,12 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testNoQuotationMakrk() {
-        QuotationValidator validator =
-                new QuotationValidator(true);
+    public void testNoQuotationMakrk() throws RedPenException {
+        Configuration conf = new Configuration.ConfigurationBuilder()
+                .setLanguage("en")
+                .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", true))
+                .build();
+        Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
         Sentence str = new Sentence("I said that is true.", 0);
         List<ValidationError> errors = validator.validate(str);
         assertNotNull(errors);
@@ -178,9 +182,12 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testNoInput() {
-        QuotationValidator validator =
-                new QuotationValidator(true);
+    public void testNoInput() throws RedPenException {
+        Configuration conf = new Configuration.ConfigurationBuilder()
+                .setLanguage("en")
+                .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", true))
+                .build();
+        Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
         Sentence str = new Sentence("", 0);
         List<ValidationError> errors = validator.validate(str);
         assertNotNull(errors);
@@ -188,9 +195,8 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testTwiceQuotations() {
-        QuotationValidator validator =
-                new QuotationValidator();
+    public void testTwiceQuotations() throws RedPenException {
+        Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said ‘that is true’ and not said ‘that is false’", 0);
         List<ValidationError> errors = validator.validate(str);
         assertNotNull(errors);
@@ -198,9 +204,8 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testOneOfFailureInTwiceQuotations() {
-        QuotationValidator validator =
-                new QuotationValidator();
+    public void testOneOfFailureInTwiceQuotations() throws RedPenException {
+        Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said ‘that is true and not said ‘that is false’", 0);
         List<ValidationError> errors = validator.validate(str);
         assertNotNull(errors);
@@ -208,9 +213,8 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testLeftDoubleQuotationsWihtoutSpace() {
-        QuotationValidator validator =
-                new QuotationValidator();
+    public void testLeftDoubleQuotationsWihtoutSpace() throws RedPenException {
+        Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said“that is true”.", 0);
         List<ValidationError> errors = validator.validate(str);
         assertNotNull(errors);
@@ -218,9 +222,12 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testLeftAsciiDoubleQuotationsWihtoutSpace() {
-        QuotationValidator validator =
-                new QuotationValidator(true);
+    public void testLeftAsciiDoubleQuotationsWihtoutSpace() throws RedPenException {
+        Configuration conf = new Configuration.ConfigurationBuilder()
+                .setLanguage("en")
+                .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", true))
+                .build();
+        Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
         Sentence str = new Sentence("I said\"that is true\".", 0);
         List<ValidationError> errors = validator.validate(str);
         assertNotNull(errors);
@@ -228,9 +235,8 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testRightDoubleQuotationsWihtoutSpace() {
-        QuotationValidator validator =
-                new QuotationValidator();
+    public void testRightDoubleQuotationsWihtoutSpace() throws RedPenException {
+        Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said “that is true”is true.", 0);
         List<ValidationError> errors = validator.validate(str);
         assertNotNull(errors);
@@ -238,9 +244,12 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testRightAsciiDoubleQuotationsWihtoutSpace() {
-        QuotationValidator validator =
-                new QuotationValidator(true);
+    public void testRightAsciiDoubleQuotationsWihtoutSpace() throws RedPenException {
+        Configuration conf = new Configuration.ConfigurationBuilder()
+                .setLanguage("en")
+                .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", true))
+                .build();
+        Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
         Sentence str = new Sentence("I said \"that is true\"is true.", 0);
         List<ValidationError> errors = validator.validate(str);
         assertNotNull(errors);
@@ -248,9 +257,16 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testDoubleQuotationsWithNonAsciiPeriod() {
-        QuotationValidator validator =
-                new QuotationValidator(true, '。');
+    public void testDoubleQuotationsWithNonAsciiPeriod() throws RedPenException {
+        Configuration conf = new Configuration.ConfigurationBuilder()
+                .setLanguage("en")
+                .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", true))
+                .setSymbol(new Symbol(SymbolType.FULL_STOP, "。"))
+                .build();
+        Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
+
+//        QuotationValidator validator =
+//                new QuotationValidator(true, '。');
         Sentence str = new Sentence("I said \"that is true\"。", 0);
         List<ValidationError> errors = validator.validate(str);
         assertNotNull(errors);

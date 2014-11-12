@@ -47,9 +47,8 @@ final public class InvalidSymbolValidator extends Validator<Sentence> {
     private ValidationError validateSymbol(Sentence sentence, SymbolType symbolType) {
         String sentenceStr = sentence.content;
         Symbol symbol = getSymbolTable().getSymbol(symbolType);
-        List<String> invalidCharsList = symbol.getInvalidSymbols();
-        for (String invalidChar : invalidCharsList) {
-            if (sentenceStr.contains(invalidChar)) {
+        for (char invalidChar : symbol.getInvalidChars()) {
+            if (sentenceStr.indexOf(invalidChar) != -1) {
                 return createValidationError(sentence, invalidChar);
             }
         }

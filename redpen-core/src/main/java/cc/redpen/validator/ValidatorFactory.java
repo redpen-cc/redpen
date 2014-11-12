@@ -1,6 +1,7 @@
 package cc.redpen.validator;
 
 import cc.redpen.RedPenException;
+import cc.redpen.config.Configuration;
 import cc.redpen.config.SymbolTable;
 import cc.redpen.config.ValidatorConfiguration;
 
@@ -26,8 +27,15 @@ public class ValidatorFactory {
         VALIDATOR_PACKAGES.add(packageToAdd);
     }
 
-    public static Validator<?> getInstance(ValidatorConfiguration config,
-                                           SymbolTable symbolTable)
+    public static Validator<?> getInstance(String valiadtorName) throws RedPenException {
+        Configuration conf = new Configuration.ConfigurationBuilder()
+                .setLanguage("en")
+                .addValidatorConfig(new ValidatorConfiguration(valiadtorName))
+                .build();
+        return getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
+    }
+
+    public static Validator<?> getInstance(ValidatorConfiguration config, SymbolTable symbolTable)
             throws RedPenException {
         try {
             for (String validatorPackage : VALIDATOR_PACKAGES) {
