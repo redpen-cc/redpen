@@ -104,17 +104,13 @@ public final class SymbolTable implements Serializable {
      *
      * @param symbol symbol configuration
      */
-    public void override(Symbol symbol) {
+    void override(Symbol symbol) {
         symbolDictionary.put(symbol.getType(), symbol);
         valueDictionary.put(symbol.getValue(), symbol);
     }
 
     public String getLang() {
         return lang;
-    }
-
-    public void setLang(String lang) {
-        this.lang = lang;
     }
 
     @Override
