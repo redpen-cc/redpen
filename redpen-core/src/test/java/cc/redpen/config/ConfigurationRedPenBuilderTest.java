@@ -75,7 +75,7 @@ public class ConfigurationRedPenBuilderTest {
         Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .setLanguage("ja")
-                .setSymbol(FULL_STOP, ".")
+                .setSymbol(new Symbol(FULL_STOP, "."))
                 .build();
 
         assertNotNull(config.getSymbolTable());
@@ -88,7 +88,7 @@ public class ConfigurationRedPenBuilderTest {
         Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .setLanguage("ja")
-                .addInvalidPattern(FULL_STOP, "●")
+                .setSymbol(new Symbol(SymbolType.FULL_STOP, "。", ".．●"))
                 .build();
 
         assertNotNull(config.getSymbolTable());
@@ -103,7 +103,7 @@ public class ConfigurationRedPenBuilderTest {
         Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .setLanguage("ja")
-                .addInvalidPattern(FULL_STOP, "●")
+                .setSymbol(new Symbol(SymbolType.FULL_STOP, "。", ".．●"))
                 .build();
 
         assertNotNull(config.getSymbolTable());

@@ -19,6 +19,7 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
+import cc.redpen.config.Symbol;
 import cc.redpen.config.SymbolType;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
@@ -260,7 +261,7 @@ public class QuotationValidatorTest {
         Configuration conf = new Configuration.ConfigurationBuilder()
                 .setLanguage("en")
                 .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", true))
-                .setSymbol(SymbolType.FULL_STOP,"。")
+                .setSymbol(new Symbol(SymbolType.FULL_STOP, "。"))
                 .build();
         Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
 

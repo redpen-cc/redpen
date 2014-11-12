@@ -20,10 +20,9 @@ package cc.redpen.config;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static cc.redpen.config.SymbolType.FULL_STOP;
 
 /**
  * Configuration table of characters used in {@link cc.redpen.RedPen}.
@@ -37,15 +36,21 @@ public final class SymbolTable implements Serializable {
     /**
      * Constructor.
      */
-    SymbolTable(String lang) {
+    SymbolTable(String lang, List<Symbol> customSymbols) {
         super();
         this.lang = lang;
         if (lang.equals("ja")) {
-            JAPANESE_SYMBOLS.values().forEach(this::override);
+            JAPANESE_SYMBOLS.values().forEach(this::overrideSymbol);
         } else {
-            DEFAULT_SYMBOLS.values().forEach(this::override);
+            DEFAULT_SYMBOLS.values().forEach(this::overrideSymbol);
         }
+        customSymbols.forEach(this::overrideSymbol);
     }
+    private void overrideSymbol(Symbol symbol) {
+        symbolDictionary.put(symbol.getType(), symbol);
+        valueDictionary.put(symbol.getValue(), symbol);
+    }
+
 
     /**
      * Get the character names in the dictionary.
@@ -79,13 +84,13 @@ public final class SymbolTable implements Serializable {
     /**
      * Detect the specified character is exit in the dictionary.
      *
-     * @param name character name
+     * @param type character name
      * @return character when exist, null when the specified
      * character does not exist
      */
-    public String getValueOrFallbackToDefault(SymbolType name) {
-        Symbol symbol = this.symbolDictionary.get(name);
-        return symbol != null ? symbol.getValue() : DEFAULT_SYMBOLS.get(FULL_STOP).getValue();
+    public String getValueOrFallbackToDefault(SymbolType type) {
+        Symbol symbol = this.symbolDictionary.get(type);
+        return symbol != null ? symbol.getValue() : DEFAULT_SYMBOLS.get(type).getValue();
     }
 
     /**
@@ -97,16 +102,6 @@ public final class SymbolTable implements Serializable {
      */
     public boolean containsSymbolByValue(String value) {
         return this.valueDictionary.get(value) != null;
-    }
-
-    /**
-     * Replace the current character setting.
-     *
-     * @param symbol symbol configuration
-     */
-    void override(Symbol symbol) {
-        symbolDictionary.put(symbol.getType(), symbol);
-        valueDictionary.put(symbol.getValue(), symbol);
     }
 
     public String getLang() {

@@ -121,10 +121,6 @@ public final class Symbol implements Serializable {
         return needAfterSpace;
     }
 
-    public void addInvalid(String invalid) {
-        this.invalidChars.add(invalid);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
