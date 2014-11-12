@@ -29,21 +29,16 @@ import java.util.List;
  */
 public final class Configuration {
     private final SymbolTable symbolTable;
-    private final List<ValidatorConfiguration> validatorConfigs =
-            new ArrayList<>();
+    private final List<ValidatorConfiguration> validatorConfigs = new ArrayList<>();
     private String lang;
     private RedPenTokenizer tokenizer;
 
     /**
      * Constructor.
-     *
      */
     Configuration(SymbolTable symbolTable, List<ValidatorConfiguration> validatorConfigs, String lang) {
-        if (symbolTable == null) {
-            this.symbolTable = new SymbolTable();
-        } else {
-            this.symbolTable = symbolTable;
-        }
+        this.symbolTable = symbolTable;
+
         this.validatorConfigs.addAll(validatorConfigs);
         this.lang = lang;
         switch (lang) {
@@ -75,6 +70,7 @@ public final class Configuration {
 
     /**
      * returns language targeted by this configuration
+     *
      * @return language
      */
     public String getLang() {
@@ -83,6 +79,7 @@ public final class Configuration {
 
     /**
      * returns Tokenizer aasociated with this configuration
+     *
      * @return tokenizer
      */
     public RedPenTokenizer getTokenizer() {
@@ -92,64 +89,41 @@ public final class Configuration {
     /**
      * Builder class of Configuration.
      */
-    public static class Builder {
+    public static class ConfigurationBuilder {
         private final List<ValidatorConfiguration> validatorConfigs =
                 new ArrayList<>();
-        private SymbolTable symbolTable;
-
         private String lang = "en";
-        private static SymbolTable loadLanguageDefaultSymbolTable(
-                String lang) {
-            SymbolTable symbolTable = new SymbolTable();
+        private SymbolTable symbolTable = new SymbolTable(lang);
 
-            Symbols symbolSettings;
-            if (lang.equals("ja")) {
-                symbolSettings = Symbols.JAPANESE_SYMBOLS;
-                symbolTable.setLang("ja");
-            } else {
-                symbolSettings = Symbols.DEFAULT_SYMBOLS;
-                symbolTable.setLang("en");
-            }
-
-            for (SymbolType symbolName : symbolSettings) {
-                Symbol symbol = symbolSettings.get(symbolName);
-                symbolTable.override(symbol);
-            }
-            return symbolTable;
-        }
-
-        public Builder setLanguage(String lang) {
-            this.symbolTable = loadLanguageDefaultSymbolTable(lang);
+        public ConfigurationBuilder setLanguage(String lang) {
+            this.symbolTable = new SymbolTable(lang);
             this.lang = lang;
             return this;
         }
 
-        public Builder setSymbol(Symbol symbol) {
+        public ConfigurationBuilder setSymbol(Symbol symbol) {
             this.symbolTable.override(symbol);
             return this;
         }
 
-        public Builder setSymbol(SymbolType symbolType, String value) {
+        public ConfigurationBuilder setSymbol(SymbolType symbolType, String value) {
             this.symbolTable.override(new Symbol(symbolType, value));
             return this;
         }
 
-        public Builder addInvalidPattern(SymbolType symbolType, String invalid) {
+        public ConfigurationBuilder addInvalidPattern(SymbolType symbolType, String invalid) {
             Symbol symbol = this.symbolTable.getSymbol(symbolType);
             symbol.addInvalid(invalid);
             return this;
         }
 
-        public Builder addValidatorConfig(ValidatorConfiguration config) {
+        public ConfigurationBuilder addValidatorConfig(ValidatorConfiguration config) {
             validatorConfigs.add(config);
             return this;
         }
 
         public Configuration build() {
-            if (symbolTable == null) {
-                setLanguage("en");
-            }
-            return new Configuration(this.symbolTable, this.validatorConfigs, this.lang);
+            return new Configuration(symbolTable, this.validatorConfigs, this.lang);
         }
     }
 }

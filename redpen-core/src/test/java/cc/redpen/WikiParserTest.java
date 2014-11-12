@@ -547,7 +547,7 @@ public class WikiParserTest {
         sampleText += "大きなベッドタウンであり、多くの人が住んでいる。";
 
         Configuration config =
-                new Configuration.Builder().setLanguage("ja").build();
+                new Configuration.ConfigurationBuilder().setLanguage("ja").build();
         Document doc = createFileContent(sampleText, config);
 
         Section firstSections = doc.getSection(0);
@@ -568,7 +568,7 @@ public class WikiParserTest {
 
     private Document createFileContent(
             String inputDocumentString) {
-        Configuration conf = new Configuration.Builder().build();
+        Configuration conf = new Configuration.ConfigurationBuilder().build();
         DocumentParser parser = DocumentParser.WIKI;
         Document doc = null;
         try {

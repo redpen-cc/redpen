@@ -81,7 +81,7 @@ public final class Symbols implements Iterable<SymbolType> , Serializable {
             , new Symbol(SymbolType.DIGIT_EIGHT, "8", "")
             , new Symbol(SymbolType.DIGIT_NINE, "9", ""));
 
-    public static final Symbols JAPANESE_SYMBOLS = new Symbols(
+    static final Symbols JAPANESE_SYMBOLS = new Symbols(
             // Common symbols
             new Symbol(SymbolType.SPACE, "　", " ")
             , new Symbol(SymbolType.EXCLAMATION_MARK, "！", "!")

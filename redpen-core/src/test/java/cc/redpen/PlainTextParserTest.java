@@ -55,7 +55,7 @@ public class PlainTextParserTest {
 
     private Document generateDocument(String sampleText) {
         Document doc = null;
-        Configuration configuration = new Configuration.Builder().build();
+        Configuration configuration = new Configuration.ConfigurationBuilder().build();
         try {
             doc = parser.parse(sampleText, RedPen.getSentenceExtractor(configuration), configuration.getTokenizer());
         } catch (RedPenException e) {
@@ -66,7 +66,7 @@ public class PlainTextParserTest {
 
     @Before
     public void setup() {
-        Configuration configuration = new Configuration.Builder()
+        Configuration configuration = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(
                         new ValidatorConfiguration("SentenceLength").addAttribute("max_length", "10"))
                 .build();

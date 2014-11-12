@@ -61,7 +61,7 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
 
     @Test
     public void testWithParenthesis() throws RedPenException {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
                 .setLanguage("ja").build();
 
@@ -83,7 +83,7 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
 
     @Test
     public void testWithComma() throws RedPenException {
-        Configuration config = new Configuration.Builder()
+        Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
                 .setLanguage("ja").build();
 

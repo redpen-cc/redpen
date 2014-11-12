@@ -37,8 +37,21 @@ public final class SymbolTable implements Serializable{
     /**
      * Constructor.
      */
-    public SymbolTable() {
+    SymbolTable(String lang) {
         super();
+        Symbols symbolSettings;
+        this.lang = lang;
+        if (lang.equals("ja")) {
+            symbolSettings = Symbols.JAPANESE_SYMBOLS;
+        } else {
+            symbolSettings = Symbols.DEFAULT_SYMBOLS;
+        }
+
+        for (SymbolType symbolName : symbolSettings) {
+            Symbol symbol = symbolSettings.get(symbolName);
+            override(symbol);
+        }
+
     }
 
     /**
