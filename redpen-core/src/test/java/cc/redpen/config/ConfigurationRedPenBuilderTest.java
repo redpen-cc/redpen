@@ -94,8 +94,8 @@ public class ConfigurationRedPenBuilderTest {
         assertNotNull(config.getSymbolTable());
         assertNotNull(config.getSymbolTable().getSymbol(FULL_STOP));
         assertEquals("。", config.getSymbolTable().getSymbol(FULL_STOP).getValue());
-        assertTrue(config.getSymbolTable()
-                .getSymbol(FULL_STOP).getInvalidSymbols().contains("●"));
+        assertTrue(new String(config.getSymbolTable()
+                .getSymbol(FULL_STOP).getInvalidChars()).contains("●"));
     }
 
     @Test
@@ -109,10 +109,10 @@ public class ConfigurationRedPenBuilderTest {
         assertNotNull(config.getSymbolTable());
         assertNotNull(config.getSymbolTable().getSymbol(FULL_STOP));
         assertEquals("。", config.getSymbolTable().getSymbol(FULL_STOP).getValue());
-        assertTrue(config.getSymbolTable()
-                .getSymbol(FULL_STOP).getInvalidSymbols().contains("●"));
+        assertTrue(new String(config.getSymbolTable()
+                .getSymbol(FULL_STOP).getInvalidChars()).contains("●"));
         assertTrue(config.getSymbolTable().containsSymbolByValue("。"));
-        assertTrue(config.getSymbolTable()
-                .getSymbolByValue("。").getInvalidSymbols().contains("●"));
+        assertTrue(new String(config.getSymbolTable()
+                .getSymbolByValue("。").getInvalidChars()).contains("●"));
     }
 }
