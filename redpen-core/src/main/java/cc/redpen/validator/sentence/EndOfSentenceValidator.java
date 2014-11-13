@@ -29,8 +29,8 @@ final public class EndOfSentenceValidator extends Validator<Sentence> {
         if (content.length() < 2) {
             return validationErrors;
         }
-        Character lastCharacter = content.charAt(content.length() - 1);
-        Character secondCharacter = content.charAt(content.length() - 2);
+        char lastCharacter = content.charAt(content.length() - 1);
+        char secondCharacter = content.charAt(content.length() - 2);
         if (lastCharacter == period
                 || lastCharacter == questionMark
                 || lastCharacter == exclamationMark) {

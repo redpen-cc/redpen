@@ -46,7 +46,7 @@ public class QuotationValidator extends Validator<Sentence> {
     private Symbol rightSingleQuotationMark;
     private Symbol leftDoubleQuotationMark;
     private Symbol rightDoubleQuotationMark;
-    private Character period;
+    private char period;
 
     @Override
     public List<ValidationError> validate(Sentence sentence) {
