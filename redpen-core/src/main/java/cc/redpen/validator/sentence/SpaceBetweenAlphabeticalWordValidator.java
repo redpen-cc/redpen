@@ -38,8 +38,8 @@ public class SpaceBetweenAlphabeticalWordValidator extends Validator<Sentence> {
 
     @Override
     protected void init() throws RedPenException {
-        leftParenthesis = getSymbolTable().getSymbol(LEFT_PARENTHESIS).getValue().charAt(0);
-        rightParenthesis = getSymbolTable().getSymbol(RIGHT_PARENTHESIS).getValue().charAt(0);
-        comma = getSymbolTable().getSymbol(COMMA).getValue().charAt(0);
+        leftParenthesis = getSymbolTable().getSymbol(LEFT_PARENTHESIS).getValue();
+        rightParenthesis = getSymbolTable().getSymbol(RIGHT_PARENTHESIS).getValue();
+        comma = getSymbolTable().getSymbol(COMMA).getValue();
     }
 }

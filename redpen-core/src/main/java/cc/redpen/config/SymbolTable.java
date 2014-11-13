@@ -24,13 +24,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static cc.redpen.config.SymbolType.*;
+
 /**
  * Configuration table of characters used in {@link cc.redpen.RedPen}.
  */
 public final class SymbolTable implements Serializable {
     private static final long serialVersionUID = 1612920745151501631L;
     private final Map<SymbolType, Symbol> symbolDictionary = new HashMap<>();
-    private final Map<String, Symbol> valueDictionary = new HashMap<>();
+    private final Map<Character, Symbol> valueDictionary = new HashMap<>();
     private String lang;
 
     /**
@@ -77,7 +79,7 @@ public final class SymbolTable implements Serializable {
      * @param value character name
      * @return character containing the settings
      */
-    public Symbol getSymbolByValue(String value) {
+    public Symbol getSymbolByValue(char value) {
         return this.valueDictionary.get(value);
     }
 
@@ -88,7 +90,7 @@ public final class SymbolTable implements Serializable {
      * @return character when exist, null when the specified
      * character does not exist
      */
-    public String getValueOrFallbackToDefault(SymbolType type) {
+    public char getValueOrFallbackToDefault(SymbolType type) {
         Symbol symbol = this.symbolDictionary.get(type);
         return symbol != null ? symbol.getValue() : DEFAULT_SYMBOLS.get(type).getValue();
     }
@@ -100,7 +102,7 @@ public final class SymbolTable implements Serializable {
      * @return character when exist, null when the specified
      * character does not exist
      */
-    public boolean containsSymbolByValue(String value) {
+    public boolean containsSymbolByValue(char value) {
         return this.valueDictionary.get(value) != null;
     }
 
@@ -158,101 +160,101 @@ public final class SymbolTable implements Serializable {
     static {
         DEFAULT_SYMBOLS = initializeSymbols(
                 // Common symbols
-                new Symbol(SymbolType.SPACE, " ", "")
-                , new Symbol(SymbolType.EXCLAMATION_MARK, "!", "！")
-                , new Symbol(SymbolType.NUMBER_SIGN, "#", "＃")
-                , new Symbol(SymbolType.DOLLAR_SIGN, "$", "＄")
-                , new Symbol(SymbolType.PERCENT_SIGN, "%", "％")
-                , new Symbol(SymbolType.QUESTION_MARK, "?", "？")
-                , new Symbol(SymbolType.AMPERSAND, "&", "＆")
-                , new Symbol(SymbolType.LEFT_PARENTHESIS, "(", "（")
-                , new Symbol(SymbolType.RIGHT_PARENTHESIS, ")", "）")
-                , new Symbol(SymbolType.ASTERISK, "*", "＊")
-                , new Symbol(SymbolType.COMMA, ",", "，、")
-                , new Symbol(SymbolType.FULL_STOP, ".", "．。")
-                , new Symbol(SymbolType.PLUS_SIGN, "+", "＋")
-                , new Symbol(SymbolType.HYPHEN_SIGN, "-", "ー")
-                , new Symbol(SymbolType.SLASH, "/", "／")
-                , new Symbol(SymbolType.COLON, ":", "：")
-                , new Symbol(SymbolType.SEMICOLON, ";", "；")
-                , new Symbol(SymbolType.LESS_THAN_SIGN, "<", "＜")
-                , new Symbol(SymbolType.EQUAL_SIGN, "=", "＝")
-                , new Symbol(SymbolType.GREATER_THAN_SIGN, ">", "＞")
-                , new Symbol(SymbolType.AT_MARK, "@", "＠")
-                , new Symbol(SymbolType.LEFT_SQUARE_BRACKET, "[", "")
-                , new Symbol(SymbolType.RIGHT_SQUARE_BRACKET, "]", "")
-                , new Symbol(SymbolType.BACKSLASH, "\\", "")
-                , new Symbol(SymbolType.CIRCUMFLEX_ACCENT, "^", "")
-                , new Symbol(SymbolType.LOW_LINE, "_", "")
-                , new Symbol(SymbolType.LEFT_CURLY_BRACKET, "{", "｛")
-                , new Symbol(SymbolType.RIGHT_CURLY_BRACKET, "}", "｝")
-                , new Symbol(SymbolType.VERTICAL_BAR, "|", "｜")
-                , new Symbol(SymbolType.TILDE, "~", "〜")
-                , new Symbol(SymbolType.LEFT_SINGLE_QUOTATION_MARK, "'", "")
-                , new Symbol(SymbolType.RIGHT_SINGLE_QUOTATION_MARK, "'", "")
-                , new Symbol(SymbolType.LEFT_DOUBLE_QUOTATION_MARK, "\"", "")
-                , new Symbol(SymbolType.RIGHT_DOUBLE_QUOTATION_MARK, "\"", "")
+                new Symbol(SPACE, ' ', "")
+                , new Symbol(EXCLAMATION_MARK, '!', "！")
+                , new Symbol(NUMBER_SIGN, '#', "＃")
+                , new Symbol(DOLLAR_SIGN, '$', "＄")
+                , new Symbol(PERCENT_SIGN, '%', "％")
+                , new Symbol(QUESTION_MARK, '?', "？")
+                , new Symbol(AMPERSAND, '&', "＆")
+                , new Symbol(LEFT_PARENTHESIS, '(', "（")
+                , new Symbol(RIGHT_PARENTHESIS, ')', "）")
+                , new Symbol(ASTERISK, '*', "＊")
+                , new Symbol(COMMA, ',', "，、")
+                , new Symbol(FULL_STOP, '.', "．。")
+                , new Symbol(PLUS_SIGN, '+', "＋")
+                , new Symbol(HYPHEN_SIGN, '-', "ー")
+                , new Symbol(SLASH, '/', "／")
+                , new Symbol(COLON, ':', "：")
+                , new Symbol(SEMICOLON, ';', "；")
+                , new Symbol(LESS_THAN_SIGN, '<', "＜")
+                , new Symbol(EQUAL_SIGN, '=', "＝")
+                , new Symbol(GREATER_THAN_SIGN, '>', "＞")
+                , new Symbol(AT_MARK, '@', "＠")
+                , new Symbol(LEFT_SQUARE_BRACKET, '[', "")
+                , new Symbol(RIGHT_SQUARE_BRACKET, ']', "")
+                , new Symbol(BACKSLASH, '\\', "")
+                , new Symbol(CIRCUMFLEX_ACCENT, '^', "")
+                , new Symbol(LOW_LINE, '_', "")
+                , new Symbol(LEFT_CURLY_BRACKET, '{', "｛")
+                , new Symbol(RIGHT_CURLY_BRACKET, '}', "｝")
+                , new Symbol(VERTICAL_BAR, '|', "｜")
+                , new Symbol(TILDE, '~', "〜")
+                , new Symbol(LEFT_SINGLE_QUOTATION_MARK, '\'', "")
+                , new Symbol(RIGHT_SINGLE_QUOTATION_MARK, '\'', "")
+                , new Symbol(LEFT_DOUBLE_QUOTATION_MARK, '\"', "")
+                , new Symbol(RIGHT_DOUBLE_QUOTATION_MARK, '\"', "")
 
                 // Digits
-                , new Symbol(SymbolType.DIGIT_ZERO, "0", "")
-                , new Symbol(SymbolType.DIGIT_ONE, "1", "")
-                , new Symbol(SymbolType.DIGIT_TWO, "2", "")
-                , new Symbol(SymbolType.DIGIT_THREE, "3", "")
-                , new Symbol(SymbolType.DIGIT_FOUR, "4", "")
-                , new Symbol(SymbolType.DIGIT_FIVE, "5", "")
-                , new Symbol(SymbolType.DIGIT_SIX, "6", "")
-                , new Symbol(SymbolType.DIGIT_SEVEN, "7", "")
-                , new Symbol(SymbolType.DIGIT_EIGHT, "8", "")
-                , new Symbol(SymbolType.DIGIT_NINE, "9", ""));
+                , new Symbol(DIGIT_ZERO, '0', "")
+                , new Symbol(DIGIT_ONE, '1', "")
+                , new Symbol(DIGIT_TWO, '2', "")
+                , new Symbol(DIGIT_THREE, '3', "")
+                , new Symbol(DIGIT_FOUR, '4', "")
+                , new Symbol(DIGIT_FIVE, '5', "")
+                , new Symbol(DIGIT_SIX, '6', "")
+                , new Symbol(DIGIT_SEVEN, '7', "")
+                , new Symbol(DIGIT_EIGHT, '8', "")
+                , new Symbol(DIGIT_NINE, '9', ""));
 
         JAPANESE_SYMBOLS = initializeSymbols(
                 // Common symbols
-                new Symbol(SymbolType.SPACE, "　", " ")
-                , new Symbol(SymbolType.EXCLAMATION_MARK, "！", "!")
-                , new Symbol(SymbolType.NUMBER_SIGN, "＃", "#")
-                , new Symbol(SymbolType.DOLLAR_SIGN, "$", "＄")
-                , new Symbol(SymbolType.PERCENT_SIGN, "％", "%")
-                , new Symbol(SymbolType.QUESTION_MARK, "？", "?")
-                , new Symbol(SymbolType.AMPERSAND, "＆", "&")
-                , new Symbol(SymbolType.LEFT_PARENTHESIS, "（", "(")
-                , new Symbol(SymbolType.RIGHT_PARENTHESIS, "）", ")")
-                , new Symbol(SymbolType.ASTERISK, "＊", "*")
-                , new Symbol(SymbolType.COMMA, "、", ",，")
-                , new Symbol(SymbolType.FULL_STOP, "。", ".．")
-                , new Symbol(SymbolType.PLUS_SIGN, "＋", "+")
-                , new Symbol(SymbolType.HYPHEN_SIGN, "ー", "-")
-                , new Symbol(SymbolType.SLASH, "／", "/")
-                , new Symbol(SymbolType.COLON, "：", ":")
-                , new Symbol(SymbolType.SEMICOLON, "；", ";")
-                , new Symbol(SymbolType.LESS_THAN_SIGN, "＜", "<")
-                , new Symbol(SymbolType.EQUAL_SIGN, "＝", "=")
-                , new Symbol(SymbolType.GREATER_THAN_SIGN, "＞", ">")
-                , new Symbol(SymbolType.AT_MARK, "＠", "@")
-                , new Symbol(SymbolType.LEFT_SQUARE_BRACKET, "「", "")
-                , new Symbol(SymbolType.RIGHT_SQUARE_BRACKET, "」", "")
-                , new Symbol(SymbolType.BACKSLASH, "¥", "\\")
-                , new Symbol(SymbolType.CIRCUMFLEX_ACCENT, "＾", "^")
-                , new Symbol(SymbolType.LOW_LINE, "＿", "_")
-                , new Symbol(SymbolType.LEFT_CURLY_BRACKET, "｛", "")
-                , new Symbol(SymbolType.RIGHT_CURLY_BRACKET, "｝", "")
-                , new Symbol(SymbolType.VERTICAL_BAR, "｜", "|")
-                , new Symbol(SymbolType.TILDE, "〜", "~")
-                , new Symbol(SymbolType.LEFT_SINGLE_QUOTATION_MARK, "‘", "")
-                , new Symbol(SymbolType.RIGHT_SINGLE_QUOTATION_MARK, "’", "")
-                , new Symbol(SymbolType.LEFT_SINGLE_QUOTATION_MARK, "“", "")
-                , new Symbol(SymbolType.RIGHT_DOUBLE_QUOTATION_MARK, "”", "")
+                new Symbol(SPACE, '　', " ")
+                , new Symbol(EXCLAMATION_MARK, '！', "!")
+                , new Symbol(NUMBER_SIGN, '＃', "#")
+                , new Symbol(DOLLAR_SIGN, '$', "＄")
+                , new Symbol(PERCENT_SIGN, '％', "%")
+                , new Symbol(QUESTION_MARK, '？', "?")
+                , new Symbol(AMPERSAND, '＆', "&")
+                , new Symbol(LEFT_PARENTHESIS, '（', "(")
+                , new Symbol(RIGHT_PARENTHESIS, '）', ")")
+                , new Symbol(ASTERISK, '＊', "*")
+                , new Symbol(COMMA, '、', ",，")
+                , new Symbol(FULL_STOP, '。', ".．")
+                , new Symbol(PLUS_SIGN, '＋', "+")
+                , new Symbol(HYPHEN_SIGN, 'ー', "-")
+                , new Symbol(SLASH, '／', "/")
+                , new Symbol(COLON, '：', ":")
+                , new Symbol(SEMICOLON, '；', ";")
+                , new Symbol(LESS_THAN_SIGN, '＜', "<")
+                , new Symbol(EQUAL_SIGN, '＝', "=")
+                , new Symbol(GREATER_THAN_SIGN, '＞', ">")
+                , new Symbol(AT_MARK, '＠', "@")
+                , new Symbol(LEFT_SQUARE_BRACKET, '「', "")
+                , new Symbol(RIGHT_SQUARE_BRACKET, '」', "")
+                , new Symbol(BACKSLASH, '¥', "\\")
+                , new Symbol(CIRCUMFLEX_ACCENT, '＾', "^")
+                , new Symbol(LOW_LINE, '＿', "_")
+                , new Symbol(LEFT_CURLY_BRACKET, '｛', "")
+                , new Symbol(RIGHT_CURLY_BRACKET, '｝', "")
+                , new Symbol(VERTICAL_BAR, '｜', "|")
+                , new Symbol(TILDE, '〜', "~")
+                , new Symbol(LEFT_SINGLE_QUOTATION_MARK, '‘', "")
+                , new Symbol(RIGHT_SINGLE_QUOTATION_MARK, '’', "")
+                , new Symbol(LEFT_SINGLE_QUOTATION_MARK, '“', "")
+                , new Symbol(RIGHT_DOUBLE_QUOTATION_MARK, '”', "")
                 /******************************************************************
                  * Digits
                  ******************************************************************/
-                , new Symbol(SymbolType.DIGIT_ZERO, "0", "")
-                , new Symbol(SymbolType.DIGIT_ONE, "1", "")
-                , new Symbol(SymbolType.DIGIT_TWO, "2", "")
-                , new Symbol(SymbolType.DIGIT_THREE, "3", "")
-                , new Symbol(SymbolType.DIGIT_FOUR, "4", "")
-                , new Symbol(SymbolType.DIGIT_FIVE, "5", "")
-                , new Symbol(SymbolType.DIGIT_SIX, "6", "")
-                , new Symbol(SymbolType.DIGIT_SEVEN, "7", "")
-                , new Symbol(SymbolType.DIGIT_EIGHT, "8", "")
-                , new Symbol(SymbolType.DIGIT_NINE, "9", ""));
+                , new Symbol(DIGIT_ZERO, '0', "")
+                , new Symbol(DIGIT_ONE, '1', "")
+                , new Symbol(DIGIT_TWO, '2', "")
+                , new Symbol(DIGIT_THREE, '3', "")
+                , new Symbol(DIGIT_FOUR, '4', "")
+                , new Symbol(DIGIT_FIVE, '5', "")
+                , new Symbol(DIGIT_SIX, '6', "")
+                , new Symbol(DIGIT_SEVEN, '7', "")
+                , new Symbol(DIGIT_EIGHT, '8', "")
+                , new Symbol(DIGIT_NINE, '9', ""));
     }
 }

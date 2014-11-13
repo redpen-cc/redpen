@@ -18,10 +18,7 @@ public class SpellingValidator extends Validator<Sentence> {
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/spellchecker";
     private static final Logger LOG =
             LoggerFactory.getLogger(SpellingValidator.class);
-    private static Character[] skipChars =
-            new Character[]{'+', '~', '-', '(', ')', ',', '\"', '.'};
-    private static Set<Character> skipCharacters =
-            new HashSet<>(Arrays.asList(skipChars));
+    private static String skipCharacters = "+~-(),\".";
     // TODO: replace more memory efficient data structure
     private Set<String> validWords = new HashSet<>();
 
@@ -84,8 +81,8 @@ public class SpellingValidator extends Validator<Sentence> {
 
     private String normalize(String line) {
         StringBuilder builder = new StringBuilder(line.length());
-        for (Character ch : line.toCharArray()) {
-            if (!skipCharacters.contains(ch)) {
+        for (char ch : line.toCharArray()) {
+            if (skipCharacters.indexOf(ch) == -1) {
                 builder.append(Character.toLowerCase(ch));
             }
         }

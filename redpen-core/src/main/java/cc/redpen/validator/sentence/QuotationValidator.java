@@ -46,7 +46,7 @@ public class QuotationValidator extends Validator<Sentence> {
     private Symbol rightSingleQuotationMark;
     private Symbol leftDoubleQuotationMark;
     private Symbol rightDoubleQuotationMark;
-    private Character period;
+    private char period;
 
     @Override
     public List<ValidationError> validate(Sentence sentence) {
@@ -66,23 +66,23 @@ public class QuotationValidator extends Validator<Sentence> {
 
     @Override
     protected void init() throws RedPenException {
-        this.period = getSymbolTable().getValueOrFallbackToDefault(FULL_STOP).charAt(0);
+        this.period = getSymbolTable().getValueOrFallbackToDefault(FULL_STOP);
 
         setUseAscii(getConfigAttributeAsBoolean("use_ascii", false));
     }
 
     private void setUseAscii(boolean useAscii) {
         if (useAscii) {
-            leftSingleQuotationMark = new Symbol(LEFT_SINGLE_QUOTATION_MARK, "'", "", true, false);
-            rightSingleQuotationMark = new Symbol(RIGHT_SINGLE_QUOTATION_MARK, "'", "", false, true);
-            leftDoubleQuotationMark = new Symbol(LEFT_DOUBLE_QUOTATION_MARK, "\"", "", true, false);
-            rightDoubleQuotationMark = new Symbol(RIGHT_DOUBLE_QUOTATION_MARK, "\"", "", false, true);
+            leftSingleQuotationMark = new Symbol(LEFT_SINGLE_QUOTATION_MARK, '\'', "", true, false);
+            rightSingleQuotationMark = new Symbol(RIGHT_SINGLE_QUOTATION_MARK, '\'', "", false, true);
+            leftDoubleQuotationMark = new Symbol(LEFT_DOUBLE_QUOTATION_MARK, '\"', "", true, false);
+            rightDoubleQuotationMark = new Symbol(RIGHT_DOUBLE_QUOTATION_MARK, '\"', "", false, true);
         } else {
             // single quotes
-            leftSingleQuotationMark = new Symbol(LEFT_SINGLE_QUOTATION_MARK, "‘", "", true, false);
-            rightSingleQuotationMark = new Symbol(RIGHT_SINGLE_QUOTATION_MARK, "’", "", false, true);
-            leftDoubleQuotationMark = new Symbol(LEFT_DOUBLE_QUOTATION_MARK, "“", "", true, false);
-            rightDoubleQuotationMark = new Symbol(RIGHT_DOUBLE_QUOTATION_MARK, "”", "", false, true);
+            leftSingleQuotationMark = new Symbol(LEFT_SINGLE_QUOTATION_MARK, '‘', "", true, false);
+            rightSingleQuotationMark = new Symbol(RIGHT_SINGLE_QUOTATION_MARK, '’', "", false, true);
+            leftDoubleQuotationMark = new Symbol(LEFT_DOUBLE_QUOTATION_MARK, '“', "", true, false);
+            rightDoubleQuotationMark = new Symbol(RIGHT_DOUBLE_QUOTATION_MARK, '”', "", false, true);
         }
     }
 
@@ -152,7 +152,7 @@ public class QuotationValidator extends Validator<Sentence> {
         return errors;
     }
 
-    private int getQuotePosition(String sentenceStr, String quote,
+    private int getQuotePosition(String sentenceStr, char quote,
                                  int startPosition) {
         int quoteCandidatePosition = startPosition;
         boolean isFound;

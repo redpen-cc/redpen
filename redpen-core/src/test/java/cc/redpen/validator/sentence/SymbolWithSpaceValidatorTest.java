@@ -47,7 +47,7 @@ public class SymbolWithSpaceValidatorTest {
         Configuration conf = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
                 .setLanguage("en")
-                .setSymbol(new Symbol(SLASH, "/"))
+                .setSymbol(new Symbol(SLASH, '/'))
                 .build();
 
         RedPen redPen = new RedPen.RedPenBuilder()
@@ -71,7 +71,7 @@ public class SymbolWithSpaceValidatorTest {
         Configuration conf = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
                 .setLanguage("en")
-                .setSymbol(new Symbol(COLON, ":", "", false, true))
+                .setSymbol(new Symbol(COLON, ':', "", false, true))
                 .build();
 
         RedPen redPen = new RedPen.RedPenBuilder()
@@ -95,7 +95,7 @@ public class SymbolWithSpaceValidatorTest {
         Configuration conf = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
                 .setLanguage("en")
-                .setSymbol(new Symbol(LEFT_PARENTHESIS, "(", "", true, false))
+                .setSymbol(new Symbol(LEFT_PARENTHESIS, '(', "", true, false))
                 .build();
 
         RedPen redPen = new RedPen.RedPenBuilder()
@@ -119,8 +119,8 @@ public class SymbolWithSpaceValidatorTest {
         Configuration conf = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
                 .setLanguage("en")
-                .setSymbol(new Symbol(LEFT_PARENTHESIS, "(", "", true, false))
-                .setSymbol(new Symbol(RIGHT_PARENTHESIS, ")", "", false, true))
+                .setSymbol(new Symbol(LEFT_PARENTHESIS, '(', "", true, false))
+                .setSymbol(new Symbol(RIGHT_PARENTHESIS, ')', "", false, true))
                 .build();
 
         RedPen redPen = new RedPen.RedPenBuilder()
@@ -144,7 +144,7 @@ public class SymbolWithSpaceValidatorTest {
         Configuration conf = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
                 .setLanguage("en")
-                .setSymbol(new Symbol(ASTERISK, "*", "", true, true))
+                .setSymbol(new Symbol(ASTERISK, '*', "", true, true))
                 .build();
 
         RedPen redPen = new RedPen.RedPenBuilder()

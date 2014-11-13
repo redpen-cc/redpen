@@ -49,7 +49,7 @@ public class InvalidSymbolValidatorTest {
         Configuration conf = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
                 .setLanguage("en")
-                .setSymbol(new Symbol(EXCLAMATION_MARK, "!", "！"))
+                .setSymbol(new Symbol(EXCLAMATION_MARK, '!', "！"))
                 .build();
 
         RedPen redPen = new RedPen.RedPenBuilder()
@@ -73,7 +73,7 @@ public class InvalidSymbolValidatorTest {
         Configuration conf = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
                 .setLanguage("en")
-                .setSymbol(new Symbol(EXCLAMATION_MARK, "!", "！"))
+                .setSymbol(new Symbol(EXCLAMATION_MARK, '!', "！"))
                 .build();
 
         RedPen redPen = new RedPen.RedPenBuilder()
@@ -98,8 +98,8 @@ public class InvalidSymbolValidatorTest {
         Configuration conf = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
                 .setLanguage("en")
-                .setSymbol(new Symbol(EXCLAMATION_MARK, "!", "！"))
-                .setSymbol(new Symbol(COMMA, ",", "、"))
+                .setSymbol(new Symbol(EXCLAMATION_MARK, '!', "！"))
+                .setSymbol(new Symbol(COMMA, ',', "、"))
                 .build();
 
         RedPen redPen = new RedPen.RedPenBuilder()

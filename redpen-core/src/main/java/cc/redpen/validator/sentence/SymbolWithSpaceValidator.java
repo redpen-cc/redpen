@@ -52,7 +52,7 @@ public class SymbolWithSpaceValidator extends Validator<Sentence> {
             return null;
         }
 
-        String target = symbol.getValue();
+        char target = symbol.getValue();
         int position = sentenceStr.indexOf(target);
         if (position != -1) {
             if (position > 0 && symbol.isNeedBeforeSpace()

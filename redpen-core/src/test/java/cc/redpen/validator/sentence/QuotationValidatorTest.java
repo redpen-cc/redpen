@@ -261,7 +261,7 @@ public class QuotationValidatorTest {
         Configuration conf = new Configuration.ConfigurationBuilder()
                 .setLanguage("en")
                 .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", true))
-                .setSymbol(new Symbol(SymbolType.FULL_STOP, "。"))
+                .setSymbol(new Symbol(SymbolType.FULL_STOP, '。'))
                 .build();
         Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
 

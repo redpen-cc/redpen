@@ -52,7 +52,7 @@ public class ConfigurationLoaderTest {
         assertEquals("MaxParagraphNumber",
                 configuration.getValidatorConfigs().get(1).getConfigurationName());
         assertNotNull(configuration.getSymbolTable());
-        assertEquals("!", configuration.getSymbolTable()
+        assertEquals('!', configuration.getSymbolTable()
                 .getSymbol(EXCLAMATION_MARK).getValue());
         assertEquals(1, configuration.getSymbolTable()
                 .getSymbol(EXCLAMATION_MARK).getInvalidChars().length);
@@ -87,7 +87,7 @@ public class ConfigurationLoaderTest {
         assertEquals("MaxParagraphNumber",
                 configuration.getValidatorConfigs().get(1).getConfigurationName());
         assertNotNull(configuration.getSymbolTable());
-        assertEquals("！", configuration.getSymbolTable()
+        assertEquals('！', configuration.getSymbolTable()
                 .getSymbol(EXCLAMATION_MARK).getValue());
         assertEquals(1, configuration.getSymbolTable()
                 .getSymbol(EXCLAMATION_MARK).getInvalidChars().length);
@@ -117,7 +117,7 @@ public class ConfigurationLoaderTest {
         assertEquals("MaxParagraphNumber",
                 configuration.getValidatorConfigs().get(1).getConfigurationName());
         assertNotNull(configuration.getSymbolTable());
-        assertEquals("!", configuration.getSymbolTable()
+        assertEquals('!', configuration.getSymbolTable()
                 .getSymbol(EXCLAMATION_MARK).getValue());
     }
 
@@ -144,7 +144,7 @@ public class ConfigurationLoaderTest {
         assertEquals("MaxParagraphNumber",
                 configuration.getValidatorConfigs().get(1).getConfigurationName());
         assertNotNull(configuration.getSymbolTable());
-        assertEquals("!", configuration.getSymbolTable()
+        assertEquals('!', configuration.getSymbolTable()
                 .getSymbol(EXCLAMATION_MARK).getValue());
     }
 
@@ -225,7 +225,7 @@ public class ConfigurationLoaderTest {
 
         assertNotNull(configuration);
 
-        assertEquals("!", configuration.getSymbolTable()
+        assertEquals('!', configuration.getSymbolTable()
                 .getSymbol(EXCLAMATION_MARK).getValue());
         assertEquals(1, configuration.getSymbolTable()
                 .getSymbol(EXCLAMATION_MARK).getInvalidChars().length);
@@ -255,7 +255,7 @@ public class ConfigurationLoaderTest {
 
         assertNotNull(configuration);
 
-        assertEquals("!", configuration.getSymbolTable()
+        assertEquals('!', configuration.getSymbolTable()
                 .getSymbol(EXCLAMATION_MARK).getValue());
         assertEquals(1, configuration.getSymbolTable()
                 .getSymbol(EXCLAMATION_MARK).getInvalidChars().length);
@@ -286,7 +286,7 @@ public class ConfigurationLoaderTest {
 
         assertNotNull(configuration);
 
-        assertEquals("\'", configuration.getSymbolTable()
+        assertEquals('\'', configuration.getSymbolTable()
                 .getSymbol(LEFT_SINGLE_QUOTATION_MARK).getValue());
         assertEquals(2, configuration.getSymbolTable()
                 .getSymbol(LEFT_SINGLE_QUOTATION_MARK).getInvalidChars().length);
@@ -312,7 +312,7 @@ public class ConfigurationLoaderTest {
 
         assertNotNull(configuration);
 
-        assertEquals("!", configuration.getSymbolTable()
+        assertEquals('!', configuration.getSymbolTable()
                 .getSymbol(EXCLAMATION_MARK).getValue());
         assertEquals(0, configuration.getSymbolTable()
                 .getSymbol(EXCLAMATION_MARK).getInvalidChars().length);
