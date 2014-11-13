@@ -89,7 +89,7 @@ public final class EndOfSentenceDetector {
                     || '\n' == str.charAt(endPosition)))) {
                 return endPosition - 1;
             }
-            return handleSuccessivePeriods(str, startPosition, whitePositions);
+            return handleSuccessivePeriods(str, endPosition - 1, whitePositions);
         }
 
         if (endPosition == str.length()) {
