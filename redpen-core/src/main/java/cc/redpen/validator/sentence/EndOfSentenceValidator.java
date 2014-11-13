@@ -44,11 +44,11 @@ final public class EndOfSentenceValidator extends Validator<Sentence> {
 
     @Override
     protected void init() throws RedPenException {
-        period = getSymbolTable().getSymbol(FULL_STOP).getValue().charAt(0);
-        rightSingleQuotation = getSymbolTable().getSymbol(RIGHT_SINGLE_QUOTATION_MARK).getValue().charAt(0);
-        rightDoubleQuotation = getSymbolTable().getSymbol(RIGHT_DOUBLE_QUOTATION_MARK).getValue().charAt(0);
-        questionMark = getSymbolTable().getSymbol(QUESTION_MARK).getValue().charAt(0);
-        exclamationMark = getSymbolTable().getSymbol(EXCLAMATION_MARK).getValue().charAt(0);
+        period = getSymbolTable().getSymbol(FULL_STOP).getValue();
+        rightSingleQuotation = getSymbolTable().getSymbol(RIGHT_SINGLE_QUOTATION_MARK).getValue();
+        rightDoubleQuotation = getSymbolTable().getSymbol(RIGHT_DOUBLE_QUOTATION_MARK).getValue();
+        questionMark = getSymbolTable().getSymbol(QUESTION_MARK).getValue();
+        exclamationMark = getSymbolTable().getSymbol(EXCLAMATION_MARK).getValue();
     }
 
     @Override

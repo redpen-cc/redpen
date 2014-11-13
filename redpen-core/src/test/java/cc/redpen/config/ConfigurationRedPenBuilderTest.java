@@ -67,7 +67,7 @@ public class ConfigurationRedPenBuilderTest {
 
         assertNotNull(config.getSymbolTable());
         assertNotNull(config.getSymbolTable().getSymbol(FULL_STOP));
-        assertEquals("。", config.getSymbolTable().getSymbol(FULL_STOP).getValue());
+        assertEquals('。', config.getSymbolTable().getSymbol(FULL_STOP).getValue());
     }
 
     @Test
@@ -75,12 +75,12 @@ public class ConfigurationRedPenBuilderTest {
         Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .setLanguage("ja")
-                .setSymbol(new Symbol(FULL_STOP, "."))
+                .setSymbol(new Symbol(FULL_STOP, '.'))
                 .build();
 
         assertNotNull(config.getSymbolTable());
         assertNotNull(config.getSymbolTable().getSymbol(FULL_STOP));
-        assertEquals(".", config.getSymbolTable().getSymbol(FULL_STOP).getValue());
+        assertEquals('.', config.getSymbolTable().getSymbol(FULL_STOP).getValue());
     }
 
     @Test
@@ -88,12 +88,12 @@ public class ConfigurationRedPenBuilderTest {
         Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .setLanguage("ja")
-                .setSymbol(new Symbol(SymbolType.FULL_STOP, "。", ".．●"))
+                .setSymbol(new Symbol(SymbolType.FULL_STOP, '。', ".．●"))
                 .build();
 
         assertNotNull(config.getSymbolTable());
         assertNotNull(config.getSymbolTable().getSymbol(FULL_STOP));
-        assertEquals("。", config.getSymbolTable().getSymbol(FULL_STOP).getValue());
+        assertEquals('。', config.getSymbolTable().getSymbol(FULL_STOP).getValue());
         assertTrue(new String(config.getSymbolTable()
                 .getSymbol(FULL_STOP).getInvalidChars()).contains("●"));
     }
@@ -103,16 +103,16 @@ public class ConfigurationRedPenBuilderTest {
         Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .setLanguage("ja")
-                .setSymbol(new Symbol(SymbolType.FULL_STOP, "。", ".．●"))
+                .setSymbol(new Symbol(SymbolType.FULL_STOP, '。', ".．●"))
                 .build();
 
         assertNotNull(config.getSymbolTable());
         assertNotNull(config.getSymbolTable().getSymbol(FULL_STOP));
-        assertEquals("。", config.getSymbolTable().getSymbol(FULL_STOP).getValue());
+        assertEquals('。', config.getSymbolTable().getSymbol(FULL_STOP).getValue());
         assertTrue(new String(config.getSymbolTable()
                 .getSymbol(FULL_STOP).getInvalidChars()).contains("●"));
-        assertTrue(config.getSymbolTable().containsSymbolByValue("。"));
+        assertTrue(config.getSymbolTable().containsSymbolByValue('。'));
         assertTrue(new String(config.getSymbolTable()
-                .getSymbolByValue("。").getInvalidChars()).contains("●"));
+                .getSymbolByValue('。').getInvalidChars()).contains("●"));
     }
 }

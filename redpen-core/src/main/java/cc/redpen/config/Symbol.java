@@ -18,6 +18,7 @@
 package cc.redpen.config;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * Represent a character settings.
@@ -25,7 +26,7 @@ import java.io.Serializable;
 public final class Symbol implements Serializable {
     private static final long serialVersionUID = 3826499136262740992L;
     private final SymbolType name;
-    private final String value;
+    private final char value;
     private final char[] invalidChars;
     private final boolean needBeforeSpace;
     private final boolean needAfterSpace;
@@ -36,7 +37,7 @@ public final class Symbol implements Serializable {
      * @param symbolType  name of target character
      * @param charValue character
      */
-    public Symbol(SymbolType symbolType, String charValue) {
+    public Symbol(SymbolType symbolType, char charValue) {
         this(symbolType, charValue, "", false, false);
     }
 
@@ -47,7 +48,7 @@ public final class Symbol implements Serializable {
      * @param charValue       character
      * @param invalidCharsStr list of invalid characters
      */
-    public Symbol(SymbolType symbolType, String charValue, String invalidCharsStr) {
+    public Symbol(SymbolType symbolType, char charValue, String invalidCharsStr) {
         this(symbolType, charValue, invalidCharsStr, false, false);
     }
 
@@ -60,7 +61,7 @@ public final class Symbol implements Serializable {
      * @param haveBeforeSpace flag to have a space before the character
      * @param haveAfterSpace  flag to have a pace after the character
      */
-    public Symbol(SymbolType symbolType, String charValue, String invalidCharsStr,
+    public Symbol(SymbolType symbolType, char charValue, String invalidCharsStr,
                   boolean haveBeforeSpace, boolean haveAfterSpace) {
         this.name = symbolType;
         this.value = charValue;
@@ -83,7 +84,7 @@ public final class Symbol implements Serializable {
      *
      * @return character
      */
-    public String getValue() {
+    public char getValue() {
         return value;
     }
 
@@ -123,10 +124,9 @@ public final class Symbol implements Serializable {
 
         if (needAfterSpace != symbol.needAfterSpace) return false;
         if (needBeforeSpace != symbol.needBeforeSpace) return false;
-        if (invalidChars != null ? !invalidChars.equals(symbol.invalidChars) : symbol.invalidChars != null)
-            return false;
-        if (name != null ? !name.equals(symbol.name) : symbol.name != null) return false;
-        if (value != null ? !value.equals(symbol.value) : symbol.value != null) return false;
+        if (value != symbol.value) return false;
+        if (!Arrays.equals(invalidChars, symbol.invalidChars)) return false;
+        if (name != symbol.name) return false;
 
         return true;
     }
@@ -134,8 +134,8 @@ public final class Symbol implements Serializable {
     @Override
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (value != null ? value.hashCode() : 0);
-        result = 31 * result + (invalidChars != null ? invalidChars.hashCode() : 0);
+        result = 31 * result + (int) value;
+        result = 31 * result + (invalidChars != null ? Arrays.hashCode(invalidChars) : 0);
         result = 31 * result + (needBeforeSpace ? 1 : 0);
         result = 31 * result + (needAfterSpace ? 1 : 0);
         return result;
@@ -144,9 +144,9 @@ public final class Symbol implements Serializable {
     @Override
     public String toString() {
         return "Symbol{" +
-                "name='" + name + '\'' +
-                ", value='" + value + '\'' +
-                ", invalidChars=" + invalidChars +
+                "name=" + name +
+                ", value=" + value +
+                ", invalidChars=" + Arrays.toString(invalidChars) +
                 ", needBeforeSpace=" + needBeforeSpace +
                 ", needAfterSpace=" + needAfterSpace +
                 '}';

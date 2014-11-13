@@ -40,7 +40,7 @@ final public class CommaNumberValidator extends Validator<Sentence> {
      */
     private static final int DEFAULT_MAX_COMMA_NUMBER = 3;
     private int maxCommaNum = DEFAULT_MAX_COMMA_NUMBER;
-    private String comma;
+    private char comma;
 
     public List<ValidationError> validate(Sentence line) {
         List<ValidationError> validationErrors = new ArrayList<>();
@@ -71,14 +71,16 @@ final public class CommaNumberValidator extends Validator<Sentence> {
 
         CommaNumberValidator that = (CommaNumberValidator) o;
 
-        return maxCommaNum == that.maxCommaNum && !(comma != null ? !comma.equals(that.comma) : that.comma != null);
+        if (comma != that.comma) return false;
+        if (maxCommaNum != that.maxCommaNum) return false;
 
+        return true;
     }
 
     @Override
     public int hashCode() {
         int result = maxCommaNum;
-        result = 31 * result + (comma != null ? comma.hashCode() : 0);
+        result = 31 * result + (int) comma;
         return result;
     }
 
@@ -86,8 +88,7 @@ final public class CommaNumberValidator extends Validator<Sentence> {
     public String toString() {
         return "CommaNumberValidator{" +
                 "maxCommaNum=" + maxCommaNum +
-                ", comma='" + comma + '\'' +
+                ", comma=" + comma +
                 '}';
     }
-
 }
