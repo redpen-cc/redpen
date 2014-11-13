@@ -98,8 +98,7 @@ public final class SentenceExtractor {
 
     private void generateQuotationPattern(char[] endCharacters, StringBuilder patternString, char quotation) {
         for (char endChar : endCharacters) {
-            String pattern;
-            pattern = handleSpecialCharacter(endChar) + quotation;
+            String pattern = handleSpecialCharacter(endChar) + quotation;
             appendPattern(patternString, pattern);
         }
     }

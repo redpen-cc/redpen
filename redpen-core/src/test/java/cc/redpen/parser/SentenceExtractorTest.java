@@ -194,8 +194,8 @@ public class SentenceExtractorTest {
 
     @Test
     public void testJapaneseSimpleWithEndQuotations() {
-        char[] stopChars = {'。','？','’','”'};
-        char[] rightQuotations = {};
+        char[] stopChars = {'。','？'};
+        char[] rightQuotations = {'’','”'};
         SentenceExtractor extractor = new SentenceExtractor(stopChars, rightQuotations);
         List<Sentence> outputSentences = new ArrayList<>();
         String remain = extractor.extract("これは“群馬。”",
@@ -207,8 +207,8 @@ public class SentenceExtractorTest {
 
     @Test
     public void testJapaneseMultipleSentencesWithEndQuotations() {
-        char[] stopChars = {'。','？','’','”'};
-        char[] rightQuotations = {};
+        char[] stopChars = {'。','？'};
+        char[] rightQuotations = {'’','”'};
         SentenceExtractor extractor = new SentenceExtractor(stopChars, rightQuotations);
         List<Sentence> outputSentences = new ArrayList<>();
         String remain = extractor.extract("これは“群馬。”あれは群馬ではない。",
