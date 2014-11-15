@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,9 +35,10 @@ import java.util.Optional;
 /**
  * Parser for plain text file.
  */
-final class PlainTextParser extends BaseDocumentParser {
+final class PlainTextParser extends BaseDocumentParser implements Serializable{
     private static final Logger LOG =
             LoggerFactory.getLogger(PlainTextParser.class);
+    private static final long serialVersionUID = -4343255148183552844L;
 
     /**
      * Constructor.
@@ -96,5 +98,10 @@ final class PlainTextParser extends BaseDocumentParser {
                 }
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return "PlainTextParser{}";
     }
 }
