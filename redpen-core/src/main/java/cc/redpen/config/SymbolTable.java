@@ -209,7 +209,7 @@ public final class SymbolTable implements Serializable {
 
         JAPANESE_SYMBOLS = initializeSymbols(
                 // Common symbols
-                new Symbol(SPACE, '　', " ")
+                new Symbol(SPACE, '　', "")
                 , new Symbol(EXCLAMATION_MARK, '！', "!")
                 , new Symbol(NUMBER_SIGN, '＃', "#")
                 , new Symbol(DOLLAR_SIGN, '$', "＄")
