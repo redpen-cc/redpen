@@ -24,7 +24,6 @@ import cc.redpen.distributor.ResultDistributor;
 import cc.redpen.model.*;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.SentenceExtractor;
-import cc.redpen.validator.PreProcessor;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import cc.redpen.validator.ValidatorFactory;
@@ -149,7 +148,7 @@ public class RedPen {
             Map<Document, List<ValidationError>> docErrorsMap) {
         for (Document document : documentCollection) {
             List<ValidationError> errors = new ArrayList<>();
-            validateDocument(document, errors);
+            validators.forEach(e -> e.validate(errors, document));
             for (ValidationError error : errors) {
                 flushError(document, error);
             }
@@ -175,7 +174,8 @@ public class RedPen {
         for (Document document : documentCollection) {
             for (Section section : document) {
                 List<ValidationError> newErrors = new ArrayList<>();
-                validateSection(section, newErrors);
+                validators.forEach(e -> e.validate(newErrors, section));
+
                 for (ValidationError error : newErrors) {
                     flushError(document, error);
                 }
@@ -188,97 +188,48 @@ public class RedPen {
     private void runSentenceValidators(
             DocumentCollection documentCollection,
             Map<Document, List<ValidationError>> docErrorsMap) {
-        runSentencePreProcessorsToDocumentCollection(documentCollection);
-        runSentenceValidatorsToDocumentCollection(documentCollection, docErrorsMap);
-    }
-
-    private void runSentencePreProcessorsToDocumentCollection(
-            DocumentCollection documentCollection) {
+        // run Sentence PreProcessors to DocumentCollection
         for (Document document : documentCollection) {
             for (Section section : document) {
-                applySentencePreProcessorsToSection(section);
+                // apply Sentence PreProcessors to section
+                // apply paragraphs
+                for (Paragraph paragraph : section.getParagraphs()) {
+                    validators.forEach(e -> paragraph.getSentences().forEach(e::preValidate));
+                }
+                // apply to section header
+                validators.forEach(e -> section.getHeaderContents().forEach(e::preValidate));
+
+                // apply to lists
+                for (ListBlock listBlock : section.getListBlocks()) {
+                    for (ListElement listElement : listBlock.getListElements()) {
+                        validators.forEach(e -> listElement.getSentences().forEach(e::preValidate));
+                    }
+                }
             }
         }
-    }
-
-    private void applySentencePreProcessorsToSection(Section section) {
-        // apply paragraphs
-        for (Paragraph paragraph : section.getParagraphs()) {
-            preprocessSentences(paragraph.getSentences());
-        }
-        // apply to section header
-        preprocessSentences(section.getHeaderContents());
-        // apply to lists
-        for (ListBlock listBlock : section.getListBlocks()) {
-            for (ListElement listElement : listBlock.getListElements()) {
-                preprocessSentences(listElement.getSentences());
-            }
-        }
-    }
-
-    private void preprocessSentences(List<Sentence> sentences) {
-        for (Validator sentenceValidator : validators) {
-            if (sentenceValidator instanceof PreProcessor) {
-                PreProcessor<Sentence> preprocessor = (PreProcessor<Sentence>) sentenceValidator;
-                sentences.forEach(preprocessor::preprocess);
-            }
-        }
-    }
-
-    private void runSentenceValidatorsToDocumentCollection(
-            DocumentCollection documentCollection, Map<Document, List<ValidationError>> docErrorsMap) {
+        // run Sentence Validators to DocumentCollection
         for (Document document : documentCollection) {
             for (Section section : document) {
                 List<ValidationError> newErrors = new ArrayList<>();
-                applySentenceValidationsToSection(document, section, newErrors);
+
+                // apply SentenceValidations to section
+                // apply paragraphs
+                for (Paragraph paragraph : section.getParagraphs()) {
+                    validators.forEach(e -> paragraph.getSentences().forEach(sentence -> e.validate(newErrors, sentence)));
+                }
+                // apply to section header
+                validators.forEach(e -> section.getHeaderContents().forEach(sentence -> e.validate(newErrors, sentence)));
+                // apply to lists
+                for (ListBlock listBlock : section.getListBlocks()) {
+                    for (ListElement listElement : listBlock.getListElements()) {
+                        validators.forEach(e -> listElement.getSentences().forEach(sentence -> e.validate(newErrors, sentence)));
+                    }
+                }
+                for (ValidationError error : newErrors) {
+                    flushError(document, error);
+                }
+
                 docErrorsMap.get(document).addAll(newErrors);
-            }
-        }
-    }
-
-    private void applySentenceValidationsToSection(
-            Document document, Section section, List<ValidationError> validationErrors) {
-        List<ValidationError> newErrors = new ArrayList<>();
-        // apply paragraphs
-        for (Paragraph paragraph : section.getParagraphs()) {
-            validateParagraph(paragraph, newErrors);
-        }
-
-        // apply to section header
-        validateSentences(section.getHeaderContents(), newErrors);
-
-        // apply to lists
-        for (ListBlock listBlock : section.getListBlocks()) {
-            for (ListElement listElement : listBlock.getListElements()) {
-                validateSentences(listElement.getSentences(), newErrors);
-            }
-        }
-        for (ValidationError error : newErrors) {
-            flushError(document, error);
-        }
-        validationErrors.addAll(newErrors);
-    }
-
-    private void validateDocument(Document document, List<ValidationError> errorList) {
-        for (Validator validator : validators) {
-            validator.validate(errorList, document);
-        }
-    }
-
-    private void validateSection(Section section, List<ValidationError> errorList) {
-        for (Validator sectionValidator : validators) {
-            sectionValidator.validate(errorList, section);
-        }
-    }
-
-    private void validateParagraph(Paragraph paragraph, List<ValidationError> errorList) {
-        validateSentences(paragraph.getSentences(), errorList);
-    }
-
-    private void validateSentences(List<Sentence> sentences, List<ValidationError> errorList) {
-        for (Validator sentenceValidator : validators) {
-            for (Sentence sentence : sentences) {
-                sentenceValidator.validate(errorList, sentence);
             }
         }
     }
