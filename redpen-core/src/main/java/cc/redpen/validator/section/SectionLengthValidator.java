@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * Validate the length of one section.
  */
-final public class SectionLengthValidator extends Validator<Section> {
+final public class SectionLengthValidator extends Validator {
     private static final int DEFAULT_MAXIMUM_CHAR_NUMBER_IN_A_SECTION = 1000;
     private static final Logger LOG =
             LoggerFactory.getLogger(SectionLengthValidator.class);

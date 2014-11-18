@@ -14,7 +14,7 @@ import static cc.redpen.config.SymbolType.*;
  * This validator check if the style end of sentence is American style.
  * @see <a herf="http://grammar.ccc.commnet.edu/grammar/marks/quotation.htm">Description of quotation marks</a>
  */
-final public class EndOfSentenceValidator extends Validator<Sentence> {
+final public class EndOfSentenceValidator extends Validator {
 
     private char rightSingleQuotation = '\'';
     private char rightDoubleQuotation = '"';
@@ -23,9 +23,9 @@ final public class EndOfSentenceValidator extends Validator<Sentence> {
     private char exclamationMark = '!';
 
     @Override
-    public List<ValidationError> validate(Sentence block) {
+    public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> validationErrors = new ArrayList<>();
-        String content = block.content;
+        String content = sentence.content;
         if (content.length() < 2) {
             return validationErrors;
         }
@@ -36,7 +36,7 @@ final public class EndOfSentenceValidator extends Validator<Sentence> {
                 || lastCharacter == exclamationMark) {
             if (secondCharacter == rightSingleQuotation
                     || secondCharacter == rightDoubleQuotation) {
-                validationErrors.add(createValidationError(block, secondCharacter+lastCharacter));
+                validationErrors.add(createValidationError(sentence, secondCharacter+lastCharacter));
             }
         }
         return validationErrors;

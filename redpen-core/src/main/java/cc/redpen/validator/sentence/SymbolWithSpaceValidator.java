@@ -31,8 +31,9 @@ import java.util.Set;
  * Validate symbol has before and after symbols. Needed spaces is depend on
  * the symbol and defined in DVCharacterTable.
  */
-public class SymbolWithSpaceValidator extends Validator<Sentence> {
+public class SymbolWithSpaceValidator extends Validator {
 
+    @Override
     public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> errors = new ArrayList<>();
         Set<SymbolType> symbolTypes = getSymbolTable().getNames();

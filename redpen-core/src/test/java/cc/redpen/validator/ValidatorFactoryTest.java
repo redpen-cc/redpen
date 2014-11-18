@@ -12,9 +12,9 @@ import static junit.framework.Assert.fail;
 
 class NotImplementInterfaceValidator {}
 
-class NoConstructorWithConfigsValidator extends Validator<Sentence> {
+class NoConstructorWithConfigsValidator extends Validator {
     @Override
-    public List<ValidationError> validate(Sentence block) {
+    public List<ValidationError> validate(Sentence sentence) {
         return null;
     }
 }

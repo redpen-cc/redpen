@@ -31,7 +31,7 @@ import static cc.redpen.config.SymbolType.*;
 /**
  * Validator to validate quotation characters.
  */
-public class QuotationValidator extends Validator<Sentence> {
+public class QuotationValidator extends Validator {
 
     private static final List<String> DEFAULT_EXCEPTION_SUFFIXES;
 

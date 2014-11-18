@@ -11,25 +11,26 @@ import java.util.List;
 
 import static cc.redpen.config.SymbolType.*;
 
-public class SpaceBetweenAlphabeticalWordValidator extends Validator<Sentence> {
+public class SpaceBetweenAlphabeticalWordValidator extends Validator {
     private char leftParenthesis = '(';
     private char rightParenthesis = ')';
     private char comma = ',';
 
-    public List<ValidationError> validate(Sentence block) {
+    @Override
+    public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> results = new ArrayList<>();
         char prevCharacter = ' ';
-        for (char character : block.content.toCharArray()) {
+        for (char character : sentence.content.toCharArray()) {
             if (!StringUtils.isBasicLatin(prevCharacter)
                     && prevCharacter != leftParenthesis && prevCharacter != comma
                     && StringUtils.isBasicLatin(character)
                     && Character.isLetter(character)) {
-                results.add(createValidationError("Before", block));
+                results.add(createValidationError("Before", sentence));
             } else if (
                     !StringUtils.isBasicLatin(character) && character != rightParenthesis
                             && StringUtils.isBasicLatin(prevCharacter)
                             && Character.isLetter(prevCharacter)) {
-                results.add(createValidationError("After", block));
+                results.add(createValidationError("After", sentence));
             }
             prevCharacter = character;
         }

@@ -16,7 +16,7 @@ import java.util.*;
 /**
  * Check if the input sentence start with a capital letter.
  */
-final public class StartWithCapitalLetterValidator extends Validator<Sentence> {
+final public class StartWithCapitalLetterValidator extends Validator {
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/capital-letter-exception-list";
     private static final Logger LOG =
             LoggerFactory.getLogger(SpellingValidator.class);
@@ -31,10 +31,10 @@ final public class StartWithCapitalLetterValidator extends Validator<Sentence> {
     }
 
     @Override
-    public List<ValidationError> validate(Sentence block) {
+    public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> validationErrors = new ArrayList<>();
-        String content = block.content;
-        List<TokenElement> tokens = block.tokens;
+        String content = sentence.content;
+        List<TokenElement> tokens = sentence.tokens;
         if (tokens.size() == 0 || this.whiteList.contains(tokens.get(0).getSurface())) {
             return validationErrors;
         }
@@ -52,7 +52,7 @@ final public class StartWithCapitalLetterValidator extends Validator<Sentence> {
 
         headChar = content.charAt(0);
         if (Character.isLowerCase(headChar)) {
-            validationErrors.add(createValidationError(block, headChar));
+            validationErrors.add(createValidationError(sentence, headChar));
         }
         return validationErrors;
     }

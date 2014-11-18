@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * Validate input sentences have more words than specified.
  */
-final public class WordNumberValidator extends Validator<Sentence> {
+final public class WordNumberValidator extends Validator {
     /**
      * Default maximum number of words in one sentence.
      */

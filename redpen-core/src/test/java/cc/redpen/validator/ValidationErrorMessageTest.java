@@ -5,7 +5,7 @@ import cc.redpen.model.Sentence;
 import java.util.ArrayList;
 import java.util.List;
 
-class ValidationErrorMessageTest extends Validator<Sentence> {
+class ValidationErrorMessageTest extends Validator {
 
     @Override
     public List<ValidationError> validate(Sentence sentence) {

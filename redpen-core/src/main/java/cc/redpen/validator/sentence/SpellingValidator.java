@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.*;
 
-public class SpellingValidator extends Validator<Sentence> {
+public class SpellingValidator extends Validator {
 
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/spellchecker";
     private static final Logger LOG =
@@ -64,16 +64,16 @@ public class SpellingValidator extends Validator<Sentence> {
     }
 
     @Override
-    public List<ValidationError> validate(Sentence line) {
+    public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> validationErrors = new ArrayList<>();
-        for (TokenElement token : line.tokens) {
+        for (TokenElement token : sentence.tokens) {
             String surface = normalize(token.getSurface());
             if (surface.length() == 0) {
                 continue;
             }
 
             if (!this.validWords.contains(surface)) {
-                validationErrors.add(createValidationError(line, surface));
+                validationErrors.add(createValidationError(sentence, surface));
             }
         }
         return validationErrors;

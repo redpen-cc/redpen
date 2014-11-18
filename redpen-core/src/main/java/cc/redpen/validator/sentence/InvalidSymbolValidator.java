@@ -30,8 +30,9 @@ import java.util.Set;
 /**
  * Validate if there is invalid characters in sentences.
  */
-final public class InvalidSymbolValidator extends Validator<Sentence> {
+final public class InvalidSymbolValidator extends Validator {
 
+    @Override
     public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> errors = new ArrayList<>();
         Set<SymbolType> symbolTypes = getSymbolTable().getNames();

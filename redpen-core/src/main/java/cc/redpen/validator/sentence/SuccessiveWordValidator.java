@@ -8,15 +8,15 @@ import cc.redpen.validator.Validator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SuccessiveWordValidator extends Validator<Sentence> {
+public class SuccessiveWordValidator extends Validator {
     @Override
-    public List<ValidationError> validate(Sentence block) {
+    public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> errors = new ArrayList<>();
         String prevSurface = "";
-        for (TokenElement token : block.tokens) {
+        for (TokenElement token : sentence.tokens) {
             String currentSurface = token.getSurface();
             if (prevSurface.equals(currentSurface) && currentSurface.length() > 0) {
-                errors.add(createValidationError(block, currentSurface));
+                errors.add(createValidationError(sentence, currentSurface));
             }
             prevSurface = currentSurface;
         }

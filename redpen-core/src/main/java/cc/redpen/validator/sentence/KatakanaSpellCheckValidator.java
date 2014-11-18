@@ -51,7 +51,7 @@ import java.util.*;
  * word is smaller than the threshold, we do not detect
  * the similarity.
  */
-final public class KatakanaSpellCheckValidator extends Validator<Sentence> {
+final public class KatakanaSpellCheckValidator extends Validator {
     /**
      * The default similarity ratio between the length and the distance.
      */
@@ -79,6 +79,7 @@ final public class KatakanaSpellCheckValidator extends Validator<Sentence> {
      */
     private Set<String> exceptions = new HashSet<>();
 
+    @Override
     public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> errors = new ArrayList<>();
         List<ValidationError> result;

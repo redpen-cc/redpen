@@ -28,8 +28,9 @@ import java.util.List;
  * Validate input sentences except for first sentence of a paragraph start with
  * a space.
  */
-final public class SpaceBeginningOfSentenceValidator extends Validator<Sentence> {
+final public class SpaceBeginningOfSentenceValidator extends Validator {
 
+    @Override
     public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> validationErrors = new ArrayList<>();
         String content = sentence.content;

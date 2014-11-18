@@ -34,8 +34,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,9 +45,7 @@ import java.util.Map;
 public class RedPen {
     private static final Logger LOG = LoggerFactory.getLogger(RedPen.class);
 
-    private final List<Validator<Document>> documentValidators = new ArrayList<>();
-    private final List<Validator<Section>> sectionValidators = new ArrayList<>();
-    private final List<Validator<Sentence>> sentenceValidators = new ArrayList<>();
+    private final List<Validator> validators = new ArrayList<>();
     private final ResultDistributor distributor;
     private final Configuration configuration;
     private final SentenceExtractor sentenceExtractor;
@@ -132,27 +128,6 @@ public class RedPen {
         return documentListMap.get(document);
     }
 
-    static Type getParameterizedClass(Object obj) {
-        if (obj == null) {
-            return null;
-        }
-
-        Class clazz = obj.getClass();
-        Type genericInterface = clazz.getGenericSuperclass();
-        ParameterizedType parameterizedType;
-        try {
-            parameterizedType =
-                    ParameterizedType.class.cast(genericInterface);
-        } catch (ClassCastException e) {
-            return null;
-        }
-
-        if (parameterizedType.getActualTypeArguments().length == 0) {
-            return null;
-        }
-        return parameterizedType.getActualTypeArguments()[0];
-    }
-
     /**
      * Load validators written in the configuration file.
      */
@@ -164,20 +139,8 @@ public class RedPen {
         }
 
         for (ValidatorConfiguration config : configuration.getValidatorConfigs()) {
-
-            Validator<?> validator = ValidatorFactory.getInstance(
-                    config, configuration.getSymbolTable());
-            Type type = getParameterizedClass(validator);
-
-            if (type == Sentence.class) {
-                this.sentenceValidators.add((Validator<Sentence>) validator);
-            } else if (type == Section.class) {
-                this.sectionValidators.add((Validator<Section>) validator);
-            } else if (type == Document.class) {
-                this.documentValidators.add((Validator<Document>) validator);
-            } else {
-                throw new IllegalStateException("No validator for " + type + " block.");
-            }
+            Validator validator = ValidatorFactory.getInstance(config, configuration.getSymbolTable());
+                this.validators.add(validator);
         }
     }
 
@@ -253,7 +216,7 @@ public class RedPen {
     }
 
     private void preprocessSentences(List<Sentence> sentences) {
-        for (Validator<Sentence> sentenceValidator : sentenceValidators) {
+        for (Validator sentenceValidator : validators) {
             if (sentenceValidator instanceof PreProcessor) {
                 PreProcessor<Sentence> preprocessor = (PreProcessor<Sentence>) sentenceValidator;
                 sentences.forEach(preprocessor::preprocess);
@@ -297,7 +260,7 @@ public class RedPen {
 
     private List<ValidationError> validateDocument(Document document) {
         List<ValidationError> errors = new ArrayList<>();
-        for (Validator<Document> validator : documentValidators) {
+        for (Validator validator : validators) {
             errors.addAll(validator.validate(document));
         }
         return errors;
@@ -305,7 +268,7 @@ public class RedPen {
 
     private List<ValidationError> validateSection(Section section) {
         List<ValidationError> errors = new ArrayList<>();
-        for (Validator<Section> sectionValidator : sectionValidators) {
+        for (Validator sectionValidator : validators) {
             errors.addAll(sectionValidator.validate(section));
         }
         return errors;
@@ -319,7 +282,7 @@ public class RedPen {
 
     private List<ValidationError> validateSentences(List<Sentence> sentences) {
         List<ValidationError> errors = new ArrayList<>();
-        for (Validator<Sentence> sentenceValidator : sentenceValidators) {
+        for (Validator sentenceValidator : validators) {
             for (Sentence sentence : sentences) {
                 errors.addAll(sentenceValidator.validate(sentence));
             }
@@ -334,12 +297,12 @@ public class RedPen {
 
         RedPen redPen = (RedPen) o;
 
+        if (configuration != null ? !configuration.equals(redPen.configuration) : redPen.configuration != null)
+            return false;
         if (distributor != null ? !distributor.equals(redPen.distributor) : redPen.distributor != null) return false;
-        if (sectionValidators != null ? !sectionValidators.equals(redPen.sectionValidators) : redPen.sectionValidators != null)
+        if (validators != null ? !validators.equals(redPen.validators) : redPen.validators != null)
             return false;
-        if (sentenceValidators != null ? !sentenceValidators.equals(redPen.sentenceValidators) : redPen.sentenceValidators != null)
-            return false;
-        if (documentValidators != null ? !documentValidators.equals(redPen.documentValidators) : redPen.documentValidators != null)
+        if (sentenceExtractor != null ? !sentenceExtractor.equals(redPen.sentenceExtractor) : redPen.sentenceExtractor != null)
             return false;
 
         return true;
@@ -347,20 +310,20 @@ public class RedPen {
 
     @Override
     public int hashCode() {
-        int result = documentValidators != null ? documentValidators.hashCode() : 0;
-        result = 31 * result + (sectionValidators != null ? sectionValidators.hashCode() : 0);
-        result = 31 * result + (sentenceValidators != null ? sentenceValidators.hashCode() : 0);
+        int result = validators != null ? validators.hashCode() : 0;
         result = 31 * result + (distributor != null ? distributor.hashCode() : 0);
+        result = 31 * result + (configuration != null ? configuration.hashCode() : 0);
+        result = 31 * result + (sentenceExtractor != null ? sentenceExtractor.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
         return "RedPen{" +
-                "documentValidators=" + documentValidators +
-                ", sectionValidators=" + sectionValidators +
-                ", sentenceValidators=" + sentenceValidators +
+                "validators=" + validators +
                 ", distributor=" + distributor +
+                ", configuration=" + configuration +
+                ", sentenceExtractor=" + sentenceExtractor +
                 '}';
     }
 

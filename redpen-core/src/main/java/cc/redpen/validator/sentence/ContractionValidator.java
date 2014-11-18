@@ -32,7 +32,7 @@ import java.util.Set;
  * Validate English contraction in the input document.
  * NOTE: this validator works only for English documents.
  */
-final public class ContractionValidator extends Validator<Sentence> implements PreProcessor<Sentence> {
+final public class ContractionValidator extends Validator implements PreProcessor<Sentence> {
     private static final Set<String> contractions;
     private static final Set<String> nonContractions;
     static {
@@ -122,13 +122,13 @@ final public class ContractionValidator extends Validator<Sentence> implements P
     private int foundNonContractionNum = 0;
 
     @Override
-    public List<ValidationError> validate(Sentence block) {
+    public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> validationErrors = new ArrayList<>();
-        for (TokenElement token : block.tokens) {
+        for (TokenElement token : sentence.tokens) {
             String surface = token.getSurface().toLowerCase();
             if (foundNonContractionNum >= foundContractionNum
                     && contractions.contains(surface)) {
-                validationErrors.add(createValidationError(block, surface));
+                validationErrors.add(createValidationError(sentence, surface));
             }
         }
         return validationErrors;

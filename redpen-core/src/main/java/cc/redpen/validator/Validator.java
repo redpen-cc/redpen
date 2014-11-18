@@ -21,6 +21,8 @@ package cc.redpen.validator;
 import cc.redpen.RedPenException;
 import cc.redpen.config.SymbolTable;
 import cc.redpen.config.ValidatorConfiguration;
+import cc.redpen.model.Document;
+import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +33,7 @@ import java.util.*;
 /**
  * Validate input document.
  */
-public abstract class Validator<E> {
+public abstract class Validator {
     private static final Logger LOG =
             LoggerFactory.getLogger(Validator.class);
     private final static ResourceBundle.Control fallbackControl =
@@ -46,11 +48,35 @@ public abstract class Validator<E> {
 
     /**
      * validate the input document and returns the invalid points.
-     *
-     * @param block input
+     * {@link cc.redpen.validator.Validator} provides empty implementation. Validator implementation validates documents can override this method.
+     * @param document input
      * @return List of ValidationError
      */
-    abstract public List<ValidationError> validate(E block);
+    public List<ValidationError> validate(Document document){
+        return new ArrayList<>();
+    }
+
+    /**
+     * validate the input document and returns the invalid points.
+     * {@link cc.redpen.validator.Validator} provides empty implementation. Validator implementation validates sentences can override this method.
+     *
+     * @param sentence input
+     * @return List of ValidationError
+     */
+    public List<ValidationError> validate(Sentence sentence){
+        return new ArrayList<>();
+    }
+
+    /**
+     * validate the input document and returns the invalid points.
+     * {@link cc.redpen.validator.Validator} provides empty implementation. Validator implementation validates sections can override this method.
+     *
+     * @param section input
+     * @return List of ValidationError
+     */
+    public List<ValidationError> validate(Section section){
+        return new ArrayList<>();
+    }
 
     final void preInit(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
         this.config = config;

@@ -27,7 +27,7 @@ public class ValidatorFactory {
         VALIDATOR_PACKAGES.add(packageToAdd);
     }
 
-    public static Validator<?> getInstance(String valiadtorName) throws RedPenException {
+    public static Validator getInstance(String valiadtorName) throws RedPenException {
         Configuration conf = new Configuration.ConfigurationBuilder()
                 .setLanguage("en")
                 .addValidatorConfig(new ValidatorConfiguration(valiadtorName))
@@ -35,7 +35,7 @@ public class ValidatorFactory {
         return getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
     }
 
-    public static Validator<?> getInstance(ValidatorConfiguration config, SymbolTable symbolTable)
+    public static Validator getInstance(ValidatorConfiguration config, SymbolTable symbolTable)
             throws RedPenException {
         try {
             for (String validatorPackage : VALIDATOR_PACKAGES) {
@@ -48,7 +48,7 @@ public class ValidatorFactory {
                     }
 
                     Constructor<?> constructor = clazz.getConstructor();
-                    Validator<?> validator = (Validator<?>) constructor.newInstance();
+                    Validator validator = (Validator) constructor.newInstance();
                     validator.preInit(config, symbolTable);
                     return validator;
                 } catch (ClassNotFoundException ignore) {

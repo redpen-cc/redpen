@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * Validate whether paragraph start as specified.
  */
-final public class ParagraphStartWithValidator extends Validator<Section> {
+final public class ParagraphStartWithValidator extends Validator {
     /**
      * Default matter paragraph start with.
      */

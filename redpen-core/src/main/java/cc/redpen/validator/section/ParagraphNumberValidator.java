@@ -29,7 +29,7 @@ import java.util.List;
  * Validate paragraph number. If a section has paragraphs more than specified,
  * This validator reports it.
  */
-final public class ParagraphNumberValidator extends Validator<Section> {
+final public class ParagraphNumberValidator extends Validator {
     /**
      * Default maximum number of paragraphs in a section.
      */

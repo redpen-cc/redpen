@@ -33,17 +33,18 @@ import java.util.stream.Collectors;
 /**
  * Validate input sentences contain invalid expression.
  */
-final public class InvalidExpressionValidator extends Validator<Sentence> {
+final public class InvalidExpressionValidator extends Validator {
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/invalid-expression";
     private static final Logger LOG =
             LoggerFactory.getLogger(InvalidExpressionValidator.class);
     private Set<String> invalidExpressions = new HashSet<>();
 
-    public List<ValidationError> validate(Sentence line) {
+    @Override
+    public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> validationErrors = new ArrayList<>();
-        String str = line.content;
+        String str = sentence.content;
         validationErrors.addAll(invalidExpressions.stream().filter(str::contains)
-                .map(w -> createValidationError(line, w)).collect(Collectors.toList()));
+                .map(w -> createValidationError(sentence, w)).collect(Collectors.toList()));
         return validationErrors;
     }
 

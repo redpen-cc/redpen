@@ -33,19 +33,20 @@ import java.util.*;
 /**
  * Detect invalid word occurrences.
  */
-final public class InvalidWordValidator extends Validator<Sentence> {
+final public class InvalidWordValidator extends Validator {
     private static final String DEFAULT_RESOURCE_PATH =
             "default-resources/invalid-word";
     private static final Logger LOG =
             LoggerFactory.getLogger(InvalidWordValidator.class);
     private Set<String> invalidWords = new HashSet<>();
 
-    public List<ValidationError> validate(Sentence line) {
+    @Override
+    public List<ValidationError> validate(Sentence sentence) {
         List<ValidationError> result = new ArrayList<>();
         //NOTE: only Ascii white space since this validator works for european languages.
-        for (TokenElement token : line.tokens) {
+        for (TokenElement token : sentence.tokens) {
             if (invalidWords.contains(token.getSurface().toLowerCase())) {
-                result.add(createValidationError(line, token.getSurface()));
+                result.add(createValidationError(sentence, token.getSurface()));
             }
         }
         return result;
