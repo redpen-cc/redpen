@@ -26,7 +26,6 @@ import cc.redpen.validator.ValidationError;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
-import java.util.Optional;
 
 /**
  * An implementation of ResultDistributor which flush the result into
@@ -86,14 +85,12 @@ public class DefaultResultDistributor implements ResultDistributor {
 
     @Override
     public void flushHeader() {
-        Optional<String> header = myFormatter.header();
-        header.ifPresent(writer::println);
+        myFormatter.header().ifPresent(writer::println);
     }
 
     @Override
     public void flushFooter() {
-        Optional<String> footer = myFormatter.footer();
-        footer.ifPresent(writer::println);
+        myFormatter.footer().ifPresent(writer::println);
     }
 
     @Override

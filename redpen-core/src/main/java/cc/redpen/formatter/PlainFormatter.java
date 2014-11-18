@@ -27,6 +27,8 @@ import java.util.Optional;
  * Format input error into a string message.
  */
 public class PlainFormatter implements Formatter {
+    private static final Optional<String> HEADER = Optional.empty();
+    private static final Optional<String> FOOTER = Optional.empty();
 
     @Override
     public String convertError(Document document, ValidationError error) throws RedPenException {
@@ -44,12 +46,12 @@ public class PlainFormatter implements Formatter {
 
     @Override
     public Optional<String> header() {
-        return Optional.ofNullable(null);
+        return HEADER;
     }
 
     @Override
     public Optional<String> footer() {
-        return Optional.ofNullable(null);
+        return FOOTER;
     }
 
 }
