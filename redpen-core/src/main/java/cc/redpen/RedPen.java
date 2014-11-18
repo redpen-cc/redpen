@@ -53,7 +53,12 @@ public class RedPen {
         this.configuration = configuration;
         this.distributor = distributor;
         this.sentenceExtractor = new SentenceExtractor(this.configuration.getSymbolTable());
-        loadValidators();
+
+        // load validators
+        for (ValidatorConfiguration config : configuration.getValidatorConfigs()) {
+            Validator validator = ValidatorFactory.getInstance(config, configuration.getSymbolTable());
+            this.validators.add(validator);
+        }
     }
 
     /**
@@ -127,22 +132,6 @@ public class RedPen {
         return documentListMap.get(document);
     }
 
-    /**
-     * Load validators written in the configuration file.
-     */
-    @SuppressWarnings("unchecked")
-    private void loadValidators()
-            throws RedPenException {
-        if (configuration == null) {
-            throw new IllegalStateException("Configuration object is null");
-        }
-
-        for (ValidatorConfiguration config : configuration.getValidatorConfigs()) {
-            Validator validator = ValidatorFactory.getInstance(config, configuration.getSymbolTable());
-            this.validators.add(validator);
-        }
-    }
-
     private void runDocumentValidators(
             DocumentCollection documentCollection,
             Map<Document, List<ValidationError>> docErrorsMap) {
@@ -153,18 +142,6 @@ public class RedPen {
                 flushError(document, error);
             }
             docErrorsMap.put(document, errors);
-        }
-    }
-
-    private void flushError(Document document, ValidationError error) {
-        /**
-         * When the flush of input error is failed, the output process continues skipping the failed error.
-         */
-        try {
-            distributor.flushError(document, error);
-        } catch (RedPenException e) {
-            LOG.error("Failed to flush error: " + error.toString());
-            LOG.error("Skipping to flush this error...");
         }
     }
 
@@ -231,6 +208,18 @@ public class RedPen {
 
                 docErrorsMap.get(document).addAll(newErrors);
             }
+        }
+    }
+
+    private void flushError(Document document, ValidationError error) {
+        /**
+         * When the flush of input error is failed, the output process continues skipping the failed error.
+         */
+        try {
+            distributor.flushError(document, error);
+        } catch (RedPenException e) {
+            LOG.error("Failed to flush error: " + error.toString());
+            LOG.error("Skipping to flush this error...");
         }
     }
 
