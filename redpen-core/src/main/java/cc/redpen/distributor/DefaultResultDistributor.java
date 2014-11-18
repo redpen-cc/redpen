@@ -87,13 +87,13 @@ public class DefaultResultDistributor implements ResultDistributor {
     @Override
     public void flushHeader() {
         Optional<String> header = myFormatter.header();
-        header.ifPresent(h -> writer.println(header.get()));
+        header.ifPresent(writer::println);
     }
 
     @Override
     public void flushFooter() {
         Optional<String> footer = myFormatter.footer();
-        footer.ifPresent(h -> writer.println(footer.get()));
+        footer.ifPresent(writer::println);
     }
 
     @Override
