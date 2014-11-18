@@ -5,13 +5,11 @@ import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SuccessiveWordValidator extends Validator {
     @Override
-    public List<ValidationError> validate(Sentence sentence) {
-        List<ValidationError> errors = new ArrayList<>();
+    public void validate(List<ValidationError> errors, Sentence sentence) {
         String prevSurface = "";
         for (TokenElement token : sentence.tokens) {
             String currentSurface = token.getSurface();
@@ -20,6 +18,5 @@ public class SuccessiveWordValidator extends Validator {
             }
             prevSurface = currentSurface;
         }
-        return errors;
     }
 }

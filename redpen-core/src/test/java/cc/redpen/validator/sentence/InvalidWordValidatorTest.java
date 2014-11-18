@@ -12,6 +12,7 @@ import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +34,8 @@ public class InvalidWordValidatorTest {
 
         InvalidWordValidator validator = new InvalidWordValidator();
         validator.addInvalid("foolish");
-        List<ValidationError> errors = validator.validate(documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0));
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0));
         assertEquals(1, errors.size());
     }
 
@@ -50,7 +52,8 @@ public class InvalidWordValidatorTest {
 
         InvalidWordValidator validator = new InvalidWordValidator();
         validator.addInvalid("foolish");
-        List<ValidationError> errors = validator.validate(documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0));
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0));
         assertEquals(0, errors.size());
     }
 
@@ -102,7 +105,6 @@ public class InvalidWordValidatorTest {
 
     /**
      * Assert not throw a exception even when there is no default dictionary.
-     *
      */
     @Test(expected = RedPenException.class)
     public void testLoadNotExistDefaultDictionary() throws RedPenException {

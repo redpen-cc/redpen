@@ -12,6 +12,7 @@ import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +28,9 @@ public class StartWithCapitalLetterValidatorTest {
                         .addSentence("this is it.", 1)
                         .build()).build();
         StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
-        assertEquals(1, validator.validate(documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0)).size());
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0));
+        assertEquals(1, errors.size());
     }
 
     @Test
@@ -39,7 +42,9 @@ public class StartWithCapitalLetterValidatorTest {
                         .addSentence("This is it.", 1)
                         .build()).build();
         StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
-        assertEquals(0, validator.validate(documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0)).size());
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0));
+        assertEquals(0, errors.size());
     }
 
     @Test
@@ -52,7 +57,9 @@ public class StartWithCapitalLetterValidatorTest {
                          .build()).build();
         StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
         validator.addWhiteList("iPhone");
-        assertEquals(0, validator.validate(documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0)).size());
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0));
+        assertEquals(0, errors.size());
     }
 
     @Test
@@ -65,7 +72,9 @@ public class StartWithCapitalLetterValidatorTest {
                         .build()).build();
         StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
         validator.addWhiteList("iPhone");
-        assertEquals(0, validator.validate(documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0)).size());
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0));
+        assertEquals(0, errors.size());
     }
 
     @Test
@@ -78,7 +87,9 @@ public class StartWithCapitalLetterValidatorTest {
                         .build()).build();
         StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
         validator.addWhiteList("iPhone");
-        assertEquals(0, validator.validate(documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0)).size());
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0));
+        assertEquals(0, errors.size());
     }
 
     @Test
@@ -91,7 +102,9 @@ public class StartWithCapitalLetterValidatorTest {
                         .build()).build();
         StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
         validator.addWhiteList("iPhone");
-        assertEquals(0, validator.validate(documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0)).size());
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0));
+        assertEquals(0, errors.size());
     }
 
     @Test

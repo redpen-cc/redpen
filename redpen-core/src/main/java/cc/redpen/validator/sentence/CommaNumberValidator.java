@@ -25,7 +25,6 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static cc.redpen.config.SymbolType.COMMA;
@@ -43,8 +42,7 @@ final public class CommaNumberValidator extends Validator {
     private char comma;
 
     @Override
-    public List<ValidationError> validate(Sentence sentence) {
-        List<ValidationError> validationErrors = new ArrayList<>();
+    public void validate(List<ValidationError> errors, Sentence sentence) {
         String content = sentence.content;
         int commaCount = 0;
         int position = 0;
@@ -54,9 +52,8 @@ final public class CommaNumberValidator extends Validator {
             content = content.substring(position + 1, content.length());
         }
         if (maxCommaNum < commaCount) {
-            validationErrors.add(createValidationError(sentence, commaCount));
+            errors.add(createValidationError(sentence, commaCount));
         }
-        return validationErrors;
     }
 
     @Override

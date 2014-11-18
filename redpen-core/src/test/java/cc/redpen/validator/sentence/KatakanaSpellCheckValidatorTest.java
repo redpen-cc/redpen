@@ -44,7 +44,8 @@ public class KatakanaSpellCheckValidatorTest {
         Sentence st = new Sentence("ハロー、ハロ。"
                 + "あのインデクスとこのインデックス"
                 , 0);
-        List<ValidationError> errors = validator.validate(st);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, st);
         // We do not detect "ハロー" and "ハロ" as a similar pair,
         // but "インデクス" and "インデックス".
         assertEquals(st.toString(), 1, errors.size());
@@ -57,10 +58,10 @@ public class KatakanaSpellCheckValidatorTest {
         List<ValidationError> errors = new ArrayList<>();
         Sentence st;
         st = new Sentence("フレーズ・アナライズにバグがある", 0);
-        errors.addAll(validator.validate(st));
+        validator.validate(errors, st);
         assertEquals(st.toString(), 0, errors.size());
         st = new Sentence("バグのあるフェーズ・アナライシス", 1);
-        errors.addAll(validator.validate(st));
+        validator.validate(errors, st);
         // We detect a similar pair of "フレーズ・アナライズ"
         // and "フェーズ・アナライシス".
         assertEquals(st.toString(), 1, errors.size());

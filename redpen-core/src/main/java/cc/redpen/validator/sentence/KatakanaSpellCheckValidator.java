@@ -80,51 +80,40 @@ final public class KatakanaSpellCheckValidator extends Validator {
     private Set<String> exceptions = new HashSet<>();
 
     @Override
-    public List<ValidationError> validate(Sentence sentence) {
-        List<ValidationError> errors = new ArrayList<>();
-        List<ValidationError> result;
-        StringBuilder katakana = new StringBuilder("");
+    public void validate(List<ValidationError> errors, Sentence sentence) {
+        StringBuilder katakana = new StringBuilder();
         for (int i = 0; i < sentence.content.length(); i++) {
             char c = sentence.content.charAt(i);
             if (StringUtils.isKatakana(c)) {
                 katakana.append(c);
             } else {
-                result = this.checkKatakanaSpell(sentence, katakana.toString());
-                if (result != null) {
-                    errors.addAll(result);
-                }
+                this.checkKatakanaSpell(sentence, katakana.toString(), errors);
                 katakana.delete(0, katakana.length());
             }
         }
-        result = checkKatakanaSpell(sentence, katakana.toString());
-        if (result != null) {
-            errors.addAll(result);
-        }
-        return errors;
+        checkKatakanaSpell(sentence, katakana.toString(), errors);
     }
 
-    private List<ValidationError> checkKatakanaSpell(Sentence sentence,
-                                                     String katakana) {
+    private void checkKatakanaSpell(Sentence sentence, String katakana
+            ,List<ValidationError> validationErrors) {
         if (katakana.length() <= MAX_IGNORE_KATAKANA_LENGTH) {
-            return null;
+            return;
         }
         if (dic.containsKey(katakana) || exceptions.contains(katakana)) {
-            return null;
+            return;
         }
-        final int minLsDistance =
-                Math.round(katakana.length() * SIMILARITY_RATIO);
+        final int minLsDistance = Math.round(katakana.length() * SIMILARITY_RATIO);
         boolean found = false;
         List<ValidationError> errors = new ArrayList<>();
         for (String key : dic.keySet()) {
             if (LevenshteinDistance.getDistance(key, katakana) <= minLsDistance) {
                 found = true;
-                errors.add(createValidationError(sentence, katakana, key, dic.get(key).toString()));
+                validationErrors.add(createValidationError(sentence, katakana, key, dic.get(key).toString()));
             }
         }
         if (!found) {
             dic.put(katakana, sentence.position);
         }
-        return errors;
     }
 
     @Override

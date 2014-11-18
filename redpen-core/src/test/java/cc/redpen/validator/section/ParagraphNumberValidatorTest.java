@@ -24,6 +24,7 @@ import cc.redpen.validator.ValidationError;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -47,7 +48,8 @@ public class ParagraphNumberValidatorTest {
         section.appendParagraph(new Paragraph());
         section.appendParagraph(new Paragraph());
 
-        List<ValidationError> errors = validator.validate(section);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, section);
         assertEquals(1, errors.size());
     }
 
@@ -59,7 +61,8 @@ public class ParagraphNumberValidatorTest {
 
         Document document = new Document.DocumentBuilder().appendSection(section).build();
 
-        List<ValidationError> errors = validator.validate(section);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, section);
         assertEquals(0, errors.size());
     }
 

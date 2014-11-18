@@ -13,6 +13,7 @@ import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,32 +23,32 @@ public class EndOfSentenceValidatorTest {
     @Test
     public void testInvalidEndOfSentence() {
         EndOfSentenceValidator validator = new EndOfSentenceValidator();
-        List<ValidationError> errors = validator.validate(
-                new Sentence("He said \"that is right\".", 0));
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, new Sentence("He said \"that is right\".", 0));
         assertEquals(1, errors.size());
     }
 
     @Test
     public void testValidEndOfSentence() {
         EndOfSentenceValidator validator = new EndOfSentenceValidator();
-        List<ValidationError> errors = validator.validate(
-                new Sentence("He said \"that is right.\"", 0));
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, new Sentence("He said \"that is right.\"", 0));
         assertEquals(0, errors.size());
     }
 
     @Test
     public void testInValidEndOfSentenceWithQuestionMark() {
         EndOfSentenceValidator validator = new EndOfSentenceValidator();
-        List<ValidationError> errors = validator.validate(
-                new Sentence("He said \"Is it right\"?", 0));
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, new Sentence("He said \"Is it right\"?", 0));
         assertEquals(1, errors.size());
     }
 
     @Test
     public void testVoid() {
         EndOfSentenceValidator validator = new EndOfSentenceValidator();
-        List<ValidationError> errors = validator.validate(
-                new Sentence("", 0));
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, new Sentence("", 0));
         assertEquals(0, errors.size());
     }
 

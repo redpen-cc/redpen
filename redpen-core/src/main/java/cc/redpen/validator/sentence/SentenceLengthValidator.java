@@ -24,7 +24,6 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,12 +40,10 @@ final public class SentenceLengthValidator extends Validator {
     private int maxLength = DEFAULT_MAX_LENGTH;
 
     @Override
-    public List<ValidationError> validate(Sentence sentence) {
-        List<ValidationError> validationErrors = new ArrayList<>();
+    public void validate(List<ValidationError> errors, Sentence sentence) {
         if (sentence.content.length() > maxLength) {
-            validationErrors.add(createValidationError(sentence, sentence.content.length()));
+            errors.add(createValidationError(sentence, sentence.content.length()));
         }
-        return validationErrors;
     }
 
     @Override

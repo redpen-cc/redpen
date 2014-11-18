@@ -40,12 +40,10 @@ final public class InvalidExpressionValidator extends Validator {
     private Set<String> invalidExpressions = new HashSet<>();
 
     @Override
-    public List<ValidationError> validate(Sentence sentence) {
-        List<ValidationError> validationErrors = new ArrayList<>();
+    public void validate(List<ValidationError> errors, Sentence sentence) {
         String str = sentence.content;
-        validationErrors.addAll(invalidExpressions.stream().filter(str::contains)
+        errors.addAll(invalidExpressions.stream().filter(str::contains)
                 .map(w -> createValidationError(sentence, w)).collect(Collectors.toList()));
-        return validationErrors;
     }
 
     /**

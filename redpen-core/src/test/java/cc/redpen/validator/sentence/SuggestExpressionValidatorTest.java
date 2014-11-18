@@ -22,12 +22,12 @@ import cc.redpen.validator.ValidationError;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 
 public class SuggestExpressionValidatorTest {
@@ -46,32 +46,32 @@ public class SuggestExpressionValidatorTest {
     @Test
     public void testSynonym() {
         Sentence str = new Sentence("it like a piece of a cake.", 0);
-        List<ValidationError> error = suggestExpressionValidator.validate(str);
-        assertNotNull(error);
-        assertEquals(1, error.size());
+        List<ValidationError> errors = new ArrayList<>();
+        suggestExpressionValidator.validate(errors, str);
+        assertEquals(1, errors.size());
     }
 
     @Test
     public void testWitoutSynonym() {
         Sentence str = new Sentence("it love a piece of a cake.", 0);
-        List<ValidationError> error = suggestExpressionValidator.validate(str);
-        assertNotNull(error);
-        assertEquals(0, error.size());
+        List<ValidationError> errors = new ArrayList<>();
+        suggestExpressionValidator.validate(errors, str);
+        assertEquals(0, errors.size());
     }
 
     @Test
     public void testWithMultipleSynonyms() {
         Sentence str = new Sentence("it like a the info.", 0);
-        List<ValidationError> error = suggestExpressionValidator.validate(str);
-        assertNotNull(error);
-        assertEquals(2, error.size());
+        List<ValidationError> errors = new ArrayList<>();
+        suggestExpressionValidator.validate(errors, str);
+        assertEquals(2, errors.size());
     }
 
     @Test
     public void testWitoutZeroLengthSentence() {
         Sentence str = new Sentence("", 0);
-        List<ValidationError> error = suggestExpressionValidator.validate(str);
-        assertNotNull(error);
-        assertEquals(0, error.size());
+        List<ValidationError> errors = new ArrayList<>();
+        suggestExpressionValidator.validate(errors, str);
+        assertEquals(0, errors.size());
     }
 }

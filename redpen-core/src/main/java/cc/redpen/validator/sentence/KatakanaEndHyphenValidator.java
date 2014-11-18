@@ -69,8 +69,7 @@ final public class KatakanaEndHyphenValidator extends Validator {
     }
 
     @Override
-    public List<ValidationError> validate(Sentence sentence) {
-        List<ValidationError> errors = new ArrayList<>();
+    public void validate(List<ValidationError> errors, Sentence sentence) {
         List<ValidationError> result;
         StringBuilder katakana = new StringBuilder("");
         for (int i = 0; i < sentence.content.length(); i++) {
@@ -89,7 +88,6 @@ final public class KatakanaEndHyphenValidator extends Validator {
         if (result != null) {
             errors.addAll(result);
         }
-        return errors;
     }
 
     private List<ValidationError> checkKatakanaEndHyphen(Sentence sentence,

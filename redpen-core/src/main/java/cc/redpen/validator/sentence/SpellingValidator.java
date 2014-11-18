@@ -64,8 +64,7 @@ public class SpellingValidator extends Validator {
     }
 
     @Override
-    public List<ValidationError> validate(Sentence sentence) {
-        List<ValidationError> validationErrors = new ArrayList<>();
+    public void validate(List<ValidationError> errors, Sentence sentence) {
         for (TokenElement token : sentence.tokens) {
             String surface = normalize(token.getSurface());
             if (surface.length() == 0) {
@@ -73,10 +72,9 @@ public class SpellingValidator extends Validator {
             }
 
             if (!this.validWords.contains(surface)) {
-                validationErrors.add(createValidationError(sentence, surface));
+                errors.add(createValidationError(sentence, surface));
             }
         }
-        return validationErrors;
     }
 
     private String normalize(String line) {

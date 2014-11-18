@@ -28,6 +28,7 @@ import cc.redpen.validator.Validator;
 import cc.redpen.validator.ValidatorFactory;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -38,7 +39,8 @@ public class QuotationValidatorTest {
     public void testDoubleQuotationMakrs() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said “That is true”.", 0);
-        List<ValidationError> errors = validator.validate(str);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, str);
         assertNotNull(errors);
         assertEquals(0, errors.size());
     }
@@ -47,7 +49,8 @@ public class QuotationValidatorTest {
     public void testSingleQuotationMakrs() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said ‘that is true’.", 0);
-        List<ValidationError> errors = validator.validate(str);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, str);
         assertNotNull(errors);
         assertEquals(0, errors.size());
     }
@@ -56,7 +59,8 @@ public class QuotationValidatorTest {
     public void testDoubleQuotationMakrWithoutRight() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said “That is true.", 0);
-        List<ValidationError> errors = validator.validate(str);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, str);
         assertNotNull(errors);
         assertEquals(1, errors.size());
     }
@@ -65,7 +69,8 @@ public class QuotationValidatorTest {
     public void testSingleQuotationMakrWithoutRight() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said ‘that is true.", 0);
-        List<ValidationError> errors = validator.validate(str);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, str);
         assertNotNull(errors);
         assertEquals(1, errors.size());
     }
@@ -74,7 +79,8 @@ public class QuotationValidatorTest {
     public void testDoubleQuotationMakrWithoutLeft() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said That is true”.", 0);
-        List<ValidationError> errors = validator.validate(str);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, str);
         assertNotNull(errors);
         assertEquals(1, errors.size());
     }
@@ -83,7 +89,8 @@ public class QuotationValidatorTest {
     public void testSingleQuotationMakrkWithoutLeft() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said that is true’.", 0);
-        List<ValidationError> errors = validator.validate(str);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, str);
         assertNotNull(errors);
         assertEquals(1, errors.size());
     }
@@ -92,7 +99,8 @@ public class QuotationValidatorTest {
     public void testExceptionCase() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I’m a jedi knight.", 0);
-        List<ValidationError> errors = validator.validate(str);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, str);
         assertNotNull(errors);
         assertEquals(0, errors.size());
     }
@@ -101,7 +109,8 @@ public class QuotationValidatorTest {
     public void testQuotedExceptionCase() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("he said ‘I’m a jedi knight’.", 0);
-        List<ValidationError> errors = validator.validate(str);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, str);
         assertNotNull(errors);
         assertEquals(0, errors.size());
     }
@@ -110,7 +119,8 @@ public class QuotationValidatorTest {
     public void testDoubleLeftSingleQuotationMakrk() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said ‘that is true‘.", 0);
-        List<ValidationError> errors = validator.validate(str);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, str);
         assertNotNull(errors);
         assertEquals(1, errors.size());
     }
@@ -119,7 +129,8 @@ public class QuotationValidatorTest {
     public void testDoubleLeftDoubleQuotationMakrk() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said “that is true.“", 0);
-        List<ValidationError> errors = validator.validate(str);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, str);
         assertNotNull(errors);
         assertEquals(1, errors.size());
     }
@@ -128,7 +139,8 @@ public class QuotationValidatorTest {
     public void testDoubleRightSingleQuotationMakrk() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said ’that is true’.", 0);
-        List<ValidationError> errors = validator.validate(str);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, str);
         assertNotNull(errors);
         assertEquals(1, errors.size());
     }
@@ -137,7 +149,8 @@ public class QuotationValidatorTest {
     public void testDoubleRightDoubleQuotationMakrk() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said ”that is true”.", 0);
-        List<ValidationError> errors = validator.validate(str);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, str);
         assertNotNull(errors);
         assertEquals(1, errors.size());
     }
@@ -150,7 +163,8 @@ public class QuotationValidatorTest {
                 .build();
         Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
         Sentence str = new Sentence("I'm a jedi knight.", 0);
-        List<ValidationError> errors = validator.validate(str);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, str);
         assertNotNull(errors);
         assertEquals(0, errors.size());
     }
@@ -163,7 +177,8 @@ public class QuotationValidatorTest {
                 .build();
         Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
         Sentence str = new Sentence("I said \"that is true\".", 0);
-        List<ValidationError> errors = validator.validate(str);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, str);
         assertNotNull(errors);
         assertEquals(0, errors.size());
     }
@@ -176,7 +191,8 @@ public class QuotationValidatorTest {
                 .build();
         Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
         Sentence str = new Sentence("I said that is true.", 0);
-        List<ValidationError> errors = validator.validate(str);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, str);
         assertNotNull(errors);
         assertEquals(0, errors.size());
     }
@@ -189,7 +205,8 @@ public class QuotationValidatorTest {
                 .build();
         Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
         Sentence str = new Sentence("", 0);
-        List<ValidationError> errors = validator.validate(str);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, str);
         assertNotNull(errors);
         assertEquals(0, errors.size());
     }
@@ -198,7 +215,8 @@ public class QuotationValidatorTest {
     public void testTwiceQuotations() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said ‘that is true’ and not said ‘that is false’", 0);
-        List<ValidationError> errors = validator.validate(str);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, str);
         assertNotNull(errors);
         assertEquals(0, errors.size());
     }
@@ -207,7 +225,8 @@ public class QuotationValidatorTest {
     public void testOneOfFailureInTwiceQuotations() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said ‘that is true and not said ‘that is false’", 0);
-        List<ValidationError> errors = validator.validate(str);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, str);
         assertNotNull(errors);
         assertEquals(1, errors.size());
     }
@@ -216,7 +235,8 @@ public class QuotationValidatorTest {
     public void testLeftDoubleQuotationsWihtoutSpace() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said“that is true”.", 0);
-        List<ValidationError> errors = validator.validate(str);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, str);
         assertNotNull(errors);
         assertEquals(1, errors.size());
     }
@@ -229,7 +249,8 @@ public class QuotationValidatorTest {
                 .build();
         Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
         Sentence str = new Sentence("I said\"that is true\".", 0);
-        List<ValidationError> errors = validator.validate(str);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, str);
         assertNotNull(errors);
         assertEquals(1, errors.size());
     }
@@ -238,7 +259,8 @@ public class QuotationValidatorTest {
     public void testRightDoubleQuotationsWihtoutSpace() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said “that is true”is true.", 0);
-        List<ValidationError> errors = validator.validate(str);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, str);
         assertNotNull(errors);
         assertEquals(1, errors.size());
     }
@@ -251,7 +273,8 @@ public class QuotationValidatorTest {
                 .build();
         Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
         Sentence str = new Sentence("I said \"that is true\"is true.", 0);
-        List<ValidationError> errors = validator.validate(str);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, str);
         assertNotNull(errors);
         assertEquals(1, errors.size());
     }
@@ -268,7 +291,8 @@ public class QuotationValidatorTest {
 //        QuotationValidator validator =
 //                new QuotationValidator(true, '。');
         Sentence str = new Sentence("I said \"that is true\"。", 0);
-        List<ValidationError> errors = validator.validate(str);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, str);
         assertNotNull(errors);
         assertEquals(0, errors.size());
     }

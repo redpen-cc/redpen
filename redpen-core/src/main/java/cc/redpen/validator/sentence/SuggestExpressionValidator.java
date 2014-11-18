@@ -41,13 +41,11 @@ final public class SuggestExpressionValidator extends Validator {
     private Map<String, String> synonyms = new HashMap<>();
 
     @Override
-    public List<ValidationError> validate(Sentence sentence) {
-        List<ValidationError> validationErrors = new ArrayList<>();
+    public void validate(List<ValidationError> errors, Sentence sentence) {
         String str = sentence.content;
         Set<String> invalidWords = synonyms.keySet();
-        validationErrors.addAll(invalidWords.stream().filter(str::contains)
+        errors.addAll(invalidWords.stream().filter(str::contains)
                 .map(w -> createValidationError(sentence, w, synonyms.get(w))).collect(Collectors.toList()));
-        return validationErrors;
     }
 
     @Override

@@ -21,7 +21,6 @@ import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,13 +30,11 @@ import java.util.List;
 final public class SpaceBeginningOfSentenceValidator extends Validator {
 
     @Override
-    public List<ValidationError> validate(Sentence sentence) {
-        List<ValidationError> validationErrors = new ArrayList<>();
+    public void validate(List<ValidationError> errors, Sentence sentence) {
         String content = sentence.content;
         if (!sentence.isFirstSentence && content.length() > 0
                 && !String.valueOf(content.charAt(0)).equals(" ")) {
-            validationErrors.add(createValidationError(sentence));
+            errors.add(createValidationError(sentence));
         }
-        return validationErrors;
     }
 }

@@ -41,15 +41,13 @@ final public class InvalidWordValidator extends Validator {
     private Set<String> invalidWords = new HashSet<>();
 
     @Override
-    public List<ValidationError> validate(Sentence sentence) {
-        List<ValidationError> result = new ArrayList<>();
+    public void validate(List<ValidationError> errors, Sentence sentence) {
         //NOTE: only Ascii white space since this validator works for european languages.
         for (TokenElement token : sentence.tokens) {
             if (invalidWords.contains(token.getSurface().toLowerCase())) {
-                result.add(createValidationError(sentence, token.getSurface()));
+                errors.add(createValidationError(sentence, token.getSurface()));
             }
         }
-        return result;
     }
 
     /**

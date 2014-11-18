@@ -49,8 +49,7 @@ public class QuotationValidator extends Validator {
     private char period;
 
     @Override
-    public List<ValidationError> validate(Sentence sentence) {
-        List<ValidationError> errors = new ArrayList<>();
+    public void validate(List<ValidationError> errors, Sentence sentence) {
         // validate single quotation
         List<ValidationError> result = this.checkQuotation(sentence,
                 leftSingleQuotationMark, rightSingleQuotationMark);
@@ -61,7 +60,6 @@ public class QuotationValidator extends Validator {
         // validate double quotation
         errors.addAll(this.checkQuotation(sentence,
                 leftDoubleQuotationMark, rightDoubleQuotationMark));
-        return errors;
     }
 
     @Override

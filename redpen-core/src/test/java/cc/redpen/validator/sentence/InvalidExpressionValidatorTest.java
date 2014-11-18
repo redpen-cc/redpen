@@ -30,6 +30,7 @@ import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +42,8 @@ public class InvalidExpressionValidatorTest {
     public void testSimpleRun() {
         InvalidExpressionValidator validator = new InvalidExpressionValidator();
         validator.addInvalid("may");
-        List<ValidationError> errors = validator.validate(new Sentence("The experiments may be true.", 0));
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, new Sentence("The experiments may be true.", 0));
         assertEquals(1, errors.size());
     }
 
@@ -49,7 +51,8 @@ public class InvalidExpressionValidatorTest {
     public void testVoid() {
         InvalidExpressionValidator validator = new InvalidExpressionValidator();
         validator.addInvalid("may");
-        List<ValidationError> errors = validator.validate(new Sentence("", 0));
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, new Sentence("", 0));
         assertEquals(0, errors.size());
     }
 

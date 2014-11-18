@@ -11,7 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Check if the input sentence start with a capital letter.
@@ -31,12 +34,11 @@ final public class StartWithCapitalLetterValidator extends Validator {
     }
 
     @Override
-    public List<ValidationError> validate(Sentence sentence) {
-        List<ValidationError> validationErrors = new ArrayList<>();
+    public void validate(List<ValidationError> errors, Sentence sentence) {
         String content = sentence.content;
         List<TokenElement> tokens = sentence.tokens;
         if (tokens.size() == 0 || this.whiteList.contains(tokens.get(0).getSurface())) {
-            return validationErrors;
+            return;
         }
 
         char headChar = '≡';
@@ -47,14 +49,13 @@ final public class StartWithCapitalLetterValidator extends Validator {
         }
 
         if (headChar == '≡') {
-            return validationErrors;
+            return;
         }
 
         headChar = content.charAt(0);
         if (Character.isLowerCase(headChar)) {
-            validationErrors.add(createValidationError(sentence, headChar));
+            errors.add(createValidationError(sentence, headChar));
         }
-        return validationErrors;
     }
 
     @Override

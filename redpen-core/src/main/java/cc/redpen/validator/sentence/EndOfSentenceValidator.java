@@ -5,7 +5,6 @@ import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static cc.redpen.config.SymbolType.*;
@@ -23,11 +22,10 @@ final public class EndOfSentenceValidator extends Validator {
     private char exclamationMark = '!';
 
     @Override
-    public List<ValidationError> validate(Sentence sentence) {
-        List<ValidationError> validationErrors = new ArrayList<>();
+    public void validate(List<ValidationError> errors, Sentence sentence) {
         String content = sentence.content;
         if (content.length() < 2) {
-            return validationErrors;
+            return;
         }
         char lastCharacter = content.charAt(content.length() - 1);
         char secondCharacter = content.charAt(content.length() - 2);
@@ -36,10 +34,9 @@ final public class EndOfSentenceValidator extends Validator {
                 || lastCharacter == exclamationMark) {
             if (secondCharacter == rightSingleQuotation
                     || secondCharacter == rightDoubleQuotation) {
-                validationErrors.add(createValidationError(sentence, secondCharacter+lastCharacter));
+                errors.add(createValidationError(sentence, secondCharacter+lastCharacter));
             }
         }
-        return validationErrors;
     }
 
     @Override

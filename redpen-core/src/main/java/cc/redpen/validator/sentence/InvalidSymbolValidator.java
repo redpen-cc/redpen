@@ -23,7 +23,6 @@ import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -33,8 +32,7 @@ import java.util.Set;
 final public class InvalidSymbolValidator extends Validator {
 
     @Override
-    public List<ValidationError> validate(Sentence sentence) {
-        List<ValidationError> errors = new ArrayList<>();
+    public void validate(List<ValidationError> errors, Sentence sentence) {
         Set<SymbolType> symbolTypes = getSymbolTable().getNames();
         for (SymbolType symbolType : symbolTypes) {
             ValidationError error = validateSymbol(sentence, symbolType);
@@ -42,7 +40,6 @@ final public class InvalidSymbolValidator extends Validator {
                 errors.add(error);
             }
         }
-        return errors;
     }
 
     private ValidationError validateSymbol(Sentence sentence, SymbolType symbolType) {

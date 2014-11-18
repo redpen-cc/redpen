@@ -49,33 +49,31 @@ public abstract class Validator {
     /**
      * validate the input document and returns the invalid points.
      * {@link cc.redpen.validator.Validator} provides empty implementation. Validator implementation validates documents can override this method.
-     * @param document input
-     * @return List of ValidationError
+     *
+     * @param errorList list of validation errors. Validator implementations will add Validation errors to this list.
+     * @param document  input
      */
-    public List<ValidationError> validate(Document document){
-        return new ArrayList<>();
+    public void validate(List<ValidationError> errorList, Document document) {
     }
 
     /**
      * validate the input document and returns the invalid points.
      * {@link cc.redpen.validator.Validator} provides empty implementation. Validator implementation validates sentences can override this method.
      *
+     * @param errors list of validation errors. Validator implementations will add Validation errors to this list.
      * @param sentence input
-     * @return List of ValidationError
      */
-    public List<ValidationError> validate(Sentence sentence){
-        return new ArrayList<>();
+    public void validate(List<ValidationError> errors, Sentence sentence) {
     }
 
     /**
      * validate the input document and returns the invalid points.
      * {@link cc.redpen.validator.Validator} provides empty implementation. Validator implementation validates sections can override this method.
      *
+     * @param errors list of validation errors. Validator implementations will add Validation errors to this list.
      * @param section input
-     * @return List of ValidationError
      */
-    public List<ValidationError> validate(Section section){
-        return new ArrayList<>();
+    public void validate(List<ValidationError> errors, Section section) {
     }
 
     final void preInit(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {

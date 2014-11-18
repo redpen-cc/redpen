@@ -26,7 +26,6 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,8 +38,7 @@ final public class SectionLengthValidator extends Validator {
     private int maxSectionCharNumber;
 
     @Override
-    public List<ValidationError> validate(Section section) {
-        List<ValidationError> validationErrors = new ArrayList<>();
+    public void validate(List<ValidationError> errors, Section section) {
         int sectionCharNumber = 0;
 
         for (Paragraph currentParagraph : section.getParagraphs()) {
@@ -50,9 +48,8 @@ final public class SectionLengthValidator extends Validator {
         }
 
         if (sectionCharNumber > maxSectionCharNumber) {
-            validationErrors.add(createValidationError(section.getJoinedHeaderContents(), sectionCharNumber));
+            errors.add(createValidationError(section.getJoinedHeaderContents(), sectionCharNumber));
         }
-        return validationErrors;
     }
 
     @Override

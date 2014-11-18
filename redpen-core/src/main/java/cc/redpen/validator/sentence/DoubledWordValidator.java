@@ -42,8 +42,7 @@ final public class DoubledWordValidator extends Validator {
     private Set<String> skipList;
 
     @Override
-    public List<ValidationError> validate(Sentence sentence) {
-        List<ValidationError> errors = new ArrayList<>();
+    public void validate(List<ValidationError> errors, Sentence sentence) {
         Set<String> surfaces = new HashSet<>();
         for (TokenElement token : sentence.tokens) {
             String currentSurface = token.getSurface();
@@ -52,7 +51,6 @@ final public class DoubledWordValidator extends Validator {
             }
             surfaces.add(currentSurface);
         }
-        return errors;
     }
 
     @Override

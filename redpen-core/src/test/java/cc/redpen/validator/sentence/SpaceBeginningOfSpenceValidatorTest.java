@@ -21,10 +21,10 @@ import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class SpaceBeginningOfSpenceValidatorTest {
 
@@ -33,8 +33,8 @@ public class SpaceBeginningOfSpenceValidatorTest {
         SpaceBeginningOfSentenceValidator spaceValidator =
                 new SpaceBeginningOfSentenceValidator();
         Sentence str = new Sentence("That is true.", 0);
-        List<ValidationError> errors = spaceValidator.validate(str);
-        assertNotNull(errors);
+        List<ValidationError> errors = new ArrayList<>();
+        spaceValidator.validate(errors, str);
         assertEquals(1, errors.size());
     }
 
@@ -43,8 +43,8 @@ public class SpaceBeginningOfSpenceValidatorTest {
         SpaceBeginningOfSentenceValidator spaceValidator =
                 new SpaceBeginningOfSentenceValidator();
         Sentence str = new Sentence(" That is true.", 0);
-        List<ValidationError> errors = spaceValidator.validate(str);
-        assertNotNull(errors);
+        List<ValidationError> errors = new ArrayList<>();
+        spaceValidator.validate(errors, str);
         assertEquals(0, errors.size());
     }
 
@@ -54,8 +54,8 @@ public class SpaceBeginningOfSpenceValidatorTest {
                 new SpaceBeginningOfSentenceValidator();
         Sentence str = new Sentence("That is true.", 0);
         str.isFirstSentence = true;
-        List<ValidationError> errors = spaceValidator.validate(str);
-        assertNotNull(errors);
+        List<ValidationError> errors = new ArrayList<>();
+        spaceValidator.validate(errors, str);
         assertEquals(0, errors.size());
     }
 
@@ -65,8 +65,8 @@ public class SpaceBeginningOfSpenceValidatorTest {
                 new SpaceBeginningOfSentenceValidator();
         Sentence str = new Sentence("", 0);
         str.isFirstSentence = true;
-        List<ValidationError> errors = spaceValidator.validate(str);
-        assertNotNull(errors);
+        List<ValidationError> errors = new ArrayList<>();
+        spaceValidator.validate(errors, str);
         assertEquals(0, errors.size());
     }
 }

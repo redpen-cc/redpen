@@ -100,7 +100,6 @@ public class DefaultResultDistributorTest extends Validator {
     }
 
     @Override
-    public List<ValidationError> validate(Sentence sentence) {
-        return null;
+    public void validate(List<ValidationError> errors, Sentence sentence) {
     }
 }

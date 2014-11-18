@@ -23,7 +23,6 @@ import cc.redpen.validator.PreProcessor;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -122,16 +121,14 @@ final public class ContractionValidator extends Validator implements PreProcesso
     private int foundNonContractionNum = 0;
 
     @Override
-    public List<ValidationError> validate(Sentence sentence) {
-        List<ValidationError> validationErrors = new ArrayList<>();
+    public void validate(List<ValidationError> errors, Sentence sentence) {
         for (TokenElement token : sentence.tokens) {
             String surface = token.getSurface().toLowerCase();
             if (foundNonContractionNum >= foundContractionNum
                     && contractions.contains(surface)) {
-                validationErrors.add(createValidationError(sentence, surface));
+                errors.add(createValidationError(sentence, surface));
             }
         }
-        return validationErrors;
     }
 
     @Override
