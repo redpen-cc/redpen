@@ -24,13 +24,12 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Validate input sentences have more words than specified.
  */
-final public class WordNumberValidator extends Validator<Sentence> {
+final public class WordNumberValidator extends Validator {
     /**
      * Default maximum number of words in one sentence.
      */
@@ -41,13 +40,11 @@ final public class WordNumberValidator extends Validator<Sentence> {
     private int maxWordNumber = DEFAULT_MAXIMUM_WORDS_IN_A_SENTENCE;
 
     @Override
-    public List<ValidationError> validate(Sentence sentence) {
-        List<ValidationError> validationErrors = new ArrayList<>();
+    public void validate(List<ValidationError> errors, Sentence sentence) {
         int wordNum = sentence.tokens.size();
         if (wordNum > maxWordNumber) {
-            validationErrors.add(createValidationError(sentence, wordNum));
+            errors.add(createValidationError(sentence, wordNum));
         }
-        return validationErrors;
     }
 
     @Override

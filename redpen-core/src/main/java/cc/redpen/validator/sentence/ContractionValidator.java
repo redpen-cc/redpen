@@ -19,11 +19,9 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.validator.PreProcessor;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,7 +30,7 @@ import java.util.Set;
  * Validate English contraction in the input document.
  * NOTE: this validator works only for English documents.
  */
-final public class ContractionValidator extends Validator<Sentence> implements PreProcessor<Sentence> {
+final public class ContractionValidator extends Validator {
     private static final Set<String> contractions;
     private static final Set<String> nonContractions;
     static {
@@ -122,21 +120,19 @@ final public class ContractionValidator extends Validator<Sentence> implements P
     private int foundNonContractionNum = 0;
 
     @Override
-    public List<ValidationError> validate(Sentence block) {
-        List<ValidationError> validationErrors = new ArrayList<>();
-        for (TokenElement token : block.tokens) {
+    public void validate(List<ValidationError> errors, Sentence sentence) {
+        for (TokenElement token : sentence.tokens) {
             String surface = token.getSurface().toLowerCase();
             if (foundNonContractionNum >= foundContractionNum
                     && contractions.contains(surface)) {
-                validationErrors.add(createValidationError(block, surface));
+                errors.add(createValidationError(sentence, surface));
             }
         }
-        return validationErrors;
     }
 
     @Override
-    public void preprocess(Sentence block) {
-        for (TokenElement token : block.tokens) {
+    public void preValidate(Sentence sentence) {
+        for (TokenElement token : sentence.tokens) {
             String surface = token.getSurface().toLowerCase();
             if (contractions.contains(surface)) {
                 foundContractionNum += 1;

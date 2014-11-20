@@ -21,10 +21,10 @@ import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class SentenceLengthValidatorTest {
     @Test
@@ -33,9 +33,9 @@ public class SentenceLengthValidatorTest {
         validator.setLengthLimit(30);
         Sentence str = new Sentence("this is a very long long long long long long"
                 + "long long long long long long sentence.", 0);
-        List<ValidationError> error = validator.validate(str);
-        assertNotNull(error);
-        assertEquals(1, error.size());
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, str);
+        assertEquals(1, errors.size());
     }
 
     @Test
@@ -43,9 +43,9 @@ public class SentenceLengthValidatorTest {
         SentenceLengthValidator validator = new SentenceLengthValidator();
         validator.setLengthLimit(30);
         Sentence str = new Sentence("this is a sentence.", 0);
-        List<ValidationError> error = validator.validate(str);
-        assertNotNull(error);
-        assertEquals(0, error.size());
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, str);
+        assertEquals(0, errors.size());
     }
 
     @Test
@@ -53,8 +53,8 @@ public class SentenceLengthValidatorTest {
         SentenceLengthValidator validator = new SentenceLengthValidator();
         validator.setLengthLimit(30);
         Sentence str = new Sentence("", 0);
-        List<ValidationError> error = validator.validate(str);
-        assertNotNull(error);
-        assertEquals(0, error.size());
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(errors, str);
+        assertEquals(0, errors.size());
     }
 }

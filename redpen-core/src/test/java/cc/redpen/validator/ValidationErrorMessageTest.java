@@ -2,16 +2,13 @@ package cc.redpen.validator;
 
 import cc.redpen.model.Sentence;
 
-import java.util.ArrayList;
 import java.util.List;
 
-class ValidationErrorMessageTest extends Validator<Sentence> {
+class ValidationErrorMessageTest extends Validator {
 
     @Override
-    public List<ValidationError> validate(Sentence sentence) {
-        List<ValidationError> errors = new ArrayList<>();
+    public void validate(List<ValidationError> errors, Sentence sentence) {
         errors.add(createValidationError(sentence, 1, 2, 3, "sentence"));
         errors.add(createValidationError("withKey", sentence, "sentence"));
-        return errors;
     }
 }

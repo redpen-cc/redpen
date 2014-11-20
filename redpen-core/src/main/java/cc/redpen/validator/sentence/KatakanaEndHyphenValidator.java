@@ -45,7 +45,7 @@ import java.util.List;
  * <p>
  * Note that KatakanaEndHyphenValidator only checks the rules a) and b).
  */
-final public class KatakanaEndHyphenValidator extends Validator<Sentence> {
+final public class KatakanaEndHyphenValidator extends Validator {
     /**
      * Default Katakana limit length without hypen.
      */
@@ -68,8 +68,8 @@ final public class KatakanaEndHyphenValidator extends Validator<Sentence> {
                 && katakana.charAt(katakana.length() - 1) == HYPHEN);
     }
 
-    public List<ValidationError> validate(Sentence sentence) {
-        List<ValidationError> errors = new ArrayList<>();
+    @Override
+    public void validate(List<ValidationError> errors, Sentence sentence) {
         List<ValidationError> result;
         StringBuilder katakana = new StringBuilder("");
         for (int i = 0; i < sentence.content.length(); i++) {
@@ -88,7 +88,6 @@ final public class KatakanaEndHyphenValidator extends Validator<Sentence> {
         if (result != null) {
             errors.addAll(result);
         }
-        return errors;
     }
 
     private List<ValidationError> checkKatakanaEndHyphen(Sentence sentence,

@@ -23,7 +23,6 @@ import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -31,10 +30,10 @@ import java.util.Set;
  * Validate symbol has before and after symbols. Needed spaces is depend on
  * the symbol and defined in DVCharacterTable.
  */
-public class SymbolWithSpaceValidator extends Validator<Sentence> {
+public class SymbolWithSpaceValidator extends Validator {
 
-    public List<ValidationError> validate(Sentence sentence) {
-        List<ValidationError> errors = new ArrayList<>();
+    @Override
+    public void validate(List<ValidationError> errors, Sentence sentence) {
         Set<SymbolType> symbolTypes = getSymbolTable().getNames();
         for (SymbolType symbolType : symbolTypes) {
             ValidationError error = validateSymbol(sentence, symbolType);
@@ -42,7 +41,6 @@ public class SymbolWithSpaceValidator extends Validator<Sentence> {
                 errors.add(error);
             }
         }
-        return errors;
     }
 
     private ValidationError validateSymbol(Sentence sentence, SymbolType symbolType) {

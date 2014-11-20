@@ -21,6 +21,7 @@ import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -33,7 +34,8 @@ public class WordNumberValidatorTest {
         WordNumberValidator maxWordNumberValidator = new WordNumberValidator();
         Sentence str = new Sentence(
                 "this sentence is short.", 0);
-        List<ValidationError> errors = maxWordNumberValidator.validate(str);
+        List<ValidationError> errors = new ArrayList<>();
+        maxWordNumberValidator.validate(errors, str);
         assertNotNull(errors);
         assertEquals(0, errors.size());
     }
@@ -44,7 +46,8 @@ public class WordNumberValidatorTest {
         Sentence str = new Sentence(
                 "this sentence is very very very very very very very very very very" +
                         " very very very very very very very very very very very very very very long", 0);
-        List<ValidationError> errors = maxWordNumberValidator.validate(str);
+        List<ValidationError> errors = new ArrayList<>();
+        maxWordNumberValidator.validate(errors, str);
         assertNotNull(errors);
         assertEquals(0, errors.size());
     }
@@ -53,7 +56,8 @@ public class WordNumberValidatorTest {
     public void testWithZeroLengthSentence() {
         WordNumberValidator maxWordNumberValidator = new WordNumberValidator();
         Sentence str = new Sentence("", 0);
-        List<ValidationError> errors = maxWordNumberValidator.validate(str);
+        List<ValidationError> errors = new ArrayList<>();
+        maxWordNumberValidator.validate(errors, str);
         assertNotNull(errors);
         assertEquals(0, errors.size());
     }

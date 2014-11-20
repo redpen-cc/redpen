@@ -21,6 +21,8 @@ package cc.redpen.validator;
 import cc.redpen.RedPenException;
 import cc.redpen.config.SymbolTable;
 import cc.redpen.config.ValidatorConfiguration;
+import cc.redpen.model.Document;
+import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +33,7 @@ import java.util.*;
 /**
  * Validate input document.
  */
-public abstract class Validator<E> {
+public abstract class Validator {
     private static final Logger LOG =
             LoggerFactory.getLogger(Validator.class);
     private final static ResourceBundle.Control fallbackControl =
@@ -45,12 +47,43 @@ public abstract class Validator<E> {
     }
 
     /**
-     * validate the input document and returns the invalid points.
+     * Process input blocks before run validation. This method is used to store
+     * the information needed to run Validator before the validation process.
      *
-     * @param block input
-     * @return List of ValidationError
+     * @param sentence input sentence
      */
-    abstract public List<ValidationError> validate(E block);
+    public void preValidate(Sentence sentence){
+    }
+
+    /**
+     * validate the input document and returns the invalid points.
+     * {@link cc.redpen.validator.Validator} provides empty implementation. Validator implementation validates documents can override this method.
+     *
+     * @param errorList list of validation errors. Validator implementations will add Validation errors to this list.
+     * @param document  input
+     */
+    public void validate(List<ValidationError> errorList, Document document) {
+    }
+
+    /**
+     * validate the input document and returns the invalid points.
+     * {@link cc.redpen.validator.Validator} provides empty implementation. Validator implementation validates sentences can override this method.
+     *
+     * @param errors list of validation errors. Validator implementations will add Validation errors to this list.
+     * @param sentence input
+     */
+    public void validate(List<ValidationError> errors, Sentence sentence) {
+    }
+
+    /**
+     * validate the input document and returns the invalid points.
+     * {@link cc.redpen.validator.Validator} provides empty implementation. Validator implementation validates sections can override this method.
+     *
+     * @param errors list of validation errors. Validator implementations will add Validation errors to this list.
+     * @param section input
+     */
+    public void validate(List<ValidationError> errors, Section section) {
+    }
 
     final void preInit(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
         this.config = config;

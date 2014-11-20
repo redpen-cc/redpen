@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
 
 import static org.junit.Assert.*;
 
-public class DefaultResultDistributorTest extends Validator<Sentence> {
+public class DefaultResultDistributorTest extends Validator {
     @Test
     public void testFlushHeaderWithPlainFormatter() {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -100,7 +100,6 @@ public class DefaultResultDistributorTest extends Validator<Sentence> {
     }
 
     @Override
-    public List<ValidationError> validate(Sentence block) {
-        return null;
+    public void validate(List<ValidationError> errors, Sentence sentence) {
     }
 }

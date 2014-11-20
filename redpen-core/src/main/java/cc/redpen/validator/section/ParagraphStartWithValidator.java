@@ -24,13 +24,12 @@ import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Validate whether paragraph start as specified.
  */
-final public class ParagraphStartWithValidator extends Validator<Section> {
+final public class ParagraphStartWithValidator extends Validator {
     /**
      * Default matter paragraph start with.
      */
@@ -39,20 +38,17 @@ final public class ParagraphStartWithValidator extends Validator<Section> {
     private String beginningOfParagraph = DEFAULT_PARAGRAPH_START_WITH;
 
     @Override
-    public List<ValidationError> validate(Section section) {
-        List<ValidationError> validationErrors = new ArrayList<>();
+    public void validate(List<ValidationError> errors, Section section) {
         for (Paragraph currentParagraph : section.getParagraphs()) {
             if (currentParagraph.getNumberOfSentences() == 0) {
                 continue;
             }
             Sentence firstSentence = currentParagraph.getSentence(0);
             if (firstSentence.content.indexOf(this.beginningOfParagraph) != 0) {
-                validationErrors.add(createValidationError(section.getJoinedHeaderContents(),
+                errors.add(createValidationError(section.getJoinedHeaderContents(),
                         firstSentence.content.charAt(0)));
             }
         }
-
-        return validationErrors;
     }
 
     @Override

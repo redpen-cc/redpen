@@ -24,7 +24,6 @@ import cc.redpen.distributor.ResultDistributor;
 import cc.redpen.model.*;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.SentenceExtractor;
-import cc.redpen.validator.PreProcessor;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import cc.redpen.validator.ValidatorFactory;
@@ -34,8 +33,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,9 +44,7 @@ import java.util.Map;
 public class RedPen {
     private static final Logger LOG = LoggerFactory.getLogger(RedPen.class);
 
-    private final List<Validator<Document>> documentValidators = new ArrayList<>();
-    private final List<Validator<Section>> sectionValidators = new ArrayList<>();
-    private final List<Validator<Sentence>> sentenceValidators = new ArrayList<>();
+    private final List<Validator> validators = new ArrayList<>();
     private final ResultDistributor distributor;
     private final Configuration configuration;
     private final SentenceExtractor sentenceExtractor;
@@ -58,7 +53,12 @@ public class RedPen {
         this.configuration = configuration;
         this.distributor = distributor;
         this.sentenceExtractor = new SentenceExtractor(this.configuration.getSymbolTable());
-        loadValidators();
+
+        // load validators
+        for (ValidatorConfiguration config : configuration.getValidatorConfigs()) {
+            Validator validator = ValidatorFactory.getInstance(config, configuration.getSymbolTable());
+            this.validators.add(validator);
+        }
     }
 
     /**
@@ -132,65 +132,82 @@ public class RedPen {
         return documentListMap.get(document);
     }
 
-    static Type getParameterizedClass(Object obj) {
-        if (obj == null) {
-            return null;
-        }
-
-        Class clazz = obj.getClass();
-        Type genericInterface = clazz.getGenericSuperclass();
-        ParameterizedType parameterizedType;
-        try {
-            parameterizedType =
-                    ParameterizedType.class.cast(genericInterface);
-        } catch (ClassCastException e) {
-            return null;
-        }
-
-        if (parameterizedType.getActualTypeArguments().length == 0) {
-            return null;
-        }
-        return parameterizedType.getActualTypeArguments()[0];
-    }
-
-    /**
-     * Load validators written in the configuration file.
-     */
-    @SuppressWarnings("unchecked")
-    private void loadValidators()
-            throws RedPenException {
-        if (configuration == null) {
-            throw new IllegalStateException("Configuration object is null");
-        }
-
-        for (ValidatorConfiguration config : configuration.getValidatorConfigs()) {
-
-            Validator<?> validator = ValidatorFactory.getInstance(
-                    config, configuration.getSymbolTable());
-            Type type = getParameterizedClass(validator);
-
-            if (type == Sentence.class) {
-                this.sentenceValidators.add((Validator<Sentence>) validator);
-            } else if (type == Section.class) {
-                this.sectionValidators.add((Validator<Section>) validator);
-            } else if (type == Document.class) {
-                this.documentValidators.add((Validator<Document>) validator);
-            } else {
-                throw new IllegalStateException("No validator for " + type + " block.");
-            }
-        }
-    }
-
     private void runDocumentValidators(
             DocumentCollection documentCollection,
             Map<Document, List<ValidationError>> docErrorsMap) {
         for (Document document : documentCollection) {
-            List<ValidationError> newErrors = validateDocument(document);
-            for (ValidationError error : newErrors) {
+            List<ValidationError> errors = new ArrayList<>();
+            validators.forEach(e -> e.validate(errors, document));
+            for (ValidationError error : errors) {
                 flushError(document, error);
             }
-            List<ValidationError> validationErrors = docErrorsMap.get(document);
-            validationErrors.addAll(newErrors);
+            docErrorsMap.put(document, errors);
+        }
+    }
+
+    private void runSectionValidators(
+            DocumentCollection documentCollection,
+            Map<Document, List<ValidationError>> docErrorsMap) {
+        for (Document document : documentCollection) {
+            for (Section section : document) {
+                List<ValidationError> newErrors = new ArrayList<>();
+                validators.forEach(e -> e.validate(newErrors, section));
+
+                for (ValidationError error : newErrors) {
+                    flushError(document, error);
+                }
+                List<ValidationError> validationErrors = docErrorsMap.get(document);
+                validationErrors.addAll(newErrors);
+            }
+        }
+    }
+
+    private void runSentenceValidators(
+            DocumentCollection documentCollection,
+            Map<Document, List<ValidationError>> docErrorsMap) {
+        // run Sentence PreProcessors to DocumentCollection
+        for (Document document : documentCollection) {
+            for (Section section : document) {
+                // apply Sentence PreProcessors to section
+                // apply paragraphs
+                for (Paragraph paragraph : section.getParagraphs()) {
+                    validators.forEach(e -> paragraph.getSentences().forEach(e::preValidate));
+                }
+                // apply to section header
+                validators.forEach(e -> section.getHeaderContents().forEach(e::preValidate));
+
+                // apply to lists
+                for (ListBlock listBlock : section.getListBlocks()) {
+                    for (ListElement listElement : listBlock.getListElements()) {
+                        validators.forEach(e -> listElement.getSentences().forEach(e::preValidate));
+                    }
+                }
+            }
+        }
+        // run Sentence Validators to DocumentCollection
+        for (Document document : documentCollection) {
+            for (Section section : document) {
+                List<ValidationError> newErrors = new ArrayList<>();
+
+                // apply SentenceValidations to section
+                // apply paragraphs
+                for (Paragraph paragraph : section.getParagraphs()) {
+                    validators.forEach(e -> paragraph.getSentences().forEach(sentence -> e.validate(newErrors, sentence)));
+                }
+                // apply to section header
+                validators.forEach(e -> section.getHeaderContents().forEach(sentence -> e.validate(newErrors, sentence)));
+                // apply to lists
+                for (ListBlock listBlock : section.getListBlocks()) {
+                    for (ListElement listElement : listBlock.getListElements()) {
+                        validators.forEach(e -> listElement.getSentences().forEach(sentence -> e.validate(newErrors, sentence)));
+                    }
+                }
+                for (ValidationError error : newErrors) {
+                    flushError(document, error);
+                }
+
+                docErrorsMap.get(document).addAll(newErrors);
+            }
         }
     }
 
@@ -206,127 +223,6 @@ public class RedPen {
         }
     }
 
-    private void runSectionValidators(
-            DocumentCollection documentCollection,
-            Map<Document, List<ValidationError>> docErrorsMap) {
-        for (Document document : documentCollection) {
-            for (Section section : document) {
-                List<ValidationError> newErrors = validateSection(section);
-                for (ValidationError error : newErrors) {
-                    flushError(document, error);
-                }
-                List<ValidationError> validationErrors = docErrorsMap.get(document);
-                validationErrors.addAll(newErrors);
-            }
-        }
-    }
-
-    private void runSentenceValidators(
-            DocumentCollection documentCollection,
-            Map<Document, List<ValidationError>> docErrorsMap) {
-        runSentencePreProcessorsToDocumentCollection(documentCollection);
-        runSentenceValidatorsToDocumentCollection(documentCollection, docErrorsMap);
-    }
-
-    private void runSentencePreProcessorsToDocumentCollection(
-            DocumentCollection documentCollection) {
-        for (Document document : documentCollection) {
-            for (Section section : document) {
-                applySentencePreProcessorsToSection(section);
-            }
-        }
-    }
-
-    private void applySentencePreProcessorsToSection(Section section) {
-        // apply paragraphs
-        for (Paragraph paragraph : section.getParagraphs()) {
-            preprocessSentences(paragraph.getSentences());
-        }
-        // apply to section header
-        preprocessSentences(section.getHeaderContents());
-        // apply to lists
-        for (ListBlock listBlock : section.getListBlocks()) {
-            for (ListElement listElement : listBlock.getListElements()) {
-                preprocessSentences(listElement.getSentences());
-            }
-        }
-    }
-
-    private void preprocessSentences(List<Sentence> sentences) {
-        for (Validator<Sentence> sentenceValidator : sentenceValidators) {
-            if (sentenceValidator instanceof PreProcessor) {
-                PreProcessor<Sentence> preprocessor = (PreProcessor<Sentence>) sentenceValidator;
-                sentences.forEach(preprocessor::preprocess);
-            }
-        }
-    }
-
-    private void runSentenceValidatorsToDocumentCollection(
-            DocumentCollection documentCollection, Map<Document, List<ValidationError>> docErrorsMap) {
-        for (Document document : documentCollection) {
-            for (Section section : document) {
-                List<ValidationError> newErrors =
-                        applySentenceValidationsToSection(document, section);
-                docErrorsMap.get(document).addAll(newErrors);
-            }
-        }
-    }
-
-    private List<ValidationError> applySentenceValidationsToSection(
-            Document document, Section section) {
-        List<ValidationError> newErrors = new ArrayList<>();
-        // apply paragraphs
-        for (Paragraph paragraph : section.getParagraphs()) {
-            newErrors.addAll(validateParagraph(paragraph));
-        }
-
-        // apply to section header
-        newErrors.addAll(validateSentences(section.getHeaderContents()));
-
-        // apply to lists
-        for (ListBlock listBlock : section.getListBlocks()) {
-            for (ListElement listElement : listBlock.getListElements()) {
-                newErrors.addAll(validateSentences(listElement.getSentences()));
-            }
-        }
-        for (ValidationError error : newErrors) {
-            flushError(document, error);
-        }
-        return newErrors;
-    }
-
-    private List<ValidationError> validateDocument(Document document) {
-        List<ValidationError> errors = new ArrayList<>();
-        for (Validator<Document> validator : documentValidators) {
-            errors.addAll(validator.validate(document));
-        }
-        return errors;
-    }
-
-    private List<ValidationError> validateSection(Section section) {
-        List<ValidationError> errors = new ArrayList<>();
-        for (Validator<Section> sectionValidator : sectionValidators) {
-            errors.addAll(sectionValidator.validate(section));
-        }
-        return errors;
-    }
-
-    private List<ValidationError> validateParagraph(Paragraph paragraph) {
-        List<ValidationError> errors = new ArrayList<>();
-        errors.addAll(validateSentences(paragraph.getSentences()));
-        return errors;
-    }
-
-    private List<ValidationError> validateSentences(List<Sentence> sentences) {
-        List<ValidationError> errors = new ArrayList<>();
-        for (Validator<Sentence> sentenceValidator : sentenceValidators) {
-            for (Sentence sentence : sentences) {
-                errors.addAll(sentenceValidator.validate(sentence));
-            }
-        }
-        return errors;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -334,12 +230,12 @@ public class RedPen {
 
         RedPen redPen = (RedPen) o;
 
+        if (configuration != null ? !configuration.equals(redPen.configuration) : redPen.configuration != null)
+            return false;
         if (distributor != null ? !distributor.equals(redPen.distributor) : redPen.distributor != null) return false;
-        if (sectionValidators != null ? !sectionValidators.equals(redPen.sectionValidators) : redPen.sectionValidators != null)
+        if (validators != null ? !validators.equals(redPen.validators) : redPen.validators != null)
             return false;
-        if (sentenceValidators != null ? !sentenceValidators.equals(redPen.sentenceValidators) : redPen.sentenceValidators != null)
-            return false;
-        if (documentValidators != null ? !documentValidators.equals(redPen.documentValidators) : redPen.documentValidators != null)
+        if (sentenceExtractor != null ? !sentenceExtractor.equals(redPen.sentenceExtractor) : redPen.sentenceExtractor != null)
             return false;
 
         return true;
@@ -347,20 +243,20 @@ public class RedPen {
 
     @Override
     public int hashCode() {
-        int result = documentValidators != null ? documentValidators.hashCode() : 0;
-        result = 31 * result + (sectionValidators != null ? sectionValidators.hashCode() : 0);
-        result = 31 * result + (sentenceValidators != null ? sentenceValidators.hashCode() : 0);
+        int result = validators != null ? validators.hashCode() : 0;
         result = 31 * result + (distributor != null ? distributor.hashCode() : 0);
+        result = 31 * result + (configuration != null ? configuration.hashCode() : 0);
+        result = 31 * result + (sentenceExtractor != null ? sentenceExtractor.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
         return "RedPen{" +
-                "documentValidators=" + documentValidators +
-                ", sectionValidators=" + sectionValidators +
-                ", sentenceValidators=" + sentenceValidators +
+                "validators=" + validators +
                 ", distributor=" + distributor +
+                ", configuration=" + configuration +
+                ", sentenceExtractor=" + sentenceExtractor +
                 '}';
     }
 

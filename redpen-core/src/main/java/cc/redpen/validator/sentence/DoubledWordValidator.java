@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.*;
 
-final public class DoubledWordValidator extends Validator<Sentence> {
+final public class DoubledWordValidator extends Validator {
     private static final Logger LOG =
             LoggerFactory.getLogger(DoubledWordValidator.class);
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/doubled-word";
@@ -42,17 +42,15 @@ final public class DoubledWordValidator extends Validator<Sentence> {
     private Set<String> skipList;
 
     @Override
-    public List<ValidationError> validate(Sentence block) {
-        List<ValidationError> errors = new ArrayList<>();
+    public void validate(List<ValidationError> errors, Sentence sentence) {
         Set<String> surfaces = new HashSet<>();
-        for (TokenElement token : block.tokens) {
+        for (TokenElement token : sentence.tokens) {
             String currentSurface = token.getSurface();
             if (surfaces.contains(currentSurface) && !skipList.contains(currentSurface.toLowerCase())) {
-                errors.add(createValidationError(block, currentSurface));
+                errors.add(createValidationError(sentence, currentSurface));
             }
             surfaces.add(currentSurface);
         }
-        return errors;
     }
 
     @Override

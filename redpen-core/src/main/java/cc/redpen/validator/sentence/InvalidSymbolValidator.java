@@ -23,17 +23,16 @@ import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 /**
  * Validate if there is invalid characters in sentences.
  */
-final public class InvalidSymbolValidator extends Validator<Sentence> {
+final public class InvalidSymbolValidator extends Validator {
 
-    public List<ValidationError> validate(Sentence sentence) {
-        List<ValidationError> errors = new ArrayList<>();
+    @Override
+    public void validate(List<ValidationError> errors, Sentence sentence) {
         Set<SymbolType> symbolTypes = getSymbolTable().getNames();
         for (SymbolType symbolType : symbolTypes) {
             ValidationError error = validateSymbol(sentence, symbolType);
@@ -41,7 +40,6 @@ final public class InvalidSymbolValidator extends Validator<Sentence> {
                 errors.add(error);
             }
         }
-        return errors;
     }
 
     private ValidationError validateSymbol(Sentence sentence, SymbolType symbolType) {

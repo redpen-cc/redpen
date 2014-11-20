@@ -24,13 +24,12 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Validate input sentences contain more characters more than specified.
  */
-final public class SentenceLengthValidator extends Validator<Sentence> {
+final public class SentenceLengthValidator extends Validator {
     /**
      * Default maximum length of sentences.
      */
@@ -40,12 +39,11 @@ final public class SentenceLengthValidator extends Validator<Sentence> {
             LoggerFactory.getLogger(SentenceLengthValidator.class);
     private int maxLength = DEFAULT_MAX_LENGTH;
 
-    public List<ValidationError> validate(Sentence line) {
-        List<ValidationError> validationErrors = new ArrayList<>();
-        if (line.content.length() > maxLength) {
-            validationErrors.add(createValidationError(line, line.content.length()));
+    @Override
+    public void validate(List<ValidationError> errors, Sentence sentence) {
+        if (sentence.content.length() > maxLength) {
+            errors.add(createValidationError(sentence, sentence.content.length()));
         }
-        return validationErrors;
     }
 
     @Override

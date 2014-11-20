@@ -34,19 +34,18 @@ import java.util.stream.Collectors;
  * If input sentences contain invalid expressions, this validator
  * returns the errors with corrected expressions.
  */
-final public class SuggestExpressionValidator extends Validator<Sentence> {
+final public class SuggestExpressionValidator extends Validator {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(SuggestExpressionValidator.class);
     private Map<String, String> synonyms = new HashMap<>();
 
-    public List<ValidationError> validate(Sentence line) {
-        List<ValidationError> validationErrors = new ArrayList<>();
-        String str = line.content;
+    @Override
+    public void validate(List<ValidationError> errors, Sentence sentence) {
+        String str = sentence.content;
         Set<String> invalidWords = synonyms.keySet();
-        validationErrors.addAll(invalidWords.stream().filter(str::contains)
-                .map(w -> createValidationError(line, w, synonyms.get(w))).collect(Collectors.toList()));
-        return validationErrors;
+        errors.addAll(invalidWords.stream().filter(str::contains)
+                .map(w -> createValidationError(sentence, w, synonyms.get(w))).collect(Collectors.toList()));
     }
 
     @Override
