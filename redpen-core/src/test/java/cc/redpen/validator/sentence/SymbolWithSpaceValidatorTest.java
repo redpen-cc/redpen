@@ -89,7 +89,7 @@ public class SymbolWithSpaceValidatorTest {
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("I like her(Nancy)very much.", 1)
+                        .addSentence("I like her(Nancy) very much.", 1)
                         .build()).build();
 
         Configuration conf = new Configuration.ConfigurationBuilder()
