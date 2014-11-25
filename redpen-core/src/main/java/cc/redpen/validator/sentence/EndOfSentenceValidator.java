@@ -34,7 +34,9 @@ final public class EndOfSentenceValidator extends Validator {
                 || lastCharacter == exclamationMark) {
             if (secondCharacter == rightSingleQuotation
                     || secondCharacter == rightDoubleQuotation) {
-                errors.add(createValidationError(sentence, secondCharacter+lastCharacter));
+                StringBuilder builder = new StringBuilder();
+                builder.append(secondCharacter).append(lastCharacter);
+                errors.add(createValidationError(sentence, builder.toString()));
             }
         }
     }

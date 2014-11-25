@@ -37,7 +37,15 @@ final public class StartWithCapitalLetterValidator extends Validator {
     public void validate(List<ValidationError> errors, Sentence sentence) {
         String content = sentence.content;
         List<TokenElement> tokens = sentence.tokens;
-        if (tokens.size() == 0 || this.whiteList.contains(tokens.get(0).getSurface())) {
+        String headWord = "";
+        for (TokenElement token : tokens) {
+            if (!token.getSurface().equals("")) { // skip white space
+                headWord = token.getSurface();
+                break;
+            }
+        }
+
+        if (tokens.size() == 0 || this.whiteList.contains(headWord)) {
             return;
         }
 
@@ -45,6 +53,7 @@ final public class StartWithCapitalLetterValidator extends Validator {
         for (char ch: content.toCharArray()) {
             if (ch != ' ') {
                 headChar = ch;
+                break;
             }
         }
 
@@ -52,7 +61,6 @@ final public class StartWithCapitalLetterValidator extends Validator {
             return;
         }
 
-        headChar = content.charAt(0);
         if (Character.isLowerCase(headChar)) {
             errors.add(createValidationError(sentence, headChar));
         }
