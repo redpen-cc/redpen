@@ -68,6 +68,7 @@ final public class ContractionValidator extends Validator {
         contractions.add("they're");
         contractions.add("they've");
         contractions.add("we'd");
+        contractions.add("we'll");
         contractions.add("we're");
         contractions.add("we've");
         contractions.add("weren't");
@@ -92,6 +93,7 @@ final public class ContractionValidator extends Validator {
         nonContractions = new HashSet<>();
         nonContractions.add("are");
         nonContractions.add("cannot");
+        nonContractions.add("can");
         nonContractions.add("could");
         nonContractions.add("did");
         nonContractions.add("do");
@@ -114,6 +116,7 @@ final public class ContractionValidator extends Validator {
         nonContractions.add("will");
         nonContractions.add("would");
         nonContractions.add("you");
+        nonContractions.add("they");
     }
 
     private int foundContractionNum = 0;
