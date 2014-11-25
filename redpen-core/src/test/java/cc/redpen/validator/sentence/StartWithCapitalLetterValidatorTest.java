@@ -128,4 +128,28 @@ public class StartWithCapitalLetterValidatorTest {
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(0, errors.get(documents.getDocument(0)).size());
     }
+
+
+    @Test
+    public void testDetectStartWithSmallCharacterInSecondSentence() throws RedPenException {
+        Configuration config = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter"))
+                .setLanguage("en").build();
+
+        DocumentCollection documents = new DocumentCollection.Builder()
+                .addDocument(new Document.DocumentBuilder()
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("This is true.", 1)
+                        .addSentence(" that is also true.", 1)
+                        .build()).build();
+
+        RedPen redPen = new RedPen.RedPenBuilder()
+                .setConfiguration(config)
+                .setResultDistributor(new FakeResultDistributor())
+                .build();
+
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        Assert.assertEquals(1, errors.get(documents.getDocument(0)).size());
+    }
 }
