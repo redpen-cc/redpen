@@ -35,7 +35,24 @@ public class WhiteSpaceTokenizerTest {
         assertEquals(0, results.get(1).getTags().size());
         assertEquals("a", results.get(2).getSurface());
         assertEquals(0, results.get(2).getTags().size());
-        assertEquals("pen.", results.get(3).getSurface());
+        assertEquals("pen", results.get(3).getSurface());
         assertEquals(0, results.get(3).getTags().size());
+    }
+
+    @Test
+    public void testTokenizeSentenceWithNoSpaceBracket() {
+        RedPenTokenizer tokenizer = new WhiteSpaceTokenizer();
+        List<TokenElement> results = tokenizer.tokenize("distributed(cluster) systems are good");
+        assertEquals(5, results.size());
+        assertEquals("distributed", results.get(0).getSurface());
+        assertEquals(0, results.get(0).getTags().size());
+        assertEquals("cluster", results.get(1).getSurface());
+        assertEquals(0, results.get(1).getTags().size());
+        assertEquals("systems", results.get(2).getSurface());
+        assertEquals(0, results.get(2).getTags().size());
+        assertEquals("are", results.get(3).getSurface());
+        assertEquals(0, results.get(3).getTags().size());
+        assertEquals("good", results.get(4).getSurface());
+        assertEquals(0, results.get(4).getTags().size());
     }
 }

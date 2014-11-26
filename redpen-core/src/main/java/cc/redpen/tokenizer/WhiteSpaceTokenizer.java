@@ -26,7 +26,8 @@ public class WhiteSpaceTokenizer implements RedPenTokenizer {
     @Override
     public List<TokenElement> tokenize(String content) {
         List<TokenElement> resultTokens = new ArrayList<>();
-        String [] words = content.split(" ");
+        String normalized = content.replaceAll("\\.|\\,|\\?|\\(|\\)", " ");
+        String [] words = normalized.split(" +");
         for (String word : words) {
             resultTokens.add(new TokenElement(word));
         }
