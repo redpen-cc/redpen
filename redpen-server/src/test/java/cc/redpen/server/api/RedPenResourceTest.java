@@ -59,7 +59,7 @@ public class RedPenResourceTest extends MockServletInvocationTest {
 
         assertEquals("HTTP status", HttpStatus.OK.getCode(), response.getStatus());
         JSONArray errors = (JSONArray) new JSONObject(response.getContentAsString()).get("errors");
-        assertEquals(1, errors.length());
+        assertEquals(2, errors.length());
         assertTrue(errors.get(0).toString().length() > 0);
     }
 
