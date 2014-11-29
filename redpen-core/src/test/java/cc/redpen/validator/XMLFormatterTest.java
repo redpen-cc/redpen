@@ -30,6 +30,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -118,7 +119,7 @@ public class XMLFormatterTest {
 
         Document document = null;
         try {
-            document = docBuilder.parse(new ByteArrayInputStream(resultString.getBytes("UTF-8")));
+            document = docBuilder.parse(new ByteArrayInputStream(resultString.getBytes(StandardCharsets.UTF_8)));
         } catch (SAXException | IOException e) {
             e.printStackTrace();
             fail();

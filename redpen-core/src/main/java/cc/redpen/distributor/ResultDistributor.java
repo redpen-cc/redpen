@@ -30,12 +30,12 @@ public interface ResultDistributor {
     /**
      * Flush header block of semi-structured format.
      */
-    void flushHeader();
+    void flushHeader() throws RedPenException;
 
     /**
      * Flush footer block of semi-structured format.
      */
-    void flushFooter();
+    void flushFooter() throws RedPenException;
 
     /**
      * Flush given ValidationError.

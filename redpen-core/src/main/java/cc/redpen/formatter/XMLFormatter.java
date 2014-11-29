@@ -121,11 +121,11 @@ public class XMLFormatter implements Formatter {
 
     @Override
     public Optional<String> header() {
-        return Optional.ofNullable("<validation-result>");
+        return Optional.of("<validation-result>");
     }
 
     @Override
     public Optional<String> footer() {
-        return Optional.ofNullable("</validation-result>");
+        return Optional.of("</validation-result>");
     }
 }

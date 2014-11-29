@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Load file from input file name or stream.
@@ -57,8 +58,7 @@ public class FileLoader {
      * @param inputStream input stream
      */
     public void loadFile(InputStream inputStream) throws IOException {
-            InputStreamReader inputStreamReader =
-                    new InputStreamReader(inputStream, "UTF-8");
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
         String line;
         while ((line = bufferedReader.readLine()) != null) {

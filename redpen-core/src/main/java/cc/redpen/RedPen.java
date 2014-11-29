@@ -110,13 +110,21 @@ public class RedPen {
      * @return list of validation errors
      */
     public Map<Document, List<ValidationError>> validate(DocumentCollection documentCollection) {
-        distributor.flushHeader();
+        try {
+            distributor.flushHeader();
+        } catch (RedPenException e) {
+            LOG.error("failed to flush header", e);
+        }
         Map<Document, List<ValidationError>> docErrorsMap = new HashMap<>();
         documentCollection.forEach(e -> docErrorsMap.put(e, new ArrayList<>()));
         runDocumentValidators(documentCollection, docErrorsMap);
         runSectionValidators(documentCollection, docErrorsMap);
         runSentenceValidators(documentCollection, docErrorsMap);
-        distributor.flushFooter();
+        try {
+            distributor.flushFooter();
+        } catch (RedPenException e) {
+            LOG.error("failed to flush footer", e);
+        }
         return docErrorsMap;
     }
 

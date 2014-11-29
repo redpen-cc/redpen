@@ -26,43 +26,32 @@ import cc.redpen.validator.Validator;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class DefaultResultDistributorTest extends Validator {
     @Test
-    public void testFlushHeaderWithPlainFormatter() {
+    public void testFlushHeaderWithPlainFormatter() throws RedPenException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         DefaultResultDistributor distributor = new DefaultResultDistributor(os);
         distributor.setFormatter(new PlainFormatter());
         distributor.flushFooter();
-        String result = null;
-        try {
-            result = new String(os.toByteArray(), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            fail();
-        }
+        String result = new String(os.toByteArray(), StandardCharsets.UTF_8);
         assertEquals("", result);
     }
 
     @Test
-    public void testFlushFooterWithPlainFormatter() {
+    public void testFlushFooterWithPlainFormatter() throws RedPenException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         DefaultResultDistributor distributor = new DefaultResultDistributor(os);
         distributor.setFormatter(new PlainFormatter());
         distributor.flushFooter();
-        String result = null;
-        try {
-            result = new String(os.toByteArray(), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            fail();
-        }
+        String result = new String(os.toByteArray(), StandardCharsets.UTF_8);
         assertEquals("", result);
     }
 
@@ -73,19 +62,13 @@ public class DefaultResultDistributorTest extends Validator {
         distributor.setFormatter(new PlainFormatter());
         ValidationError error = createValidationError(new Sentence("sentence", 1));
         distributor.flushError(new Document.DocumentBuilder().build(), error);
-        String result = null;
-        try {
-            result = new String(os.toByteArray(), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            fail();
-        }
+        String result = new String(os.toByteArray(), StandardCharsets.UTF_8);
         Pattern p = Pattern.compile("foobar");
         Matcher m = p.matcher(result);
         assertTrue(m.find());
     }
 
-    @Test(expected = RedPenException.class)
+    @Test(expected = NullPointerException.class)
     public void testFlushErrorWithPlainFormatterForNull() throws RedPenException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         DefaultResultDistributor distributor = new DefaultResultDistributor(os);

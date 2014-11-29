@@ -23,9 +23,7 @@ import cc.redpen.formatter.PlainFormatter;
 import cc.redpen.model.Document;
 import cc.redpen.validator.ValidationError;
 
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 
 /**
  * An implementation of ResultDistributor which flush the result into
@@ -33,7 +31,7 @@ import java.io.UnsupportedEncodingException;
  */
 public class DefaultResultDistributor implements ResultDistributor {
     private Formatter myFormatter;
-    private PrintStream writer;
+    private BufferedWriter writer;
 
     /**
      * Constructor.
@@ -45,11 +43,7 @@ public class DefaultResultDistributor implements ResultDistributor {
         if (os == null) {
             throw new IllegalArgumentException("argument OutputStream is null");
         }
-        try {
-            writer = new PrintStream(os, true, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException(e);
-        }
+        writer = new BufferedWriter(new PrintWriter(os));
         myFormatter = new PlainFormatter();
     }
 
@@ -62,11 +56,7 @@ public class DefaultResultDistributor implements ResultDistributor {
         if (ps == null) {
             throw new IllegalArgumentException("argument PrintStream is null");
         }
-        try {
-            writer = new PrintStream(ps, true, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException(e);
-        }
+        writer = new BufferedWriter(new PrintWriter(ps));
         myFormatter = new PlainFormatter();
     }
 
@@ -76,21 +66,37 @@ public class DefaultResultDistributor implements ResultDistributor {
      * @param err validation error
      */
     public void flushError(Document document, ValidationError err) throws RedPenException {
-        if (err == null) {
-            throw new RedPenException("argument ValidationError is null");
+        try {
+            writer.write(myFormatter.convertError(document, err));
+            writer.write("\n");
+            writer.flush();
+        } catch (IOException e) {
+            throw new RedPenException(e);
         }
-        writer.println(myFormatter.convertError(document, err));
-        writer.flush();
     }
 
     @Override
-    public void flushHeader() {
-        myFormatter.header().ifPresent(writer::println);
+    public void flushHeader() throws RedPenException{
+        if (myFormatter.header().isPresent()) {
+            try {
+                writer.write(myFormatter.header().get());
+                writer.write("\n");
+            } catch (IOException e) {
+                throw new RedPenException(e);
+            }
+        }
     }
 
     @Override
-    public void flushFooter() {
-        myFormatter.footer().ifPresent(writer::println);
+    public void flushFooter() throws RedPenException {
+        if (myFormatter.footer().isPresent()) {
+            try {
+                writer.write(myFormatter.footer().get());
+                writer.write("\n");
+            } catch (IOException e) {
+                throw new RedPenException(e);
+            }
+        }
     }
 
     @Override

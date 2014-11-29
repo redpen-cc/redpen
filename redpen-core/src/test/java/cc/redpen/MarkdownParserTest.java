@@ -41,7 +41,7 @@ public class MarkdownParserTest {
     public void setup() {
     }
 
-    @Test(expected = RedPenException.class)
+    @Test(expected = NullPointerException.class)
     public void testNullDocument() throws Exception {
         Configuration configuration = new Configuration.ConfigurationBuilder().build();
         DocumentParser parser = DocumentParser.MARKDOWN;
