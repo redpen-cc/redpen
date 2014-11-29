@@ -19,6 +19,8 @@ package cc.redpen;
 
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+
 public class MainTest {
 
     @Test
@@ -32,12 +34,12 @@ public class MainTest {
 
     @Test
     public void testHelp() throws RedPenException {
-        Main.run(new String[] { "-h" });
+        assertEquals(0, Main.run("-h"));
     }
 
     @Test
     public void testVersion() throws RedPenException {
-        Main.run(new String[] { "-v" });
+        assertEquals(0, Main.run("-v"));
     }
 
 }

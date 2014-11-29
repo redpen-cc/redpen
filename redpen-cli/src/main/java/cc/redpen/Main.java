@@ -52,11 +52,11 @@ public final class Main {
      * @param args arguments
      * @throws RedPenException
      */
-    public static void main(String[] args) throws RedPenException {
+    public static void main(String... args) throws RedPenException {
         System.exit(run(args));
     }
 
-    public static int run(String[] args) throws RedPenException {
+    public static int run(String... args) throws RedPenException {
         Options options = new Options();
         options.addOption("h", "help", false, "Displays this help information and exits");
 
