@@ -23,13 +23,7 @@ import cc.redpen.formatter.Formatter;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.validator.ValidationError;
-import org.apache.commons.cli.BasicParser;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.OptionBuilder;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,10 +48,15 @@ public final class Main {
 
     /**
      * When the errors reported by RedPen is more than the specified limit, this method returns 1 otherwise return 0.
+     *
      * @param args arguments
      * @throws RedPenException
      */
-    public static void main(String[] args) throws RedPenException {
+    public static void main(String... args) throws RedPenException {
+        System.exit(run(args));
+    }
+
+    public static int run(String... args) throws RedPenException {
         Options options = new Options();
         options.addOption("h", "help", false, "Displays this help information and exits");
 
@@ -86,7 +85,7 @@ public final class Main {
         options.addOption(OptionBuilder.create("l"));
 
         options.addOption("v", "version", false,
-            "Displays version information and exits");
+                "Displays version information and exits");
 
         CommandLineParser commandLineParser = new BasicParser();
         CommandLine commandLine = null;
@@ -95,7 +94,7 @@ public final class Main {
         } catch (ParseException e) {
             LOG.error("Error occurred in parsing command line options ");
             printHelp(options);
-            System.exit(-1);
+            return -1;
         }
 
         String inputFormat = "plain";
@@ -106,11 +105,11 @@ public final class Main {
 
         if (commandLine.hasOption("h")) {
             printHelp(options);
-            System.exit(0);
+            return 0;
         }
         if (commandLine.hasOption("v")) {
             System.out.println(VERSION);
-            System.exit(0);
+            return 0;
         }
         if (commandLine.hasOption("f")) {
             inputFormat = commandLine.getOptionValue("f");
@@ -144,14 +143,14 @@ public final class Main {
         DocumentCollection documents = redPen.parse(parser, inputFiles);
         if (documents == null) {
             LOG.error("Failed to create a DocumentCollection object");
-            System.exit(-1);
+            return -1;
         }
         List<ValidationError> errors = redPen.validate(documents).get(documents.getDocument(0));
         if (errors.size() > limit) {
             LOG.error("The number of errors \"{}\" is larger than specified (limit is \"{}\").", errors.size(), limit);
-            System.exit(1);
+            return 1;
         } else {
-            System.exit(0);
+            return 0;
         }
     }
 
