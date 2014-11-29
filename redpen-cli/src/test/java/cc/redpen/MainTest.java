@@ -17,32 +17,27 @@
  */
 package cc.redpen;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class MainTest {
 
-    @Ignore("Enable this to run basic validation test during development ")
     @Test
     public void testMain() throws RedPenException {
         String[] args = new String[]{
             "-c", "redpen-cli/sample/conf/redpen-conf-en.xml",
                 "redpen-cli/sample/sample-doc/en/sampledoc-en.txt"
         };
-        
-        Main.main(args);
+        Main.run(args);
     }
 
-    @Ignore("Enable this to show help")
     @Test
     public void testHelp() throws RedPenException {
-        Main.main(new String[] { "-h" });
+        Main.run(new String[] { "-h" });
     }
 
-    @Ignore("Enable this to show version")
     @Test
     public void testVersion() throws RedPenException {
-        Main.main(new String[] { "-v" });
+        Main.run(new String[] { "-v" });
     }
 
 }
