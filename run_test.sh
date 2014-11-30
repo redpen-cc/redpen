@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION=0.6
+VERSION=1.0
 
 run_test() {
     echo "Building RedPen Version $VERSION"
@@ -36,6 +36,6 @@ run_test() {
 
 }
 
-[ ${#BASH_SOURCE[@]} = 1 ] && run_test "$@"
+run_test "$@"
 echo "Succeeded to run tests"
 exit 0
