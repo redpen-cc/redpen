@@ -17,24 +17,94 @@
  */
 package cc.redpen.distributor;
 
+import cc.redpen.RedPenException;
 import cc.redpen.formatter.Formatter;
 import cc.redpen.model.Document;
 import cc.redpen.validator.ValidationError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 
 /**
  * ResultDistributor flush the errors reported from Validators.
  */
-public interface ResultDistributor {
+public class ResultDistributor {
+    private static final Logger LOG = LoggerFactory.getLogger(ResultDistributor.class);
+    private Formatter formatter;
+    private BufferedWriter writer;
 
     /**
-     * Set Formatter object.
+     * Constructor.
      *
-     * @param formatter flush result with tye specified format
+     * @param os output stream
      */
-    void setFormatter(Formatter formatter);
+    ResultDistributor(OutputStream os, Formatter formatter) {
+        writer = new BufferedWriter(new PrintWriter(os));
+        this.formatter = formatter;
+    }
 
-    void distribute(Map<Document, List<ValidationError>> docErrorsMap);
+    /**
+     * Constructor.
+     *
+     * @param ps output stream
+     */
+    public ResultDistributor(PrintStream ps, Formatter formatter) {
+        if (ps == null) {
+            throw new IllegalArgumentException("argument PrintStream is null");
+        }
+        writer = new BufferedWriter(new PrintWriter(ps));
+        this.formatter = formatter;
+    }
+
+    public void distribute(Map<Document, List<ValidationError>> docErrorsMap) {
+        flushHeader();
+
+        docErrorsMap.keySet().forEach(document -> {
+            List<ValidationError> errors = docErrorsMap.get(document);
+            for (ValidationError error : errors) {
+                flushError(document, error);
+            }
+        });
+        flushFooter();
+    }
+
+    /**
+     * Output given validation error.
+     *
+     * @param err validation error
+     */
+    private void flushError(Document document, ValidationError err) {
+        try {
+            writer.write(formatter.format(document, err));
+            writer.write("\n");
+            writer.flush();
+        } catch (IOException | RedPenException e) {
+            LOG.error("failed to flush error", e);
+        }
+    }
+
+    private void flushHeader() {
+        if (formatter.header().isPresent()) {
+            try {
+                writer.write(formatter.header().get());
+                writer.write("\n");
+            } catch (IOException e) {
+                LOG.error("failed to flush header", e);
+            }
+        }
+    }
+
+    private void flushFooter() {
+        if (formatter.footer().isPresent()) {
+            try {
+                writer.write(formatter.footer().get());
+                writer.write("\n");
+            } catch (IOException e) {
+                LOG.error("failed to flush header", e);
+            }
+        }
+    }
 }

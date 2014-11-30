@@ -35,7 +35,7 @@ public interface Formatter {
      * @param error object containing file and line number information.
      * @return error message
      */
-    String convertError(Document document, ValidationError error) throws RedPenException;
+    String format(Document document, ValidationError error) throws RedPenException;
 
     /**
      * Return the header block of semi-structured format. Returns empty by default.

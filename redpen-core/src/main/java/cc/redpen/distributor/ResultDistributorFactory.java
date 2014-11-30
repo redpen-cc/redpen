@@ -45,24 +45,14 @@ public final class ResultDistributorFactory {
      */
     public static ResultDistributor createDistributor(Formatter.Type outputFormat,
                                                       OutputStream output) {
-        if (outputFormat == null) {
-            LOG.error("Specified output format is null...");
-            return null;
-        }
-
-        if (output == null) {
-            LOG.error("Output stream is null...");
-            return null;
-        }
-        ResultDistributor distributor = new DefaultResultDistributor(output);
-
+        ResultDistributor distributor;
         LOG.info("Creating Distributor...");
         switch (outputFormat) {
             case PLAIN:
-                distributor.setFormatter(new PlainFormatter());
+                distributor = new ResultDistributor(output, new PlainFormatter());
                 break;
             case XML:
-                distributor.setFormatter(new XMLFormatter());
+                distributor = new ResultDistributor(output, new XMLFormatter());
                 break;
             default:
                 throw new RuntimeException("There is not such formatter: " + outputFormat);

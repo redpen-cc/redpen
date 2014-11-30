@@ -4,7 +4,6 @@ import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
-import cc.redpen.distributor.FakeResultDistributor;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.model.Sentence;
@@ -67,7 +66,6 @@ public class EndOfSentenceValidatorTest {
 
         RedPen redPen = new RedPen.RedPenBuilder()
                 .setConfiguration(config)
-                .setResultDistributor(new FakeResultDistributor())
                 .build();
 
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);

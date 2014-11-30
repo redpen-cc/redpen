@@ -19,8 +19,6 @@ package cc.redpen;
 
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
-import cc.redpen.distributor.DefaultResultDistributor;
-import cc.redpen.distributor.ResultDistributor;
 import cc.redpen.model.*;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.SentenceExtractor;
@@ -32,7 +30,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,13 +42,11 @@ public class RedPen {
     private static final Logger LOG = LoggerFactory.getLogger(RedPen.class);
 
     private final List<Validator> validators = new ArrayList<>();
-    private final ResultDistributor distributor;
     private final Configuration configuration;
     private final SentenceExtractor sentenceExtractor;
 
-    private RedPen(Configuration configuration, ResultDistributor distributor) throws RedPenException {
+    private RedPen(Configuration configuration) throws RedPenException {
         this.configuration = configuration;
-        this.distributor = distributor;
         this.sentenceExtractor = new SentenceExtractor(this.configuration.getSymbolTable());
 
         // load validators
@@ -115,9 +110,6 @@ public class RedPen {
         runDocumentValidators(documentCollection, docErrorsMap);
         runSectionValidators(documentCollection, docErrorsMap);
         runSentenceValidators(documentCollection, docErrorsMap);
-
-        distributor.distribute(docErrorsMap);
-
         return docErrorsMap;
     }
 
@@ -210,7 +202,6 @@ public class RedPen {
 
         if (configuration != null ? !configuration.equals(redPen.configuration) : redPen.configuration != null)
             return false;
-        if (distributor != null ? !distributor.equals(redPen.distributor) : redPen.distributor != null) return false;
         if (validators != null ? !validators.equals(redPen.validators) : redPen.validators != null)
             return false;
         if (sentenceExtractor != null ? !sentenceExtractor.equals(redPen.sentenceExtractor) : redPen.sentenceExtractor != null)
@@ -222,7 +213,6 @@ public class RedPen {
     @Override
     public int hashCode() {
         int result = validators != null ? validators.hashCode() : 0;
-        result = 31 * result + (distributor != null ? distributor.hashCode() : 0);
         result = 31 * result + (configuration != null ? configuration.hashCode() : 0);
         result = 31 * result + (sentenceExtractor != null ? sentenceExtractor.hashCode() : 0);
         return result;
@@ -232,7 +222,6 @@ public class RedPen {
     public String toString() {
         return "RedPen{" +
                 "validators=" + validators +
-                ", distributor=" + distributor +
                 ", configuration=" + configuration +
                 ", sentenceExtractor=" + sentenceExtractor +
                 '}';
@@ -244,10 +233,6 @@ public class RedPen {
     public static class RedPenBuilder {
 
         private Configuration configuration;
-
-        private ResultDistributor distributor = new DefaultResultDistributor(
-                new PrintStream(System.out)
-        );
 
         public RedPenBuilder setConfiguration(Configuration configuration) {
             this.configuration = configuration;
@@ -266,16 +251,11 @@ public class RedPen {
             return this;
         }
 
-        public RedPenBuilder setResultDistributor(ResultDistributor distributor) {
-            this.distributor = distributor;
-            return this;
-        }
-
         public RedPen build() throws RedPenException {
             if (configuration == null) {
                 throw new IllegalStateException("Configuration not set.");
             }
-            return new RedPen(configuration, distributor);
+            return new RedPen(configuration);
         }
     }
 }

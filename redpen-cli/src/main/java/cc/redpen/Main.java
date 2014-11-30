@@ -20,6 +20,7 @@ package cc.redpen;
 import cc.redpen.distributor.ResultDistributor;
 import cc.redpen.distributor.ResultDistributorFactory;
 import cc.redpen.formatter.Formatter;
+import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.validator.ValidationError;
@@ -29,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class containing main method called from command line.
@@ -138,14 +140,16 @@ public final class Main {
 
         RedPen redPen = new RedPen.RedPenBuilder()
             .setConfigFile(new File(configFileName))
-            .setResultDistributor(distributor)
             .build();
         DocumentCollection documents = redPen.parse(parser, inputFiles);
         if (documents == null) {
             LOG.error("Failed to create a DocumentCollection object");
             return -1;
         }
-        List<ValidationError> errors = redPen.validate(documents).get(documents.getDocument(0));
+        Map<Document, List<ValidationError>> documentListMap = redPen.validate(documents);
+        distributor.distribute(documentListMap);
+        List<ValidationError> errors = documentListMap.get(documents.getDocument(0));
+
         if (errors.size() > limit) {
             LOG.error("The number of errors \"{}\" is larger than specified (limit is \"{}\").", errors.size(), limit);
             return 1;

@@ -27,7 +27,10 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,21 +39,11 @@ import static org.junit.Assert.assertTrue;
 
 public class DefaultResultDistributorTest extends Validator {
     @Test
-    public void testFlushHeaderWithPlainFormatter() throws RedPenException {
+    public void testDistributeWithPlainFormatter() throws RedPenException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        DefaultResultDistributor distributor = new DefaultResultDistributor(os);
-        distributor.setFormatter(new PlainFormatter());
-        distributor.flushFooter();
-        String result = new String(os.toByteArray(), StandardCharsets.UTF_8);
-        assertEquals("", result);
-    }
-
-    @Test
-    public void testFlushFooterWithPlainFormatter() throws RedPenException {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        DefaultResultDistributor distributor = new DefaultResultDistributor(os);
-        distributor.setFormatter(new PlainFormatter());
-        distributor.flushFooter();
+        ResultDistributor distributor = new ResultDistributor(os, new PlainFormatter());
+        Map<Document, List<ValidationError>> docErrorsMap = new HashMap<>();
+        distributor.distribute(docErrorsMap);
         String result = new String(os.toByteArray(), StandardCharsets.UTF_8);
         assertEquals("", result);
     }
@@ -58,28 +51,22 @@ public class DefaultResultDistributorTest extends Validator {
     @Test
     public void testFlushErrorWithPlainFormatter() throws RedPenException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        DefaultResultDistributor distributor = new DefaultResultDistributor(os);
-        distributor.setFormatter(new PlainFormatter());
-        ValidationError error = createValidationError(new Sentence("sentence", 1));
-        distributor.flushError(new Document.DocumentBuilder().build(), error);
+        ResultDistributor distributor = new ResultDistributor(os, new PlainFormatter());
+        List<ValidationError> errors = new ArrayList<>();
+        errors.add(createValidationError(new Sentence("sentence", 1)));
+        Map<Document, List<ValidationError>> docErrorsMap = new HashMap<>();
+        Document document = new Document.DocumentBuilder().build();
+        docErrorsMap.put(document, errors);
+        distributor.distribute(docErrorsMap);
         String result = new String(os.toByteArray(), StandardCharsets.UTF_8);
         Pattern p = Pattern.compile("foobar");
         Matcher m = p.matcher(result);
         assertTrue(m.find());
     }
 
-    @Test(expected = NullPointerException.class)
-    public void testFlushErrorWithPlainFormatterForNull() throws RedPenException {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        DefaultResultDistributor distributor = new DefaultResultDistributor(os);
-        distributor.setFormatter(new PlainFormatter());
-        distributor.flushError(new Document.DocumentBuilder().build(), null);
-    }
-
     @Test(expected = IllegalArgumentException.class)
     public void testCreatePlainFormatterNullStream() {
-        DefaultResultDistributor distributor = new DefaultResultDistributor(null);
-        distributor.setFormatter(new PlainFormatter());
+        ResultDistributor distributor = new ResultDistributor(null, new PlainFormatter());
     }
 
     @Override

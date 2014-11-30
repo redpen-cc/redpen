@@ -57,7 +57,7 @@ public class XMLFormatter implements Formatter {
     }
 
     @Override
-    public String convertError(cc.redpen.model.Document document, ValidationError error) throws RedPenException {
+    public String format(cc.redpen.model.Document document, ValidationError error) throws RedPenException {
         // create dom
         Document doc = db.newDocument();
         Element errorElement = doc.createElement("error");

@@ -26,7 +26,7 @@ import cc.redpen.validator.ValidationError;
 public final class PlainFormatter implements Formatter {
 
     @Override
-    public String convertError(Document document, ValidationError error) {
+    public String format(Document document, ValidationError error) {
         StringBuilder str = new StringBuilder();
 
         str.append("ValidationError[");

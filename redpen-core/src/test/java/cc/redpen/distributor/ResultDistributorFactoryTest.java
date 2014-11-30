@@ -21,7 +21,6 @@ import cc.redpen.formatter.Formatter;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 public class ResultDistributorFactoryTest {
 
@@ -37,18 +36,6 @@ public class ResultDistributorFactoryTest {
         ResultDistributor distributor = ResultDistributorFactory.createDistributor(
                 Formatter.Type.XML, System.out);
         assertNotNull(distributor);
-    }
-
-    @Test
-    public void testNullDistributor() {
-        ResultDistributor distributor = ResultDistributorFactory.createDistributor(null, null);
-        assertNull(distributor);
-    }
-
-    @Test
-    public void testNullOutputDistributor() {
-        ResultDistributor distributor = ResultDistributorFactory.createDistributor(Formatter.Type.PLAIN, null);
-        assertNull(distributor);
     }
 
 }
