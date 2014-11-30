@@ -145,4 +145,26 @@ public class SpaceBeginningOfSpenceValidatorTest {
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         assertEquals(0, errors.get(documents.getDocument(0)).size());
     }
+
+    @Test
+    public void testProcessVoidSentence() throws RedPenException {
+        Configuration config = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(new ValidatorConfiguration("SpaceBeginningOfSentence"))
+                .setLanguage("en").build();
+
+        DocumentCollection documents = new DocumentCollection.Builder()
+                .addDocument(new Document.DocumentBuilder()
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("", 1)
+                        .build()).build();
+
+        RedPen redPen = new RedPen.RedPenBuilder()
+                .setConfiguration(config)
+                .setResultDistributor(new FakeResultDistributor())
+                .build();
+
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        assertEquals(0, errors.get(documents.getDocument(0)).size());
+    }
 }

@@ -26,8 +26,8 @@ public class MainTest {
     @Test
     public void testMain() throws RedPenException {
         String[] args = new String[]{
-            "-c", "redpen-cli/sample/conf/redpen-conf-en.xml",
-                "redpen-cli/sample/sample-doc/en/sampledoc-en.txt"
+            "-c", "sample/conf/redpen-conf-en.xml",
+                "sample/sample-doc/en/sampledoc-en.txt"
         };
         Main.run(args);
     }
