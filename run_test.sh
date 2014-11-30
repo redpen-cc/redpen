@@ -1,6 +1,5 @@
 #!/bin/bash
 
-FAILED=0
 VERSION=0.6
 
 run_test() {
@@ -8,7 +7,7 @@ run_test() {
     mvn clean install
     if [ $? -ne 0 ]; then
 	echo "Error in the build..."
-	FAILED=1
+	exit 1
     fi
 
     echo "Running application"
@@ -18,7 +17,7 @@ run_test() {
     bin/redpen -c conf/redpen-conf-en.xml doc/txt/en/sampledoc-en.txt
     if [ $? -ne 0 ]; then
 	echo "Error runnig application..."
-	FAILED=1
+	exit 1
     fi
     cd ../../..
 
@@ -32,10 +31,11 @@ run_test() {
 	pgrep -f redpen | xargs kill
     else
 	echo "RedPen server failed to start ..."
-	FAILED=1
+	exit 1
     fi
 
 }
 
 [ ${#BASH_SOURCE[@]} = 1 ] && run_test "$@"
-exit $FAILED
+echo "Succeeded to run tests"
+exit 0
