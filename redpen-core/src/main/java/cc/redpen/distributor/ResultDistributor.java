@@ -17,10 +17,12 @@
  */
 package cc.redpen.distributor;
 
-import cc.redpen.RedPenException;
 import cc.redpen.formatter.Formatter;
 import cc.redpen.model.Document;
 import cc.redpen.validator.ValidationError;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * ResultDistributor flush the errors reported from Validators.
@@ -28,26 +30,11 @@ import cc.redpen.validator.ValidationError;
 public interface ResultDistributor {
 
     /**
-     * Flush header block of semi-structured format.
-     */
-    void flushHeader() throws RedPenException;
-
-    /**
-     * Flush footer block of semi-structured format.
-     */
-    void flushFooter() throws RedPenException;
-
-    /**
-     * Flush given ValidationError.
-     *
-     * @param err error reported from a Validator
-     */
-    void flushError(Document document, ValidationError err) throws RedPenException;
-
-    /**
      * Set Formatter object.
      *
      * @param formatter flush result with tye specified format
      */
     void setFormatter(Formatter formatter);
+
+    void distribute(Map<Document, List<ValidationError>> docErrorsMap);
 }

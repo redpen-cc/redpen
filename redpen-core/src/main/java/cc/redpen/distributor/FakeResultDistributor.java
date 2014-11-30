@@ -21,6 +21,9 @@ import cc.redpen.formatter.Formatter;
 import cc.redpen.model.Document;
 import cc.redpen.validator.ValidationError;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * FakeResultDistributor does nothing. this class is just for testing.
  */
@@ -33,17 +36,11 @@ public class FakeResultDistributor implements ResultDistributor {
     }
 
     @Override
-    public void flushError(Document document, ValidationError err) {}
-
-    @Override
     public void setFormatter(Formatter formatter) {
     }
 
     @Override
-    public void flushHeader() {
-    }
+    public void distribute(Map<Document, List<ValidationError>> docErrorsMap) {
 
-    @Override
-    public void flushFooter() {
     }
 }

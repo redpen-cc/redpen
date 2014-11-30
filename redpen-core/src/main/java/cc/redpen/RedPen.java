@@ -110,21 +110,14 @@ public class RedPen {
      * @return list of validation errors
      */
     public Map<Document, List<ValidationError>> validate(DocumentCollection documentCollection) {
-        try {
-            distributor.flushHeader();
-        } catch (RedPenException e) {
-            LOG.error("failed to flush header", e);
-        }
         Map<Document, List<ValidationError>> docErrorsMap = new HashMap<>();
         documentCollection.forEach(e -> docErrorsMap.put(e, new ArrayList<>()));
         runDocumentValidators(documentCollection, docErrorsMap);
         runSectionValidators(documentCollection, docErrorsMap);
         runSentenceValidators(documentCollection, docErrorsMap);
-        try {
-            distributor.flushFooter();
-        } catch (RedPenException e) {
-            LOG.error("failed to flush footer", e);
-        }
+
+        distributor.distribute(docErrorsMap);
+
         return docErrorsMap;
     }
 
@@ -146,9 +139,6 @@ public class RedPen {
         for (Document document : documentCollection) {
             List<ValidationError> errors = new ArrayList<>();
             validators.forEach(e -> e.validate(errors, document));
-            for (ValidationError error : errors) {
-                flushError(document, error);
-            }
             docErrorsMap.put(document, errors);
         }
     }
@@ -160,10 +150,6 @@ public class RedPen {
             for (Section section : document) {
                 List<ValidationError> newErrors = new ArrayList<>();
                 validators.forEach(e -> e.validate(newErrors, section));
-
-                for (ValidationError error : newErrors) {
-                    flushError(document, error);
-                }
                 List<ValidationError> validationErrors = docErrorsMap.get(document);
                 validationErrors.addAll(newErrors);
             }
@@ -210,24 +196,8 @@ public class RedPen {
                         validators.forEach(e -> listElement.getSentences().forEach(sentence -> e.validate(newErrors, sentence)));
                     }
                 }
-                for (ValidationError error : newErrors) {
-                    flushError(document, error);
-                }
-
                 docErrorsMap.get(document).addAll(newErrors);
             }
-        }
-    }
-
-    private void flushError(Document document, ValidationError error) {
-        /**
-         * When the flush of input error is failed, the output process continues skipping the failed error.
-         */
-        try {
-            distributor.flushError(document, error);
-        } catch (RedPenException e) {
-            LOG.error("Failed to flush error: " + error.toString());
-            LOG.error("Skipping to flush this error...");
         }
     }
 
