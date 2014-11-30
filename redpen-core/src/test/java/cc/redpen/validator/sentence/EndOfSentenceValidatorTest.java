@@ -64,10 +64,7 @@ public class EndOfSentenceValidatorTest {
                         .addSentence("彼は言った，“今日は誕生日”。", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(config)
-                .build();
-
+        RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(1, errors.get(documents.getDocument(0)).size());
     }

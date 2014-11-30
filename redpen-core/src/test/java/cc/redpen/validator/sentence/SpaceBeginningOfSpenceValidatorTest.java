@@ -46,10 +46,7 @@ public class SpaceBeginningOfSpenceValidatorTest {
                         .addSentence("this is a test.", 1) // error in second sentence (need space)
                         .build()).build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(config)
-                .build();
-
+        RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         assertEquals(1, errors.get(documents.getDocument(0)).size());
     }
@@ -68,10 +65,7 @@ public class SpaceBeginningOfSpenceValidatorTest {
                         .addSentence(" this is a test", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(config)
-                .build();
-
+        RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         assertEquals(0, errors.get(documents.getDocument(0)).size());
     }
@@ -89,10 +83,7 @@ public class SpaceBeginningOfSpenceValidatorTest {
                         .addSentence("This is a test", 0)
                         .build()).build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(config)
-                .build();
-
+        RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         assertEquals(0, errors.get(documents.getDocument(0)).size());
     }
@@ -110,10 +101,7 @@ public class SpaceBeginningOfSpenceValidatorTest {
                         .addSentence("", 0)
                         .build()).build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(config)
-                .build();
-
+        RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         assertEquals(0, errors.get(documents.getDocument(0)).size());
     }
@@ -132,10 +120,7 @@ public class SpaceBeginningOfSpenceValidatorTest {
                         .addSentence("this is a test.", 2) // ok since the sentence start from the beginning of the line
                         .build()).build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(config)
-                .build();
-
+        RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         assertEquals(0, errors.get(documents.getDocument(0)).size());
     }
@@ -153,10 +138,7 @@ public class SpaceBeginningOfSpenceValidatorTest {
                         .addSentence("", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(config)
-                .build();
-
+        RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         assertEquals(0, errors.get(documents.getDocument(0)).size());
     }

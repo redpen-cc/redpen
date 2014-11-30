@@ -49,10 +49,7 @@ public class SymbolWithSpaceValidatorTest {
                 .setSymbol(new Symbol(SLASH, '/'))
                 .build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(conf)
-                .build();
-
+        RedPen redPen = new RedPen(conf);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(0, errors.get(documents.getDocument(0)).size());
     }
@@ -72,10 +69,7 @@ public class SymbolWithSpaceValidatorTest {
                 .setSymbol(new Symbol(COLON, ':', "", false, true))
                 .build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(conf)
-                .build();
-
+        RedPen redPen = new RedPen(conf);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(1, errors.get(documents.getDocument(0)).size());
     }
@@ -95,10 +89,7 @@ public class SymbolWithSpaceValidatorTest {
                 .setSymbol(new Symbol(LEFT_PARENTHESIS, '(', "", true, false))
                 .build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(conf)
-                .build();
-
+        RedPen redPen = new RedPen(conf);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(1, errors.get(documents.getDocument(0)).size());
     }
@@ -119,10 +110,7 @@ public class SymbolWithSpaceValidatorTest {
                 .setSymbol(new Symbol(RIGHT_PARENTHESIS, ')', "", false, true))
                 .build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(conf)
-                .build();
-
+        RedPen redPen = new RedPen(conf);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(2, errors.get(documents.getDocument(0)).size());
     }
@@ -142,10 +130,7 @@ public class SymbolWithSpaceValidatorTest {
                 .setSymbol(new Symbol(ASTERISK, '*', "", true, true))
                 .build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(conf)
-                .build();
-
+        RedPen redPen = new RedPen(conf);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(1, errors.get(documents.getDocument(0)).size());
     }

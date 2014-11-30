@@ -45,7 +45,30 @@ public class RedPen {
     private final Configuration configuration;
     private final SentenceExtractor sentenceExtractor;
 
-    private RedPen(Configuration configuration) throws RedPenException {
+    /**
+     * constructs RedPen with specified config file
+     * @param configFile config file
+     * @throws RedPenException
+     */
+    public RedPen(File configFile) throws RedPenException {
+        this(new ConfigurationLoader().load(configFile));
+    }
+
+    /**
+     * constructs RedPen with specified config file path
+     * @param configPath config file path
+     * @throws RedPenException
+     */
+    public RedPen(String configPath) throws RedPenException {
+        this(new ConfigurationLoader().loadFromResource(configPath));
+    }
+
+    /**
+     * constructs RedPen with specified configuration
+     * @param configuration configuration
+     * @throws RedPenException
+     */
+    public RedPen(Configuration configuration) throws RedPenException {
         this.configuration = configuration;
         this.sentenceExtractor = new SentenceExtractor(this.configuration.getSymbolTable());
 
@@ -225,37 +248,5 @@ public class RedPen {
                 ", configuration=" + configuration +
                 ", sentenceExtractor=" + sentenceExtractor +
                 '}';
-    }
-
-    /**
-     * Builder for {@link cc.redpen.RedPen}.
-     */
-    public static class RedPenBuilder {
-
-        private Configuration configuration;
-
-        public RedPenBuilder setConfiguration(Configuration configuration) {
-            this.configuration = configuration;
-            return this;
-        }
-
-        public RedPenBuilder setConfigFile(File configFile) throws RedPenException {
-            ConfigurationLoader configLoader = new ConfigurationLoader();
-            configuration = configLoader.load(configFile);
-            return this;
-        }
-
-        public RedPenBuilder setConfigResourcePath(String configPath) throws RedPenException {
-            ConfigurationLoader configLoader = new ConfigurationLoader();
-            configuration = configLoader.loadFromResource(configPath);
-            return this;
-        }
-
-        public RedPen build() throws RedPenException {
-            if (configuration == null) {
-                throw new IllegalStateException("Configuration not set.");
-            }
-            return new RedPen(configuration);
-        }
     }
 }

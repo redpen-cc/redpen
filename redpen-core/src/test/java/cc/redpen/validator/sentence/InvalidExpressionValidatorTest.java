@@ -70,10 +70,7 @@ public class InvalidExpressionValidatorTest {
                                 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(config)
-                .build();
-
+        RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(1, errors.get(documents.getDocument(0)).size());
     }
@@ -91,10 +88,7 @@ public class InvalidExpressionValidatorTest {
                         .addSentence("明日地球が滅亡するってマジですか。", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(config)
-                .build();
-
+        RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(1, errors.get(documents.getDocument(0)).size());
     }
@@ -113,10 +107,7 @@ public class InvalidExpressionValidatorTest {
                         .addSentence("うふぉっ本当ですか？", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(config)
-                .build();
-
+        RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(1, errors.get(documents.getDocument(0)).size());
     }

@@ -45,10 +45,7 @@ public class DoubledWordValidatorTest {
                         .addSentence("the good item is a good example.", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(config)
-                .build();
-
+        RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(1, errors.get(documents.getDocument(0)).size());
     }
@@ -66,10 +63,7 @@ public class DoubledWordValidatorTest {
                         .addSentence("That is true, as far as I know.", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(config)
-                .build();
-
+        RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(0, errors.get(documents.getDocument(0)).size());
     }
@@ -88,10 +82,7 @@ public class DoubledWordValidatorTest {
                         .addSentence("RedPen is RedPen right?", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(config)
-                .build();
-
+        RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(0, errors.get(documents.getDocument(0)).size());
     }
@@ -110,10 +101,7 @@ public class DoubledWordValidatorTest {
                         .addSentence("redPen is redPen right?", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(config)
-                .build();
-
+        RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(0, errors.get(documents.getDocument(0)).size());
     }
@@ -131,10 +119,7 @@ public class DoubledWordValidatorTest {
                                 .addSentence("それは真実であり，それが正しい", 1)
                                 .build()).build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(config)
-                .build();
-
+        RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(1, errors.get(documents.getDocument(0)).size());
     }

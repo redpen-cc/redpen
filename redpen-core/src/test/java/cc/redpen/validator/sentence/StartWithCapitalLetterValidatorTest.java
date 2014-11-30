@@ -119,10 +119,7 @@ public class StartWithCapitalLetterValidatorTest {
                         .addSentence("mixi is a Japanese company.", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(config)
-                .build();
-
+        RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(0, errors.get(documents.getDocument(0)).size());
     }
@@ -142,10 +139,7 @@ public class StartWithCapitalLetterValidatorTest {
                         .addSentence(" that is also true.", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(config)
-                .build();
-
+        RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(1, errors.get(documents.getDocument(0)).size());
     }

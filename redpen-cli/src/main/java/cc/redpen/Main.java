@@ -138,9 +138,7 @@ public final class Main {
         ResultDistributor distributor =
             ResultDistributorFactory.createDistributor(outputFormat, System.out);
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-            .setConfigFile(new File(configFileName))
-            .build();
+        RedPen redPen = new RedPen(new File(configFileName));
         DocumentCollection documents = redPen.parse(parser, inputFiles);
         if (documents == null) {
             LOG.error("Failed to create a DocumentCollection object");

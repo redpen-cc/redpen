@@ -79,10 +79,7 @@ public class KatakanaSpellCheckValidatorTest {
                                 .addSentence("あのインデクスとこのインデックス", 1)
                                 .build()).build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(config)
-                .build();
-
+        RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(0, errors.get(documents.getDocument(0)).size());
     }
