@@ -16,8 +16,8 @@ run_test() {
     cd redpen-cli-$VERSION
     bin/redpen -c conf/redpen-conf-en.xml -l 100 sample-doc/en/sampledoc-en.txt
     if [ $? -ne 0 ]; then
-  echo "Error runnig application..."
-  exit 1
+        echo "Error runnig application..."
+        exit 1
     fi
     cd ../../..
 
