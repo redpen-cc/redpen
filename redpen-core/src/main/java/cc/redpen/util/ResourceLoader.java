@@ -25,7 +25,7 @@ import java.io.InputStream;
  */
 public class ResourceLoader {
 
-    private FileLoader loader = null;
+    private ResourceExtractor loader = null;
 
     /**
      * Constructor.
@@ -33,7 +33,7 @@ public class ResourceLoader {
      * @param resourceExtractor resource extractor.
      */
     public ResourceLoader(ResourceExtractor resourceExtractor) {
-        this.loader = new FileLoader(resourceExtractor);
+        this.loader = resourceExtractor;
     }
 
     /**

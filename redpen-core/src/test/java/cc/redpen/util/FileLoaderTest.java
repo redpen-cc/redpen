@@ -21,7 +21,6 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Set;
@@ -36,8 +35,7 @@ public class FileLoaderTest {
         sampleWordSet += "Gifu\n";
 
         WordListExtractor ex = new WordListExtractor();
-        FileLoader fileLoader = new FileLoader(ex);
-        fileLoader.loadFile(new ByteArrayInputStream(sampleWordSet.getBytes(StandardCharsets.UTF_8)));
+        ex.loadFile(new ByteArrayInputStream(sampleWordSet.getBytes(StandardCharsets.UTF_8)));
         Set<String> result = ex.get();
         assertEquals(3, result.size());
     }
@@ -47,8 +45,7 @@ public class FileLoaderTest {
         String sampleWordSet = "";
 
         WordListExtractor ex = new WordListExtractor();
-        FileLoader fileLoader = new FileLoader(ex);
-        fileLoader.loadFile(new ByteArrayInputStream(sampleWordSet.getBytes(StandardCharsets.UTF_8)));
+        ex.loadFile(new ByteArrayInputStream(sampleWordSet.getBytes(StandardCharsets.UTF_8)));
         Set<String> result = ex.get();
         assertEquals(0, result.size());
     }
@@ -60,8 +57,7 @@ public class FileLoaderTest {
         sampleWordSet += "Gifu\t1200\n";
 
         KeyValueDictionaryExtractor ex = new KeyValueDictionaryExtractor();
-        FileLoader fileLoader = new FileLoader(ex);
-        fileLoader.loadFile(new ByteArrayInputStream(sampleWordSet.getBytes(StandardCharsets.UTF_8)));
+        ex.loadFile(new ByteArrayInputStream(sampleWordSet.getBytes(StandardCharsets.UTF_8)));
         Map<String, String> result = ex.get();
         assertEquals(3, result.size());
         assertEquals("100", result.get("Saitama"));
@@ -73,17 +69,8 @@ public class FileLoaderTest {
     public void testCreateVacantKeyValueList() throws IOException {
         String sampleWordSet = "";
         KeyValueDictionaryExtractor ex = new KeyValueDictionaryExtractor();
-        FileLoader fileLoader = new FileLoader(ex);
-        fileLoader.loadFile(new ByteArrayInputStream(sampleWordSet.getBytes(StandardCharsets.UTF_8)));
+        ex.loadFile(new ByteArrayInputStream(sampleWordSet.getBytes(StandardCharsets.UTF_8)));
         Map<String, String> result = ex.get();
         assertEquals(0, result.size());
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void testNullStream() throws IOException {
-        InputStream inputStream = null;
-        WordListExtractor ex = new WordListExtractor();
-        FileLoader fileLoader = new FileLoader(ex);
-        fileLoader.loadFile(inputStream);
     }
 }

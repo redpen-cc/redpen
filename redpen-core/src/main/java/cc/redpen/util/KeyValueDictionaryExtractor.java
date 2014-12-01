@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * An ResourceExtractor implementation for KeyValue input data.
  */
-public class KeyValueDictionaryExtractor implements ResourceExtractor<Map<String, String>> {
+public class KeyValueDictionaryExtractor extends ResourceExtractor<Map<String, String>> {
     private final Map<String, String> map;
 
     /**
