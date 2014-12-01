@@ -74,7 +74,7 @@ final public class StartWithCapitalLetterValidator extends Validator {
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/default-capital-case-exception-list.dat";
         try {
-            extractor.loadInternalResource(defaultDictionaryFile);
+            extractor.loadFromResource(defaultDictionaryFile);
         } catch (IOException e) {
             throw new RedPenException("Failed to load default dictionary.", e);
         }
@@ -84,7 +84,7 @@ final public class StartWithCapitalLetterValidator extends Validator {
         confFile.ifPresent(f -> {
             LOG.info("user dictionary file is " + f);
             try {
-                extractor.loadFile(new FileInputStream(f));
+                extractor.load(new FileInputStream(f));
             } catch (IOException e) {
                 LOG.error("Failed to load user dictionary.");
                 return;

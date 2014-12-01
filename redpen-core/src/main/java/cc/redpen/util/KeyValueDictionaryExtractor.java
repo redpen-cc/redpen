@@ -43,7 +43,7 @@ public class KeyValueDictionaryExtractor extends ResourceExtractor<Map<String, S
      * @return 0 when succeeded to load, 1 otherwise
      */
     @Override
-    public void load(String line) throws RedPenException {
+    protected void load(String line) throws RedPenException {
         String[] result = line.split("\t");
         if (result.length != 2) {
             throw new RedPenException("Invalid line: " +  line);

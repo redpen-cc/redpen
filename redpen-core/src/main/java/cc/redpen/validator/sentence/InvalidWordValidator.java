@@ -69,7 +69,7 @@ final public class InvalidWordValidator extends Validator {
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/invalid-word-" + lang + ".dat";
         try {
-            extractor.loadInternalResource(defaultDictionaryFile);
+            extractor.loadFromResource(defaultDictionaryFile);
         } catch (IOException e) {
             LOG.error(e.getMessage());
             LOG.error("Failed to load default dictionary.");
@@ -88,7 +88,7 @@ final public class InvalidWordValidator extends Validator {
         confFile.ifPresent(f -> {
             LOG.info("user dictionary file is " + f);
             try {
-                extractor.loadFile(new FileInputStream(f));
+                extractor.load(new FileInputStream(f));
             } catch (IOException e) {
                 LOG.error(e.getMessage());
                 LOG.error("Failed to load user dictionary.");

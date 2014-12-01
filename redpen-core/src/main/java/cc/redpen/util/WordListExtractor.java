@@ -42,10 +42,9 @@ public class WordListExtractor extends ResourceExtractor<Set<String>> {
      * Load word list file.
      *
      * @param line line in a file
-     * @return 0 when succeeded.
      */
     @Override
-    public void load(String line) throws RedPenException {
+    protected void load(String line) throws RedPenException {
         if (this.toLowerCase) {
             line = line.toLowerCase();
         }

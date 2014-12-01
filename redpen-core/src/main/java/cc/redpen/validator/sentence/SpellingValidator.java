@@ -33,7 +33,7 @@ public class SpellingValidator extends Validator {
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/spellchecker-" + lang + ".dat";
         try {
-            extractor.loadInternalResource(defaultDictionaryFile);
+            extractor.loadFromResource(defaultDictionaryFile);
         } catch (IOException e) {
             LOG.error(e.getMessage());
             LOG.info("Failed to load default dictionary.");
@@ -52,7 +52,7 @@ public class SpellingValidator extends Validator {
         userDictionaryFile.ifPresent(f -> {
             LOG.info("user dictionary file is " + f);
             try {
-                extractor.loadFile(new FileInputStream(f));
+                extractor.load(new FileInputStream(f));
             } catch (IOException e) {
                 LOG.error("Failed to load user dictionary.");
                 return;

@@ -124,7 +124,7 @@ final public class KatakanaSpellCheckValidator extends Validator {
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/katakana-spellcheck.dat";
         try {
-            extractor.loadInternalResource(defaultDictionaryFile);
+            extractor.loadFromResource(defaultDictionaryFile);
             LOG.info("Succeeded to load default dictionary.");
         } catch (IOException e) {
             throw new RedPenException("Failed to load default dictionary.", e);
@@ -134,7 +134,7 @@ final public class KatakanaSpellCheckValidator extends Validator {
         confFile.ifPresent(e -> {
             LOG.info("User dictionary file is " + e);
             try {
-                extractor.loadFile(new FileInputStream(e));
+                extractor.load(new FileInputStream(e));
             } catch (IOException e1) {
                 LOG.error("Failed to load user dictionary");
             }

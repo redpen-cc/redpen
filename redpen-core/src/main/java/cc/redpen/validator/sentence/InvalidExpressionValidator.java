@@ -64,7 +64,7 @@ final public class InvalidExpressionValidator extends Validator {
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/invalid-expression-" + lang + ".dat";
         try {
-            extractor.loadInternalResource(defaultDictionaryFile);
+            extractor.loadFromResource(defaultDictionaryFile);
         } catch (IOException e) {
             LOG.error("Failed to load default dictionary.");
             LOG.error("InvalidExpressionValidator does not support dictionary for "
@@ -84,7 +84,7 @@ final public class InvalidExpressionValidator extends Validator {
         confFile.ifPresent(f -> {
             LOG.info("user dictionary file is " + f);
             try {
-                extractor.loadFile(new FileInputStream(f));
+                extractor.load(new FileInputStream(f));
             } catch (IOException e) {
                 LOG.error("Failed to load user dictionary.");
                 return;
