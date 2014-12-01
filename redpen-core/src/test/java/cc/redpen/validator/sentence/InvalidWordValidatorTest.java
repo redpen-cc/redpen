@@ -5,7 +5,6 @@ import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
-import cc.redpen.model.DocumentCollection;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
@@ -22,37 +21,37 @@ public class InvalidWordValidatorTest {
 
     @Test
     public void testSimpleRun() {
-        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+        List<Document> documents = new ArrayList<>();documents.add(
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(
                                 "He is a foolish guy.",
                                 1)
-                        .build()).build();
+                        .build());
 
         InvalidWordValidator validator = new InvalidWordValidator();
         validator.addInvalid("foolish");
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0));
+        validator.validate(errors, documents.get(0).getLastSection().getParagraph(0).getSentence(0));
         assertEquals(1, errors.size());
     }
 
     @Test
     public void testVoid() {
-        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+        List<Document> documents = new ArrayList<>();documents.add(
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(
                                 "",
                                 1)
-                        .build()).build();
+                        .build());
 
         InvalidWordValidator validator = new InvalidWordValidator();
         validator.addInvalid("foolish");
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, documents.getDocument(0).getLastSection().getParagraph(0).getSentence(0));
+        validator.validate(errors, documents.get(0).getLastSection().getParagraph(0).getSentence(0));
         assertEquals(0, errors.size());
     }
 
@@ -62,17 +61,17 @@ public class InvalidWordValidatorTest {
                 .addValidatorConfig(new ValidatorConfiguration("InvalidWord"))
                 .setLanguage("en").build();
 
-        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+        List<Document> documents = new ArrayList<>();documents.add(
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("he is a foolish man.", 1)
-                        .build()).build();
+                        .build());
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(1, errors.get(documents.getDocument(0)).size());
-        assertTrue(errors.get(documents.getDocument(0)).get(0).getMessage().contains("foolish"));
+        Assert.assertEquals(1, errors.get(documents.get(0)).size());
+        assertTrue(errors.get(documents.get(0)).get(0).getMessage().contains("foolish"));
     }
 
 
@@ -82,16 +81,16 @@ public class InvalidWordValidatorTest {
                 .addValidatorConfig(new ValidatorConfiguration("InvalidWord").addAttribute("list", "boom,domo"))
                 .setLanguage("en").build();
 
-        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+        List<Document> documents = new ArrayList<>();documents.add(
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("Domo is a greeting word in Japan.", 1)
-                        .build()).build();
+                        .build());
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(1, errors.get(documents.getDocument(0)).size());
+        Assert.assertEquals(1, errors.get(documents.get(0)).size());
     }
 
     /**
@@ -103,15 +102,15 @@ public class InvalidWordValidatorTest {
                 .addValidatorConfig(new ValidatorConfiguration("InvalidWord"))
                 .setLanguage("ja").build(); // NOTE: no dictionary for japanese or other languages whose words are not split by white space.
 
-        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+        List<Document> documents = new ArrayList<>();documents.add(
                 new Document.DocumentBuilder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence("こんにちは、群馬にきました。", 1)
-                        .build()).build();
+                        .build());
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.getDocument(0)).size());
+        Assert.assertEquals(0, errors.get(documents.get(0)).size());
     }
 }

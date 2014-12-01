@@ -22,11 +22,11 @@ import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
-import cc.redpen.model.DocumentCollection;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -37,18 +37,19 @@ public class ContractionValidatorTest {
                 .addValidatorConfig(new ValidatorConfiguration("Contraction"))
                 .setLanguage("en").build();
 
-        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+        List<Document> documents = new ArrayList<>();
+        documents.add(
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("he is a super man.", 1)
                         .addSentence("he is not a bat man.", 2)
                         .addSentence("he's also a business man.", 3)
-                        .build()).build();
+                        .build());
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(1, errors.get(documents.getDocument(0)).size());
+        Assert.assertEquals(1, errors.get(documents.get(0)).size());
     }
 
     @Test
@@ -57,18 +58,19 @@ public class ContractionValidatorTest {
                 .addValidatorConfig(new ValidatorConfiguration("Contraction"))
                 .setLanguage("en").build();
 
-        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+        List<Document> documents = new ArrayList<>();
+        documents.add(
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("he is a super man.", 1)
                         .addSentence("he is not a bat man.", 2)
                         .addSentence("he is a business man.", 3)
-                        .build()).build();
+                        .build());
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.getDocument(0)).size());
+        Assert.assertEquals(0, errors.get(documents.get(0)).size());
     }
 
     @Test
@@ -77,18 +79,19 @@ public class ContractionValidatorTest {
                 .addValidatorConfig(new ValidatorConfiguration("Contraction"))
                 .setLanguage("en").build();
 
-        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+        List<Document> documents = new ArrayList<>();
+        documents.add(
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("He is a super man.", 1)
                         .addSentence("He is not a bat man.", 2)
                         .addSentence("He's also a business man.", 3)
-                        .build()).build();
+                        .build());
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(1, errors.get(documents.getDocument(0)).size());
+        Assert.assertEquals(1, errors.get(documents.get(0)).size());
     }
 
     /**
@@ -100,17 +103,18 @@ public class ContractionValidatorTest {
                 .addValidatorConfig(new ValidatorConfiguration("Contraction"))
                 .setLanguage("en").build();
 
-        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+        List<Document> documents = new ArrayList<>();
+        documents.add(
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("he's a super man.", 1)
                         .addSentence("he's not a bat man.", 2)
                         .addSentence("he is a business man.", 3)
-                        .build()).build();
+                        .build());
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.getDocument(0)).size());
+        Assert.assertEquals(0, errors.get(documents.get(0)).size());
     }
 }

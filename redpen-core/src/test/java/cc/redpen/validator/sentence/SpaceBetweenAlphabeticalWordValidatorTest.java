@@ -5,7 +5,6 @@ import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
-import cc.redpen.model.DocumentCollection;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
@@ -65,16 +64,16 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
                 .setLanguage("ja").build();
 
-        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+        List<Document> documents = new ArrayList<>();documents.add(
                 new Document.DocumentBuilder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence("きょうは（Coke）を飲みたい。", 1)
-                        .build()).build();
+                        .build());
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.getDocument(0)).size());
+        Assert.assertEquals(0, errors.get(documents.get(0)).size());
     }
 
     @Test
@@ -83,15 +82,15 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
                 .setLanguage("ja").build();
 
-        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+        List<Document> documents = new ArrayList<>();documents.add(
                 new Document.DocumentBuilder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence("きょうは、Coke を飲みたい。", 1)
-                        .build()).build();
+                        .build());
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.getDocument(0)).size());
+        Assert.assertEquals(0, errors.get(documents.get(0)).size());
     }
 }

@@ -22,12 +22,12 @@ import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
-import cc.redpen.model.DocumentCollection;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,16 +38,16 @@ public class DoubledWordValidatorTest {
                 .addValidatorConfig(new ValidatorConfiguration("DoubledWord"))
                 .setLanguage("en").build();
 
-        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+        List<Document> documents = new ArrayList<>();documents.add(
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("the good item is a good example.", 1)
-                        .build()).build();
+                        .build());
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(1, errors.get(documents.getDocument(0)).size());
+        Assert.assertEquals(1, errors.get(documents.get(0)).size());
     }
 
     @Test
@@ -56,16 +56,16 @@ public class DoubledWordValidatorTest {
                 .addValidatorConfig(new ValidatorConfiguration("DoubledWord"))
                 .setLanguage("en").build();
 
-        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+        List<Document> documents = new ArrayList<>();documents.add(
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("That is true, as far as I know.", 1)
-                        .build()).build();
+                        .build());
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.getDocument(0)).size());
+        Assert.assertEquals(0, errors.get(documents.get(0)).size());
     }
 
     @Test
@@ -75,16 +75,16 @@ public class DoubledWordValidatorTest {
                         .addAttribute("list", "redpen,tool"))
                 .setLanguage("en").build();
 
-        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+        List<Document> documents = new ArrayList<>();documents.add(
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("RedPen is RedPen right?", 1)
-                        .build()).build();
+                        .build());
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.getDocument(0)).size());
+        Assert.assertEquals(0, errors.get(documents.get(0)).size());
     }
 
     @Test
@@ -94,16 +94,16 @@ public class DoubledWordValidatorTest {
                         .addAttribute("list", "RedPen,Tool"))
                 .setLanguage("en").build();
 
-        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+        List<Document> documents = new ArrayList<>();documents.add(
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence("redPen is redPen right?", 1)
-                        .build()).build();
+                        .build());
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.getDocument(0)).size());
+        Assert.assertEquals(0, errors.get(documents.get(0)).size());
     }
 
     @Test
@@ -112,15 +112,15 @@ public class DoubledWordValidatorTest {
                 .addValidatorConfig(new ValidatorConfiguration("DoubledWord"))
                 .setLanguage("ja").build();
 
-        DocumentCollection documents = new DocumentCollection.Builder().addDocument(
+        List<Document> documents = new ArrayList<>();documents.add(
                 new Document.DocumentBuilder(new JapaneseTokenizer())
-                                .addSection(1)
-                                .addParagraph()
-                                .addSentence("それは真実であり，それが正しい", 1)
-                                .build()).build();
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("それは真実であり，それが正しい", 1)
+                        .build());
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(1, errors.get(documents.getDocument(0)).size());
+        Assert.assertEquals(1, errors.get(documents.get(0)).size());
     }
 }

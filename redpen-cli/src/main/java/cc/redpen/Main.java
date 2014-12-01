@@ -21,7 +21,6 @@ import cc.redpen.distributor.ResultDistributor;
 import cc.redpen.distributor.ResultDistributorFactory;
 import cc.redpen.formatter.Formatter;
 import cc.redpen.model.Document;
-import cc.redpen.model.DocumentCollection;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.validator.ValidationError;
 import org.apache.commons.cli.*;
@@ -138,7 +137,7 @@ public final class Main {
         ResultDistributor distributor = ResultDistributorFactory.createDistributor(outputFormat, System.out);
 
         RedPen redPen = new RedPen(new File(configFileName));
-        DocumentCollection documents = redPen.parse(parser, inputFiles);
+        List<Document> documents = redPen.parse(parser, inputFiles);
         if (documents == null) {
             LOG.error("Failed to create a DocumentCollection object");
             return -1;
