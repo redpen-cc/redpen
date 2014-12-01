@@ -6,7 +6,7 @@ RedPen
 =======
 
 <p align="center">
-   <img src="logo/redpen-logo.png"/>
+   <a href="http://redpen.cc"><img src="logo/redpen-logo.png"/></a>
 </p>
 
 A document inspection tool.
