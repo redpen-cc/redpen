@@ -5,6 +5,10 @@
 RedPen
 =======
 
+<p align="center">
+   <img src="logo/redpen-logo.png"/>
+</p>
+
 A document inspection tool.
 
 See the detail usage in the RedPen [home page](http://redpen.cc/).
