@@ -135,8 +135,7 @@ public final class Main {
         DocumentParser parser = DocumentParser.of(inputFormat);
         outputFormat = Formatter.Type.valueOf(resultFormat.toUpperCase());
 
-        ResultDistributor distributor =
-            ResultDistributorFactory.createDistributor(outputFormat, System.out);
+        ResultDistributor distributor = ResultDistributorFactory.createDistributor(outputFormat, System.out);
 
         RedPen redPen = new RedPen(new File(configFileName));
         DocumentCollection documents = redPen.parse(parser, inputFiles);
@@ -146,10 +145,11 @@ public final class Main {
         }
         Map<Document, List<ValidationError>> documentListMap = redPen.validate(documents);
         distributor.distribute(documentListMap);
-        List<ValidationError> errors = documentListMap.get(documents.getDocument(0));
 
-        if (errors.size() > limit) {
-            LOG.error("The number of errors \"{}\" is larger than specified (limit is \"{}\").", errors.size(), limit);
+        long errorCount = documentListMap.values().stream().map(List::size).count();
+
+        if (errorCount > limit) {
+            LOG.error("The number of errors \"{}\" is larger than specified (limit is \"{}\").", errorCount, limit);
             return 1;
         } else {
             return 0;
