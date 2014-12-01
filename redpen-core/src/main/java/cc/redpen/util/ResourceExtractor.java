@@ -21,7 +21,10 @@ import cc.redpen.RedPenException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -46,17 +49,6 @@ public abstract class ResourceExtractor<E> {
     abstract E get();
 
     /**
-     * Load input file.
-     *
-     * @param fileName input file name.
-     */
-    public void loadFile(String fileName) throws IOException {
-        try (InputStream inputStream = new FileInputStream(fileName)) {
-            loadFile(inputStream);
-        }
-    }
-
-    /**
      * Given a input stream, load the contents.
      *
      * @param inputStream input stream
@@ -74,5 +66,22 @@ public abstract class ResourceExtractor<E> {
                 }
             }
         }
+
     }
+    /**
+     * Load a given input file combined with jar package.
+     *
+     * @param inputFile a file included in the jar file
+     */
+    public void loadInternalResource(String inputFile) throws IOException {
+        try (InputStream inputStream = getClass()
+                .getClassLoader()
+                .getResourceAsStream(inputFile)) {
+            if (inputStream == null) {
+                throw new IOException("Failed to load input " + inputFile);
+            }
+            loadFile(inputStream);
+        }
+    }
+
 }

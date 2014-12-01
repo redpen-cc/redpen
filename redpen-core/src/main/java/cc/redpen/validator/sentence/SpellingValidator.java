@@ -3,13 +3,13 @@ package cc.redpen.validator.sentence;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.util.ResourceLoader;
 import cc.redpen.util.WordListExtractor;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -27,14 +27,13 @@ public class SpellingValidator extends Validator {
         String lang = getSymbolTable().getLang();
         WordListExtractor extractor = new WordListExtractor();
         extractor.setToLowerCase();
-        ResourceLoader loader = new ResourceLoader(extractor);
 
         LOG.info("Loading default invalid expression dictionary for " +
                 "\"" + lang + "\".");
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/spellchecker-" + lang + ".dat";
         try {
-            loader.loadInternalResource(defaultDictionaryFile);
+            extractor.loadInternalResource(defaultDictionaryFile);
         } catch (IOException e) {
             LOG.error(e.getMessage());
             LOG.info("Failed to load default dictionary.");
@@ -53,7 +52,7 @@ public class SpellingValidator extends Validator {
         userDictionaryFile.ifPresent(f -> {
             LOG.info("user dictionary file is " + f);
             try {
-                loader.loadExternalFile(f);
+                extractor.loadFile(new FileInputStream(f));
             } catch (IOException e) {
                 LOG.error("Failed to load user dictionary.");
                 return;
