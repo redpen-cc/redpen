@@ -30,11 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -62,9 +58,9 @@ public class RedPenResource {
                 if (langRedPenMap.size() == 0) {
                     LOG.info("Starting Document Validator Server.");
                     try {
-                        RedPen japaneseRedPen = new RedPen.RedPenBuilder().setConfigResourcePath("/conf/redpen-conf-ja.xml").build();
+                        RedPen japaneseRedPen = new RedPen("/conf/redpen-conf-ja.xml");
                         langRedPenMap.put("ja", japaneseRedPen);
-                        RedPen englishRedPen = new RedPen.RedPenBuilder().setConfigResourcePath(DEFAULT_INTERNAL_CONFIG_PATH).build();
+                        RedPen englishRedPen = new RedPen(DEFAULT_INTERNAL_CONFIG_PATH);
                         langRedPenMap.put("en", englishRedPen);
                         langRedPenMap.put("", englishRedPen);
 
@@ -73,7 +69,7 @@ public class RedPenResource {
                             configPath = context.getInitParameter("redpen.conf.path");
                             if (configPath != null) {
                                 LOG.info("Config Path is set to \"{}\"", configPath);
-                                RedPen defaultRedPen = new RedPen.RedPenBuilder().setConfigResourcePath(configPath).build();
+                                RedPen defaultRedPen = new RedPen(configPath);
                                 langRedPenMap.put("", defaultRedPen);
                             } else {
                                 // if config path is not set, fallback to default config path

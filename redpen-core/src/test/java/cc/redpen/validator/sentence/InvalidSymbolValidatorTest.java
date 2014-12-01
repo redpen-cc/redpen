@@ -22,7 +22,6 @@ import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.Symbol;
 import cc.redpen.config.ValidatorConfiguration;
-import cc.redpen.distributor.FakeResultDistributor;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.tokenizer.JapaneseTokenizer;
@@ -52,11 +51,7 @@ public class InvalidSymbolValidatorTest {
                 .setSymbol(new Symbol(EXCLAMATION_MARK, '!', "！"))
                 .build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(conf)
-                .setResultDistributor(new FakeResultDistributor())
-                .build();
-
+        RedPen redPen = new RedPen(conf);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(1, errors.get(documents.getDocument(0)).size());
     }
@@ -76,11 +71,7 @@ public class InvalidSymbolValidatorTest {
                 .setSymbol(new Symbol(EXCLAMATION_MARK, '!', "！"))
                 .build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(conf)
-                .setResultDistributor(new FakeResultDistributor())
-                .build();
-
+        RedPen redPen = new RedPen(conf);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(0, errors.get(documents.getDocument(0)).size());
     }
@@ -102,11 +93,7 @@ public class InvalidSymbolValidatorTest {
                 .setSymbol(new Symbol(COMMA, ',', "、"))
                 .build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(conf)
-                .setResultDistributor(new FakeResultDistributor())
-                .build();
-
+        RedPen redPen = new RedPen(conf);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(2, errors.get(documents.getDocument(0)).size());
     }

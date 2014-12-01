@@ -17,21 +17,16 @@
  */
 package cc.redpen.formatter;
 
-import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
 import cc.redpen.validator.ValidationError;
-
-import java.util.Optional;
 
 /**
  * Format input error into a string message.
  */
-public class PlainFormatter implements Formatter {
-    private static final Optional<String> HEADER = Optional.empty();
-    private static final Optional<String> FOOTER = Optional.empty();
+public final class PlainFormatter implements Formatter {
 
     @Override
-    public String convertError(Document document, ValidationError error) throws RedPenException {
+    public String format(Document document, ValidationError error) {
         StringBuilder str = new StringBuilder();
 
         str.append("ValidationError[");
@@ -43,15 +38,4 @@ public class PlainFormatter implements Formatter {
         str.append(" at line: ").append(error.getSentence().content);
         return str.toString();
     }
-
-    @Override
-    public Optional<String> header() {
-        return HEADER;
-    }
-
-    @Override
-    public Optional<String> footer() {
-        return FOOTER;
-    }
-
 }

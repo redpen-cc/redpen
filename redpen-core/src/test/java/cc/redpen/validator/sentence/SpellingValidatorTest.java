@@ -4,7 +4,6 @@ import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
-import cc.redpen.distributor.FakeResultDistributor;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.validator.ValidationError;
@@ -49,11 +48,7 @@ public class SpellingValidatorTest {
                         .addSentence("this iz goody", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(config)
-                .setResultDistributor(new FakeResultDistributor())
-                .build();
-
+        RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         assertEquals(1, errors.get(documents.getDocument(0)).size());
     }
@@ -71,11 +66,7 @@ public class SpellingValidatorTest {
                         .addSentence("This iz goody", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(config)
-                .setResultDistributor(new FakeResultDistributor())
-                .build();
-
+        RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         assertEquals(1, errors.get(documents.getDocument(0)).size());
     }
@@ -94,11 +85,7 @@ public class SpellingValidatorTest {
                         .addSentence("That is true, but there is a condition", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(config)
-                .setResultDistributor(new FakeResultDistributor())
-                .build();
-
+        RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         assertEquals(0, errors.get(documents.getDocument(0)).size());
     }
@@ -116,11 +103,7 @@ public class SpellingValidatorTest {
                         .addSentence("Abeshi is a word used in a comic.", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(config)
-                .setResultDistributor(new FakeResultDistributor())
-                .build();
-
+        RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         assertEquals(0, errors.get(documents.getDocument(0)).size());
     }
@@ -138,11 +121,7 @@ public class SpellingValidatorTest {
                         .addSentence("That is true.", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(config)
-                .setResultDistributor(new FakeResultDistributor())
-                .build();
-
+        RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         assertEquals(0, errors.get(documents.getDocument(0)).size());
     }
@@ -160,11 +139,7 @@ public class SpellingValidatorTest {
                         .addSentence("", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(config)
-                .setResultDistributor(new FakeResultDistributor())
-                .build();
-
+        RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         assertEquals(0, errors.get(documents.getDocument(0)).size());
     }

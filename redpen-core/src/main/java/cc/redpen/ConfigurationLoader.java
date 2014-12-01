@@ -34,6 +34,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 import static cc.redpen.config.Configuration.ConfigurationBuilder;
 
@@ -45,12 +46,12 @@ public final class ConfigurationLoader {
             LoggerFactory.getLogger(ConfigurationLoader.class);
     private ConfigurationBuilder configBuilder = new ConfigurationBuilder();
 
-    private static Symbol createSymbol(Element element) throws RedPenException{
+    private static Symbol createSymbol(Element element) throws RedPenException {
         if (!element.hasAttribute("name") || !element.hasAttribute("value")) {
             throw new IllegalStateException("Found element does not have name and value attribute...");
         }
         String value = element.getAttribute("value");
-        if(value.length() != 1){
+        if (value.length() != 1) {
             throw new RedPenException("value sould be one character, specified: " + value);
         }
         char charValue = value.charAt(0);
@@ -117,11 +118,7 @@ public final class ConfigurationLoader {
      * @throws cc.redpen.RedPenException
      */
     public Configuration loadFromString(String configString) throws RedPenException {
-        try {
-            return load(new ByteArrayInputStream(configString.getBytes("UTF-8")));
-        } catch (UnsupportedEncodingException e) {
-            throw new RedPenException(e);
-        }
+        return load(new ByteArrayInputStream(configString.getBytes(StandardCharsets.UTF_8)));
     }
 
     /**

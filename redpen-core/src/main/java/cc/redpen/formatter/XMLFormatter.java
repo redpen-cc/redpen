@@ -42,6 +42,7 @@ public class XMLFormatter implements Formatter {
     private static final Logger LOG =
             LoggerFactory.getLogger(XMLFormatter.class);
     private DocumentBuilder db;
+    private final Transformer transformer;
 
     /**
      * Constructor.
@@ -49,15 +50,22 @@ public class XMLFormatter implements Formatter {
     public XMLFormatter() {
         super();
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+
         try {
             this.db = dbf.newDocumentBuilder();
+            TransformerFactory tf = TransformerFactory.newInstance();
+            this.transformer = tf.newTransformer();
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
         } catch (ParserConfigurationException e) {
+            throw new RuntimeException(e);
+        } catch (TransformerConfigurationException e) {
+            LOG.error("Failed to create Transformer object");
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public String convertError(cc.redpen.model.Document document, ValidationError error) throws RedPenException {
+    public String format(cc.redpen.model.Document document, ValidationError error) throws RedPenException {
         // create dom
         Document doc = db.newDocument();
         Element errorElement = doc.createElement("error");
@@ -89,9 +97,6 @@ public class XMLFormatter implements Formatter {
         errorElement.appendChild(sentenceElement);
         sentenceElement.appendChild(doc.createTextNode(error.getSentence().content));
 
-        // create a transformer
-        Transformer transformer = createTransformer();
-
         // convert the result dom into a string
         StringWriter writer = new StringWriter();
         StreamResult result = new StreamResult(writer);
@@ -104,28 +109,13 @@ public class XMLFormatter implements Formatter {
         return writer.toString();
     }
 
-    private Transformer createTransformer() {
-        TransformerFactory tf;
-        tf = TransformerFactory.newInstance();
-
-        Transformer transformer;
-        try {
-            transformer = tf.newTransformer();
-        } catch (TransformerConfigurationException e) {
-            LOG.error("Failed to create Transformer object");
-            throw new RuntimeException(e);
-        }
-        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-        return transformer;
-    }
-
     @Override
     public Optional<String> header() {
-        return Optional.ofNullable("<validation-result>");
+        return Optional.of("<validation-result>");
     }
 
     @Override
     public Optional<String> footer() {
-        return Optional.ofNullable("</validation-result>");
+        return Optional.of("</validation-result>");
     }
 }

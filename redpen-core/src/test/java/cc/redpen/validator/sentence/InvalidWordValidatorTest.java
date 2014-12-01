@@ -4,7 +4,6 @@ import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
-import cc.redpen.distributor.FakeResultDistributor;
 import cc.redpen.model.Document;
 import cc.redpen.model.DocumentCollection;
 import cc.redpen.tokenizer.JapaneseTokenizer;
@@ -70,11 +69,7 @@ public class InvalidWordValidatorTest {
                         .addSentence("he is a foolish man.", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(config)
-                .setResultDistributor(new FakeResultDistributor())
-                .build();
-
+        RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(1, errors.get(documents.getDocument(0)).size());
         assertTrue(errors.get(documents.getDocument(0)).get(0).getMessage().contains("foolish"));
@@ -94,11 +89,7 @@ public class InvalidWordValidatorTest {
                         .addSentence("Domo is a greeting word in Japan.", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(config)
-                .setResultDistributor(new FakeResultDistributor())
-                .build();
-
+        RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(1, errors.get(documents.getDocument(0)).size());
     }
@@ -119,11 +110,7 @@ public class InvalidWordValidatorTest {
                         .addSentence("こんにちは、群馬にきました。", 1)
                         .build()).build();
 
-        RedPen redPen = new RedPen.RedPenBuilder()
-                .setConfiguration(config)
-                .setResultDistributor(new FakeResultDistributor())
-                .build();
-
+        RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(0, errors.get(documents.getDocument(0)).size());
     }

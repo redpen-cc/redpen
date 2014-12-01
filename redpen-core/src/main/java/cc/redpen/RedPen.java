@@ -19,8 +19,6 @@ package cc.redpen;
 
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
-import cc.redpen.distributor.DefaultResultDistributor;
-import cc.redpen.distributor.ResultDistributor;
 import cc.redpen.model.*;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.SentenceExtractor;
@@ -32,7 +30,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,13 +42,34 @@ public class RedPen {
     private static final Logger LOG = LoggerFactory.getLogger(RedPen.class);
 
     private final List<Validator> validators = new ArrayList<>();
-    private final ResultDistributor distributor;
     private final Configuration configuration;
     private final SentenceExtractor sentenceExtractor;
 
-    private RedPen(Configuration configuration, ResultDistributor distributor) throws RedPenException {
+    /**
+     * constructs RedPen with specified config file
+     * @param configFile config file
+     * @throws RedPenException
+     */
+    public RedPen(File configFile) throws RedPenException {
+        this(new ConfigurationLoader().load(configFile));
+    }
+
+    /**
+     * constructs RedPen with specified config file path
+     * @param configPath config file path
+     * @throws RedPenException
+     */
+    public RedPen(String configPath) throws RedPenException {
+        this(new ConfigurationLoader().loadFromResource(configPath));
+    }
+
+    /**
+     * constructs RedPen with specified configuration
+     * @param configuration configuration
+     * @throws RedPenException
+     */
+    public RedPen(Configuration configuration) throws RedPenException {
         this.configuration = configuration;
-        this.distributor = distributor;
         this.sentenceExtractor = new SentenceExtractor(this.configuration.getSymbolTable());
 
         // load validators
@@ -110,13 +128,11 @@ public class RedPen {
      * @return list of validation errors
      */
     public Map<Document, List<ValidationError>> validate(DocumentCollection documentCollection) {
-        distributor.flushHeader();
         Map<Document, List<ValidationError>> docErrorsMap = new HashMap<>();
         documentCollection.forEach(e -> docErrorsMap.put(e, new ArrayList<>()));
         runDocumentValidators(documentCollection, docErrorsMap);
         runSectionValidators(documentCollection, docErrorsMap);
         runSentenceValidators(documentCollection, docErrorsMap);
-        distributor.flushFooter();
         return docErrorsMap;
     }
 
@@ -138,9 +154,6 @@ public class RedPen {
         for (Document document : documentCollection) {
             List<ValidationError> errors = new ArrayList<>();
             validators.forEach(e -> e.validate(errors, document));
-            for (ValidationError error : errors) {
-                flushError(document, error);
-            }
             docErrorsMap.put(document, errors);
         }
     }
@@ -152,10 +165,6 @@ public class RedPen {
             for (Section section : document) {
                 List<ValidationError> newErrors = new ArrayList<>();
                 validators.forEach(e -> e.validate(newErrors, section));
-
-                for (ValidationError error : newErrors) {
-                    flushError(document, error);
-                }
                 List<ValidationError> validationErrors = docErrorsMap.get(document);
                 validationErrors.addAll(newErrors);
             }
@@ -202,24 +211,8 @@ public class RedPen {
                         validators.forEach(e -> listElement.getSentences().forEach(sentence -> e.validate(newErrors, sentence)));
                     }
                 }
-                for (ValidationError error : newErrors) {
-                    flushError(document, error);
-                }
-
                 docErrorsMap.get(document).addAll(newErrors);
             }
-        }
-    }
-
-    private void flushError(Document document, ValidationError error) {
-        /**
-         * When the flush of input error is failed, the output process continues skipping the failed error.
-         */
-        try {
-            distributor.flushError(document, error);
-        } catch (RedPenException e) {
-            LOG.error("Failed to flush error: " + error.toString());
-            LOG.error("Skipping to flush this error...");
         }
     }
 
@@ -232,7 +225,6 @@ public class RedPen {
 
         if (configuration != null ? !configuration.equals(redPen.configuration) : redPen.configuration != null)
             return false;
-        if (distributor != null ? !distributor.equals(redPen.distributor) : redPen.distributor != null) return false;
         if (validators != null ? !validators.equals(redPen.validators) : redPen.validators != null)
             return false;
         if (sentenceExtractor != null ? !sentenceExtractor.equals(redPen.sentenceExtractor) : redPen.sentenceExtractor != null)
@@ -244,7 +236,6 @@ public class RedPen {
     @Override
     public int hashCode() {
         int result = validators != null ? validators.hashCode() : 0;
-        result = 31 * result + (distributor != null ? distributor.hashCode() : 0);
         result = 31 * result + (configuration != null ? configuration.hashCode() : 0);
         result = 31 * result + (sentenceExtractor != null ? sentenceExtractor.hashCode() : 0);
         return result;
@@ -254,50 +245,8 @@ public class RedPen {
     public String toString() {
         return "RedPen{" +
                 "validators=" + validators +
-                ", distributor=" + distributor +
                 ", configuration=" + configuration +
                 ", sentenceExtractor=" + sentenceExtractor +
                 '}';
-    }
-
-    /**
-     * Builder for {@link cc.redpen.RedPen}.
-     */
-    public static class RedPenBuilder {
-
-        private Configuration configuration;
-
-        private ResultDistributor distributor = new DefaultResultDistributor(
-                new PrintStream(System.out)
-        );
-
-        public RedPenBuilder setConfiguration(Configuration configuration) {
-            this.configuration = configuration;
-            return this;
-        }
-
-        public RedPenBuilder setConfigFile(File configFile) throws RedPenException {
-            ConfigurationLoader configLoader = new ConfigurationLoader();
-            configuration = configLoader.load(configFile);
-            return this;
-        }
-
-        public RedPenBuilder setConfigResourcePath(String configPath) throws RedPenException {
-            ConfigurationLoader configLoader = new ConfigurationLoader();
-            configuration = configLoader.loadFromResource(configPath);
-            return this;
-        }
-
-        public RedPenBuilder setResultDistributor(ResultDistributor distributor) {
-            this.distributor = distributor;
-            return this;
-        }
-
-        public RedPen build() throws RedPenException {
-            if (configuration == null) {
-                throw new IllegalStateException("Configuration not set.");
-            }
-            return new RedPen(configuration, distributor);
-        }
     }
 }

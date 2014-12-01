@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 /**
@@ -37,11 +38,7 @@ public abstract class BaseDocumentParser implements DocumentParser {
 
     @Override
     public Document parse(String content, SentenceExtractor sentenceExtractor, RedPenTokenizer tokenizer) throws RedPenException {
-        try {
-            return parse(new ByteArrayInputStream(content.getBytes("UTF-8")), sentenceExtractor, tokenizer);
-        } catch (UnsupportedEncodingException shouldNeverHappen) {
-            throw new RuntimeException(shouldNeverHappen);
-        }
+        return parse(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)), sentenceExtractor, tokenizer);
     }
 
     @Override
@@ -61,19 +58,8 @@ public abstract class BaseDocumentParser implements DocumentParser {
      * @throws cc.redpen.RedPenException if InputStream is not
      *                                   supported UTF-8 encoding
      */
-    protected BufferedReader createReader(InputStream is)
-            throws RedPenException {
-        if (is == null) {
-            throw new RedPenException("input stream is null");
-        }
-        BufferedReader br;
-        try {
-            br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            throw new RedPenException(
-                    "does not support UTF-8 encoding", e);
-        }
-        return br;
+    protected BufferedReader createReader(InputStream is) {
+        return new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
     }
 
 }

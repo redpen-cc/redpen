@@ -35,21 +35,25 @@ public interface Formatter {
      * @param error object containing file and line number information.
      * @return error message
      */
-    String convertError(Document document, ValidationError error) throws RedPenException;
+    String format(Document document, ValidationError error) throws RedPenException;
 
     /**
-     * Return the header block of semi-structured format.
+     * Return the header block of semi-structured format. Returns empty by default.
      *
      * @return header block
      */
-    Optional<String> header();
+    default Optional<String> header(){
+        return Optional.empty();
+    }
 
     /**
-     * Return the footer block of semi-structured format.
+     * Return the footer block of semi-structured format. Returns empty by default.
      *
      * @return footer block
      */
-    Optional<String> footer();
+    default Optional<String> footer(){
+        return Optional.empty();
+    }
 
     /**
      * the type of formatter using ResultDistributorFactory.
