@@ -26,9 +26,8 @@ import cc.redpen.validator.ValidationError;
 public final class PlainFormatter extends Formatter {
 
     @Override
-    protected String writeError(Document document, ValidationError error) {
+    protected String writeError(Document document, ValidationError error, boolean isLast) {
         StringBuilder str = new StringBuilder();
-
         str.append("ValidationError[");
         str.append(error.getValidatorName());
         str.append("][");
@@ -36,6 +35,7 @@ public final class PlainFormatter extends Formatter {
         str.append(error.getLineNumber()).append(" (")
                 .append(error.getMessage()).append(")]");
         str.append(" at line: ").append(error.getSentence().content);
+        str.append("\n");
         return str.toString();
     }
 }

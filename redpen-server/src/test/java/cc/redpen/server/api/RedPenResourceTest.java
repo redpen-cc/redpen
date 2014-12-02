@@ -58,6 +58,7 @@ public class RedPenResourceTest extends MockServletInvocationTest {
         MockHttpServletResponse response = invoke(request);
 
         assertEquals("HTTP status", HttpStatus.OK.getCode(), response.getStatus());
+        System.out.println(response.getContentAsString());
         JSONArray errors = (JSONArray) new JSONObject(response.getContentAsString()).get("errors");
         assertEquals(2, errors.length());
         assertTrue(errors.get(0).toString().length() > 0);

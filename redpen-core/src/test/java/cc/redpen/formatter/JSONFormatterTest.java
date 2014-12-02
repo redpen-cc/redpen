@@ -22,38 +22,34 @@ import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
-public class FormatterTest extends Validator {
-    @Test
-    public void testDistributeWithPlainFormatter() throws RedPenException {
-        PlainFormatter formatter = new PlainFormatter();
-        Map<Document, List<ValidationError>> docErrorsMap = new HashMap<>();
-        String result = formatter.format(docErrorsMap);
-        assertEquals("", result);
-    }
+public class JSONFormatterTest extends Validator {
 
     @Test
-    public void testFlushErrorWithPlainFormatter() throws RedPenException {
-        PlainFormatter formatter = new PlainFormatter();
+    public void testFormatErrors() throws RedPenException, JSONException {
+        JSONFormatter formatter = new JSONFormatter();
         List<ValidationError> errors = new ArrayList<>();
-        errors.add(createValidationError(new Sentence("sentence", 1)));
-        Map<Document, List<ValidationError>> docErrorsMap = new HashMap<>();
+        errors.add(createValidationError(new Sentence("testing JSONFormatter", 1)));
         Document document = new Document.DocumentBuilder().build();
-        docErrorsMap.put(document, errors);
-        String result = formatter.format(docErrorsMap);
-        Pattern p = Pattern.compile("foobar");
-        Matcher m = p.matcher(result);
-        assertTrue(m.find());
+        String result = formatter.format(document, errors);
+        JSONObject jsonObject = new JSONObject(result);
+        String jsonDoc = jsonObject.getString("document");
+        assertNotNull(jsonDoc);
+        JSONArray jsonErrors = jsonObject.getJSONArray("errors");
+        assertNotNull(jsonErrors);
+        assertEquals(1, jsonErrors.length());
+        assertEquals("testing JSONFormatter", jsonErrors.getJSONObject(0).getString("sentence"));
+        assertEquals("json test error", jsonErrors.getJSONObject(0).getString("message"));
+        assertEquals("{\"document\":\"foobar\",\"errors\":[{\"sentence\":\"testing JSONFormatter\",\"message\":\"json test error\"}]}", result);
     }
 }

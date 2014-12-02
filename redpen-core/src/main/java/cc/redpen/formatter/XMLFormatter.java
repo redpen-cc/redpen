@@ -28,11 +28,7 @@ import org.w3c.dom.Text;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
@@ -59,16 +55,13 @@ public class XMLFormatter extends Formatter {
             TransformerFactory tf = TransformerFactory.newInstance();
             this.transformer = tf.newTransformer();
             transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-        } catch (ParserConfigurationException e) {
-            throw new RuntimeException(e);
-        } catch (TransformerConfigurationException e) {
-            LOG.error("Failed to create Transformer object");
+        } catch (ParserConfigurationException | TransformerConfigurationException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    protected String writeError(cc.redpen.model.Document document, ValidationError error) throws RedPenException {
+    protected String writeError(cc.redpen.model.Document document, ValidationError error, boolean isLast) throws RedPenException {
         // create dom
         Document doc = db.newDocument();
         Element errorElement = doc.createElement("error");
@@ -109,24 +102,16 @@ public class XMLFormatter extends Formatter {
         } catch (TransformerException e) {
             throw new RedPenException(e);
         }
-        return writer.toString();
+        return writer.toString() + "\n";
     }
 
     @Override
-    protected void writeHeader(Writer writer) {
-        try {
-            writer.write("<validation-result>\n");
-        } catch (IOException e) {
-            LOG.error("failed to write header", e);
-        }
+    protected void writeHeader(Writer writer) throws IOException {
+        writer.write("<validation-result>\n");
     }
 
     @Override
-    protected void writeFooter(Writer writer) {
-        try {
-            writer.write("</validation-result>");
-        } catch (IOException e) {
-            LOG.error("failed to write footer", e);
-        }
+    protected void writeFooter(Writer writer) throws IOException {
+        writer.write("</validation-result>");
     }
 }

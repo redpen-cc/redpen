@@ -41,10 +41,10 @@ public class XMLFormatterTest extends Validator {
     @Test
     public void testConvertValidationError() throws RedPenException {
         ValidationError error =createValidationError(new Sentence("This is a sentence", 0));
-        XMLFormatter formatter = createXMLFormatter();
+        XMLFormatter formatter = new XMLFormatter();
         cc.redpen.model.Document document1 = new cc.redpen.model.Document.DocumentBuilder(new WhiteSpaceTokenizer())
                 .setFileName("foobar.md").build();
-        String resultString = formatter.writeError(document1, error);
+        String resultString = formatter.writeError(document1, error, false);
 
         Document document = extractDocument(resultString);
         assertEquals(1, document.getElementsByTagName("error").getLength());
@@ -68,9 +68,9 @@ public class XMLFormatterTest extends Validator {
     @Test
     public void testConvertValidationErrorWithoutFileName() throws RedPenException {
         ValidationError error =createValidationError(new Sentence("text", 0));
-        XMLFormatter formatter = createXMLFormatter();
+        XMLFormatter formatter = new XMLFormatter();
         String resultString = formatter.writeError(
-                new cc.redpen.model.Document.DocumentBuilder(new WhiteSpaceTokenizer()).build(), error);
+                new cc.redpen.model.Document.DocumentBuilder(new WhiteSpaceTokenizer()).build(), error, false);
         Document document = extractDocument(resultString);
         assertEquals(1, document.getElementsByTagName("error").getLength());
         assertEquals(1, document.getElementsByTagName("message").getLength());
@@ -79,27 +79,6 @@ public class XMLFormatterTest extends Validator {
         assertEquals(0, document.getElementsByTagName("file").getLength());
         assertEquals(1, document.getElementsByTagName("lineNum").getLength());
         assertEquals("0",
-                document.getElementsByTagName("lineNum").item(0).getTextContent());
-        assertEquals(1, document.getElementsByTagName("validator").getLength());
-        assertEquals(this.getClass().getSimpleName(),
-                document.getElementsByTagName("validator").item(0).getTextContent());
-    }
-
-    @Test
-    public void testConvertValidationErrorWithoutLineNumAndFileName() throws RedPenException {
-        ValidationError error =createValidationError(new Sentence("text", -1));
-        XMLFormatter formatter = createXMLFormatter();
-        String resultString = formatter.writeError(
-                new cc.redpen.model.Document.DocumentBuilder(new WhiteSpaceTokenizer()).build(), error);
-
-        Document document = extractDocument(resultString);
-        assertEquals(1, document.getElementsByTagName("error").getLength());
-        assertEquals(1, document.getElementsByTagName("message").getLength());
-        assertEquals("Fatal Error",
-                document.getElementsByTagName("message").item(0).getTextContent());
-        assertEquals(0, document.getElementsByTagName("file").getLength());
-        assertEquals(1, document.getElementsByTagName("lineNum").getLength());
-        assertEquals("-1",
                 document.getElementsByTagName("lineNum").item(0).getTextContent());
         assertEquals(1, document.getElementsByTagName("validator").getLength());
         assertEquals(this.getClass().getSimpleName(),
@@ -124,9 +103,4 @@ public class XMLFormatterTest extends Validator {
         }
         return document;
     }
-
-    private XMLFormatter createXMLFormatter() {
-        return new XMLFormatter();
-    }
-
 }

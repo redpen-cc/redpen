@@ -20,17 +20,20 @@ package cc.redpen.server.api;
 
 import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
+import cc.redpen.formatter.JSONFormatter;
 import cc.redpen.model.Document;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.validator.ValidationError;
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
-import javax.ws.rs.*;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -93,28 +96,11 @@ public class RedPenResource {
     public Response validateDocument(@FormParam("textarea") @DefaultValue("") String document,
                                      @FormParam("lang") @DefaultValue("en") String lang)
             throws JSONException, RedPenException, UnsupportedEncodingException {
-
         LOG.info("Validating document");
         RedPen redPen = getRedPen(lang);
-        JSONObject json = new JSONObject();
-
-        json.put("document", document);
-
         Document parsedDocument = redPen.parse(DocumentParser.PLAIN, document);
-
         List<ValidationError> errors = redPen.validate(parsedDocument);
-
-        JSONArray jsonErrors = new JSONArray();
-
-        for (ValidationError error : errors) {
-            JSONObject jsonError = new JSONObject();
-            jsonError.put("sentence", error.getSentence().content);
-            jsonError.put("message", error.getMessage());
-            jsonErrors.put(jsonError);
-        }
-
-        json.put("errors", jsonErrors);
-
-        return Response.ok().entity(json).build();
+        String responseJSON = new JSONFormatter().format(parsedDocument, errors);
+        return Response.ok().entity(responseJSON).build();
     }
 }
