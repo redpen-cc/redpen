@@ -32,7 +32,6 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * ResultDistributor flush the errors reported from Validators.
@@ -83,26 +82,10 @@ public abstract class Formatter {
         }
     }
 
-    private void writeHeader(Writer writer) {
-        if (header().isPresent()) {
-            try {
-                writer.write(header().get());
-                writer.write("\n");
-            } catch (IOException e) {
-                LOG.error("failed to write header", e);
-            }
-        }
+    protected void writeHeader(Writer writer) {
     }
 
-    private void writeFooter(Writer writer) {
-        if (footer().isPresent()) {
-            try {
-                writer.write(footer().get());
-                writer.write("\n");
-            } catch (IOException e) {
-                LOG.error("failed to write footer", e);
-            }
-        }
+    protected void writeFooter(Writer writer) {
     }
 
     /**
@@ -114,21 +97,4 @@ public abstract class Formatter {
      */
     abstract String format(Document document, ValidationError error) throws RedPenException;
 
-    /**
-     * Return the header block of semi-structured format. Returns empty by default.
-     *
-     * @return header block
-     */
-    protected Optional<String> header() {
-        return Optional.empty();
-    }
-
-    /**
-     * Return the footer block of semi-structured format. Returns empty by default.
-     *
-     * @return footer block
-     */
-    protected Optional<String> footer() {
-        return Optional.empty();
-    }
 }

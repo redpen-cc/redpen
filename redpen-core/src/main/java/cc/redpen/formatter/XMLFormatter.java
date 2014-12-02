@@ -35,8 +35,9 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Optional;
+import java.io.Writer;
 
 /**
  * XML Output formatter.
@@ -112,12 +113,20 @@ public class XMLFormatter extends Formatter {
     }
 
     @Override
-    public Optional<String> header() {
-        return Optional.of("<validation-result>");
+    protected void writeHeader(Writer writer) {
+        try {
+            writer.write("<validation-result>\n");
+        } catch (IOException e) {
+            LOG.error("failed to write header", e);
+        }
     }
 
     @Override
-    public Optional<String> footer() {
-        return Optional.of("</validation-result>");
+    public void writeFooter(Writer writer) {
+        try {
+            writer.write("</validation-result>");
+        } catch (IOException e) {
+            LOG.error("failed to write footer", e);
+        }
     }
 }
