@@ -23,7 +23,7 @@ import cc.redpen.validator.ValidationError;
 /**
  * Format input error into a string message.
  */
-public final class PlainFormatter implements Formatter {
+public final class PlainFormatter extends Formatter {
 
     @Override
     public String format(Document document, ValidationError error) {

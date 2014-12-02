@@ -20,14 +20,91 @@ package cc.redpen.formatter;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
 import cc.redpen.validator.ValidationError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
- * This interface is for classes to define output format of
- * reported ValidationError objects.
+ * ResultDistributor flush the errors reported from Validators.
  */
-public interface Formatter {
+public abstract class Formatter {
+    private static final Logger LOG = LoggerFactory.getLogger(Formatter.class);
+
+    public void format(PrintWriter pw, Map<Document, List<ValidationError>> docErrorsMap) {
+        BufferedWriter writer = new BufferedWriter(new PrintWriter(pw));
+
+        writeHeader(writer);
+
+        docErrorsMap.keySet().forEach(document -> {
+            List<ValidationError> errors = docErrorsMap.get(document);
+            for (ValidationError error : errors) {
+                writeError(writer, document, error);
+            }
+        });
+        writeFooter(writer);
+        try {
+            writer.flush();
+        } catch (IOException e) {
+            LOG.error("failed to flush", e);
+        }
+    }
+
+    public void format(OutputStream os, Map<Document, List<ValidationError>> docErrorsMap) {
+        format(new PrintWriter(os), docErrorsMap);
+    }
+
+    public String format(Map<Document, List<ValidationError>> docErrorsMap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        format(new PrintWriter(baos), docErrorsMap);
+        return new String(baos.toByteArray(), StandardCharsets.UTF_8);
+    }
+
+    /**
+     * Output given validation error.
+     *
+     * @param err validation error
+     */
+    private void writeError(Writer writer, Document document, ValidationError err) {
+        try {
+            writer.write(format(document, err));
+            writer.write("\n");
+        } catch (IOException | RedPenException e) {
+            LOG.error("failed to weite error", e);
+        }
+    }
+
+    private void writeHeader(Writer writer) {
+        if (header().isPresent()) {
+            try {
+                writer.write(header().get());
+                writer.write("\n");
+            } catch (IOException e) {
+                LOG.error("failed to write header", e);
+            }
+        }
+    }
+
+    private void writeFooter(Writer writer) {
+        if (footer().isPresent()) {
+            try {
+                writer.write(footer().get());
+                writer.write("\n");
+            } catch (IOException e) {
+                LOG.error("failed to write footer", e);
+            }
+        }
+    }
+
     /**
      * Convert ValidationError into a string to flush a error message.
      *
@@ -35,14 +112,14 @@ public interface Formatter {
      * @param error    object containing file and line number information.
      * @return error message
      */
-    String format(Document document, ValidationError error) throws RedPenException;
+    abstract String format(Document document, ValidationError error) throws RedPenException;
 
     /**
      * Return the header block of semi-structured format. Returns empty by default.
      *
      * @return header block
      */
-    default Optional<String> header() {
+    protected Optional<String> header() {
         return Optional.empty();
     }
 
@@ -51,26 +128,7 @@ public interface Formatter {
      *
      * @return footer block
      */
-    default Optional<String> footer() {
+    protected Optional<String> footer() {
         return Optional.empty();
-    }
-
-    static Formatter getFormatter(String type) {
-        switch (Type.valueOf(type.toUpperCase())) {
-            case XML:
-                return new XMLFormatter();
-            case PLAIN:
-                return new PlainFormatter();
-            default:
-                throw new IllegalArgumentException("Unsupported format:" + type);
-        }
-    }
-
-    /**
-     * the type of formatter using ResultDistributorFactory.
-     */
-    enum Type {
-        PLAIN,
-        XML
     }
 }

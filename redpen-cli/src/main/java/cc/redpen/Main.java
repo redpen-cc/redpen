@@ -17,8 +17,9 @@
  */
 package cc.redpen;
 
-import cc.redpen.distributor.ResultDistributor;
 import cc.redpen.formatter.Formatter;
+import cc.redpen.formatter.PlainFormatter;
+import cc.redpen.formatter.XMLFormatter;
 import cc.redpen.model.Document;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.validator.ValidationError;
@@ -137,7 +138,18 @@ public final class Main {
 
         DocumentParser parser = DocumentParser.of(inputFormat);
 
-        ResultDistributor distributor = new ResultDistributor();
+        Formatter formatter;
+        switch (resultFormat.toLowerCase()) {
+            case "xml":
+                formatter = new XMLFormatter();
+                break;
+            case "plain":
+                formatter = new PlainFormatter();
+                break;
+            default:
+                LOG.error("Unsupported format:" + resultFormat);
+                return -1;
+        }
 
         RedPen redPen = new RedPen(new File(configFileName));
         List<Document> documents = redPen.parse(parser, inputFiles);
@@ -146,7 +158,7 @@ public final class Main {
             return -1;
         }
         Map<Document, List<ValidationError>> documentListMap = redPen.validate(documents);
-        String result = distributor.distribute(Formatter.getFormatter(resultFormat), documentListMap);
+        String result = formatter.format(documentListMap);
         System.out.println(result);
 
         long errorCount = documentListMap.values().stream().map(List::size).count();

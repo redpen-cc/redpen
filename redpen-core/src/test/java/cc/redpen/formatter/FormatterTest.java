@@ -15,10 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cc.redpen.distributor;
+package cc.redpen.formatter;
 
 import cc.redpen.RedPenException;
-import cc.redpen.formatter.PlainFormatter;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
@@ -35,24 +34,24 @@ import java.util.regex.Pattern;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class DefaultResultDistributorTest extends Validator {
+public class FormatterTest extends Validator {
     @Test
     public void testDistributeWithPlainFormatter() throws RedPenException {
-        ResultDistributor distributor = new ResultDistributor();
+        PlainFormatter formatter = new PlainFormatter();
         Map<Document, List<ValidationError>> docErrorsMap = new HashMap<>();
-        String result = distributor.distribute(new PlainFormatter(), docErrorsMap);
+        String result = formatter.format(docErrorsMap);
         assertEquals("", result);
     }
 
     @Test
     public void testFlushErrorWithPlainFormatter() throws RedPenException {
-        ResultDistributor distributor = new ResultDistributor();
+        PlainFormatter formatter = new PlainFormatter();
         List<ValidationError> errors = new ArrayList<>();
         errors.add(createValidationError(new Sentence("sentence", 1)));
         Map<Document, List<ValidationError>> docErrorsMap = new HashMap<>();
         Document document = new Document.DocumentBuilder().build();
         docErrorsMap.put(document, errors);
-        String result = distributor.distribute(new PlainFormatter(), docErrorsMap);
+        String result = formatter.format(docErrorsMap);
         Pattern p = Pattern.compile("foobar");
         Matcher m = p.matcher(result);
         assertTrue(m.find());

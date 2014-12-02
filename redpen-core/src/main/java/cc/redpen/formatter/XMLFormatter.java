@@ -28,7 +28,11 @@ import org.w3c.dom.Text;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.StringWriter;
@@ -37,10 +41,9 @@ import java.util.Optional;
 /**
  * XML Output formatter.
  */
-public class XMLFormatter implements Formatter {
+public class XMLFormatter extends Formatter {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(XMLFormatter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(XMLFormatter.class);
     private DocumentBuilder db;
     private final Transformer transformer;
 
@@ -48,7 +51,6 @@ public class XMLFormatter implements Formatter {
      * Constructor.
      */
     public XMLFormatter() {
-        super();
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
         try {
