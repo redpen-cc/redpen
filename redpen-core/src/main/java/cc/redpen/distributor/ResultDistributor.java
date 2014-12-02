@@ -19,12 +19,20 @@ package cc.redpen.distributor;
 
 import cc.redpen.RedPenException;
 import cc.redpen.formatter.Formatter;
+import cc.redpen.formatter.PlainFormatter;
+import cc.redpen.formatter.XMLFormatter;
 import cc.redpen.model.Document;
 import cc.redpen.validator.ValidationError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -33,42 +41,38 @@ import java.util.Map;
  */
 public class ResultDistributor {
     private static final Logger LOG = LoggerFactory.getLogger(ResultDistributor.class);
-    private Formatter formatter;
-    private BufferedWriter writer;
+    public static Formatter XML = new XMLFormatter();
+    public static Formatter PLAIN = new PlainFormatter();
 
     /**
      * Constructor.
-     *
-     * @param os output stream
      */
-    ResultDistributor(OutputStream os, Formatter formatter) {
-        writer = new BufferedWriter(new PrintWriter(os));
-        this.formatter = formatter;
+    public ResultDistributor() {
     }
 
-    /**
-     * Constructor.
-     *
-     * @param ps output stream
-     */
-    public ResultDistributor(PrintStream ps, Formatter formatter) {
-        if (ps == null) {
-            throw new IllegalArgumentException("argument PrintStream is null");
-        }
-        writer = new BufferedWriter(new PrintWriter(ps));
-        this.formatter = formatter;
-    }
+    public void distribute(PrintWriter pw, Formatter formatter, Map<Document, List<ValidationError>> docErrorsMap) {
+        BufferedWriter writer = new BufferedWriter(new PrintWriter(pw));
 
-    public void distribute(Map<Document, List<ValidationError>> docErrorsMap) {
-        flushHeader();
+        flushHeader(writer, formatter);
 
         docErrorsMap.keySet().forEach(document -> {
             List<ValidationError> errors = docErrorsMap.get(document);
             for (ValidationError error : errors) {
-                flushError(document, error);
+                flushError(writer, formatter, document, error);
             }
         });
-        flushFooter();
+        flushFooter(writer, formatter);
+
+    }
+
+    public void distribute(OutputStream os, Formatter formatter, Map<Document, List<ValidationError>> docErrorsMap) {
+        distribute(new PrintWriter(os), formatter, docErrorsMap);
+    }
+
+    public String distribute(Formatter formatter, Map<Document, List<ValidationError>> docErrorsMap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        distribute(new PrintWriter(baos), formatter, docErrorsMap);
+        return new String(baos.toByteArray(), StandardCharsets.UTF_8);
     }
 
     /**
@@ -76,7 +80,7 @@ public class ResultDistributor {
      *
      * @param err validation error
      */
-    private void flushError(Document document, ValidationError err) {
+    private void flushError(Writer writer, Formatter formatter, Document document, ValidationError err) {
         try {
             writer.write(formatter.format(document, err));
             writer.write("\n");
@@ -86,7 +90,7 @@ public class ResultDistributor {
         }
     }
 
-    private void flushHeader() {
+    private void flushHeader(Writer writer, Formatter formatter) {
         if (formatter.header().isPresent()) {
             try {
                 writer.write(formatter.header().get());
@@ -97,7 +101,7 @@ public class ResultDistributor {
         }
     }
 
-    private void flushFooter() {
+    private void flushFooter(Writer writer, Formatter formatter) {
         if (formatter.footer().isPresent()) {
             try {
                 writer.write(formatter.footer().get());

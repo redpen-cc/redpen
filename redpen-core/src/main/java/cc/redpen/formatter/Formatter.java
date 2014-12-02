@@ -32,7 +32,7 @@ public interface Formatter {
      * Convert ValidationError into a string to flush a error message.
      *
      * @param document document associated with the validation error
-     * @param error object containing file and line number information.
+     * @param error    object containing file and line number information.
      * @return error message
      */
     String format(Document document, ValidationError error) throws RedPenException;
@@ -42,7 +42,7 @@ public interface Formatter {
      *
      * @return header block
      */
-    default Optional<String> header(){
+    default Optional<String> header() {
         return Optional.empty();
     }
 
@@ -51,8 +51,19 @@ public interface Formatter {
      *
      * @return footer block
      */
-    default Optional<String> footer(){
+    default Optional<String> footer() {
         return Optional.empty();
+    }
+
+    static Formatter getFormatter(String type) {
+        switch (Type.valueOf(type.toUpperCase())) {
+            case XML:
+                return new XMLFormatter();
+            case PLAIN:
+                return new PlainFormatter();
+            default:
+                throw new IllegalArgumentException("Unsupported format:" + type);
+        }
     }
 
     /**

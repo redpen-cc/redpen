@@ -25,8 +25,6 @@ import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,33 +38,24 @@ import static org.junit.Assert.assertTrue;
 public class DefaultResultDistributorTest extends Validator {
     @Test
     public void testDistributeWithPlainFormatter() throws RedPenException {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        ResultDistributor distributor = new ResultDistributor(os, new PlainFormatter());
+        ResultDistributor distributor = new ResultDistributor();
         Map<Document, List<ValidationError>> docErrorsMap = new HashMap<>();
-        distributor.distribute(docErrorsMap);
-        String result = new String(os.toByteArray(), StandardCharsets.UTF_8);
+        String result = distributor.distribute(new PlainFormatter(), docErrorsMap);
         assertEquals("", result);
     }
 
     @Test
     public void testFlushErrorWithPlainFormatter() throws RedPenException {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        ResultDistributor distributor = new ResultDistributor(os, new PlainFormatter());
+        ResultDistributor distributor = new ResultDistributor();
         List<ValidationError> errors = new ArrayList<>();
         errors.add(createValidationError(new Sentence("sentence", 1)));
         Map<Document, List<ValidationError>> docErrorsMap = new HashMap<>();
         Document document = new Document.DocumentBuilder().build();
         docErrorsMap.put(document, errors);
-        distributor.distribute(docErrorsMap);
-        String result = new String(os.toByteArray(), StandardCharsets.UTF_8);
+        String result = distributor.distribute(new PlainFormatter(), docErrorsMap);
         Pattern p = Pattern.compile("foobar");
         Matcher m = p.matcher(result);
         assertTrue(m.find());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testCreatePlainFormatterNullStream() {
-        ResultDistributor distributor = new ResultDistributor(null, new PlainFormatter());
     }
 
     @Override
