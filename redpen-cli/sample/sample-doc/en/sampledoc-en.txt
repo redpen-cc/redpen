@@ -1,7 +1,4 @@
-ln bibliometrics and and link analysis studies many attempts have been made to analyze the relationship amongscientific papers, authors andjoumals and recently, these research results have been found to be effective for analyzing the link structure ofweb pages as we11. In addition,  Most of these methods are concernedwith the two link analysis measures: relatedness between documenatsndglobal importance of individual documents. These measures, however,have been discussed independently in previous work。
+Some software tools work in more than one machine, and such distributed (cluster)systems can handle huge data or tasks, because such software tools make use of large amount of computer resources.
+In this article, we'll call a computer server that works as a member of a cluster an "instance". for example, each instance in distributed search engines stores the the fractions of data.
+Such distriubuted systems need a component to merge the preliminary results from member instnaces.
 
-To provide a unified perspective on the two link analysis measures, this thesis explores the application of kemel as metrics to link analysis. Kene1-based machine leaming methods are becoming more and more popular due to their ability to deal with (semi-)structured data such as strings and graphs. The framework provided by the kernels establishes relative importance, in which the degree of ‘relativity’ or the bias between relatedness and importance, is naturally contro11ed by a parameter characterizing individual kerels in the family.
-
-In contrast to these methods, we address new relatedness measures that overcome two limitation of traditional relatedness measures. These relatedness measures also defined as kernels. By introducing a new parameterization, we obtain a link analysis measures that are intermediate between global importance andthe extended relatedness measure.
-
-Next, we'll extend our keme1-based.link analysis based on generative process of links (citations). This method overcomes a problem in our keme1-based link analysis.
