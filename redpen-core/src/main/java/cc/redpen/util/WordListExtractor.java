@@ -26,7 +26,7 @@ import java.util.Set;
  * WordListExtractor extracts word from a given line. This class is called from
  * FileLoader.
  */
-public class WordListExtractor implements ResourceExtractor<Set<String>> {
+public class WordListExtractor extends ResourceExtractor<Set<String>> {
     private final Set<String> wordList;
     private boolean toLowerCase = false;
 
@@ -42,10 +42,9 @@ public class WordListExtractor implements ResourceExtractor<Set<String>> {
      * Load word list file.
      *
      * @param line line in a file
-     * @return 0 when succeeded.
      */
     @Override
-    public void load(String line) throws RedPenException {
+    protected void load(String line) throws RedPenException {
         if (this.toLowerCase) {
             line = line.toLowerCase();
         }

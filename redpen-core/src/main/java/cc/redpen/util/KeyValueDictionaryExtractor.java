@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * An ResourceExtractor implementation for KeyValue input data.
  */
-public class KeyValueDictionaryExtractor implements ResourceExtractor<Map<String, String>> {
+public class KeyValueDictionaryExtractor extends ResourceExtractor<Map<String, String>> {
     private final Map<String, String> map;
 
     /**
@@ -43,7 +43,7 @@ public class KeyValueDictionaryExtractor implements ResourceExtractor<Map<String
      * @return 0 when succeeded to load, 1 otherwise
      */
     @Override
-    public void load(String line) throws RedPenException {
+    protected void load(String line) throws RedPenException {
         String[] result = line.split("\t");
         if (result.length != 2) {
             throw new RedPenException("Invalid line: " +  line);

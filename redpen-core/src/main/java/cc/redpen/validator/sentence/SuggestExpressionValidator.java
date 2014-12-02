@@ -19,13 +19,13 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
-import cc.redpen.util.FileLoader;
 import cc.redpen.util.KeyValueDictionaryExtractor;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -57,9 +57,8 @@ final public class SuggestExpressionValidator extends Validator {
             throw new RedPenException("dictionary file is not specified");
         } else {
             KeyValueDictionaryExtractor extractor = new KeyValueDictionaryExtractor();
-            FileLoader loader = new FileLoader(extractor);
             try {
-                loader.loadFile(confFile.get());
+                extractor.load(new FileInputStream(confFile.get()));
             } catch (IOException e) {
                 throw new RedPenException("Failed to load KeyValueDictionaryExtractor", e);
             }

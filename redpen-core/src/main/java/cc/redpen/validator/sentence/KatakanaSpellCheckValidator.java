@@ -20,7 +20,6 @@ package cc.redpen.validator.sentence;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.LevenshteinDistance;
-import cc.redpen.util.ResourceLoader;
 import cc.redpen.util.StringUtils;
 import cc.redpen.util.WordListExtractor;
 import cc.redpen.validator.ValidationError;
@@ -28,6 +27,7 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -119,13 +119,12 @@ final public class KatakanaSpellCheckValidator extends Validator {
     @Override
     protected void init() throws RedPenException {
         WordListExtractor extractor = new WordListExtractor();
-        ResourceLoader loader = new ResourceLoader(extractor);
 
         LOG.info("Loading default katakana word dictionary");
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/katakana-spellcheck.dat";
         try {
-            loader.loadInternalResource(defaultDictionaryFile);
+            extractor.loadFromResource(defaultDictionaryFile);
             LOG.info("Succeeded to load default dictionary.");
         } catch (IOException e) {
             throw new RedPenException("Failed to load default dictionary.", e);
@@ -135,7 +134,7 @@ final public class KatakanaSpellCheckValidator extends Validator {
         confFile.ifPresent(e -> {
             LOG.info("User dictionary file is " + e);
             try {
-                loader.loadExternalFile(e);
+                extractor.load(new FileInputStream(e));
             } catch (IOException e1) {
                 LOG.error("Failed to load user dictionary");
             }

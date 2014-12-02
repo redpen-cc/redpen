@@ -18,23 +18,68 @@
 package cc.redpen.util;
 
 import cc.redpen.RedPenException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 /**
  * ResourceExtractor is called from FileLoader. To support a file format,
  * we create a class implementing ResourceExtractor.
  */
-public interface ResourceExtractor<E> {
+public abstract class ResourceExtractor<E> {
+    private static final Logger LOG = LoggerFactory.getLogger(ResourceExtractor.class);
+
     /**
      * load line.
      *
      * @param line line in a file
      */
-    void load(String line) throws RedPenException;
+    abstract protected void load(String line) throws RedPenException;
 
     /**
      * Get the loaded container.
      *
      * @return container
      */
-    E get();
+    abstract E get();
+
+    /**
+     * Given a input stream, load the contents.
+     *
+     * @param inputStream input stream
+     */
+    public void load(InputStream inputStream) throws IOException {
+        try (InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                try {
+                    load(line);
+                } catch (RedPenException e) {
+                    LOG.error(e.getMessage()); // just skip to load the line
+                    LOG.error("Skip to load line...");
+                }
+            }
+        }
+
+    }
+    /**
+     * Load a given input file combined with jar package.
+     *
+     * @param inputFile a file included in the jar file
+     */
+    public void loadFromResource(String inputFile) throws IOException {
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(inputFile)) {
+            if (inputStream == null) {
+                throw new IOException("Failed to load input " + inputFile);
+            }
+            load(inputStream);
+        }
+    }
+
 }

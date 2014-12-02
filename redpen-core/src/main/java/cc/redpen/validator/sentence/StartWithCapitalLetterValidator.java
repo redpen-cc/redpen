@@ -3,13 +3,13 @@ package cc.redpen.validator.sentence;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.util.ResourceLoader;
 import cc.redpen.util.WordListExtractor;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
@@ -69,13 +69,12 @@ final public class StartWithCapitalLetterValidator extends Validator {
     @Override
     protected void init() throws RedPenException {
         WordListExtractor extractor = new WordListExtractor();
-        ResourceLoader loader = new ResourceLoader(extractor);
 
         LOG.info("Loading default capital letter exception dictionary ");
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/default-capital-case-exception-list.dat";
         try {
-            loader.loadInternalResource(defaultDictionaryFile);
+            extractor.loadFromResource(defaultDictionaryFile);
         } catch (IOException e) {
             throw new RedPenException("Failed to load default dictionary.", e);
         }
@@ -85,7 +84,7 @@ final public class StartWithCapitalLetterValidator extends Validator {
         confFile.ifPresent(f -> {
             LOG.info("user dictionary file is " + f);
             try {
-                loader.loadExternalFile(f);
+                extractor.load(new FileInputStream(f));
             } catch (IOException e) {
                 LOG.error("Failed to load user dictionary.");
                 return;
