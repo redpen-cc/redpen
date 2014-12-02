@@ -68,7 +68,7 @@ public class XMLFormatter extends Formatter {
     }
 
     @Override
-    public String format(cc.redpen.model.Document document, ValidationError error) throws RedPenException {
+    protected String writeError(cc.redpen.model.Document document, ValidationError error) throws RedPenException {
         // create dom
         Document doc = db.newDocument();
         Element errorElement = doc.createElement("error");
@@ -122,7 +122,7 @@ public class XMLFormatter extends Formatter {
     }
 
     @Override
-    public void writeFooter(Writer writer) {
+    protected void writeFooter(Writer writer) {
         try {
             writer.write("</validation-result>");
         } catch (IOException e) {

@@ -39,17 +39,17 @@ import java.util.Map;
 public abstract class Formatter {
     private static final Logger LOG = LoggerFactory.getLogger(Formatter.class);
 
-    public void format(PrintWriter pw, Map<Document, List<ValidationError>> docErrorsMap) {
+    public void format(PrintWriter pw, Map<Document, List<ValidationError>> docErrorsMap) throws RedPenException, IOException{
         BufferedWriter writer = new BufferedWriter(new PrintWriter(pw));
 
         writeHeader(writer);
 
-        docErrorsMap.keySet().forEach(document -> {
+       for(Document document : docErrorsMap.keySet()){
             List<ValidationError> errors = docErrorsMap.get(document);
             for (ValidationError error : errors) {
                 writeError(writer, document, error);
             }
-        });
+        }
         writeFooter(writer);
         try {
             writer.flush();
@@ -58,13 +58,18 @@ public abstract class Formatter {
         }
     }
 
-    public void format(OutputStream os, Map<Document, List<ValidationError>> docErrorsMap) {
+    public void format(OutputStream os, Map<Document, List<ValidationError>> docErrorsMap) throws RedPenException, IOException{
         format(new PrintWriter(os), docErrorsMap);
     }
 
     public String format(Map<Document, List<ValidationError>> docErrorsMap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        format(new PrintWriter(baos), docErrorsMap);
+        try {
+            format(new PrintWriter(baos), docErrorsMap);
+        } catch (RedPenException | IOException e) {
+            // writing to ByteArrayOutputStream shouldn't fail with IOException
+            throw new RuntimeException(e);
+        }
         return new String(baos.toByteArray(), StandardCharsets.UTF_8);
     }
 
@@ -73,13 +78,9 @@ public abstract class Formatter {
      *
      * @param err validation error
      */
-    private void writeError(Writer writer, Document document, ValidationError err) {
-        try {
-            writer.write(format(document, err));
-            writer.write("\n");
-        } catch (IOException | RedPenException e) {
-            LOG.error("failed to weite error", e);
-        }
+    private void writeError(Writer writer, Document document, ValidationError err) throws RedPenException, IOException {
+        writer.write(writeError(document, err));
+        writer.write("\n");
     }
 
     protected void writeHeader(Writer writer) {
@@ -95,6 +96,6 @@ public abstract class Formatter {
      * @param error    object containing file and line number information.
      * @return error message
      */
-    abstract String format(Document document, ValidationError error) throws RedPenException;
+    abstract String writeError(Document document, ValidationError error) throws RedPenException;
 
 }
