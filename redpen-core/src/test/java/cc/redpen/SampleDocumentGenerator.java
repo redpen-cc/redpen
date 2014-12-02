@@ -18,9 +18,12 @@
 package cc.redpen;
 
 import cc.redpen.config.Configuration;
-import cc.redpen.model.DocumentCollection;
+import cc.redpen.model.Document;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.SentenceExtractor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Generate DocumentCollection objects from String. This class are applied
@@ -37,13 +40,12 @@ public class SampleDocumentGenerator {
      * @param parser    document syntax: wiki, markdown or plain
      * @return DocumentCollection object
      */
-    public static DocumentCollection generateOneFileDocument(String docString,
+    public static List<Document> generateOneFileDocument(String docString,
                                                              DocumentParser parser) throws RedPenException {
         Configuration configuration = new Configuration.ConfigurationBuilder()
                 .setLanguage("en").build();
-        DocumentCollection.Builder builder = new DocumentCollection.Builder();
-        builder.addDocument(
-                parser.parse(docString, new SentenceExtractor(configuration.getSymbolTable()), configuration.getTokenizer()));
-        return builder.build();
+        List<Document> docs = new ArrayList<>();
+        docs.add(parser.parse(docString, new SentenceExtractor(configuration.getSymbolTable()), configuration.getTokenizer()));
+        return docs;
     }
 }

@@ -17,9 +17,11 @@
  */
 package cc.redpen;
 
-import cc.redpen.model.DocumentCollection;
+import cc.redpen.model.Document;
 import cc.redpen.parser.DocumentParser;
 import org.junit.Test;
+
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -29,15 +31,15 @@ public class SampleDocumentGeneratorTest {
     public void testGenerateSimplePlainDocument() throws RedPenException {
         String sampleText = "";
         sampleText += "Gekioko pun pun maru means very very angry.\n";
-        DocumentCollection doc = SampleDocumentGenerator.generateOneFileDocument(sampleText,
+        List<Document> docs = SampleDocumentGenerator.generateOneFileDocument(sampleText,
                 DocumentParser.PLAIN);
-        assertNotNull(doc);
-        assertEquals(1, doc.size());
-        assertEquals(1, doc.getDocument(0).size());
-        assertEquals(1, doc.getDocument(0).getSection(0).getNumberOfParagraphs());
-        assertEquals(1, doc.getDocument(0).getSection(0).getParagraph(0)
+        assertNotNull(docs);
+        assertEquals(1, docs.size());
+        assertEquals(1, docs.get(0).size());
+        assertEquals(1, docs.get(0).getSection(0).getNumberOfParagraphs());
+        assertEquals(1, docs.get(0).getSection(0).getParagraph(0)
                 .getNumberOfSentences());
-        assertEquals("Gekioko pun pun maru means very very angry.", doc.getDocument(0).getSection(0)
+        assertEquals("Gekioko pun pun maru means very very angry.", docs.get(0).getSection(0)
                 .getParagraph(0).getSentence(0).content);
     }
 
@@ -46,16 +48,16 @@ public class SampleDocumentGeneratorTest {
         String sampleText = "";
         sampleText += "h1. About Gekioko.\n";
         sampleText += "Gekioko pun pun maru means very very angry.\n";
-        DocumentCollection doc = SampleDocumentGenerator.generateOneFileDocument(sampleText,
+        List<Document> docs = SampleDocumentGenerator.generateOneFileDocument(sampleText,
                 DocumentParser.WIKI);
-        assertNotNull(doc);
-        assertEquals(1, doc.size());
-        assertEquals(2, doc.getDocument(0).size());
-        assertEquals("About Gekioko.", doc.getDocument(0).getSection(1).getHeaderContent(0).content);
-        assertEquals(1, doc.getDocument(0).getSection(1).getNumberOfParagraphs());
-        assertEquals(1, doc.getDocument(0).getSection(1).getParagraph(0)
+        assertNotNull(docs);
+        assertEquals(1, docs.size());
+        assertEquals(2, docs.get(0).size());
+        assertEquals("About Gekioko.", docs.get(0).getSection(1).getHeaderContent(0).content);
+        assertEquals(1, docs.get(0).getSection(1).getNumberOfParagraphs());
+        assertEquals(1, docs.get(0).getSection(1).getParagraph(0)
                 .getNumberOfSentences());
-        assertEquals("Gekioko pun pun maru means very very angry.", doc.getDocument(0).getSection(1)
+        assertEquals("Gekioko pun pun maru means very very angry.", docs.get(0).getSection(1)
                 .getParagraph(0).getSentence(0).content);
     }
 
@@ -64,16 +66,16 @@ public class SampleDocumentGeneratorTest {
         String sampleText = "";
         sampleText += "# About Gekioko.\n";
         sampleText += "Gekioko pun pun maru means very very angry.\n";
-        DocumentCollection doc = SampleDocumentGenerator.generateOneFileDocument(sampleText,
+        List<Document> docs = SampleDocumentGenerator.generateOneFileDocument(sampleText,
                 DocumentParser.MARKDOWN);
-        assertNotNull(doc);
-        assertEquals(1, doc.size());
-        assertEquals(2, doc.getDocument(0).size());
-        assertEquals("About Gekioko.", doc.getDocument(0).getSection(1).getHeaderContent(0).content);
-        assertEquals(1, doc.getDocument(0).getSection(1).getNumberOfParagraphs());
-        assertEquals(1, doc.getDocument(0).getSection(1).getParagraph(0)
+        assertNotNull(docs);
+        assertEquals(1, docs.size());
+        assertEquals(2, docs.get(0).size());
+        assertEquals("About Gekioko.", docs.get(0).getSection(1).getHeaderContent(0).content);
+        assertEquals(1, docs.get(0).getSection(1).getNumberOfParagraphs());
+        assertEquals(1, docs.get(0).getSection(1).getParagraph(0)
                 .getNumberOfSentences());
-        assertEquals("Gekioko pun pun maru means very very angry.", doc.getDocument(0).getSection(1)
+        assertEquals("Gekioko pun pun maru means very very angry.", docs.get(0).getSection(1)
                 .getParagraph(0).getSentence(0).content);
     }
 
