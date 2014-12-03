@@ -20,46 +20,51 @@ package cc.redpen.formatter;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
 import cc.redpen.validator.ValidationError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Optional;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * This interface is for classes to define output format of
- * reported ValidationError objects.
+ * ResultDistributor flush the errors reported from Validators.
  */
-public interface Formatter {
-    /**
-     * Convert ValidationError into a string to flush a error message.
-     *
-     * @param document document associated with the validation error
-     * @param error object containing file and line number information.
-     * @return error message
-     */
-    String format(Document document, ValidationError error) throws RedPenException;
+public abstract class Formatter {
+    private static final Logger LOG = LoggerFactory.getLogger(Formatter.class);
 
-    /**
-     * Return the header block of semi-structured format. Returns empty by default.
-     *
-     * @return header block
-     */
-    default Optional<String> header(){
-        return Optional.empty();
+    public abstract void format(PrintWriter pw, Map<Document, List<ValidationError>> docErrorsMap) throws RedPenException, IOException;
+
+    public void format(OutputStream os, Map<Document, List<ValidationError>> docErrorsMap) throws RedPenException, IOException {
+        format(new PrintWriter(os), docErrorsMap);
     }
 
-    /**
-     * Return the footer block of semi-structured format. Returns empty by default.
-     *
-     * @return footer block
-     */
-    default Optional<String> footer(){
-        return Optional.empty();
+    public String format(Map<Document, List<ValidationError>> docErrorsMap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            format(new PrintWriter(baos), docErrorsMap);
+        } catch (RedPenException | IOException e) {
+            // writing to ByteArrayOutputStream shouldn't fail with IOException
+            throw new RuntimeException(e);
+        }
+        return new String(baos.toByteArray(), StandardCharsets.UTF_8);
     }
 
-    /**
-     * the type of formatter using ResultDistributorFactory.
-     */
-    enum Type {
-        PLAIN,
-        XML
+    public String format(Document document, List<ValidationError> errors) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        Map<Document, List<ValidationError>> docErrorsMap = new HashMap<>();
+        docErrorsMap.put(document, errors);
+        try {
+            format(new PrintWriter(baos), docErrorsMap);
+        } catch (RedPenException | IOException e) {
+            // writing to ByteArrayOutputStream shouldn't fail with IOException
+            throw new RuntimeException(e);
+        }
+        return new String(baos.toByteArray(), StandardCharsets.UTF_8);
     }
 }

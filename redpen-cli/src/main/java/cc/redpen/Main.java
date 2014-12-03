@@ -17,13 +17,20 @@
  */
 package cc.redpen;
 
-import cc.redpen.distributor.ResultDistributor;
-import cc.redpen.distributor.ResultDistributorFactory;
 import cc.redpen.formatter.Formatter;
+import cc.redpen.formatter.JSONFormatter;
+import cc.redpen.formatter.PlainFormatter;
+import cc.redpen.formatter.XMLFormatter;
 import cc.redpen.model.Document;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.validator.ValidationError;
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.BasicParser;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,7 +109,6 @@ public final class Main {
         String configFileName = "";
         String resultFormat = "plain";
         int limit = EDEFAULT_LIMIT;
-        Formatter.Type outputFormat;
 
         if (commandLine.hasOption("h")) {
             printHelp(options);
@@ -132,9 +138,22 @@ public final class Main {
         }
 
         DocumentParser parser = DocumentParser.of(inputFormat);
-        outputFormat = Formatter.Type.valueOf(resultFormat.toUpperCase());
 
-        ResultDistributor distributor = ResultDistributorFactory.createDistributor(outputFormat, System.out);
+        Formatter formatter;
+        switch (resultFormat.toLowerCase()) {
+            case "xml":
+                formatter = new XMLFormatter();
+                break;
+            case "plain":
+                formatter = new PlainFormatter();
+                break;
+            case "json":
+                formatter = new JSONFormatter();
+                break;
+            default:
+                LOG.error("Unsupported format:" + resultFormat);
+                return -1;
+        }
 
         RedPen redPen = new RedPen(new File(configFileName));
         List<Document> documents = redPen.parse(parser, inputFiles);
@@ -143,7 +162,8 @@ public final class Main {
             return -1;
         }
         Map<Document, List<ValidationError>> documentListMap = redPen.validate(documents);
-        distributor.distribute(documentListMap);
+        String result = formatter.format(documentListMap);
+        System.out.println(result);
 
         long errorCount = documentListMap.values().stream().map(List::size).count();
 

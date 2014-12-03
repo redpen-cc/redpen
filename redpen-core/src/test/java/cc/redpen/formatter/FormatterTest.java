@@ -15,18 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cc.redpen.distributor;
+package cc.redpen.formatter;
 
 import cc.redpen.RedPenException;
-import cc.redpen.formatter.PlainFormatter;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,39 +34,26 @@ import java.util.regex.Pattern;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class DefaultResultDistributorTest extends Validator {
+public class FormatterTest extends Validator {
     @Test
     public void testDistributeWithPlainFormatter() throws RedPenException {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        ResultDistributor distributor = new ResultDistributor(os, new PlainFormatter());
+        PlainFormatter formatter = new PlainFormatter();
         Map<Document, List<ValidationError>> docErrorsMap = new HashMap<>();
-        distributor.distribute(docErrorsMap);
-        String result = new String(os.toByteArray(), StandardCharsets.UTF_8);
+        String result = formatter.format(docErrorsMap);
         assertEquals("", result);
     }
 
     @Test
     public void testFlushErrorWithPlainFormatter() throws RedPenException {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        ResultDistributor distributor = new ResultDistributor(os, new PlainFormatter());
+        PlainFormatter formatter = new PlainFormatter();
         List<ValidationError> errors = new ArrayList<>();
         errors.add(createValidationError(new Sentence("sentence", 1)));
         Map<Document, List<ValidationError>> docErrorsMap = new HashMap<>();
         Document document = new Document.DocumentBuilder().build();
         docErrorsMap.put(document, errors);
-        distributor.distribute(docErrorsMap);
-        String result = new String(os.toByteArray(), StandardCharsets.UTF_8);
+        String result = formatter.format(docErrorsMap);
         Pattern p = Pattern.compile("foobar");
         Matcher m = p.matcher(result);
         assertTrue(m.find());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testCreatePlainFormatterNullStream() {
-        ResultDistributor distributor = new ResultDistributor(null, new PlainFormatter());
-    }
-
-    @Override
-    public void validate(List<ValidationError> errors, Sentence sentence) {
     }
 }
