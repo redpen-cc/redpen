@@ -18,44 +18,87 @@
 package cc.redpen.formatter;
 
 import cc.redpen.RedPenException;
+import cc.redpen.model.Document;
 import cc.redpen.validator.ValidationError;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.Writer;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * XML Output formatter.
+ * JSON Output formatter.
  */
 public class JSONFormatter extends Formatter {
-
     private static final Logger LOG = LoggerFactory.getLogger(JSONFormatter.class);
 
+    /**
+     * format Validation Errors to JSONArray
+     * @param pw
+     * @param docErrorsMap
+     * @throws RedPenException
+     * @throws IOException
+     */
     @Override
-    protected String writeError(cc.redpen.model.Document document, ValidationError error,
-                              boolean isLast) throws RedPenException {
-        JSONObject jsonError = new JSONObject();
+    public void format(PrintWriter pw, Map<Document, List<ValidationError>> docErrorsMap) throws RedPenException, IOException {
+        BufferedWriter writer = new BufferedWriter(new PrintWriter(pw));
         try {
-            jsonError.put("sentence", error.getSentence().content);
-            jsonError.put("message", error.getMessage());
+            writer.write(toJSONArray(docErrorsMap).toString());
         } catch (JSONException e) {
             throw new RedPenException(e);
         }
-        return jsonError.toString()+ (isLast ? "": ",");
+        writer.flush();
     }
 
+    /**
+     * format Validation Errors to JSON
+     * @param document
+     * @param errors
+     * @return
+     */
     @Override
-    protected void writeHeader(Writer writer) throws IOException {
-        writer.write("{\"document\":\"foobar\",\"errors\":[");
-//        writer.write("{\"errors\":[");
+    public String format(Document document, List<ValidationError> errors) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        BufferedWriter writer = new BufferedWriter(new PrintWriter(baos));
+        Map<Document, List<ValidationError>> docErrorsMap = new HashMap<>();
+        docErrorsMap.put(document, errors);
+        try {
+            writer.write(toJSONArray(docErrorsMap).get(0).toString());
+            writer.flush();
+        } catch (JSONException | IOException e) {
+            throw new RuntimeException(e);
+        }
+        return new String(baos.toByteArray(), StandardCharsets.UTF_8);
     }
 
-    @Override
-    protected void writeFooter(Writer writer) throws IOException {
-        writer.write("]}");
-//        writer.write("]}");
+    private JSONArray toJSONArray(Map<Document, List<ValidationError>> docErrorsMap) throws JSONException {
+        JSONArray json = new JSONArray();
+        for (cc.redpen.model.Document document : docErrorsMap.keySet()) {
+            JSONObject docError = new JSONObject();
+            if (document.getFileName().isPresent()) {
+                docError.put("document", document.getFileName().get());
+            }
+            JSONArray jsonErrors = new JSONArray();
+            List<ValidationError> errors = docErrorsMap.get(document);
+            for (ValidationError error : errors) {
+                JSONObject jsonError = new JSONObject();
+                jsonError.put("sentence", error.getSentence().content);
+                jsonError.put("message", error.getMessage());
+                jsonErrors.put(jsonError);
+            }
+            docError.put("errors", jsonErrors);
+            json.put(docError);
+        }
+
+        return json;
     }
 }

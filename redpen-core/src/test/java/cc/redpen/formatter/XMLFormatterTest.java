@@ -32,6 +32,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -40,11 +42,12 @@ public class XMLFormatterTest extends Validator {
 
     @Test
     public void testConvertValidationError() throws RedPenException {
-        ValidationError error =createValidationError(new Sentence("This is a sentence", 0));
+        ValidationError error = createValidationError(new Sentence("This is a sentence", 0));
         XMLFormatter formatter = new XMLFormatter();
         cc.redpen.model.Document document1 = new cc.redpen.model.Document.DocumentBuilder(new WhiteSpaceTokenizer())
                 .setFileName("foobar.md").build();
-        String resultString = formatter.writeError(document1, error, false);
+        List<ValidationError> validationErrors = Arrays.asList(error);
+        String resultString = formatter.format(document1, validationErrors);
 
         Document document = extractDocument(resultString);
         assertEquals(1, document.getElementsByTagName("error").getLength());
@@ -67,10 +70,11 @@ public class XMLFormatterTest extends Validator {
 
     @Test
     public void testConvertValidationErrorWithoutFileName() throws RedPenException {
-        ValidationError error =createValidationError(new Sentence("text", 0));
+        ValidationError error = createValidationError(new Sentence("text", 0));
         XMLFormatter formatter = new XMLFormatter();
-        String resultString = formatter.writeError(
-                new cc.redpen.model.Document.DocumentBuilder(new WhiteSpaceTokenizer()).build(), error, false);
+        List<ValidationError> validationErrors = Arrays.asList(error);
+        String resultString = formatter.format(new cc.redpen.model.Document.DocumentBuilder(new WhiteSpaceTokenizer()).build(), validationErrors);
+
         Document document = extractDocument(resultString);
         assertEquals(1, document.getElementsByTagName("error").getLength());
         assertEquals(1, document.getElementsByTagName("message").getLength());

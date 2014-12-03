@@ -28,28 +28,53 @@ import org.json.JSONObject;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class JSONFormatterTest extends Validator {
 
     @Test
-    public void testFormatErrors() throws RedPenException, JSONException {
+    public void testFormatSingleDocumentErrors() throws RedPenException, JSONException {
         JSONFormatter formatter = new JSONFormatter();
         List<ValidationError> errors = new ArrayList<>();
         errors.add(createValidationError(new Sentence("testing JSONFormatter", 1)));
-        Document document = new Document.DocumentBuilder().build();
+        Document document = new Document.DocumentBuilder().setFileName("docName").build();
         String result = formatter.format(document, errors);
         JSONObject jsonObject = new JSONObject(result);
-        String jsonDoc = jsonObject.getString("document");
-        assertNotNull(jsonDoc);
+        String docName = jsonObject.getString("document");
+        assertEquals("docName", docName);
         JSONArray jsonErrors = jsonObject.getJSONArray("errors");
         assertNotNull(jsonErrors);
         assertEquals(1, jsonErrors.length());
         assertEquals("testing JSONFormatter", jsonErrors.getJSONObject(0).getString("sentence"));
         assertEquals("json test error", jsonErrors.getJSONObject(0).getString("message"));
-        assertEquals("{\"document\":\"foobar\",\"errors\":[{\"sentence\":\"testing JSONFormatter\",\"message\":\"json test error\"}]}", result);
+        assertEquals("{\"document\":\"docName\",\"errors\":[{\"sentence\":\"testing JSONFormatter\",\"message\":\"json test error\"}]}", result);
+    }
+
+    @Test
+    public void testFormatDocumentsAndErrors() throws RedPenException, JSONException {
+        JSONFormatter formatter = new JSONFormatter();
+        List<ValidationError> errors = new ArrayList<>();
+        errors.add(createValidationError(new Sentence("testing JSONFormatter", 1)));
+        Document document = new Document.DocumentBuilder().setFileName("docName").build();
+        Map<Document, List<ValidationError>> documentListMap = new HashMap<>();
+        documentListMap.put(document, errors);
+
+        String result = formatter.format(documentListMap);
+        assertEquals("[{\"document\":\"docName\",\"errors\":[{\"sentence\":\"testing JSONFormatter\",\"message\":\"json test error\"}]}]", result);
+        JSONArray jsonArray = new JSONArray(result);
+        assertTrue(jsonArray.length() == 1);
+        JSONObject jsonObject = jsonArray.getJSONObject(0);
+
+        String docName = jsonObject.getString("document");
+        assertEquals("docName", docName);
+        JSONArray jsonErrors = jsonObject.getJSONArray("errors");
+        assertNotNull(jsonErrors);
+        assertEquals(1, jsonErrors.length());
+        assertEquals("testing JSONFormatter", jsonErrors.getJSONObject(0).getString("sentence"));
+        assertEquals("json test error", jsonErrors.getJSONObject(0).getString("message"));
     }
 }

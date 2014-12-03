@@ -28,12 +28,19 @@ import org.w3c.dom.Text;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.io.Writer;
+import java.util.List;
+import java.util.Map;
 
 /**
  * XML Output formatter.
@@ -61,7 +68,23 @@ public class XMLFormatter extends Formatter {
     }
 
     @Override
-    protected String writeError(cc.redpen.model.Document document, ValidationError error, boolean isLast) throws RedPenException {
+    public void format(PrintWriter pw, Map<cc.redpen.model.Document, List<ValidationError>> docErrorsMap) throws RedPenException, IOException {
+
+        BufferedWriter writer = new BufferedWriter(new PrintWriter(pw));
+
+        writer.write("<validation-result>\n");
+
+        for (cc.redpen.model.Document document : docErrorsMap.keySet()) {
+            List<ValidationError> errors = docErrorsMap.get(document);
+            for (ValidationError error : errors) {
+                writer.write(writeError(document, error));
+            }
+        }
+        writer.write("</validation-result>");
+        writer.flush();
+    }
+
+    private String writeError(cc.redpen.model.Document document, ValidationError error) throws RedPenException {
         // create dom
         Document doc = db.newDocument();
         Element errorElement = doc.createElement("error");
@@ -105,13 +128,4 @@ public class XMLFormatter extends Formatter {
         return writer.toString() + "\n";
     }
 
-    @Override
-    protected void writeHeader(Writer writer) throws IOException {
-        writer.write("<validation-result>\n");
-    }
-
-    @Override
-    protected void writeFooter(Writer writer) throws IOException {
-        writer.write("</validation-result>");
-    }
 }

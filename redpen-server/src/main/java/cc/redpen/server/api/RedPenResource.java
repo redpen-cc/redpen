@@ -24,7 +24,6 @@ import cc.redpen.formatter.JSONFormatter;
 import cc.redpen.model.Document;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.validator.ValidationError;
-import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +36,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,8 +92,7 @@ public class RedPenResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public Response validateDocument(@FormParam("textarea") @DefaultValue("") String document,
-                                     @FormParam("lang") @DefaultValue("en") String lang)
-            throws JSONException, RedPenException, UnsupportedEncodingException {
+                                     @FormParam("lang") @DefaultValue("en") String lang) throws RedPenException {
         LOG.info("Validating document");
         RedPen redPen = getRedPen(lang);
         Document parsedDocument = redPen.parse(DocumentParser.PLAIN, document);
