@@ -33,7 +33,12 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 import static cc.redpen.config.Configuration.ConfigurationBuilder;
@@ -52,7 +57,7 @@ public final class ConfigurationLoader {
         }
         String value = element.getAttribute("value");
         if (value.length() != 1) {
-            throw new RedPenException("value sould be one character, specified: " + value);
+            throw new RedPenException("value should be one character, specified: " + value);
         }
         char charValue = value.charAt(0);
         return new Symbol(
