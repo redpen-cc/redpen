@@ -18,6 +18,7 @@
 package cc.redpen;
 
 import cc.redpen.formatter.Formatter;
+import cc.redpen.formatter.JSONFormatter;
 import cc.redpen.formatter.PlainFormatter;
 import cc.redpen.formatter.XMLFormatter;
 import cc.redpen.model.Document;
@@ -145,6 +146,9 @@ public final class Main {
                 break;
             case "plain":
                 formatter = new PlainFormatter();
+                break;
+            case "json":
+                formatter = new JSONFormatter();
                 break;
             default:
                 LOG.error("Unsupported format:" + resultFormat);
