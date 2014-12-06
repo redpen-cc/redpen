@@ -2,9 +2,6 @@
 [![Coverage Status](https://coveralls.io/repos/recruit-tech/redpen/badge.png)](https://coveralls.io/r/recruit-tech/redpen)
 [![Gitter chat](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/recruit-tech/redpen)
 
-RedPen
-=======
-
 <p align="center">
    <a href="http://redpen.cc"><img src="logo/redpen-logo.png"/></a>
 </p>
@@ -17,6 +14,12 @@ Keywords
 ========
 
 proofreading,  document inspection, spellchecker
+
+How to contribute
+==================
+
+We welcome any contributions through Github pull requests. When you make changes such as adding new features and the tests,
+please run test before throw the pull reqest. You can run test with the mvn test command.
 
 Resources
 ==========
