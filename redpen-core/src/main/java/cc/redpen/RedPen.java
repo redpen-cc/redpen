@@ -156,6 +156,13 @@ public class RedPen {
     }
 
     private void runSectionValidators(List<Document> documents, Map<Document, List<ValidationError>> docErrorsMap) {
+        // run Section PreProcessors to documents
+        for (Document document : documents) {
+            for (Section section : document) {
+                validators.forEach(e -> e.preValidate(section));
+            }
+        }
+        // run Section validator to documents
         for (Document document : documents) {
             for (Section section : document) {
                 List<ValidationError> newErrors = new ArrayList<>();

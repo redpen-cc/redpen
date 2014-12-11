@@ -56,6 +56,15 @@ public abstract class Validator {
     }
 
     /**
+     * Process input blocks before run validation. This method is used to store
+     * the information needed to run Validator before the validation process.
+     *
+     * @param section input section
+     */
+    public void preValidate(Section section){
+    }
+
+    /**
      * validate the input document and returns the invalid points.
      * {@link cc.redpen.validator.Validator} provides empty implementation. Validator implementation validates documents can override this method.
      *
