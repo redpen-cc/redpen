@@ -56,6 +56,15 @@ public abstract class Validator {
     }
 
     /**
+     * Process input blocks before run validation. This method is used to store
+     * the information needed to run Validator before the validation process.
+     *
+     * @param section input section
+     */
+    public void preValidate(Section section){
+    }
+
+    /**
      * validate the input document and returns the invalid points.
      * {@link cc.redpen.validator.Validator} provides empty implementation. Validator implementation validates documents can override this method.
      *
@@ -136,6 +145,17 @@ public abstract class Validator {
         if (value != null) {
             LOG.info("{} is set to {}", attributeName, value);
             return Boolean.valueOf(value);
+        } else {
+            LOG.info("{} is not set. Use default value of {}", attributeName, defaultValue);
+            return defaultValue;
+        }
+    }
+
+    protected double getConfigAttributeAsDouble(String attributeName, double defaultValue) {
+        String value = config.getAttribute(attributeName);
+        if (value != null) {
+            LOG.info("{} is set to {}", attributeName, value);
+            return Double.valueOf(value);
         } else {
             LOG.info("{} is not set. Use default value of {}", attributeName, defaultValue);
             return defaultValue;
