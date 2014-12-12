@@ -1,5 +1,6 @@
 package cc.redpen.validator.section;
 
+import cc.redpen.RedPenException;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
@@ -13,8 +14,12 @@ import java.util.*;
  * DuplicatedSectionValidator check if there are highly similar section pairs.
  */
 final public class DuplicatedSectionValidator extends Validator {
+    /**
+     * Default threshold (Cosine similarity).
+     */
+    static final public double DEFAULT_SIMILARITY_THRESHOLD = 0.9d;
 
-    static final private double SIMILARITY_THRESHOLD = 0.9d;
+    private double threhold;
     private List<SectionVector> sectionVectors = new ArrayList<>();
 
     class SectionVector {
@@ -54,7 +59,7 @@ final public class DuplicatedSectionValidator extends Validator {
             Map<String, Integer> candidateVector = sectionVector.sectionVector;
             // NOTE: not header.equals() since the we need check if the references are identical
             if (sectionVector.header != section.getHeaderContent(0) &&
-                    calcCosine(targetVector, candidateVector) > SIMILARITY_THRESHOLD) {
+                    calcCosine(targetVector, candidateVector) > threhold) {
                 Optional<Sentence> header = Optional.ofNullable(section.getHeaderContent(0));
                 errors.add(createValidationError(header.orElse(section.getParagraph(0).getSentence(0)),
                         sectionVector.header.position));
@@ -92,6 +97,11 @@ final public class DuplicatedSectionValidator extends Validator {
             Integer currentNum = sectionVector.get(surface);
             sectionVector.put(surface, ++currentNum);
         }
+    }
+
+    @Override
+    protected void init() throws RedPenException {
+        this.threhold = getConfigAttributeAsDouble("threshold", DEFAULT_SIMILARITY_THRESHOLD);
     }
 
     @Override

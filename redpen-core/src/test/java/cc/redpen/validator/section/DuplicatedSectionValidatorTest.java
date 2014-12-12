@@ -18,7 +18,7 @@ public class DuplicatedSectionValidatorTest {
     @Test
     public void testDetectDuplicatedSection() throws RedPenException {
         Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(new ValidatorConfiguration("DuplicateSection"))
+                .addValidatorConfig(new ValidatorConfiguration("DuplicatedSection"))
                 .setLanguage("en").build();
 
         List<Document> documents = new ArrayList<>();
@@ -43,7 +43,7 @@ public class DuplicatedSectionValidatorTest {
     @Test
     public void testDetectNonDuplicatedSection() throws RedPenException {
         Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(new ValidatorConfiguration("DuplicateSection"))
+                .addValidatorConfig(new ValidatorConfiguration("DuplicatedSection"))
                 .setLanguage("en").build();
 
         List<Document> documents = new ArrayList<>();
@@ -67,7 +67,7 @@ public class DuplicatedSectionValidatorTest {
     @Test
     public void testDetectDuplicatedSectionWithSameHeader() throws RedPenException {
         Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(new ValidatorConfiguration("DuplicateSection"))
+                .addValidatorConfig(new ValidatorConfiguration("DuplicatedSection"))
                 .setLanguage("en").build();
 
         List<Document> documents = new ArrayList<>();
@@ -88,4 +88,28 @@ public class DuplicatedSectionValidatorTest {
         Assert.assertEquals(2, errors.get(documents.get(0)).size());
     }
 
+    @Test
+    public void testDetectNonDuplicatedSectionWithLowThreshold() throws RedPenException {
+        Configuration config = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(new ValidatorConfiguration("DuplicatedSection").addAttribute("threshold", "0.0"))
+                .setLanguage("en").build();
+
+        List<Document> documents = new ArrayList<>();
+        // create two section which contains only one same word, "baz"
+        documents.add(
+        new Document.DocumentBuilder()
+                .addSection(1)
+                .addSectionHeader("foobar")
+                .addParagraph()
+                .addSentence("baz foo foo", 1)
+                .addSection(1)
+                .addSectionHeader("aho")
+                .addParagraph()
+                .addSentence("baz zoo zoo", 2)
+                .build());
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        Assert.assertEquals(2, errors.get(documents.get(0)).size());
+    }
 }

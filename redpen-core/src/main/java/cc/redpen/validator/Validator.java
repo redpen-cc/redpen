@@ -151,6 +151,17 @@ public abstract class Validator {
         }
     }
 
+    protected double getConfigAttributeAsDouble(String attributeName, double defaultValue) {
+        String value = config.getAttribute(attributeName);
+        if (value != null) {
+            LOG.info("{} is set to {}", attributeName, value);
+            return Double.valueOf(value);
+        } else {
+            LOG.info("{} is not set. Use default value of {}", attributeName, defaultValue);
+            return defaultValue;
+        }
+    }
+
     protected SymbolTable getSymbolTable() {
         return symbolTable;
     }
