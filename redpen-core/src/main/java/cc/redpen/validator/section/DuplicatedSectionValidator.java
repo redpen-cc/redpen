@@ -9,7 +9,7 @@ import cc.redpen.validator.Validator;
 
 import java.util.*;
 
-public class DuplicateSectionValidator extends Validator {
+public class DuplicatedSectionValidator extends Validator {
 
     static final private double SIMILARITY_THRESHOLD = 0.9d;
     private List<SectionVector> sectionVectors;
@@ -24,7 +24,7 @@ public class DuplicateSectionValidator extends Validator {
         }
     }
 
-    public DuplicateSectionValidator() {
+    public DuplicatedSectionValidator() {
         this.sectionVectors = sectionVectors = new ArrayList<>();
     }
 
@@ -53,12 +53,13 @@ public class DuplicateSectionValidator extends Validator {
         Map<String, Integer> targetVector = extractWordFrequency(section);
         for (SectionVector sectionVector : sectionVectors) {
             Map<String, Integer> candidateVector = sectionVector.sectionVector;
-             if (sectionVector.header != section.getHeaderContent(0) &&
-                     calcCosine(targetVector, candidateVector) > SIMILARITY_THRESHOLD) {
-                 Optional<Sentence> header = Optional.ofNullable(section.getHeaderContent(0));
-                 errors.add(createValidationError(header.orElse(section.getParagraph(0).getSentence(0)),
-                         sectionVector.header.position));
-             }
+            // NOTE: not header.equals() since the we need check if the references are identical
+            if (sectionVector.header != section.getHeaderContent(0) &&
+                    calcCosine(targetVector, candidateVector) > SIMILARITY_THRESHOLD) {
+                Optional<Sentence> header = Optional.ofNullable(section.getHeaderContent(0));
+                errors.add(createValidationError(header.orElse(section.getParagraph(0).getSentence(0)),
+                        sectionVector.header.position));
+            }
         }
     }
 

@@ -212,7 +212,7 @@ public final class SymbolTable implements Serializable {
                 new Symbol(SPACE, '　', "")
                 , new Symbol(EXCLAMATION_MARK, '！', "!")
                 , new Symbol(NUMBER_SIGN, '＃', "#")
-                , new Symbol(DOLLAR_SIGN, '$', "＄")
+                , new Symbol(DOLLAR_SIGN, '＄', "$")
                 , new Symbol(PERCENT_SIGN, '％', "%")
                 , new Symbol(QUESTION_MARK, '？', "?")
                 , new Symbol(AMPERSAND, '＆', "&")

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class DuplicateSectionValidatorTest {
+public class DuplicatedSectionValidatorTest {
 
     @Test
     public void testDetectDuplicatedSection() throws RedPenException {
