@@ -51,7 +51,8 @@ public class JSONFormatterTest extends Validator {
         assertEquals(1, jsonErrors.length());
         assertEquals("testing JSONFormatter", jsonErrors.getJSONObject(0).getString("sentence"));
         assertEquals("json test error", jsonErrors.getJSONObject(0).getString("message"));
-        assertEquals("{\"document\":\"docName\",\"errors\":[{\"sentence\":\"testing JSONFormatter\",\"message\":\"json test error\"}]}", result);
+        assertEquals(1, jsonErrors.getJSONObject(0).getInt("lineNum"));
+        assertEquals("{\"document\":\"docName\",\"errors\":[{\"sentence\":\"testing JSONFormatter\",\"lineNum\":1,\"message\":\"json test error\"}]}", result);
     }
 
     @Test
@@ -64,7 +65,7 @@ public class JSONFormatterTest extends Validator {
         documentListMap.put(document, errors);
 
         String result = formatter.format(documentListMap);
-        assertEquals("[{\"document\":\"docName\",\"errors\":[{\"sentence\":\"testing JSONFormatter\",\"message\":\"json test error\"}]}]", result);
+        assertEquals("[{\"document\":\"docName\",\"errors\":[{\"sentence\":\"testing JSONFormatter\",\"lineNum\":1,\"message\":\"json test error\"}]}]", result);
         JSONArray jsonArray = new JSONArray(result);
         assertTrue(jsonArray.length() == 1);
         JSONObject jsonObject = jsonArray.getJSONObject(0);
@@ -76,5 +77,6 @@ public class JSONFormatterTest extends Validator {
         assertEquals(1, jsonErrors.length());
         assertEquals("testing JSONFormatter", jsonErrors.getJSONObject(0).getString("sentence"));
         assertEquals("json test error", jsonErrors.getJSONObject(0).getString("message"));
+        assertEquals(1, jsonErrors.getJSONObject(0).getInt("lineNum"));
     }
 }
