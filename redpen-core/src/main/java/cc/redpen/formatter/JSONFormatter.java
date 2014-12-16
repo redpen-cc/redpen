@@ -93,6 +93,7 @@ public class JSONFormatter extends Formatter {
                 JSONObject jsonError = new JSONObject();
                 jsonError.put("sentence", error.getSentence().content);
                 jsonError.put("message", error.getMessage());
+                jsonError.put("lineNum", error.getLineNumber());
                 jsonErrors.put(jsonError);
             }
             docError.put("errors", jsonErrors);
