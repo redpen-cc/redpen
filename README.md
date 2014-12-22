@@ -21,12 +21,13 @@ How to contribute
 We welcome any contributions through Github pull requests. When you make changes such as adding new features and the tests,
 please run test before throw the pull reqest. You can run test with the mvn test command.
 
-Resources
-==========
+Links
+======
 
 * [Mailing List](https://groups.google.com/forum/#!forum/redpen-validator)
 * [Docs](http://redpen.cc/docs.html)
-* [Docker Image](https://registry.hub.docker.com/u/ainoya/redpen-server/)
+* [Docker Image by Naoki Ainoya](https://registry.hub.docker.com/u/ainoya/redpen-server/)
+* [Atom Editor package by griffin-stewie](https://atom.io/packages/redpen)
 
 Deploy
 ======
