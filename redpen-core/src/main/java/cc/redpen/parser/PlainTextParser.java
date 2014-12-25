@@ -60,7 +60,7 @@ final class PlainTextParser extends BaseDocumentParser implements Serializable{
         BufferedReader br = createReader(is);
         String remain = "";
         String line;
-        int lineNum = 0;
+        int lineNum = 1;
         try {
             while ((line = br.readLine()) != null) {
                 int periodPosition = sentenceExtractor.getSentenceEndPosition(line);

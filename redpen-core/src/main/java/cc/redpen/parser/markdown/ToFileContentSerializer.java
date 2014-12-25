@@ -111,7 +111,7 @@ public class ToFileContentSerializer implements Visitor {
     }
 
     private int lineNumberFromStartIndex(int startIndex) {
-        int lineNum = 0;
+        int lineNum = 1;
         // TODO test
         for (int end : lineList) {
             if (startIndex < end) {

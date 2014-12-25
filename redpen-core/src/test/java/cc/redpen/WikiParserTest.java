@@ -537,9 +537,47 @@ public class WikiParserTest {
         assertEquals(h2Section.getParentSection(), h1Section);
         assertEquals(rootSection.getParentSection(), null);
 
-        assertEquals(0, rootSection.getHeaderContent(0).position);
-        assertEquals(0, h1Section.getHeaderContent(0).position);
-        assertEquals(4, h2Section.getHeaderContent(0).position);
+        assertEquals(1, rootSection.getHeaderContent(0).position);
+        assertEquals(0, rootSection.getNumberOfParagraphs());
+
+        assertEquals(1, h1Section.getHeaderContent(0).position);
+        assertEquals(2, h1Section.getNumberOfParagraphs());
+        assertEquals(1, h1Section.getParagraph(0).getNumberOfSentences());
+        assertEquals(2, h1Section.getParagraph(0).getSentence(0).position);
+        assertEquals(1, h1Section.getParagraph(1).getNumberOfSentences());
+        assertEquals(4, h1Section.getParagraph(1).getSentence(0).position);
+
+        assertEquals(5, h2Section.getHeaderContent(0).position);
+        assertEquals(1, h2Section.getNumberOfParagraphs());
+        assertEquals(1, h2Section.getParagraph(0).getNumberOfSentences());
+        assertEquals(6, h2Section.getParagraph(0).getSentence(0).position);
+    }
+
+    @Test
+    public void testDocumentWithoutLastPeriod()
+            throws UnsupportedEncodingException {
+        String sampleText = "h1. Prefectures in Japan.\n";
+        sampleText += "There are 47 prefectures in Japan\n";// no last period
+
+        Document doc = createFileContent(sampleText);
+        assertEquals(2, doc.size());
+        Section rootSection = doc.getSection(0);
+        Section h1Section = doc.getSection(1);
+
+        assertEquals(0, rootSection.getLevel());
+        assertEquals(1, h1Section.getLevel());
+
+        assertEquals(rootSection.getSubSection(0), h1Section);
+        assertEquals(h1Section.getParentSection(), rootSection);
+        assertEquals(rootSection.getParentSection(), null);
+
+        assertEquals(1, rootSection.getHeaderContent(0).position);
+        assertEquals(0, rootSection.getNumberOfParagraphs());
+
+        assertEquals(1, h1Section.getHeaderContent(0).position);
+        assertEquals(1, h1Section.getNumberOfParagraphs());
+        assertEquals(1, h1Section.getParagraph(0).getNumberOfSentences());
+        assertEquals(2, h1Section.getParagraph(0).getSentence(0).position);
     }
 
     @Test
