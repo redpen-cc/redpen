@@ -83,13 +83,26 @@ public class PlainTextParserTest {
         sampleText += "However, pen is not oranges.\n";
         sampleText += "We need to be peisient.\n";
         sampleText += "\n";
-        sampleText += "Happ life.\n";
+        sampleText += "Happy life.\n";
         sampleText += "Happy home.\n";
         sampleText += "Tama Home.\n";
         Document doc = generateDocument(sampleText);
         Section section = doc.getLastSection();
         assertEquals(7, calcLineNum(section));
         assertEquals(3, extractParagraphs(section).size());
+
+        assertEquals(2, section.getParagraph(0).getNumberOfSentences());
+        assertEquals(1, section.getParagraph(0).getSentence(0).position);
+        assertEquals(2, section.getParagraph(0).getSentence(1).position);
+
+        assertEquals(2, section.getParagraph(1).getNumberOfSentences());
+        assertEquals(4, section.getParagraph(1).getSentence(0).position);
+        assertEquals(5, section.getParagraph(1).getSentence(1).position);
+
+        assertEquals(3, section.getParagraph(2).getNumberOfSentences());
+        assertEquals(7, section.getParagraph(2).getSentence(0).position);
+        assertEquals(8, section.getParagraph(2).getSentence(1).position);
+        assertEquals(9, section.getParagraph(2).getSentence(2).position);
     }
 
     @Test

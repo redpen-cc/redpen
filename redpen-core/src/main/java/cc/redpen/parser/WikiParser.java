@@ -99,13 +99,13 @@ final class WikiParser extends BaseDocumentParser {
 
         // for sentences right below the beginning of document
         List<Sentence> headers = new ArrayList<>();
-        headers.add(new Sentence("", 0));
+        headers.add(new Sentence("", 1));
         documentBuilder.addSection(0, headers);
 
         // begin parsing
         LinePattern prevPattern, currentPattern = LinePattern.VOID;
         String line;
-        int lineNum = 0;
+        int lineNum = 1;
         StringBuilder remain = new StringBuilder();
         br = createReader(is);
         try {
@@ -144,7 +144,7 @@ final class WikiParser extends BaseDocumentParser {
             throw new RedPenException(e);
         }
         if (remain.length() > 0) {
-            appendLastSentence(lineNum, remain.toString(), documentBuilder);
+            appendLastSentence(lineNum-1, remain.toString(), documentBuilder); // lineNum-1 since the lineNum is incremented.
         }
         return documentBuilder.build();
 
