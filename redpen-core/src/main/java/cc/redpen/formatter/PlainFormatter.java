@@ -55,12 +55,10 @@ public final class PlainFormatter extends Formatter {
 
     private String writeError(Document document, ValidationError error) {
         StringBuilder str = new StringBuilder();
-        str.append("ValidationError[");
-        str.append(error.getValidatorName());
-        str.append("][");
-        document.getFileName().ifPresent(e -> str.append(e).append(" : "));
-        str.append(error.getLineNumber()).append(" (")
-                .append(error.getMessage()).append(")]");
+        document.getFileName().ifPresent(e -> str.append(e).append(":"));
+        str.append(error.getLineNumber());
+        str.append(": ValidationError[").append(error.getValidatorName()).append("], ");
+        str.append(error.getMessage());
         str.append(" at line: ").append(error.getSentence().content);
         str.append("\n");
         return str.toString();
