@@ -50,7 +50,7 @@ public final class ValidationError implements java.io.Serializable {
      * @return the number of line
      */
     public int getLineNumber() {
-        return sentence.position;
+        return sentence.lineNum;
     }
 
     /**

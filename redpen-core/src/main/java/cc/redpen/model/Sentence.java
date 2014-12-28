@@ -35,7 +35,7 @@ public final class Sentence implements Serializable {
     /**
      * Sentence position in a file.
      */
-    public final int position;
+    public final int lineNum;
     /**
      * Content of string.
      */
@@ -62,7 +62,7 @@ public final class Sentence implements Serializable {
     public Sentence(String sentenceContent, int sentencePosition) {
         super();
         this.content = sentenceContent;
-        this.position = sentencePosition;
+        this.lineNum = sentencePosition;
         this.isFirstSentence = false;
         this.links = new ArrayList<>();
         this.tokens = new ArrayList<>();
@@ -76,7 +76,7 @@ public final class Sentence implements Serializable {
         Sentence sentence = (Sentence) o;
 
         if (isFirstSentence != sentence.isFirstSentence) return false;
-        if (position != sentence.position) return false;
+        if (lineNum != sentence.lineNum) return false;
         if (content != null ? !content.equals(sentence.content) : sentence.content != null) return false;
         if (links != null ? !links.equals(sentence.links) : sentence.links != null) return false;
         if (tokens != null ? !tokens.equals(sentence.tokens) : sentence.tokens != null) return false;
@@ -88,7 +88,7 @@ public final class Sentence implements Serializable {
     public int hashCode() {
         int result = links != null ? links.hashCode() : 0;
         result = 31 * result + (content != null ? content.hashCode() : 0);
-        result = 31 * result + position;
+        result = 31 * result + lineNum;
         result = 31 * result + (isFirstSentence ? 1 : 0);
         result = 31 * result + (tokens != null ? tokens.hashCode() : 0);
         return result;
@@ -99,7 +99,7 @@ public final class Sentence implements Serializable {
         return "Sentence{" +
                 "links=" + links +
                 ", content='" + content + '\'' +
-                ", position=" + position +
+                ", lineNum=" + lineNum +
                 ", isFirstSentence=" + isFirstSentence +
                 ", tokens=" + tokens +
                 '}';

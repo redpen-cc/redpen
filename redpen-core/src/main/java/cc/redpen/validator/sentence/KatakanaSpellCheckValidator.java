@@ -112,7 +112,7 @@ final public class KatakanaSpellCheckValidator extends Validator {
             }
         }
         if (!found) {
-            dic.put(katakana, sentence.position);
+            dic.put(katakana, sentence.lineNum);
         }
     }
 

@@ -180,9 +180,9 @@ public final class Section {
      */
     public Sentence getJoinedHeaderContents() {
         StringBuilder joinedHeader = new StringBuilder();
-        int linePosition = 0;
+        int lineNum = 0;
         if (headerContent.size() > 0) {
-            linePosition = headerContent.get(0).position;
+            lineNum = headerContent.get(0).lineNum;
         }
         int i = 0;
         for (Sentence header : headerContent) {
@@ -193,7 +193,7 @@ public final class Section {
             joinedHeader.append(header.content);
             i++;
         }
-        return new Sentence(joinedHeader.toString(), linePosition);
+        return new Sentence(joinedHeader.toString(), lineNum);
     }
 
     /**
