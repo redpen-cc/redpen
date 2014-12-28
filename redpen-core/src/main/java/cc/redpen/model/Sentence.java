@@ -27,7 +27,7 @@ import java.util.List;
  * Sentence block in a Document.
  */
 public final class Sentence implements Serializable {
-    private static final long serialVersionUID = 8001875796889119504L;
+    private static final long serialVersionUID = -3019057510527995111L;
     /**
      * Links (including internal and external ones).
      */
@@ -41,11 +41,14 @@ public final class Sentence implements Serializable {
      */
     public String content;
     /**
+     * Position which the sentence starts with.
+     */
+    public final int startPositionOffset;
+    /**
      * Flag for knowing if the sentence is the first sentence
      * of a block, such as paragraph, list, header.
      */
     public boolean isFirstSentence;
-
     /**
      * A list of tokens.
      *
@@ -57,15 +60,39 @@ public final class Sentence implements Serializable {
      * Constructor.
      *
      * @param sentenceContent  content of sentence
-     * @param sentencePosition sentence position
+     * @param lineNum line number of sentence
      */
-    public Sentence(String sentenceContent, int sentencePosition) {
+    public Sentence(String sentenceContent, int lineNum) {
+        this(sentenceContent, lineNum, 0);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param sentenceContent  content of sentence
+     * @param sentencePosition sentence position
+     * @param startOffset offset of the start position in the line
+     */
+    public Sentence(String sentenceContent, int sentencePosition, int startOffset) {
         super();
         this.content = sentenceContent;
         this.lineNum = sentencePosition;
         this.isFirstSentence = false;
         this.links = new ArrayList<>();
         this.tokens = new ArrayList<>();
+        this.startPositionOffset = startOffset;
+    }
+
+    @Override
+    public String toString() {
+        return "Sentence{" +
+                "links=" + links +
+                ", lineNum=" + lineNum +
+                ", content='" + content + '\'' +
+                ", startPositionOffset=" + startPositionOffset +
+                ", isFirstSentence=" + isFirstSentence +
+                ", tokens=" + tokens +
+                '}';
     }
 
     @Override
@@ -77,6 +104,7 @@ public final class Sentence implements Serializable {
 
         if (isFirstSentence != sentence.isFirstSentence) return false;
         if (lineNum != sentence.lineNum) return false;
+        if (startPositionOffset != sentence.startPositionOffset) return false;
         if (content != null ? !content.equals(sentence.content) : sentence.content != null) return false;
         if (links != null ? !links.equals(sentence.links) : sentence.links != null) return false;
         if (tokens != null ? !tokens.equals(sentence.tokens) : sentence.tokens != null) return false;
@@ -87,21 +115,11 @@ public final class Sentence implements Serializable {
     @Override
     public int hashCode() {
         int result = links != null ? links.hashCode() : 0;
-        result = 31 * result + (content != null ? content.hashCode() : 0);
         result = 31 * result + lineNum;
+        result = 31 * result + (content != null ? content.hashCode() : 0);
+        result = 31 * result + startPositionOffset;
         result = 31 * result + (isFirstSentence ? 1 : 0);
         result = 31 * result + (tokens != null ? tokens.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Sentence{" +
-                "links=" + links +
-                ", content='" + content + '\'' +
-                ", lineNum=" + lineNum +
-                ", isFirstSentence=" + isFirstSentence +
-                ", tokens=" + tokens +
-                '}';
     }
 }
