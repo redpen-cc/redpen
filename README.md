@@ -6,8 +6,6 @@
    <a href="http://redpen.cc"><img src="logo/redpen-logo.png"/></a>
 </p>
 
-A document inspection tool.
-
 See the detail usage in the RedPen [home page](http://redpen.cc/).
 
 Keywords
@@ -26,8 +24,10 @@ Links
 
 * [Mailing List](https://groups.google.com/forum/#!forum/redpen-validator)
 * [Docs](http://redpen.cc/docs.html)
+* [Blog](http://blog.redpen.cc)
 * [Docker Image by Naoki Ainoya](https://registry.hub.docker.com/u/ainoya/redpen-server/)
 * [Atom Editor package by griffin-stewie](https://atom.io/packages/redpen)
+* [RubyGem by akinomurasame](https://rubygems.org/gems/redpen_ruby)
 
 Deploy
 ======
