@@ -27,16 +27,26 @@ final class CandidateSentence {
 
     private String link;
 
-    CandidateSentence(int line,
-                      String lineCharacter, String linkCharacter) {
-        this.lineNum = line;
-        this.sentence = lineCharacter;
-        this.link = linkCharacter;
+    private int startPositionOffset;
+
+    CandidateSentence(int lineNum,
+                      String content, String link) {
+        this(lineNum, content, link, 0);
+    }
+
+    CandidateSentence(int lineNum, String sentence, String link,
+            int positionOffset) {
+        this.lineNum = lineNum;
+        this.sentence = sentence;
+        this.link = link;
+        this.startPositionOffset = positionOffset;
     }
 
     public int getLineNum() {
         return lineNum;
     }
+
+    public int getStartPositionOffset() { return startPositionOffset; }
 
     public String getSentence() {
         return sentence;

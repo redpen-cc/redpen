@@ -102,12 +102,12 @@ public class ToFileContentSerializer implements Visitor {
         }
     }
 
-    private void addCandidateSentence(int lineNum, String text) {
-        addCandidateSentence(lineNum, text, null);
+    private void addCandidateSentence(int lineNum, String text, int positionOffset) {
+        addCandidateSentence(lineNum, text, positionOffset, null);
     }
 
-    private void addCandidateSentence(int lineNum, String text, String link) {
-        candidateSentences.add(new CandidateSentence(lineNum, text, link));
+    private void addCandidateSentence(int lineNum, String text, int positionOffset, String link) {
+        candidateSentences.add(new CandidateSentence(lineNum, text, link, positionOffset));
     }
 
     private int lineNumberFromStartIndex(int startIndex) {
@@ -120,6 +120,14 @@ public class ToFileContentSerializer implements Visitor {
             lineNum++;
         }
         return lineNum;
+    }
+
+    private int lineStartIndex(int lineNumber) {
+        if (lineNumber == 1) {
+            return 0;
+        } else {
+            return lineList.get(lineNumber-2);
+        }
     }
 
     private String printChildrenToString(SuperNode node) {
@@ -233,9 +241,12 @@ public class ToFileContentSerializer implements Visitor {
 
     public void visit(AutoLinkNode autoLinkNode) {
         // TODO GitHub Markdown Extension
+        int lineNumber =lineNumberFromStartIndex(autoLinkNode.getStartIndex());
         addCandidateSentence(
-                lineNumberFromStartIndex(autoLinkNode.getStartIndex()),
-                autoLinkNode.getText(), autoLinkNode.getText());
+                lineNumber,
+                autoLinkNode.getText(),
+                autoLinkNode.getStartIndex() - lineStartIndex(lineNumber),
+                autoLinkNode.getText());
     }
 
     public void visit(BlockQuoteNode blockQuoteNode) {
@@ -243,8 +254,11 @@ public class ToFileContentSerializer implements Visitor {
     }
 
     public void visit(CodeNode codeNode) {
+        int lineNumber =lineNumberFromStartIndex(codeNode.getStartIndex());
         addCandidateSentence(lineNumberFromStartIndex(
-                codeNode.getStartIndex()), codeNode.getText());
+                codeNode.getStartIndex()),
+                codeNode.getText(),
+                codeNode.getStartIndex() - lineStartIndex(lineNumber));
     }
 
     public void visit(ExpImageNode expImageNode) {
@@ -327,6 +341,8 @@ public class ToFileContentSerializer implements Visitor {
 
     public void visit(SimpleNode simpleNode) {
         //TODO validate detail
+        int lineNumber =lineNumberFromStartIndex(simpleNode.getStartIndex());
+
         switch (simpleNode.getType()) {
             case Linebreak:
                 break;
@@ -336,19 +352,23 @@ public class ToFileContentSerializer implements Visitor {
                 break;
             case Apostrophe:
                 addCandidateSentence(
-                        lineNumberFromStartIndex(simpleNode.getStartIndex()), "'");
+                        lineNumberFromStartIndex(simpleNode.getStartIndex()),
+                        "'", simpleNode.getStartIndex() - lineStartIndex(lineNumber));
                 break;
             case Ellipsis:
                 addCandidateSentence(
-                        lineNumberFromStartIndex(simpleNode.getStartIndex()), "...");
+                        lineNumberFromStartIndex(simpleNode.getStartIndex()),
+                        "...", simpleNode.getStartIndex() - lineStartIndex(lineNumber));
                 break;
             case Emdash:
                 addCandidateSentence(
-                        lineNumberFromStartIndex(simpleNode.getStartIndex()), "–");
+                        lineNumberFromStartIndex(simpleNode.getStartIndex()),
+                        "–", simpleNode.getStartIndex() - lineStartIndex(lineNumber));
                 break;
             case Endash:
                 addCandidateSentence(
-                        lineNumberFromStartIndex(simpleNode.getStartIndex()), "—");
+                        lineNumberFromStartIndex(simpleNode.getStartIndex()),
+                        "—", simpleNode.getStartIndex() - lineStartIndex(lineNumber));
                 break;
             default:
                 LOG.warn("Illegal SimpleNode:[" + simpleNode.toString() + "]");
@@ -357,9 +377,12 @@ public class ToFileContentSerializer implements Visitor {
 
     public void visit(SpecialTextNode specialTextNode) {
         // TODO to sentence
+        int lineNumber =lineNumberFromStartIndex(specialTextNode.getStartIndex());
         addCandidateSentence(
                 lineNumberFromStartIndex(
-                        specialTextNode.getStartIndex()), specialTextNode.getText());
+                        specialTextNode.getStartIndex()),
+                specialTextNode.getText(),
+                specialTextNode.getStartIndex() - lineStartIndex(lineNumber));
     }
 
     public void visit(StrikeNode strikeNode) {
@@ -371,11 +394,13 @@ public class ToFileContentSerializer implements Visitor {
     }
 
     public void visit(TextNode textNode) {
+        int lineNumber = lineNumberFromStartIndex(textNode.getStartIndex());
         // to sentence, if sentence breaker appear
         // append remain sentence, if sentence breaker not appear
         addCandidateSentence(
-                lineNumberFromStartIndex(
-                        textNode.getStartIndex()), textNode.getText());
+                lineNumberFromStartIndex(textNode.getStartIndex()),
+                textNode.getText(),
+                textNode.getStartIndex() - lineStartIndex(lineNumber));
         // for printChildrenToString
         printer.print(textNode.getText());
     }
