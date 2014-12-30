@@ -27,10 +27,7 @@ import org.pegdown.ast.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.parboiled.common.Preconditions.checkArgNotNull;
 
@@ -141,72 +138,39 @@ public class ToFileContentSerializer implements Visitor {
     }
 
     private List<Sentence> createSentenceList() {
-        List<Sentence> newSentences = new ArrayList<>();
-        String remainStr = "";
-        Sentence currentSentence = null;
-        List<String> remainLinks = new ArrayList<>();
-        int lineNum = -1;
-        Integer lineStartOffset = -1;
-
-        for (CandidateSentence candidateSentence : candidateSentences) {
-            if (lineNum < 0) {
-                lineNum = candidateSentence.getLineNum();
-            }
-            if (lineStartOffset < 0) {
-                lineStartOffset = candidateSentence.getStartPositionOffset();
-            }
-
-            // extract sentences in input line
-            List<Sentence> currentSentences = new ArrayList<>();
-            remainStr = extractSentences(remainStr, lineNum, candidateSentence,
-                    currentSentences, lineStartOffset);
-
-            if (remainStr.length() == 0) {
-                lineStartOffset = -1;
-            }
-
-            if (currentSentences.size() > 0) {
-                currentSentence = addExtractedSentences(newSentences,
-                        remainLinks, currentSentences);
-                remainLinks = new ArrayList<>();
-            }
-
-            if (candidateSentence.getLink() == null) {
-                continue;
-            }
-            if (currentSentence != null) {
-                currentSentence.links.add(candidateSentence.getLink());
-            } else {
-                remainLinks.add(candidateSentence.getLink());
-            }
+        List<Sentence> outputSentences = new ArrayList<>();
+        MergedCandidateSentence mergedCandidateSentence = MergedCandidateSentence.merge(candidateSentences);
+        if (mergedCandidateSentence != null) {
+            outputSentences = extractSentences(mergedCandidateSentence);
         }
-        // for remaining
-        if (remainStr.length() > 0) {
-            newSentences.add(new Sentence(remainStr, lineNum, lineStartOffset));
-        }
-
         candidateSentences.clear();
-        return newSentences;
+        return outputSentences;
     }
 
-    private String extractSentences(String remainStr,
-            int lineNum, CandidateSentence candidateSentence,
-            List<Sentence> outputSentences, Integer lineStartOffset) {
-        remainStr = sentenceExtractor.extract(
-                remainStr + candidateSentence.getSentence(),
-                outputSentences, lineNum, lineStartOffset);
-        return remainStr;
-    }
+    private List<Sentence> extractSentences(MergedCandidateSentence mergedCandidateSentence) {
+        List<Sentence> outputSentences = new ArrayList<>();
+        String remainStr = sentenceExtractor.extract(mergedCandidateSentence.getContents(),
+                outputSentences, mergedCandidateSentence.getLineNum());
 
-    private Sentence addExtractedSentences(List<Sentence> newSentences,
-            List<String> remainLinks, List<Sentence> currentSentences) {
-        Sentence currentSentence;
-        newSentences.addAll(currentSentences);
-        currentSentence = currentSentences.get(currentSentences.size() - 1);
-        for (String remainLink : remainLinks) {
-            currentSentence.links.add(remainLink);
+        if (remainStr.length() > 0) {
+            outputSentences.add(new Sentence(remainStr,
+                    (mergedCandidateSentence.getOffsetMap().get(mergedCandidateSentence.getContents().length() - remainStr.length())).lineNum,
+                    (mergedCandidateSentence.getOffsetMap().get(mergedCandidateSentence.getContents().length() - remainStr.length())).offset
+            ));
         }
-        return currentSentence;
+
+        int offset = 0;
+        int sentenceId = 0;
+        for (Sentence outputSentence : outputSentences) {
+            outputSentence.startPositionOffset = mergedCandidateSentence.getOffsetMap().get(offset).offset;
+            outputSentence.lineNum = mergedCandidateSentence.getOffsetMap().get(offset).lineNum;
+            if (mergedCandidateSentence.getLinks().size() > sentenceId) {
+                outputSentence.links.add(mergedCandidateSentence.getLinks().get(sentenceId));
+            }
+            sentenceId += 1;
+            offset += outputSentence.content.length();
+        }
+        return outputSentences;
     }
 
     //FIXME wikiparser have same method. pull up or expand to utils

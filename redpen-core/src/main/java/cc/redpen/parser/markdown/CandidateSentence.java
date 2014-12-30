@@ -23,9 +23,9 @@ import java.util.List;
 /**
  * Buffer list of to candidate sentence.
  */
-final class CandidateSentence {
+final public class CandidateSentence {
 
-    class LineOffset {
+    final static public class LineOffset {
         public int lineNum;
         public int offset;
 
@@ -68,6 +68,10 @@ final class CandidateSentence {
         for (int i = 0; i < sentence.length(); ++i) {
             offsetMap.add(new LineOffset(lineNum, positionOffset+i));
         }
+    }
+
+    public List<LineOffset> getOffsetMap() {
+        return offsetMap;
     }
 
     public int getLineNum() {

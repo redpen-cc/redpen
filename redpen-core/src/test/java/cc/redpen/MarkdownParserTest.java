@@ -197,31 +197,31 @@ public class MarkdownParserTest {
     @Test
     public void testGenerateDocumentWithMultipleSentenceInMultipleSentences() {
         String sampleText = "Tokyu is a good railway company. The company is reliable. In addition it\n";
-        sampleText += " is rich. I like the company. However someone does not like it.";
+        sampleText += "is rich. I like the company. However someone does not like it.";
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
         assertEquals(5, firstParagraph.getNumberOfSentences());
 
         assertEquals("Tokyu is a good railway company.", doc.getSection(0).getParagraph(0).getSentence(0).content);
-        //assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(0).lineNum);
-        //assertEquals(0, doc.getSection(0).getParagraph(0).getSentence(0).startPositionOffset);
+        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(0).lineNum);
+        assertEquals(0, doc.getSection(0).getParagraph(0).getSentence(0).startPositionOffset);
 
         assertEquals(" The company is reliable.", doc.getSection(0).getParagraph(0).getSentence(1).content);
-        //assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(1).lineNum);
-        //assertEquals(32, doc.getSection(0).getParagraph(0).getSentence(1).startPositionOffset);
+        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(1).lineNum);
+        assertEquals(32, doc.getSection(0).getParagraph(0).getSentence(1).startPositionOffset);
 
         assertEquals(" In addition it is rich.", doc.getSection(0).getParagraph(0).getSentence(2).content);
-        //assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(2).lineNum);
-        //assertEquals(54, doc.getSection(0).getParagraph(0).getSentence(2).startPositionOffset);
+        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(2).lineNum);
+        assertEquals(57, doc.getSection(0).getParagraph(0).getSentence(2).startPositionOffset);
 
         assertEquals(" I like the company.", doc.getSection(0).getParagraph(0).getSentence(3).content);
-        //assertEquals(2, doc.getSection(0).getParagraph(0).getSentence(3).lineNum);
-        //assertEquals(8, doc.getSection(0).getParagraph(0).getSentence(3).startPositionOffset);
+        assertEquals(2, doc.getSection(0).getParagraph(0).getSentence(3).lineNum);
+        assertEquals(8, doc.getSection(0).getParagraph(0).getSentence(3).startPositionOffset);
 
         assertEquals(" However someone does not like it.", doc.getSection(0).getParagraph(0).getSentence(4).content);
-        //assertEquals(2, doc.getSection(0).getParagraph(0).getSentence(4).lineNum);
-        //assertEquals(24, doc.getSection(0).getParagraph(0).getSentence(4).startPositionOffset);
+        assertEquals(2, doc.getSection(0).getParagraph(0).getSentence(4).lineNum);
+        assertEquals(28, doc.getSection(0).getParagraph(0).getSentence(4).startPositionOffset);
     }
 
     @Test
@@ -291,6 +291,38 @@ public class MarkdownParserTest {
         assertEquals("the url is not Google.",
                 firstParagraph.getSentence(0).content);
     }
+
+    @Test
+    public void testPlainTwoLinkWithinOneLine() {
+        // PegDown Parser is related tovisit(AutoLinkNode) method
+        String sampleText = "url of google is http://google.com. http://yahoo.com is Yahoo url.";
+        Document doc = createFileContent(sampleText);
+        Section firstSections = doc.getSection(0);
+        Paragraph firstParagraph = firstSections.getParagraph(0);
+        assertEquals(2, firstParagraph.getNumberOfSentences());
+        assertEquals(1, firstParagraph.getSentence(0).links.size());
+        assertEquals("http://google.com", firstParagraph.getSentence(0).links.get(0));
+        assertEquals("url of google is http://google.com.",
+                firstParagraph.getSentence(0).content);
+        assertEquals("http://yahoo.com", firstParagraph.getSentence(1).links.get(0));
+        assertEquals(" http://yahoo.com is Yahoo url.",
+                firstParagraph.getSentence(1).content);
+    }
+
+//    @Test
+//    public void testPlainTwoLinkWithinOneSentence() {
+//        String sampleText = "http://yahoo.com and http://google.com is Google and Yahoo urls.";
+//        Document doc = createFileContent(sampleText);
+//        Section firstSections = doc.getSection(0);
+//        Paragraph firstParagraph = firstSections.getParagraph(0);
+//        assertEquals(1, firstParagraph.getNumberOfSentences());
+//        assertEquals(2, firstParagraph.getSentence(0).links.size());
+//        assertEquals("http://yahoo.com", firstParagraph.getSentence(0).links.get(0));
+//        assertEquals("http://google.com", firstParagraph.getSentence(0).links.get(1));
+//        assertEquals("http://yahoo.com and http://google.com is Google and Yahoo urls.",
+//                firstParagraph.getSentence(0).content);
+//
+//    }
 
     @Test
     public void testLinkWithoutTag() {

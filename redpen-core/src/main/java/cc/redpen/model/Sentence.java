@@ -35,7 +35,7 @@ public final class Sentence implements Serializable {
     /**
      * Sentence position in a file.
      */
-    public final int lineNum;
+    public int lineNum;
     /**
      * Content of string.
      */
@@ -43,7 +43,7 @@ public final class Sentence implements Serializable {
     /**
      * Position which the sentence starts with.
      */
-    public final int startPositionOffset;
+    public int startPositionOffset;
     /**
      * Flag for knowing if the sentence is the first sentence
      * of a block, such as paragraph, list, header.

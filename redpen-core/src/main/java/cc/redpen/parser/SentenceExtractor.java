@@ -140,20 +140,17 @@ public final class SentenceExtractor {
      * @param line            Input line which can contain more than one sentences
      * @param outputSentences List of extracted sentences
      * @param lineNum         Line number
-     * @param lineStartOffset position offset
      * @return remaining line
      */
-    public String extract(String line, List<Sentence> outputSentences,
-            int lineNum, Integer lineStartOffset) {
+    public String extract(String line, List<Sentence> outputSentences, int lineNum) {
         int periodPosition = endOfSentenceDetector.getSentenceEndPosition(line);
         if (periodPosition == -1) {
             return line;
         } else {
             while (true) {
                 Sentence sentence = new Sentence(line.substring(0,
-                        periodPosition + 1), lineNum, lineStartOffset);
+                        periodPosition + 1), lineNum);
                 outputSentences.add(sentence);
-                lineStartOffset = periodPosition + 1;
                 line = line.substring(periodPosition + 1, line.length());
                 periodPosition = endOfSentenceDetector.getSentenceEndPosition(line);
                 if (periodPosition == -1) {
@@ -161,18 +158,6 @@ public final class SentenceExtractor {
                 }
             }
         }
-    }
-
-    /**
-     * Get Sentence lists.
-     *
-     * @param line            Input line which can contain more than one sentences
-     * @param outputSentences List of extracted sentences
-     * @param lineNum         Line number
-     * @return remaining line
-     */
-    public String extract(String line, List<Sentence> outputSentences, int lineNum) {
-        return extract(line, outputSentences, lineNum, 0);
     }
 
     /**
