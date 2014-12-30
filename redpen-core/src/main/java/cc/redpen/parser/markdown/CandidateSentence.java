@@ -70,6 +70,7 @@ final class CandidateSentence {
                 + "lineNum=" + lineNum
                 + ", sentence='" + sentence + '\''
                 + ", link='" + link + '\''
+                + ", startPositionOffset='" + startPositionOffset + '\''
                 + '}';
     }
 }

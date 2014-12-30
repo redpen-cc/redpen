@@ -8,7 +8,7 @@
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
+ * Unless required by applicable law or agreed to in writing, sofftware
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -146,16 +146,18 @@ public class ToFileContentSerializer implements Visitor {
         Sentence currentSentence = null;
         List<String> remainLinks = new ArrayList<>();
         int lineNum = -1;
-        Integer lineStartOffset = 0;
+        Integer lineStartOffset = -1;
 
         for (CandidateSentence candidateSentence : candidateSentences) {
-            lineNum = candidateSentence.getLineNum();
+            if (lineNum < 0) {
+                lineNum = candidateSentence.getLineNum();
+            }
             if (lineStartOffset < 0) {
                 lineStartOffset = candidateSentence.getStartPositionOffset();
             }
             // extract sentences in input line
             List<Sentence> currentSentences = new ArrayList<>();
-            remainStr = extractSentences(remainStr, candidateSentence,
+            remainStr = extractSentences(remainStr, lineNum, candidateSentence,
                     currentSentences, lineStartOffset);
 
             if (remainStr.length() == 0) {
@@ -179,18 +181,19 @@ public class ToFileContentSerializer implements Visitor {
         }
         // for remaining
         if (remainStr.length() > 0) {
-            newSentences.add(new Sentence(remainStr, lineNum));
+            newSentences.add(new Sentence(remainStr, lineNum, lineStartOffset));
         }
+
         candidateSentences.clear();
         return newSentences;
     }
 
     private String extractSentences(String remainStr,
-            CandidateSentence candidateSentence,
+            int lineNum, CandidateSentence candidateSentence,
             List<Sentence> currentSentences, Integer lineStartOffset) {
         remainStr = sentenceExtractor.extract(
                 remainStr + candidateSentence.getSentence(),
-                currentSentences, candidateSentence.getLineNum(), lineStartOffset);
+                currentSentences, lineNum, lineStartOffset);
         return remainStr;
     }
 

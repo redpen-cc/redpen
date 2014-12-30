@@ -143,8 +143,8 @@ public final class SentenceExtractor {
      * @param lineStartOffset position offset
      * @return remaining line
      */
-    public String extract(String line, List<Sentence> outputSentences, int lineNum,
-            Integer lineStartOffset) {
+    public String extract(String line, List<Sentence> outputSentences,
+            int lineNum, Integer lineStartOffset) {
         int periodPosition = endOfSentenceDetector.getSentenceEndPosition(line);
         if (periodPosition == -1) {
             return line;
@@ -153,8 +153,8 @@ public final class SentenceExtractor {
                 Sentence sentence = new Sentence(line.substring(0,
                         periodPosition + 1), lineNum, lineStartOffset);
                 outputSentences.add(sentence);
-                lineStartOffset += periodPosition;
-                line = line.substring(periodPosition + 1,line.length());
+                lineStartOffset = periodPosition + 1;
+                line = line.substring(periodPosition + 1, line.length());
                 periodPosition = endOfSentenceDetector.getSentenceEndPosition(line);
                 if (periodPosition == -1) {
                     return line;
