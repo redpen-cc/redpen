@@ -17,10 +17,32 @@
  */
 package cc.redpen.parser.markdown;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Buffer list of to candidate sentence.
  */
 final class CandidateSentence {
+
+    class LineOffset {
+        public int lineNum;
+        public int offset;
+
+        public LineOffset(int lineNum, int offset) {
+            this.lineNum = lineNum;
+            this.offset = offset;
+        }
+
+        @Override
+        public String toString() {
+            return "LineOffset{" +
+                    "lineNum=" + lineNum +
+                    ", offset=" + offset +
+                    '}';
+        }
+    }
+
     private int lineNum;
 
     private String sentence;
@@ -28,6 +50,8 @@ final class CandidateSentence {
     private String link;
 
     private int startPositionOffset;
+
+    private List<LineOffset> offsetMap;
 
     CandidateSentence(int lineNum,
                       String content, String link) {
@@ -40,6 +64,10 @@ final class CandidateSentence {
         this.sentence = sentence;
         this.link = link;
         this.startPositionOffset = positionOffset;
+        this.offsetMap = new ArrayList<>();
+        for (int i = 0; i < sentence.length(); ++i) {
+            offsetMap.add(new LineOffset(lineNum, positionOffset+i));
+        }
     }
 
     public int getLineNum() {
@@ -66,11 +94,12 @@ final class CandidateSentence {
 
     @Override
     public String toString() {
-        return "CandidateSentence{"
-                + "lineNum=" + lineNum
-                + ", sentence='" + sentence + '\''
-                + ", link='" + link + '\''
-                + ", startPositionOffset='" + startPositionOffset + '\''
-                + '}';
+        return "CandidateSentence{" +
+                "lineNum=" + lineNum +
+                ", sentence='" + sentence + '\'' +
+                ", link='" + link + '\'' +
+                ", startPositionOffset=" + startPositionOffset +
+                ", offsetMap=" + offsetMap +
+                '}';
     }
 }

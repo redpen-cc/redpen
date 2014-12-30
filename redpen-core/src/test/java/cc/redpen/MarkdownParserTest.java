@@ -175,6 +175,7 @@ public class MarkdownParserTest {
         assertEquals(3, firstParagraph.getNumberOfSentences());
         for (int i = 0; i < expectedResult.length; i++) {
             assertEquals(expectedResult[i], firstParagraph.getSentence(i).content);
+            assertEquals(1, firstParagraph.getSentence(i).lineNum);
         }
     }
 
@@ -186,18 +187,41 @@ public class MarkdownParserTest {
         Paragraph firstParagraph = firstSections.getParagraph(0);
         assertEquals(3, firstParagraph.getNumberOfSentences());
         assertEquals("Is Tokyu a good railway company?", doc.getSection(0).getParagraph(0).getSentence(0).content);
+        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(0).lineNum);
         assertEquals(" The company is reliable.", doc.getSection(0).getParagraph(0).getSentence(1).content);
+        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(1).lineNum);
         assertEquals(" In addition it is rich!", doc.getSection(0).getParagraph(0).getSentence(2).content);
+        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(2).lineNum);
     }
 
     @Test
     public void testGenerateDocumentWithMultipleSentenceInMultipleSentences() {
-        String sampleText = "Tokyu is a good railway company. The company is reliable. In addition it is rich.\n";
-        sampleText += "I like the company. Howerver someone does not like it.";
+        String sampleText = "Tokyu is a good railway company. The company is reliable. In addition it\n";
+        sampleText += " is rich. I like the company. However someone does not like it.";
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
         assertEquals(5, firstParagraph.getNumberOfSentences());
+
+        assertEquals("Tokyu is a good railway company.", doc.getSection(0).getParagraph(0).getSentence(0).content);
+        //assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(0).lineNum);
+        //assertEquals(0, doc.getSection(0).getParagraph(0).getSentence(0).startPositionOffset);
+
+        assertEquals(" The company is reliable.", doc.getSection(0).getParagraph(0).getSentence(1).content);
+        //assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(1).lineNum);
+        //assertEquals(32, doc.getSection(0).getParagraph(0).getSentence(1).startPositionOffset);
+
+        assertEquals(" In addition it is rich.", doc.getSection(0).getParagraph(0).getSentence(2).content);
+        //assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(2).lineNum);
+        //assertEquals(54, doc.getSection(0).getParagraph(0).getSentence(2).startPositionOffset);
+
+        assertEquals(" I like the company.", doc.getSection(0).getParagraph(0).getSentence(3).content);
+        //assertEquals(2, doc.getSection(0).getParagraph(0).getSentence(3).lineNum);
+        //assertEquals(8, doc.getSection(0).getParagraph(0).getSentence(3).startPositionOffset);
+
+        assertEquals(" However someone does not like it.", doc.getSection(0).getParagraph(0).getSentence(4).content);
+        //assertEquals(2, doc.getSection(0).getParagraph(0).getSentence(4).lineNum);
+        //assertEquals(24, doc.getSection(0).getParagraph(0).getSentence(4).startPositionOffset);
     }
 
     @Test

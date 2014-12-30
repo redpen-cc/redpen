@@ -155,6 +155,7 @@ public class ToFileContentSerializer implements Visitor {
             if (lineStartOffset < 0) {
                 lineStartOffset = candidateSentence.getStartPositionOffset();
             }
+
             // extract sentences in input line
             List<Sentence> currentSentences = new ArrayList<>();
             remainStr = extractSentences(remainStr, lineNum, candidateSentence,
@@ -190,10 +191,10 @@ public class ToFileContentSerializer implements Visitor {
 
     private String extractSentences(String remainStr,
             int lineNum, CandidateSentence candidateSentence,
-            List<Sentence> currentSentences, Integer lineStartOffset) {
+            List<Sentence> outputSentences, Integer lineStartOffset) {
         remainStr = sentenceExtractor.extract(
                 remainStr + candidateSentence.getSentence(),
-                currentSentences, lineNum, lineStartOffset);
+                outputSentences, lineNum, lineStartOffset);
         return remainStr;
     }
 
