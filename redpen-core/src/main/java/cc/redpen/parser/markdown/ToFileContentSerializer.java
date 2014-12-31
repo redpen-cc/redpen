@@ -167,13 +167,13 @@ public class ToFileContentSerializer implements Visitor {
             outputSentence.startPositionOffset = mergedCandidateSentence.getOffsetMap().get(offset).offset;
             outputSentence.lineNum = mergedCandidateSentence.getOffsetMap().get(offset).lineNum;
             outputSentence.offsetMap = mergedCandidateSentence.getOffsetMap().subList(offset,
-                    offset + outputSentence.content.length()-1);
+                    offset + outputSentence.content.length());
 
             Set<LineOffset> linkPositions = mergedCandidateSentence.getLinks().keySet();
             for (LineOffset linkPosition : linkPositions) {
                 if (linkPosition.compareTo(outputSentence.offsetMap.get(0)) >= 0
                         && linkPosition.compareTo(outputSentence.offsetMap.get(
-                        getEndIndex(outputSentence))) <= 0) {
+                        outputSentence.content.length() - 1)) <= 0) {
                     outputSentence.links.add(mergedCandidateSentence.getLinks().get(linkPosition));
                 }
 
@@ -181,18 +181,6 @@ public class ToFileContentSerializer implements Visitor {
             offset += outputSentence.content.length();
         }
         return outputSentences;
-    }
-
-    private int getEndIndex(Sentence outputSentence) {
-        System.out.println("sentence: " + outputSentence.content);
-        System.out.println("content.size: " + outputSentence.content.length());
-        System.out.println("offsetMap.size: " + outputSentence.offsetMap.size());
-
-        if (outputSentence.content.length() > outputSentence.offsetMap.size() - 1) {
-            return outputSentence.offsetMap.size() - 1;
-        } else {
-            return outputSentence.content.length() - 1;
-        }
     }
 
     //FIXME wikiparser have same method. pull up or expand to utils

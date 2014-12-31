@@ -251,11 +251,27 @@ public class MarkdownParserTest {
         assertEquals("Tokyu is a good railway company.", doc.getSection(0).getParagraph(0).getSentence(0).content);
         assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(0).lineNum);
         assertEquals(0, doc.getSection(0).getParagraph(0).getSentence(0).startPositionOffset);
-        // assertEquals(32, doc.getSection(0).getParagraph(0).getSentence(0).offsetMap.size()); TODO FIXMLE
+        assertEquals(32, doc.getSection(0).getParagraph(0).getSentence(0).offsetMap.size());
 
         assertEquals(" But there are competitors.", doc.getSection(0).getParagraph(0).getSentence(1).content);
         assertEquals(3, doc.getSection(0).getParagraph(0).getSentence(1).lineNum);
         assertEquals(16, doc.getSection(0).getParagraph(0).getSentence(1).startPositionOffset);
+    }
+
+
+    @Test
+    public void testMappingTableWithShortSentence() {
+        String sampleText = "Tsu is a city.";
+        Document doc = createFileContent(sampleText);
+        Section firstSections = doc.getSection(0);
+        Paragraph firstParagraph = firstSections.getParagraph(0);
+        assertEquals(1, firstParagraph.getNumberOfSentences());
+        assertEquals("Tsu is a city.", doc.getSection(0).getParagraph(0).getSentence(0).content);
+
+        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(0).lineNum);
+        assertEquals(0, doc.getSection(0).getParagraph(0).getSentence(0).startPositionOffset);
+        assertEquals(doc.getSection(0).getParagraph(0).getSentence(0).content.length(),
+                doc.getSection(0).getParagraph(0).getSentence(0).offsetMap.size());
     }
 
         @Test
