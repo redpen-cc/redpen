@@ -49,7 +49,7 @@ final public class CandidateSentence {
         this.link = link;
         this.startPositionOffset = positionOffset;
         this.offsetMap = new ArrayList<>();
-        for (int i = 0; i < sentence.length(); ++i) {
+        for (int i = 0; i < sentence.length(); i++) {
             offsetMap.add(new LineOffset(lineNum, positionOffset+i));
         }
     }

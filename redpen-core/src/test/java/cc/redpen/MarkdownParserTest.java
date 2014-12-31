@@ -167,16 +167,23 @@ public class MarkdownParserTest {
     public void testGenerateDocumentWithMultipleSentenceInOneSentence() {
         String sampleText =
                 "Tokyu is a good railway company. The company is reliable. In addition it is rich.";
-        String[] expectedResult = {"Tokyu is a good railway company.",
-                " The company is reliable.", " In addition it is rich."};
+
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
         assertEquals(3, firstParagraph.getNumberOfSentences());
-        for (int i = 0; i < expectedResult.length; i++) {
-            assertEquals(expectedResult[i], firstParagraph.getSentence(i).content);
-            assertEquals(1, firstParagraph.getSentence(i).lineNum);
-        }
+
+        assertEquals("Tokyu is a good railway company.", firstParagraph.getSentence(0).content);
+        assertEquals(1, firstParagraph.getSentence(0).lineNum);
+        assertEquals(0, firstParagraph.getSentence(0).startPositionOffset);
+
+        assertEquals(" The company is reliable.", firstParagraph.getSentence(1).content);
+        assertEquals(1, firstParagraph.getSentence(1).lineNum);
+        assertEquals(32, firstParagraph.getSentence(1).startPositionOffset);
+
+        assertEquals(" In addition it is rich.", firstParagraph.getSentence(2).content);
+        assertEquals(1, firstParagraph.getSentence(2).lineNum);
+        assertEquals(57, firstParagraph.getSentence(2).startPositionOffset);
     }
 
     @Test
@@ -186,12 +193,18 @@ public class MarkdownParserTest {
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
         assertEquals(3, firstParagraph.getNumberOfSentences());
+
         assertEquals("Is Tokyu a good railway company?", doc.getSection(0).getParagraph(0).getSentence(0).content);
         assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(0).lineNum);
+        assertEquals(0, doc.getSection(0).getParagraph(0).getSentence(0).startPositionOffset);
+
         assertEquals(" The company is reliable.", doc.getSection(0).getParagraph(0).getSentence(1).content);
         assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(1).lineNum);
+        assertEquals(32, doc.getSection(0).getParagraph(0).getSentence(1).startPositionOffset);
+
         assertEquals(" In addition it is rich!", doc.getSection(0).getParagraph(0).getSentence(2).content);
         assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(2).lineNum);
+        assertEquals(57, doc.getSection(0).getParagraph(0).getSentence(2).startPositionOffset);
     }
 
     @Test
@@ -225,6 +238,27 @@ public class MarkdownParserTest {
     }
 
     @Test
+    public void testGenerateDocumentWithTwoSentencesWithMultipleShortLine() {
+        String sampleText = "Tokyu\n" +
+                "is a good\n" +
+                "railway company. But there\n" +
+                "are competitors.";
+        Document doc = createFileContent(sampleText);
+        Section firstSections = doc.getSection(0);
+        Paragraph firstParagraph = firstSections.getParagraph(0);
+        assertEquals(2, firstParagraph.getNumberOfSentences());
+
+        assertEquals("Tokyu is a good railway company.", doc.getSection(0).getParagraph(0).getSentence(0).content);
+        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(0).lineNum);
+        assertEquals(0, doc.getSection(0).getParagraph(0).getSentence(0).startPositionOffset);
+        // assertEquals(32, doc.getSection(0).getParagraph(0).getSentence(0).offsetMap.size()); TODO FIXMLE
+
+        assertEquals(" But there are competitors.", doc.getSection(0).getParagraph(0).getSentence(1).content);
+        assertEquals(3, doc.getSection(0).getParagraph(0).getSentence(1).lineNum);
+        assertEquals(16, doc.getSection(0).getParagraph(0).getSentence(1).startPositionOffset);
+    }
+
+        @Test
     public void testGenerateDocumentWitVoidContent() {
         String sampleText = "";
         Document doc = createFileContent(sampleText);
