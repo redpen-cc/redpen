@@ -274,7 +274,7 @@ public class MarkdownParserTest {
         assertEquals(1, firstParagraph.getSentence(0).links.size());
         // PegDown Parser is related to visit(RefLinkNode) method
         assertEquals("http://google.com", firstParagraph.getSentence(0).links.get(0));
-        assertEquals("this is not a [pen], but also this is not Google either.",
+        assertEquals("this is not a pen, but also this is not Google either.",
                 firstParagraph.getSentence(0).content);
     }
 
@@ -309,20 +309,20 @@ public class MarkdownParserTest {
                 firstParagraph.getSentence(1).content);
     }
 
-//    @Test
-//    public void testPlainTwoLinkWithinOneSentence() {
-//        String sampleText = "http://yahoo.com and http://google.com is Google and Yahoo urls.";
-//        Document doc = createFileContent(sampleText);
-//        Section firstSections = doc.getSection(0);
-//        Paragraph firstParagraph = firstSections.getParagraph(0);
-//        assertEquals(1, firstParagraph.getNumberOfSentences());
-//        assertEquals(2, firstParagraph.getSentence(0).links.size());
-//        assertEquals("http://yahoo.com", firstParagraph.getSentence(0).links.get(0));
-//        assertEquals("http://google.com", firstParagraph.getSentence(0).links.get(1));
-//        assertEquals("http://yahoo.com and http://google.com is Google and Yahoo urls.",
-//                firstParagraph.getSentence(0).content);
-//
-//    }
+    @Test
+    public void testPlainTwoLinkWithinOneSentence() {
+        String sampleText = "http://yahoo.com and http://google.com is Google and Yahoo urls.";
+        Document doc = createFileContent(sampleText);
+        Section firstSections = doc.getSection(0);
+        Paragraph firstParagraph = firstSections.getParagraph(0);
+        assertEquals(1, firstParagraph.getNumberOfSentences());
+        assertEquals(2, firstParagraph.getSentence(0).links.size());
+        assertEquals("http://yahoo.com", firstParagraph.getSentence(0).links.get(1));
+        assertEquals("http://google.com", firstParagraph.getSentence(0).links.get(0));
+        assertEquals("http://yahoo.com and http://google.com is Google and Yahoo urls.",
+                firstParagraph.getSentence(0).content);
+
+    }
 
     @Test
     public void testLinkWithoutTag() {

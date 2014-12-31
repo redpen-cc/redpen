@@ -1,7 +1,11 @@
 package cc.redpen.parser.markdown;
 
+import cc.redpen.parser.LineOffset;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MergedCandidateSentence {
 
@@ -9,12 +13,12 @@ public class MergedCandidateSentence {
 
     private String contents;
 
-    private List<String> links; // candidateSentenceId -> link
+    private Map<LineOffset, String> links;
 
-    private List<CandidateSentence.LineOffset> offsetMap;
+    private List<LineOffset> offsetMap;
 
     public MergedCandidateSentence(int lineNum, String contents,
-            List<String> links, List<CandidateSentence.LineOffset> offsetMap) {
+            Map<LineOffset, String> links, List<LineOffset> offsetMap) {
         this.lineNum = lineNum;
         this.contents = contents;
         this.links = links;
@@ -29,22 +33,22 @@ public class MergedCandidateSentence {
 
         StringBuilder contents = new StringBuilder();
 
-        List<String> links = new ArrayList<>(); // candidateSentenceId -> link
+        Map<LineOffset, String> links = new HashMap<>();
 
-        List<CandidateSentence.LineOffset> offsetMap = new ArrayList<>();
+        List<LineOffset> offsetMap = new ArrayList<>();
 
         for (CandidateSentence sentence : candidateSentences) {
             if (offsetMap.size() > 0) {
                 int rt = sentence.getLineNum() - offsetMap.get(offsetMap.size() - 1).lineNum;
                 for (int i = 0; i < rt; i++) {
                     contents.append(" ");
-                    offsetMap.add(new CandidateSentence.LineOffset(sentence.getLineNum() + i, 0));
+                    offsetMap.add(new LineOffset(sentence.getLineNum() + i, 0));
                 }
             }
             contents.append(sentence.getSentence());
             offsetMap.addAll(sentence.getOffsetMap());
             if (sentence.getLink() != null) {
-                links.add(sentence.getLink());
+                links.put(sentence.getOffsetMap().get(0), sentence.getLink());
             }
         }
         return new MergedCandidateSentence(lineNum, contents.toString(), links, offsetMap);
@@ -54,11 +58,11 @@ public class MergedCandidateSentence {
         return contents;
     }
 
-    public List<String> getLinks() {
+    public Map<LineOffset, String> getLinks() {
         return links;
     }
 
-    public List<CandidateSentence.LineOffset> getOffsetMap() {
+    public List<LineOffset> getOffsetMap() {
         return offsetMap;
     }
 

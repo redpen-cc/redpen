@@ -17,6 +17,8 @@
  */
 package cc.redpen.parser.markdown;
 
+import cc.redpen.parser.LineOffset;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,24 +26,6 @@ import java.util.List;
  * Buffer list of to candidate sentence.
  */
 final public class CandidateSentence {
-
-    final static public class LineOffset {
-        public int lineNum;
-        public int offset;
-
-        public LineOffset(int lineNum, int offset) {
-            this.lineNum = lineNum;
-            this.offset = offset;
-        }
-
-        @Override
-        public String toString() {
-            return "LineOffset{" +
-                    "lineNum=" + lineNum +
-                    ", offset=" + offset +
-                    '}';
-        }
-    }
 
     private int lineNum;
 

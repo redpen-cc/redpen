@@ -20,6 +20,7 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
+import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
 import org.parboiled.common.StringUtils;
 import org.pegdown.Printer;
@@ -154,20 +155,29 @@ public class ToFileContentSerializer implements Visitor {
 
         if (remainStr.length() > 0) {
             outputSentences.add(new Sentence(remainStr,
-                    (mergedCandidateSentence.getOffsetMap().get(mergedCandidateSentence.getContents().length() - remainStr.length())).lineNum,
-                    (mergedCandidateSentence.getOffsetMap().get(mergedCandidateSentence.getContents().length() - remainStr.length())).offset
+                    (mergedCandidateSentence.getOffsetMap().get(
+                            mergedCandidateSentence.getContents().length() - remainStr.length())).lineNum,
+                    (mergedCandidateSentence.getOffsetMap().get(
+                            mergedCandidateSentence.getContents().length() - remainStr.length())).offset
             ));
         }
 
         int offset = 0;
-        int sentenceId = 0;
         for (Sentence outputSentence : outputSentences) {
             outputSentence.startPositionOffset = mergedCandidateSentence.getOffsetMap().get(offset).offset;
             outputSentence.lineNum = mergedCandidateSentence.getOffsetMap().get(offset).lineNum;
-            if (mergedCandidateSentence.getLinks().size() > sentenceId) {
-                outputSentence.links.add(mergedCandidateSentence.getLinks().get(sentenceId));
+            outputSentence.offsetMap = mergedCandidateSentence.getOffsetMap().subList(offset,
+                    offset + outputSentence.content.length()-1);
+
+            Set<LineOffset> linkPositions = mergedCandidateSentence.getLinks().keySet();
+            for (LineOffset linkPosition : linkPositions) {
+                if (linkPosition.compareTo(outputSentence.offsetMap.get(0)) >= 0
+                        && linkPosition.compareTo(outputSentence.offsetMap.get(
+                        outputSentence.content.length() - 2)) <= 0) { // TODO: safer
+                    outputSentence.links.add(mergedCandidateSentence.getLinks().get(linkPosition));
+                }
+
             }
-            sentenceId += 1;
             offset += outputSentence.content.length();
         }
         return outputSentences;
@@ -422,7 +432,7 @@ public class ToFileContentSerializer implements Visitor {
             lastCandidateSentence.setLink(url);
         } else {
             lastCandidateSentence.setSentence(
-                    "[" + lastCandidateSentence.getSentence() + "]");
+                    lastCandidateSentence.getSentence());
         }
     }
 

@@ -17,6 +17,7 @@
  */
 package cc.redpen.model;
 
+import cc.redpen.parser.LineOffset;
 import cc.redpen.tokenizer.TokenElement;
 
 import java.io.Serializable;
@@ -57,6 +58,11 @@ public final class Sentence implements Serializable {
     public List<TokenElement> tokens;
 
     /**
+     * Combinations of line Number and the position offset
+     */
+    public List<LineOffset> offsetMap;
+
+    /**
      * Constructor.
      *
      * @param sentenceContent  content of sentence
@@ -92,6 +98,7 @@ public final class Sentence implements Serializable {
                 ", startPositionOffset=" + startPositionOffset +
                 ", isFirstSentence=" + isFirstSentence +
                 ", tokens=" + tokens +
+                ", offsetMap=" + offsetMap +
                 '}';
     }
 
