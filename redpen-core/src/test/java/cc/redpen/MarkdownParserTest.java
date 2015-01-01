@@ -24,12 +24,15 @@ import cc.redpen.model.ListBlock;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.parser.DocumentParser;
+import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static cc.redpen.config.SymbolType.COMMA;
 import static cc.redpen.config.SymbolType.FULL_STOP;
@@ -258,7 +261,6 @@ public class MarkdownParserTest {
         assertEquals(16, doc.getSection(0).getParagraph(0).getSentence(1).startPositionOffset);
     }
 
-
     @Test
     public void testMappingTableWithShortSentence() {
         String sampleText = "Tsu is a city.";
@@ -272,6 +274,7 @@ public class MarkdownParserTest {
         assertEquals(0, doc.getSection(0).getParagraph(0).getSentence(0).startPositionOffset);
         assertEquals(doc.getSection(0).getParagraph(0).getSentence(0).content.length(),
                 doc.getSection(0).getParagraph(0).getSentence(0).offsetMap.size());
+
     }
 
         @Test
@@ -316,7 +319,7 @@ public class MarkdownParserTest {
 
     @Test
     public void testPlainLink() {
-        String sampleText = "this is not a [pen], but also this is not [Google](http://google.com) either.";
+        String sampleText = "It is not [Google](http://google.com).";
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
@@ -324,8 +327,34 @@ public class MarkdownParserTest {
         assertEquals(1, firstParagraph.getSentence(0).links.size());
         // PegDown Parser is related to visit(RefLinkNode) method
         assertEquals("http://google.com", firstParagraph.getSentence(0).links.get(0));
-        assertEquals("this is not a pen, but also this is not Google either.",
+        assertEquals("It is not Google.",
                 firstParagraph.getSentence(0).content);
+        assertEquals(firstParagraph.getSentence(0).content.length(),
+                firstParagraph.getSentence(0).offsetMap.size());
+
+        List<LineOffset> expectedOffsets = initializeMappingTable(
+                new LineOffset(1, 0),
+                new LineOffset(1, 1),
+                new LineOffset(1, 2),
+                new LineOffset(1, 3),
+                new LineOffset(1, 4),
+                new LineOffset(1, 5),
+                new LineOffset(1, 6),
+                new LineOffset(1, 7),
+                new LineOffset(1, 8),
+                new LineOffset(1, 9),
+                new LineOffset(1, 11),
+                new LineOffset(1, 12),
+                new LineOffset(1, 13),
+                new LineOffset(1, 14),
+                new LineOffset(1, 15),
+                new LineOffset(1, 16),
+                new LineOffset(1, 37));
+
+        assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).offsetMap.size());
+        for (int i = 0; i < expectedOffsets.size() ; i++) {
+            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).offsetMap.get(i));
+        }
     }
 
     @Test
@@ -389,59 +418,200 @@ public class MarkdownParserTest {
     }
 
     @Test
-    public void testDocumentWithItalicWord() {
-        String sampleText = "This is a *good* day.\n";
+    public void testDocumentWithSimpleSentence() {
+        String sampleText = "It is a good day.";
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
-        assertEquals("This is a good day.", firstParagraph.getSentence(0).content);
+        assertEquals("It is a good day.", firstParagraph.getSentence(0).content);
+        assertEquals(17, firstParagraph.getSentence(0).content.length());
+        assertEquals(1, firstParagraph.getSentence(0).lineNum);
+        List<LineOffset> expectedOffsets = initializeMappingTable(
+                new LineOffset(1, 0),
+                new LineOffset(1, 1),
+                new LineOffset(1, 2),
+                new LineOffset(1, 3),
+                new LineOffset(1, 4),
+                new LineOffset(1, 5),
+                new LineOffset(1, 6),
+                new LineOffset(1, 7),
+                new LineOffset(1, 8),
+                new LineOffset(1, 9),
+                new LineOffset(1, 10),
+                new LineOffset(1, 11),
+                new LineOffset(1, 12),
+                new LineOffset(1, 13),
+                new LineOffset(1, 14),
+                new LineOffset(1, 15),
+                new LineOffset(1, 16));
+
+        assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).offsetMap.size());
+        for (int i = 0; i < expectedOffsets.size() ; i++) {
+            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).offsetMap.get(i));
+        }
+    }
+
+    @Test
+    public void testDocumentWithItalicWord() {
+        String sampleText = "It is a *good* day.";
+        Document doc = createFileContent(sampleText);
+        Section firstSections = doc.getSection(0);
+        Paragraph firstParagraph = firstSections.getParagraph(0);
+        assertEquals("It is a good day.", firstParagraph.getSentence(0).content);
+        List<LineOffset> expectedOffsets = initializeMappingTable(
+                new LineOffset(1, 0),
+                new LineOffset(1, 1),
+                new LineOffset(1, 2),
+                new LineOffset(1, 3),
+                new LineOffset(1, 4),
+                new LineOffset(1, 5),
+                new LineOffset(1, 6),
+                new LineOffset(1, 7),
+                new LineOffset(1, 9),
+                new LineOffset(1, 10),
+                new LineOffset(1, 11),
+                new LineOffset(1, 12),
+                new LineOffset(1, 14),
+                new LineOffset(1, 15),
+                new LineOffset(1, 16),
+                new LineOffset(1, 17),
+                new LineOffset(1, 18));
+
+        assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).offsetMap.size());
+        for (int i = 0; i < expectedOffsets.size() ; i++) {
+            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).offsetMap.get(i));
+        }
     }
 
     @Test
     public void testDocumentWithMultipleItalicWords() {
-        String sampleText = "*This* is a _good_ day.\n";
+        String sampleText = "*It* is a _good_ day.\n";
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
-        assertEquals("This is a good day.", firstParagraph.getSentence(0).content);
+        assertEquals("It is a good day.", firstParagraph.getSentence(0).content);
+        List<LineOffset> expectedOffsets = initializeMappingTable(
+                new LineOffset(1, 1),
+                new LineOffset(1, 2),
+                new LineOffset(1, 4),
+                new LineOffset(1, 5),
+                new LineOffset(1, 6),
+                new LineOffset(1, 7),
+                new LineOffset(1, 8),
+                new LineOffset(1, 9),
+                new LineOffset(1, 11),
+                new LineOffset(1, 12),
+                new LineOffset(1, 13),
+                new LineOffset(1, 14),
+                new LineOffset(1, 16),
+                new LineOffset(1, 17),
+                new LineOffset(1, 18),
+                new LineOffset(1, 19),
+                new LineOffset(1, 20));
+
+        assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).offsetMap.size());
+        for (int i = 0; i < expectedOffsets.size() ; i++) {
+            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).offsetMap.get(i));
+        }
     }
 
     @Test
     public void testDocumentWithMultipleNearStrongWords() {
-        String sampleText = "This is **a** __good__ day.\n";
+        String sampleText = "It is **a** __good__ day.\n";
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
-        assertEquals("This is a good day.", firstParagraph.getSentence(0).content);
+        assertEquals("It is a good day.", firstParagraph.getSentence(0).content);
+        List<LineOffset> expectedOffsets = initializeMappingTable(
+                new LineOffset(1, 0),
+                new LineOffset(1, 1),
+                new LineOffset(1, 2),
+                new LineOffset(1, 3),
+                new LineOffset(1, 4),
+                new LineOffset(1, 5),
+                new LineOffset(1, 8),
+                new LineOffset(1, 11),
+                new LineOffset(1, 14),
+                new LineOffset(1, 15),
+                new LineOffset(1, 16),
+                new LineOffset(1, 17),
+                new LineOffset(1, 20),
+                new LineOffset(1, 21),
+                new LineOffset(1, 22),
+                new LineOffset(1, 23),
+                new LineOffset(1, 24));
+        assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).offsetMap.size());
+        for (int i = 0; i < expectedOffsets.size() ; i++) {
+            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).offsetMap.get(i));
+        }
     }
 
     @Test
-    public void testDocumentWithItalicExpression() {
-        String sampleText = "This is *a good* day.\n";
-        Document doc = createFileContent(sampleText);
-        Section firstSections = doc.getSection(0);
-        Paragraph firstParagraph = firstSections.getParagraph(0);
-        assertEquals("This is a good day.", firstParagraph.getSentence(0).content);
-    }
-
-
-    @Test
-    public void testDocumentWithHeaderCotainingMultipleSentences()
+    public void testDocumentWithHeaderContainingMultipleSentences()
             throws UnsupportedEncodingException {
         String sampleText = "";
         sampleText += "# About Gunma. About Saitama.\n";
         sampleText += "Gunma is located at west of Saitama.\n";
-        sampleText += "The word also have posive meaning. Hower it is a bit wired.";
+        sampleText += "The word also have positive meaning. However it is a bit wired.";
 
         Document doc = createFileContent(sampleText);
         Section lastSection = doc.getSection(doc.size() - 1);
         assertEquals(2, lastSection.getHeaderContentsListSize());
+
         assertEquals("About Gunma.", lastSection.getHeaderContent(0).content);
+        assertEquals(1, lastSection.getHeaderContent(0).lineNum);
+        assertEquals(2, lastSection.getHeaderContent(0).startPositionOffset);
+
+        List<LineOffset> expectedOffsets1 = initializeMappingTable(
+                new LineOffset(1, 2),
+                new LineOffset(1, 3),
+                new LineOffset(1, 4),
+                new LineOffset(1, 5),
+                new LineOffset(1, 6),
+                new LineOffset(1, 7),
+                new LineOffset(1, 8),
+                new LineOffset(1, 9),
+                new LineOffset(1, 10),
+                new LineOffset(1, 11),
+                new LineOffset(1, 12),
+                new LineOffset(1, 13));
+
+        assertEquals(expectedOffsets1.size(), lastSection.getHeaderContent(0).offsetMap.size());
+        for (int i = 0; i < expectedOffsets1.size() ; i++) {
+            assertEquals(expectedOffsets1.get(i),
+                    lastSection.getHeaderContent(0).offsetMap.get(i));
+        }
+
+        List<LineOffset> expectedOffsets2 = initializeMappingTable(
+                new LineOffset(1, 14),
+                new LineOffset(1, 15),
+                new LineOffset(1, 16),
+                new LineOffset(1, 17),
+                new LineOffset(1, 18),
+                new LineOffset(1, 19),
+                new LineOffset(1, 20),
+                new LineOffset(1, 21),
+                new LineOffset(1, 22),
+                new LineOffset(1, 23),
+                new LineOffset(1, 24),
+                new LineOffset(1, 25),
+                new LineOffset(1, 26),
+                new LineOffset(1, 27),
+                new LineOffset(1, 28));
+
         assertEquals(" About Saitama.", lastSection.getHeaderContent(1).content);
+        assertEquals(1, lastSection.getHeaderContent(1).lineNum);
+        assertEquals(14, lastSection.getHeaderContent(1).startPositionOffset);
+
+        assertEquals(expectedOffsets2.size(), lastSection.getHeaderContent(1).offsetMap.size());
+        for (int i = 0; i < expectedOffsets2.size() ; i++) {
+            assertEquals(expectedOffsets2.get(i),
+                    lastSection.getHeaderContent(1).offsetMap.get(i));
+        }
     }
 
     @Test
-    public void testDocumentWithHeaderWitoutPeriod()
+    public void testDocumentWithHeaderWithoutPeriods()
             throws UnsupportedEncodingException {
         String sampleText = "";
         sampleText += "# About Gunma\n";
@@ -452,6 +622,25 @@ public class MarkdownParserTest {
         Section lastSection = doc.getSection(doc.size() - 1);
         assertEquals(1, lastSection.getHeaderContentsListSize());
         assertEquals("About Gunma", lastSection.getHeaderContent(0).content);
+        assertEquals(2, lastSection.getHeaderContent(0).startPositionOffset);
+
+        List<LineOffset> expectedOffsets = initializeMappingTable(
+                new LineOffset(1, 2),
+                new LineOffset(1, 3),
+                new LineOffset(1, 4),
+                new LineOffset(1, 5),
+                new LineOffset(1, 6),
+                new LineOffset(1, 7),
+                new LineOffset(1, 8),
+                new LineOffset(1, 9),
+                new LineOffset(1, 10),
+                new LineOffset(1, 11),
+                new LineOffset(1, 12));
+        assertEquals(expectedOffsets.size(), lastSection.getHeaderContent(0).offsetMap.size());
+        for (int i = 0; i < expectedOffsets.size() ; i++) {
+            assertEquals(expectedOffsets.get(i),
+                    lastSection.getHeaderContent(0).offsetMap.get(i));
+        }
     }
 
     @Test
@@ -623,11 +812,20 @@ public class MarkdownParserTest {
         Document doc = null;
         try {
             Configuration configuration = new Configuration.ConfigurationBuilder().build();
-            doc = parser.parse(inputDocumentString, new SentenceExtractor(configuration.getSymbolTable()), configuration.getTokenizer());
+            doc = parser.parse(inputDocumentString, new SentenceExtractor(configuration.getSymbolTable()),
+                    configuration.getTokenizer());
         } catch (RedPenException e) {
             e.printStackTrace();
             fail();
         }
         return doc;
+    }
+
+    private static List<LineOffset> initializeMappingTable(LineOffset... offsets) {
+        List<LineOffset> offsetTable = new ArrayList<>();
+        for (LineOffset offset : offsets) {
+            offsetTable.add(offset);
+        }
+        return offsetTable;
     }
 }
