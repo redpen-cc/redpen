@@ -431,8 +431,8 @@ public class ToFileContentSerializer implements Visitor {
         if (StringUtils.isNotEmpty(url)) {
             lastCandidateSentence.setLink(url);
         } else {
-            lastCandidateSentence.setSentence(
-                    lastCandidateSentence.getSentence());
+            lastCandidateSentence.setContent(
+                    lastCandidateSentence.getContent());
         }
     }
 

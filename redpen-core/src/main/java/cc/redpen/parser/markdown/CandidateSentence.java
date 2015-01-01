@@ -23,13 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Buffer list of to candidate sentence.
+ * Buffer list of to candidate content.
  */
 final public class CandidateSentence {
 
     private int lineNum;
 
-    private String sentence;
+    private String content;
 
     private String link;
 
@@ -42,14 +42,14 @@ final public class CandidateSentence {
         this(lineNum, content, link, 0);
     }
 
-    CandidateSentence(int lineNum, String sentence, String link,
+    CandidateSentence(int lineNum, String content, String link,
             int positionOffset) {
         this.lineNum = lineNum;
-        this.sentence = sentence;
+        this.content = content;
         this.link = link;
         this.startPositionOffset = positionOffset;
         this.offsetMap = new ArrayList<>();
-        for (int i = 0; i < sentence.length(); i++) {
+        for (int i = 0; i < content.length(); i++) {
             offsetMap.add(new LineOffset(lineNum, positionOffset+i));
         }
     }
@@ -64,12 +64,12 @@ final public class CandidateSentence {
 
     public int getStartPositionOffset() { return startPositionOffset; }
 
-    public String getSentence() {
-        return sentence;
+    public String getContent() {
+        return content;
     }
 
-    public void setSentence(String text) {
-        this.sentence = text;
+    public void setContent(String text) {
+        this.content = text;
     }
 
     public String getLink() {
@@ -84,7 +84,7 @@ final public class CandidateSentence {
     public String toString() {
         return "CandidateSentence{" +
                 "lineNum=" + lineNum +
-                ", sentence='" + sentence + '\'' +
+                ", content='" + content + '\'' +
                 ", link='" + link + '\'' +
                 ", startPositionOffset=" + startPositionOffset +
                 ", offsetMap=" + offsetMap +

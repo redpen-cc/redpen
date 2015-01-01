@@ -30,11 +30,8 @@ public class MergedCandidateSentence {
             return null;
         }
         int lineNum = candidateSentences.get(0).getLineNum();
-
         StringBuilder contents = new StringBuilder();
-
         Map<LineOffset, String> links = new HashMap<>();
-
         List<LineOffset> offsetMap = new ArrayList<>();
 
         for (CandidateSentence sentence : candidateSentences) {
@@ -45,7 +42,7 @@ public class MergedCandidateSentence {
                     offsetMap.add(new LineOffset(sentence.getLineNum() + i, 0));
                 }
             }
-            contents.append(sentence.getSentence());
+            contents.append(sentence.getContent());
             offsetMap.addAll(sentence.getOffsetMap());
             if (sentence.getLink() != null) {
                 links.put(sentence.getOffsetMap().get(0), sentence.getLink());
@@ -67,7 +64,6 @@ public class MergedCandidateSentence {
     }
 
     public int getLineNum() {
-
         return lineNum;
     }
 
