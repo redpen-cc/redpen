@@ -2,10 +2,7 @@ package cc.redpen.parser.markdown;
 
 import cc.redpen.parser.LineOffset;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MergedCandidateSentence {
 
@@ -25,9 +22,9 @@ public class MergedCandidateSentence {
         this.offsetMap = offsetMap;
     }
 
-    public static MergedCandidateSentence merge(List<CandidateSentence> candidateSentences) {
+    public static Optional<MergedCandidateSentence> merge(List<CandidateSentence> candidateSentences) {
         if (candidateSentences.size() == 0) {
-            return null;
+            return Optional.empty();
         }
         int lineNum = candidateSentences.get(0).getLineNum();
         StringBuilder contents = new StringBuilder();
@@ -48,7 +45,7 @@ public class MergedCandidateSentence {
                 links.put(sentence.getOffsetMap().get(0), sentence.getLink());
             }
         }
-        return new MergedCandidateSentence(lineNum, contents.toString(), links, offsetMap);
+        return Optional.of(new MergedCandidateSentence(lineNum, contents.toString(), links, offsetMap));
     }
 
     public String getContents() {

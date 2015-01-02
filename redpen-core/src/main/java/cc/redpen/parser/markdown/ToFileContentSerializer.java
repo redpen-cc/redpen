@@ -140,16 +140,18 @@ public class ToFileContentSerializer implements Visitor {
 
     private List<Sentence> createSentenceList() {
         List<Sentence> outputSentences = new ArrayList<>();
-        MergedCandidateSentence mergedCandidateSentence = MergedCandidateSentence.merge(candidateSentences);
-        if (mergedCandidateSentence != null) {
-            outputSentences = extractSentences(mergedCandidateSentence);
-        }
+        Optional<MergedCandidateSentence> mergedCandidateSentence =
+                MergedCandidateSentence.merge(candidateSentences);
+        mergedCandidateSentence.ifPresent(m ->
+            extractSentences(m, outputSentences)
+        );
         candidateSentences.clear();
         return outputSentences;
     }
 
-    private List<Sentence> extractSentences(MergedCandidateSentence mergedCandidateSentence) {
-        List<Sentence> outputSentences = new ArrayList<>();
+    private List<Sentence> extractSentences(MergedCandidateSentence mergedCandidateSentence,
+            List<Sentence> outputSentences) {
+        // TODO refactoring extract just extract sentence start and end position list
         String remainStr = sentenceExtractor.extract(mergedCandidateSentence.getContents(),
                 outputSentences, mergedCandidateSentence.getLineNum());
 

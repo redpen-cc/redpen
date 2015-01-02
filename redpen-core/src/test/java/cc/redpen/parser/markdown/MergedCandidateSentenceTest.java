@@ -5,7 +5,9 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 public class MergedCandidateSentenceTest {
@@ -16,7 +18,8 @@ public class MergedCandidateSentenceTest {
                 new CandidateSentence(1, "second ", "", 6),
                 new CandidateSentence(1, "third", "", 13));
 
-        MergedCandidateSentence mergedSentence = MergedCandidateSentence.merge(candidateSentences);
+        MergedCandidateSentence mergedSentence = MergedCandidateSentence.merge(candidateSentences).get();
+        assertTrue(mergedSentence != null);
         assertEquals("first second third", mergedSentence.getContents());
         List<LineOffset> expectedOffsets = initializeMappingTable(
                 new LineOffset(1, 0), // f
