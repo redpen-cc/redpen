@@ -32,13 +32,6 @@ public class MergedCandidateSentence {
         List<LineOffset> offsetMap = new ArrayList<>();
 
         for (CandidateSentence sentence : candidateSentences) {
-            if (offsetMap.size() > 0) {
-                int rt = sentence.getLineNum() - offsetMap.get(offsetMap.size() - 1).lineNum;
-                for (int i = 0; i < rt; i++) {
-                    contents.append(" ");
-                    offsetMap.add(new LineOffset(sentence.getLineNum() + i, 0));
-                }
-            }
             contents.append(sentence.getContent());
             offsetMap.addAll(sentence.getOffsetMap());
             if (sentence.getLink() != null) {
