@@ -112,6 +112,11 @@ public class XMLFormatter extends Formatter {
         Text lineNum = doc.createTextNode(Integer.toString(error.getLineNumber()));
         lineNumberElement.appendChild(lineNum);
 
+        Element sentenceStartOffset = doc.createElement("sentenceStartColumnNum");
+        errorElement.appendChild(sentenceStartOffset);
+        Text offset = doc.createTextNode(Integer.toString(error.getStartColumnNumber()));
+        sentenceStartOffset.appendChild(offset);
+
         Element sentenceElement = doc.createElement("sentence");
         errorElement.appendChild(sentenceElement);
         sentenceElement.appendChild(doc.createTextNode(error.getSentence().content));
@@ -127,5 +132,4 @@ public class XMLFormatter extends Formatter {
         }
         return writer.toString() + "\n";
     }
-
 }
