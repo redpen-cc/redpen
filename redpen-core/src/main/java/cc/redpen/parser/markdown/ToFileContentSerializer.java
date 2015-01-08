@@ -20,6 +20,7 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
+import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
 import org.parboiled.common.StringUtils;
 import org.pegdown.Printer;
@@ -27,10 +28,7 @@ import org.pegdown.ast.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.parboiled.common.Preconditions.checkArgNotNull;
 
@@ -102,15 +100,15 @@ public class ToFileContentSerializer implements Visitor {
         }
     }
 
-    private void addCandidateSentence(int lineNum, String text) {
-        addCandidateSentence(lineNum, text, null);
+    private void addCandidateSentence(int lineNum, String text, int positionOffset) {
+        addCandidateSentence(lineNum, text, positionOffset, null);
     }
 
-    private void addCandidateSentence(int lineNum, String text, String link) {
-        candidateSentences.add(new CandidateSentence(lineNum, text, link));
+    private void addCandidateSentence(int lineNum, String text, int positionOffset, String link) {
+        candidateSentences.add(new CandidateSentence(lineNum, text, link, positionOffset));
     }
 
-    private int lineNumberFromStartIndex(int startIndex) {
+    private int getLineNumberFromStartIndex(int startIndex) {
         int lineNum = 1;
         // TODO test
         for (int end : lineList) {
@@ -120,6 +118,14 @@ public class ToFileContentSerializer implements Visitor {
             lineNum++;
         }
         return lineNum;
+    }
+
+    private int getLineStartIndex(int lineNumber) {
+        if (lineNumber == 1) {
+            return 0;
+        } else {
+            return lineList.get(lineNumber-2);
+        }
     }
 
     private String printChildrenToString(SuperNode node) {
@@ -133,52 +139,50 @@ public class ToFileContentSerializer implements Visitor {
     }
 
     private List<Sentence> createSentenceList() {
-        List<Sentence> newSentences = new ArrayList<>();
-        String remainStr = "";
-        Sentence currentSentence = null;
-        List<String> remainLinks = new ArrayList<>();
-        int lineNum = -1;
-
-        for (CandidateSentence candidateSentence : candidateSentences) {
-            lineNum = candidateSentence.getLineNum();
-            // extract sentences in input line
-            List<Sentence> currentSentences = new ArrayList<>();
-            remainStr = sentenceExtractor.extract(
-                    remainStr + candidateSentence.getSentence(),
-                    currentSentences, lineNum);
-
-            if (currentSentences.size() > 0) {
-                currentSentence = addExtractedSentences(newSentences,
-                        remainLinks, currentSentences);
-                remainLinks = new ArrayList<>();
-            }
-
-            if (candidateSentence.getLink() == null) {
-                continue;
-            }
-            if (currentSentence != null) {
-                currentSentence.links.add(candidateSentence.getLink());
-            } else {
-                remainLinks.add(candidateSentence.getLink());
-            }
-        }
-        // for remaining
-        if (remainStr.length() > 0) {
-            newSentences.add(new Sentence(remainStr, lineNum));
-        }
+        List<Sentence> outputSentences = new ArrayList<>();
+        Optional<MergedCandidateSentence> mergedCandidateSentence =
+                MergedCandidateSentence.merge(candidateSentences);
+        mergedCandidateSentence.ifPresent(m ->
+            extractSentences(m, outputSentences)
+        );
         candidateSentences.clear();
-        return newSentences;
+        return outputSentences;
     }
 
-    private Sentence addExtractedSentences(List<Sentence> newSentences,
-            List<String> remainLinks, List<Sentence> currentSentences) {
-        Sentence currentSentence;
-        newSentences.addAll(currentSentences);
-        currentSentence = currentSentences.get(currentSentences.size() - 1);
-        for (String remainLink : remainLinks) {
-            currentSentence.links.add(remainLink);
+    private List<Sentence> extractSentences(MergedCandidateSentence mergedCandidateSentence,
+            List<Sentence> outputSentences) {
+        // TODO refactoring extract just extract sentence start and end position list
+        String remainStr = sentenceExtractor.extract(mergedCandidateSentence.getContents(),
+                outputSentences, mergedCandidateSentence.getLineNum());
+
+        if (remainStr.length() > 0) {
+            outputSentences.add(new Sentence(remainStr,
+                    (mergedCandidateSentence.getOffsetMap().get(
+                            mergedCandidateSentence.getContents().length() - remainStr.length())).lineNum,
+                    (mergedCandidateSentence.getOffsetMap().get(
+                            mergedCandidateSentence.getContents().length() - remainStr.length())).offset
+            ));
         }
-        return currentSentence;
+
+        int offset = 0;
+        for (Sentence outputSentence : outputSentences) {
+            outputSentence.startPositionOffset = mergedCandidateSentence.getOffsetMap().get(offset).offset;
+            outputSentence.lineNum = mergedCandidateSentence.getOffsetMap().get(offset).lineNum;
+            outputSentence.offsetMap = mergedCandidateSentence.getOffsetMap().subList(offset,
+                    offset + outputSentence.content.length());
+
+            Set<LineOffset> linkPositions = mergedCandidateSentence.getLinks().keySet();
+            for (LineOffset linkPosition : linkPositions) {
+                if (linkPosition.compareTo(outputSentence.offsetMap.get(0)) >= 0
+                        && linkPosition.compareTo(outputSentence.offsetMap.get(
+                        outputSentence.content.length() - 1)) <= 0) {
+                    outputSentence.links.add(mergedCandidateSentence.getLinks().get(linkPosition));
+                }
+
+            }
+            offset += outputSentence.content.length();
+        }
+        return outputSentences;
     }
 
     //FIXME wikiparser have same method. pull up or expand to utils
@@ -233,9 +237,12 @@ public class ToFileContentSerializer implements Visitor {
 
     public void visit(AutoLinkNode autoLinkNode) {
         // TODO GitHub Markdown Extension
+        int lineNumber = getLineNumberFromStartIndex(autoLinkNode.getStartIndex());
         addCandidateSentence(
-                lineNumberFromStartIndex(autoLinkNode.getStartIndex()),
-                autoLinkNode.getText(), autoLinkNode.getText());
+                lineNumber,
+                autoLinkNode.getText(),
+                autoLinkNode.getStartIndex() - getLineStartIndex(lineNumber),
+                autoLinkNode.getText());
     }
 
     public void visit(BlockQuoteNode blockQuoteNode) {
@@ -243,8 +250,11 @@ public class ToFileContentSerializer implements Visitor {
     }
 
     public void visit(CodeNode codeNode) {
-        addCandidateSentence(lineNumberFromStartIndex(
-                codeNode.getStartIndex()), codeNode.getText());
+        int lineNumber = getLineNumberFromStartIndex(codeNode.getStartIndex());
+        addCandidateSentence(getLineNumberFromStartIndex(
+                        codeNode.getStartIndex()),
+                codeNode.getText(),
+                codeNode.getStartIndex() - getLineStartIndex(lineNumber));
     }
 
     public void visit(ExpImageNode expImageNode) {
@@ -327,28 +337,36 @@ public class ToFileContentSerializer implements Visitor {
 
     public void visit(SimpleNode simpleNode) {
         //TODO validate detail
+        int lineNumber = getLineNumberFromStartIndex(simpleNode.getStartIndex());
+
         switch (simpleNode.getType()) {
             case Linebreak:
-                break;
+                addCandidateSentence(
+                        getLineNumberFromStartIndex(simpleNode.getStartIndex()),
+                        " ", simpleNode.getStartIndex() - getLineStartIndex(lineNumber));
             case Nbsp:
                 break;
             case HRule:
                 break;
             case Apostrophe:
                 addCandidateSentence(
-                        lineNumberFromStartIndex(simpleNode.getStartIndex()), "'");
+                        getLineNumberFromStartIndex(simpleNode.getStartIndex()),
+                        "'", simpleNode.getStartIndex() - getLineStartIndex(lineNumber));
                 break;
             case Ellipsis:
                 addCandidateSentence(
-                        lineNumberFromStartIndex(simpleNode.getStartIndex()), "...");
+                        getLineNumberFromStartIndex(simpleNode.getStartIndex()),
+                        "...", simpleNode.getStartIndex() - getLineStartIndex(lineNumber));
                 break;
             case Emdash:
                 addCandidateSentence(
-                        lineNumberFromStartIndex(simpleNode.getStartIndex()), "–");
+                        getLineNumberFromStartIndex(simpleNode.getStartIndex()),
+                        "–", simpleNode.getStartIndex() - getLineStartIndex(lineNumber));
                 break;
             case Endash:
                 addCandidateSentence(
-                        lineNumberFromStartIndex(simpleNode.getStartIndex()), "—");
+                        getLineNumberFromStartIndex(simpleNode.getStartIndex()),
+                        "—", simpleNode.getStartIndex() - getLineStartIndex(lineNumber));
                 break;
             default:
                 LOG.warn("Illegal SimpleNode:[" + simpleNode.toString() + "]");
@@ -357,9 +375,12 @@ public class ToFileContentSerializer implements Visitor {
 
     public void visit(SpecialTextNode specialTextNode) {
         // TODO to sentence
+        int lineNumber = getLineNumberFromStartIndex(specialTextNode.getStartIndex());
         addCandidateSentence(
-                lineNumberFromStartIndex(
-                        specialTextNode.getStartIndex()), specialTextNode.getText());
+                getLineNumberFromStartIndex(
+                        specialTextNode.getStartIndex()),
+                specialTextNode.getText(),
+                specialTextNode.getStartIndex() - getLineStartIndex(lineNumber));
     }
 
     public void visit(StrikeNode strikeNode) {
@@ -371,11 +392,13 @@ public class ToFileContentSerializer implements Visitor {
     }
 
     public void visit(TextNode textNode) {
+        int lineNumber = getLineNumberFromStartIndex(textNode.getStartIndex());
         // to sentence, if sentence breaker appear
         // append remain sentence, if sentence breaker not appear
         addCandidateSentence(
-                lineNumberFromStartIndex(
-                        textNode.getStartIndex()), textNode.getText());
+                getLineNumberFromStartIndex(textNode.getStartIndex()),
+                textNode.getText(),
+                textNode.getStartIndex() - getLineStartIndex(lineNumber));
         // for printChildrenToString
         printer.print(textNode.getText());
     }
@@ -412,8 +435,8 @@ public class ToFileContentSerializer implements Visitor {
         if (StringUtils.isNotEmpty(url)) {
             lastCandidateSentence.setLink(url);
         } else {
-            lastCandidateSentence.setSentence(
-                    "[" + lastCandidateSentence.getSentence() + "]");
+            lastCandidateSentence.setContent(
+                    lastCandidateSentence.getContent());
         }
     }
 

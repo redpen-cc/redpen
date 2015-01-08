@@ -137,22 +137,21 @@ public final class SentenceExtractor {
     /**
      * Get Sentence lists.
      *
-     * @param line            input line which can contain more than one sentences
+     * @param line            Input line which can contain more than one sentences
      * @param outputSentences List of extracted sentences
-     * @param position        line number
+     * @param lineNum         Line number
      * @return remaining line
      */
-    public String extract(String line, List<Sentence> outputSentences, int position) {
+    public String extract(String line, List<Sentence> outputSentences, int lineNum) {
         int periodPosition = endOfSentenceDetector.getSentenceEndPosition(line);
         if (periodPosition == -1) {
             return line;
         } else {
             while (true) {
                 Sentence sentence = new Sentence(line.substring(0,
-                        periodPosition + 1), position);
+                        periodPosition + 1), lineNum);
                 outputSentences.add(sentence);
-                line = line.substring(periodPosition + 1,
-                        line.length());
+                line = line.substring(periodPosition + 1, line.length());
                 periodPosition = endOfSentenceDetector.getSentenceEndPosition(line);
                 if (periodPosition == -1) {
                     return line;
@@ -189,4 +188,5 @@ public final class SentenceExtractor {
         generateSimplePattern(this.fullStopList, patternString);
         return Pattern.compile(patternString.toString());
     }
+
 }

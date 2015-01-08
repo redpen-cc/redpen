@@ -17,33 +17,59 @@
  */
 package cc.redpen.parser.markdown;
 
+import cc.redpen.parser.LineOffset;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Buffer list of to candidate sentence.
+ * Buffer list of to candidate content.
  */
-final class CandidateSentence {
+final public class CandidateSentence {
+
     private int lineNum;
 
-    private String sentence;
+    private String content;
 
     private String link;
 
-    CandidateSentence(int line,
-                      String lineCharacter, String linkCharacter) {
-        this.lineNum = line;
-        this.sentence = lineCharacter;
-        this.link = linkCharacter;
+    private int startPositionOffset;
+
+    private List<LineOffset> offsetMap;
+
+    CandidateSentence(int lineNum,
+                      String content, String link) {
+        this(lineNum, content, link, 0);
+    }
+
+    CandidateSentence(int lineNum, String content, String link,
+            int positionOffset) {
+        this.lineNum = lineNum;
+        this.content = content;
+        this.link = link;
+        this.startPositionOffset = positionOffset;
+        this.offsetMap = new ArrayList<>();
+        for (int i = 0; i < content.length(); i++) {
+            offsetMap.add(new LineOffset(lineNum, positionOffset+i));
+        }
+    }
+
+    public List<LineOffset> getOffsetMap() {
+        return offsetMap;
     }
 
     public int getLineNum() {
         return lineNum;
     }
 
-    public String getSentence() {
-        return sentence;
+    public int getStartPositionOffset() { return startPositionOffset; }
+
+    public String getContent() {
+        return content;
     }
 
-    public void setSentence(String text) {
-        this.sentence = text;
+    public void setContent(String text) {
+        this.content = text;
     }
 
     public String getLink() {
@@ -56,10 +82,12 @@ final class CandidateSentence {
 
     @Override
     public String toString() {
-        return "CandidateSentence{"
-                + "lineNum=" + lineNum
-                + ", sentence='" + sentence + '\''
-                + ", link='" + link + '\''
-                + '}';
+        return "CandidateSentence{" +
+                "lineNum=" + lineNum +
+                ", content='" + content + '\'' +
+                ", link='" + link + '\'' +
+                ", startPositionOffset=" + startPositionOffset +
+                ", offsetMap=" + offsetMap +
+                '}';
     }
 }
