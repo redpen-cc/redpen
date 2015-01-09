@@ -339,9 +339,9 @@ public class WikiParserTest {
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
         assertEquals(1, firstParagraph.getNumberOfSentences());
-        assertEquals(2, firstParagraph.getSentence(0).links.size());
-        assertEquals("pen", firstParagraph.getSentence(0).links.get(0));
-        assertEquals("http://google.com", firstParagraph.getSentence(0).links.get(1));
+        assertEquals(2, firstParagraph.getSentence(0).getLinks().size());
+        assertEquals("pen", firstParagraph.getSentence(0).getLinks().get(0));
+        assertEquals("http://google.com", firstParagraph.getSentence(0).getLinks().get(1));
         assertEquals("this is not a pen, but also this is not Google either.",
                 firstParagraph.getSentence(0).content);
     }
@@ -353,8 +353,8 @@ public class WikiParserTest {
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
         assertEquals(1, firstParagraph.getNumberOfSentences());
-        assertEquals(1, firstParagraph.getSentence(0).links.size());
-        assertEquals("http://google.com", firstParagraph.getSentence(0).links.get(0));
+        assertEquals(1, firstParagraph.getSentence(0).getLinks().size());
+        assertEquals("http://google.com", firstParagraph.getSentence(0).getLinks().get(0));
         assertEquals("the url is not Google.",
                 firstParagraph.getSentence(0).content);
     }
@@ -366,8 +366,8 @@ public class WikiParserTest {
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
         assertEquals(1, firstParagraph.getNumberOfSentences());
-        assertEquals(1, firstParagraph.getSentence(0).links.size());
-        assertEquals("http://google.com", firstParagraph.getSentence(0).links.get(0));
+        assertEquals(1, firstParagraph.getSentence(0).getLinks().size());
+        assertEquals("http://google.com", firstParagraph.getSentence(0).getLinks().get(0));
         assertEquals("url of google is http://google.com.",
                 firstParagraph.getSentence(0).content);
     }
@@ -379,7 +379,7 @@ public class WikiParserTest {
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
         assertEquals(1, firstParagraph.getNumberOfSentences());
-        assertEquals(0, firstParagraph.getSentence(0).links.size());
+        assertEquals(0, firstParagraph.getSentence(0).getLinks().size());
         assertEquals("url of google is [[http://google.com.",
                 firstParagraph.getSentence(0).content);
     }
@@ -391,8 +391,8 @@ public class WikiParserTest {
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
         assertEquals(1, firstParagraph.getNumberOfSentences());
-        assertEquals(1, firstParagraph.getSentence(0).links.size());
-        assertEquals("http://google.com", firstParagraph.getSentence(0).links.get(0));
+        assertEquals(1, firstParagraph.getSentence(0).getLinks().size());
+        assertEquals("http://google.com", firstParagraph.getSentence(0).getLinks().get(0));
         assertEquals("this is not a pen, but also this is not Google either.",
                 firstParagraph.getSentence(0).content);
     }
@@ -404,8 +404,8 @@ public class WikiParserTest {
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
         assertEquals(1, firstParagraph.getNumberOfSentences());
-        assertEquals(1, firstParagraph.getSentence(0).links.size());
-        assertEquals("", firstParagraph.getSentence(0).links.get(0));
+        assertEquals(1, firstParagraph.getSentence(0).getLinks().size());
+        assertEquals("", firstParagraph.getSentence(0).getLinks().get(0));
         assertEquals("this is not a pen, but also this is not  Google either.",
                 firstParagraph.getSentence(0).content);
     }
@@ -537,20 +537,20 @@ public class WikiParserTest {
         assertEquals(h2Section.getParentSection(), h1Section);
         assertEquals(rootSection.getParentSection(), null);
 
-        assertEquals(1, rootSection.getHeaderContent(0).lineNum);
+        assertEquals(1, rootSection.getHeaderContent(0).getLineNum());
         assertEquals(0, rootSection.getNumberOfParagraphs());
 
-        assertEquals(1, h1Section.getHeaderContent(0).lineNum);
+        assertEquals(1, h1Section.getHeaderContent(0).getLineNum());
         assertEquals(2, h1Section.getNumberOfParagraphs());
         assertEquals(1, h1Section.getParagraph(0).getNumberOfSentences());
-        assertEquals(2, h1Section.getParagraph(0).getSentence(0).lineNum);
+        assertEquals(2, h1Section.getParagraph(0).getSentence(0).getLineNum());
         assertEquals(1, h1Section.getParagraph(1).getNumberOfSentences());
-        assertEquals(4, h1Section.getParagraph(1).getSentence(0).lineNum);
+        assertEquals(4, h1Section.getParagraph(1).getSentence(0).getLineNum());
 
-        assertEquals(5, h2Section.getHeaderContent(0).lineNum);
+        assertEquals(5, h2Section.getHeaderContent(0).getLineNum());
         assertEquals(1, h2Section.getNumberOfParagraphs());
         assertEquals(1, h2Section.getParagraph(0).getNumberOfSentences());
-        assertEquals(6, h2Section.getParagraph(0).getSentence(0).lineNum);
+        assertEquals(6, h2Section.getParagraph(0).getSentence(0).getLineNum());
     }
 
     @Test
@@ -571,13 +571,13 @@ public class WikiParserTest {
         assertEquals(h1Section.getParentSection(), rootSection);
         assertEquals(rootSection.getParentSection(), null);
 
-        assertEquals(1, rootSection.getHeaderContent(0).lineNum);
+        assertEquals(1, rootSection.getHeaderContent(0).getLineNum());
         assertEquals(0, rootSection.getNumberOfParagraphs());
 
-        assertEquals(1, h1Section.getHeaderContent(0).lineNum);
+        assertEquals(1, h1Section.getHeaderContent(0).getLineNum());
         assertEquals(1, h1Section.getNumberOfParagraphs());
         assertEquals(1, h1Section.getParagraph(0).getNumberOfSentences());
-        assertEquals(2, h1Section.getParagraph(0).getSentence(0).lineNum);
+        assertEquals(2, h1Section.getParagraph(0).getSentence(0).getLineNum());
     }
 
     @Test

@@ -164,10 +164,11 @@ public class ToFileContentSerializer implements Visitor {
             ));
         }
 
+        // TODO: refactor not to reset member variables...
         int offset = 0;
         for (Sentence outputSentence : outputSentences) {
             outputSentence.startPositionOffset = mergedCandidateSentence.getOffsetMap().get(offset).offset;
-            outputSentence.lineNum = mergedCandidateSentence.getOffsetMap().get(offset).lineNum;
+            outputSentence.setLineNum(mergedCandidateSentence.getOffsetMap().get(offset).lineNum);
             outputSentence.offsetMap = mergedCandidateSentence.getOffsetMap().subList(offset,
                     offset + outputSentence.content.length());
 
@@ -176,7 +177,7 @@ public class ToFileContentSerializer implements Visitor {
                 if (linkPosition.compareTo(outputSentence.offsetMap.get(0)) >= 0
                         && linkPosition.compareTo(outputSentence.offsetMap.get(
                         outputSentence.content.length() - 1)) <= 0) {
-                    outputSentence.links.add(mergedCandidateSentence.getLinks().get(linkPosition));
+                    outputSentence.addLink(mergedCandidateSentence.getLinks().get(linkPosition));
                 }
 
             }

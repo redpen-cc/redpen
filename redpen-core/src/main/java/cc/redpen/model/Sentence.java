@@ -29,14 +29,16 @@ import java.util.List;
  */
 public final class Sentence implements Serializable {
     private static final long serialVersionUID = -3019057510527995111L;
+
     /**
      * Links (including internal and external ones).
      */
-    public final List<String> links;
+    private final List<String> links;
+
     /**
      * Sentence position in a file.
      */
-    public int lineNum;
+    private int lineNum;
     /**
      * Content of string.
      */
@@ -87,6 +89,23 @@ public final class Sentence implements Serializable {
         this.links = new ArrayList<>();
         this.tokens = new ArrayList<>();
         this.startPositionOffset = startOffset;
+    }
+
+    public int getLineNum() {
+        return lineNum;
+    }
+
+    // TODO: remove this method for immutability
+    public void setLineNum(int lineNum) {
+        this.lineNum = lineNum;
+    }
+
+    public List<String> getLinks() {
+        return links;
+    }
+
+    public void addLink(String link) {
+        this.links.add(link);
     }
 
     @Override

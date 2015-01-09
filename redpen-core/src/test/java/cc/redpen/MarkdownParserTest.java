@@ -86,7 +86,7 @@ public class MarkdownParserTest {
         final Section secondSection = doc.getSection(1);
         assertEquals(1, secondSection.getHeaderContentsListSize());
         assertEquals("About Gekioko.", secondSection.getHeaderContent(0).content);
-        assertEquals(1, secondSection.getHeaderContent(0).lineNum);
+        assertEquals(1, secondSection.getHeaderContent(0).getLineNum());
         assertEquals(2, secondSection.getHeaderContent(0).startPositionOffset);
         assertEquals(0, secondSection.getNumberOfLists());
         assertEquals(2, secondSection.getNumberOfParagraphs());
@@ -96,11 +96,11 @@ public class MarkdownParserTest {
         // validate paragraph in 2nd section
         assertEquals(1, secondSection.getParagraph(0).getNumberOfSentences());
         assertEquals(true, secondSection.getParagraph(0).getSentence(0).isFirstSentence);
-        assertEquals(2, secondSection.getParagraph(0).getSentence(0).lineNum);
+        assertEquals(2, secondSection.getParagraph(0).getSentence(0).getLineNum());
         assertEquals(0, secondSection.getParagraph(0).getSentence(0).startPositionOffset);
         assertEquals(1, secondSection.getParagraph(1).getNumberOfSentences());
         assertEquals(true, secondSection.getParagraph(1).getSentence(0).isFirstSentence);
-        assertEquals(4, secondSection.getParagraph(1).getSentence(0).lineNum);
+        assertEquals(4, secondSection.getParagraph(1).getSentence(0).getLineNum());
         assertEquals(0, secondSection.getParagraph(1).getSentence(0).startPositionOffset);
 
         // 3rd section
@@ -117,13 +117,13 @@ public class MarkdownParserTest {
         // validate paragraphs in last section
         assertEquals(1, lastSection.getParagraph(0).getNumberOfSentences());
         assertEquals(true, lastSection.getParagraph(0).getSentence(0).isFirstSentence);
-        assertEquals(7, lastSection.getParagraph(0).getSentence(0).lineNum);
+        assertEquals(7, lastSection.getParagraph(0).getSentence(0).getLineNum());
         assertEquals(0, lastSection.getParagraph(0).getSentence(0).startPositionOffset);
         assertEquals(2, lastSection.getParagraph(1).getNumberOfSentences());
         assertEquals(true, lastSection.getParagraph(1).getSentence(0).isFirstSentence);
-        assertEquals(15, lastSection.getParagraph(1).getSentence(0).lineNum);
+        assertEquals(15, lastSection.getParagraph(1).getSentence(0).getLineNum());
         assertEquals(false, lastSection.getParagraph(1).getSentence(1).isFirstSentence);
-        assertEquals(15, lastSection.getParagraph(1).getSentence(1).lineNum);
+        assertEquals(15, lastSection.getParagraph(1).getSentence(1).getLineNum());
         assertEquals(36, lastSection.getParagraph(1).getSentence(1).startPositionOffset);
     }
 
@@ -142,27 +142,27 @@ public class MarkdownParserTest {
         assertEquals(5, doc.getSection(0).getListBlock(0).getNumberOfListElements());
         assertEquals("Tokyu", doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).content);
         assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(0).getLevel());
-        assertEquals(3, doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).lineNum);
+        assertEquals(3, doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).getLineNum());
         assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).startPositionOffset);
 
         assertEquals("Toyoko Line", doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).content);
         assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(1).getLevel());
-        assertEquals(4, doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).lineNum);
+        assertEquals(4, doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).getLineNum());
         assertEquals(6, doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).startPositionOffset);
 
         assertEquals("Denentoshi Line", doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).content);
         assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(2).getLevel());
-        assertEquals(5, doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).lineNum);
+        assertEquals(5, doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).getLineNum());
         assertEquals(6, doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).startPositionOffset);
 
         assertEquals("Keio", doc.getSection(0).getListBlock(0).getListElement(3).getSentence(0).content);
         assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(3).getLevel());
-        assertEquals(6, doc.getSection(0).getListBlock(0).getListElement(3).getSentence(0).lineNum);
+        assertEquals(6, doc.getSection(0).getListBlock(0).getListElement(3).getSentence(0).getLineNum());
         assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(3).getSentence(0).startPositionOffset);
 
         assertEquals("Odakyu", doc.getSection(0).getListBlock(0).getListElement(4).getSentence(0).content);
         assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(4).getLevel());
-        assertEquals(7, doc.getSection(0).getListBlock(0).getListElement(4).getSentence(0).lineNum);
+        assertEquals(7, doc.getSection(0).getListBlock(0).getListElement(4).getSentence(0).getLineNum());
         assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(4).getSentence(0).startPositionOffset);
     }
 
@@ -177,15 +177,15 @@ public class MarkdownParserTest {
         assertEquals(3, firstParagraph.getNumberOfSentences());
 
         assertEquals("Tokyu is a good railway company.", firstParagraph.getSentence(0).content);
-        assertEquals(1, firstParagraph.getSentence(0).lineNum);
+        assertEquals(1, firstParagraph.getSentence(0).getLineNum());
         assertEquals(0, firstParagraph.getSentence(0).startPositionOffset);
 
         assertEquals(" The company is reliable.", firstParagraph.getSentence(1).content);
-        assertEquals(1, firstParagraph.getSentence(1).lineNum);
+        assertEquals(1, firstParagraph.getSentence(1).getLineNum());
         assertEquals(32, firstParagraph.getSentence(1).startPositionOffset);
 
         assertEquals(" In addition it is rich.", firstParagraph.getSentence(2).content);
-        assertEquals(1, firstParagraph.getSentence(2).lineNum);
+        assertEquals(1, firstParagraph.getSentence(2).getLineNum());
         assertEquals(57, firstParagraph.getSentence(2).startPositionOffset);
     }
 
@@ -198,15 +198,15 @@ public class MarkdownParserTest {
         assertEquals(3, firstParagraph.getNumberOfSentences());
 
         assertEquals("Is Tokyu a good railway company?", doc.getSection(0).getParagraph(0).getSentence(0).content);
-        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(0).lineNum);
+        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(0).getLineNum());
         assertEquals(0, doc.getSection(0).getParagraph(0).getSentence(0).startPositionOffset);
 
         assertEquals(" The company is reliable.", doc.getSection(0).getParagraph(0).getSentence(1).content);
-        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(1).lineNum);
+        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(1).getLineNum());
         assertEquals(32, doc.getSection(0).getParagraph(0).getSentence(1).startPositionOffset);
 
         assertEquals(" In addition it is rich!", doc.getSection(0).getParagraph(0).getSentence(2).content);
-        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(2).lineNum);
+        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(2).getLineNum());
         assertEquals(57, doc.getSection(0).getParagraph(0).getSentence(2).startPositionOffset);
     }
 
@@ -220,23 +220,23 @@ public class MarkdownParserTest {
         assertEquals(5, firstParagraph.getNumberOfSentences());
 
         assertEquals("Tokyu is a good railway company.", doc.getSection(0).getParagraph(0).getSentence(0).content);
-        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(0).lineNum);
+        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(0).getLineNum());
         assertEquals(0, doc.getSection(0).getParagraph(0).getSentence(0).startPositionOffset);
 
         assertEquals(" The company is reliable.", doc.getSection(0).getParagraph(0).getSentence(1).content);
-        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(1).lineNum);
+        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(1).getLineNum());
         assertEquals(32, doc.getSection(0).getParagraph(0).getSentence(1).startPositionOffset);
 
         assertEquals(" In addition it is rich.", doc.getSection(0).getParagraph(0).getSentence(2).content);
-        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(2).lineNum);
+        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(2).getLineNum());
         assertEquals(57, doc.getSection(0).getParagraph(0).getSentence(2).startPositionOffset);
 
         assertEquals(" I like the company.", doc.getSection(0).getParagraph(0).getSentence(3).content);
-        assertEquals(2, doc.getSection(0).getParagraph(0).getSentence(3).lineNum);
+        assertEquals(2, doc.getSection(0).getParagraph(0).getSentence(3).getLineNum());
         assertEquals(8, doc.getSection(0).getParagraph(0).getSentence(3).startPositionOffset);
 
         assertEquals(" However someone does not like it.", doc.getSection(0).getParagraph(0).getSentence(4).content);
-        assertEquals(2, doc.getSection(0).getParagraph(0).getSentence(4).lineNum);
+        assertEquals(2, doc.getSection(0).getParagraph(0).getSentence(4).getLineNum());
         assertEquals(28, doc.getSection(0).getParagraph(0).getSentence(4).startPositionOffset);
     }
 
@@ -252,12 +252,12 @@ public class MarkdownParserTest {
         assertEquals(2, firstParagraph.getNumberOfSentences());
 
         assertEquals("Tokyu is a good railway company.", doc.getSection(0).getParagraph(0).getSentence(0).content);
-        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(0).lineNum);
+        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(0).getLineNum());
         assertEquals(0, doc.getSection(0).getParagraph(0).getSentence(0).startPositionOffset);
         assertEquals(32, doc.getSection(0).getParagraph(0).getSentence(0).offsetMap.size());
 
         assertEquals(" But there are competitors.", doc.getSection(0).getParagraph(0).getSentence(1).content);
-        assertEquals(3, doc.getSection(0).getParagraph(0).getSentence(1).lineNum);
+        assertEquals(3, doc.getSection(0).getParagraph(0).getSentence(1).getLineNum());
         assertEquals(16, doc.getSection(0).getParagraph(0).getSentence(1).startPositionOffset);
     }
 
@@ -270,7 +270,7 @@ public class MarkdownParserTest {
         assertEquals(1, firstParagraph.getNumberOfSentences());
         assertEquals("Tsu is a city.", doc.getSection(0).getParagraph(0).getSentence(0).content);
 
-        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(0).lineNum);
+        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(0).getLineNum());
         assertEquals(0, doc.getSection(0).getParagraph(0).getSentence(0).startPositionOffset);
         assertEquals(doc.getSection(0).getParagraph(0).getSentence(0).content.length(),
                 doc.getSection(0).getParagraph(0).getSentence(0).offsetMap.size());
@@ -324,9 +324,9 @@ public class MarkdownParserTest {
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
         assertEquals(1, firstParagraph.getNumberOfSentences());
-        assertEquals(1, firstParagraph.getSentence(0).links.size());
+        assertEquals(1, firstParagraph.getSentence(0).getLinks().size()); // TODO: refactor Sentence method
         // PegDown Parser is related to visit(RefLinkNode) method
-        assertEquals("http://google.com", firstParagraph.getSentence(0).links.get(0));
+        assertEquals("http://google.com", firstParagraph.getSentence(0).getLinks().get(0));
         assertEquals("It is not Google.",
                 firstParagraph.getSentence(0).content);
         assertEquals(firstParagraph.getSentence(0).content.length(),
@@ -365,8 +365,8 @@ public class MarkdownParserTest {
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
         assertEquals(1, firstParagraph.getNumberOfSentences());
-        assertEquals(1, firstParagraph.getSentence(0).links.size());
-        assertEquals("http://google.com", firstParagraph.getSentence(0).links.get(0));
+        assertEquals(1, firstParagraph.getSentence(0).getLinks().size());
+        assertEquals("http://google.com", firstParagraph.getSentence(0).getLinks().get(0));
         assertEquals("the url is not Google.",
                 firstParagraph.getSentence(0).content);
     }
@@ -379,11 +379,11 @@ public class MarkdownParserTest {
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
         assertEquals(2, firstParagraph.getNumberOfSentences());
-        assertEquals(1, firstParagraph.getSentence(0).links.size());
-        assertEquals("http://google.com", firstParagraph.getSentence(0).links.get(0));
+        assertEquals(1, firstParagraph.getSentence(0).getLinks().size());
+        assertEquals("http://google.com", firstParagraph.getSentence(0).getLinks().get(0));
         assertEquals("url of google is http://google.com.",
                 firstParagraph.getSentence(0).content);
-        assertEquals("http://yahoo.com", firstParagraph.getSentence(1).links.get(0));
+        assertEquals("http://yahoo.com", firstParagraph.getSentence(1).getLinks().get(0));
         assertEquals(" http://yahoo.com is Yahoo url.",
                 firstParagraph.getSentence(1).content);
     }
@@ -395,9 +395,9 @@ public class MarkdownParserTest {
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
         assertEquals(1, firstParagraph.getNumberOfSentences());
-        assertEquals(2, firstParagraph.getSentence(0).links.size());
-        assertEquals("http://yahoo.com", firstParagraph.getSentence(0).links.get(1));
-        assertEquals("http://google.com", firstParagraph.getSentence(0).links.get(0));
+        assertEquals(2, firstParagraph.getSentence(0).getLinks().size());
+        assertEquals("http://yahoo.com", firstParagraph.getSentence(0).getLinks().get(1));
+        assertEquals("http://google.com", firstParagraph.getSentence(0).getLinks().get(0));
         assertEquals("http://yahoo.com and http://google.com is Google and Yahoo urls.",
                 firstParagraph.getSentence(0).content);
 
@@ -411,8 +411,8 @@ public class MarkdownParserTest {
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
         assertEquals(1, firstParagraph.getNumberOfSentences());
-        assertEquals(1, firstParagraph.getSentence(0).links.size());
-        assertEquals("http://google.com", firstParagraph.getSentence(0).links.get(0));
+        assertEquals(1, firstParagraph.getSentence(0).getLinks().size());
+        assertEquals("http://google.com", firstParagraph.getSentence(0).getLinks().get(0));
         assertEquals("url of google is http://google.com.",
                 firstParagraph.getSentence(0).content);
     }
@@ -425,7 +425,7 @@ public class MarkdownParserTest {
         Paragraph firstParagraph = firstSections.getParagraph(0);
         assertEquals("It is a good day.", firstParagraph.getSentence(0).content);
         assertEquals(17, firstParagraph.getSentence(0).content.length());
-        assertEquals(1, firstParagraph.getSentence(0).lineNum);
+        assertEquals(1, firstParagraph.getSentence(0).getLineNum());
         List<LineOffset> expectedOffsets = initializeMappingTable(
                 new LineOffset(1, 0),
                 new LineOffset(1, 1),
@@ -559,7 +559,7 @@ public class MarkdownParserTest {
         assertEquals(2, lastSection.getHeaderContentsListSize());
 
         assertEquals("About Gunma.", lastSection.getHeaderContent(0).content);
-        assertEquals(1, lastSection.getHeaderContent(0).lineNum);
+        assertEquals(1, lastSection.getHeaderContent(0).getLineNum());
         assertEquals(2, lastSection.getHeaderContent(0).startPositionOffset);
 
         List<LineOffset> expectedOffsets1 = initializeMappingTable(
@@ -600,7 +600,7 @@ public class MarkdownParserTest {
                 new LineOffset(1, 28));
 
         assertEquals(" About Saitama.", lastSection.getHeaderContent(1).content);
-        assertEquals(1, lastSection.getHeaderContent(1).lineNum);
+        assertEquals(1, lastSection.getHeaderContent(1).getLineNum());
         assertEquals(14, lastSection.getHeaderContent(1).startPositionOffset);
 
         assertEquals(expectedOffsets2.size(), lastSection.getHeaderContent(1).offsetMap.size());
@@ -676,7 +676,7 @@ public class MarkdownParserTest {
         ListBlock listBlock = lastSection.getListBlock(0);
         assertEquals(1, listBlock.getNumberOfListElements());
         assertEquals(1, listBlock.getListElement(0).getNumberOfSentences());
-        assertEquals(2, listBlock.getListElement(0).getSentence(0).lineNum);
+        assertEquals(2, listBlock.getListElement(0).getSentence(0).getLineNum());
         assertEquals("Gunma is located at west of Saitama",
                 listBlock.getListElement(0).getSentence(0).content);
     }
@@ -706,9 +706,9 @@ public class MarkdownParserTest {
         assertEquals(h2Section.getParentSection(), h1Section);
         assertEquals(rootSection.getParentSection(), null);
 
-        assertEquals(0, rootSection.getHeaderContent(0).lineNum);
-        assertEquals(1, h1Section.getHeaderContent(0).lineNum);
-        assertEquals(5, h2Section.getHeaderContent(0).lineNum);
+        assertEquals(0, rootSection.getHeaderContent(0).getLineNum());
+        assertEquals(1, h1Section.getHeaderContent(0).getLineNum());
+        assertEquals(5, h2Section.getHeaderContent(0).getLineNum());
     }
 
     @Test
@@ -738,9 +738,9 @@ public class MarkdownParserTest {
         assertEquals(h2Section.getParentSection(), h1Section);
         assertEquals(rootSection.getParentSection(), null);
 
-        assertEquals(0, rootSection.getHeaderContent(0).lineNum);
-        assertEquals(1, h1Section.getHeaderContent(0).lineNum);
-        assertEquals(6, h2Section.getHeaderContent(0).lineNum);
+        assertEquals(0, rootSection.getHeaderContent(0).getLineNum());
+        assertEquals(1, h1Section.getHeaderContent(0).getLineNum());
+        assertEquals(6, h2Section.getHeaderContent(0).getLineNum());
     }
 
     /**

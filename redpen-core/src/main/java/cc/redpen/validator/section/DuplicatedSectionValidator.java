@@ -62,7 +62,7 @@ final public class DuplicatedSectionValidator extends Validator {
                     calcCosine(targetVector, candidateVector) > threhold) {
                 Optional<Sentence> header = Optional.ofNullable(section.getHeaderContent(0));
                 errors.add(createValidationError(header.orElse(section.getParagraph(0).getSentence(0)),
-                        sectionVector.header.lineNum));
+                        sectionVector.header.getLineNum()));
             }
         }
     }
