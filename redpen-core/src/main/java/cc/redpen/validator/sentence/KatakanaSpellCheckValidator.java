@@ -82,8 +82,8 @@ final public class KatakanaSpellCheckValidator extends Validator {
     @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {
         StringBuilder katakana = new StringBuilder();
-        for (int i = 0; i < sentence.content.length(); i++) {
-            char c = sentence.content.charAt(i);
+        for (int i = 0; i < sentence.getContent().length(); i++) {
+            char c = sentence.getContent().charAt(i);
             if (StringUtils.isKatakana(c)) {
                 katakana.append(c);
             } else {

@@ -43,7 +43,7 @@ final public class InvalidWordValidator extends Validator {
     @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {
         //NOTE: only Ascii white space since this validator works for european languages.
-        for (TokenElement token : sentence.tokens) {
+        for (TokenElement token : sentence.getTokens()) {
             if (invalidWords.contains(token.getSurface().toLowerCase())) {
                 errors.add(createValidationError(sentence, token.getSurface()));
             }

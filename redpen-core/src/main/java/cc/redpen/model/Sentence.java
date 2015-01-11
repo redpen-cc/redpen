@@ -29,12 +29,10 @@ import java.util.List;
  */
 public final class Sentence implements Serializable {
     private static final long serialVersionUID = -3019057510527995111L;
-
     /**
      * Links (including internal and external ones).
      */
     private final List<String> links;
-
     /**
      * Sentence position in a file.
      */
@@ -42,27 +40,26 @@ public final class Sentence implements Serializable {
     /**
      * Content of string.
      */
-    public String content;
+    private String content;
     /**
      * Position which the sentence starts with.
      */
-    public int startPositionOffset;
+    private int startPositionOffset;
     /**
      * Flag for knowing if the sentence is the first sentence
      * of a block, such as paragraph, list, header.
      */
-    public boolean isFirstSentence;
+    private boolean isFirstSentence;
     /**
      * A list of tokens.
      *
      * Note: the contents of the tokens are added in DocumentCollectionBuilder
      */
-    public List<TokenElement> tokens;
-
+    private List<TokenElement> tokens;
     /**
      * Combinations of line Number and the position offset
      */
-    public List<LineOffset> offsetMap;
+    private List<LineOffset> offsetMap;
 
     /**
      * Constructor.
@@ -107,6 +104,47 @@ public final class Sentence implements Serializable {
     public void addLink(String link) {
         this.links.add(link);
     }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public int getStartPositionOffset() {
+        return startPositionOffset;
+    }
+
+    public void setStartPositionOffset(int startPositionOffset) {
+        this.startPositionOffset = startPositionOffset;
+    }
+
+    public boolean isFirstSentence() {
+        return isFirstSentence;
+    }
+
+    public void setIsFirstSentence(boolean isFirstSentence) {
+        this.isFirstSentence = isFirstSentence;
+    }
+
+    public List<TokenElement> getTokens() {
+        return tokens;
+    }
+
+    public void setTokens(List<TokenElement> tokens) {
+        this.tokens = tokens;
+    }
+
+    public List<LineOffset> getOffsetMap() {
+        return offsetMap;
+    }
+
+    public void setOffsetMap(List<LineOffset> offsetMap) {
+        this.offsetMap = offsetMap;
+    }
+
 
     @Override
     public String toString() {

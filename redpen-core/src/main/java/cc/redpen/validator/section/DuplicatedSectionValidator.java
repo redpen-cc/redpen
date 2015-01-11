@@ -89,7 +89,7 @@ final public class DuplicatedSectionValidator extends Validator {
     }
 
     private void addWords(Map<String, Integer> sectionVector, Sentence sentence) {
-        for (TokenElement token : sentence.tokens) {
+        for (TokenElement token : sentence.getTokens()) {
             String surface = token.getSurface();
             if (!sectionVector.containsKey(surface)){
                 sectionVector.put(surface, 0);

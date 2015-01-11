@@ -68,7 +68,7 @@ public final class ValidationError implements java.io.Serializable {
      * @return column (character) position which sentence starts
      */
     public int getStartColumnNumber() {
-        return sentence.startPositionOffset;
+        return sentence.getStartPositionOffset();
     }
 
     /**

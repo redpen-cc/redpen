@@ -59,7 +59,7 @@ public final class PlainFormatter extends Formatter {
         str.append(error.getLineNumber());
         str.append(": ValidationError[").append(error.getValidatorName()).append("], ");
         str.append(error.getMessage());
-        str.append(" at line: ").append(error.getSentence().content);
+        str.append(" at line: ").append(error.getSentence().getContent());
         str.append("\n");
         return str.toString();
     }

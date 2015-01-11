@@ -44,9 +44,9 @@ final public class ParagraphStartWithValidator extends Validator {
                 continue;
             }
             Sentence firstSentence = currentParagraph.getSentence(0);
-            if (firstSentence.content.indexOf(this.beginningOfParagraph) != 0) {
+            if (firstSentence.getContent().indexOf(this.beginningOfParagraph) != 0) {
                 errors.add(createValidationError(section.getJoinedHeaderContents(),
-                        firstSentence.content.charAt(0)));
+                        firstSentence.getContent().charAt(0)));
             }
         }
     }

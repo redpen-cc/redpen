@@ -91,7 +91,7 @@ public class JSONFormatter extends Formatter {
             List<ValidationError> errors = docErrorsMap.get(document);
             for (ValidationError error : errors) {
                 JSONObject jsonError = new JSONObject();
-                jsonError.put("sentence", error.getSentence().content);
+                jsonError.put("sentence", error.getSentence().getContent());
                 jsonError.put("message", error.getMessage());
                 jsonError.put("lineNum", error.getLineNumber());
                 jsonErrors.put(jsonError);

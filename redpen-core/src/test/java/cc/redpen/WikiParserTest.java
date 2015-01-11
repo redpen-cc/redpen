@@ -60,7 +60,7 @@ public class WikiParserTest {
         // first section
         final Section firstSection = doc.getSection(0);
         assertEquals(1, firstSection.getHeaderContentsListSize());
-        assertEquals("", firstSection.getHeaderContent(0).content);
+        assertEquals("", firstSection.getHeaderContent(0).getContent());
         assertEquals(0, firstSection.getNumberOfLists());
         assertEquals(0, firstSection.getNumberOfParagraphs());
         assertEquals(1, firstSection.getNumberOfSubsections());
@@ -68,16 +68,16 @@ public class WikiParserTest {
         // 2nd section
         final Section secondSection = doc.getSection(1);
         assertEquals(1, secondSection.getHeaderContentsListSize());
-        assertEquals("About Gekioko.", secondSection.getHeaderContent(0).content);
+        assertEquals("About Gekioko.", secondSection.getHeaderContent(0).getContent());
         assertEquals(0, secondSection.getNumberOfLists());
         assertEquals(2, secondSection.getNumberOfParagraphs());
         assertEquals(1, secondSection.getNumberOfSubsections());
         assertEquals(firstSection, secondSection.getParentSection());
         // validate paragraph in 2nd section
         assertEquals(1, secondSection.getParagraph(0).getNumberOfSentences());
-        assertEquals(true, secondSection.getParagraph(0).getSentence(0).isFirstSentence);
+        assertEquals(true, secondSection.getParagraph(0).getSentence(0).isFirstSentence());
         assertEquals(1, secondSection.getParagraph(1).getNumberOfSentences());
-        assertEquals(true, secondSection.getParagraph(1).getSentence(0).isFirstSentence);
+        assertEquals(true, secondSection.getParagraph(1).getSentence(0).isFirstSentence());
 
         // last section
         Section lastSection = doc.getSection(doc.size() - 1);
@@ -86,15 +86,15 @@ public class WikiParserTest {
         assertEquals(2, lastSection.getNumberOfParagraphs());
         assertEquals(1, lastSection.getHeaderContentsListSize());
         assertEquals(0, lastSection.getNumberOfSubsections());
-        assertEquals("About Gunma.", lastSection.getHeaderContent(0).content);
+        assertEquals("About Gunma.", lastSection.getHeaderContent(0).getContent());
         assertEquals(secondSection, lastSection.getParentSection());
 
         // validate paragraph in last section
         assertEquals(1, lastSection.getParagraph(0).getNumberOfSentences());
-        assertEquals(true, lastSection.getParagraph(0).getSentence(0).isFirstSentence);
+        assertEquals(true, lastSection.getParagraph(0).getSentence(0).isFirstSentence());
         assertEquals(2, lastSection.getParagraph(1).getNumberOfSentences());
-        assertEquals(true, lastSection.getParagraph(1).getSentence(0).isFirstSentence);
-        assertEquals(false, lastSection.getParagraph(1).getSentence(1).isFirstSentence);
+        assertEquals(true, lastSection.getParagraph(1).getSentence(0).isFirstSentence());
+        assertEquals(false, lastSection.getParagraph(1).getSentence(1).isFirstSentence());
 
     }
 
@@ -109,15 +109,15 @@ public class WikiParserTest {
         sampleText += "- Odakyu\n";
         Document doc = createFileContent(sampleText);
         assertEquals(5, doc.getSection(0).getListBlock(0).getNumberOfListElements());
-        assertEquals("Tokyu", doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).content);
+        assertEquals("Tokyu", doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).getContent());
         assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(0).getLevel());
-        assertEquals("Toyoko Line", doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).content);
+        assertEquals("Toyoko Line", doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).getContent());
         assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(1).getLevel());
-        assertEquals("Denentoshi Line", doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).content);
+        assertEquals("Denentoshi Line", doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).getContent());
         assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(2).getLevel());
-        assertEquals("Keio", doc.getSection(0).getListBlock(0).getListElement(3).getSentence(0).content);
+        assertEquals("Keio", doc.getSection(0).getListBlock(0).getListElement(3).getSentence(0).getContent());
         assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(3).getLevel());
-        assertEquals("Odakyu", doc.getSection(0).getListBlock(0).getListElement(4).getSentence(0).content);
+        assertEquals("Odakyu", doc.getSection(0).getListBlock(0).getListElement(4).getSentence(0).getContent());
         assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(4).getLevel());
     }
 
@@ -132,15 +132,15 @@ public class WikiParserTest {
         sampleText += "# Odakyu\n";
         Document doc = createFileContent(sampleText);
         assertEquals(5, doc.getSection(0).getListBlock(0).getNumberOfListElements());
-        assertEquals("Tokyu", doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).content);
+        assertEquals("Tokyu", doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).getContent());
         assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(0).getLevel());
-        assertEquals("Toyoko Line", doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).content);
+        assertEquals("Toyoko Line", doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).getContent());
         assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(1).getLevel());
-        assertEquals("Denentoshi Line", doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).content);
+        assertEquals("Denentoshi Line", doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).getContent());
         assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(2).getLevel());
-        assertEquals("Keio", doc.getSection(0).getListBlock(0).getListElement(3).getSentence(0).content);
+        assertEquals("Keio", doc.getSection(0).getListBlock(0).getListElement(3).getSentence(0).getContent());
         assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(3).getLevel());
-        assertEquals("Odakyu", doc.getSection(0).getListBlock(0).getListElement(4).getSentence(0).content);
+        assertEquals("Odakyu", doc.getSection(0).getListBlock(0).getListElement(4).getSentence(0).getContent());
         assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(4).getLevel());
     }
 
@@ -267,7 +267,7 @@ public class WikiParserTest {
         Paragraph firstParagraph = firstSections.getParagraph(0);
         assertEquals(3, firstParagraph.getNumberOfSentences());
         for (int i = 0; i < expectedResult.length; i++) {
-            assertEquals(expectedResult[i], firstParagraph.getSentence(i).content);
+            assertEquals(expectedResult[i], firstParagraph.getSentence(i).getContent());
         }
     }
 
@@ -288,9 +288,9 @@ public class WikiParserTest {
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
         assertEquals(3, firstParagraph.getNumberOfSentences());
-        assertEquals("Is Tokyu a good railway company?", doc.getSection(0).getParagraph(0).getSentence(0).content);
-        assertEquals(" The company is reliable.", doc.getSection(0).getParagraph(0).getSentence(1).content);
-        assertEquals(" In addition it is rich!", doc.getSection(0).getParagraph(0).getSentence(2).content);
+        assertEquals("Is Tokyu a good railway company?", doc.getSection(0).getParagraph(0).getSentence(0).getContent());
+        assertEquals(" The company is reliable.", doc.getSection(0).getParagraph(0).getSentence(1).getContent());
+        assertEquals(" In addition it is rich!", doc.getSection(0).getParagraph(0).getSentence(2).getContent());
     }
 
     @Test
@@ -343,7 +343,7 @@ public class WikiParserTest {
         assertEquals("pen", firstParagraph.getSentence(0).getLinks().get(0));
         assertEquals("http://google.com", firstParagraph.getSentence(0).getLinks().get(1));
         assertEquals("this is not a pen, but also this is not Google either.",
-                firstParagraph.getSentence(0).content);
+                firstParagraph.getSentence(0).getContent());
     }
 
     @Test
@@ -356,7 +356,7 @@ public class WikiParserTest {
         assertEquals(1, firstParagraph.getSentence(0).getLinks().size());
         assertEquals("http://google.com", firstParagraph.getSentence(0).getLinks().get(0));
         assertEquals("the url is not Google.",
-                firstParagraph.getSentence(0).content);
+                firstParagraph.getSentence(0).getContent());
     }
 
     @Test
@@ -369,7 +369,7 @@ public class WikiParserTest {
         assertEquals(1, firstParagraph.getSentence(0).getLinks().size());
         assertEquals("http://google.com", firstParagraph.getSentence(0).getLinks().get(0));
         assertEquals("url of google is http://google.com.",
-                firstParagraph.getSentence(0).content);
+                firstParagraph.getSentence(0).getContent());
     }
 
     @Test
@@ -381,7 +381,7 @@ public class WikiParserTest {
         assertEquals(1, firstParagraph.getNumberOfSentences());
         assertEquals(0, firstParagraph.getSentence(0).getLinks().size());
         assertEquals("url of google is [[http://google.com.",
-                firstParagraph.getSentence(0).content);
+                firstParagraph.getSentence(0).getContent());
     }
 
     @Test
@@ -394,7 +394,7 @@ public class WikiParserTest {
         assertEquals(1, firstParagraph.getSentence(0).getLinks().size());
         assertEquals("http://google.com", firstParagraph.getSentence(0).getLinks().get(0));
         assertEquals("this is not a pen, but also this is not Google either.",
-                firstParagraph.getSentence(0).content);
+                firstParagraph.getSentence(0).getContent());
     }
 
     @Test
@@ -407,7 +407,7 @@ public class WikiParserTest {
         assertEquals(1, firstParagraph.getSentence(0).getLinks().size());
         assertEquals("", firstParagraph.getSentence(0).getLinks().get(0));
         assertEquals("this is not a pen, but also this is not  Google either.",
-                firstParagraph.getSentence(0).content);
+                firstParagraph.getSentence(0).getContent());
     }
 
     @Test
@@ -416,7 +416,7 @@ public class WikiParserTest {
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
-        assertEquals("This is a good day.", firstParagraph.getSentence(0).content);
+        assertEquals("This is a good day.", firstParagraph.getSentence(0).getContent());
     }
 
     @Test
@@ -425,7 +425,7 @@ public class WikiParserTest {
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
-        assertEquals("This is a good day.", firstParagraph.getSentence(0).content);
+        assertEquals("This is a good day.", firstParagraph.getSentence(0).getContent());
     }
 
     @Test
@@ -434,7 +434,7 @@ public class WikiParserTest {
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
-        assertEquals("This is a good day.", firstParagraph.getSentence(0).content);
+        assertEquals("This is a good day.", firstParagraph.getSentence(0).getContent());
     }
 
     @Test
@@ -443,7 +443,7 @@ public class WikiParserTest {
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
-        assertEquals("This is a good day.", firstParagraph.getSentence(0).content);
+        assertEquals("This is a good day.", firstParagraph.getSentence(0).getContent());
     }
 
     @Test
@@ -457,8 +457,8 @@ public class WikiParserTest {
         Document doc = createFileContent(sampleText);
         Section lastSection = doc.getSection(doc.size() - 1);
         assertEquals(2, lastSection.getHeaderContentsListSize());
-        assertEquals("About Gunma.", lastSection.getHeaderContent(0).content);
-        assertEquals(" About Saitama.", lastSection.getHeaderContent(1).content);
+        assertEquals("About Gunma.", lastSection.getHeaderContent(0).getContent());
+        assertEquals(" About Saitama.", lastSection.getHeaderContent(1).getContent());
     }
 
     @Test
@@ -472,7 +472,7 @@ public class WikiParserTest {
         Document doc = createFileContent(sampleText);
         Section lastSection = doc.getSection(doc.size() - 1);
         assertEquals(1, lastSection.getHeaderContentsListSize());
-        assertEquals("About Gunma", lastSection.getHeaderContent(0).content);
+        assertEquals("About Gunma", lastSection.getHeaderContent(0).getContent());
     }
 
     @Test
@@ -489,11 +489,11 @@ public class WikiParserTest {
         assertEquals(2, listBlock.getNumberOfListElements());
         assertEquals(1, listBlock.getListElement(0).getNumberOfSentences());
         assertEquals("Gunma is located at west of Saitama.",
-                listBlock.getListElement(0).getSentence(0).content);
+                listBlock.getListElement(0).getSentence(0).getContent());
         assertEquals("The word also have posive meaning.",
-                listBlock.getListElement(1).getSentence(0).content);
+                listBlock.getListElement(1).getSentence(0).getContent());
         assertEquals(" Hower it is a bit wired.",
-                listBlock.getListElement(1).getSentence(1).content);
+                listBlock.getListElement(1).getSentence(1).getContent());
     }
 
     @Test
@@ -509,7 +509,7 @@ public class WikiParserTest {
         assertEquals(1, listBlock.getNumberOfListElements());
         assertEquals(1, listBlock.getListElement(0).getNumberOfSentences());
         assertEquals("Gunma is located at west of Saitama",
-                listBlock.getListElement(0).getSentence(0).content);
+                listBlock.getListElement(0).getSentence(0).getContent());
     }
 
     @Test

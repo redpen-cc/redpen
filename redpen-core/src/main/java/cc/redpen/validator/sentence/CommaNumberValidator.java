@@ -43,7 +43,7 @@ final public class CommaNumberValidator extends Validator {
 
     @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {
-        String content = sentence.content;
+        String content = sentence.getContent();
         int commaCount = 0;
         int position = 0;
         while (position != -1) {

@@ -44,7 +44,7 @@ public class SymbolWithSpaceValidator extends Validator {
     }
 
     private ValidationError validateSymbol(Sentence sentence, SymbolType symbolType) {
-        String sentenceStr = sentence.content;
+        String sentenceStr = sentence.getContent();
         Symbol symbol = getSymbolTable().getSymbol(symbolType);
         if (!symbol.isNeedAfterSpace() && !symbol.isNeedBeforeSpace()) {
             return null;

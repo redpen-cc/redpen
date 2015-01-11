@@ -139,10 +139,10 @@ public class PlainTextParserTest {
         assertEquals(5, calcLineNum(section));
         Paragraph paragraph = paragraphs.get(paragraphs.size() - 1);
         for (int i = 0; i < expectedResult.length; i++) {
-            assertEquals(expectedResult[i], paragraph.getSentence(i).content);
+            assertEquals(expectedResult[i], paragraph.getSentence(i).getContent());
         }
         assertEquals(0, section.getHeaderContent(0).getLineNum());
-        assertEquals("", section.getHeaderContent(0).content);
+        assertEquals("", section.getHeaderContent(0).getContent());
     }
 
     @Test
@@ -158,10 +158,10 @@ public class PlainTextParserTest {
         assertEquals(3, calcLineNum(section));
         Paragraph paragraph = paragraphs.get(paragraphs.size() - 1);
         for (int i = 0; i < expectedResult.length; i++) {
-            assertEquals(expectedResult[i], paragraph.getSentence(i).content);
+            assertEquals(expectedResult[i], paragraph.getSentence(i).getContent());
         }
         assertEquals(0, section.getHeaderContent(0).getLineNum());
-        assertEquals("", section.getHeaderContent(0).content);
+        assertEquals("", section.getHeaderContent(0).getContent());
     }
 
     @Test

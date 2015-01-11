@@ -43,7 +43,7 @@ final public class InvalidSymbolValidator extends Validator {
     }
 
     private ValidationError validateSymbol(Sentence sentence, SymbolType symbolType) {
-        String sentenceStr = sentence.content;
+        String sentenceStr = sentence.getContent();
         Symbol symbol = getSymbolTable().getSymbol(symbolType);
         for (char invalidChar : symbol.getInvalidChars()) {
             if (sentenceStr.indexOf(invalidChar) != -1) {

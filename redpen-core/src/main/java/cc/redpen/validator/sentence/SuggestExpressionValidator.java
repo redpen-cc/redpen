@@ -42,7 +42,7 @@ final public class SuggestExpressionValidator extends Validator {
 
     @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {
-        String str = sentence.content;
+        String str = sentence.getContent();
         Set<String> invalidWords = synonyms.keySet();
         errors.addAll(invalidWords.stream().filter(str::contains)
                 .map(w -> createValidationError(sentence, w, synonyms.get(w))).collect(Collectors.toList()));

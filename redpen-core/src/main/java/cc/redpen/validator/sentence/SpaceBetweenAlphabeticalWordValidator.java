@@ -18,7 +18,7 @@ public class SpaceBetweenAlphabeticalWordValidator extends Validator {
     @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {
         char prevCharacter = ' ';
-        for (char character : sentence.content.toCharArray()) {
+        for (char character : sentence.getContent().toCharArray()) {
             if (!StringUtils.isBasicLatin(prevCharacter)
                     && prevCharacter != leftParenthesis && prevCharacter != comma
                     && StringUtils.isBasicLatin(character)

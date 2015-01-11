@@ -190,7 +190,7 @@ public final class Section {
                 joinedHeader.append(" ");
 
             }
-            joinedHeader.append(header.content);
+            joinedHeader.append(header.getContent());
             i++;
         }
         return new Sentence(joinedHeader.toString(), lineNum);

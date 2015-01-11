@@ -72,8 +72,8 @@ final public class KatakanaEndHyphenValidator extends Validator {
     public void validate(List<ValidationError> errors, Sentence sentence) {
         List<ValidationError> result;
         StringBuilder katakana = new StringBuilder("");
-        for (int i = 0; i < sentence.content.length(); i++) {
-            char c = sentence.content.charAt(i);
+        for (int i = 0; i < sentence.getContent().length(); i++) {
+            char c = sentence.getContent().charAt(i);
             if (StringUtils.isKatakana(c) && c != KATAKANA_MIDDLE_DOT) {
                 katakana.append(c);
             } else {

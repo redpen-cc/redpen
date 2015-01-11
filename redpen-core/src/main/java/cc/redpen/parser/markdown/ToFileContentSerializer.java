@@ -167,21 +167,21 @@ public class ToFileContentSerializer implements Visitor {
         // TODO: refactor not to reset member variables...
         int offset = 0;
         for (Sentence outputSentence : outputSentences) {
-            outputSentence.startPositionOffset = mergedCandidateSentence.getOffsetMap().get(offset).offset;
+            outputSentence.setStartPositionOffset(mergedCandidateSentence.getOffsetMap().get(offset).offset);
             outputSentence.setLineNum(mergedCandidateSentence.getOffsetMap().get(offset).lineNum);
-            outputSentence.offsetMap = mergedCandidateSentence.getOffsetMap().subList(offset,
-                    offset + outputSentence.content.length());
+            outputSentence.setOffsetMap(mergedCandidateSentence.getOffsetMap().subList(offset,
+                    offset + outputSentence.getContent().length()));
 
             Set<LineOffset> linkPositions = mergedCandidateSentence.getLinks().keySet();
             for (LineOffset linkPosition : linkPositions) {
-                if (linkPosition.compareTo(outputSentence.offsetMap.get(0)) >= 0
-                        && linkPosition.compareTo(outputSentence.offsetMap.get(
-                        outputSentence.content.length() - 1)) <= 0) {
+                if (linkPosition.compareTo(outputSentence.getOffsetMap().get(0)) >= 0
+                        && linkPosition.compareTo(outputSentence.getOffsetMap().get(
+                        outputSentence.getContent().length() - 1)) <= 0) {
                     outputSentence.addLink(mergedCandidateSentence.getLinks().get(linkPosition));
                 }
 
             }
-            offset += outputSentence.content.length();
+            offset += outputSentence.getContent().length();
         }
         return outputSentences;
     }
@@ -218,7 +218,7 @@ public class ToFileContentSerializer implements Visitor {
 
         // To deal with a header content as a paragraph
         if (headerContents.size() > 0) {
-            headerContents.get(0).isFirstSentence = true;
+            headerContents.get(0).setIsFirstSentence(true);
         }
 
         // 3. create new Section

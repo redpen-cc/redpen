@@ -34,12 +34,12 @@ final public class SpaceBeginningOfSentenceValidator extends Validator {
     private Map<Integer, List<Sentence>> sentencePositions = new HashMap<>();
 
     private boolean isFistInLine(Sentence sentence) {
-        return sentence.isFirstSentence || sentencePositions.get(sentence.getLineNum()).get(0) == sentence;
+        return sentence.isFirstSentence() || sentencePositions.get(sentence.getLineNum()).get(0) == sentence;
     }
 
     @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {
-        String content = sentence.content;
+        String content = sentence.getContent();
         if (!isFistInLine(sentence) && content.length() > 0 && content.charAt(0) != ' ') {
             errors.add(createValidationError(sentence));
         }
