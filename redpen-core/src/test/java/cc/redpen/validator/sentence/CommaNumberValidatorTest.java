@@ -41,7 +41,7 @@ public class CommaNumberValidatorTest {
         commaNumberValidator.validate(errors, str);
         assertNotNull(errors);
         assertEquals(1, errors.size());
-        assertEquals(content, errors.get(0).getSentence().content);
+        assertEquals(content, errors.get(0).getSentence().getContent());
     }
 
     @Test

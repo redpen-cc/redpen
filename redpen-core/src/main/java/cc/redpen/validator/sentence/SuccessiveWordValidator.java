@@ -11,7 +11,7 @@ public class SuccessiveWordValidator extends Validator {
     @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {
         String prevSurface = "";
-        for (TokenElement token : sentence.tokens) {
+        for (TokenElement token : sentence.getTokens()) {
             String currentSurface = token.getSurface();
             if (prevSurface.equals(currentSurface) && currentSurface.length() > 0) {
                 errors.add(createValidationError(sentence, currentSurface));

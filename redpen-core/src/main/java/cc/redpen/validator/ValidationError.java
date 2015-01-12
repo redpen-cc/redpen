@@ -50,7 +50,7 @@ public final class ValidationError implements java.io.Serializable {
      * @return the number of line
      */
     public int getLineNumber() {
-        return sentence.lineNum;
+        return sentence.getLineNum();
     }
 
     /**
@@ -68,7 +68,7 @@ public final class ValidationError implements java.io.Serializable {
      * @return column (character) position which sentence starts
      */
     public int getStartColumnNumber() {
-        return sentence.startPositionOffset;
+        return sentence.getStartPositionOffset();
     }
 
     /**

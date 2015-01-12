@@ -64,7 +64,7 @@ public class SpellingValidator extends Validator {
 
     @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {
-        for (TokenElement token : sentence.tokens) {
+        for (TokenElement token : sentence.getTokens()) {
             String surface = normalize(token.getSurface());
             if (surface.length() == 0) {
                 continue;

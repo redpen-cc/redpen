@@ -28,39 +28,38 @@ import java.util.List;
  * Sentence block in a Document.
  */
 public final class Sentence implements Serializable {
-    private static final long serialVersionUID = -3019057510527995111L;
+    private static final long serialVersionUID = 6965952257673722591L;
     /**
      * Links (including internal and external ones).
      */
-    public final List<String> links;
+    private final List<String> links;
     /**
      * Sentence position in a file.
      */
-    public int lineNum;
+    private int lineNum;
     /**
      * Content of string.
      */
-    public String content;
+    private String content;
     /**
      * Position which the sentence starts with.
      */
-    public int startPositionOffset;
+    private int startPositionOffset;
     /**
      * Flag for knowing if the sentence is the first sentence
      * of a block, such as paragraph, list, header.
      */
-    public boolean isFirstSentence;
+    private boolean isFirstSentence;
     /**
      * A list of tokens.
      *
      * Note: the contents of the tokens are added in DocumentCollectionBuilder
      */
-    public List<TokenElement> tokens;
-
+    private List<TokenElement> tokens;
     /**
      * Combinations of line Number and the position offset
      */
-    public List<LineOffset> offsetMap;
+    private List<LineOffset> offsetMap;
 
     /**
      * Constructor.
@@ -88,6 +87,127 @@ public final class Sentence implements Serializable {
         this.tokens = new ArrayList<>();
         this.startPositionOffset = startOffset;
     }
+
+    /**
+     * Get line number where the sentence starts.
+     *
+     * @return line number
+     */
+    public int getLineNum() {
+        return lineNum;
+    }
+
+    /**
+     * Set line number where the sentence starts.
+     *
+     * @param lineNum line number
+     */
+    public void setLineNum(int lineNum) {
+        this.lineNum = lineNum;
+    }
+
+    /**
+     * Return links the sentence contains.
+     *
+     * @return a set of links
+     */
+    public List<String> getLinks() {
+        return links;
+    }
+
+    /**
+     * Add a link to Sentence
+     * @param link link url
+     */
+    public void addLink(String link) {
+        this.links.add(link);
+    }
+
+    /**
+     * Get content of sentence.
+     *
+     * @return sentence
+     */
+    public String getContent() {
+        return content;
+    }
+
+    /**
+     * Set content of sentence.
+     *
+     * @param content sentence
+     */
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    /**
+     * Get start column offset where the sentence starts.
+     * @return column offset of start sentence
+     */
+    public int getStartPositionOffset() {
+        return startPositionOffset;
+    }
+
+    /**
+     * Set start column offset where the sentence starts.
+     *
+     * @param startPositionOffset column offset of start sentence
+     */
+    public void setStartPositionOffset(int startPositionOffset) {
+        this.startPositionOffset = startPositionOffset;
+    }
+
+    /**
+     * Detect the sentence is the first sentence of a paragraph.
+     *
+     * @return true when the first sentence of a paragraph. false otherwise.
+     */
+    public boolean isFirstSentence() {
+        return isFirstSentence;
+    }
+
+    /**
+     * Set a flag to detect if the sentence is a first sentence of a paragraph.
+     * @param isFirstSentence a flag to detect if the sentence exists in the begging of a paragraph
+     */
+    public void setIsFirstSentence(boolean isFirstSentence) {
+        this.isFirstSentence = isFirstSentence;
+    }
+
+    /**
+     * Get a set of tokenized words in the sentence.
+     * @return
+     */
+    public List<TokenElement> getTokens() {
+        return tokens;
+    }
+
+    /**
+     * Set a set of tokenized words.
+     * @param tokens tokenized words
+     */
+    public void setTokens(List<TokenElement> tokens) {
+        this.tokens = tokens;
+    }
+
+    /**
+     * Return the offset mapping table which contains character position to column offset in line.
+     * @return offset table
+     */
+    public List<LineOffset> getOffsetMap() {
+        return offsetMap;
+    }
+
+    /**
+     * Set the offset mapping table which contains character position to column offset in line.
+     *
+     * @param offsetMap
+     */
+    public void setOffsetMap(List<LineOffset> offsetMap) {
+        this.offsetMap = offsetMap;
+    }
+
 
     @Override
     public String toString() {

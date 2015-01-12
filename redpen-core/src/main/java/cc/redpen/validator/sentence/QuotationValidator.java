@@ -87,7 +87,7 @@ public class QuotationValidator extends Validator {
     private List<ValidationError> checkQuotation(Sentence sentence,
                                                  Symbol leftQuotation,
                                                  Symbol rightQuotation) {
-        String sentenceString = sentence.content;
+        String sentenceString = sentence.getContent();
         List<ValidationError> errors = new ArrayList<>();
         int leftPosition = 0;
         int rightPosition = 0;

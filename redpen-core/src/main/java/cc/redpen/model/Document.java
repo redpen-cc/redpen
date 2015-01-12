@@ -159,9 +159,9 @@ public class Document implements Iterable<Section>, Serializable {
 
             lastParagraph.appendSentence(sentence);
             if (lastParagraph.getNumberOfSentences() == 1) {
-                sentence.isFirstSentence = true;
+                sentence.setIsFirstSentence(true);
             }
-            sentence.tokens = tokenizer.tokenize(sentence.content);
+            sentence.setTokens(tokenizer.tokenize(sentence.getContent()));
             return this;
         }
 

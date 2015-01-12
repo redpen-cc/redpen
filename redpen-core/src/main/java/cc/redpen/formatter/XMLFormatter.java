@@ -119,7 +119,7 @@ public class XMLFormatter extends Formatter {
 
         Element sentenceElement = doc.createElement("sentence");
         errorElement.appendChild(sentenceElement);
-        sentenceElement.appendChild(doc.createTextNode(error.getSentence().content));
+        sentenceElement.appendChild(doc.createTextNode(error.getSentence().getContent()));
 
         // convert the result dom into a string
         StringWriter writer = new StringWriter();

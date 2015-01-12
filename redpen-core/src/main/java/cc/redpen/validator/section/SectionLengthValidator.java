@@ -43,7 +43,7 @@ final public class SectionLengthValidator extends Validator {
 
         for (Paragraph currentParagraph : section.getParagraphs()) {
             for (Sentence sentence : currentParagraph.getSentences()) {
-                sectionCharNumber += sentence.content.length();
+                sectionCharNumber += sentence.getContent().length();
             }
         }
 

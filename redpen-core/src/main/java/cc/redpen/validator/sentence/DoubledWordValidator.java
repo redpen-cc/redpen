@@ -44,7 +44,7 @@ final public class DoubledWordValidator extends Validator {
     @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {
         Set<String> surfaces = new HashSet<>();
-        for (TokenElement token : sentence.tokens) {
+        for (TokenElement token : sentence.getTokens()) {
             String currentSurface = token.getSurface();
             if (surfaces.contains(currentSurface) && !skipList.contains(currentSurface.toLowerCase())) {
                 errors.add(createValidationError(sentence, currentSurface));

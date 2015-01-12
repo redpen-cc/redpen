@@ -23,7 +23,7 @@ final public class EndOfSentenceValidator extends Validator {
 
     @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {
-        String content = sentence.content;
+        String content = sentence.getContent();
         if (content.length() < 2) {
             return;
         }

@@ -182,7 +182,7 @@ public final class Section {
         StringBuilder joinedHeader = new StringBuilder();
         int lineNum = 0;
         if (headerContent.size() > 0) {
-            lineNum = headerContent.get(0).lineNum;
+            lineNum = headerContent.get(0).getLineNum();
         }
         int i = 0;
         for (Sentence header : headerContent) {
@@ -190,7 +190,7 @@ public final class Section {
                 joinedHeader.append(" ");
 
             }
-            joinedHeader.append(header.content);
+            joinedHeader.append(header.getContent());
             i++;
         }
         return new Sentence(joinedHeader.toString(), lineNum);

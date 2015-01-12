@@ -41,7 +41,7 @@ final public class WordNumberValidator extends Validator {
 
     @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {
-        int wordNum = sentence.tokens.size();
+        int wordNum = sentence.getTokens().size();
         if (wordNum > maxWordNumber) {
             errors.add(createValidationError(sentence, wordNum));
         }

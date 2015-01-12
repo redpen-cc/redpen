@@ -124,7 +124,7 @@ final public class ContractionValidator extends Validator {
 
     @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {
-        for (TokenElement token : sentence.tokens) {
+        for (TokenElement token : sentence.getTokens()) {
             String surface = token.getSurface().toLowerCase();
             if (foundNonContractionNum >= foundContractionNum
                     && contractions.contains(surface)) {
@@ -135,7 +135,7 @@ final public class ContractionValidator extends Validator {
 
     @Override
     public void preValidate(Sentence sentence) {
-        for (TokenElement token : sentence.tokens) {
+        for (TokenElement token : sentence.getTokens()) {
             String surface = token.getSurface().toLowerCase();
             if (contractions.contains(surface)) {
                 foundContractionNum += 1;

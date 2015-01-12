@@ -28,8 +28,8 @@ public class SectionTest {
     @Test
     public void testGetJoinedHeaderFromSectionHasOneSentenceHeader() {
         Section section = new Section(0, "header");
-        assertEquals("header", section.getJoinedHeaderContents().content);
-        assertEquals(0, section.getJoinedHeaderContents().lineNum);
+        assertEquals("header", section.getJoinedHeaderContents().getContent());
+        assertEquals(0, section.getJoinedHeaderContents().getLineNum());
     }
 
     @Test
@@ -38,14 +38,14 @@ public class SectionTest {
         headers.add(new Sentence("header1.", 0));
         headers.add(new Sentence("header2.", 0));
         Section section = new Section(0, headers);
-        assertEquals("header1. header2.", section.getJoinedHeaderContents().content);
-        assertEquals(0, section.getJoinedHeaderContents().lineNum);
+        assertEquals("header1. header2.", section.getJoinedHeaderContents().getContent());
+        assertEquals(0, section.getJoinedHeaderContents().getLineNum());
     }
 
     @Test
     public void testGetJoinedHeaderFromSectionWithoutHeader() {
         Section section = new Section(0);
-        assertEquals("", section.getJoinedHeaderContents().content);
-        assertEquals(0, section.getJoinedHeaderContents().lineNum);
+        assertEquals("", section.getJoinedHeaderContents().getContent());
+        assertEquals(0, section.getJoinedHeaderContents().getLineNum());
     }
 }

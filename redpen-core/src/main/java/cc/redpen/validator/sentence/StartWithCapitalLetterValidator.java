@@ -35,8 +35,8 @@ final public class StartWithCapitalLetterValidator extends Validator {
 
     @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {
-        String content = sentence.content;
-        List<TokenElement> tokens = sentence.tokens;
+        String content = sentence.getContent();
+        List<TokenElement> tokens = sentence.getTokens();
         String headWord = "";
         for (TokenElement token : tokens) {
             if (!token.getSurface().equals("")) { // skip white space

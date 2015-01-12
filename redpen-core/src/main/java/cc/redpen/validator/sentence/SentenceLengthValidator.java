@@ -41,8 +41,8 @@ final public class SentenceLengthValidator extends Validator {
 
     @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {
-        if (sentence.content.length() > maxLength) {
-            errors.add(createValidationError(sentence, sentence.content.length()));
+        if (sentence.getContent().length() > maxLength) {
+            errors.add(createValidationError(sentence, sentence.getContent().length()));
         }
     }
 

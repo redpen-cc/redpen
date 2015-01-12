@@ -177,7 +177,7 @@ final class WikiParser extends BaseDocumentParser {
 
         // To deal with header content as a paragraph
         if (outputSentences.size() > 0) {
-            outputSentences.get(0).isFirstSentence = true;
+            outputSentences.get(0).setIsFirstSentence(true);
         }
         Section currentSection = builder.getLastSection();
         builder.addSection(level, outputSentences);
@@ -202,24 +202,24 @@ final class WikiParser extends BaseDocumentParser {
     }
 
     private void removeTags(Sentence sentence) {
-        String content = sentence.content;
+        String content = sentence.getContent();
         for (Pattern inlinePattern : INLINE_PATTERNS) {
             Matcher m = inlinePattern.matcher(content);
             content = m.replaceAll("$1");
         }
-        sentence.content = content;
+        sentence.setContent(content);
     }
 
     private void extractLinks(Sentence sentence) {
         StringBuilder modContent = new StringBuilder();
         int start = 0;
-        Matcher m = LINK_PATTERN.matcher(sentence.content);
+        Matcher m = LINK_PATTERN.matcher(sentence.getContent());
         while (m.find()) {
             String[] tagInternal = m.group(1).split("\\|");
             String tagURL = null;
             if (tagInternal.length == 1) {
                 tagURL = tagInternal[0].trim();
-                modContent.append(sentence.content.substring(
+                modContent.append(sentence.getContent().substring(
                         start, m.start())).append(tagURL.trim());
             } else if (tagInternal.length == 0) {
                 LOG.warn("Invalid link block: vacant block");
@@ -228,22 +228,22 @@ final class WikiParser extends BaseDocumentParser {
                 if (tagInternal.length > 2) {
                     LOG.warn(
                             "Invalid link block: there are more than two link blocks at line "
-                                    + sentence.lineNum);
+                                    + sentence.getLineNum());
                 }
                 tagURL = tagInternal[1].trim();
                 StringBuilder buffer = new StringBuilder();
-                buffer.append(sentence.content.substring(start, m.start()));
+                buffer.append(sentence.getContent().substring(start, m.start()));
                 buffer.append(tagInternal[0].trim());
                 modContent.append(buffer);
             }
-            sentence.links.add(tagURL);
+            sentence.addLink(tagURL);
             start = m.end();
         }
 
         if (start > 0) {
-            modContent.append(sentence.content.substring(
-                    start, sentence.content.length()));
-            sentence.content = modContent.toString();
+            modContent.append(sentence.getContent().substring(
+                    start, sentence.getContent().length()));
+            sentence.setContent(modContent.toString());
         }
     }
 
