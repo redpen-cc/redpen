@@ -121,6 +121,18 @@ public class XMLFormatter extends Formatter {
         errorElement.appendChild(sentenceElement);
         sentenceElement.appendChild(doc.createTextNode(error.getSentence().getContent()));
 
+        error.getStartPosition().ifPresent(e -> {
+            Element startPositionElement = doc.createElement("errorStartPosition");
+            errorElement.appendChild(startPositionElement);
+            startPositionElement.appendChild(doc.createTextNode(error.getStartPosition().toString()));
+        });
+
+        error.getStartPosition().ifPresent(e -> {
+            Element endPositionElement = doc.createElement("errorEndPosition");
+            errorElement.appendChild(endPositionElement);
+            endPositionElement.appendChild(doc.createTextNode(error.getStartPosition().toString()));
+        });
+
         // convert the result dom into a string
         StringWriter writer = new StringWriter();
         StreamResult result = new StreamResult(writer);

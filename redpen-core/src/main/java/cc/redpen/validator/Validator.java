@@ -24,6 +24,7 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
+import cc.redpen.parser.LineOffset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -190,6 +191,35 @@ public abstract class Validator {
     }
 
     /**
+     * create a ValidationError for the specified position with default error message
+     *
+     * @param sentenceWithError sentence
+     * @param start             start position
+     * @param end               end position
+     * @param args              objects to format
+     * @return ValidationError with localized message
+     */
+    protected ValidationError createValidationErrorWithPosition(Sentence sentenceWithError,
+            LineOffset start, LineOffset end, Object... args) {
+        return new ValidationError(this.getClass(), getLocalizedErrorMessage(Optional.empty(), args), sentenceWithError, start, end);
+    }
+
+    /**
+     * create a ValidationError for the specified position with specified message key
+     *
+     * @param messageKey        messageKey
+     * @param sentenceWithError sentence
+     * @param start             start position
+     * @param end               end position
+     * @param args              objects to format
+     * @return ValidationError with localized message
+     */
+    protected ValidationError createValidationErrorWithPosition(String messageKey, Sentence sentenceWithError,
+            LineOffset start, LineOffset end, Object... args) {
+        return new ValidationError(this.getClass(), getLocalizedErrorMessage(Optional.of(messageKey), args), sentenceWithError, start, end);
+    }
+
+    /**
      * returns localized error message for the given key formatted with argument
      *
      * @param key  message key
@@ -204,5 +234,4 @@ public abstract class Validator {
             throw new AssertionError("message resource not found.");
         }
     }
-
 }

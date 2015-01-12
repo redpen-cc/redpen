@@ -23,6 +23,7 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.Symbol;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
+import cc.redpen.parser.LineOffset;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
@@ -55,6 +56,8 @@ public class InvalidSymbolValidatorTest {
         RedPen redPen = new RedPen(conf);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(1, errors.get(documents.get(0)).size());
+        Assert.assertEquals(new LineOffset(1, 12), errors.get(documents.get(0)).get(0).getStartPosition().get());
+        Assert.assertEquals(new LineOffset(1, 13), errors.get(documents.get(0)).get(0).getEndPosition().get());
     }
 
     @Test

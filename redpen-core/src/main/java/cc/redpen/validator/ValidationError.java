@@ -18,6 +18,9 @@
 package cc.redpen.validator;
 
 import cc.redpen.model.Sentence;
+import cc.redpen.parser.LineOffset;
+
+import java.util.Optional;
 
 /**
  * Error to report invalid point from Validators.
@@ -28,6 +31,8 @@ public final class ValidationError implements java.io.Serializable {
     private final String message;
     private final String validatorName;
     private final Sentence sentence;
+    private final Optional<LineOffset> startPosition;
+    private final Optional<LineOffset> endPosition;
 
     /**
      * Constructor.
@@ -37,11 +42,32 @@ public final class ValidationError implements java.io.Serializable {
      * @param sentenceWithError sentence containing validation error
      */
     ValidationError(Class validatorClass,
-                           String errorMessage,
-                           Sentence sentenceWithError) {
+            String errorMessage,
+            Sentence sentenceWithError) {
         this.message = errorMessage;
         this.validatorName = validatorClass.getSimpleName();
         this.sentence = sentenceWithError;
+        this.startPosition = Optional.empty();
+        this.endPosition = Optional.empty();
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param validatorClass    validator class
+     * @param errorMessage      error message
+     * @param sentenceWithError sentence containing validation error
+     * @param startPosition     position where error starts
+     * @param endPosition       position where error ends
+     */
+    ValidationError(Class validatorClass,
+            String errorMessage,
+            Sentence sentenceWithError, LineOffset startPosition, LineOffset endPosition) {
+        this.message = errorMessage;
+        this.validatorName = validatorClass.getSimpleName();
+        this.sentence = sentenceWithError;
+        this.startPosition = Optional.of(startPosition);
+        this.endPosition = Optional.of(endPosition);
     }
 
     /**
@@ -94,4 +120,21 @@ public final class ValidationError implements java.io.Serializable {
         }
     }
 
+    /**
+     * Get error start position.
+     *
+     * @return error start position (Note: some validation error does not specify the error position)
+     */
+    public Optional<LineOffset> getStartPosition() {
+        return startPosition;
+    }
+
+    /**
+     * Get error end position.
+     *
+     * @return error end position (Note: some validation error does not specify the error position)
+     */
+    public Optional<LineOffset> getEndPosition() {
+        return endPosition;
+    }
 }
