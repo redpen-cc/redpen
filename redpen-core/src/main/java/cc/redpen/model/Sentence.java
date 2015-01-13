@@ -23,6 +23,7 @@ import cc.redpen.tokenizer.TokenElement;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Sentence block in a Document.
@@ -210,10 +211,17 @@ public final class Sentence implements Serializable {
      * Get offset position for specified character position
      *
      * @param position character position in a sentence
-     * @return
+     * @return offset position
      */
-    public LineOffset getOffset(int position) {
-        return this.offsetMap.get(position);
+    public Optional<LineOffset> getOffset(int position) {
+        if (this.offsetMap.size() > position) {
+            return Optional.of(this.offsetMap.get(position));
+        } else if (this.offsetMap.size() == position) {
+            LineOffset prev = this.offsetMap.get(position-1);
+            return Optional.of(new LineOffset(prev.lineNum, prev.offset+1));
+        } else {
+            return Optional.empty();
+        }
     }
 
     /**

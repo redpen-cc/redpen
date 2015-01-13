@@ -20,7 +20,6 @@ package cc.redpen.validator.sentence;
 import cc.redpen.config.Symbol;
 import cc.redpen.config.SymbolType;
 import cc.redpen.model.Sentence;
-import cc.redpen.parser.LineOffset;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
@@ -49,14 +48,8 @@ final public class InvalidSymbolValidator extends Validator {
         for (char invalidChar : symbol.getInvalidChars()) {
             int startPosition = sentenceStr.indexOf(invalidChar);
             if (startPosition != -1) {
-                // TODO simplify the following steps with enrich LineOffset accessor methods.
-                LineOffset startOffset =  sentence.getOffset(startPosition);
-                LineOffset endOffset = new LineOffset(startOffset.lineNum, startOffset.offset+1);
-                if (sentence.getOffsetMapSize() > startPosition+1) {
-                    endOffset = sentence.getOffset(startPosition+1);
-                }
-                return createValidationErrorWithPosition(sentence,
-                        startOffset,  endOffset, invalidChar);
+                return createValidationErrorWithPosition(sentence, sentence.getOffset(startPosition),
+                        sentence.getOffset(startPosition+1), invalidChar);
             }
         }
         return null;

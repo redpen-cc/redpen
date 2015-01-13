@@ -174,9 +174,9 @@ public class ToFileContentSerializer implements Visitor {
 
             Set<LineOffset> linkPositions = mergedCandidateSentence.getLinks().keySet();
             for (LineOffset linkPosition : linkPositions) {
-                if (linkPosition.compareTo(outputSentence.getOffset(0)) >= 0
+                if (linkPosition.compareTo(outputSentence.getOffset(0).get()) >= 0
                         && linkPosition.compareTo(outputSentence.getOffset(
-                        outputSentence.getContent().length() - 1)) <= 0) {
+                        outputSentence.getContent().length() - 1).get()) <= 0) {
                     outputSentence.addLink(mergedCandidateSentence.getLinks().get(linkPosition));
                 }
 

@@ -200,7 +200,7 @@ public abstract class Validator {
      * @return ValidationError with localized message
      */
     protected ValidationError createValidationErrorWithPosition(Sentence sentenceWithError,
-            LineOffset start, LineOffset end, Object... args) {
+            Optional<LineOffset> start, Optional<LineOffset> end, Object... args) {
         return new ValidationError(this.getClass(), getLocalizedErrorMessage(Optional.empty(), args), sentenceWithError, start, end);
     }
 
@@ -215,7 +215,7 @@ public abstract class Validator {
      * @return ValidationError with localized message
      */
     protected ValidationError createValidationErrorWithPosition(String messageKey, Sentence sentenceWithError,
-            LineOffset start, LineOffset end, Object... args) {
+            Optional<LineOffset> start, Optional<LineOffset> end, Object... args) {
         return new ValidationError(this.getClass(), getLocalizedErrorMessage(Optional.of(messageKey), args), sentenceWithError, start, end);
     }
 

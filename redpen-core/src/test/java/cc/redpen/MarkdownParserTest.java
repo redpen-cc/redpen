@@ -353,7 +353,7 @@ public class MarkdownParserTest {
 
         assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMapSize());
         for (int i = 0; i < expectedOffsets.size() ; i++) {
-            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i));
+            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i).get());
         }
     }
 
@@ -447,7 +447,7 @@ public class MarkdownParserTest {
 
         assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMapSize());
         for (int i = 0; i < expectedOffsets.size() ; i++) {
-            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i));
+            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i).get());
         }
     }
 
@@ -479,7 +479,7 @@ public class MarkdownParserTest {
 
         assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMapSize());
         for (int i = 0; i < expectedOffsets.size() ; i++) {
-            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i));
+            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i).get());
         }
     }
 
@@ -511,7 +511,7 @@ public class MarkdownParserTest {
 
         assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMapSize());
         for (int i = 0; i < expectedOffsets.size() ; i++) {
-            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i));
+            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i).get());
         }
     }
 
@@ -542,7 +542,7 @@ public class MarkdownParserTest {
                 new LineOffset(1, 24));
         assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMapSize());
         for (int i = 0; i < expectedOffsets.size() ; i++) {
-            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i));
+            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i).get());
         }
     }
 
@@ -579,7 +579,7 @@ public class MarkdownParserTest {
         assertEquals(expectedOffsets1.size(), lastSection.getHeaderContent(0).getOffsetMapSize());
         for (int i = 0; i < expectedOffsets1.size() ; i++) {
             assertEquals(expectedOffsets1.get(i),
-                    lastSection.getHeaderContent(0).getOffset(i));
+                    lastSection.getHeaderContent(0).getOffset(i).get());
         }
 
         List<LineOffset> expectedOffsets2 = initializeMappingTable(
@@ -606,7 +606,7 @@ public class MarkdownParserTest {
         assertEquals(expectedOffsets2.size(), lastSection.getHeaderContent(1).getOffsetMapSize());
         for (int i = 0; i < expectedOffsets2.size() ; i++) {
             assertEquals(expectedOffsets2.get(i),
-                    lastSection.getHeaderContent(1).getOffset(i));
+                    lastSection.getHeaderContent(1).getOffset(i).get());
         }
     }
 
@@ -639,7 +639,7 @@ public class MarkdownParserTest {
         assertEquals(expectedOffsets.size(), lastSection.getHeaderContent(0).getOffsetMapSize());
         for (int i = 0; i < expectedOffsets.size() ; i++) {
             assertEquals(expectedOffsets.get(i),
-                    lastSection.getHeaderContent(0).getOffset(i));
+                    lastSection.getHeaderContent(0).getOffset(i).get());
         }
     }
 

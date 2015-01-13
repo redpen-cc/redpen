@@ -60,14 +60,13 @@ public final class ValidationError implements java.io.Serializable {
      * @param startPosition     position where error starts
      * @param endPosition       position where error ends
      */
-    ValidationError(Class validatorClass,
-            String errorMessage,
-            Sentence sentenceWithError, LineOffset startPosition, LineOffset endPosition) {
+    ValidationError(Class validatorClass, String errorMessage, Sentence sentenceWithError,
+            Optional<LineOffset> startPosition, Optional<LineOffset> endPosition) {
         this.message = errorMessage;
         this.validatorName = validatorClass.getSimpleName();
         this.sentence = sentenceWithError;
-        this.startPosition = Optional.of(startPosition);
-        this.endPosition = Optional.of(endPosition);
+        this.startPosition = startPosition;
+        this.endPosition = endPosition;
     }
 
     /**
