@@ -50,10 +50,10 @@ final public class InvalidSymbolValidator extends Validator {
             int startPosition = sentenceStr.indexOf(invalidChar);
             if (startPosition != -1) {
                 // TODO simplify the following steps with enrich LineOffset accessor methods.
-                LineOffset startOffset =  sentence.getOffsetMap().get(startPosition);
+                LineOffset startOffset =  sentence.getOffset(startPosition);
                 LineOffset endOffset = new LineOffset(startOffset.lineNum, startOffset.offset+1);
-                if (sentence.getOffsetMap().size() > startPosition+1) {
-                    endOffset = sentence.getOffsetMap().get(startPosition+1);
+                if (sentence.getOffsetMapSize() > startPosition+1) {
+                    endOffset = sentence.getOffset(startPosition+1);
                 }
                 return createValidationErrorWithPosition(sentence,
                         startOffset,  endOffset, invalidChar);

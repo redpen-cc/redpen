@@ -197,20 +197,32 @@ public final class Sentence implements Serializable {
     }
 
     /**
-     * Return the offset mapping table which contains character position to column offset in line.
-     * @return offset table
-     */
-    public List<LineOffset> getOffsetMap() {
-        return offsetMap;
-    }
-
-    /**
      * Set the offset mapping table which contains character position to column offset in line.
      *
      * @param offsetMap
      */
     public void setOffsetMap(List<LineOffset> offsetMap) {
         this.offsetMap = offsetMap;
+    }
+
+
+    /**
+     * Get offset position for specified character position
+     *
+     * @param position character position in a sentence
+     * @return
+     */
+    public LineOffset getOffset(int position) {
+        return this.offsetMap.get(position);
+    }
+
+    /**
+     * Get size of offset mapping table (the size should be same as the content length)
+     *
+     * @return
+     */
+    public int getOffsetMapSize() {
+        return this.offsetMap.size();
     }
 
 
