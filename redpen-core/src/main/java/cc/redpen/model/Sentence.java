@@ -88,10 +88,6 @@ public final class Sentence implements Serializable {
         this.tokens = new ArrayList<>();
         this.startPositionOffset = startOffset;
         this.offsetMap = new ArrayList<>();
-        //TODO: the followings are redundant. The process are needed for testing purposed but should be removed in the **near** future.
-        for (int i=0; i<content.length(); i++) {
-            offsetMap.add(new LineOffset(lineNum, startPositionOffset+i));
-        }
     }
 
     /**

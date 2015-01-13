@@ -23,7 +23,6 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.Symbol;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
-import cc.redpen.parser.LineOffset;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
@@ -32,6 +31,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static cc.redpen.config.SymbolType.COMMA;
 import static cc.redpen.config.SymbolType.EXCLAMATION_MARK;
@@ -56,8 +56,9 @@ public class InvalidSymbolValidatorTest {
         RedPen redPen = new RedPen(conf);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(1, errors.get(documents.get(0)).size());
-        Assert.assertEquals(new LineOffset(1, 12), errors.get(documents.get(0)).get(0).getStartPosition().get());
-        Assert.assertEquals(new LineOffset(1, 13), errors.get(documents.get(0)).get(0).getEndPosition().get());
+        // NOTE: no position without parsing
+        Assert.assertEquals(Optional.empty(), errors.get(documents.get(0)).get(0).getStartPosition());
+        Assert.assertEquals(Optional.empty(), errors.get(documents.get(0)).get(0).getEndPosition());
     }
 
     @Test

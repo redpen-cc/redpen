@@ -19,6 +19,7 @@ package cc.redpen;
 
 import cc.redpen.config.Configuration;
 import cc.redpen.config.Symbol;
+import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.ListBlock;
 import cc.redpen.model.Paragraph;
@@ -26,6 +27,7 @@ import cc.redpen.model.Section;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
+import cc.redpen.validator.ValidationError;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -794,6 +796,29 @@ public class MarkdownParserTest {
                 firstParagraph.getSentence(1).getContent());
     }
 
+
+    @Test
+    public void testErrorPositionOfMarkdownParser() throws RedPenException {
+        String sampleText = "This is a good day。\n"; // invalid end of sentence symbol
+        Configuration conf = new Configuration.ConfigurationBuilder()
+                .setLanguage("en")
+                .build();
+        List<Document> documents = new ArrayList<>();
+        documents.add(createFileContent(sampleText, conf));
+
+        Configuration configuration = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(
+                        new ValidatorConfiguration("InvalidSymbol"))
+                .build();
+
+        RedPen redPen = new RedPen(configuration);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
+        assertEquals(1, errors.size());
+        assertEquals("InvalidSymbol", errors.get(0).getValidatorName());
+        assertEquals(19, errors.get(0).getSentence().getContent().length());
+        assertEquals(new LineOffset(1, 18), errors.get(0).getStartPosition().get());
+        assertEquals(new LineOffset(1, 19), errors.get(0).getEndPosition().get());
+    }
 
     private Document createFileContent(String inputDocumentString,
                                        Configuration config) {
