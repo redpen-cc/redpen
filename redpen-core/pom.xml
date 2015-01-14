@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>redpen-core</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
     <name>redpen-core</name>
     <url>http://redpen.cc</url>
 
@@ -165,4 +165,3 @@
         </repository>
     </repositories>
 </project>
-
