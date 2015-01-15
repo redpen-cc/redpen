@@ -23,6 +23,9 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.Symbol;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
+import cc.redpen.parser.DocumentParser;
+import cc.redpen.parser.LineOffset;
+import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -32,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 import static cc.redpen.config.SymbolType.*;
+import static org.junit.Assert.assertEquals;
 
 public class SymbolWithSpaceValidatorTest {
     @Test
@@ -138,5 +142,49 @@ public class SymbolWithSpaceValidatorTest {
         RedPen redPen = new RedPen(conf);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(1, errors.get(documents.get(0)).size());
+    }
+
+    @Test
+    public void testErrorBeforePosition() throws RedPenException {
+        String sampleText = "I like her(Nancy) very much.";
+        Configuration configuration = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(
+                        new ValidatorConfiguration("SymbolWithSpace"))
+                .build();
+        DocumentParser parser = DocumentParser.MARKDOWN;
+        List<Document> documents = new ArrayList<>();
+        Document document  = parser.parse(
+                sampleText, new SentenceExtractor(configuration.getSymbolTable()),
+                configuration.getTokenizer());
+        documents.add(document);
+
+        RedPen redPen = new RedPen(configuration);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
+        assertEquals(1, errors.size());
+        assertEquals("SymbolWithSpace", errors.get(0).getValidatorName());
+        assertEquals(new LineOffset(1, 10), errors.get(0).getStartPosition().get());
+        assertEquals(new LineOffset(1, 11), errors.get(0).getEndPosition().get());
+    }
+
+    @Test
+    public void testErrorAfterPosition() throws RedPenException {
+        String sampleText = "I like her (Nancy)very much.";
+        Configuration configuration = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(
+                        new ValidatorConfiguration("SymbolWithSpace"))
+                .build();
+        DocumentParser parser = DocumentParser.MARKDOWN;
+        List<Document> documents = new ArrayList<>();
+        Document document  = parser.parse(
+                sampleText, new SentenceExtractor(configuration.getSymbolTable()),
+                configuration.getTokenizer());
+        documents.add(document);
+
+        RedPen redPen = new RedPen(configuration);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
+        assertEquals(1, errors.size());
+        assertEquals("SymbolWithSpace", errors.get(0).getValidatorName());
+        assertEquals(new LineOffset(1, 18), errors.get(0).getStartPosition().get());
+        assertEquals(new LineOffset(1, 19), errors.get(0).getEndPosition().get());
     }
 }

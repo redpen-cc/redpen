@@ -23,6 +23,9 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
+import cc.redpen.parser.DocumentParser;
+import cc.redpen.parser.LineOffset;
+import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
@@ -109,5 +112,26 @@ public class InvalidExpressionValidatorTest {
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(1, errors.get(documents.get(0)).size());
+    }
+
+    @Test
+    public void testErrorPosition() throws RedPenException {
+        String sampleText = "Hello You know."; // invalid expression "You know"
+        Configuration configuration = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(
+                        new ValidatorConfiguration("InvalidExpression"))
+                .build();
+        DocumentParser parser = DocumentParser.MARKDOWN;
+        List<Document> documents = new ArrayList<>();
+        Document document  = parser.parse(sampleText, new SentenceExtractor(configuration.getSymbolTable()),
+                configuration.getTokenizer());
+        documents.add(document);
+
+        RedPen redPen = new RedPen(configuration);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
+        assertEquals(1, errors.size());
+        assertEquals("InvalidExpression", errors.get(0).getValidatorName());
+        assertEquals(new LineOffset(1, 6), errors.get(0).getStartPosition().get());
+        assertEquals(new LineOffset(1, 14), errors.get(0).getEndPosition().get());
     }
 }

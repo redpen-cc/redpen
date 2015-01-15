@@ -55,11 +55,19 @@ public class SymbolWithSpaceValidator extends Validator {
         if (position != -1) {
             if (position > 0 && symbol.isNeedBeforeSpace()
                     && !Character.isWhitespace(sentenceStr.charAt(position - 1))) {
-                return createValidationError(sentence, symbol.getType(), sentenceStr.charAt(position));
+                return createValidationErrorWithPosition(sentence,
+                        sentence.getOffset(position),
+                        sentence.getOffset(position+1),
+                        sentenceStr.charAt(position));
+
             } else if (position < sentenceStr.length() - 1
                     && symbol.isNeedAfterSpace()
                     && !Character.isWhitespace(sentenceStr.charAt(position + 1))) {
-                return createValidationError(sentence, symbol.getType(), sentenceStr.charAt(position));
+                return createValidationErrorWithPosition(sentence,
+                        sentence.getOffset(position+1),
+                        sentence.getOffset(position+2),
+                        sentenceStr.charAt(position));
+
             }
         }
         return null;

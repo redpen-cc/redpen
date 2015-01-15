@@ -212,7 +212,7 @@ public final class Sentence implements Serializable {
     public Optional<LineOffset> getOffset(int position) {
         if (this.offsetMap.size() > position) {
             return Optional.of(this.offsetMap.get(position));
-        } else if (this.offsetMap.size() == position) {
+        } else if (this.offsetMap.size() == position && offsetMap.size() > 0) {
             LineOffset prev = this.offsetMap.get(position-1);
             return Optional.of(new LineOffset(prev.lineNum, prev.offset+1));
         } else {
