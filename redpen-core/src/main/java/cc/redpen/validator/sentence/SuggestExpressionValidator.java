@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * If input sentences contain invalid expressions, this validator
@@ -38,18 +37,26 @@ final public class SuggestExpressionValidator extends Validator {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(SuggestExpressionValidator.class);
+    private static final String DEFAULT_RESOURCE_PATH = "";
     private Map<String, String> synonyms = new HashMap<>();
 
     @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {
-        String str = sentence.getContent();
-        Set<String> invalidWords = synonyms.keySet();
-        errors.addAll(invalidWords.stream().filter(str::contains)
-                .map(w -> createValidationError(sentence, w, synonyms.get(w))).collect(Collectors.toList()));
+        synonyms.keySet().stream().forEach(value -> {
+                    int startPosition = sentence.getContent().indexOf(value);
+                    if (startPosition != -1) {
+                        errors.add(createValidationErrorWithPosition(sentence,
+                                sentence.getOffset(startPosition),
+                                sentence.getOffset(startPosition + value.length()),
+                                synonyms.get(value)));
+                    }
+                }
+        );
     }
 
     @Override
     protected void init() throws RedPenException {
+        //TODO: support default dictionary.
         Optional<String> confFile = getConfigAttribute("dict");
         LOG.info("Dictionary file is " + confFile);
         if (!confFile.isPresent()) {

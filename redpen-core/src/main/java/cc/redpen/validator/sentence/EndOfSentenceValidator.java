@@ -36,7 +36,9 @@ final public class EndOfSentenceValidator extends Validator {
                     || secondCharacter == rightDoubleQuotation) {
                 StringBuilder builder = new StringBuilder();
                 builder.append(secondCharacter).append(lastCharacter);
-                errors.add(createValidationError(sentence, builder.toString()));
+                errors.add(createValidationErrorWithPosition(sentence,
+                        sentence.getOffset(content.length()-2),
+                        sentence.getOffset(content.length()-1), builder.toString()));
             }
         }
     }

@@ -19,6 +19,7 @@ package cc.redpen;
 
 import cc.redpen.config.Configuration;
 import cc.redpen.config.Symbol;
+import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.ListBlock;
 import cc.redpen.model.Paragraph;
@@ -26,6 +27,7 @@ import cc.redpen.model.Section;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
+import cc.redpen.validator.ValidationError;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -254,7 +256,7 @@ public class MarkdownParserTest {
         assertEquals("Tokyu is a good railway company.", doc.getSection(0).getParagraph(0).getSentence(0).getContent());
         assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(0).getLineNum());
         assertEquals(0, doc.getSection(0).getParagraph(0).getSentence(0).getStartPositionOffset());
-        assertEquals(32, doc.getSection(0).getParagraph(0).getSentence(0).getOffsetMap().size());
+        assertEquals(32, doc.getSection(0).getParagraph(0).getSentence(0).getOffsetMapSize());
 
         assertEquals(" But there are competitors.", doc.getSection(0).getParagraph(0).getSentence(1).getContent());
         assertEquals(3, doc.getSection(0).getParagraph(0).getSentence(1).getLineNum());
@@ -273,7 +275,7 @@ public class MarkdownParserTest {
         assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(0).getLineNum());
         assertEquals(0, doc.getSection(0).getParagraph(0).getSentence(0).getStartPositionOffset());
         assertEquals(doc.getSection(0).getParagraph(0).getSentence(0).getContent().length(),
-                doc.getSection(0).getParagraph(0).getSentence(0).getOffsetMap().size());
+                doc.getSection(0).getParagraph(0).getSentence(0).getOffsetMapSize());
 
     }
 
@@ -330,7 +332,7 @@ public class MarkdownParserTest {
         assertEquals("It is not Google.",
                 firstParagraph.getSentence(0).getContent());
         assertEquals(firstParagraph.getSentence(0).getContent().length(),
-                firstParagraph.getSentence(0).getOffsetMap().size());
+                firstParagraph.getSentence(0).getOffsetMapSize());
 
         List<LineOffset> expectedOffsets = initializeMappingTable(
                 new LineOffset(1, 0),
@@ -351,9 +353,9 @@ public class MarkdownParserTest {
                 new LineOffset(1, 16),
                 new LineOffset(1, 37));
 
-        assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMap().size());
+        assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMapSize());
         for (int i = 0; i < expectedOffsets.size() ; i++) {
-            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffsetMap().get(i));
+            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i).get());
         }
     }
 
@@ -445,9 +447,9 @@ public class MarkdownParserTest {
                 new LineOffset(1, 15),
                 new LineOffset(1, 16));
 
-        assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMap().size());
+        assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMapSize());
         for (int i = 0; i < expectedOffsets.size() ; i++) {
-            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffsetMap().get(i));
+            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i).get());
         }
     }
 
@@ -477,9 +479,9 @@ public class MarkdownParserTest {
                 new LineOffset(1, 17),
                 new LineOffset(1, 18));
 
-        assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMap().size());
+        assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMapSize());
         for (int i = 0; i < expectedOffsets.size() ; i++) {
-            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffsetMap().get(i));
+            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i).get());
         }
     }
 
@@ -509,9 +511,9 @@ public class MarkdownParserTest {
                 new LineOffset(1, 19),
                 new LineOffset(1, 20));
 
-        assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMap().size());
+        assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMapSize());
         for (int i = 0; i < expectedOffsets.size() ; i++) {
-            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffsetMap().get(i));
+            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i).get());
         }
     }
 
@@ -540,9 +542,9 @@ public class MarkdownParserTest {
                 new LineOffset(1, 22),
                 new LineOffset(1, 23),
                 new LineOffset(1, 24));
-        assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMap().size());
+        assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMapSize());
         for (int i = 0; i < expectedOffsets.size() ; i++) {
-            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffsetMap().get(i));
+            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i).get());
         }
     }
 
@@ -576,10 +578,10 @@ public class MarkdownParserTest {
                 new LineOffset(1, 12),
                 new LineOffset(1, 13));
 
-        assertEquals(expectedOffsets1.size(), lastSection.getHeaderContent(0).getOffsetMap().size());
+        assertEquals(expectedOffsets1.size(), lastSection.getHeaderContent(0).getOffsetMapSize());
         for (int i = 0; i < expectedOffsets1.size() ; i++) {
             assertEquals(expectedOffsets1.get(i),
-                    lastSection.getHeaderContent(0).getOffsetMap().get(i));
+                    lastSection.getHeaderContent(0).getOffset(i).get());
         }
 
         List<LineOffset> expectedOffsets2 = initializeMappingTable(
@@ -603,10 +605,10 @@ public class MarkdownParserTest {
         assertEquals(1, lastSection.getHeaderContent(1).getLineNum());
         assertEquals(14, lastSection.getHeaderContent(1).getStartPositionOffset());
 
-        assertEquals(expectedOffsets2.size(), lastSection.getHeaderContent(1).getOffsetMap().size());
+        assertEquals(expectedOffsets2.size(), lastSection.getHeaderContent(1).getOffsetMapSize());
         for (int i = 0; i < expectedOffsets2.size() ; i++) {
             assertEquals(expectedOffsets2.get(i),
-                    lastSection.getHeaderContent(1).getOffsetMap().get(i));
+                    lastSection.getHeaderContent(1).getOffset(i).get());
         }
     }
 
@@ -636,10 +638,10 @@ public class MarkdownParserTest {
                 new LineOffset(1, 10),
                 new LineOffset(1, 11),
                 new LineOffset(1, 12));
-        assertEquals(expectedOffsets.size(), lastSection.getHeaderContent(0).getOffsetMap().size());
+        assertEquals(expectedOffsets.size(), lastSection.getHeaderContent(0).getOffsetMapSize());
         for (int i = 0; i < expectedOffsets.size() ; i++) {
             assertEquals(expectedOffsets.get(i),
-                    lastSection.getHeaderContent(0).getOffsetMap().get(i));
+                    lastSection.getHeaderContent(0).getOffset(i).get());
         }
     }
 
@@ -794,6 +796,29 @@ public class MarkdownParserTest {
                 firstParagraph.getSentence(1).getContent());
     }
 
+
+    @Test
+    public void testErrorPositionOfMarkdownParser() throws RedPenException {
+        String sampleText = "This is a good day。\n"; // invalid end of sentence symbol
+        Configuration conf = new Configuration.ConfigurationBuilder()
+                .setLanguage("en")
+                .build();
+        List<Document> documents = new ArrayList<>();
+        documents.add(createFileContent(sampleText, conf));
+
+        Configuration configuration = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(
+                        new ValidatorConfiguration("InvalidSymbol"))
+                .build();
+
+        RedPen redPen = new RedPen(configuration);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
+        assertEquals(1, errors.size());
+        assertEquals("InvalidSymbol", errors.get(0).getValidatorName());
+        assertEquals(19, errors.get(0).getSentence().getContent().length());
+        assertEquals(new LineOffset(1, 18), errors.get(0).getStartPosition().get());
+        assertEquals(new LineOffset(1, 19), errors.get(0).getEndPosition().get());
+    }
 
     private Document createFileContent(String inputDocumentString,
                                        Configuration config) {

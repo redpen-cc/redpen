@@ -52,7 +52,7 @@ public class SuggestExpressionValidatorTest {
     }
 
     @Test
-    public void testWitoutSynonym() {
+    public void testWithoutSynonym() {
         Sentence str = new Sentence("it love a piece of a cake.", 0);
         List<ValidationError> errors = new ArrayList<>();
         suggestExpressionValidator.validate(errors, str);

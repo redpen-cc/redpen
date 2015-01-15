@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Validate input sentences contain invalid expression.
@@ -41,9 +40,15 @@ final public class InvalidExpressionValidator extends Validator {
 
     @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {
-        String str = sentence.getContent();
-        errors.addAll(invalidExpressions.stream().filter(str::contains)
-                .map(w -> createValidationError(sentence, w)).collect(Collectors.toList()));
+        invalidExpressions.stream().forEach(value -> {
+                    int startPosition = sentence.getContent().indexOf(value);
+                    if (startPosition != -1) {
+                        errors.add(createValidationErrorWithPosition(sentence,
+                                sentence.getOffset(startPosition),
+                                sentence.getOffset(startPosition + value.length()), value));
+                    }
+                }
+        );
     }
 
     /**

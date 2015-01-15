@@ -31,6 +31,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static cc.redpen.config.SymbolType.COMMA;
 import static cc.redpen.config.SymbolType.EXCLAMATION_MARK;
@@ -55,6 +56,9 @@ public class InvalidSymbolValidatorTest {
         RedPen redPen = new RedPen(conf);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(1, errors.get(documents.get(0)).size());
+        // NOTE: no position without parsing
+        Assert.assertEquals(Optional.empty(), errors.get(documents.get(0)).get(0).getStartPosition());
+        Assert.assertEquals(Optional.empty(), errors.get(documents.get(0)).get(0).getEndPosition());
     }
 
     @Test

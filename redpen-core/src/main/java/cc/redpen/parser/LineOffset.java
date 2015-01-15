@@ -17,10 +17,16 @@
  */
 package cc.redpen.parser;
 
-final public class LineOffset implements Comparable {
-    public int lineNum;
-    public int offset;
+public final class LineOffset implements Comparable {
+    public final int lineNum;
+    public final int offset;
 
+    /**
+     * Constructor.
+     *
+     * @param lineNum line number
+     * @param offset character offset position from start of line
+     */
     public LineOffset(int lineNum, int offset) {
         this.lineNum = lineNum;
         this.offset = offset;

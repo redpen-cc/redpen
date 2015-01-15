@@ -23,6 +23,7 @@ import cc.redpen.tokenizer.TokenElement;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Sentence block in a Document.
@@ -67,7 +68,7 @@ public final class Sentence implements Serializable {
      * @param sentenceContent  content of sentence
      * @param lineNum line number of sentence
      */
-    public Sentence(String sentenceContent, int lineNum) {
+    public Sentence(String sentenceContent, int lineNum){
         this(sentenceContent, lineNum, 0);
     }
 
@@ -86,6 +87,7 @@ public final class Sentence implements Serializable {
         this.links = new ArrayList<>();
         this.tokens = new ArrayList<>();
         this.startPositionOffset = startOffset;
+        this.offsetMap = new ArrayList<>();
     }
 
     /**
@@ -192,20 +194,39 @@ public final class Sentence implements Serializable {
     }
 
     /**
-     * Return the offset mapping table which contains character position to column offset in line.
-     * @return offset table
-     */
-    public List<LineOffset> getOffsetMap() {
-        return offsetMap;
-    }
-
-    /**
      * Set the offset mapping table which contains character position to column offset in line.
      *
      * @param offsetMap
      */
     public void setOffsetMap(List<LineOffset> offsetMap) {
         this.offsetMap = offsetMap;
+    }
+
+
+    /**
+     * Get offset position for specified character position
+     *
+     * @param position character position in a sentence
+     * @return offset position
+     */
+    public Optional<LineOffset> getOffset(int position) {
+        if (this.offsetMap.size() > position) {
+            return Optional.of(this.offsetMap.get(position));
+        } else if (this.offsetMap.size() == position && offsetMap.size() > 0) {
+            LineOffset prev = this.offsetMap.get(position-1);
+            return Optional.of(new LineOffset(prev.lineNum, prev.offset+1));
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * Get size of offset mapping table (the size should be same as the content length)
+     *
+     * @return
+     */
+    public int getOffsetMapSize() {
+        return this.offsetMap.size();
     }
 
 

@@ -24,11 +24,13 @@ import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.SentenceExtractor;
+import cc.redpen.validator.ValidationError;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -174,4 +176,30 @@ public class PlainTextParserTest {
         assertEquals(0, calcLineNum(section));
     }
 
+    @Test
+    public void testErrorPositionOfMarkdownParser() throws RedPenException {
+        String sampleText = "This is a good day。\n"; // invalid end of sentence symbol
+        Configuration conf = new Configuration.ConfigurationBuilder()
+                .setLanguage("en")
+                .build();
+        List<Document> documents = new ArrayList<>();
+
+        DocumentParser parser = DocumentParser.PLAIN;
+        Document doc = parser.parse(sampleText, new SentenceExtractor(conf.getSymbolTable()), conf.getTokenizer());
+        documents.add(doc);
+
+        Configuration configuration = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(
+                        new ValidatorConfiguration("InvalidSymbol"))
+                .build();
+
+        RedPen redPen = new RedPen(configuration);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
+        assertEquals(1, errors.size());
+        assertEquals("InvalidSymbol", errors.get(0).getValidatorName());
+        assertEquals(19, errors.get(0).getSentence().getContent().length());
+        // plain text parser does not support error position.
+        assertEquals(Optional.empty(), errors.get(0).getStartPosition());
+        assertEquals(Optional.empty(), errors.get(0).getEndPosition());
+    }
 }

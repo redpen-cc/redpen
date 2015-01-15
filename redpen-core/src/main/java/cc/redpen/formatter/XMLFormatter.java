@@ -18,6 +18,7 @@
 package cc.redpen.formatter;
 
 import cc.redpen.RedPenException;
+import cc.redpen.parser.LineOffset;
 import cc.redpen.validator.ValidationError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,6 +121,22 @@ public class XMLFormatter extends Formatter {
         Element sentenceElement = doc.createElement("sentence");
         errorElement.appendChild(sentenceElement);
         sentenceElement.appendChild(doc.createTextNode(error.getSentence().getContent()));
+
+        error.getStartPosition().ifPresent(e -> {
+            Element startPositionElement = doc.createElement("errorStartPosition");
+            errorElement.appendChild(startPositionElement);
+            LineOffset startOffset = error.getStartPosition().get();
+            startPositionElement.appendChild(doc.createTextNode(Integer.toString(startOffset.lineNum)
+                    + "," + Integer.toString(startOffset.offset)));
+        });
+
+        error.getStartPosition().ifPresent(e -> {
+            Element endPositionElement = doc.createElement("errorEndPosition");
+            errorElement.appendChild(endPositionElement);
+            LineOffset endOffset = error.getEndPosition().get();
+            endPositionElement.appendChild(doc.createTextNode(Integer.toString(endOffset.lineNum)
+                    + "," + Integer.toString(endOffset.offset)));
+        });
 
         // convert the result dom into a string
         StringWriter writer = new StringWriter();

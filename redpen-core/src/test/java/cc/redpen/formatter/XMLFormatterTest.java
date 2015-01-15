@@ -17,8 +17,13 @@
  */
 package cc.redpen.formatter;
 
+import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
+import cc.redpen.config.Configuration;
+import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
+import cc.redpen.parser.DocumentParser;
+import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
@@ -32,6 +37,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -87,6 +93,45 @@ public class XMLFormatterTest extends Validator {
         assertEquals(1, document.getElementsByTagName("validator").getLength());
         assertEquals(this.getClass().getSimpleName(),
                 document.getElementsByTagName("validator").item(0).getTextContent());
+    }
+
+    @Test
+    public void testConvertedValidationErrorWithErrorPosition() throws RedPenException {
+        // TODO: shorten the procedure before getting formatter result.
+        String sampleText = "This is a good day。\n"; // invalid end of sentence symbol
+        Configuration conf = new Configuration.ConfigurationBuilder()
+                .setLanguage("en")
+                .build();
+        Configuration configuration = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(
+                        new ValidatorConfiguration("InvalidSymbol"))
+                .build();
+
+        List<cc.redpen.model.Document> documents = new ArrayList<>();
+        DocumentParser parser = DocumentParser.MARKDOWN;
+        documents.add(parser.parse(sampleText,
+                new SentenceExtractor(conf.getSymbolTable()), conf.getTokenizer()));
+        RedPen redPen = new RedPen(configuration);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
+
+        XMLFormatter formatter = new XMLFormatter();
+        String resultString = formatter.format(new cc.redpen.model.Document.DocumentBuilder(
+                new WhiteSpaceTokenizer()).build(), errors);
+
+        Document document = extractDocument(resultString);
+        assertEquals(1, document.getElementsByTagName("error").getLength());
+        assertEquals(1, document.getElementsByTagName("message").getLength());
+        assertEquals(0, document.getElementsByTagName("file").getLength());
+        assertEquals(1, document.getElementsByTagName("lineNum").getLength());
+        assertEquals("1",
+                document.getElementsByTagName("lineNum").item(0).getTextContent());
+        assertEquals(1, document.getElementsByTagName("validator").getLength());
+        assertEquals("InvalidSymbol",
+                document.getElementsByTagName("validator").item(0).getTextContent());
+        assertEquals("1,18",
+                document.getElementsByTagName("errorStartPosition").item(0).getTextContent());
+        assertEquals("1,19",
+                document.getElementsByTagName("errorEndPosition").item(0).getTextContent());
     }
 
     private Document extractDocument(String resultString) {
