@@ -28,6 +28,7 @@ Links
 * [Docker Image by Naoki Ainoya](https://registry.hub.docker.com/u/ainoya/redpen-server/)
 * [Atom Editor package by griffin-stewie](https://atom.io/packages/redpen)
 * [RubyGem by akinomurasame](https://rubygems.org/gems/redpen_ruby)
+* [Homebrew formula by Kozo Nishida](http://braumeister.org/formula/redpen)
 
 Deploy
 ======
