@@ -67,7 +67,6 @@ public class SymbolWithSpaceValidator extends Validator {
                         sentence.getOffset(position+1),
                         sentence.getOffset(position+2),
                         sentenceStr.charAt(position));
-
             }
         }
         return null;
