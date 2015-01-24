@@ -130,6 +130,32 @@ public class MarkdownParserTest {
     }
 
     @Test
+    public void testGenerateDocumentWithHeaderedDocument() {
+        String sampleText = "# Validator\n"
+        + "Validator class is a abstract class in RedPen project.\n"
+        + "Functions provided by RedPen class are implemented with validator class.\n";
+        Document doc = createFileContent(sampleText);
+
+        final Section secondSection = doc.getSection(1);
+        assertEquals(1, secondSection.getHeaderContentsListSize());
+        assertEquals("Validator", secondSection.getHeaderContent(0).getContent());
+        assertEquals(1, secondSection.getHeaderContent(0).getLineNum());
+        assertEquals(2, secondSection.getHeaderContent(0).getStartPositionOffset());
+        assertEquals(0, secondSection.getNumberOfLists());
+        assertEquals(1, secondSection.getNumberOfParagraphs());
+
+        // validate paragraph in 2nd section
+        assertEquals(2, secondSection.getParagraph(0).getNumberOfSentences());
+        assertEquals(true, secondSection.getParagraph(0).getSentence(0).isFirstSentence());
+        assertEquals(2, secondSection.getParagraph(0).getSentence(0).getLineNum());
+        assertEquals(0, secondSection.getParagraph(0).getSentence(0).getStartPositionOffset());
+        assertEquals(false, secondSection.getParagraph(0).getSentence(1).isFirstSentence());
+        assertEquals(3, secondSection.getParagraph(0).getSentence(1).getLineNum());
+        assertEquals(0, secondSection.getParagraph(0).getSentence(1).getStartPositionOffset());
+    }
+
+
+    @Test
     public void testGenerateDocumentWithList() {
         String sampleText =
                 "Threre are several railway companies in Japan as follows.\n";
