@@ -149,11 +149,26 @@ public class MarkdownParserTest {
         assertEquals(true, secondSection.getParagraph(0).getSentence(0).isFirstSentence());
         assertEquals(2, secondSection.getParagraph(0).getSentence(0).getLineNum());
         assertEquals(0, secondSection.getParagraph(0).getSentence(0).getStartPositionOffset());
+        assertEquals("Validator class is a abstract class in RedPen project.",
+                secondSection.getParagraph(0).getSentence(0).getContent());
+
         assertEquals(false, secondSection.getParagraph(0).getSentence(1).isFirstSentence());
+        assertEquals(" Functions provided by RedPen class are implemented with validator class.",
+                secondSection.getParagraph(0).getSentence(1).getContent());
         assertEquals(3, secondSection.getParagraph(0).getSentence(1).getLineNum());
         assertEquals(0, secondSection.getParagraph(0).getSentence(1).getStartPositionOffset());
-    }
 
+        // NOTE: both linebreak and first character of the offsets are 0
+        List<LineOffset> expectedOffsets = initializeMappingTable(
+                new LineOffset(3, 0), // LineBreak NOTE: lineBreak is exist but the offset is "0"
+                new LineOffset(3, 0), // F NOTE: even when there is a Linebreak, sentence start from offset "0".
+                new LineOffset(3, 1)  // u
+        );
+        for (int i = 0; i < expectedOffsets.size() ; i++) {
+            assertEquals(expectedOffsets.get(i), secondSection.getParagraph(0).getSentence(1).getOffset(i).get());
+        }
+
+    }
 
     @Test
     public void testGenerateDocumentWithList() {

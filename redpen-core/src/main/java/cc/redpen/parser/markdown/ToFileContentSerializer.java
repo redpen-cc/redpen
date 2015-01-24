@@ -343,8 +343,9 @@ public class ToFileContentSerializer implements Visitor {
         switch (simpleNode.getType()) {
             case Linebreak:
                 addCandidateSentence(
-                        getLineNumberFromStartIndex(simpleNode.getStartIndex()),
-                        " ", simpleNode.getStartIndex() - getLineStartIndex(lineNumber));
+                        getLineNumberFromStartIndex(simpleNode.getStartIndex()+1),
+                        " ", 0); //NOTE: column Offset of Linebreak should be always 0.
+                break;
             case Nbsp:
                 break;
             case HRule:
