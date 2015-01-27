@@ -1,6 +1,6 @@
-/*
+/**
  * redpen: a text inspection tool
- * Copyright (C) 2014 Recruit Technologies Co., Ltd. and contributors
+ * Copyright (c) 2014-2015 Recruit Technologies Co., Ltd. and contributors
  * (see CONTRIBUTORS.md)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cc.redpen.config;
 
 import org.junit.Test;
