@@ -26,10 +26,32 @@ public class MainTest {
     @Test
     public void testMain() throws RedPenException {
         String[] args = new String[]{
-            "-c", "sample/conf/redpen-conf-en.xml",
+                "-c", "sample/conf/redpen-conf-en.xml",
                 "sample/sample-doc/en/sampledoc-en.txt"
         };
         Main.run(args);
+    }
+
+    @Test
+    public void testMainWithoutParameters() throws RedPenException {
+        String[] args = new String[]{};
+        assertEquals(1, Main.run(args));
+    }
+
+    @Test
+    public void testMainWithoutConfig() throws RedPenException {
+        String[] args = new String[]{
+                "sample/sample-doc/en/sampledoc-en.txt"
+        };
+        assertEquals(1, Main.run(args));
+    }
+
+    @Test
+    public void testMainWithoutInput() throws RedPenException {
+        String[] args = new String[]{
+                "-c", "sample/conf/redpen-conf-en.xml",
+        };
+        assertEquals(1, Main.run(args));
     }
 
     @Test
@@ -41,5 +63,4 @@ public class MainTest {
     public void testVersion() throws RedPenException {
         assertEquals(0, Main.run("-v"));
     }
-
 }
