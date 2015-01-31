@@ -62,7 +62,7 @@ public class SentenceExtractorTest {
         List<Sentence> outputSentences = createSentences(outputPositions, lastPosition, input);
         assertEquals(1, outputSentences.size());
         assertEquals("this is a pen.", outputSentences.get(0).getContent());
-        assertEquals("14", lastPosition);
+        assertEquals(14, lastPosition);
     }
 
     @Test
