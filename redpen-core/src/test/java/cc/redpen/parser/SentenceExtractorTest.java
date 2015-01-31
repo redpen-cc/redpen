@@ -19,6 +19,7 @@ package cc.redpen.parser;
 
 import cc.redpen.config.Configuration;
 import cc.redpen.model.Sentence;
+import cc.redpen.util.Pair;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -27,6 +28,18 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public class SentenceExtractorTest {
+
+    private List<Sentence> createSentences(List<Pair<Integer, Integer>> outputPositions,
+            int lastPosition, String line) {
+        List<Sentence> output = new ArrayList<>();
+        for (Pair<Integer, Integer> outputPosition : outputPositions) {
+            output.add(new Sentence(line.substring(outputPosition.first, outputPosition.second), 0));
+        }
+        if (lastPosition < line.length()) {
+            output.add(new Sentence(line.substring(outputPositions.get(outputPositions.size() - 1).second + 1), line.length(), 0));
+        }
+        return output;
+    }
 
     @Test
     public void testSimple() {
@@ -37,6 +50,19 @@ public class SentenceExtractorTest {
         assertEquals(1, outputSentences.size());
         assertEquals("this is a pen.", outputSentences.get(0).getContent());
         assertEquals("", remain);
+    }
+
+    @Test
+    public void testSimpleWithPosition() {
+        SentenceExtractor extractor = new SentenceExtractor(
+                new Configuration.ConfigurationBuilder().build().getSymbolTable());
+        List<Pair<Integer, Integer>> outputPositions = new ArrayList<>();
+        String input = "this is a pen.";
+        int lastPosition = extractor.extract(input, outputPositions);
+        List<Sentence> outputSentences = createSentences(outputPositions, lastPosition, input);
+        assertEquals(1, outputSentences.size());
+        assertEquals("this is a pen.", outputSentences.get(0).getContent());
+        assertEquals("14", lastPosition);
     }
 
     @Test

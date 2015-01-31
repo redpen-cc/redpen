@@ -21,6 +21,7 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.SymbolTable;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.EndOfSentenceDetector;
+import cc.redpen.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -158,6 +159,24 @@ public final class SentenceExtractor {
                 }
             }
         }
+    }
+
+    /**
+     * Get Sentence lists.
+     *
+     * @param line              Input line which can contain more than one sentences
+     * @param sentencePositions List of extracted sentences
+     * @return remaining line
+     */
+    public int extract(String line, List<Pair<Integer, Integer>> sentencePositions) {
+        int startPosition = 0;
+        int periodPosition = endOfSentenceDetector.getSentenceEndPosition(line);
+        while (periodPosition >= 0 ) {
+            sentencePositions.add(new Pair<>(startPosition, periodPosition+1));
+            startPosition = periodPosition+1;
+            periodPosition = endOfSentenceDetector.getSentenceEndPosition(line, startPosition);
+        }
+        return startPosition;
     }
 
     /**
