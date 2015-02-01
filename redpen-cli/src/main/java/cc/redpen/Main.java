@@ -35,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -198,6 +199,9 @@ public final class Main {
     private static void printHelp(Options opt) {
         HelpFormatter formatter = new HelpFormatter();
         formatter.setWidth(100);
-        formatter.printHelp(PROGRAM + " [Options] [<INPUT FILE>]", opt);
+        PrintWriter pw = new PrintWriter(System.err);
+        formatter.printHelp(pw, 80, PROGRAM + " [Options] [<INPUT FILE>]", null,  opt, 1, 3, "");
+        pw.flush();
     }
+
 }

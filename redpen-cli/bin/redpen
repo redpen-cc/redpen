@@ -22,17 +22,14 @@ REDPEN_HOME=`dirname "$SCRIPT"`/..
 
 # Make REDPEN_HOME absolute
 REDPEN_HOME=`cd "$REDPEN_HOME"; pwd`
-
-
-REDPEN_CLASSPATH=REDPEN_HOME/conf:$REDPEN_HOME/lib/*
+REDPEN_CLASSPATH=$REDPEN_HOME/conf/*:$REDPEN_HOME/lib/*
 
 if [ -z "$JAVA_HOME" ]; then
     echo "Error: JAVA_HOME is not defined. Can not start RedPen" 1>&2
     exit 1
 fi
 
-JAVA_OPTS="$JAVA_OPTS"
-
+JAVA_OPTS="$JAVA_OPTS -Dlogback.configurationFile=$REDPEN_HOME/conf/logback.xml"
 JAVA_CMD="$JAVA_HOME/bin/java"
 
 if [ ! -x "$JAVA_CMD" ]; then
