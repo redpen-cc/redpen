@@ -1,45 +1,61 @@
-function httpPost(url, data, lang) {
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open('POST', url, false);
-    xmlHttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xmlHttp.send("lang=" + lang + "&textarea=" + data);
-    return xmlHttp;
-}
+/**
+ * redpen: a text inspection tool
+ * Copyright (c) 2014-2015 Recruit Technologies Co., Ltd. and contributors
+ * (see CONTRIBUTORS.md)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ *
+ * redpen.js - javascript RedPen API
+ *
+ */
 
-function getElement(id) {
-    return document.getElementById(id);
-}
+/**
+ * Call redpen API function with parameters
+ * @param method
+ * @param parameters
+ * @param callback
+ */
 
-function validateDocument(lang) {
-    var doc = getElement('textarea').value;
-    var xmlHttp = httpPost('rest/document/validate', doc, lang);
-    var response_data = xmlHttp.responseText;
-    var result = eval('(' + response_data + ')');
-    var errors = result['errors'];
-    var div = getElement("result");
+var redpen = (function () {
 
-    if (errors.length > 0) {
-        div.innerHTML = "<h2>Result from document validation</h2>";
-        var html = "<h3>The following errors were found:</h3>";
+    // basic API call
+    var doAPICall = function (method, parameters, callback) {
+        $.ajax({
+            type: "POST",
+            url: "rest/" + method,
+            data: parameters,
+            success: function (data) {
+                if (callback) {
+                    callback(data);
+                }
+            },
+            dataType: "json"
+        }).fail(function (err) {
+                console.log(err);
+            });
+    };
 
-        for (var i = 0; i < errors.length; i++) {
-            html += '<div class="bg-warning">' +
-            '<h4 class="alert-warning">' +
-            errors[i]['message'] +
-            '</h4>' +
-            '<p>' +
-            errors[i]['sentence'] +
-            '</p>' +
-            '</div>';
-        }
+    // placeholder (and cheap implementation) of a detect-language function
+    this.detectLanguage = function (text) {
+        var japanese = (text.indexOf('。') != -1) || (text.indexOf('、') != -1) || (text.indexOf('は') != -1);
+        return japanese ? 'ja' : 'en';
+    };
 
-        div.innerHTML += html;
-    } else {
-        div.innerHTML = "<em>No errors found in this document!</em>";
-    }
-}
+    // validate the document {text: text, lang: [en|ja..]}
+    this.validate = function (parameters, callback) {
+        doAPICall('document/validate', parameters, callback);
+    };
 
-function clearResult() {
-    getElement('textarea').value = '';
-    getElement('result').innerHTML = '';
-}
+    return this;
+})();

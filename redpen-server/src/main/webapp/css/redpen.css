@@ -1,9 +1,51 @@
+/* colours to match redpen theme from redpen.cc */
+body {
+    background-color: #c0c5b2;
+
+}
+
+.navbar-brand {
+    padding-top: 15px;
+}
+
+.navbar-brand img {
+    height: 28px;
+}
+
 #main {
-    margin-left: auto;
-    margin-right: auto;
-    width: 60%;
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    bottom: 4px;
+}
+
+#editor {
+    overflow: auto;
+}
+
+.fixed-height {
+    height: 100%;
+}
+
+.editor-panel {
+}
+
+#results {
+    max-height: 42%;
+    overflow: auto;
+}
+
+.red {
+    color: #a70c00;
+}
+
+.alert-warning {
+    padding-left: 2px;
 }
 
 .error strong {
     color: red;
 }
+
+

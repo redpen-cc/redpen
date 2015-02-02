@@ -4,45 +4,154 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="shortcut icon" type="image/png" href="images/redpen-logo-nib-icon.png"/>
+
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-sandstone.min.css" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="css/redpen.css"/>
-    <title>RedPen</title>
+    <title>RedPen Demo</title>
+
+    <script src="js/jquery-1.11.0.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <script src="js/redpen.js"></script>
+
+    <script>
+
+        // call redpen's valdate
+        function validateDocument() {
+            redpen.validate(
+                    {
+                        textarea: $('#editor').val(),
+                        lang: $("input:radio[name=lang]:checked").val()
+                    },
+                    function (data) {
+                        var errors = data['errors'];
+                        if (errors.length) {
+                            var results = $('#results')
+                                    .empty()
+                                    .addClass('well')
+                                    .append($('<h4></h4>')
+                                            .html('<span class="red">Red</span>Pen found the following errors:')
+                                    );
+
+                            for (var i = 0; i < errors.length; i++) {
+                                results.append(
+                                        $('<div></div>')
+                                                .addClass('bg-warning')
+                                                .append($('<p></p>')
+                                                        .addClass('alert-warning')
+                                                        .html(errors[i]['message']))
+                                                .append($('<p></p>')
+                                                        .html(errors[i]['sentence']))
+                                );
+                            }
+                        }
+                        else {
+                            $('#results')
+                                    .empty()
+                                    .append($('<em></em>')
+                                            .html('No errors detected!')
+                                    );
+                        }
+                    });
+        }
+
+        // clear editor and results
+        function clearResult() {
+            $('#textarea').empty();
+            $('#results').empty().removeClass("well");
+        }
+
+        // simplistic language check
+        $(document).ready(function () {
+            $("#editor").bind("keyup", function () {
+                var lang = redpen.detectLanguage($(this).val());
+                $("input:radio[name=lang][value=" + lang + "]").prop("checked", true);
+            });
+        });
+
+    </script>
 </head>
 <body>
 
-<section id="main">
-    <h1>Welcome to the RedPen</h1>
-
-    <p>To try the validator add a document and press submit!</p>
-
-    <div class="well">
-        <form>
-            <div class="form-group">
-                <textarea id="textarea" class="form-control" rows="10" autofocus
-                          placeholder="Copy and paste a document here..."></textarea>
-            </div>
-            <div class="form-group">
-                <button type="button" class="btn btn-primary"
-                        onclick="validateDocument('en')">Validate English
-                </button>
-                <button type="button" class="btn btn-primary"
-                        onclick="validateDocument('ja')">Validate Japanese
-                </button>
-                <button type="button" class="btn btn-default"
-                        onclick="clearResult()">Clear
+<section id="header">
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a href="../" class="navbar-brand"><img src="images/redpen-logo-inline.png"/></a>
+                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
                 </button>
             </div>
-        </form>
+            <div class="navbar-collapse collapse" id="navbar-main">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="themes">Examples <span
+                                class="caret"></span></a>
+                        <ul class="dropdown-menu" aria-labelledby="themes">
+                            <li><a href="tba">Sample English Validation</a></li>
+                            <li><a href="tba">Sample Japanese Validation</a></li>
+                            <!--<li class="divider"></li>-->
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="tba">Documentation</a>
+                    </li>
+                    <li>
+                        <a href="http://blog.redpen.cc/">Blog</a>
+                    </li>
+                </ul>
 
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://redpen.cc/" target="_blank"><img src="images/recruit-logo.png"/></a></li>
+                </ul>
+            </div>
+        </div>
     </div>
+</section>
 
-    <div id="result">
+<section id="main">
+    <div class="container fixed-height">
+        <div class="editor-panel">
+            <h1>Welcome to <span class="red">Red</span>Pen</h1>
+
+            <p>To try the validator, please paste some text into the box and click Validate!</p>
+
+            <div class="well">
+                <form>
+                    <div class="form-group">
+                        <textarea id="editor" class="form-control" rows="10" autofocus
+                                  placeholder="Copy and paste a document here..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="radio-inline">
+                            <input type="radio" name="lang" id="langRadio1" value="en" checked>English
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="lang" id="langRadio1" value="ja">Japanese
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary" onclick="validateDocument()">
+                            Validate
+                        </button>
+                        <button type="button" class="btn" onclick="clearResult()">Clear
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="results">
+        </div>
     </div>
 
 </section>
-<script src="js/redpen.js"></script>
-<script src="js/jquery-1.11.0.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
+
 </body>
 </html>
