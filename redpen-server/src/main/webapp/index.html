@@ -20,7 +20,7 @@
 
     <script>
 
-        // call redpen's valdate
+        // call redpen's validate
         function validateDocument() {
             redpen.validate(
                     {
@@ -61,7 +61,7 @@
 
         // clear editor and results
         function clearResult() {
-            $('#textarea').empty();
+            $('#editor').val('');
             $('#results').empty().removeClass("well");
         }
 
