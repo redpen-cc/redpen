@@ -90,6 +90,17 @@ public final class Sentence implements Serializable {
         this.offsetMap = new ArrayList<>();
     }
 
+
+    public Sentence(String content, List<LineOffset> offsetMap) {
+        this.content = content;
+        this.offsetMap = offsetMap;
+        this.startPositionOffset = offsetMap.get(0).offset;
+        this.lineNum = offsetMap.get(0).lineNum;
+        this.isFirstSentence = false;
+        this.tokens =  new ArrayList<>();
+        this.links = new ArrayList<>();
+    }
+
     /**
      * Get line number where the sentence starts.
      *

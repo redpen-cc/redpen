@@ -22,6 +22,7 @@ import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
+import cc.redpen.util.Pair;
 import org.parboiled.common.StringUtils;
 import org.pegdown.Printer;
 import org.pegdown.ast.*;
@@ -152,26 +153,25 @@ public class ToFileContentSerializer implements Visitor {
     private List<Sentence> extractSentences(MergedCandidateSentence mergedCandidateSentence,
             List<Sentence> outputSentences) {
         // TODO refactoring extract just extract sentence start and end position list
-        String remainStr = sentenceExtractor.extract(mergedCandidateSentence.getContents(),
-                outputSentences, mergedCandidateSentence.getLineNum());
+        List<Pair<Integer, Integer>> sentencePositions = new ArrayList<>();
+        final String line = mergedCandidateSentence.getContents();
+        int lastPosition = sentenceExtractor.extract(line , sentencePositions);
 
-        if (remainStr.length() > 0) {
-            outputSentences.add(new Sentence(remainStr,
-                    (mergedCandidateSentence.getOffsetMap().get(
-                            mergedCandidateSentence.getContents().length() - remainStr.length())).lineNum,
-                    (mergedCandidateSentence.getOffsetMap().get(
-                            mergedCandidateSentence.getContents().length() - remainStr.length())).offset
-            ));
+        for (Pair<Integer, Integer> sentencePosition : sentencePositions) {
+            List<LineOffset> offsetMap = mergedCandidateSentence.getOffsetMap().subList(sentencePosition.first,
+                    sentencePosition.second);
+            outputSentences.add(new Sentence(line.substring(
+                    sentencePosition.first, sentencePosition.second), offsetMap));
+        }
+        if (lastPosition < mergedCandidateSentence.getContents().length()) {
+            List<LineOffset> offsetMap = mergedCandidateSentence.getOffsetMap().subList(lastPosition,
+                    mergedCandidateSentence.getContents().length());
+            outputSentences.add(new Sentence(line.substring(
+                    lastPosition, mergedCandidateSentence.getContents().length()), offsetMap));
         }
 
         // TODO: refactor not to reset member variables...
-        int offset = 0;
         for (Sentence outputSentence : outputSentences) {
-            outputSentence.setStartPositionOffset(mergedCandidateSentence.getOffsetMap().get(offset).offset);
-            outputSentence.setLineNum(mergedCandidateSentence.getOffsetMap().get(offset).lineNum);
-            outputSentence.setOffsetMap(mergedCandidateSentence.getOffsetMap().subList(offset,
-                    offset + outputSentence.getContent().length()));
-
             Set<LineOffset> linkPositions = mergedCandidateSentence.getLinks().keySet();
             for (LineOffset linkPosition : linkPositions) {
                 if (linkPosition.compareTo(outputSentence.getOffset(0).get()) >= 0
@@ -181,7 +181,6 @@ public class ToFileContentSerializer implements Visitor {
                 }
 
             }
-            offset += outputSentence.getContent().length();
         }
         return outputSentences;
     }
