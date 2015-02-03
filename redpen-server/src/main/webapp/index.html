@@ -20,21 +20,26 @@
 
     <script>
 
+        var sampleText = {
+            "en": "RedPen is a proofreading tool to help writers or programmers who write technical documents or manuals that need to adhere to a writing standard. RedPen automates the verifications of input documents written in natural languages (NOT computer languages such as C++ or Java).",
+            "ja": "RedPen はプログラマや記者が規約にしたがって文書 (マニュアルやソフトウェアドキュメント) を記述するのをサポートします。RedPen は自然言語で記述された入力文書のチェックを自動化します。"
+        };
+
         // call redpen's validate
         function validateDocument() {
             redpen.validate(
                     {
-                        textarea: $('#editor').val(),
-                        lang: $("input:radio[name=lang]:checked").val()
+                        document: $('#redpen-editor').val(),
+                        lang: $("input:radio[name=redpen-lang]:checked").val()
                     },
                     function (data) {
                         var errors = data['errors'];
                         if (errors.length) {
-                            var results = $('#results')
+                            var results = $('#redpen-results')
                                     .empty()
                                     .addClass('well')
                                     .append($('<h4></h4>')
-                                            .html('<span class="red">Red</span>Pen found the following errors:')
+                                            .html('<span class="redpen-red">Red</span>Pen found the following errors:')
                                     );
 
                             for (var i = 0; i < errors.length; i++) {
@@ -50,9 +55,10 @@
                             }
                         }
                         else {
-                            $('#results')
+                            $('#redpen-results')
                                     .empty()
-                                    .append($('<em></em>')
+                                    .append($('<p></p>')
+                                            .addClass('alert-info')
                                             .html('No errors detected!')
                                     );
                         }
@@ -61,15 +67,52 @@
 
         // clear editor and results
         function clearResult() {
-            $('#editor').val('');
-            $('#results').empty().removeClass("well");
+            $('#redpen-editor').val('');
+            $('#redpen-results').empty().removeClass("well");
+        }
+
+        function pasteSampleText(lang) {
+            $("#redpen-editor").val(sampleText[lang]).trigger("change");
         }
 
         // simplistic language check
         $(document).ready(function () {
-            $("#editor").bind("keyup", function () {
+            var editorChanged = function () {
                 var lang = redpen.detectLanguage($(this).val());
-                $("input:radio[name=lang][value=" + lang + "]").prop("checked", true);
+                $("input:radio[name=redpen-lang][value=" + lang + "]").prop("checked", true);
+            };
+            $("#redpen-editor")
+                    .change(editorChanged)
+                    .bind("keyup", editorChanged);
+
+            redpen.getConfiguration(function (configData) {
+                for (var configItem in configData) {
+                    var config = configData[configItem];
+                    var summary = $('<div></div>').addClass("redpen-config-summary-panel");
+                    var table = $('<table></table>');
+                    for (var setting in config) {
+                        var value;
+                        if (config[setting].constructor == Array) {
+                            value = '';
+                            for (var i = 0; i < config[setting].length; i++) {
+                                value += "<input type='checkbox' checked/>&nbsp;" +
+                                        config[setting][i] + "<br/>";
+                            }
+                        }
+                        else {
+                            value = config[setting];
+                        }
+                        $(table).append($("<tr></tr>").append(
+                                        $('<th></th>').html(setting)).append(
+                                        $('<td></td>').html(value)));
+                    }
+                    $(summary)
+                            .append($('<div></div>')
+                                    .addClass("redpen-config-summary-panel-header")
+                                    .html("Configuration: " + configItem))
+                            .append(table);
+                    $("#redpen-config-summary").append(summary);
+                }
             });
         });
 
@@ -91,16 +134,16 @@
             <div class="navbar-collapse collapse" id="navbar-main">
                 <ul class="nav navbar-nav">
                     <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="themes">Examples <span
-                                class="caret"></span></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="themes">Examples
+                            <span class="caret"></span></a>
                         <ul class="dropdown-menu" aria-labelledby="themes">
-                            <li><a href="tba">Sample English Validation</a></li>
-                            <li><a href="tba">Sample Japanese Validation</a></li>
+                            <li><a onclick="pasteSampleText('en')">Sample English Text</a></li>
+                            <li><a onclick="pasteSampleText('ja')">Sample Japanese Text</a></li>
                             <!--<li class="divider"></li>-->
                         </ul>
                     </li>
                     <li>
-                        <a href="tba">Documentation</a>
+                        <a href="/rest" target="_blank">Server API</a>
                     </li>
                     <li>
                         <a href="http://blog.redpen.cc/">Blog</a>
@@ -116,25 +159,26 @@
 </section>
 
 <section id="main">
-    <div class="container fixed-height">
-        <div class="editor-panel">
-            <h1>Welcome to <span class="red">Red</span>Pen</h1>
+    <div class="container redpen-fixed-height">
+        <div class="redpen-editor-panel">
+            <h1>Welcome to <span class="redpen-red">Red</span>Pen!</h1>
 
-            <p>To try the validator, please paste some text into the box and click Validate!</p>
+            <p>To try the <span class="redpen-red">Red</span>Pen validator, please type or paste some text into the box
+                and click Validate.</p>
 
             <div class="well">
                 <form>
                     <div class="form-group">
-                        <textarea id="editor" class="form-control" rows="10" autofocus
+                        <textarea id="redpen-editor" class="form-control" rows="10" autofocus
                                   placeholder="Copy and paste a document here..."></textarea>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group pull-right">
                         <label class="radio-inline">
-                            <input type="radio" name="lang" id="langRadio1" value="en" checked>English
+                            <input type="radio" name="redpen-lang" id="langRadio1" value="en" checked>English
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" name="lang" id="langRadio1" value="ja">Japanese
+                            <input type="radio" name="redpen-lang" id="langRadio1" value="ja">Japanese
                         </label>
                     </div>
                     <div class="form-group">
@@ -147,7 +191,14 @@
                 </form>
             </div>
         </div>
-        <div id="results">
+        <div id="redpen-results">
+        </div>
+        <div>
+            <a data-toggle="collapse" data-target="#redpen-config-summary">Active RedPen Configurations <span
+                    class="caret"></span></a>
+
+            <div id="redpen-config-summary" class="collapse">
+            </div>
         </div>
     </div>
 

@@ -30,9 +30,10 @@
 var redpen = (function () {
 
     // basic API call
-    var doAPICall = function (method, parameters, callback) {
+    var doAPICall = function (method, parameters, callback, type) {
+        type = type ? type : "GET";
         $.ajax({
-            type: "POST",
+            type: type,
             url: "rest/" + method,
             data: parameters,
             success: function (data) {
@@ -54,7 +55,12 @@ var redpen = (function () {
 
     // validate the document {text: text, lang: [en|ja..]}
     this.validate = function (parameters, callback) {
-        doAPICall('document/validate', parameters, callback);
+        doAPICall('document/validate', parameters, callback, "POST");
+    };
+
+    // get the current configuration
+    this.getConfiguration = function (callback) {
+        doAPICall('config/redpen', {}, callback);
     };
 
     return this;

@@ -1,1 +1,3 @@
+cc.redpen.server.api.WinkAPIDescriber
 cc.redpen.server.api.RedPenResource
+cc.redpen.server.api.RedPenConfigurationResource

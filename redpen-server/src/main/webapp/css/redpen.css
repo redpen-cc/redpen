@@ -11,6 +11,26 @@ body {
     height: 28px;
 }
 
+.alert-warning, .alert-info, .alert-success {
+    padding-left: 4px;
+    border-radius: 2px;
+}
+
+.error strong {
+    color: red;
+}
+
+a {
+    color: rgb(62, 63, 58);
+    cursor: pointer;
+}
+
+a:hover {
+    color: rgb(62, 63, 58);
+    cursor: pointer;
+}
+
+
 #main {
     position: absolute;
     top: 64px;
@@ -19,32 +39,55 @@ body {
     bottom: 4px;
 }
 
-#editor {
+#redpen-editor {
     overflow: auto;
 }
 
-.fixed-height {
+.redpen-fixed-height {
     height: 100%;
 }
 
-.editor-panel {
+.redpen-editor-panel {
 }
 
-#results {
+#redpen-results {
     max-height: 42%;
+    padding-bottom: 8px;
     overflow: auto;
 }
 
-.red {
+.redpen-red {
     color: #a70c00;
 }
 
-.alert-warning {
-    padding-left: 2px;
+.redpen-config-summary-panel {
+    display: inline-block;
+    width: 350px;
+    padding: 12px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    font-size: 12px;
 }
 
-.error strong {
-    color: red;
+.redpen-config-summary-panel-header {
+    color: orange;
+}
+
+.redpen-config-summary-panel th {
+    font-weight: normal;
+    color: rgb(132, 204, 255);
+    padding-right: 4px;
+}
+
+.redpen-config-summary-panel tr {
+    white-space: pre-wrap;
+}
+
+.redpen-config-summary-panel tr {
+    vertical-align: top;
 }
 
 
