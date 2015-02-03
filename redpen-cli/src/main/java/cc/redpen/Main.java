@@ -35,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -64,7 +65,7 @@ public final class Main {
         System.exit(run(args));
     }
 
-    public static int run(String... args) throws RedPenException {
+    public static int run(String... args) {
         Options options = new Options();
         options.addOption("h", "help", false, "Displays this help information and exits");
 
@@ -75,7 +76,7 @@ public final class Main {
         options.addOption(OptionBuilder.create("f"));
 
         OptionBuilder.withLongOpt("conf");
-        OptionBuilder.withDescription("Configuration file (Required)");
+        OptionBuilder.withDescription("Configuration file (REQUIRED)");
         OptionBuilder.hasArg();
         OptionBuilder.withArgName("CONF FILE");
         options.addOption(OptionBuilder.create("c"));
@@ -96,7 +97,7 @@ public final class Main {
                 "Displays version information and exits");
 
         CommandLineParser commandLineParser = new BasicParser();
-        CommandLine commandLine = null;
+        CommandLine commandLine;
         try {
             commandLine = commandLineParser.parse(options, args);
         } catch (ParseException e) {
@@ -155,12 +156,32 @@ public final class Main {
                 return -1;
         }
 
-        RedPen redPen = new RedPen(new File(configFileName));
-        List<Document> documents = redPen.parse(parser, inputFiles);
+        if (configFileName == null
+                || configFileName.length() == 0) {
+            LOG.error("Configuration file is not specified.");
+            printHelp(options);
+            return 1;
+        } else if (inputFileNames.length == 0) {
+            LOG.error("Input file is not given");
+            printHelp(options);
+            return 1;
+        }
+
+        RedPen redPen;
+        List<Document> documents;
+        try {
+            redPen = new RedPen(new File(configFileName));
+            documents = redPen.parse(parser, inputFiles);
+        } catch (RedPenException e) {
+            LOG.error("Failed to parse input files: " + e);
+            return -1;
+        }
+
         if (documents == null) {
             LOG.error("Failed to create a DocumentCollection object");
             return -1;
         }
+
         Map<Document, List<ValidationError>> documentListMap = redPen.validate(documents);
         String result = formatter.format(documentListMap);
         System.out.println(result);
@@ -178,6 +199,9 @@ public final class Main {
     private static void printHelp(Options opt) {
         HelpFormatter formatter = new HelpFormatter();
         formatter.setWidth(100);
-        formatter.printHelp(PROGRAM + " [Options] [<INPUT FILE>]", opt);
+        PrintWriter pw = new PrintWriter(System.err);
+        formatter.printHelp(pw, 80, PROGRAM + " [Options] [<INPUT FILE>]", null,  opt, 1, 3, "");
+        pw.flush();
     }
+
 }

@@ -1,0 +1,26 @@
+<configuration>
+
+  <appender name="STDERR" class="ch.qos.logback.core.ConsoleAppender">
+    <Target>System.err</Target>
+    <encoder>
+      <Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}][%-5level] %class - %msg%n</Pattern>
+    </encoder>
+  </appender>
+
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <FileNamePattern>logs/applog.%d{yyyy-MM}.log</FileNamePattern>
+      <MaxHistory>1</MaxHistory>
+    </rollingPolicy>
+    <encoder>
+      <charset>UTF-8</charset>
+      <Pattern>[%-5level][%d{yyyy-MM-dd HH:mm:ss.SSS}] %class - %msg%n</Pattern>
+    </encoder>
+  </appender>
+
+  <root>
+    <level value="Info" />
+    <appender-ref ref="STDERR"/>
+  </root>
+
+</configuration>
