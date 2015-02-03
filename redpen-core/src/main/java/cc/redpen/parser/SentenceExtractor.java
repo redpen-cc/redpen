@@ -19,7 +19,6 @@ package cc.redpen.parser;
 
 import cc.redpen.config.Configuration;
 import cc.redpen.config.SymbolTable;
-import cc.redpen.model.Sentence;
 import cc.redpen.util.EndOfSentenceDetector;
 import cc.redpen.util.Pair;
 import org.slf4j.Logger;
@@ -133,32 +132,6 @@ public final class SentenceExtractor {
     private static <E> List<E> generateUmList(E... args) {
         List<E> list = new ArrayList<>(Arrays.asList(args));
         return list;
-    }
-
-    /**
-     * Get Sentence lists.
-     *
-     * @param line            Input line which can contain more than one sentences
-     * @param outputSentences List of extracted sentences
-     * @param lineNum         Line number
-     * @return remaining line
-     */
-    public String extract(String line, List<Sentence> outputSentences, int lineNum) {
-        int periodPosition = endOfSentenceDetector.getSentenceEndPosition(line);
-        if (periodPosition == -1) {
-            return line;
-        } else {
-            while (true) {
-                Sentence sentence = new Sentence(line.substring(0,
-                        periodPosition + 1), lineNum);
-                outputSentences.add(sentence);
-                line = line.substring(periodPosition + 1, line.length());
-                periodPosition = endOfSentenceDetector.getSentenceEndPosition(line);
-                if (periodPosition == -1) {
-                    return line;
-                }
-            }
-        }
     }
 
     /**
