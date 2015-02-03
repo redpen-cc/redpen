@@ -22,6 +22,7 @@ import cc.redpen.model.Document;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.RedPenTokenizer;
+import cc.redpen.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -271,11 +272,18 @@ final class WikiParser extends BaseDocumentParser {
 
     private String obtainSentences(int lineNum, String line,
                                    List<Sentence> outputSentences, SentenceExtractor sentenceExtractor) {
-        String remain = sentenceExtractor.extract(line, outputSentences, lineNum);
+        List<Pair<Integer,Integer>> positions = new ArrayList<>();
+        int lastPosition = sentenceExtractor.extract(line, positions);
+
+        for (Pair<Integer, Integer> position : positions) {
+            outputSentences.add(new Sentence(line.substring(
+                    position.first, position.second), lineNum));
+        }
+
         for (Sentence sentence : outputSentences) {
             parseSentence(sentence); // extract inline elements
         }
-        return remain;
+        return line.substring(lastPosition, line.length());
     }
 
     private String appendSentencesIntoSection(int lineNum, String line, SentenceExtractor sentenceExtractor, Document.DocumentBuilder builder) {
