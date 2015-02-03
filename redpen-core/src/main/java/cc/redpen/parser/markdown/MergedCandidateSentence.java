@@ -41,6 +41,17 @@ public class MergedCandidateSentence {
         return Optional.of(new MergedCandidateSentence(lineNum, contents.toString(), links, offsetMap));
     }
 
+    public List<String> getRangedLinks(int startPosition, int endPosition) {
+        List<String> output = new ArrayList<>();
+        for (LineOffset linkPosition : this.links.keySet()) {
+            if (linkPosition.compareTo(offsetMap.get(startPosition)) >= 0
+                    && linkPosition.compareTo(offsetMap.get(endPosition)) <= 0) {
+                output.add(this.getLinks().get(linkPosition));
+            }
+        }
+        return output;
+    }
+
     public String getContents() {
         return contents;
     }

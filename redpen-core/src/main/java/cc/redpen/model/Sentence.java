@@ -91,14 +91,14 @@ public final class Sentence implements Serializable {
     }
 
 
-    public Sentence(String content, List<LineOffset> offsetMap) {
+    public Sentence(String content, List<LineOffset> offsetMap, List<String> links) {
         this.content = content;
         this.offsetMap = offsetMap;
         this.startPositionOffset = offsetMap.get(0).offset;
         this.lineNum = offsetMap.get(0).lineNum;
         this.isFirstSentence = false;
         this.tokens =  new ArrayList<>();
-        this.links = new ArrayList<>();
+        this.links = links;
     }
 
     /**

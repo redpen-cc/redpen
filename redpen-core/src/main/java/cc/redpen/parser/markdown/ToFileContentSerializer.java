@@ -152,35 +152,26 @@ public class ToFileContentSerializer implements Visitor {
 
     private List<Sentence> extractSentences(MergedCandidateSentence mergedCandidateSentence,
             List<Sentence> outputSentences) {
-        // TODO refactoring extract just extract sentence start and end position list
         List<Pair<Integer, Integer>> sentencePositions = new ArrayList<>();
         final String line = mergedCandidateSentence.getContents();
         int lastPosition = sentenceExtractor.extract(line , sentencePositions);
 
         for (Pair<Integer, Integer> sentencePosition : sentencePositions) {
-            List<LineOffset> offsetMap = mergedCandidateSentence.getOffsetMap().subList(sentencePosition.first,
+            List<LineOffset> offsetMap =
+                    mergedCandidateSentence.getOffsetMap().subList(sentencePosition.first,
                     sentencePosition.second);
             outputSentences.add(new Sentence(line.substring(
-                    sentencePosition.first, sentencePosition.second), offsetMap));
+                    sentencePosition.first, sentencePosition.second), offsetMap,
+                    mergedCandidateSentence.getRangedLinks(sentencePosition.first, sentencePosition.second-1)));
         }
         if (lastPosition < mergedCandidateSentence.getContents().length()) {
             List<LineOffset> offsetMap = mergedCandidateSentence.getOffsetMap().subList(lastPosition,
                     mergedCandidateSentence.getContents().length());
             outputSentences.add(new Sentence(line.substring(
-                    lastPosition, mergedCandidateSentence.getContents().length()), offsetMap));
-        }
-
-        // TODO: refactor not to reset member variables...
-        for (Sentence outputSentence : outputSentences) {
-            Set<LineOffset> linkPositions = mergedCandidateSentence.getLinks().keySet();
-            for (LineOffset linkPosition : linkPositions) {
-                if (linkPosition.compareTo(outputSentence.getOffset(0).get()) >= 0
-                        && linkPosition.compareTo(outputSentence.getOffset(
-                        outputSentence.getContent().length() - 1).get()) <= 0) {
-                    outputSentence.addLink(mergedCandidateSentence.getLinks().get(linkPosition));
-                }
-
-            }
+                    lastPosition, mergedCandidateSentence.getContents().length()),
+                    offsetMap,
+                    mergedCandidateSentence.getRangedLinks(lastPosition,
+                            mergedCandidateSentence.getContents().length())));
         }
         return outputSentences;
     }
