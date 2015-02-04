@@ -40,7 +40,7 @@ public class KeyValueDictionaryExtractor extends ResourceExtractor<Map<String, S
      * Load input file. The input file TSV with two columns.
      *
      * @param line line in a file
-     * @return 0 when succeeded to load, 1 otherwise
+     * @throws RedPenException when the input line is invalid
      */
     @Override
     protected void load(String line) throws RedPenException {

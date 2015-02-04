@@ -34,9 +34,9 @@ import java.util.*;
 import static org.parboiled.common.Preconditions.checkArgNotNull;
 
 /**
- * Using Pegdown Parser. <br/>
+ * Using Pegdown Parser.
  *
- * @see <a herf="https://github.com/sirthias/pegdown">pegdown</a>
+ * @see <a href="https://github.com/sirthias/pegdown">pegdown</a>
  */
 public class ToFileContentSerializer implements Visitor {
 

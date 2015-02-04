@@ -32,6 +32,9 @@ public interface DocumentParser {
     /**
      * Given input stream, return Document instance from a stream.
      *
+     * @param is input stream containing input content
+     * @param sentenceExtractor SentenceExtractor object
+     * @param tokenizer tokenizer
      * @return a generated file content
      * @throws cc.redpen.RedPenException if Parser failed to parse input.
      */
@@ -44,6 +47,9 @@ public interface DocumentParser {
      * Given input stream, return Document instance from a stream.
      *
      * @param io input stream containing input content
+     * @param fileName file name
+     * @param sentenceExtractor SentenceExtractor object
+     * @param tokenizer tokenizer
      * @return a generated file content
      * @throws cc.redpen.RedPenException if Parser failed to parse input.
      */
@@ -54,6 +60,8 @@ public interface DocumentParser {
      * Given content, return Document instance for the specified file.
      *
      * @param content input content
+     * @param sentenceExtractor SentenceExtractor object
+     * @param tokenizer tokenizer
      * @return a generated file content
      * @throws cc.redpen.RedPenException if Parser failed to parse input.
      */
@@ -64,6 +72,8 @@ public interface DocumentParser {
      * Given input file name, return Document instance for the specified file.
      *
      * @param file input file
+     * @param sentenceExtractor SentenceExtractor object
+     * @param tokenizer tokenizer
      * @return a generated file content
      * @throws cc.redpen.RedPenException if Parser failed to parse input.
      */

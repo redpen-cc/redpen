@@ -117,7 +117,7 @@ public final class LevenshteinDistance {
      * @param a a string.
      * @param b one another string.
      * @return Levenshtein distance.
-     * @see http://en.wikipedia.org/wiki/Levenshtein_distance.
+     * @see <a href="http://en.wikipedia.org/wiki/Levenshtein_distance">http://en.wikipedia.org/wiki/Levenshtein_distance</a>
      */
     public static int getDistance(CharSequence a, CharSequence b) {
         if (a == null && b == null) {

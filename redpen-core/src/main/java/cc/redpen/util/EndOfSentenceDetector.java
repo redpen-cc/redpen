@@ -28,8 +28,6 @@ import java.util.regex.Pattern;
  * Utility class to handle a string.
  */
 public final class EndOfSentenceDetector {
-
-
     private List<String> whiteList;
     private Pattern pattern;
 

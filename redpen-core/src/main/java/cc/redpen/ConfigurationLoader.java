@@ -73,8 +73,8 @@ public final class ConfigurationLoader {
      * parse the input stream. stream will be closed.
      *
      * @param input stream
-     * @return
-     * @throws RedPenException
+     * @return document object
+     * @throws RedPenException when failed to parse
      */
     private static Document toDocument(InputStream input) throws RedPenException {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -92,7 +92,7 @@ public final class ConfigurationLoader {
      *
      * @param configFile input configuration file
      * @return Validator configuration resources
-     * @throws cc.redpen.RedPenException
+     * @throws cc.redpen.RedPenException when failed to load configuration from specified configuration file
      */
     public Configuration load(File configFile) throws RedPenException {
         LOG.info("Loading config from specified config file: \"{}\"", configFile.getAbsolutePath());
@@ -108,7 +108,7 @@ public final class ConfigurationLoader {
      *
      * @param resourcePath input configuration path
      * @return Validator configuration resources
-     * @throws cc.redpen.RedPenException
+     * @throws cc.redpen.RedPenException when failed to load configuration from specified resource
      */
     public Configuration loadFromResource(String resourcePath) throws RedPenException {
         InputStream inputConfigStream = Configuration.class.getResourceAsStream(resourcePath);
@@ -120,7 +120,7 @@ public final class ConfigurationLoader {
      *
      * @param configString configuration as String
      * @return Validator configuration resources
-     * @throws cc.redpen.RedPenException
+     * @throws cc.redpen.RedPenException when failed to load Configuration from specified string
      */
     public Configuration loadFromString(String configString) throws RedPenException {
         return load(new ByteArrayInputStream(configString.getBytes(StandardCharsets.UTF_8)));
@@ -132,6 +132,7 @@ public final class ConfigurationLoader {
      *
      * @param stream input configuration settings
      * @return Configuration loaded from input stream
+     * @throws cc.redpen.RedPenException when failed to load configuration from specified stream
      */
     public Configuration load(InputStream stream) throws RedPenException {
         Document doc = toDocument(stream);

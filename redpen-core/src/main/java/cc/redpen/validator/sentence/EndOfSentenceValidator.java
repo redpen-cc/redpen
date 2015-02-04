@@ -28,7 +28,7 @@ import static cc.redpen.config.SymbolType.*;
 
 /**
  * This validator check if the style end of sentence is American style.
- * @see <a herf="http://grammar.ccc.commnet.edu/grammar/marks/quotation.htm">Description of quotation marks</a>
+ * @see <a href="http://grammar.ccc.commnet.edu/grammar/marks/quotation.htm">Description of quotation marks</a>
  */
 final public class EndOfSentenceValidator extends Validator {
 
