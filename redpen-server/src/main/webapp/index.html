@@ -22,7 +22,10 @@
 
         var sampleText = {
             "en": "RedPen is a proofreading tool to help writers or programmers who write technical documents or manuals that need to adhere to a writing standard. RedPen automates the verifications of input documents written in natural languages (NOT computer languages such as C++ or Java).",
-            "ja": "RedPen はプログラマや記者が規約にしたがって文書 (マニュアルやソフトウェアドキュメント) を記述するのをサポートします。RedPen は自然言語で記述された入力文書のチェックを自動化します。"
+            "ja": "最近利用されているソフトウェアの中には複数の計算機上で動作（分散）するものが多く存在し、このような分散ソフトウェアは複数の計算機で動作することで大量のデータを扱えたり，高負荷な状況に対処できたりします。\n" +
+                    "本稿では,複数の計算機（クラスタ）でで動作する各サーバーを「インスタンス」と呼びまます。\n" +
+                    "たとえば検索エンジンやデータベースではインデックスを複数のインスタンスで分割して保持します。\n" +
+                    "このような場合、各インデクスの結果をマージしてclientプログラムに渡す機構が必要となります。"
         };
 
         // call redpen's validate
@@ -149,10 +152,6 @@
                         <a href="http://blog.redpen.cc/">Blog</a>
                     </li>
                 </ul>
-
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="http://redpen.cc/" target="_blank"><img src="images/recruit-logo.png"/></a></li>
-                </ul>
             </div>
         </div>
     </div>
@@ -169,7 +168,7 @@
             <div class="well">
                 <form>
                     <div class="form-group">
-                        <textarea id="redpen-editor" class="form-control" rows="10" autofocus
+                        <textarea id="redpen-editor" class="form-control" rows="7" autofocus
                                   placeholder="Copy and paste a document here..."></textarea>
                     </div>
 
