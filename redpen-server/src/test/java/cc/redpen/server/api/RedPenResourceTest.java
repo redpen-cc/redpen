@@ -56,7 +56,7 @@ public class RedPenResourceTest extends MockServletInvocationTest {
     public void testRun() throws Exception {
         MockHttpServletRequest request =
                 constructMockRequest("POST", "/document/validate", MediaType.WILDCARD);
-        request.setContent(("textarea=foobar").getBytes());
+        request.setContent(("document=foobar").getBytes());
         MockServletContext context = new MockServletContext();
         context.addInitParameter("redpen.conf.path", "conf/redpen-conf.xml");
         MockHttpServletResponse response = invoke(request);
@@ -69,7 +69,7 @@ public class RedPenResourceTest extends MockServletInvocationTest {
     public void testRunWithErrors() throws Exception {
         MockHttpServletRequest request =
                 constructMockRequest("POST", "/document/validate", MediaType.WILDCARD);
-        request.setContent(("textarea=foobar.foobar").getBytes()); //NOTE: need space between periods.
+        request.setContent(("document=foobar.foobar").getBytes()); //NOTE: need space between periods.
         MockServletContext context = new MockServletContext();
         context.addInitParameter("redpen.conf.path", "conf/redpen-conf.xml");
         MockHttpServletResponse response = invoke(request);
@@ -95,7 +95,7 @@ public class RedPenResourceTest extends MockServletInvocationTest {
     public void testRunWithOnlyFormName() throws Exception {
         MockHttpServletRequest request =
                 constructMockRequest("POST", "/document/validate", MediaType.WILDCARD);
-        request.setContent(("textarea=").getBytes()); //NOTE: need space between periods.
+        request.setContent(("document=").getBytes()); //NOTE: need space between periods.
         MockServletContext context = new MockServletContext();
         context.addInitParameter("redpen.conf.path", "conf/redpen-conf.xml");
         MockHttpServletResponse response = invoke(request);

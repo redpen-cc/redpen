@@ -1,9 +1,93 @@
-#main {
-    margin-left: auto;
-    margin-right: auto;
-    width: 60%;
+/* colours to match redpen theme from redpen.cc */
+body {
+    background-color: #c0c5b2;
+}
+
+.navbar-brand {
+    padding-top: 15px;
+}
+
+.navbar-brand img {
+    height: 28px;
+}
+
+.alert-warning, .alert-info, .alert-success {
+    padding-left: 4px;
+    border-radius: 2px;
 }
 
 .error strong {
     color: red;
 }
+
+a {
+    color: rgb(62, 63, 58);
+    cursor: pointer;
+}
+
+a:hover {
+    color: rgb(62, 63, 58);
+    cursor: pointer;
+}
+
+
+#main {
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    bottom: 4px;
+}
+
+#redpen-editor {
+    overflow: auto;
+}
+
+.redpen-fixed-height {
+    height: 100%;
+}
+
+.redpen-editor-panel {
+}
+
+#redpen-results {
+    max-height: 42%;
+    padding-bottom: 8px;
+    overflow: auto;
+}
+
+.redpen-red {
+    color: #a70c00;
+}
+
+.redpen-config-summary-panel {
+    display: inline-block;
+    width: 350px;
+    padding: 12px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    font-size: 12px;
+}
+
+.redpen-config-summary-panel-header {
+    color: orange;
+}
+
+.redpen-config-summary-panel th {
+    font-weight: normal;
+    color: rgb(132, 204, 255);
+    padding-right: 4px;
+}
+
+.redpen-config-summary-panel tr {
+    white-space: pre-wrap;
+}
+
+.redpen-config-summary-panel tr {
+    vertical-align: top;
+}
+
+
