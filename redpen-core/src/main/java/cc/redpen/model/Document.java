@@ -38,6 +38,9 @@ public class Document implements Iterable<Section>, Serializable {
 
     /**
      * Constructor.
+     *
+     * @param sections list of sections
+     * @param fileName file name
      */
     public Document(List<Section> sections, Optional<String> fileName) {
         this.sections = sections;
@@ -124,10 +127,17 @@ public class Document implements Iterable<Section>, Serializable {
         private final List<Section> sections;
         Optional<String> fileName;
 
+        /**
+         * Constructor.
+         */
         public DocumentBuilder() {
             this(new WhiteSpaceTokenizer());
         }
 
+        /**
+         * Constructor.
+         * @param tokenizer tokenizer
+         */
         public DocumentBuilder(RedPenTokenizer tokenizer) {
             sections = new ArrayList<>();
             fileName = Optional.empty();
@@ -135,9 +145,10 @@ public class Document implements Iterable<Section>, Serializable {
         }
 
         /**
-         * Add a Section.
+         * Add a section.
          *
          * @param section a section in file content
+         * @return DocumentBuilder itself
          */
         public DocumentBuilder appendSection(Section section) {
             ensureNotBuilt();
@@ -145,6 +156,12 @@ public class Document implements Iterable<Section>, Serializable {
             return this;
         }
 
+        /**
+         * Add a sentence.
+         *
+         * @param sentence sentence
+         * @return DocumentBuilder itself
+         */
         public DocumentBuilder addSentence(Sentence sentence) {
             ensureNotBuilt();
             if (sections.size() == 0) {
@@ -206,6 +223,8 @@ public class Document implements Iterable<Section>, Serializable {
 
         /**
          * Add a new list block.
+         *
+         * @return builder itself
          */
         public DocumentBuilder addListBlock() {
             ensureNotBuilt();
@@ -222,6 +241,7 @@ public class Document implements Iterable<Section>, Serializable {
          *
          * @param level    indentation level
          * @param contents content of list element
+         * @return builder
          */
         public DocumentBuilder addListElement(int level, List<Sentence> contents) {
             ensureNotBuilt();
@@ -254,6 +274,7 @@ public class Document implements Iterable<Section>, Serializable {
          *
          * @param level  section level
          * @param header header contents
+         * @return builder
          */
         public DocumentBuilder addSection(int level, List<Sentence> header) {
             ensureNotBuilt();
@@ -309,6 +330,7 @@ public class Document implements Iterable<Section>, Serializable {
          * Set file name.
          *
          * @param name file name
+         * @return builder
          */
         public DocumentBuilder setFileName(String name) {
             ensureNotBuilt();

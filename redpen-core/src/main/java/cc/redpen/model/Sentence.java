@@ -182,7 +182,7 @@ public final class Sentence implements Serializable {
 
     /**
      * Get a set of tokenized words in the sentence.
-     * @return
+     * @return list of tokenized words
      */
     public List<TokenElement> getTokens() {
         return tokens;
@@ -197,7 +197,18 @@ public final class Sentence implements Serializable {
     }
 
     /**
-     * Get offset position for specified character position
+<<<<<<< HEAD
+     * Set the offset mapping table which contains character position to column offset in line.
+     *
+     * @param offsetMap position mapping table
+     */
+    public void setOffsetMap(List<LineOffset> offsetMap) {
+        this.offsetMap = offsetMap;
+    }
+
+
+    /**
+     * Get offset position for specified character position.
      *
      * @param position character position in a sentence
      * @return offset position
@@ -214,9 +225,9 @@ public final class Sentence implements Serializable {
     }
 
     /**
-     * Get size of offset mapping table (the size should be same as the content length)
+     * Get size of offset mapping table (the size should be same as the content length).
      *
-     * @return
+     * @return size of position mapping table
      */
     public int getOffsetMapSize() {
         return this.offsetMap.size();

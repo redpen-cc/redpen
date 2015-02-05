@@ -55,6 +55,7 @@ public final class ListBlock {
     /**
      * Get iterator of list elements.
      *
+     * @param id element id
      * @return Iterator of ListElement
      */
     public ListElement getListElement(int id) {

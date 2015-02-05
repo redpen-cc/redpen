@@ -55,8 +55,6 @@ public abstract class BaseDocumentParser implements DocumentParser {
      *
      * @param is InputStream using to parse
      * @return BufferedReader created from InputStream
-     * @throws cc.redpen.RedPenException if InputStream is not
-     *                                   supported UTF-8 encoding
      */
     protected BufferedReader createReader(InputStream is) {
         return new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));

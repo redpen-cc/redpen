@@ -43,10 +43,10 @@ public class JSONFormatter extends Formatter {
 
     /**
      * format Validation Errors to JSONArray
-     * @param pw
-     * @param docErrorsMap
-     * @throws RedPenException
-     * @throws IOException
+     * @param pw writer
+     * @param docErrorsMap map from document to list of errors
+     * @throws RedPenException when failed to write JSON to string
+     * @throws IOException when failed to write JSON to string
      */
     @Override
     public void format(PrintWriter pw, Map<Document, List<ValidationError>> docErrorsMap) throws RedPenException, IOException {
@@ -61,9 +61,9 @@ public class JSONFormatter extends Formatter {
 
     /**
      * format Validation Errors to JSON
-     * @param document
-     * @param errors
-     * @return
+     * @param document document
+     * @param errors list of errors
+     * @return JSON formatted errors
      */
     @Override
     public String format(Document document, List<ValidationError> errors) {

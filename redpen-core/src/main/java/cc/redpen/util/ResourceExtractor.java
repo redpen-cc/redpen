@@ -38,6 +38,7 @@ public abstract class ResourceExtractor<E> {
      * load line.
      *
      * @param line line in a file
+     * @throws RedPenException when failed to load
      */
     abstract protected void load(String line) throws RedPenException;
 
@@ -52,6 +53,7 @@ public abstract class ResourceExtractor<E> {
      * Given a input stream, load the contents.
      *
      * @param inputStream input stream
+     * @throws IOException when failed to create reader from the specified input stream
      */
     public void load(InputStream inputStream) throws IOException {
         try (InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
@@ -72,6 +74,7 @@ public abstract class ResourceExtractor<E> {
      * Load a given input file combined with jar package.
      *
      * @param inputFile a file included in the jar file
+     * @throws IOException when input stream is null
      */
     public void loadFromResource(String inputFile) throws IOException {
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(inputFile)) {

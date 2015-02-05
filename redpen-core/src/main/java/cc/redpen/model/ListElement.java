@@ -50,6 +50,7 @@ public final class ListElement {
     /**
      * Given sentence id, return the content of sentence.
      *
+     * @param id sentence id
      * @return content of list element
      */
     public Sentence getSentence(int id) {
