@@ -40,6 +40,15 @@ public class EndOfSentenceDetectorTest {
     }
 
     @Test
+    public void testEndPositionSpecifyingStartPositon() {
+        Pattern pattern = Pattern.compile("\\.");
+        String str = "Right. That is not a pen.";
+        EndOfSentenceDetector detector = new EndOfSentenceDetector(pattern);
+        assertEquals(5, detector.getSentenceEndPosition(str, 0));
+        assertEquals(24, detector.getSentenceEndPosition(str, 6));
+    }
+
+    @Test
     public void testEndPositionWithTailingSpace() {
         Pattern pattern = Pattern.compile("\\.");
         String str = "this is a pen. ";

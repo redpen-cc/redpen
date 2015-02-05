@@ -47,6 +47,7 @@ public class RedPen {
 
     /**
      * constructs RedPen with specified config file.
+     *
      * @param configFile config file
      * @throws RedPenException when failed to construct RedPen
      */
@@ -56,6 +57,7 @@ public class RedPen {
 
     /**
      * constructs RedPen with specified config file path.
+     *
      * @param configPath config file path
      * @throws RedPenException when failed to construct RedPen
      */
@@ -65,6 +67,7 @@ public class RedPen {
 
     /**
      * constructs RedPen with specified configuration.
+     *
      * @param configuration configuration
      * @throws RedPenException when failed to construct RedPen
      */
@@ -214,6 +217,33 @@ public class RedPen {
                 docErrorsMap.get(document).addAll(newErrors);
             }
         }
+    }
+
+    /**
+     * Return the validators used by this RedPen
+     *
+     * @return a list of validators used by this RedPen
+     */
+    public List<Validator> getValidators() {
+        return validators;
+    }
+
+    /**
+     * Get the configuration object for this RedPen
+     *
+     * @return The configuration object for this RedPen
+     */
+    public Configuration getConfiguration() {
+        return configuration;
+    }
+
+    /**
+     * Return the sentence extractor used by this RedPen
+     *
+     * @return the sentence extractor for this RedPen
+     */
+    public SentenceExtractor getSentenceExtractor() {
+        return sentenceExtractor;
     }
 
     @Override

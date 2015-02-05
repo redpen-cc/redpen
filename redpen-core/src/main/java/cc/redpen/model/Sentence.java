@@ -90,6 +90,17 @@ public final class Sentence implements Serializable {
         this.offsetMap = new ArrayList<>();
     }
 
+
+    public Sentence(String content, List<LineOffset> offsetMap, List<String> links) {
+        this.content = content;
+        this.offsetMap = offsetMap;
+        this.startPositionOffset = offsetMap.get(0).offset;
+        this.lineNum = offsetMap.get(0).lineNum;
+        this.isFirstSentence = false;
+        this.tokens =  new ArrayList<>();
+        this.links = links;
+    }
+
     /**
      * Get line number where the sentence starts.
      *
@@ -151,14 +162,6 @@ public final class Sentence implements Serializable {
         return startPositionOffset;
     }
 
-    /**
-     * Set start column offset where the sentence starts.
-     *
-     * @param startPositionOffset column offset of start sentence
-     */
-    public void setStartPositionOffset(int startPositionOffset) {
-        this.startPositionOffset = startPositionOffset;
-    }
 
     /**
      * Detect the sentence is the first sentence of a paragraph.
@@ -194,6 +197,7 @@ public final class Sentence implements Serializable {
     }
 
     /**
+<<<<<<< HEAD
      * Set the offset mapping table which contains character position to column offset in line.
      *
      * @param offsetMap position mapping table

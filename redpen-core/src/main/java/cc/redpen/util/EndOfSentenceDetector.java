@@ -69,6 +69,19 @@ public final class EndOfSentenceDetector {
         return getEndPosition(str, 0, nonEndOfSentencePositions);
     }
 
+    /**
+     * Get sentence end position.
+     *
+     * @param str input string
+     * @param startPosition start offset position
+     * @return position of full stop when there is a full stop, -1 otherwise
+     */
+    public int getSentenceEndPosition(String str, int startPosition) {
+        Set<Integer> nonEndOfSentencePositions =
+                extractNonEndOfSentencePositions(str);
+        return getEndPosition(str, startPosition, nonEndOfSentencePositions);
+    }
+
     private int getEndPosition(String str,
                                int offset, Set<Integer> whitePositions) {
         int startPosition = -1;
