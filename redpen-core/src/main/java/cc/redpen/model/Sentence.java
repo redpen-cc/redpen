@@ -29,7 +29,7 @@ import java.util.Optional;
  * Sentence block in a Document.
  */
 public final class Sentence implements Serializable {
-    private static final long serialVersionUID = 6965952257673722591L;
+    private static final long serialVersionUID = 3761982769692999924L;
     /**
      * Links (including internal and external ones).
      */
@@ -37,7 +37,7 @@ public final class Sentence implements Serializable {
     /**
      * Sentence position in a file.
      */
-    private int lineNum;
+    private int lineNumber;
     /**
      * Content of string.
      */
@@ -82,7 +82,7 @@ public final class Sentence implements Serializable {
     public Sentence(String sentenceContent, int sentencePosition, int startOffset) {
         super();
         this.content = sentenceContent;
-        this.lineNum = sentencePosition;
+        this.lineNumber = sentencePosition;
         this.isFirstSentence = false;
         this.links = new ArrayList<>();
         this.tokens = new ArrayList<>();
@@ -95,7 +95,7 @@ public final class Sentence implements Serializable {
         this.content = content;
         this.offsetMap = offsetMap;
         this.startPositionOffset = offsetMap.get(0).offset;
-        this.lineNum = offsetMap.get(0).lineNum;
+        this.lineNumber = offsetMap.get(0).lineNum;
         this.isFirstSentence = false;
         this.tokens =  new ArrayList<>();
         this.links = links;
@@ -106,17 +106,17 @@ public final class Sentence implements Serializable {
      *
      * @return line number
      */
-    public int getLineNum() {
-        return lineNum;
+    public int getLineNumber() {
+        return lineNumber;
     }
 
     /**
      * Set line number where the sentence starts.
      *
-     * @param lineNum line number
+     * @param lineNumber line number
      */
-    public void setLineNum(int lineNum) {
-        this.lineNum = lineNum;
+    public void setLineNumber(int lineNumber) {
+        this.lineNumber = lineNumber;
     }
 
     /**
@@ -238,7 +238,7 @@ public final class Sentence implements Serializable {
     public String toString() {
         return "Sentence{" +
                 "links=" + links +
-                ", lineNum=" + lineNum +
+                ", lineNumber=" + lineNumber +
                 ", content='" + content + '\'' +
                 ", startPositionOffset=" + startPositionOffset +
                 ", isFirstSentence=" + isFirstSentence +
@@ -255,7 +255,7 @@ public final class Sentence implements Serializable {
         Sentence sentence = (Sentence) o;
 
         if (isFirstSentence != sentence.isFirstSentence) return false;
-        if (lineNum != sentence.lineNum) return false;
+        if (lineNumber != sentence.lineNumber) return false;
         if (startPositionOffset != sentence.startPositionOffset) return false;
         if (content != null ? !content.equals(sentence.content) : sentence.content != null) return false;
         if (links != null ? !links.equals(sentence.links) : sentence.links != null) return false;
@@ -267,7 +267,7 @@ public final class Sentence implements Serializable {
     @Override
     public int hashCode() {
         int result = links != null ? links.hashCode() : 0;
-        result = 31 * result + lineNum;
+        result = 31 * result + lineNumber;
         result = 31 * result + (content != null ? content.hashCode() : 0);
         result = 31 * result + startPositionOffset;
         result = 31 * result + (isFirstSentence ? 1 : 0);

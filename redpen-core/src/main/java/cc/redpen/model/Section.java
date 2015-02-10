@@ -182,7 +182,7 @@ public final class Section {
         StringBuilder joinedHeader = new StringBuilder();
         int lineNum = 0;
         if (headerContent.size() > 0) {
-            lineNum = headerContent.get(0).getLineNum();
+            lineNum = headerContent.get(0).getLineNumber();
         }
         int i = 0;
         for (Sentence header : headerContent) {
