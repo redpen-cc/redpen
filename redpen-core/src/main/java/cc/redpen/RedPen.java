@@ -220,30 +220,12 @@ public class RedPen {
     }
 
     /**
-     * Return the validators used by this RedPen
-     *
-     * @return a list of validators used by this RedPen
-     */
-    public List<Validator> getValidators() {
-        return validators;
-    }
-
-    /**
      * Get the configuration object for this RedPen
      *
      * @return The configuration object for this RedPen
      */
     public Configuration getConfiguration() {
         return configuration;
-    }
-
-    /**
-     * Return the sentence extractor used by this RedPen
-     *
-     * @return the sentence extractor for this RedPen
-     */
-    public SentenceExtractor getSentenceExtractor() {
-        return sentenceExtractor;
     }
 
     @Override

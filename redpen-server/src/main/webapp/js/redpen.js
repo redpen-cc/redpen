@@ -47,10 +47,10 @@ var redpen = (function () {
             });
     };
 
-    // placeholder (and cheap implementation) of a detect-language function
-    this.detectLanguage = function (text) {
+    // placeholder (and cheap client-side implementation) of a detect-language function
+    this.detectLanguage = function (text, callback) {
         var japanese = (text.indexOf('。') != -1) || (text.indexOf('、') != -1) || (text.indexOf('は') != -1);
-        return japanese ? 'ja' : 'en';
+        callback(japanese ? 'ja' : 'en');
     };
 
     // validate the document {text: text, lang: [en|ja..]}
@@ -58,9 +58,13 @@ var redpen = (function () {
         doAPICall('document/validate', parameters, callback, "POST");
     };
 
-    // get the current configuration
-    this.getConfiguration = function (callback) {
-        doAPICall('config/redpen', {}, callback);
+    // validate the document {text: text, lang: [en|ja..]}
+    this.validateBySentence = function (parameters, callback) {
+        doAPICall('document/validate_by_sentence', parameters, callback, "POST");
+    };
+    // get the current redpen configuration
+    this.getRedPens = function (callback) {
+        doAPICall('config/redpens', {}, callback);
     };
 
     return this;
