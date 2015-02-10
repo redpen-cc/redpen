@@ -17,9 +17,15 @@
  */
 package cc.redpen.formatter;
 
+import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
+import cc.redpen.config.Configuration;
+import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
+import cc.redpen.parser.DocumentParser;
+import cc.redpen.parser.SentenceExtractor;
+import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.json.JSONArray;
@@ -52,7 +58,7 @@ public class JSONFormatterTest extends Validator {
         assertEquals("testing JSONFormatter", jsonErrors.getJSONObject(0).getString("sentence"));
         assertEquals("json test error", jsonErrors.getJSONObject(0).getString("message"));
         assertEquals(1, jsonErrors.getJSONObject(0).getInt("lineNum"));
-        assertEquals("{\"document\":\"docName\",\"errors\":[{\"sentence\":\"testing JSONFormatter\",\"lineNum\":1,\"message\":\"json test error\"}]}", result);
+        assertEquals("{\"document\":\"docName\",\"errors\":[{\"sentence\":\"testing JSONFormatter\",\"validator\":\"JSONFormatterTest\",\"lineNum\":1,\"sentenceStartColumnNum\":0,\"message\":\"json test error\"}]}", result);
     }
 
     @Test
@@ -65,7 +71,7 @@ public class JSONFormatterTest extends Validator {
         documentListMap.put(document, errors);
 
         String result = formatter.format(documentListMap);
-        assertEquals("[{\"document\":\"docName\",\"errors\":[{\"sentence\":\"testing JSONFormatter\",\"lineNum\":1,\"message\":\"json test error\"}]}]", result);
+        assertEquals("[{\"document\":\"docName\",\"errors\":[{\"sentence\":\"testing JSONFormatter\",\"validator\":\"JSONFormatterTest\",\"lineNum\":1,\"sentenceStartColumnNum\":0,\"message\":\"json test error\"}]}]", result);
         JSONArray jsonArray = new JSONArray(result);
         assertTrue(jsonArray.length() == 1);
         JSONObject jsonObject = jsonArray.getJSONObject(0);
@@ -79,4 +85,35 @@ public class JSONFormatterTest extends Validator {
         assertEquals("json test error", jsonErrors.getJSONObject(0).getString("message"));
         assertEquals(1, jsonErrors.getJSONObject(0).getInt("lineNum"));
     }
+
+    @Test
+    public void testFormatDocumentsAndErrorsWithPosition() throws RedPenException, JSONException {
+        String sampleText = "This is a good day。"; // invalid end of sentence symbol
+        Configuration conf = new Configuration.ConfigurationBuilder()
+                .setLanguage("en")
+                .build();
+        Configuration configuration = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(
+                        new ValidatorConfiguration("InvalidSymbol"))
+                .build();
+
+        List<Document> documents = new ArrayList<>();
+        DocumentParser parser = DocumentParser.MARKDOWN;
+        documents.add(parser.parse(sampleText,
+                new SentenceExtractor(conf.getSymbolTable()), conf.getTokenizer()));
+        RedPen redPen = new RedPen(configuration);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
+
+        JSONFormatter formatter = new JSONFormatter();
+        String resultString = formatter.format(new cc.redpen.model.Document.DocumentBuilder(
+                new WhiteSpaceTokenizer()).build(), errors);
+        JSONObject jsonObject = new JSONObject(resultString);
+        JSONArray jsonErrors = jsonObject.getJSONArray("errors");
+        assertEquals(1, jsonErrors.length());
+        assertEquals(sampleText, jsonErrors.getJSONObject(0).getString("sentence"));
+        assertEquals("0", jsonErrors.getJSONObject(0).getString("sentenceStartColumnNum"));
+        assertEquals("1,18", jsonErrors.getJSONObject(0).getString("errorStartPosition"));
+        assertEquals("1,19", jsonErrors.getJSONObject(0).getString("errorEndPosition"));
+    }
+
 }

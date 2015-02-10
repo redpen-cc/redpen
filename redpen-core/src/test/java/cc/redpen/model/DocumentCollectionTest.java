@@ -47,10 +47,10 @@ public class DocumentCollectionTest {
         assertEquals(2, docs.get(0).getSection(0).getParagraph(0).getNumberOfSentences());
         assertEquals("sentence0", docs.get(0).getSection(0).getParagraph(0).getSentence(0).getContent());
         assertEquals(true, docs.get(0).getSection(0).getParagraph(0).getSentence(0).isFirstSentence());
-        assertEquals(0, docs.get(0).getSection(0).getParagraph(0).getSentence(0).getLineNum());
+        assertEquals(0, docs.get(0).getSection(0).getParagraph(0).getSentence(0).getLineNumber());
         assertEquals("sentence1", docs.get(0).getSection(0).getParagraph(0).getSentence(1).getContent());
         assertEquals(false, docs.get(0).getSection(0).getParagraph(0).getSentence(1).isFirstSentence());
-        assertEquals(1, docs.get(0).getSection(0).getParagraph(0).getSentence(1).getLineNum());
+        assertEquals(1, docs.get(0).getSection(0).getParagraph(0).getSentence(1).getLineNumber());
     }
 
     @Test
@@ -83,10 +83,10 @@ public class DocumentCollectionTest {
         assertEquals(2, docs.get(0).getSection(0).getParagraph(0).getNumberOfSentences());
         assertEquals("sentence00", docs.get(0).getSection(0).getParagraph(0).getSentence(0).getContent());
         assertEquals(true, docs.get(0).getSection(0).getParagraph(0).getSentence(0).isFirstSentence());
-        assertEquals(0, docs.get(0).getSection(0).getParagraph(0).getSentence(0).getLineNum());
+        assertEquals(0, docs.get(0).getSection(0).getParagraph(0).getSentence(0).getLineNumber());
         assertEquals("sentence01", docs.get(0).getSection(0).getParagraph(0).getSentence(1).getContent());
         assertEquals(false, docs.get(0).getSection(0).getParagraph(0).getSentence(1).isFirstSentence());
-        assertEquals(1, docs.get(0).getSection(0).getParagraph(0).getSentence(1).getLineNum());
+        assertEquals(1, docs.get(0).getSection(0).getParagraph(0).getSentence(1).getLineNumber());
 
         // second document
         assertEquals(1, docs.get(1).size());
@@ -97,9 +97,9 @@ public class DocumentCollectionTest {
         assertEquals(2, docs.get(1).getSection(0).getParagraph(0).getNumberOfSentences());
         assertEquals("sentence10", docs.get(1).getSection(0).getParagraph(0).getSentence(0).getContent());
         assertEquals(true, docs.get(1).getSection(0).getParagraph(0).getSentence(0).isFirstSentence());
-        assertEquals(0, docs.get(1).getSection(0).getParagraph(0).getSentence(0).getLineNum());
+        assertEquals(0, docs.get(1).getSection(0).getParagraph(0).getSentence(0).getLineNumber());
         assertEquals("sentence11", docs.get(1).getSection(0).getParagraph(0).getSentence(1).getContent());
         assertEquals(false, docs.get(1).getSection(0).getParagraph(0).getSentence(1).isFirstSentence());
-        assertEquals(1, docs.get(1).getSection(0).getParagraph(0).getSentence(1).getLineNum());
+        assertEquals(1, docs.get(1).getSection(0).getParagraph(0).getSentence(1).getLineNumber());
     }
 }

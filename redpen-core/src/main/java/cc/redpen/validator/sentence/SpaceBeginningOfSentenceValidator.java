@@ -34,7 +34,7 @@ final public class SpaceBeginningOfSentenceValidator extends Validator {
     private Map<Integer, List<Sentence>> sentencePositions = new HashMap<>();
 
     private boolean isFistInLine(Sentence sentence) {
-        return sentence.isFirstSentence() || sentencePositions.get(sentence.getLineNum()).get(0) == sentence;
+        return sentence.isFirstSentence() || sentencePositions.get(sentence.getLineNumber()).get(0) == sentence;
     }
 
     @Override
@@ -49,10 +49,10 @@ final public class SpaceBeginningOfSentenceValidator extends Validator {
 
     @Override
     public void preValidate(Sentence sentence) {
-        if (!sentencePositions.containsKey(sentence.getLineNum())) {
-            sentencePositions.put(sentence.getLineNum(), new LinkedList<>());
+        if (!sentencePositions.containsKey(sentence.getLineNumber())) {
+            sentencePositions.put(sentence.getLineNumber(), new LinkedList<>());
         }
-        List<Sentence> list = sentencePositions.get(sentence.getLineNum());
+        List<Sentence> list = sentencePositions.get(sentence.getLineNumber());
         list.add(sentence);
     }
 

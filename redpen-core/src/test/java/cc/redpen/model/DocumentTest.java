@@ -54,10 +54,10 @@ public class DocumentTest {
         assertEquals(1, doc.getSection(0).getNumberOfParagraphs());
         assertEquals("sentence0", doc.getSection(0).getParagraph(0).getSentence(0).getContent());
         assertEquals(true, doc.getSection(0).getParagraph(0).getSentence(0).isFirstSentence());
-        assertEquals(0, doc.getSection(0).getParagraph(0).getSentence(0).getLineNum());
+        assertEquals(0, doc.getSection(0).getParagraph(0).getSentence(0).getLineNumber());
         assertEquals("sentence1", doc.getSection(0).getParagraph(0).getSentence(1).getContent());
         assertEquals(false, doc.getSection(0).getParagraph(0).getSentence(1).isFirstSentence());
-        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(1).getLineNum());
+        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(1).getLineNumber());
         assertEquals(1, doc.getSection(0).getNumberOfLists());
         assertEquals(3, doc.getSection(0).getListBlock(0).getNumberOfListElements());
         assertEquals(0, doc.getSection(0).getListBlock(0).getListElement(0).getLevel());

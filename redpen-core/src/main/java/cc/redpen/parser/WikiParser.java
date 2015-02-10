@@ -229,7 +229,7 @@ final class WikiParser extends BaseDocumentParser {
                 if (tagInternal.length > 2) {
                     LOG.warn(
                             "Invalid link block: there are more than two link blocks at line "
-                                    + sentence.getLineNum());
+                                    + sentence.getLineNumber());
                 }
                 tagURL = tagInternal[1].trim();
                 StringBuilder buffer = new StringBuilder();

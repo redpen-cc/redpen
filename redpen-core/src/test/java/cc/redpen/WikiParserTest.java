@@ -542,20 +542,20 @@ public class WikiParserTest {
         assertEquals(h2Section.getParentSection(), h1Section);
         assertEquals(rootSection.getParentSection(), null);
 
-        assertEquals(1, rootSection.getHeaderContent(0).getLineNum());
+        assertEquals(1, rootSection.getHeaderContent(0).getLineNumber());
         assertEquals(0, rootSection.getNumberOfParagraphs());
 
-        assertEquals(1, h1Section.getHeaderContent(0).getLineNum());
+        assertEquals(1, h1Section.getHeaderContent(0).getLineNumber());
         assertEquals(2, h1Section.getNumberOfParagraphs());
         assertEquals(1, h1Section.getParagraph(0).getNumberOfSentences());
-        assertEquals(2, h1Section.getParagraph(0).getSentence(0).getLineNum());
+        assertEquals(2, h1Section.getParagraph(0).getSentence(0).getLineNumber());
         assertEquals(1, h1Section.getParagraph(1).getNumberOfSentences());
-        assertEquals(4, h1Section.getParagraph(1).getSentence(0).getLineNum());
+        assertEquals(4, h1Section.getParagraph(1).getSentence(0).getLineNumber());
 
-        assertEquals(5, h2Section.getHeaderContent(0).getLineNum());
+        assertEquals(5, h2Section.getHeaderContent(0).getLineNumber());
         assertEquals(1, h2Section.getNumberOfParagraphs());
         assertEquals(1, h2Section.getParagraph(0).getNumberOfSentences());
-        assertEquals(6, h2Section.getParagraph(0).getSentence(0).getLineNum());
+        assertEquals(6, h2Section.getParagraph(0).getSentence(0).getLineNumber());
     }
 
     @Test
@@ -576,13 +576,13 @@ public class WikiParserTest {
         assertEquals(h1Section.getParentSection(), rootSection);
         assertEquals(rootSection.getParentSection(), null);
 
-        assertEquals(1, rootSection.getHeaderContent(0).getLineNum());
+        assertEquals(1, rootSection.getHeaderContent(0).getLineNumber());
         assertEquals(0, rootSection.getNumberOfParagraphs());
 
-        assertEquals(1, h1Section.getHeaderContent(0).getLineNum());
+        assertEquals(1, h1Section.getHeaderContent(0).getLineNumber());
         assertEquals(1, h1Section.getNumberOfParagraphs());
         assertEquals(1, h1Section.getParagraph(0).getNumberOfSentences());
-        assertEquals(2, h1Section.getParagraph(0).getSentence(0).getLineNum());
+        assertEquals(2, h1Section.getParagraph(0).getSentence(0).getLineNumber());
     }
 
     @Test

@@ -19,6 +19,7 @@ package cc.redpen.formatter;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
+import cc.redpen.parser.LineOffset;
 import cc.redpen.validator.ValidationError;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -94,6 +95,18 @@ public class JSONFormatter extends Formatter {
                 jsonError.put("sentence", error.getSentence().getContent());
                 jsonError.put("message", error.getMessage());
                 jsonError.put("lineNum", error.getLineNumber());
+                jsonError.put("validator", error.getValidatorName());
+                jsonError.put("sentenceStartColumnNum", error.getStartColumnNumber());
+                if (error.getStartPosition().isPresent()) {
+                    LineOffset e = error.getStartPosition().get();
+                    jsonError.put("errorStartPosition", new StringBuilder().append(e.lineNum)
+                            .append(",").append(e.offset).toString());
+                }
+                if (error.getEndPosition().isPresent()) {
+                    LineOffset e = error.getEndPosition().get();
+                    jsonError.put("errorEndPosition", new StringBuilder().append(e.lineNum)
+                            .append(",").append(e.offset).toString());
+                }
                 jsonErrors.put(jsonError);
             }
             docError.put("errors", jsonErrors);

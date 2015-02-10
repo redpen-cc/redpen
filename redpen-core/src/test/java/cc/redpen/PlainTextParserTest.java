@@ -94,17 +94,17 @@ public class PlainTextParserTest {
         assertEquals(3, extractParagraphs(section).size());
 
         assertEquals(2, section.getParagraph(0).getNumberOfSentences());
-        assertEquals(1, section.getParagraph(0).getSentence(0).getLineNum());
-        assertEquals(2, section.getParagraph(0).getSentence(1).getLineNum());
+        assertEquals(1, section.getParagraph(0).getSentence(0).getLineNumber());
+        assertEquals(2, section.getParagraph(0).getSentence(1).getLineNumber());
 
         assertEquals(2, section.getParagraph(1).getNumberOfSentences());
-        assertEquals(4, section.getParagraph(1).getSentence(0).getLineNum());
-        assertEquals(5, section.getParagraph(1).getSentence(1).getLineNum());
+        assertEquals(4, section.getParagraph(1).getSentence(0).getLineNumber());
+        assertEquals(5, section.getParagraph(1).getSentence(1).getLineNumber());
 
         assertEquals(3, section.getParagraph(2).getNumberOfSentences());
-        assertEquals(7, section.getParagraph(2).getSentence(0).getLineNum());
-        assertEquals(8, section.getParagraph(2).getSentence(1).getLineNum());
-        assertEquals(9, section.getParagraph(2).getSentence(2).getLineNum());
+        assertEquals(7, section.getParagraph(2).getSentence(0).getLineNumber());
+        assertEquals(8, section.getParagraph(2).getSentence(1).getLineNumber());
+        assertEquals(9, section.getParagraph(2).getSentence(2).getLineNumber());
     }
 
     @Test
@@ -143,7 +143,7 @@ public class PlainTextParserTest {
         for (int i = 0; i < expectedResult.length; i++) {
             assertEquals(expectedResult[i], paragraph.getSentence(i).getContent());
         }
-        assertEquals(0, section.getHeaderContent(0).getLineNum());
+        assertEquals(0, section.getHeaderContent(0).getLineNumber());
         assertEquals("", section.getHeaderContent(0).getContent());
     }
 
@@ -162,7 +162,7 @@ public class PlainTextParserTest {
         for (int i = 0; i < expectedResult.length; i++) {
             assertEquals(expectedResult[i], paragraph.getSentence(i).getContent());
         }
-        assertEquals(0, section.getHeaderContent(0).getLineNum());
+        assertEquals(0, section.getHeaderContent(0).getLineNumber());
         assertEquals("", section.getHeaderContent(0).getContent());
     }
 
