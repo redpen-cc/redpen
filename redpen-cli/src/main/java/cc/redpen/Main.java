@@ -186,7 +186,7 @@ public final class Main {
         String result = formatter.format(documentListMap);
         System.out.println(result);
 
-        long errorCount = documentListMap.values().stream().map(List::size).count();
+        long errorCount = documentListMap.values().stream().mapToLong(List::size).sum();
 
         if (errorCount > limit) {
             LOG.error("The number of errors \"{}\" is larger than specified (limit is \"{}\").", errorCount, limit);
