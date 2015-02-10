@@ -51,7 +51,7 @@ public class RedPenConfigurationResource {
     @Path("/redpens")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @WinkAPIDescriber.Description("Return the configuration for avaiable RedPens matching the supplied language (default is any language)")
+    @WinkAPIDescriber.Description("Return the configuration for available redpens matching the supplied language (default is any language)")
     public Response getRedPens(@QueryParam("lang") @DefaultValue("") String lang) throws RedPenException {
 
         JSONObject response = new JSONObject();

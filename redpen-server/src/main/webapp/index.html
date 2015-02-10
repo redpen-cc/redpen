@@ -20,6 +20,7 @@
 
 <script>
 
+// some sample documents and the parser to use to parse them
 var sampleDocuments = {
     en: {parser: "PLAIN", document: "Some software tools work in more than one machine, and such distributed (cluster)systems can handle huge data or tasks, because such software tools make use of large amount of computer resources.\n" +
             "In this article, we'll call a computer server that works as a member of a cluster an \"instance\". for example, each instance in distributed search engines stores the the fractions of data.\n" +
@@ -48,6 +49,7 @@ function clearResult() {
     $('#redpen-editor').val('').trigger("change");
 }
 
+// paste some sample text into the editor and trigger a change
 function pasteSampleText(key) {
     if (sampleDocuments[key]) {
         permitLanguageAutoDetect = true;
@@ -152,11 +154,13 @@ $(document).ready(function () {
                     function (data) {
                         var errors = data['errors'];
                         if (errors.length) {
+
                             // get a list of the checked validators
                             var validators = {};
                             $("#redpen-active-validators").find("input:checked").each(function () {
                                 validators[$(this).val()] = true;
                             });
+
                             // display the errors
                             var results = $('#redpen-results')
                                     .empty()
@@ -243,8 +247,7 @@ $(document).ready(function () {
         setLanguage("en");
         pasteSampleText("en");
     });
-})
-;
+});
 </script>
 </head>
 <body>
@@ -294,7 +297,7 @@ $(document).ready(function () {
 
         <div class="row redpen-fixed-row">
             <div class="col-md-5">
-                <textarea id="redpen-editor" class="form-control" rows="16" autofocus
+                <textarea id="redpen-editor" class="form-control" autofocus
                           placeholder="Type or paste a document here..."></textarea>
                 <button type="button" class="btn btn-sm redpen-clear-button" onclick="clearResult()">Clear</button>
             </div>
