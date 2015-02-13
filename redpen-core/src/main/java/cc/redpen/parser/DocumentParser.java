@@ -23,6 +23,9 @@ import cc.redpen.tokenizer.RedPenTokenizer;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -32,24 +35,24 @@ public interface DocumentParser {
     /**
      * Given input stream, return Document instance from a stream.
      *
-     * @param is input stream containing input content
+     * @param is                input stream containing input content
      * @param sentenceExtractor SentenceExtractor object
-     * @param tokenizer tokenizer
+     * @param tokenizer         tokenizer
      * @return a generated file content
      * @throws cc.redpen.RedPenException if Parser failed to parse input.
      */
     public default Document parse(InputStream is, SentenceExtractor sentenceExtractor, RedPenTokenizer tokenizer)
             throws RedPenException {
-        return this.parse(is, Optional.empty(), sentenceExtractor,tokenizer);
+        return this.parse(is, Optional.empty(), sentenceExtractor, tokenizer);
     }
 
     /**
      * Given input stream, return Document instance from a stream.
      *
-     * @param io input stream containing input content
-     * @param fileName file name
+     * @param io                input stream containing input content
+     * @param fileName          file name
      * @param sentenceExtractor SentenceExtractor object
-     * @param tokenizer tokenizer
+     * @param tokenizer         tokenizer
      * @return a generated file content
      * @throws cc.redpen.RedPenException if Parser failed to parse input.
      */
@@ -59,9 +62,9 @@ public interface DocumentParser {
     /**
      * Given content, return Document instance for the specified file.
      *
-     * @param content input content
+     * @param content           input content
      * @param sentenceExtractor SentenceExtractor object
-     * @param tokenizer tokenizer
+     * @param tokenizer         tokenizer
      * @return a generated file content
      * @throws cc.redpen.RedPenException if Parser failed to parse input.
      */
@@ -71,9 +74,9 @@ public interface DocumentParser {
     /**
      * Given input file name, return Document instance for the specified file.
      *
-     * @param file input file
+     * @param file              input file
      * @param sentenceExtractor SentenceExtractor object
-     * @param tokenizer tokenizer
+     * @param tokenizer         tokenizer
      * @return a generated file content
      * @throws cc.redpen.RedPenException if Parser failed to parse input.
      */
@@ -84,16 +87,20 @@ public interface DocumentParser {
     public static final DocumentParser WIKI = new WikiParser();
     public static final DocumentParser MARKDOWN = new MarkdownParser();
 
+    public static final Map<String, DocumentParser> PARSER_MAP = Collections.unmodifiableMap(
+            new HashMap<String, DocumentParser>() {
+                {
+                    put("PLAIN", PLAIN);
+                    put("WIKI", WIKI);
+                    put("MARKDOWN", MARKDOWN);
+                }
+            });
+
     static DocumentParser of(String parserType) {
-        switch (parserType.toUpperCase()){
-            case "PLAIN" :
-                return PLAIN;
-            case "WIKI" :
-                return WIKI;
-            case "MARKDOWN":
-                return MARKDOWN;
-            default :
-                throw new IllegalArgumentException("no such parser for :" + parserType);
+        DocumentParser parser = PARSER_MAP.get(parserType.toUpperCase());
+        if (parser == null) {
+            throw new IllegalArgumentException("no such parser for :" + parserType);
         }
+        return parser;
     }
 }

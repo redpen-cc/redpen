@@ -1,10 +1,51 @@
 /* colours to match redpen theme from redpen.cc */
 body {
     background-color: #c0c5b2;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+h1, h2, h3, h4 {
+    color: #414439;
+}
+
+a {
+    color: rgb(62, 63, 58);
+    cursor: pointer;
+}
+
+a:hover {
+    color: rgb(62, 63, 58);
+    cursor: pointer;
+}
+
+label {
+    margin-bottom: 0px;
+}
+
+textarea {
+    resize: none;
+}
+
+.navbar-default {
+    background-color: rgba(114, 117, 106, 1);
+    border-color: rgb(107, 110, 100);
+}
+
+.navbar-default .navbar-nav>li>a {
+    color: #eee;
+    text-transform: uppercase;
+    font-size: 11px;
+    line-height: 22px;
+    font-weight: 500;
+}
+
+.dropdown-menu>li>a {
+    text-transform: uppercase;
+    font-size: 11px;
 }
 
 .navbar-brand {
-    padding-top: 15px;
+    padding-top: 11px;
 }
 
 .navbar-brand img {
@@ -20,16 +61,9 @@ body {
     color: red;
 }
 
-a {
-    color: rgb(62, 63, 58);
-    cursor: pointer;
+.radio, .checkbox {
+    margin-top: 0;
 }
-
-a:hover {
-    color: rgb(62, 63, 58);
-    cursor: pointer;
-}
-
 
 #main {
     position: absolute;
@@ -40,20 +74,70 @@ a:hover {
 }
 
 #redpen-editor {
+    padding: 19px;
+}
+
+#redpen-editor,
+#redpen-results {
+    min-height: 100%;
+    height: 100%;
     overflow: auto;
 }
 
-.redpen-fixed-height {
+#redpen-results h4 {
+    margin-top: 0;
+}
+
+.col-md-5 {
+    padding-right: 0;
+}
+
+.redpen-fixed-container {
     height: 100%;
 }
 
-.redpen-editor-panel {
+.redpen-fixed-row {
+    height: 80%;
 }
 
-#redpen-results {
-    max-height: 42%;
-    padding-bottom: 8px;
-    overflow: auto;
+.redpen-fixed-row>div {
+    height: 100%;
+}
+
+.redpen-error-sentence {
+    background-image: url(../images/redpen-logo-nib-icon.png);
+    background-size: 16px 16px;
+    background-position: left 5px;
+    background-repeat: no-repeat;
+    padding-left: 18px;
+}
+
+.redpen-error-message {
+    color: rgb(205, 31, 0);
+}
+
+.redpen-info-message {
+    color: rgb(74, 152, 100);
+    background-image: url(../images/redpen-logo-nib-icon.png);
+    background-size: 16px 16px;
+    background-position: left 5px;
+    background-repeat: no-repeat;
+    padding-left: 18px;
+}
+
+.redpen-clear-button {
+    margin-top: 4px;
+}
+
+.redpen-error-validator {
+    display: inline-block;
+    padding: 1px;
+    margin-left: 2px;
+    font-size: 9px;
+    background-color: #aaa;
+    color: white;
+    border-radius: 4px;
+    vertical-align: middle;
 }
 
 .redpen-red {
@@ -88,6 +172,11 @@ a:hover {
 
 .redpen-config-summary-panel tr {
     vertical-align: top;
+}
+
+.redpen-validators {
+    font-size: 12px;
+    line-height: 20px;
 }
 
 

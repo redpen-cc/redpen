@@ -37,12 +37,12 @@ public class RedPenService {
     private final static String DEFAULT_INTERNAL_CONFIG_PATH = "/conf/redpen-conf.xml";
     private final static String DEFAULT_LANGUAGE = "default";
 
-    private Map<String, RedPen> langRedPenMap = new HashMap<>();
+    private static Map<String, RedPen> langRedPenMap = new HashMap<>();
 
     public RedPenService(ServletContext context) {
         synchronized (this) {
             if (langRedPenMap.size() == 0) {
-                LOG.info("Starting Document Validator Server.");
+                LOG.info("Creating RedPen instances");
                 try {
                     RedPen englishRedPen = new RedPen(DEFAULT_INTERNAL_CONFIG_PATH);
                     langRedPenMap.put("en", englishRedPen);

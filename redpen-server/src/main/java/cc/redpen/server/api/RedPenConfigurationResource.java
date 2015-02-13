@@ -21,6 +21,7 @@ package cc.redpen.server.api;
 import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
 import cc.redpen.config.ValidatorConfiguration;
+import cc.redpen.parser.DocumentParser;
 import org.apache.wink.common.annotations.Workspace;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -47,40 +48,50 @@ public class RedPenConfigurationResource {
     @Context
     private ServletContext context;
 
-    @Path("/redpen")
+    @Path("/redpens")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @WinkAPIDescriber.Description("Return the available RedPens matching the supplied language (default is all languages)")
+    @WinkAPIDescriber.Description("Return the configuration for available redpens matching the supplied language (default is any language)")
     public Response getRedPens(@QueryParam("lang") @DefaultValue("") String lang) throws RedPenException {
-        LOG.info("Looking for RedPens");
-        Map<String, RedPen> redpens = new RedPenService(context).getRedPens();
-        final JSONObject json = new JSONObject();
-        redpens.forEach(new BiConsumer<String, RedPen>() {
-            @Override
-            public void accept(String redPenLang, RedPen redPen) {
-                if ((lang == null) || lang.isEmpty() || redPenLang.contains(lang)) {
-                    try {
-                        // add some configuration items
-                        JSONObject config = new JSONObject();
-                        config.put("language", redPen.getConfiguration().getLang());
-                        config.put("tokenizer", redPen.getConfiguration().getTokenizer().getClass().getName());
-                        config.put("symbolTable", redPen.getConfiguration().getSymbolTable().getClass().getName());
-                        config.put("sentenceExtractor", redPen.getSentenceExtractor().getClass().getName());
 
-                        // validators
-                        JSONArray validators = new JSONArray();
-                        for (ValidatorConfiguration validator : redPen.getConfiguration().getValidatorConfigs()) {
-                            validators.put(validator.getConfigurationName());
+        JSONObject response = new JSONObject();
+
+        // add the known document formats
+        try {
+            response.put("documentParsers", DocumentParser.PARSER_MAP.keySet());
+
+            // add matching configurations
+            Map<String, RedPen> redpens = new RedPenService(context).getRedPens();
+            final JSONObject redpensJSON = new JSONObject();
+            response.put("redpens", redpensJSON);
+            redpens.forEach(new BiConsumer<String, RedPen>() {
+                @Override
+                public void accept(String configurationName, RedPen redPen) {
+                    if ((lang == null) || lang.isEmpty() || redPen.getConfiguration().getLang().contains(lang)) {
+                        try {
+                            // add specific configuration items
+                            JSONObject config = new JSONObject();
+                            config.put("lang", redPen.getConfiguration().getLang());
+                            config.put("tokenizer", redPen.getConfiguration().getTokenizer().getClass().getName());
+
+                            // add the names of the validators
+                            JSONArray validatorConfigs = new JSONArray();
+                            for (ValidatorConfiguration validator : redPen.getConfiguration().getValidatorConfigs()) {
+                                validatorConfigs.put(validator.getConfigurationName());
+                            }
+                            config.put("validators", validatorConfigs);
+
+                            redpensJSON.put(configurationName, config);
+                        } catch (Exception e) {
+                            LOG.error("Exception when rendering RedPen to JSON for configuration " + configurationName, e);
                         }
-                        config.put("validators", validators);
-
-                        json.put(redPenLang, config);
-                    } catch (Exception e) {
-                        LOG.error("Exception when rendering RedPen to JSON for lang=" + redPenLang, e);
                     }
                 }
-            }
-        });
-        return Response.ok().entity(json).build();
+            });
+        } catch (Exception e) {
+            LOG.error("Exception when rendering RedPen to JSON", e);
+        }
+
+        return Response.ok().entity(response).build();
     }
 }

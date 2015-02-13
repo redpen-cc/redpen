@@ -1,127 +1,254 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="shortcut icon" type="image/png" href="images/redpen-logo-nib-icon.png"/>
+<link rel="shortcut icon" type="image/png" href="images/redpen-logo-nib-icon.png"/>
 
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/bootstrap-sandstone.min.css" rel="stylesheet">
+<link href="css/bootstrap.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="css/redpen.css"/>
-    <title>RedPen Demo</title>
+<link rel="stylesheet" type="text/css" href="css/redpen.css"/>
+<title>RedPen Demo</title>
 
-    <script src="js/jquery-1.11.0.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+<script src="js/jquery-1.11.0.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
 
-    <script src="js/redpen.js"></script>
+<!--redpen api-->
+<script src="js/redpen.js"></script>
 
-    <script>
+<script>
 
-        var sampleText = {
-            "en": "Some software tools work in more than one machine, and such distributed (cluster)systems can handle huge data or tasks, because such software tools make use of large amount of computer resources.\n" +
-                    "In this article, we'll call a computer server that works as a member of a cluster an \"instance\". for example, each instance in distributed search engines stores the the fractions of data.\n" +
-                    "Such distriubuted systems need a component to merge the preliminary results from member instnaces.",
-            "ja": "最近利用されているソフトウェアの中には複数の計算機上で動作（分散）するものが多く存在し、このような分散ソフトウェアは複数の計算機で動作することで大量のデータを扱えたり，高負荷な状況に対処できたりします。\n" +
-                    "本稿では,複数の計算機（クラスタ）でで動作する各サーバーを「インスタンス」と呼びまます。\n" +
-                    "たとえば検索エンジンやデータベースではインデックスを複数のインスタンスで分割して保持します。\n" +
-                    "このような場合、各インデクスの結果をマージしてclientプログラムに渡す機構が必要となります。"
+// some sample documents and the parser to use to parse them
+var sampleDocuments = {
+    en: {parser: "PLAIN", document: "Some software tools work in more than one machine, and such distributed (cluster)systems can handle huge data or tasks, because such software tools make use of large amount of computer resources.\n" +
+            "In this article, we'll call a computer server that works as a member of a cluster an \"instance\". for example, each instance in distributed search engines stores the the fractions of data.\n" +
+            "Such distriubuted systems need a component to merge the preliminary results from member instnaces."},
+    ja: {parser: "PLAIN", document: "最近利用されているソフトウェアの中には複数の計算機上で動作（分散）するものが多く存在し、このような分散ソフトウェアは複数の計算機で動作することで大量のデータを扱えたり，高負荷な状況に対処できたりします。\n" +
+            "本稿では,複数の計算機（クラスタ）でで動作する各サーバーを「インスタンス」と呼びまます。\n" +
+            "たとえば検索エンジンやデータベースではインデックスを複数のインスタンスで分割して保持します。\n" +
+            "このような場合、各インデクスの結果をマージしてclientプログラムに渡す機構が必要となります。"},
+    en_md: { parser: "MARKDOWN", document: "# Instances\n" +
+            "Some software tools work in more than one machine, and such _distributed_ (cluster)systems can handle huge data or tasks, because such software tools make use of large amount of computer resources, such as\n" +
+            "* CPU\n* Disk\n* Memory\n\n" +
+            "In this article, we'll call a computer server that works as a member of a cluster an _instance_. for example, each instance in distributed search engines stores the the fractions of data." +
+            " Such distriubuted systems need a component to merge the preliminary results from member instnaces."},
+    ja_md: {parser: "MARKDOWN", document: "# 分散処理\n最近利用されているソフトウェアの中には複数の計算機上で動作（分散）するものが多く存在し、このような分散ソフトウェアは複数の計算機で動作することで大量のデータを扱えたり，高負荷な状況に対処できたりします。\n" +
+            "本稿では,複数の計算機（クラスタ）でで動作する各サーバーを_「インスタンス」_と呼びまます。\n" +
+            "たとえば検索エンジンやデータベースではインデックスを複数のインスタンスで分割して保持します。\n" +
+            "このような場合、各インデクスの結果をマージして_clientプログラム_に渡す機構が必要となります。"}
+};
+
+
+// ensure the language autodetect doesn't override the user's selection
+var permitLanguageAutoDetect = true;
+
+// clear editor and results
+function clearResult() {
+    $('#redpen-editor').val('').trigger("change");
+}
+
+// paste some sample text into the editor and trigger a change
+function pasteSampleText(key) {
+    if (sampleDocuments[key]) {
+        permitLanguageAutoDetect = true;
+        $("#redpen-document-parser").val(sampleDocuments[key].parser);
+        $("#redpen-editor").val(sampleDocuments[key].document).trigger("change");
+    }
+}
+
+$(document).ready(function () {
+    // debouncer for user input
+    var validateTimeout = 0;
+
+    // load the configuration and build the options and controls
+    redpen.getRedPens(function (configuration) {
+
+        var editor = $('#redpen-editor');
+        var configSelect = $("#redpen-configuration");
+        var languageSelect = $("#redpen-language");
+        var documentParserSelect = $("#redpen-document-parser");
+
+        var discoveredLanguages = {};
+        var validatorConfiguration = {};
+
+        // build options for each configured redpen
+        for (var redpenName in configuration.redpens) {
+            var config = configuration.redpens[redpenName];
+            $(configSelect).append(
+                    $('<option></option>')
+                            .prop("value", redpenName)
+                            .data("lang", config.lang)
+                            .text(redpenName)
+            );
+            discoveredLanguages[config.lang] = true;
+            var validatorCheckboxes = $('<div></div>').addClass('redpen-validators');
+            validatorConfiguration[redpenName] = validatorCheckboxes;
+            for (var i = 0; i < config.validators.length; i++) {
+                var validatorName = config.validators[i];
+                $(validatorCheckboxes).append(
+                        $('<div></div>')
+                                .addClass("checkbox")
+                                .append(
+                                        $('<label></label>')
+                                                .append(
+                                                        $('<input/>')
+                                                                .prop("type", "checkbox")
+                                                                .prop("checked", true)
+                                                                .prop("value", validatorName)
+                                                )
+                                                .append(validatorName)
+                                )
+                );
+            }
+        }
+
+        // populate the language options
+        for (var language in discoveredLanguages) {
+            $(languageSelect).append(
+                    $('<option></option>')
+                            .prop("value", language)
+                            .text(language)
+            );
+        }
+
+        // populate the document parser options
+        for (var i = 0; i < configuration.documentParsers.length; i++) {
+            var parser = configuration.documentParsers[i];
+            $(documentParserSelect).append(
+                    $('<option></option>')
+                            .prop("value", parser)
+                            .text(parser)
+            );
+        }
+
+        // set the document parser
+        var setDocumentParser = function (parser) {
+            $(documentParserSelect).val(parser);
         };
 
-        // call redpen's validate
-        function validateDocument() {
-            redpen.validate(
+        // ensure the options displayed are appropriate for the selected language
+        var setLanguage = function (lang) {
+            var firstValidRedpen = false;
+            $(configSelect).find("option").each(function () {
+                var valid = $(this).data("lang") == lang;
+                $(this).toggle(valid);
+                if (valid && !firstValidRedpen) {
+                    firstValidRedpen = $(this).val();
+                }
+            });
+            $(configSelect).val(firstValidRedpen);
+            $(languageSelect).val(lang);
+            showConfigurationOptions(firstValidRedpen);
+        };
+
+        // call RedPen to validate the document and display any errors
+        var validateDocument = function () {
+            redpen.validateBySentence(
                     {
-                        document: $('#redpen-editor').val(),
-                        lang: $("input:radio[name=redpen-lang]:checked").val()
+                        document: $(editor).val(),
+                        lang: $(languageSelect).val(),
+                        documentParser: $(documentParserSelect).val()
                     },
                     function (data) {
                         var errors = data['errors'];
                         if (errors.length) {
+
+                            // get a list of the checked validators
+                            var validators = {};
+                            $("#redpen-active-validators").find("input:checked").each(function () {
+                                validators[$(this).val()] = true;
+                            });
+
+                            // display the errors
                             var results = $('#redpen-results')
                                     .empty()
-                                    .addClass('well')
                                     .append($('<h4></h4>')
                                             .html('<span class="redpen-red">Red</span>Pen found the following errors:')
                                     );
 
                             for (var i = 0; i < errors.length; i++) {
-                                results.append(
-                                        $('<div></div>')
-                                                .addClass('bg-warning')
-                                                .append($('<p></p>')
-                                                        .addClass('alert-warning')
-                                                        .html(errors[i]['message']))
-                                                .append($('<p></p>')
-                                                        .html(errors[i]['sentence']))
-                                );
+                                var errorDiv = $('<div></div>');
+                                var errorList = $('<ul></ul>');
+                                results.append(errorDiv);
+                                $(errorDiv)
+                                        .append($('<p></p>')
+                                                .addClass('redpen-error-sentence')
+                                                .html(errors[i].sentence)
+                                        )
+                                        .append(errorList);
+
+                                for (var j = 0; j < errors[i].errors.length; j++) {
+                                    if (validators[errors[i].errors[j].validator]) {
+                                        $(errorList).append($('<li></li>')
+                                                .addClass('redpen-error-message')
+                                                .append(errors[i].errors[j].message)
+                                                .append($("<div></div>")
+                                                        .addClass('redpen-error-validator')
+                                                        .text(errors[i].errors[j].validator)
+                                                )
+                                        )
+                                    }
+                                }
                             }
                         }
                         else {
                             $('#redpen-results')
                                     .empty()
-                                    .append($('<p></p>')
-                                            .addClass('alert-info')
-                                            .html('No errors detected!')
+                                    .append($('<h4></h4>')
+                                            .html('<span class="redpen-red">Red</span>Pen found no errors.')
                                     );
                         }
                     });
-        }
+        };
 
-        // clear editor and results
-        function clearResult() {
-            $('#redpen-editor').val('');
-            $('#redpen-results').empty().removeClass("well");
-        }
+        // show the options for a given redpen
+        var showConfigurationOptions = function (redpenName) {
+            $("#redpen-active-validators")
+                    .empty()
+                    .append(validatorConfiguration[redpenName])
+                    .find('input').click(validateDocument);
 
-        function pasteSampleText(lang) {
-            $("#redpen-editor").val(sampleText[lang]).trigger("change");
-        }
+        };
 
-        // simplistic language check
-        $(document).ready(function () {
-            var editorChanged = function () {
-                var lang = redpen.detectLanguage($(this).val());
-                $("input:radio[name=redpen-lang][value=" + lang + "]").prop("checked", true);
-            };
-            $("#redpen-editor")
-                    .change(editorChanged)
-                    .bind("keyup", editorChanged);
+        // revalidate the document using the currently selected options
+        var delayedRevalidateDocument = function () {
+            if (permitLanguageAutoDetect) {
+                redpen.detectLanguage($(this).val(), function (lang) {
+                    setLanguage(lang);
+                });
+            }
+            // debounce changes
+            clearTimeout(validateTimeout);
+            validateTimeout = setTimeout(validateDocument, 250);
+        };
 
-            redpen.getConfiguration(function (configData) {
-                for (var configItem in configData) {
-                    var config = configData[configItem];
-                    var summary = $('<div></div>').addClass("redpen-config-summary-panel");
-                    var table = $('<table></table>');
-                    for (var setting in config) {
-                        var value;
-                        if (config[setting].constructor == Array) {
-                            value = '';
-                            for (var i = 0; i < config[setting].length; i++) {
-                                value += "<input type='checkbox' checked/>&nbsp;" +
-                                        config[setting][i] + "<br/>";
-                            }
-                        }
-                        else {
-                            value = config[setting];
-                        }
-                        $(table).append($("<tr></tr>").append(
-                                        $('<th></th>').html(setting)).append(
-                                        $('<td></td>').html(value)));
-                    }
-                    $(summary)
-                            .append($('<div></div>')
-                                    .addClass("redpen-config-summary-panel-header")
-                                    .html("Configuration: " + configItem))
-                            .append(table);
-                    $("#redpen-config-summary").append(summary);
-                }
-            });
+        // bind events
+        $(editor)
+                .change(delayedRevalidateDocument)
+                .bind("keyup", delayedRevalidateDocument);
+
+        $(documentParserSelect).change(validateDocument);
+
+        $(languageSelect).change(function () {
+            permitLanguageAutoDetect = false; // prevent auto-detection from subsequently overriding the user's selection
+            setLanguage($(this).val());
+            validateDocument();
         });
 
-    </script>
+        $(configSelect).change(function () {
+            showConfigurationOptions($(this).val());
+            validateDocument();
+        });
+
+        // set the initial state
+        setDocumentParser("PLAIN");
+        setLanguage("en");
+        pasteSampleText("en");
+    });
+});
+</script>
 </head>
 <body>
 
@@ -142,8 +269,10 @@
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="themes">Examples
                             <span class="caret"></span></a>
                         <ul class="dropdown-menu" aria-labelledby="themes">
-                            <li><a onclick="pasteSampleText('en')">Sample English Text</a></li>
-                            <li><a onclick="pasteSampleText('ja')">Sample Japanese Text</a></li>
+                            <li><a onclick="pasteSampleText('en')">English Text</a></li>
+                            <li><a onclick="pasteSampleText('ja')">Japanese Text</a></li>
+                            <li><a onclick="pasteSampleText('en_md')">English Markdown</a></li>
+                            <li><a onclick="pasteSampleText('ja_md')">Japanese Markdown</a></li>
                             <!--<li class="divider"></li>-->
                         </ul>
                     </li>
@@ -160,45 +289,46 @@
 </section>
 
 <section id="main">
-    <div class="container redpen-fixed-height">
-        <div class="redpen-editor-panel">
-            <h1>Welcome to <span class="redpen-red">Red</span>Pen!</h1>
+    <div class="container redpen-fixed-container">
+        <h1>Welcome to <span class="redpen-red">Red</span>Pen!</h1>
 
-            <p>To try the <span class="redpen-red">Red</span>Pen validator, please type or paste some text into the box
-                and click Validate.</p>
+        <p>To try the <span class="redpen-red">Red</span>Pen validator, please type or paste some text into
+            the left-hand box.</p>
 
-            <div class="well">
-                <form>
-                    <div class="form-group">
-                        <textarea id="redpen-editor" class="form-control" rows="7" autofocus
-                                  placeholder="Copy and paste a document here..."></textarea>
-                    </div>
-
-                    <div class="form-group pull-right">
-                        <label class="radio-inline">
-                            <input type="radio" name="redpen-lang" id="langRadio1" value="en" checked>English
-                        </label>
-                        <label class="radio-inline">
-                            <input type="radio" name="redpen-lang" id="langRadio1" value="ja">Japanese
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <button type="button" class="btn btn-primary" onclick="validateDocument()">
-                            Validate
-                        </button>
-                        <button type="button" class="btn" onclick="clearResult()">Clear
-                        </button>
-                    </div>
-                </form>
+        <div class="row redpen-fixed-row">
+            <div class="col-md-5">
+                <textarea id="redpen-editor" class="form-control" autofocus
+                          placeholder="Type or paste a document here..."></textarea>
+                <button type="button" class="btn btn-sm redpen-clear-button" onclick="clearResult()">Clear</button>
             </div>
-        </div>
-        <div id="redpen-results">
-        </div>
-        <div>
-            <a data-toggle="collapse" data-target="#redpen-config-summary">Active RedPen Configurations <span
-                    class="caret"></span></a>
+            <div class="col-md-5">
+                <div id="redpen-results" class="well">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="control-label">Document Parser
+                        <select id="redpen-document-parser" class="form-control"></select>
+                    </label>
+                </div>
 
-            <div id="redpen-config-summary" class="collapse">
+                <div class="form-group">
+                    <label class="control-label">Language
+                        <select id="redpen-language" class="form-control"></select>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Configuration
+                        <select id="redpen-configuration" class="form-control"> </select>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Validators</label>
+
+                    <div id="redpen-active-validators"></div>
+                </div>
             </div>
         </div>
     </div>
