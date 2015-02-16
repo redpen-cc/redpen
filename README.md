@@ -30,6 +30,7 @@ Links
 * [Atom Editor package by griffin-stewie](https://atom.io/packages/redpen)
 * [RubyGem by akinomurasame](https://rubygems.org/gems/redpen_ruby)
 * [Homebrew formula by Kozo Nishida](http://braumeister.org/formula/redpen)
+* [Android App by Shintaro Katafuchi](https://play.google.com/store/apps/details?id=cc.redpen)
 
 Deploy
 ======
