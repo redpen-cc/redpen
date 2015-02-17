@@ -35,7 +35,7 @@ import java.util.Optional;
 /**
  * Parser for plain text file.
  */
-final class PlainTextParser extends BaseDocumentParser implements Serializable{
+final class PlainTextParser extends BaseDocumentParser implements Serializable {
     private static final Logger LOG =
             LoggerFactory.getLogger(PlainTextParser.class);
     private static final long serialVersionUID = -4343255148183552844L;
@@ -84,14 +84,16 @@ final class PlainTextParser extends BaseDocumentParser implements Serializable{
     }
 
     private String extractSentences(int lineNum, String line, SentenceExtractor sentenceExtractor, Document.DocumentBuilder builder) {
+        int offset = 0;
         int periodPosition = sentenceExtractor.getSentenceEndPosition(line);
         if (periodPosition == -1) {
             return line;
         } else {
             while (true) {
-                builder.addSentence(
-                        line.substring(0, periodPosition + 1), lineNum);
-                line = line.substring(periodPosition + 1, line.length());
+                Sentence sentence = new Sentence(line.substring(0, periodPosition + 1), lineNum, offset);
+                builder.addSentence(sentence);
+                offset = periodPosition + 1;
+                line = line.substring(offset, line.length());
                 periodPosition = sentenceExtractor.getSentenceEndPosition(line);
                 if (periodPosition == -1) {
                     return line;

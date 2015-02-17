@@ -20,6 +20,24 @@
 
 <script>
 
+/**
+ * redpen: a text inspection tool
+ * Copyright (c) 2014-2015 Recruit Technologies Co., Ltd. and contributors
+ * (see CONTRIBUTORS.md)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 // some sample documents and the parser to use to parse them
 var sampleDocuments = {
     en: {parser: "PLAIN", document: "Some software tools work in more than one machine, and such distributed (cluster)systems can handle huge data or tasks, because such software tools make use of large amount of computer resources.\n" +
@@ -29,7 +47,7 @@ var sampleDocuments = {
             "本稿では,複数の計算機（クラスタ）でで動作する各サーバーを「インスタンス」と呼びまます。\n" +
             "たとえば検索エンジンやデータベースではインデックスを複数のインスタンスで分割して保持します。\n" +
             "このような場合、各インデクスの結果をマージしてclientプログラムに渡す機構が必要となります。"},
-    en_md: { parser: "MARKDOWN", document: "# Instances\n" +
+    en_md: {parser: "MARKDOWN", document: "# Instances\n" +
             "Some software tools work in more than one machine, and such _distributed_ (cluster)systems can handle huge data or tasks, because such software tools make use of large amount of computer resources, such as\n" +
             "* CPU\n* Disk\n* Memory\n\n" +
             "In this article, we'll call a computer server that works as a member of a cluster an _instance_. for example, each instance in distributed search engines stores the the fractions of data." +
@@ -51,11 +69,17 @@ function clearResult() {
 
 // paste some sample text into the editor and trigger a change
 function pasteSampleText(key) {
+    var text;
     if (sampleDocuments[key]) {
         permitLanguageAutoDetect = true;
+        text = sampleDocuments[key].document;
         $("#redpen-document-parser").val(sampleDocuments[key].parser);
-        $("#redpen-editor").val(sampleDocuments[key].document).trigger("change");
     }
+    $("#redpen-editor")
+            .val(text ? text : "")
+            .trigger("change")
+            .prop("disabled", false)
+            .prop("placeholder", "Please type or paste some text here...");
 }
 
 $(document).ready(function () {
@@ -143,6 +167,34 @@ $(document).ready(function () {
             showConfigurationOptions(firstValidRedpen);
         };
 
+        // highlight a line in the editor
+        var highlightEditor = function (error) {
+            if (error) {
+                var document = $(editor).val();
+                var start;
+                var end;
+
+                start = document.indexOf(error.sentence);
+                end = start + error.sentence.length;
+                if (start < 0) {
+                    start = document.length;
+                    end = start;
+                }
+                var textarea = $(editor)[0];
+
+                if (textarea.setSelectionRange) {
+                    textarea.focus();
+                    textarea.setSelectionRange(start, end);
+                } else if (textarea.createTextRange) {
+                    var range = textarea.createTextRange();
+                    range.collapse(true);
+                    range.moveEnd('character', end);
+                    range.moveStart('character', start);
+                    range.select();
+                }
+            }
+        };
+
         // call RedPen to validate the document and display any errors
         var validateDocument = function () {
             redpen.validateBySentence(
@@ -168,29 +220,40 @@ $(document).ready(function () {
                                             .html('<span class="redpen-red">Red</span>Pen found the following errors:')
                                     );
 
-                            for (var i = 0; i < errors.length; i++) {
-                                var errorDiv = $('<div></div>');
+                            var addError = function (error) {
+                                var errorDiv = $('<div></div>')
+                                        .addClass('redpen-error-section')
+                                        .mouseenter(function () {
+                                            highlightEditor(error);
+                                        })
+                                        .mouseleave(function () {
+                                            highlightEditor(false);
+                                        });
                                 var errorList = $('<ul></ul>');
                                 results.append(errorDiv);
                                 $(errorDiv)
                                         .append($('<p></p>')
                                                 .addClass('redpen-error-sentence')
-                                                .html(errors[i].sentence)
+                                                .html(error.sentence)
                                         )
                                         .append(errorList);
 
-                                for (var j = 0; j < errors[i].errors.length; j++) {
-                                    if (validators[errors[i].errors[j].validator]) {
+                                for (var j = 0; j < error.errors.length; j++) {
+                                    if (validators[error.errors[j].validator]) {
                                         $(errorList).append($('<li></li>')
                                                 .addClass('redpen-error-message')
-                                                .append(errors[i].errors[j].message)
+                                                .append(error.errors[j].message)
                                                 .append($("<div></div>")
                                                         .addClass('redpen-error-validator')
-                                                        .text(errors[i].errors[j].validator)
+                                                        .text(error.errors[j].validator)
                                                 )
                                         )
                                     }
                                 }
+                            };
+                            for (var i = 0; i < errors.length; i++) {
+                                addError(errors[i]);
+
                             }
                         }
                         else {
@@ -247,7 +310,8 @@ $(document).ready(function () {
         setLanguage("en");
         pasteSampleText("en");
     });
-});
+})
+;
 </script>
 </head>
 <body>
@@ -293,12 +357,12 @@ $(document).ready(function () {
         <h1>Welcome to <span class="redpen-red">Red</span>Pen!</h1>
 
         <p>To try the <span class="redpen-red">Red</span>Pen validator, please type or paste some text into
-            the left-hand box.</p>
+            the first box.</p>
 
         <div class="row redpen-fixed-row">
             <div class="col-md-5">
-                <textarea id="redpen-editor" class="form-control" autofocus
-                          placeholder="Type or paste a document here..."></textarea>
+                <textarea disabled id="redpen-editor" class="form-control" autofocus
+                          placeholder="Please wait..."></textarea>
                 <button type="button" class="btn btn-sm redpen-clear-button" onclick="clearResult()">Clear</button>
             </div>
             <div class="col-md-5">

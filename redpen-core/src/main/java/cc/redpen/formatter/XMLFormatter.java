@@ -47,8 +47,8 @@ import java.util.Map;
  * XML Output formatter.
  */
 public class XMLFormatter extends Formatter {
-
     private static final Logger LOG = LoggerFactory.getLogger(XMLFormatter.class);
+
     private DocumentBuilder db;
     private final Transformer transformer;
 
@@ -78,14 +78,15 @@ public class XMLFormatter extends Formatter {
         for (cc.redpen.model.Document document : docErrorsMap.keySet()) {
             List<ValidationError> errors = docErrorsMap.get(document);
             for (ValidationError error : errors) {
-                writer.write(writeError(document, error));
+                writer.write(formatError(document, error));
             }
         }
         writer.write("</validation-result>");
         writer.flush();
     }
 
-    private String writeError(cc.redpen.model.Document document, ValidationError error) throws RedPenException {
+    @Override
+    public String formatError(cc.redpen.model.Document document, ValidationError error) throws RedPenException {
         // create dom
         Document doc = db.newDocument();
         Element errorElement = doc.createElement("error");

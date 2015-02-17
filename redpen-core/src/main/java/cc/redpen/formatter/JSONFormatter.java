@@ -32,87 +32,107 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * JSON Output formatter.
+ * JSON error formatter
  */
 public class JSONFormatter extends Formatter {
     private static final Logger LOG = LoggerFactory.getLogger(JSONFormatter.class);
 
-    /**
-     * format Validation Errors to JSONArray
-     * @param pw writer
-     * @param docErrorsMap map from document to list of errors
-     * @throws RedPenException when failed to write JSON to string
-     * @throws IOException when failed to write JSON to string
-     */
     @Override
     public void format(PrintWriter pw, Map<Document, List<ValidationError>> docErrorsMap) throws RedPenException, IOException {
         BufferedWriter writer = new BufferedWriter(new PrintWriter(pw));
-        try {
-            writer.write(toJSONArray(docErrorsMap).toString());
-        } catch (JSONException e) {
-            throw new RedPenException(e);
-        }
+        JSONArray errors = new JSONArray();
+        docErrorsMap.forEach((doc, errorList) -> errors.put(asJSON(doc, errorList)));
+        writer.write(errors.toString());
         writer.flush();
     }
 
-    /**
-     * format Validation Errors to JSON
-     * @param document document
-     * @param errors list of errors
-     * @return JSON formatted errors
-     */
     @Override
     public String format(Document document, List<ValidationError> errors) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         BufferedWriter writer = new BufferedWriter(new PrintWriter(baos));
-        Map<Document, List<ValidationError>> docErrorsMap = new HashMap<>();
-        docErrorsMap.put(document, errors);
         try {
-            writer.write(toJSONArray(docErrorsMap).get(0).toString());
+            writer.write(asJSON(document, errors).toString());
             writer.flush();
-        } catch (JSONException | IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
         return new String(baos.toByteArray(), StandardCharsets.UTF_8);
     }
 
-    private JSONArray toJSONArray(Map<Document, List<ValidationError>> docErrorsMap) throws JSONException {
-        JSONArray json = new JSONArray();
-        for (cc.redpen.model.Document document : docErrorsMap.keySet()) {
-            JSONObject docError = new JSONObject();
-            if (document.getFileName().isPresent()) {
-                docError.put("document", document.getFileName().get());
-            }
-            JSONArray jsonErrors = new JSONArray();
-            List<ValidationError> errors = docErrorsMap.get(document);
-            for (ValidationError error : errors) {
-                JSONObject jsonError = new JSONObject();
-                jsonError.put("sentence", error.getSentence().getContent());
-                jsonError.put("message", error.getMessage());
-                jsonError.put("lineNum", error.getLineNumber());
-                jsonError.put("validator", error.getValidatorName());
-                jsonError.put("sentenceStartColumnNum", error.getStartColumnNumber());
-                if (error.getStartPosition().isPresent()) {
-                    LineOffset e = error.getStartPosition().get();
-                    jsonError.put("errorStartPosition", new StringBuilder().append(e.lineNum)
-                            .append(",").append(e.offset).toString());
-                }
-                if (error.getEndPosition().isPresent()) {
-                    LineOffset e = error.getEndPosition().get();
-                    jsonError.put("errorEndPosition", new StringBuilder().append(e.lineNum)
-                            .append(",").append(e.offset).toString());
-                }
-                jsonErrors.put(jsonError);
-            }
-            docError.put("errors", jsonErrors);
-            json.put(docError);
+    @Override
+    public String formatError(Document document, ValidationError error) throws RedPenException {
+        try {
+            return asJSON(error).toString();
+        } catch (Exception e) {
+            throw new RedPenException(e);
+        }
+    }
+
+
+    /**
+     * Render a single redpen error as JSON
+     *
+     * @param error the redpen error
+     * @return a JSON object representing the redpen error
+     * @throws JSONException
+     */
+    protected JSONObject asJSON(ValidationError error) throws JSONException {
+        JSONObject jsonError = new JSONObject();
+
+        jsonError.put("sentence", error.getSentence().getContent());
+        jsonError.put("lineNum", error.getLineNumber());
+        jsonError.put("message", error.getMessage());
+        jsonError.put("validator", error.getValidatorName());
+        jsonError.put("sentenceStartColumnNum", error.getStartColumnNumber());
+        if (error.getStartPosition().isPresent()) {
+            jsonError.put("startPosition", asJSON(error.getStartPosition().get()));
+        }
+        if (error.getEndPosition().isPresent()) {
+            jsonError.put("endPosition", asJSON(error.getEndPosition().get()));
         }
 
-        return json;
+        return jsonError;
+    }
+
+    /**
+     * Render a line offset as JSON
+     *
+     * @param lineOffset the line offset
+     * @return a JSON object representing the line offset
+     */
+    protected JSONObject asJSON(LineOffset lineOffset) throws JSONException {
+        JSONObject offset = new JSONObject();
+        offset.put("lineNum", lineOffset.lineNum);
+        offset.put("offset", lineOffset.offset);
+        return offset;
+    }
+
+    /**
+     * Render as a JSON object a list of errors for a given document
+     *
+     * @param document the document that has the errors
+     * @param errors   a list of errors
+     * @return a JSON object representing the errors
+     */
+    protected JSONObject asJSON(Document document, List<ValidationError> errors) {
+
+        JSONObject jsonErrors = new JSONObject();
+        try {
+            if (document.getFileName().isPresent()) {
+                jsonErrors.put("document", document.getFileName().get());
+            }
+            JSONArray documentErrors = new JSONArray();
+            for (ValidationError error : errors) {
+                documentErrors.put(asJSON(error));
+            }
+            jsonErrors.put("errors", documentErrors);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        return jsonErrors;
     }
 }

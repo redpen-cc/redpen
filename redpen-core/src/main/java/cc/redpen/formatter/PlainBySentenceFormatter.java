@@ -30,10 +30,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Format errors as string messages.
+ * Format errors as string messages, collated by sentence
  */
-public final class PlainFormatter extends Formatter {
-    private static final Logger LOG = LoggerFactory.getLogger(PlainFormatter.class);
+public final class PlainBySentenceFormatter extends Formatter {
+    private static final Logger LOG = LoggerFactory.getLogger(PlainBySentenceFormatter.class);
 
     @Override
     public void format(PrintWriter pw, Map<Document, List<ValidationError>> docErrorsMap) throws RedPenException, IOException {
@@ -41,9 +41,20 @@ public final class PlainFormatter extends Formatter {
         BufferedWriter writer = new BufferedWriter(new PrintWriter(pw));
 
         for (Document document : docErrorsMap.keySet()) {
+            if (document.getFileName().isPresent()) {
+                writer.write("Document: " + document.getFileName().get() + "\n");
+            }
+
             List<ValidationError> errors = docErrorsMap.get(document);
+            errors.sort(JSONBySentenceFormatter.BY_SENTENCE_COMPARATOR);
+            ValidationError lastError = null;
             for (ValidationError error : errors) {
-                writer.write(formatError(document, error));
+                if (JSONBySentenceFormatter.BY_SENTENCE_COMPARATOR.compare(lastError, error) != 0) {
+                    writer.write("\tLine: " + error.getSentence().getLineNumber() + ", Offset: " + error.getSentence().getStartPositionOffset() + "\n");
+                    writer.write("\t\tSentence: " + error.getSentence().getContent() + "\n");
+                    lastError = error;
+                }
+                writer.write("\t\t\t" + formatError(document, error));
             }
         }
         try {
@@ -56,11 +67,8 @@ public final class PlainFormatter extends Formatter {
     @Override
     public String formatError(Document document, ValidationError error) {
         StringBuilder str = new StringBuilder();
-        document.getFileName().ifPresent(e -> str.append(e).append(":"));
-        str.append(error.getLineNumber());
-        str.append(": ValidationError[").append(error.getValidatorName()).append("], ");
+        str.append(error.getValidatorName()).append(": ");
         str.append(error.getMessage());
-        str.append(" at line: ").append(error.getSentence().getContent());
         str.append("\n");
         return str.toString();
     }
