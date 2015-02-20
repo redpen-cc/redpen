@@ -34,7 +34,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Map;
-import java.util.function.BiConsumer;
 
 /**
  * Resource to get and set RedPen configuration options.
@@ -64,27 +63,24 @@ public class RedPenConfigurationResource {
             Map<String, RedPen> redpens = new RedPenService(context).getRedPens();
             final JSONObject redpensJSON = new JSONObject();
             response.put("redpens", redpensJSON);
-            redpens.forEach(new BiConsumer<String, RedPen>() {
-                @Override
-                public void accept(String configurationName, RedPen redPen) {
-                    if ((lang == null) || lang.isEmpty() || redPen.getConfiguration().getLang().contains(lang)) {
-                        try {
-                            // add specific configuration items
-                            JSONObject config = new JSONObject();
-                            config.put("lang", redPen.getConfiguration().getLang());
-                            config.put("tokenizer", redPen.getConfiguration().getTokenizer().getClass().getName());
+            redpens.forEach((configurationName, redPen) -> {
+                if ((lang == null) || lang.isEmpty() || redPen.getConfiguration().getLang().contains(lang)) {
+                    try {
+                        // add specific configuration items
+                        JSONObject config = new JSONObject();
+                        config.put("lang", redPen.getConfiguration().getLang());
+                        config.put("tokenizer", redPen.getConfiguration().getTokenizer().getClass().getName());
 
-                            // add the names of the validators
-                            JSONArray validatorConfigs = new JSONArray();
-                            for (ValidatorConfiguration validator : redPen.getConfiguration().getValidatorConfigs()) {
-                                validatorConfigs.put(validator.getConfigurationName());
-                            }
-                            config.put("validators", validatorConfigs);
-
-                            redpensJSON.put(configurationName, config);
-                        } catch (Exception e) {
-                            LOG.error("Exception when rendering RedPen to JSON for configuration " + configurationName, e);
+                        // add the names of the validators
+                        JSONArray validatorConfigs = new JSONArray();
+                        for (ValidatorConfiguration validator : redPen.getConfiguration().getValidatorConfigs()) {
+                            validatorConfigs.put(validator.getConfigurationName());
                         }
+                        config.put("validators", validatorConfigs);
+
+                        redpensJSON.put(configurationName, config);
+                    } catch (Exception e) {
+                        LOG.error("Exception when rendering RedPen to JSON for configuration " + configurationName, e);
                     }
                 }
             });

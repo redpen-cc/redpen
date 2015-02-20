@@ -17,20 +17,11 @@
  */
 package cc.redpen;
 
-import cc.redpen.formatter.Formatter;
-import cc.redpen.formatter.JSONFormatter;
-import cc.redpen.formatter.PlainFormatter;
-import cc.redpen.formatter.XMLFormatter;
+import cc.redpen.formatter.*;
 import cc.redpen.model.Document;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.validator.ValidationError;
-import org.apache.commons.cli.BasicParser;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.OptionBuilder;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -148,11 +139,17 @@ public final class Main {
             case "plain":
                 formatter = new PlainFormatter();
                 break;
+            case "plain2":
+                formatter = new PlainBySentenceFormatter();
+                break;
             case "json":
                 formatter = new JSONFormatter();
                 break;
+            case "json2":
+                formatter = new JSONBySentenceFormatter();
+                break;
             default:
-                LOG.error("Unsupported format:" + resultFormat);
+                LOG.error("Unsupported format: " + resultFormat + " - please use xml, plain, plain2, json or json2");
                 return -1;
         }
 

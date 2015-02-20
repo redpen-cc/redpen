@@ -112,8 +112,10 @@ public class JSONFormatterTest extends Validator {
         assertEquals(1, jsonErrors.length());
         assertEquals(sampleText, jsonErrors.getJSONObject(0).getString("sentence"));
         assertEquals("0", jsonErrors.getJSONObject(0).getString("sentenceStartColumnNum"));
-        assertEquals("1,18", jsonErrors.getJSONObject(0).getString("errorStartPosition"));
-        assertEquals("1,19", jsonErrors.getJSONObject(0).getString("errorEndPosition"));
+        assertEquals("1", jsonErrors.getJSONObject(0).getJSONObject("startPosition").getString("lineNum"));
+        assertEquals("18", jsonErrors.getJSONObject(0).getJSONObject("startPosition").getString("offset"));
+        assertEquals("1", jsonErrors.getJSONObject(0).getJSONObject("endPosition").getString("lineNum"));
+        assertEquals("19", jsonErrors.getJSONObject(0).getJSONObject("endPosition").getString("offset"));
     }
 
 }

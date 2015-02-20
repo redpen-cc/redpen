@@ -33,17 +33,50 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * ResultDistributor flush the errors reported from Validators.
+ * Formatter - Format and write RedPen errors
  */
 public abstract class Formatter {
     private static final Logger LOG = LoggerFactory.getLogger(Formatter.class);
 
-    public abstract void format(PrintWriter pw, Map<Document, List<ValidationError>> docErrorsMap) throws RedPenException, IOException;
 
-    public void format(OutputStream os, Map<Document, List<ValidationError>> docErrorsMap) throws RedPenException, IOException {
-        format(new PrintWriter(os), docErrorsMap);
+    /**
+     * Format and print the errors for a set of documents
+     *
+     * @param printWriter  The printwriter destination for the errors
+     * @param docErrorsMap a map of documents to the corresponding list of errors
+     * @throws RedPenException
+     * @throws IOException
+     */
+    public abstract void format(PrintWriter printWriter, Map<Document, List<ValidationError>> docErrorsMap) throws RedPenException, IOException;
+
+    /**
+     * Format a single error as a string
+     *
+     * @param document the document the error is for
+     * @param error    the error to format
+     * @return A formatted error
+     * @throws RedPenException
+     */
+    public abstract String formatError(Document document, ValidationError error) throws RedPenException;
+
+    /**
+     * Format and print the errors for a set of documents
+     *
+     * @param outputStream the output stream destination for the errors
+     * @param docErrorsMap a map of documents to the corresponding list of errors
+     * @throws RedPenException
+     * @throws IOException
+     */
+    public void format(OutputStream outputStream, Map<Document, List<ValidationError>> docErrorsMap) throws RedPenException, IOException {
+        format(new PrintWriter(outputStream), docErrorsMap);
     }
 
+    /**
+     * Format errors for a set of documents as a String
+     *
+     * @param docErrorsMap a map of documents to the corresponding list of errors
+     * @return appropriately formatted errors per document
+     */
     public String format(Map<Document, List<ValidationError>> docErrorsMap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
@@ -55,6 +88,13 @@ public abstract class Formatter {
         return new String(baos.toByteArray(), StandardCharsets.UTF_8);
     }
 
+    /**
+     * Format the errors for a given document
+     *
+     * @param document the document
+     * @param errors   the list of errors for the document
+     * @return an appropriately formatted group of errors for the document
+     */
     public String format(Document document, List<ValidationError> errors) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Map<Document, List<ValidationError>> docErrorsMap = new HashMap<>();
