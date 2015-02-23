@@ -18,10 +18,14 @@
 package cc.redpen.parser.markdown;
 
 import cc.redpen.parser.LineOffset;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 public class MergedCandidateSentence {
+    private static final Logger LOG =
+            LoggerFactory.getLogger(MergedCandidateSentence.class);
 
     private int lineNum;
 
@@ -55,10 +59,17 @@ public class MergedCandidateSentence {
                 links.put(sentence.getOffsetMap().get(0), sentence.getLink());
             }
         }
+        if (offsetMap.size() != contents.length()) {
+            LOG.warn("Size of offset map (\"{}\") is not the same as sentence length \"{}\":  ",
+                    offsetMap.size(), contents.length(), contents);
+        }
         return Optional.of(new MergedCandidateSentence(lineNum, contents.toString(), links, offsetMap));
     }
 
     public List<String> getRangedLinks(int startPosition, int endPosition) {
+        if (startPosition >= offsetMap.size() || endPosition >= offsetMap.size()) {
+            return new ArrayList<>();
+        }
         List<String> output = new ArrayList<>();
         for (LineOffset linkPosition : this.links.keySet()) {
             if (linkPosition.compareTo(offsetMap.get(startPosition)) >= 0
