@@ -30,16 +30,15 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Validate all input files using appended Validators.
  */
 public class RedPen {
     private static final Logger LOG = LoggerFactory.getLogger(RedPen.class);
+
+    public static final String VERSION = "1.1.2";
 
     private final List<Validator> validators = new ArrayList<>();
     private final Configuration configuration;
@@ -150,6 +149,24 @@ public class RedPen {
         return documentListMap.get(document);
     }
 
+    /**
+     * Get the configuration object for this RedPen
+     *
+     * @return The configuration object for this RedPen
+     */
+    public Configuration getConfiguration() {
+        return configuration;
+    }
+
+    /**
+     * Return a list of the validators used by this RedPen
+     *
+     * @return a list of validators used by this RedPen
+     */
+    public List<Validator> getValidators() {
+        return Collections.unmodifiableList(validators);
+    }
+
     private void runDocumentValidators(List<Document> documents, Map<Document, List<ValidationError>> docErrorsMap) {
         for (Document document : documents) {
             List<ValidationError> errors = new ArrayList<>();
@@ -217,15 +234,6 @@ public class RedPen {
                 docErrorsMap.get(document).addAll(newErrors);
             }
         }
-    }
-
-    /**
-     * Get the configuration object for this RedPen
-     *
-     * @return The configuration object for this RedPen
-     */
-    public Configuration getConfiguration() {
-        return configuration;
     }
 
     @Override

@@ -24,7 +24,9 @@ import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Validate the end hyphens of Katakana words in Japanese documents.
@@ -66,6 +68,11 @@ final public class KatakanaEndHyphenValidator extends Validator {
     public static boolean isKatakanaEndHyphen(StringBuilder katakana) {
         return (DEFAULT_KATAKANA_LIMIT_LENGTH < katakana.length()
                 && katakana.charAt(katakana.length() - 1) == HYPHEN);
+    }
+
+    @Override
+    public List<String> getSupportedLanguages() {
+        return Arrays.asList(Locale.JAPANESE.getLanguage());
     }
 
     @Override

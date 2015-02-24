@@ -24,7 +24,9 @@ import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import static cc.redpen.config.SymbolType.*;
 
@@ -47,6 +49,11 @@ public class QuotationValidator extends Validator {
     private Symbol leftDoubleQuotationMark;
     private Symbol rightDoubleQuotationMark;
     private char period;
+
+    @Override
+    public List<String> getSupportedLanguages() {
+        return Arrays.asList(Locale.ENGLISH.getLanguage());
+    }
 
     @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {

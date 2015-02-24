@@ -38,8 +38,6 @@ public final class Main {
 
     private static final String PROGRAM = "redpen-cli";
 
-    private static final String VERSION = "1.1.2";
-
     private static final int EDEFAULT_LIMIT = 1;
 
     private Main() {
@@ -107,7 +105,7 @@ public final class Main {
             return 0;
         }
         if (commandLine.hasOption("v")) {
-            System.out.println(VERSION);
+            System.out.println(RedPen.VERSION);
             return 0;
         }
         if (commandLine.hasOption("f")) {
@@ -197,7 +195,7 @@ public final class Main {
         HelpFormatter formatter = new HelpFormatter();
         formatter.setWidth(100);
         PrintWriter pw = new PrintWriter(System.err);
-        formatter.printHelp(pw, 80, PROGRAM + " [Options] [<INPUT FILE>]", null,  opt, 1, 3, "");
+        formatter.printHelp(pw, 80, PROGRAM + " [Options] [<INPUT FILE>]", null, opt, 1, 3, "");
         pw.flush();
     }
 

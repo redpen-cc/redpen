@@ -14,5 +14,6 @@
         <validator name="SpaceBetweenAlphabeticalWord" />
         <validator name="CommaNumber" />
         <validator name="SuccessiveWord" />
+        <validator name="HankakuKana" />
     </validators>
 </redpen-conf>

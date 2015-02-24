@@ -112,6 +112,41 @@ public class JSONFormatter extends Formatter {
     }
 
     /**
+     * Render a start and end line offset as a 'position'
+     *
+     * @param startLineOffset the line offset denoting the start position
+     * @param endLineOffset   the line offset denoting the end position
+     * @return a JSON representation of this 'position'
+     * @throws JSONException
+     */
+    protected JSONObject asJSON(LineOffset startLineOffset, LineOffset endLineOffset) throws JSONException {
+        return asJSON(startLineOffset.lineNum, startLineOffset.offset, endLineOffset.lineNum, endLineOffset.offset);
+    }
+
+    /**
+     * Render a start and end coordinates as a 'position'
+     *
+     * @param startLine   the line this position starts
+     * @param startOffset the offset within startLine the position starts
+     * @param endLine     the line offset denoting the end position
+     * @param endOffset   the offset within endLine the position ends
+     * @return a JSON representation of this 'position'
+     * @throws JSONException
+     */
+    protected JSONObject asJSON(int startLine, int startOffset, int endLine, int endOffset) throws JSONException {
+        JSONObject position = new JSONObject();
+        JSONObject offset = new JSONObject();
+        offset.put("line", startLine);
+        offset.put("offset", startOffset);
+        position.put("start", offset);
+        offset = new JSONObject();
+        offset.put("line", endLine);
+        offset.put("offset", endOffset);
+        position.put("end", offset);
+        return position;
+    }
+
+    /**
      * Render as a JSON object a list of errors for a given document
      *
      * @param document the document that has the errors
@@ -135,4 +170,6 @@ public class JSONFormatter extends Formatter {
         }
         return jsonErrors;
     }
+
+
 }

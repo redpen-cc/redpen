@@ -105,6 +105,60 @@ textarea {
     margin-top: 0;
 }
 
+#redpen-results-json {
+    background-color: rgb(255, 245, 224);
+    color: rgb(6, 45, 5);
+    min-height: 100%;
+    height: 100%;
+    overflow: auto;
+    font-size: 11px;
+    line-height: 12px;
+    font-family: monospace;
+    white-space: pre;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+#redpen-settings {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+}
+
+#redpen-version {
+    position: absolute;
+    right: 4px;
+    bottom: 0;
+    font-size: 10px;
+    line-height: 12px;
+    color: rgba(255, 255, 255, 0.4);
+    text-align: right;
+}
+
+#redpen-option-results {
+    text-align: center;
+    list-style: none;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    text-transform: uppercase;
+    font-size: 11px;
+}
+
+#redpen-option-results li {
+    display: inline-block;
+    width: 52px;
+    padding: 4px;
+    cursor: pointer;
+}
+
+.redpen-option-selected {
+    border-radius: 3px;
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+}
+
 .col-md-5 {
     padding-right: 0;
 }
@@ -121,8 +175,16 @@ textarea {
     height: 100%;
 }
 
+.redpen-header-row {
+    height: 10%;
+    min-height: 100px;
+}
+
+.redpen-header-row>div {
+    height: 100%;
+}
+
 .redpen-error-section {
-    cursor: help;
 }
 
 .redpen-error-sentence {
@@ -135,6 +197,7 @@ textarea {
 
 .redpen-error-message {
     color: rgb(205, 31, 0);
+    cursor: help;
 }
 
 .redpen-info-message {
@@ -196,8 +259,20 @@ textarea {
 }
 
 .redpen-validators {
-    font-size: 12px;
-    line-height: 20px;
+    font-size: 11px;
+    line-height: 18px;
 }
 
+.redpen-validators .checkbox {
+    margin-bottom: 0;
+}
+
+.redpen-validators label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.redpen-validators .checkbox i {
+    color: #1C6100;
+}
 

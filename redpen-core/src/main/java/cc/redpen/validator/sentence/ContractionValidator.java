@@ -22,9 +22,7 @@ import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Validate English contraction in the input document.
@@ -33,6 +31,7 @@ import java.util.Set;
 final public class ContractionValidator extends Validator {
     private static final Set<String> contractions;
     private static final Set<String> nonContractions;
+
     static {
         contractions = new HashSet<>();
         contractions.add("aren't");
@@ -89,6 +88,7 @@ final public class ContractionValidator extends Validator {
         contractions.add("you're");
         contractions.add("you've");
     }
+
     static {
         nonContractions = new HashSet<>();
         nonContractions.add("are");
@@ -121,6 +121,11 @@ final public class ContractionValidator extends Validator {
 
     private int foundContractionNum = 0;
     private int foundNonContractionNum = 0;
+
+    @Override
+    public List<String> getSupportedLanguages() {
+        return Arrays.asList(Locale.ENGLISH.getLanguage());
+    }
 
     @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {

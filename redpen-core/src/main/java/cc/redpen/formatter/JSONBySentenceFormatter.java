@@ -19,6 +19,7 @@ package cc.redpen.formatter;
 
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
+import cc.redpen.parser.LineOffset;
 import cc.redpen.validator.ValidationError;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -68,8 +69,25 @@ public class JSONBySentenceFormatter extends JSONFormatter {
      */
     @Override
     protected JSONObject asJSON(ValidationError error) throws JSONException {
-        JSONObject jsonError = super.asJSON(error);
-        jsonError.remove("sentence");
+        JSONObject jsonError = new JSONObject();
+
+        jsonError.put("message", error.getMessage());
+        jsonError.put("validator", error.getValidatorName());
+
+        LineOffset startOffset;
+        LineOffset endOffset;
+        if (error.getStartPosition().isPresent()) {
+            startOffset = error.getStartPosition().get();
+        } else {
+            startOffset = new LineOffset(error.getSentence().getLineNumber(), error.getSentence().getStartPositionOffset());
+        }
+        if (error.getEndPosition().isPresent()) {
+            endOffset = error.getEndPosition().get();
+        } else {
+            endOffset = new LineOffset(error.getSentence().getLineNumber(), error.getSentence().getStartPositionOffset());
+        }
+        jsonError.put("position", asJSON(startOffset, endOffset));
+
         return jsonError;
     }
 
@@ -98,8 +116,11 @@ public class JSONBySentenceFormatter extends JSONFormatter {
                 if (BY_SENTENCE_COMPARATOR.compare(lastError, error) != 0) {
                     JSONObject sentenceError = new JSONObject();
                     sentenceError.put("sentence", error.getSentence().getContent());
-                    sentenceError.put("lineNum", error.getSentence().getLineNumber());
-                    sentenceError.put("offset", error.getSentence().getStartPositionOffset());
+                    sentenceError.put("position", asJSON(
+                            error.getSentence().getLineNumber(),
+                            error.getSentence().getStartPositionOffset(),
+                            error.getSentence().getLineNumber(),
+                            error.getSentence().getContent().length() + error.getSentence().getStartPositionOffset()));
                     sentenceErrors = new JSONArray();
                     sentenceError.put("errors", sentenceErrors);
                     documentErrors.put(sentenceError);

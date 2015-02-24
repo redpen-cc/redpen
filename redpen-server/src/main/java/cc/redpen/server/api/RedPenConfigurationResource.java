@@ -20,8 +20,8 @@ package cc.redpen.server.api;
 
 import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.parser.DocumentParser;
+import cc.redpen.validator.Validator;
 import org.apache.wink.common.annotations.Workspace;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -57,6 +57,7 @@ public class RedPenConfigurationResource {
 
         // add the known document formats
         try {
+            response.put("version", RedPen.VERSION);
             response.put("documentParsers", DocumentParser.PARSER_MAP.keySet());
 
             // add matching configurations
@@ -73,8 +74,13 @@ public class RedPenConfigurationResource {
 
                         // add the names of the validators
                         JSONArray validatorConfigs = new JSONArray();
-                        for (ValidatorConfiguration validator : redPen.getConfiguration().getValidatorConfigs()) {
-                            validatorConfigs.put(validator.getConfigurationName());
+                        for (Validator validator : redPen.getValidators()) {
+                            JSONObject validatorJSON = new JSONObject();
+                            validatorJSON.put("name", validator.getClass().getSimpleName().endsWith("Validator")
+                                    ? validator.getClass().getSimpleName().substring(0, validator.getClass().getSimpleName().length() - 9)
+                                    : validator.getClass().getSimpleName());
+                            validatorJSON.put("languages", validator.getSupportedLanguages());
+                            validatorConfigs.put(validatorJSON);
                         }
                         config.put("validators", validatorConfigs);
 

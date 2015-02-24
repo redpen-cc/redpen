@@ -56,7 +56,7 @@ public class RedPenResourceTest extends MockServletInvocationTest {
     public void testRun() throws Exception {
         MockHttpServletRequest request =
                 constructMockRequest("POST", "/document/validate", MediaType.WILDCARD);
-        request.setContent(("document=foobar").getBytes());
+        request.setContent(("document=Foobar").getBytes());
         MockServletContext context = new MockServletContext();
         context.addInitParameter("redpen.conf.path", "conf/redpen-conf.xml");
         MockHttpServletResponse response = invoke(request);
@@ -77,7 +77,7 @@ public class RedPenResourceTest extends MockServletInvocationTest {
         assertEquals("HTTP status", HttpStatus.OK.getCode(), response.getStatus());
         System.out.println(response.getContentAsString());
         JSONArray errors = (JSONArray) new JSONObject(response.getContentAsString()).get("errors");
-        assertEquals(2, errors.length());
+        assertEquals(3, errors.length());
         assertTrue(errors.get(0).toString().length() > 0);
     }
 
@@ -88,7 +88,6 @@ public class RedPenResourceTest extends MockServletInvocationTest {
         MockServletContext context = new MockServletContext();
         context.addInitParameter("redpen.conf.path", "conf/redpen-conf.xml");
         MockHttpServletResponse response = invoke(request);
-
         assertEquals("HTTP status", HttpStatus.OK.getCode(), response.getStatus());
     }
 

@@ -80,6 +80,11 @@ final public class KatakanaSpellCheckValidator extends Validator {
     private Set<String> exceptions = new HashSet<>();
 
     @Override
+    public List<String> getSupportedLanguages() {
+        return Arrays.asList(Locale.JAPANESE.getLanguage());
+    }
+
+    @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {
         StringBuilder katakana = new StringBuilder();
         for (int i = 0; i < sentence.getContent().length(); i++) {

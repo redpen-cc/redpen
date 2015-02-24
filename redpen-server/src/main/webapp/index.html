@@ -58,7 +58,6 @@ var sampleDocuments = {
             "このような場合、各インデクスの結果をマージして_clientプログラム_に渡す機構が必要となります。"}
 };
 
-
 // ensure the language autodetect doesn't override the user's selection
 var permitLanguageAutoDetect = true;
 
@@ -94,6 +93,7 @@ $(document).ready(function () {
         var languageSelect = $("#redpen-language");
         var documentParserSelect = $("#redpen-document-parser");
 
+        $("#redpen-version").text("RedPen version " + configuration.version);
         var discoveredLanguages = {};
         var validatorConfiguration = {};
 
@@ -109,8 +109,11 @@ $(document).ready(function () {
             discoveredLanguages[config.lang] = true;
             var validatorCheckboxes = $('<div></div>').addClass('redpen-validators');
             validatorConfiguration[redpenName] = validatorCheckboxes;
+            config.validators.sort(function (a, b) {
+                return a.name.localeCompare(b.name);
+            });
             for (var i = 0; i < config.validators.length; i++) {
-                var validatorName = config.validators[i];
+                var validator = config.validators[i];
                 $(validatorCheckboxes).append(
                         $('<div></div>')
                                 .addClass("checkbox")
@@ -120,9 +123,11 @@ $(document).ready(function () {
                                                         $('<input/>')
                                                                 .prop("type", "checkbox")
                                                                 .prop("checked", true)
-                                                                .prop("value", validatorName)
+                                                                .prop("value", validator.name)
                                                 )
-                                                .append(validatorName)
+                                                .append(validator.name +
+                                                        (validator.languages.length ? ' <i>' + validator.languages.join(',') + '</i>' : '')
+                                                )
                                 )
                 );
             }
@@ -171,29 +176,50 @@ $(document).ready(function () {
         var highlightEditor = function (error) {
             if (error) {
                 var document = $(editor).val();
-                var start;
-                var end;
+                var sentences = document.split("\n");
+                var lines = [
+                    {offset: 0, length: 0}
+                ];
 
-                start = document.indexOf(error.sentence);
-                end = start + error.sentence.length;
-                if (start < 0) {
-                    start = document.length;
-                    end = start;
+                var offset = 0;
+                for (var i = 0; i < sentences.length; i++) {
+                    lines.push({offset: offset, length: sentences[i].length});
+                    offset += sentences[i].length + 1;
                 }
-                var textarea = $(editor)[0];
 
-                if (textarea.setSelectionRange) {
-                    textarea.focus();
-                    textarea.setSelectionRange(start, end);
-                } else if (textarea.createTextRange) {
-                    var range = textarea.createTextRange();
-                    range.collapse(true);
-                    range.moveEnd('character', end);
-                    range.moveStart('character', start);
-                    range.select();
+                var line = lines[error.position.start.line];
+                if (line) {
+                    var startOffset = error.position.start.offset ? error.position.start.offset : 0;
+                    var endOffset = error.position.end.offset ? error.position.end.offset : line.length;
+
+                    var start = line.offset + startOffset;
+                    var end = line.offset + endOffset;
+
+                    var textarea = $(editor)[0];
+
+                    if (textarea.setSelectionRange) {
+                        textarea.focus();
+                        textarea.setSelectionRange(start, end);
+                    } else if (textarea.createTextRange) {
+                        var range = textarea.createTextRange();
+                        range.collapse(true);
+                        range.moveEnd('character', end);
+                        range.moveStart('character', start);
+                        range.select();
+                    }
                 }
             }
         };
+
+        // cheap tabs - bootstraps were a somewhat visually heavy
+        $("#redpen-option-results li").click(function () {
+            $(this).siblings().each(function (i, item) {
+                $(this).removeClass("redpen-option-selected");
+                $($(this).data("target")).hide();
+            });
+            $($(this).data("target")).show();
+            $(this).addClass("redpen-option-selected");
+        });
 
         // call RedPen to validate the document and display any errors
         var validateDocument = function () {
@@ -204,9 +230,9 @@ $(document).ready(function () {
                         documentParser: $(documentParserSelect).val()
                     },
                     function (data) {
+                        $('#redpen-results-json').text(JSON.stringify(data, null, 1));
                         var errors = data['errors'];
                         if (errors.length) {
-
                             // get a list of the checked validators
                             var validators = {};
                             $("#redpen-active-validators").find("input:checked").each(function () {
@@ -220,40 +246,39 @@ $(document).ready(function () {
                                             .html('<span class="redpen-red">Red</span>Pen found the following errors:')
                                     );
 
-                            var addError = function (error) {
-                                var errorDiv = $('<div></div>')
-                                        .addClass('redpen-error-section')
-                                        .mouseenter(function () {
-                                            highlightEditor(error);
-                                        })
-                                        .mouseleave(function () {
-                                            highlightEditor(false);
-                                        });
+                            var addError = function (errorList, error) {
+
+                                if (validators[error.validator]) {
+                                    $(errorList).append($('<li></li>')
+                                            .addClass('redpen-error-message')
+                                            .append(error.message)
+                                            .mouseenter(function () {
+                                                highlightEditor(error);
+                                            })
+                                            .mouseleave(function () {
+                                                highlightEditor(false);
+                                            })
+                                            .append($("<div></div>")
+                                                    .addClass('redpen-error-validator')
+                                                    .text(error.validator)
+                                            )
+                                    )
+                                }
+                            };
+                            for (var i = 0; i < errors.length; i++) {
+                                var errorDiv = $('<div></div>').addClass('redpen-error-section');
                                 var errorList = $('<ul></ul>');
                                 results.append(errorDiv);
                                 $(errorDiv)
                                         .append($('<p></p>')
                                                 .addClass('redpen-error-sentence')
-                                                .html(error.sentence)
+                                                .html(errors[i].sentence)
                                         )
                                         .append(errorList);
 
-                                for (var j = 0; j < error.errors.length; j++) {
-                                    if (validators[error.errors[j].validator]) {
-                                        $(errorList).append($('<li></li>')
-                                                .addClass('redpen-error-message')
-                                                .append(error.errors[j].message)
-                                                .append($("<div></div>")
-                                                        .addClass('redpen-error-validator')
-                                                        .text(error.errors[j].validator)
-                                                )
-                                        )
-                                    }
+                                for (var j = 0; j < errors[i].errors.length; j++) {
+                                    addError(errorList, errors[i].errors[j]);
                                 }
-                            };
-                            for (var i = 0; i < errors.length; i++) {
-                                addError(errors[i]);
-
                             }
                         }
                         else {
@@ -349,15 +374,28 @@ $(document).ready(function () {
                 </ul>
             </div>
         </div>
+        <div id="redpen-version"></div>
     </div>
 </section>
 
 <section id="main">
     <div class="container redpen-fixed-container">
-        <h1>Welcome to <span class="redpen-red">Red</span>Pen!</h1>
 
-        <p>To try the <span class="redpen-red">Red</span>Pen validator, please type or paste some text into
-            the first box.</p>
+        <div class="row redpen-header-row">
+            <div class="col-md-8">
+                <h1>Welcome to <span class="redpen-red">Red</span>Pen!</h1>
+
+                <p>To try the <span class="redpen-red">Red</span>Pen validator, please type or paste some text into
+                    the first box.</p>
+            </div>
+
+            <div class="col-md-2">
+                <ul id="redpen-option-results">
+                    <li data-target='#redpen-results' class="redpen-option-selected">Errors</li>
+                    <li data-target='#redpen-results-json'>JSON</li>
+                </ul>
+            </div>
+        </div>
 
         <div class="row redpen-fixed-row">
             <div class="col-md-5">
@@ -368,30 +406,34 @@ $(document).ready(function () {
             <div class="col-md-5">
                 <div id="redpen-results" class="well">
                 </div>
+                <div id="redpen-results-json" style="display:none" class="well">
+                </div>
             </div>
             <div class="col-md-2">
-                <div class="form-group">
-                    <label class="control-label">Document Parser
-                        <select id="redpen-document-parser" class="form-control"></select>
-                    </label>
-                </div>
+                <div id="redpen-settings">
+                    <div class="form-group">
+                        <label class="control-label">Document Parser
+                            <select id="redpen-document-parser" class="form-control"></select>
+                        </label>
+                    </div>
 
-                <div class="form-group">
-                    <label class="control-label">Language
-                        <select id="redpen-language" class="form-control"></select>
-                    </label>
-                </div>
+                    <div class="form-group">
+                        <label class="control-label">Language
+                            <select id="redpen-language" class="form-control"></select>
+                        </label>
+                    </div>
 
-                <div class="form-group">
-                    <label class="control-label">Configuration
-                        <select id="redpen-configuration" class="form-control"> </select>
-                    </label>
-                </div>
+                    <div class="form-group">
+                        <label class="control-label">Configuration
+                            <select id="redpen-configuration" class="form-control"> </select>
+                        </label>
+                    </div>
 
-                <div class="form-group">
-                    <label class="control-label">Validators</label>
+                    <div class="form-group">
+                        <label class="control-label">Validators</label>
 
-                    <div id="redpen-active-validators"></div>
+                        <div id="redpen-active-validators"></div>
+                    </div>
                 </div>
             </div>
         </div>
