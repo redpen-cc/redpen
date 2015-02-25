@@ -35,10 +35,10 @@ import java.util.*;
  * Validate input document.
  */
 public abstract class Validator {
-    private static final Logger LOG =
-            LoggerFactory.getLogger(Validator.class);
-    private final static ResourceBundle.Control fallbackControl =
-            ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_DEFAULT);
+
+    private static final Logger LOG = LoggerFactory.getLogger(Validator.class);
+    private final static ResourceBundle.Control fallbackControl = ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_DEFAULT);
+
     private Optional<ResourceBundle> errorMessages = Optional.empty();
     private ValidatorConfiguration config;
     private SymbolTable symbolTable;
@@ -53,7 +53,7 @@ public abstract class Validator {
      *
      * @param sentence input sentence
      */
-    public void preValidate(Sentence sentence){
+    public void preValidate(Sentence sentence) {
     }
 
     /**
@@ -62,7 +62,7 @@ public abstract class Validator {
      *
      * @param section input section
      */
-    public void preValidate(Section section){
+    public void preValidate(Section section) {
     }
 
     /**
@@ -79,7 +79,7 @@ public abstract class Validator {
      * validate the input document and returns the invalid points.
      * {@link cc.redpen.validator.Validator} provides empty implementation. Validator implementation validates sentences can override this method.
      *
-     * @param errors list of validation errors. Validator implementations will add Validation errors to this list.
+     * @param errors   list of validation errors. Validator implementations will add Validation errors to this list.
      * @param sentence input
      */
     public void validate(List<ValidationError> errors, Sentence sentence) {
@@ -89,10 +89,20 @@ public abstract class Validator {
      * validate the input document and returns the invalid points.
      * {@link cc.redpen.validator.Validator} provides empty implementation. Validator implementation validates sections can override this method.
      *
-     * @param errors list of validation errors. Validator implementations will add Validation errors to this list.
+     * @param errors  list of validation errors. Validator implementations will add Validation errors to this list.
      * @param section input
      */
     public void validate(List<ValidationError> errors, Section section) {
+    }
+
+    /**
+     * Return an array of languages supported by this validator
+     * {@link cc.redpen.validator.Validator} provides empty implementation. Validator implementation validates sections can override this method.
+     *
+     * @return an array of the languages supported by this validator. An empty list implies there are no restrictions on the languages supported by this validator.
+     */
+    public List<String> getSupportedLanguages() {
+        return Collections.emptyList();
     }
 
     final void preInit(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
@@ -108,7 +118,6 @@ public abstract class Validator {
             errorMessages = Optional.ofNullable(ResourceBundle.getBundle(packageName + ".error-messages", locale, fallbackControl));
         } catch (MissingResourceException ignore) {
         }
-
     }
 
     protected void init() throws RedPenException {
@@ -200,7 +209,7 @@ public abstract class Validator {
      * @return ValidationError with localized message
      */
     protected ValidationError createValidationErrorWithPosition(Sentence sentenceWithError,
-            Optional<LineOffset> start, Optional<LineOffset> end, Object... args) {
+                                                                Optional<LineOffset> start, Optional<LineOffset> end, Object... args) {
         return new ValidationError(this.getClass(), getLocalizedErrorMessage(Optional.empty(), args), sentenceWithError, start, end);
     }
 
@@ -215,7 +224,7 @@ public abstract class Validator {
      * @return ValidationError with localized message
      */
     protected ValidationError createValidationErrorWithPosition(String messageKey, Sentence sentenceWithError,
-            Optional<LineOffset> start, Optional<LineOffset> end, Object... args) {
+                                                                Optional<LineOffset> start, Optional<LineOffset> end, Object... args) {
         return new ValidationError(this.getClass(), getLocalizedErrorMessage(Optional.of(messageKey), args), sentenceWithError, start, end);
     }
 

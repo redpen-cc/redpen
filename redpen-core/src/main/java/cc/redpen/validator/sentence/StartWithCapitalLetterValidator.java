@@ -28,10 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Check if the input sentence start with a capital letter.
@@ -51,6 +48,11 @@ final public class StartWithCapitalLetterValidator extends Validator {
     }
 
     @Override
+    public List<String> getSupportedLanguages() {
+        return Arrays.asList(Locale.ENGLISH.getLanguage());
+    }
+
+    @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {
         String content = sentence.getContent();
         List<TokenElement> tokens = sentence.getTokens();
@@ -67,7 +69,7 @@ final public class StartWithCapitalLetterValidator extends Validator {
         }
 
         char headChar = '≡';
-        for (char ch: content.toCharArray()) {
+        for (char ch : content.toCharArray()) {
             if (ch != ' ') {
                 headChar = ch;
                 break;

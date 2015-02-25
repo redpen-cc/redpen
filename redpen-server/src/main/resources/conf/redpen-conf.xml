@@ -28,8 +28,26 @@
         </validator>
         <validator name="ParagraphNumber"/>
         <validator name="Spelling"/>
-        <validator name="Contraction" />
-        <validator name="DoubledWord" />
-        <validator name="SuccessiveWord" />
+        <validator name="Contraction"/>
+        <validator name="DoubledWord"/>
+        <validator name="SuccessiveWord"/>
+
+        <validator name="CommaNumber"/>
+        <validator name="EndOfSentence"/>
+        <validator name="InvalidExpression"/>
+        <validator name="InvalidWord"/>
+
+        <validator name="Quotation"/>
+        <validator name="SpaceBetweenAlphabeticalWord"/>
+        <validator name="StartWithCapitalLetter"/>
+        <validator name="WordNumber"/>
+
+        <!--<validator name="SpaceBeginningOfSentence"/>-->
+        <!--<validator name="ParagraphStartWith"/>-->
+        <!--<validator name="DuplicatedSection"/>-->
+        <!--<validator name="SuggestExpression">-->
+            <!--<property name="dict" value="location_of_dictionary"/>-->
+        <!--</validator>-->
+
     </validators>
 </redpen-conf>

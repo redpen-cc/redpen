@@ -25,6 +25,7 @@ import cc.redpen.validator.Validator;
 import java.util.List;
 
 public class SuccessiveWordValidator extends Validator {
+
     @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {
         String prevSurface = "";

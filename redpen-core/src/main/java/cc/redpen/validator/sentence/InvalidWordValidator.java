@@ -41,6 +41,11 @@ final public class InvalidWordValidator extends Validator {
     private Set<String> invalidWords = new HashSet<>();
 
     @Override
+    public List<String> getSupportedLanguages() {
+        return Arrays.asList(Locale.ENGLISH.getLanguage());
+    }
+
+    @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {
         //NOTE: only Ascii white space since this validator works for european languages.
         for (TokenElement token : sentence.getTokens()) {

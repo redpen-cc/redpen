@@ -22,7 +22,9 @@ import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import static cc.redpen.config.SymbolType.*;
 
@@ -37,6 +39,11 @@ final public class EndOfSentenceValidator extends Validator {
     private char period = '.';
     private char questionMark = '?';
     private char exclamationMark = '!';
+
+    @Override
+    public List<String> getSupportedLanguages() {
+        return Arrays.asList(Locale.ENGLISH.getLanguage());
+    }
 
     @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {

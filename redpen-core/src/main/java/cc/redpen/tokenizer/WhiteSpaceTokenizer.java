@@ -19,18 +19,36 @@ package cc.redpen.tokenizer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class WhiteSpaceTokenizer implements RedPenTokenizer {
-    public WhiteSpaceTokenizer() {}
+
+    private static Pattern[] BLACKLIST_TOKEN_PATTERNS = new Pattern[]{
+            Pattern.compile("^[-+]?\\d+(\\.\\d+)?$") // a number [+-]n[.n]
+    };
+
+    public WhiteSpaceTokenizer() {
+    }
 
     @Override
     public List<TokenElement> tokenize(String content) {
         List<TokenElement> resultTokens = new ArrayList<>();
         String normalized = content.replaceAll("\\.|\\,|\\?|\\(|\\)", " ");
-        String [] words = normalized.split(" +");
+        String[] words = normalized.split(" +");
+
         for (String word : words) {
-            resultTokens.add(new TokenElement(word));
+            boolean validToken = true;
+            for (Pattern pattern : BLACKLIST_TOKEN_PATTERNS) {
+                if (pattern.matcher(word).find()) {
+                    validToken = false;
+                    break;
+                }
+            }
+            if (validToken) {
+                resultTokens.add(new TokenElement(word));
+            }
         }
+
         return resultTokens;
     }
 }
