@@ -116,11 +116,17 @@ public class JSONBySentenceFormatter extends JSONFormatter {
                 if (BY_SENTENCE_COMPARATOR.compare(lastError, error) != 0) {
                     JSONObject sentenceError = new JSONObject();
                     sentenceError.put("sentence", error.getSentence().getContent());
+                    Sentence sentence = error.getSentence();
+                    //NOTE: last position is optional (only Markdown parser provides the offset positions)
+                    LineOffset lastPosition = sentence.getOffset(sentence.getContent().length()-1).orElse(
+                            new LineOffset(sentence.getLineNumber(),
+                                    sentence.getStartPositionOffset()+sentence.getContent().length()));
                     sentenceError.put("position", asJSON(
-                            error.getSentence().getLineNumber(),
-                            error.getSentence().getStartPositionOffset(),
-                            error.getSentence().getLineNumber(),
-                            error.getSentence().getContent().length() + error.getSentence().getStartPositionOffset()));
+                            sentence.getLineNumber(),
+                            sentence.getStartPositionOffset(),
+                            lastPosition.lineNum,
+                            lastPosition.offset)
+                    );
                     sentenceErrors = new JSONArray();
                     sentenceError.put("errors", sentenceErrors);
                     documentErrors.put(sentenceError);
