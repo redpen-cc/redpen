@@ -96,6 +96,39 @@ public class ConfigurationLoaderTest {
     }
 
     @Test
+    public void testLoadJapaneseConfigurationWithHankakuType() throws RedPenException{
+        String sampleConfigString =
+                "<redpen-conf lang=\"ja\" type=\"hankaku\">" +
+                        "<validators>" +
+                        "<validator name=\"SentenceLength\">" +
+                        "<property name=\"max_length\" value=\"200\" />" +
+                        "</validator>" +
+                        "<validator name=\"MaxParagraphNumber\" />" +
+                        "</validators>" +
+                        "</redpen-conf>";
+
+        ConfigurationLoader configurationLoader = new ConfigurationLoader();
+        Configuration configuration = configurationLoader.loadFromString(sampleConfigString);
+
+        assertNotNull(configuration);
+        assertEquals(2, configuration.getValidatorConfigs().size());
+        assertEquals("SentenceLength",
+                configuration.getValidatorConfigs().get(0).getConfigurationName());
+        assertEquals("200",
+                configuration.getValidatorConfigs().get(0).getAttribute("max_length"));
+        assertEquals("MaxParagraphNumber",
+                configuration.getValidatorConfigs().get(1).getConfigurationName());
+        assertNotNull(configuration.getSymbolTable());
+        assertEquals('!', configuration.getSymbolTable()
+                .getSymbol(EXCLAMATION_MARK).getValue());
+        assertEquals(1, configuration.getSymbolTable()
+                .getSymbol(EXCLAMATION_MARK).getInvalidChars().length);
+        assertEquals('！', configuration.getSymbolTable()
+                .getSymbol(EXCLAMATION_MARK).getInvalidChars()[0]);
+    }
+
+
+    @Test
     public void testNewLoadConfigurationWithoutSymbolTableConfig() throws RedPenException{
         String sampleConfigString =
                 "<redpen-conf>" +
