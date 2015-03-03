@@ -18,11 +18,11 @@
 package cc.redpen.config;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static cc.redpen.config.SymbolType.*;
 
@@ -33,17 +33,33 @@ public final class SymbolTable implements Serializable {
     private static final long serialVersionUID = 1612920745151501631L;
     private final Map<SymbolType, Symbol> symbolDictionary = new HashMap<>();
     private final Map<Character, Symbol> valueDictionary = new HashMap<>();
+    private final String type;
     private String lang;
+    private static final Logger LOG = LoggerFactory.getLogger(SymbolTable.class);
 
     /**
      * Constructor.
      */
-    SymbolTable(String lang, List<Symbol> customSymbols) {
+    SymbolTable(String lang, Optional<String> type, List<Symbol> customSymbols) {
         super();
         this.lang = lang;
+        this.type = type.orElse("");
         if (lang.equals("ja")) {
-            JAPANESE_SYMBOLS.values().forEach(this::overrideSymbol);
+            LOG.info("\"ja\" is specified.");
+            if (this.type.equals("hankaku")) {
+                LOG.info("\"hankaku\" type is specified");
+                JAPANESE_HANKAKU_SYMBOLS.values().forEach(this::overrideSymbol);
+            } else if (this.type.equals("zenkaku2")) {
+                LOG.info("\"zenkaku2\" type is specified");
+                JAPANESE_SYMBOLS.values().forEach(this::overrideSymbol);
+                this.overrideSymbol(new Symbol(FULL_STOP, '．', "。."));
+                this.overrideSymbol(new Symbol(COMMA, '，', "、,"));
+            } else {
+                LOG.info("\"normal\" type is specified");
+                JAPANESE_SYMBOLS.values().forEach(this::overrideSymbol);
+            }
         } else {
+            LOG.info("Default symbol settings are loaded");
             DEFAULT_SYMBOLS.values().forEach(this::overrideSymbol);
         }
         customSymbols.forEach(this::overrideSymbol);
@@ -52,7 +68,6 @@ public final class SymbolTable implements Serializable {
         symbolDictionary.put(symbol.getType(), symbol);
         valueDictionary.put(symbol.getValue(), symbol);
     }
-
 
     /**
      * Get the character names in the dictionary.
@@ -112,17 +127,15 @@ public final class SymbolTable implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
         SymbolTable that = (SymbolTable) o;
 
-        if (lang != null ? !lang.equals(that.lang) : that.lang != null)
-            return false;
+        if (lang != null ? !lang.equals(that.lang) : that.lang != null) return false;
         if (symbolDictionary != null ? !symbolDictionary.equals(that.symbolDictionary) : that.symbolDictionary != null)
             return false;
+        if (type != null ? !type.equals(that.type) : that.type != null) return false;
         if (valueDictionary != null ? !valueDictionary.equals(that.valueDictionary) : that.valueDictionary != null)
             return false;
 
@@ -133,6 +146,7 @@ public final class SymbolTable implements Serializable {
     public int hashCode() {
         int result = symbolDictionary != null ? symbolDictionary.hashCode() : 0;
         result = 31 * result + (valueDictionary != null ? valueDictionary.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
         result = 31 * result + (lang != null ? lang.hashCode() : 0);
         return result;
     }
@@ -142,12 +156,14 @@ public final class SymbolTable implements Serializable {
         return "SymbolTable{" +
                 "symbolDictionary=" + symbolDictionary +
                 ", valueDictionary=" + valueDictionary +
+                ", type='" + type + '\'' +
                 ", lang='" + lang + '\'' +
                 '}';
     }
 
     private static final Map<SymbolType, Symbol> DEFAULT_SYMBOLS;
     private static final Map<SymbolType, Symbol> JAPANESE_SYMBOLS;
+    private static final Map<SymbolType, Symbol> JAPANESE_HANKAKU_SYMBOLS;
 
     private static Map<SymbolType, Symbol> initializeSymbols(Symbol... newSymbols) {
         HashMap<SymbolType, Symbol> symbolTypeSymbolMap = new HashMap<>();
@@ -256,5 +272,54 @@ public final class SymbolTable implements Serializable {
                 , new Symbol(DIGIT_SEVEN, '7', "")
                 , new Symbol(DIGIT_EIGHT, '8', "")
                 , new Symbol(DIGIT_NINE, '9', ""));
+
+        JAPANESE_HANKAKU_SYMBOLS = initializeSymbols(
+                new Symbol(SPACE, '　', " ")
+                , new Symbol(EXCLAMATION_MARK, '!', "！")
+                , new Symbol(NUMBER_SIGN, '#', "＃")
+                , new Symbol(DOLLAR_SIGN, '$', "＄")
+                , new Symbol(PERCENT_SIGN, '%', "％")
+                , new Symbol(QUESTION_MARK, '?', "？")
+                , new Symbol(AMPERSAND, '&', "＆")
+                , new Symbol(LEFT_PARENTHESIS, '(', "（", true, false)
+                , new Symbol(RIGHT_PARENTHESIS, ')', "）", false, true)
+                , new Symbol(ASTERISK, '*', "＊")
+                , new Symbol(COMMA, ',', "，、", false, true)
+                , new Symbol(FULL_STOP, '.', "．。")
+                , new Symbol(PLUS_SIGN, '+', "＋")
+                , new Symbol(HYPHEN_SIGN, '-', "ー")
+                , new Symbol(SLASH, '/', "／")
+                , new Symbol(COLON, ':', "：")
+                , new Symbol(SEMICOLON, ';', "；")
+                , new Symbol(LESS_THAN_SIGN, '<', "＜")
+                , new Symbol(EQUAL_SIGN, '=', "＝")
+                , new Symbol(GREATER_THAN_SIGN, '>', "＞")
+                , new Symbol(AT_MARK, '@', "＠")
+                , new Symbol(LEFT_SQUARE_BRACKET, '[', "", true, false)
+                , new Symbol(RIGHT_SQUARE_BRACKET, ']', "", false, true)
+                , new Symbol(BACKSLASH, '\\', "")
+                , new Symbol(CIRCUMFLEX_ACCENT, '^', "")
+                , new Symbol(LOW_LINE, '_', "")
+                , new Symbol(LEFT_CURLY_BRACKET, '{', "｛", true, false)
+                , new Symbol(RIGHT_CURLY_BRACKET, '}', "｝", false, true)
+                , new Symbol(VERTICAL_BAR, '|', "｜")
+                , new Symbol(TILDE, '~', "〜")
+                , new Symbol(LEFT_SINGLE_QUOTATION_MARK, '\'', "")
+                , new Symbol(RIGHT_SINGLE_QUOTATION_MARK, '\'', "")
+                , new Symbol(LEFT_DOUBLE_QUOTATION_MARK, '\"', "")
+                , new Symbol(RIGHT_DOUBLE_QUOTATION_MARK, '\"', "")
+
+                // Digits
+                , new Symbol(DIGIT_ZERO, '0', "０")
+                , new Symbol(DIGIT_ONE, '1', "１")
+                , new Symbol(DIGIT_TWO, '2', "２")
+                , new Symbol(DIGIT_THREE, '3', "３")
+                , new Symbol(DIGIT_FOUR, '4', "４")
+                , new Symbol(DIGIT_FIVE, '5', "５")
+                , new Symbol(DIGIT_SIX, '6', "６")
+                , new Symbol(DIGIT_SEVEN, '7', "７")
+                , new Symbol(DIGIT_EIGHT, '8', "８")
+                , new Symbol(DIGIT_NINE, '9', "９"));
     }
+
 }

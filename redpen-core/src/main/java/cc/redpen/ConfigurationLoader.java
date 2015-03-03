@@ -40,6 +40,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 import static cc.redpen.config.Configuration.ConfigurationBuilder;
 
@@ -153,6 +154,15 @@ public final class ConfigurationLoader {
             LOG.info("Set language to en");
         }
 
+        Node typeNode = rootElement.getAttributes().getNamedItem("type");
+        Optional<String> type = Optional.empty();
+        if (typeNode != null) {
+            type = Optional.of(typeNode.getNodeValue());
+            LOG.info("Type is set to \"{}\"", type.get());
+        } else {
+            LOG.warn("No type configuration...");
+        }
+
         // extract validator configurations
         NodeList validatorConfigElementList =
                 getSpecifiedNodeList(rootElement, "validators");
@@ -171,9 +181,10 @@ public final class ConfigurationLoader {
         // extract symbol configurations
         NodeList symbolTableConfigElementList =
                 getSpecifiedNodeList(rootElement, "symbols");
-        if (symbolTableConfigElementList == null) {
-            configBuilder.setLanguage(language);
-        } else {
+        configBuilder.setLanguage(language);
+        type.ifPresent(configBuilder::setType);
+
+        if (symbolTableConfigElementList != null) {
             extractSymbolConfig(symbolTableConfigElementList, language);
         }
         return configBuilder.build();
