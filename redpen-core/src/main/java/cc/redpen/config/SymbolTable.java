@@ -47,13 +47,19 @@ public final class SymbolTable implements Serializable {
         if (lang.equals("ja")) {
             LOG.info("\"ja\" is specified.");
             if (this.type.equals("hankaku")) {
-                LOG.info("\"hankaku\" type is specified.");
+                LOG.info("\"hankaku\" type is specified");
                 JAPANESE_HANKAKU_SYMBOLS.values().forEach(this::overrideSymbol);
+            } else if (this.type.equals("zenkaku2")) {
+                LOG.info("\"zenkaku2\" type is specified");
+                JAPANESE_SYMBOLS.values().forEach(this::overrideSymbol);
+                this.overrideSymbol(new Symbol(FULL_STOP, '．', "。."));
+                this.overrideSymbol(new Symbol(COMMA, '，', "、,"));
             } else {
-                LOG.info("\"normal\" type is specified.");
+                LOG.info("\"normal\" type is specified");
                 JAPANESE_SYMBOLS.values().forEach(this::overrideSymbol);
             }
         } else {
+            LOG.info("Default symbol settings are loaded");
             DEFAULT_SYMBOLS.values().forEach(this::overrideSymbol);
         }
         customSymbols.forEach(this::overrideSymbol);

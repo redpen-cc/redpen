@@ -22,6 +22,8 @@ import org.junit.Test;
 
 import static cc.redpen.config.SymbolType.EXCLAMATION_MARK;
 import static cc.redpen.config.SymbolType.LEFT_SINGLE_QUOTATION_MARK;
+import static cc.redpen.config.SymbolType.COMMA;
+
 import static org.junit.Assert.*;
 
 public class ConfigurationLoaderTest {
@@ -127,6 +129,40 @@ public class ConfigurationLoaderTest {
                 .getSymbol(EXCLAMATION_MARK).getInvalidChars()[0]);
     }
 
+
+    @Test
+    public void testLoadJapaneseConfigurationWithZenkaku2Type() throws RedPenException{
+        String sampleConfigString =
+                "<redpen-conf lang=\"ja\" type=\"zenkaku2\">" +
+                        "<validators>" +
+                        "<validator name=\"SentenceLength\">" +
+                        "<property name=\"max_length\" value=\"200\" />" +
+                        "</validator>" +
+                        "<validator name=\"MaxParagraphNumber\" />" +
+                        "</validators>" +
+                        "</redpen-conf>";
+
+        ConfigurationLoader configurationLoader = new ConfigurationLoader();
+        Configuration configuration = configurationLoader.loadFromString(sampleConfigString);
+
+        assertNotNull(configuration);
+        assertEquals(2, configuration.getValidatorConfigs().size());
+        assertEquals("SentenceLength",
+                configuration.getValidatorConfigs().get(0).getConfigurationName());
+        assertEquals("200",
+                configuration.getValidatorConfigs().get(0).getAttribute("max_length"));
+        assertEquals("MaxParagraphNumber",
+                configuration.getValidatorConfigs().get(1).getConfigurationName());
+        assertNotNull(configuration.getSymbolTable());
+        assertEquals('，', configuration.getSymbolTable()
+                .getSymbol(COMMA).getValue());
+        assertEquals(2, configuration.getSymbolTable()
+                .getSymbol(COMMA).getInvalidChars().length);
+        assertEquals('、', configuration.getSymbolTable()
+                .getSymbol(COMMA).getInvalidChars()[0]);
+        assertEquals(',', configuration.getSymbolTable()
+                .getSymbol(COMMA).getInvalidChars()[1]);
+    }
 
     @Test
     public void testNewLoadConfigurationWithoutSymbolTableConfig() throws RedPenException{
