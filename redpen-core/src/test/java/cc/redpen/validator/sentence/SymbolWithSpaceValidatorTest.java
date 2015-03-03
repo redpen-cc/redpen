@@ -184,7 +184,7 @@ public class SymbolWithSpaceValidatorTest {
         List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
         assertEquals(1, errors.size());
         assertEquals("SymbolWithSpace", errors.get(0).getValidatorName());
-        assertEquals(new LineOffset(1, 18), errors.get(0).getStartPosition().get());
-        assertEquals(new LineOffset(1, 19), errors.get(0).getEndPosition().get());
+        assertEquals(new LineOffset(1, 17), errors.get(0).getStartPosition().get());
+        assertEquals(new LineOffset(1, 18), errors.get(0).getEndPosition().get());
     }
 }

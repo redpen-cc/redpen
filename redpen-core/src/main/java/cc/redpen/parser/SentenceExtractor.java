@@ -47,6 +47,8 @@ public final class SentenceExtractor {
             "May.", "Jun.", "Jul.", "Aug.", "Sep.", "Oct.",
             "Nov.", "Dec.", "Feb.", "B.C", "A.D.");
     private EndOfSentenceDetector endOfSentenceDetector;
+    // reference to the symbol table used to create us
+    private SymbolTable symbolTable = null;
 
     /**
      * Constructor.
@@ -64,6 +66,7 @@ public final class SentenceExtractor {
      */
     public SentenceExtractor(SymbolTable symbolTable) {
         this(extractPeriods(symbolTable), extractRightQuotations(symbolTable));
+        this.symbolTable = symbolTable;
     }
 
     /**
@@ -144,9 +147,9 @@ public final class SentenceExtractor {
     public int extract(String line, List<Pair<Integer, Integer>> sentencePositions) {
         int startPosition = 0;
         int periodPosition = endOfSentenceDetector.getSentenceEndPosition(line);
-        while (periodPosition >= 0 ) {
-            sentencePositions.add(new Pair<>(startPosition, periodPosition+1));
-            startPosition = periodPosition+1;
+        while (periodPosition >= 0) {
+            sentencePositions.add(new Pair<>(startPosition, periodPosition + 1));
+            startPosition = periodPosition + 1;
             periodPosition = endOfSentenceDetector.getSentenceEndPosition(line, startPosition);
         }
         return startPosition;
@@ -160,6 +163,18 @@ public final class SentenceExtractor {
      */
     public int getSentenceEndPosition(String str) {
         return endOfSentenceDetector.getSentenceEndPosition(str);
+    }
+
+    /**
+     * Return the string that should be used to re-join lines broken with \n in
+     * <p/>
+     * For English, this is a space.
+     * For Japanese, it is an empty string.
+     *
+     * @return a string used to join lines that have been 'broken'
+     */
+    public String getBrokenLineSeparator() {
+        return (symbolTable != null) && (symbolTable.getLang().equals("ja")) ? "" : " ";
     }
 
     /**

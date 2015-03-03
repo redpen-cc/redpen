@@ -24,6 +24,7 @@ import cc.redpen.model.ListBlock;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.parser.DocumentParser;
+import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.validator.ValidationError;
 import org.junit.Before;
@@ -618,13 +619,11 @@ public class WikiParserTest {
         assertEquals(1, errors.size());
         assertEquals("InvalidSymbol", errors.get(0).getValidatorName());
         assertEquals(19, errors.get(0).getSentence().getContent().length());
-        // wiki parser does not support error position.
-        assertEquals(Optional.empty(), errors.get(0).getStartPosition());
-        assertEquals(Optional.empty(), errors.get(0).getEndPosition());
+        assertEquals(Optional.of(new LineOffset(1, 18)), errors.get(0).getStartPosition());
+        assertEquals(Optional.of(new LineOffset(1, 19)), errors.get(0).getEndPosition());
     }
 
-    private Document createFileContent(String inputDocumentString,
-                                       Configuration conf) {
+    private Document createFileContent(String inputDocumentString, Configuration conf) {
         DocumentParser parser = DocumentParser.WIKI;
         try {
             return parser.parse(inputDocumentString, new SentenceExtractor(conf.getSymbolTable()), conf.getTokenizer());
@@ -634,8 +633,7 @@ public class WikiParserTest {
         }
     }
 
-    private Document createFileContent(
-            String inputDocumentString) {
+    private Document createFileContent(String inputDocumentString) {
         Configuration conf = new Configuration.ConfigurationBuilder().build();
         DocumentParser parser = DocumentParser.WIKI;
         Document doc = null;

@@ -53,7 +53,7 @@ public final class Sentence implements Serializable {
     private boolean isFirstSentence;
     /**
      * A list of tokens.
-     *
+     * <p/>
      * Note: the contents of the tokens are added in DocumentCollectionBuilder
      */
     private List<TokenElement> tokens;
@@ -65,10 +65,10 @@ public final class Sentence implements Serializable {
     /**
      * Constructor.
      *
-     * @param sentenceContent  content of sentence
-     * @param lineNum line number of sentence
+     * @param sentenceContent content of sentence
+     * @param lineNum         line number of sentence
      */
-    public Sentence(String sentenceContent, int lineNum){
+    public Sentence(String sentenceContent, int lineNum) {
         this(sentenceContent, lineNum, 0);
     }
 
@@ -77,7 +77,7 @@ public final class Sentence implements Serializable {
      *
      * @param sentenceContent  content of sentence
      * @param sentencePosition sentence position
-     * @param startOffset offset of the start position in the line
+     * @param startOffset      offset of the start position in the line
      */
     public Sentence(String sentenceContent, int sentencePosition, int startOffset) {
         super();
@@ -97,7 +97,7 @@ public final class Sentence implements Serializable {
         this.startPositionOffset = offsetMap.get(0).offset;
         this.lineNumber = offsetMap.get(0).lineNum;
         this.isFirstSentence = false;
-        this.tokens =  new ArrayList<>();
+        this.tokens = new ArrayList<>();
         this.links = links;
     }
 
@@ -130,6 +130,7 @@ public final class Sentence implements Serializable {
 
     /**
      * Add a link to Sentence
+     *
      * @param link link url
      */
     public void addLink(String link) {
@@ -156,6 +157,7 @@ public final class Sentence implements Serializable {
 
     /**
      * Get start column offset where the sentence starts.
+     *
      * @return column offset of start sentence
      */
     public int getStartPositionOffset() {
@@ -174,6 +176,7 @@ public final class Sentence implements Serializable {
 
     /**
      * Set a flag to detect if the sentence is a first sentence of a paragraph.
+     *
      * @param isFirstSentence a flag to detect if the sentence exists in the begging of a paragraph
      */
     public void setIsFirstSentence(boolean isFirstSentence) {
@@ -182,6 +185,7 @@ public final class Sentence implements Serializable {
 
     /**
      * Get a set of tokenized words in the sentence.
+     *
      * @return list of tokenized words
      */
     public List<TokenElement> getTokens() {
@@ -190,6 +194,7 @@ public final class Sentence implements Serializable {
 
     /**
      * Set a set of tokenized words.
+     *
      * @param tokens tokenized words
      */
     public void setTokens(List<TokenElement> tokens) {
@@ -197,7 +202,6 @@ public final class Sentence implements Serializable {
     }
 
     /**
-<<<<<<< HEAD
      * Set the offset mapping table which contains character position to column offset in line.
      *
      * @param offsetMap position mapping table
@@ -217,10 +221,10 @@ public final class Sentence implements Serializable {
         if (this.offsetMap.size() > position) {
             return Optional.of(this.offsetMap.get(position));
         } else if (this.offsetMap.size() == position && offsetMap.size() > 0) {
-            LineOffset prev = this.offsetMap.get(position-1);
-            return Optional.of(new LineOffset(prev.lineNum, prev.offset+1));
+            LineOffset prev = this.offsetMap.get(position - 1);
+            return Optional.of(new LineOffset(prev.lineNum, prev.offset + 1));
         } else {
-            return Optional.empty();
+            return Optional.of(new LineOffset(lineNumber, position));
         }
     }
 

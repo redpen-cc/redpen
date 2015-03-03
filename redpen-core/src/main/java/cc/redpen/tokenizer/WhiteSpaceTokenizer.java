@@ -27,28 +27,67 @@ public class WhiteSpaceTokenizer implements RedPenTokenizer {
             Pattern.compile("^[-+]?\\d+(\\.\\d+)?$") // a number [+-]n[.n]
     };
 
+
     public WhiteSpaceTokenizer() {
     }
 
     @Override
     public List<TokenElement> tokenize(String content) {
-        List<TokenElement> resultTokens = new ArrayList<>();
-        String normalized = content.replaceAll("\\.|\\,|\\?|\\(|\\)", " ");
-        String[] words = normalized.split(" +");
+        List<TokenElement> tokens = new ArrayList<>();
 
-        for (String word : words) {
-            boolean validToken = true;
-            for (Pattern pattern : BLACKLIST_TOKEN_PATTERNS) {
-                if (pattern.matcher(word).find()) {
-                    validToken = false;
+        String surface = "";
+        int tokenStart = 0;
+        List<String> tags = new ArrayList<>();
+
+        for (int i = 0, l = content.length(); i < l; i++) {
+            char c = content.charAt(i);
+            switch (c) {
+                case ' ':
+                case '?':
+                case ',':
+                case ':':
+                case ';':
+                case '.':
+                case '(':
+                case ')':
+                case '\u2014': // mdash
+                case '"':
+                case '\t':
+                case '\r':
+                case '\n':
+                    if (isSuitableToken(surface)) {
+                        tokens.add(new TokenElement(surface, tags, tokenStart));
+                    }
+                    surface = "";
+                    tokenStart = -1;
                     break;
-                }
-            }
-            if (validToken) {
-                resultTokens.add(new TokenElement(word));
+                default:
+                    if (tokenStart < 0) {
+                        tokenStart = i;
+                    }
+                    surface += c;
+                    break;
             }
         }
 
-        return resultTokens;
+        if (isSuitableToken(surface)) {
+            tokens.add(new TokenElement(surface, tags, tokenStart));
+        }
+
+        return tokens;
+    }
+
+    private boolean isSuitableToken(String surface) {
+
+        if (surface.isEmpty()) {
+            return false;
+        }
+
+        for (Pattern pattern : BLACKLIST_TOKEN_PATTERNS) {
+            if (pattern.matcher(surface).find()) {
+                return false;
+            }
+        }
+        return true;
     }
 }

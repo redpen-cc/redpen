@@ -123,6 +123,7 @@ public class JSONBySentenceFormatter extends JSONFormatter {
                             error.getSentence().getContent().length() + error.getSentence().getStartPositionOffset()));
                     sentenceErrors = new JSONArray();
                     sentenceError.put("errors", sentenceErrors);
+
                     documentErrors.put(sentenceError);
                     lastError = error;
                 }

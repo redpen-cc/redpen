@@ -36,8 +36,7 @@ import java.util.Optional;
  * Parser for plain text file.
  */
 final class PlainTextParser extends BaseDocumentParser implements Serializable {
-    private static final Logger LOG =
-            LoggerFactory.getLogger(PlainTextParser.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PlainTextParser.class);
     private static final long serialVersionUID = -4343255148183552844L;
 
     /**
@@ -60,19 +59,18 @@ final class PlainTextParser extends BaseDocumentParser implements Serializable {
         BufferedReader br = createReader(is);
         String remain = "";
         String line;
-        int lineNum = 1;
+        int lineNum = 0;
         try {
             while ((line = br.readLine()) != null) {
+                lineNum++;
                 int periodPosition = sentenceExtractor.getSentenceEndPosition(line);
                 if (line.equals("")) {
                     documentBuilder.addParagraph();
                 } else if (periodPosition == -1) {
                     remain = remain + line;
                 } else {
-                    remain =
-                            this.extractSentences(lineNum, remain + line, sentenceExtractor, documentBuilder);
+                    remain = this.extractSentences(lineNum, remain + line, sentenceExtractor, documentBuilder);
                 }
-                lineNum++;
             }
         } catch (IOException e) {
             throw new RedPenException(e);

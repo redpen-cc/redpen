@@ -23,6 +23,7 @@ import cc.redpen.model.Document;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.parser.DocumentParser;
+import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.validator.ValidationError;
 import org.junit.Before;
@@ -73,7 +74,7 @@ public class PlainTextParserTest {
                 .addValidatorConfig(
                         new ValidatorConfiguration("SentenceLength").addAttribute("max_length", "10"))
                 .build();
-            parser = DocumentParser.PLAIN;
+        parser = DocumentParser.PLAIN;
     }
 
     @Test
@@ -199,7 +200,7 @@ public class PlainTextParserTest {
         assertEquals("InvalidSymbol", errors.get(0).getValidatorName());
         assertEquals(19, errors.get(0).getSentence().getContent().length());
         // plain text parser does not support error position.
-        assertEquals(Optional.empty(), errors.get(0).getStartPosition());
-        assertEquals(Optional.empty(), errors.get(0).getEndPosition());
+        assertEquals(Optional.of(new LineOffset(1, 18)), errors.get(0).getStartPosition());
+        assertEquals(Optional.of(new LineOffset(1, 19)), errors.get(0).getEndPosition());
     }
 }

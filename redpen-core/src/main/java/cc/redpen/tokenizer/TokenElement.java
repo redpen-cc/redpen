@@ -25,23 +25,32 @@ import java.util.List;
 
 public final class TokenElement implements Serializable {
     private static final long serialVersionUID = -7779529873101010570L;
+
+    // the surface form of the token
     final private String surface;
 
+    // token metadata (POS, etc)
     final private List<String> tags;
 
+    // the character position of the token in the sentence
+    final private int offset;
+
     TokenElement(String word) {
-        surface = word;
-        tags = Collections.unmodifiableList(new ArrayList<>());
+        this(word, Collections.unmodifiableList(new ArrayList<>()), 0);
     }
 
     TokenElement(String word, String tag) {
-        surface = word;
-        tags = Collections.unmodifiableList(Arrays.asList(tag));
+        this(word, Collections.unmodifiableList(Arrays.asList(tag)), 0);
     }
 
     TokenElement(String word, List<String> tagList) {
+        this(word, Collections.unmodifiableList(tagList), 0);
+    }
+
+    TokenElement(String word, List<String> tagList, int offset) {
         surface = word;
         tags = Collections.unmodifiableList(tagList);
+        this.offset = offset;
     }
 
     public String getSurface() {
@@ -50,6 +59,10 @@ public final class TokenElement implements Serializable {
 
     public List<String> getTags() {
         return tags;
+    }
+
+    public int getOffset() {
+        return offset;
     }
 
     @Override
@@ -76,6 +89,7 @@ public final class TokenElement implements Serializable {
     public String toString() {
         return "TokenElement{" +
                 "surface='" + surface + '\'' +
+                ", offset=" + offset +
                 ", tags=" + tags +
                 '}';
     }

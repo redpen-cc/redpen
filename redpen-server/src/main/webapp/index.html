@@ -172,6 +172,11 @@ $(document).ready(function () {
             showConfigurationOptions(firstValidRedpen);
         };
 
+        var getSourceLines = function () {
+            var document = $(editor).val();
+            return ("\n" + document).split("\n");
+        };
+
         // highlight a line in the editor
         var highlightEditor = function (error) {
             if (error) {
@@ -247,10 +252,10 @@ $(document).ready(function () {
                                     );
 
                             var addError = function (errorList, error) {
-
                                 if (validators[error.validator]) {
                                     $(errorList).append($('<li></li>')
                                             .addClass('redpen-error-message')
+                                            .toggleClass('redpen-error-message-annotated', error.annotated)
                                             .append(error.message)
                                             .mouseenter(function () {
                                                 highlightEditor(error);
@@ -265,20 +270,94 @@ $(document).ready(function () {
                                     )
                                 }
                             };
-                            for (var i = 0; i < errors.length; i++) {
-                                var errorDiv = $('<div></div>').addClass('redpen-error-section');
-                                var errorList = $('<ul></ul>');
-                                results.append(errorDiv);
-                                $(errorDiv)
-                                        .append($('<p></p>')
-                                                .addClass('redpen-error-sentence')
-                                                .html(errors[i].sentence)
-                                        )
-                                        .append(errorList);
 
-                                for (var j = 0; j < errors[i].errors.length; j++) {
-                                    addError(errorList, errors[i].errors[j]);
+                            var annotateDocument = function (errors) {
+                                var lines = getSourceLines();
+                                var annotated = [];
+                                for (var i = 1; i < lines.length; i++) {
+                                    var sentence = lines[i];
+                                    annotated[i] = [];
+                                    for (var j = 0; j < sentence.length; j++) {
+                                        annotated[i].push({char: sentence[j], errorStart: [], errorEnd: []});
+                                    }
                                 }
+                                for (var i = 0; i < errors.length; i++) {
+                                    var lineNo = errors[i].position.end.line;
+                                    if (lineNo < lines.length) {
+                                        var sentence = lines[lineNo];
+                                        var start = errors[i].position.start.offset ? errors[i].position.start.offset : 0;
+                                        var end = errors[i].position.end.offset ? errors[i].position.end.offset : 0;
+                                        if ((start != 0) || (end != 0)) {
+                                            if (annotated[lineNo][start]) {
+                                                annotated[lineNo][start].errorStart.push({id: i + 1, error: errors[i]});
+                                            }
+                                            errors[i].annotated = true;
+                                        }
+                                        if (annotated[lineNo][end]) {
+                                            annotated[lineNo][end].errorEnd.push({id: i + 1, error: errors[i]});
+                                            errors[i].annotated = true;
+                                        }
+
+                                    }
+                                }
+
+                                // renderer the errors as HTML
+                                var html = "";
+                                var errorOpen = false;
+                                for (var line = 1; line < annotated.length; line++) {
+                                    if (line != 1) {
+                                        html += "<br/>";
+                                    }
+                                    for (var i = 0; i < annotated[line].length; i++) {
+                                        if (errorOpen && annotated[line][i].errorEnd.length) {
+                                            html += "</i>";
+                                            errorOpen = false;
+                                        }
+                                        for (var j = 0; j < annotated[line][i].errorEnd.length; j++) {
+                                            html += "<b>" + annotated[line][i].errorEnd[j].id + "</b>";
+                                        }
+                                        if (annotated[line][i].errorStart.length) {
+                                            html += "<i>";
+                                            errorOpen = true;
+                                        }
+                                        if (errorOpen && annotated[line][i].errorEnd.length) {
+                                            html += "</i>";
+                                            errorOpen = false;
+                                        }
+                                        html += annotated[line][i].char;
+                                    }
+                                }
+
+                                return $("<span></span>").addClass("redpen-annotated-sentence").html(html);
+                            };
+
+                            var allErrors = [];
+                            for (var i = 0; i < errors.length; i++) {
+                                for (var j = 0; j < errors[i].errors.length; j++) {
+                                    // TODO: Consider putting absolute positions in the errors rather than sentence relative ones?
+                                    errors[i].errors[j].position.start.offset += errors[i].position.start.offset;
+                                    errors[i].errors[j].position.end.offset += errors[i].position.start.offset;
+                                    allErrors.push(errors[i].errors[j]);
+                                }
+                            }
+                            allErrors.sort(function (a, b) {
+                                var lineDiff = a.position.end.line - b.position.end.line;
+                                return lineDiff == 0 ? a.position.end.offset - b.position.end.offset : lineDiff;
+                            });
+
+                            var annotatedSentence = annotateDocument(allErrors);
+                            var errorDiv = $('<div></div>').addClass('redpen-error-section');
+                            var errorList = $('<ol></ol>').addClass('redpen-error-list');
+                            results.append(errorDiv);
+                            $(errorDiv)
+                                    .append($('<p></p>')
+                                            .addClass('redpen-error-sentence')
+                                            .html(annotatedSentence)
+                                    )
+                                    .append(errorList);
+
+                            for (var j = 0; j < allErrors.length; j++) {
+                                addError(errorList, allErrors[j]);
                             }
                         }
                         else {

@@ -163,7 +163,7 @@ public class ToFileContentSerializer implements Visitor {
                     sentencePosition.second);
             outputSentences.add(new Sentence(line.substring(
                     sentencePosition.first, sentencePosition.second), offsetMap,
-                    mergedCandidateSentence.getRangedLinks(sentencePosition.first, sentencePosition.second-1)));
+                    mergedCandidateSentence.getRangedLinks(sentencePosition.first, sentencePosition.second - 1)));
         }
         if (lastPosition < mergedCandidateSentence.getContents().length()) {
             List<LineOffset> offsetMap = mergedCandidateSentence.getOffsetMap().subList(lastPosition,
@@ -334,8 +334,8 @@ public class ToFileContentSerializer implements Visitor {
         switch (simpleNode.getType()) {
             case Linebreak:
                 addCandidateSentence(
-                        getLineNumberFromStartIndex(simpleNode.getStartIndex()+1),
-                        " ", 0); //NOTE: column Offset of Linebreak should be always 0.
+                        getLineNumberFromStartIndex(simpleNode.getStartIndex() + 1),
+                        sentenceExtractor.getBrokenLineSeparator(), 0); //NOTE: column Offset of Linebreak should be always 0.
                 break;
             case Nbsp:
                 break;
