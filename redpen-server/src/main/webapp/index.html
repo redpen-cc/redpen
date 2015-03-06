@@ -251,7 +251,7 @@ $(document).ready(function () {
                                 if (validators[error.validator]) {
                                     $(errorList).append($('<li></li>')
                                             .addClass('redpen-error-message')
-                                            .append(error.message)
+                                            .text(error.message)
                                             .mouseenter(function () {
                                                 highlightEditor(error);
                                             })
@@ -272,7 +272,7 @@ $(document).ready(function () {
                                 $(errorDiv)
                                         .append($('<p></p>')
                                                 .addClass('redpen-error-sentence')
-                                                .html(errors[i].sentence)
+                                                .text(errors[i].sentence)
                                         )
                                         .append(errorList);
 
