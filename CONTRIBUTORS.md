@@ -6,3 +6,5 @@
 * Gaute Lambertsen <gl _at_ atilika.com>
 * Yusuke Yamamoto <yusuke at mac.com>
 * Shintaro Katafuchi <hot.chemistry21 at gmail.com>
+* Takahiro Yoshimura <altakey _at_ gmail.com>
+* Naoki Ainoya <ainonic _at_ gmail.com>
