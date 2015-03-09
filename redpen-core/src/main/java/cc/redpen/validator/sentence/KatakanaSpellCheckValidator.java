@@ -22,8 +22,8 @@ import cc.redpen.model.Sentence;
 import cc.redpen.util.LevenshteinDistance;
 import cc.redpen.util.StringUtils;
 import cc.redpen.util.WordListExtractor;
+import cc.redpen.validator.CloneableValidator;
 import cc.redpen.validator.ValidationError;
-import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +51,7 @@ import java.util.*;
  * word is smaller than the threshold, we do not detect
  * the similarity.
  */
-final public class KatakanaSpellCheckValidator extends Validator {
+final public class KatakanaSpellCheckValidator extends CloneableValidator {
     /**
      * The default similarity ratio between the length and the distance.
      */

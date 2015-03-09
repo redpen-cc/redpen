@@ -20,8 +20,8 @@ package cc.redpen.validator.sentence;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.KeyValueDictionaryExtractor;
+import cc.redpen.validator.CloneableValidator;
 import cc.redpen.validator.ValidationError;
-import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +33,7 @@ import java.util.*;
  * If input sentences contain invalid expressions, this validator
  * returns the errors with corrected expressions.
  */
-final public class SuggestExpressionValidator extends Validator {
+final public class SuggestExpressionValidator extends CloneableValidator {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(SuggestExpressionValidator.class);

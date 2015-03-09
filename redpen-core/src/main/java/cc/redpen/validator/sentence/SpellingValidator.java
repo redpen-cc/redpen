@@ -21,8 +21,8 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.util.WordListExtractor;
+import cc.redpen.validator.CloneableValidator;
 import cc.redpen.validator.ValidationError;
-import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +30,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
-public class SpellingValidator extends Validator {
+public class SpellingValidator extends CloneableValidator {
 
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/spellchecker";
     private static final Logger LOG =

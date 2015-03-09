@@ -21,8 +21,8 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.util.WordListExtractor;
+import cc.redpen.validator.CloneableValidator;
 import cc.redpen.validator.ValidationError;
-import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +30,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
-final public class DoubledWordValidator extends Validator {
+final public class DoubledWordValidator extends CloneableValidator {
     private static final Logger LOG =
             LoggerFactory.getLogger(DoubledWordValidator.class);
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/doubled-word";

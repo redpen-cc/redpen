@@ -20,8 +20,8 @@ package cc.redpen.validator.sentence;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.WordListExtractor;
+import cc.redpen.validator.CloneableValidator;
 import cc.redpen.validator.ValidationError;
-import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +32,7 @@ import java.util.*;
 /**
  * Validate input sentences contain invalid expression.
  */
-final public class InvalidExpressionValidator extends Validator {
+final public class InvalidExpressionValidator extends CloneableValidator {
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/invalid-expression";
     private static final Logger LOG =
             LoggerFactory.getLogger(InvalidExpressionValidator.class);

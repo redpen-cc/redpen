@@ -21,8 +21,8 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.util.WordListExtractor;
+import cc.redpen.validator.CloneableValidator;
 import cc.redpen.validator.ValidationError;
-import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +33,7 @@ import java.util.*;
 /**
  * Detect invalid word occurrences.
  */
-final public class InvalidWordValidator extends Validator {
+final public class InvalidWordValidator extends CloneableValidator {
     private static final String DEFAULT_RESOURCE_PATH =
             "default-resources/invalid-word";
     private static final Logger LOG =
