@@ -54,7 +54,7 @@ public final class Main {
         System.exit(run(args));
     }
 
-    public static int run(String... args) {
+    public static int run(String... args) throws RedPenException {
         Options options = new Options();
         options.addOption("h", "help", false, "Displays this help information and exits");
 

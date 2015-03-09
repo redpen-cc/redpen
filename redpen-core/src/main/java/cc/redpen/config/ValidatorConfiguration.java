@@ -56,6 +56,13 @@ public final class ValidatorConfiguration {
     }
 
     /**
+     * Get validator class name
+     * @return validator class name
+     */
+    public String getValidatorClassName() {
+        return configurationName + "Validator";
+    }
+    /**
      * Add an attribute.
      *
      * @param name  attribute name
