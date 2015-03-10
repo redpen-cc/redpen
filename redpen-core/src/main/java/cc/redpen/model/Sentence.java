@@ -218,14 +218,16 @@ public final class Sentence implements Serializable {
      * @return offset position
      */
     public Optional<LineOffset> getOffset(int position) {
-        if (this.offsetMap.size() > position) {
-            return Optional.of(this.offsetMap.get(position));
-        } else if (this.offsetMap.size() == position && offsetMap.size() > 0) {
-            LineOffset prev = this.offsetMap.get(position - 1);
-            return Optional.of(new LineOffset(prev.lineNum, prev.offset + 1));
-        } else {
+        if (position >= 0) {
+            if (offsetMap.size() > position) {
+                return Optional.of(offsetMap.get(position));
+            } else if ((position > 0) && (offsetMap.size() == position)) {
+                LineOffset prev = offsetMap.get(position - 1);
+                return Optional.of(new LineOffset(prev.lineNum, prev.offset + 1));
+            }
             return Optional.of(new LineOffset(lineNumber, position));
         }
+        return Optional.empty();
     }
 
     /**
