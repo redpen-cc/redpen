@@ -229,6 +229,17 @@ public final class Sentence implements Serializable {
     }
 
     /**
+     * Get the position of the supplied offset (ie: the position in the source text) in this sentence's normalized content
+     *
+     * @param offset the position in the source text
+     * @return the position in the setence's content
+     */
+    public int getOffsetPosition(LineOffset offset) {
+        int position = offsetMap.indexOf(offset);
+        return position < 0 ? 0 : position;
+    }
+
+    /**
      * Get size of offset mapping table (the size should be same as the content length).
      *
      * @return size of position mapping table

@@ -22,9 +22,11 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
+import cc.redpen.model.Sentence;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
+import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.validator.ValidationError;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,7 +50,7 @@ public class PlainTextParserTest {
         return paragraphs;
     }
 
-    private int calcLineNum(Section section) {
+    private int getTotalSentenceCount(Section section) {
         int lineNum = 0;
 
         for (Paragraph paragraph : section.getParagraphs()) {
@@ -58,8 +60,13 @@ public class PlainTextParserTest {
     }
 
     private Document generateDocument(String sampleText) {
+        return generateDocument(sampleText, "en");
+    }
+
+    private Document generateDocument(String sampleText, String lang) {
         Document doc = null;
-        Configuration configuration = new Configuration.ConfigurationBuilder().build();
+        Configuration configuration = new Configuration.ConfigurationBuilder().setLanguage(lang).build();
+
         try {
             doc = parser.parse(sampleText, new SentenceExtractor(configuration.getSymbolTable()), configuration.getTokenizer());
         } catch (RedPenException e) {
@@ -91,7 +98,7 @@ public class PlainTextParserTest {
         sampleText += "Tama Home.\n";
         Document doc = generateDocument(sampleText);
         Section section = doc.getLastSection();
-        assertEquals(7, calcLineNum(section));
+        assertEquals(7, getTotalSentenceCount(section));
         assertEquals(3, extractParagraphs(section).size());
 
         assertEquals(2, section.getParagraph(0).getNumberOfSentences());
@@ -139,7 +146,7 @@ public class PlainTextParserTest {
         Section section = doc.getLastSection();
         List<Paragraph> paragraphs = extractParagraphs(section);
         assertEquals(1, paragraphs.size());
-        assertEquals(5, calcLineNum(section));
+        assertEquals(5, getTotalSentenceCount(section));
         Paragraph paragraph = paragraphs.get(paragraphs.size() - 1);
         for (int i = 0; i < expectedResult.length; i++) {
             assertEquals(expectedResult[i], paragraph.getSentence(i).getContent());
@@ -158,7 +165,7 @@ public class PlainTextParserTest {
         Section section = doc.getLastSection();
         List<Paragraph> paragraphs = extractParagraphs(section);
         assertEquals(1, paragraphs.size());
-        assertEquals(3, calcLineNum(section));
+        assertEquals(3, getTotalSentenceCount(section));
         Paragraph paragraph = paragraphs.get(paragraphs.size() - 1);
         for (int i = 0; i < expectedResult.length; i++) {
             assertEquals(expectedResult[i], paragraph.getSentence(i).getContent());
@@ -168,17 +175,139 @@ public class PlainTextParserTest {
     }
 
     @Test
+    public void testPlainTextDocumentOffsets() {
+        String sampleText = "Is Tokyu a good railway company? It is indeed. Additionally, its cash reserves\nwould fill " +
+                "a small \ncrater on the\nmoon! Yes it would\n\nAnother paragraph resides here.";
+        String[] expectedParagraph1Sentences = {
+                "Is Tokyu a good railway company?",
+                " It is indeed.",
+                " Additionally, its cash reserves would fill a small  crater on the moon!",
+                " Yes it would"
+        };
+        Document doc = generateDocument(sampleText);
+        Section section = doc.getLastSection();
+        List<Paragraph> paragraphs = extractParagraphs(section);
+        assertEquals(2, paragraphs.size());
+        assertEquals(5, getTotalSentenceCount(section));
+        Paragraph paragraph1 = paragraphs.get(0);
+        Paragraph paragraph2 = paragraphs.get(1);
+
+        assertEquals(4, paragraph1.getNumberOfSentences());
+        assertEquals(1, paragraph2.getNumberOfSentences());
+
+        // check the sentence text
+        for (int i = 0; i < expectedParagraph1Sentences.length; i++) {
+            assertEquals(expectedParagraph1Sentences[i], paragraph1.getSentence(i).getContent());
+        }
+
+        // make sure the sentences tokenized correctly
+        assertEquals(6, paragraph1.getSentence(0).getTokens().size());
+        assertEquals(3, paragraph1.getSentence(1).getTokens().size());
+        assertEquals(12, paragraph1.getSentence(2).getTokens().size());
+        assertEquals(3, paragraph1.getSentence(3).getTokens().size());
+
+        // ensure that we can recover the original position of a token
+        TokenElement token = paragraph1.getSentence(2).getTokens().get(0); // line 1, offset 47, first word of sentence, "Additionally"
+        assertEquals("Additionally", token.getSurface());
+        assertEquals(1, token.getOffset());
+        assertEquals(new LineOffset(1, 47), paragraph1.getSentence(2).getOffset(token.getOffset()).get());
+
+        token = paragraph1.getSentence(2).getTokens().get(8); // line 3, offset 0, "crater"
+        assertEquals("crater", token.getSurface());
+        assertEquals(53, token.getOffset());
+        assertEquals(new LineOffset(3, 0), paragraph1.getSentence(2).getOffset(token.getOffset()).get());
+
+        token = paragraph1.getSentence(3).getTokens().get(1); // line 4, offset 5, "it"
+        assertEquals("it", token.getSurface());
+        assertEquals(5, token.getOffset());
+        assertEquals(new LineOffset(4, 10), paragraph1.getSentence(3).getOffset(token.getOffset()).get());
+
+
+        assertEquals(0, section.getHeaderContent(0).getLineNumber());
+        assertEquals("", section.getHeaderContent(0).getContent());
+    }
+
+    @Test
+    public void testPlainTextJapaneseDocumentOffsets() {
+        String sampleText = "お祖母さんの鉛筆は田の\n中にあります。お祖母さんの鉛筆が中にあるの\n田はどこですか？私の家\nの後ろあります\n\nつぎだんらくです。";
+        String[] expectedParagraph1Sentences = {
+                "お祖母さんの鉛筆は田の中にあります。",
+                "お祖母さんの鉛筆が中にあるの田はどこですか？",
+                "私の家の後ろあります"
+        };
+        Document doc = generateDocument(sampleText, "ja");
+        Section section = doc.getLastSection();
+        List<Paragraph> paragraphs = extractParagraphs(section);
+        assertEquals(2, paragraphs.size());
+        assertEquals(4, getTotalSentenceCount(section));
+        Paragraph paragraph1 = paragraphs.get(0);
+        Paragraph paragraph2 = paragraphs.get(1);
+
+        assertEquals(3, paragraph1.getNumberOfSentences());
+        assertEquals(1, paragraph2.getNumberOfSentences());
+
+        // check the sentence text
+        for (int i = 0; i < expectedParagraph1Sentences.length; i++) {
+            assertEquals(expectedParagraph1Sentences[i], paragraph1.getSentence(i).getContent());
+        }
+
+        // make sure the sentences tokenized correctly
+        assertEquals(11, paragraph1.getSentence(0).getTokens().size());
+        assertEquals(14, paragraph1.getSentence(1).getTokens().size());
+        assertEquals(7, paragraph1.getSentence(2).getTokens().size());
+
+        // ensure that we can recover the original position of a token
+        TokenElement token = paragraph1.getSentence(0).getTokens().get(6); // line 2, offset 0, "middle"
+        assertEquals("中", token.getSurface());
+        assertEquals(11, token.getOffset());
+        assertEquals(new LineOffset(2, 0), paragraph1.getSentence(0).getOffset(token.getOffset()).get());
+
+        token = paragraph1.getSentence(1).getTokens().get(10); // line 3, offset 2, "where"
+        assertEquals("どこ", token.getSurface());
+        assertEquals(16, token.getOffset());
+        assertEquals(new LineOffset(3, 2), paragraph1.getSentence(1).getOffset(token.getOffset()).get());
+
+        token = paragraph1.getSentence(2).getTokens().get(0); // line 3, offset 8, first word of sentence, "I"
+        assertEquals("私", token.getSurface());
+        assertEquals(0, token.getOffset());
+        assertEquals(new LineOffset(3, 8), paragraph1.getSentence(2).getOffset(token.getOffset()).get());
+
+
+        assertEquals(0, section.getHeaderContent(0).getLineNumber());
+        assertEquals("", section.getHeaderContent(0).getContent());
+    }
+
+    @Test
+    public void testPlainTextReverseOffsets() {
+        String sampleText = "お祖母さんの鉛筆は田の\n中にあります。お祖母さんの鉛筆が中にあるの\n田はどこですか？私の家\nの後ろあります";
+        Document doc = generateDocument(sampleText, "ja");
+        Section section = doc.getLastSection();
+        List<Paragraph> paragraphs = extractParagraphs(section);
+        assertEquals(1, paragraphs.size());
+        Paragraph paragraph1 = paragraphs.get(0);
+
+        assertEquals(3, paragraph1.getNumberOfSentences());
+
+        for (Sentence s : paragraph1.getSentences()) {
+            for (TokenElement t : s.getTokens()) {
+                assertEquals(true, s.getOffset(t.getOffset()).isPresent());
+                assertEquals(t.getOffset(), s.getOffsetPosition(s.getOffset(t.getOffset()).get()));
+            }
+        }
+    }
+
+    @Test
     public void testGenerateDocumentWithNoContent() {
         String sampleText = "";
         Document doc = generateDocument(sampleText);
         Section section = doc.getLastSection();
         List<Paragraph> paragraphs = extractParagraphs(section);
         assertEquals(1, paragraphs.size());
-        assertEquals(0, calcLineNum(section));
+        assertEquals(0, getTotalSentenceCount(section));
     }
 
     @Test
-    public void testErrorPositionOfMarkdownParser() throws RedPenException {
+    public void testErrorPositionOfPlainTextParser() throws RedPenException {
         String sampleText = "This is a good day。\n"; // invalid end of sentence symbol
         Configuration conf = new Configuration.ConfigurationBuilder()
                 .setLanguage("en")

@@ -88,6 +88,9 @@ public class JSONBySentenceFormatter extends JSONFormatter {
         }
         jsonError.put("position", asJSON(startOffset, endOffset));
 
+        // add the error position relative to the sentence's content
+        jsonError.put("subsentence", asJSON(error.getSentence(), startOffset, endOffset));
+
         return jsonError;
     }
 

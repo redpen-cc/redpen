@@ -171,6 +171,8 @@ public final class SentenceExtractor {
      * For English, this is a space.
      * For Japanese, it is an empty string.
      *
+     * The specification of this string should be moved to part of the configuration
+     *
      * @return a string used to join lines that have been 'broken'
      */
     public String getBrokenLineSeparator() {

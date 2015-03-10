@@ -23,10 +23,11 @@ import java.util.regex.Pattern;
 
 public class WhiteSpaceTokenizer implements RedPenTokenizer {
 
-    private static Pattern[] BLACKLIST_TOKEN_PATTERNS = new Pattern[]{
+    private static final Pattern[] BLACKLIST_TOKEN_PATTERNS = new Pattern[]{
             Pattern.compile("^[-+]?\\d+(\\.\\d+)?$") // a number [+-]n[.n]
     };
 
+    private static final String DELIMITERS = " \t\n\r?!,:;.()\u2014\"";
 
     public WhiteSpaceTokenizer() {
     }
@@ -36,42 +37,27 @@ public class WhiteSpaceTokenizer implements RedPenTokenizer {
         List<TokenElement> tokens = new ArrayList<>();
 
         String surface = "";
-        int tokenStart = 0;
+        int offset = 0;
         List<String> tags = new ArrayList<>();
 
         for (int i = 0, l = content.length(); i < l; i++) {
-            char c = content.charAt(i);
-            switch (c) {
-                case ' ':
-                case '?':
-                case ',':
-                case ':':
-                case ';':
-                case '.':
-                case '(':
-                case ')':
-                case '\u2014': // mdash
-                case '"':
-                case '\t':
-                case '\r':
-                case '\n':
-                    if (isSuitableToken(surface)) {
-                        tokens.add(new TokenElement(surface, tags, tokenStart));
-                    }
-                    surface = "";
-                    tokenStart = -1;
-                    break;
-                default:
-                    if (tokenStart < 0) {
-                        tokenStart = i;
-                    }
-                    surface += c;
-                    break;
+            char ch = content.charAt(i);
+            if (DELIMITERS.indexOf(ch) != -1) {
+                if (isSuitableToken(surface)) {
+                    tokens.add(new TokenElement(surface, tags, offset));
+                }
+                surface = "";
+                offset = -1;
+            } else {
+                if (offset < 0) {
+                    offset = i;
+                }
+                surface += ch;
             }
         }
 
         if (isSuitableToken(surface)) {
-            tokens.add(new TokenElement(surface, tags, tokenStart));
+            tokens.add(new TokenElement(surface, tags, offset));
         }
 
         return tokens;
