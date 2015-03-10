@@ -23,6 +23,7 @@ import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Contains Settings used throughout {@link cc.redpen.RedPen}.
@@ -94,6 +95,7 @@ public final class Configuration {
         private final List<Symbol> customSymbols = new ArrayList<>();
 
         private String lang = "en";
+        private Optional<String> type = Optional.empty();
 
         public ConfigurationBuilder setLanguage(String lang) {
             this.lang = lang;
@@ -110,8 +112,13 @@ public final class Configuration {
             return this;
         }
 
+        public ConfigurationBuilder setType(String type) {
+            this.type = Optional.of(type);
+            return this;
+        }
+
         public Configuration build() {
-            return new Configuration(new SymbolTable(lang, customSymbols), this.validatorConfigs, this.lang);
+            return new Configuration(new SymbolTable(lang, type, customSymbols), this.validatorConfigs, this.lang);
         }
     }
 }

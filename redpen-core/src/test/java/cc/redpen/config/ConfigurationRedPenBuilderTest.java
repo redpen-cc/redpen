@@ -88,6 +88,19 @@ public class ConfigurationRedPenBuilderTest {
     }
 
     @Test
+    public void testBuildConfigurationSpecifyingLanguageAndType() {
+        Configuration config = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
+                .setLanguage("ja")
+                .setType("hankaku")
+                .build();
+
+        assertNotNull(config.getSymbolTable());
+        assertNotNull(config.getSymbolTable().getSymbol(FULL_STOP));
+        assertEquals('.', config.getSymbolTable().getSymbol(FULL_STOP).getValue());
+    }
+
+    @Test
     public void testBuildConfigurationOverrideSymbolSetting() {
         Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
