@@ -22,7 +22,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -65,6 +64,7 @@ public class MergedCandidateSentenceTest {
         }
 
     }
+
 
     private static List<CandidateSentence> initializeCandidateSentences(CandidateSentence... candidateSentences) {
         List<CandidateSentence> candidateSentenceList = new ArrayList<>();

@@ -39,6 +39,7 @@ import java.util.List;
 import static cc.redpen.config.SymbolType.COMMA;
 import static cc.redpen.config.SymbolType.FULL_STOP;
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class MarkdownParserTest {
 
@@ -58,7 +59,7 @@ public class MarkdownParserTest {
     public void testBasicDocument() throws UnsupportedEncodingException {
         String sampleText = "";
         sampleText += "# About Gekioko.\n";
-        sampleText += "Gekioko pun pun maru means very very angry.\n";
+        sampleText += "Gekioko pun pun maru means _very very_ angry.\n";
         sampleText += "\n";
         sampleText += "The word also has a positive meaning.\n";
         sampleText += "## About Gunma.\n";
@@ -71,9 +72,10 @@ public class MarkdownParserTest {
         sampleText += "* Location\n";
         sampleText += "    * Japan\n";
         sampleText += "\n";
-        sampleText += "The word also have positive meaning. However it is a bit wired.";
+        sampleText += "The word also have positive meaning. However it is a bit weird.";
 
         Document doc = createFileContent(sampleText);
+
         assertNotNull("doc is null", doc);
         assertEquals(3, doc.size());
         // first section
@@ -129,11 +131,12 @@ public class MarkdownParserTest {
         assertEquals(36, lastSection.getParagraph(1).getSentence(1).getStartPositionOffset());
     }
 
+
     @Test
     public void testGenerateDocumentWithHeaderedDocument() {
         String sampleText = "# Validator\n"
-        + "Validator class is a abstract class in RedPen project.\n"
-        + "Functions provided by RedPen class are implemented with validator class.\n";
+                + "Validator class is a abstract class in RedPen project.\n"
+                + "Functions provided by RedPen class are implemented with validator class.\n";
         Document doc = createFileContent(sampleText);
 
         final Section secondSection = doc.getSection(1);
@@ -164,7 +167,7 @@ public class MarkdownParserTest {
                 new LineOffset(3, 0), // F NOTE: even when there is a Linebreak, sentence start from offset "0".
                 new LineOffset(3, 1)  // u
         );
-        for (int i = 0; i < expectedOffsets.size() ; i++) {
+        for (int i = 0; i < expectedOffsets.size(); i++) {
             assertEquals(expectedOffsets.get(i), secondSection.getParagraph(0).getSentence(1).getOffset(i).get());
         }
 
@@ -320,7 +323,7 @@ public class MarkdownParserTest {
 
     }
 
-        @Test
+    @Test
     public void testGenerateDocumentWitVoidContent() {
         String sampleText = "";
         Document doc = createFileContent(sampleText);
@@ -395,7 +398,7 @@ public class MarkdownParserTest {
                 new LineOffset(1, 37));
 
         assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMapSize());
-        for (int i = 0; i < expectedOffsets.size() ; i++) {
+        for (int i = 0; i < expectedOffsets.size(); i++) {
             assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i).get());
         }
     }
@@ -489,7 +492,7 @@ public class MarkdownParserTest {
                 new LineOffset(1, 16));
 
         assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMapSize());
-        for (int i = 0; i < expectedOffsets.size() ; i++) {
+        for (int i = 0; i < expectedOffsets.size(); i++) {
             assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i).get());
         }
     }
@@ -521,7 +524,7 @@ public class MarkdownParserTest {
                 new LineOffset(1, 18));
 
         assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMapSize());
-        for (int i = 0; i < expectedOffsets.size() ; i++) {
+        for (int i = 0; i < expectedOffsets.size(); i++) {
             assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i).get());
         }
     }
@@ -553,7 +556,7 @@ public class MarkdownParserTest {
                 new LineOffset(1, 20));
 
         assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMapSize());
-        for (int i = 0; i < expectedOffsets.size() ; i++) {
+        for (int i = 0; i < expectedOffsets.size(); i++) {
             assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i).get());
         }
     }
@@ -584,7 +587,7 @@ public class MarkdownParserTest {
                 new LineOffset(1, 23),
                 new LineOffset(1, 24));
         assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMapSize());
-        for (int i = 0; i < expectedOffsets.size() ; i++) {
+        for (int i = 0; i < expectedOffsets.size(); i++) {
             assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i).get());
         }
     }
@@ -595,7 +598,7 @@ public class MarkdownParserTest {
         String sampleText = "";
         sampleText += "# About Gunma. About Saitama.\n";
         sampleText += "Gunma is located at west of Saitama.\n";
-        sampleText += "The word also have positive meaning. However it is a bit wired.";
+        sampleText += "The word also have positive meaning. However it is a bit weird.";
 
         Document doc = createFileContent(sampleText);
         Section lastSection = doc.getSection(doc.size() - 1);
@@ -620,7 +623,7 @@ public class MarkdownParserTest {
                 new LineOffset(1, 13));
 
         assertEquals(expectedOffsets1.size(), lastSection.getHeaderContent(0).getOffsetMapSize());
-        for (int i = 0; i < expectedOffsets1.size() ; i++) {
+        for (int i = 0; i < expectedOffsets1.size(); i++) {
             assertEquals(expectedOffsets1.get(i),
                     lastSection.getHeaderContent(0).getOffset(i).get());
         }
@@ -647,7 +650,7 @@ public class MarkdownParserTest {
         assertEquals(14, lastSection.getHeaderContent(1).getStartPositionOffset());
 
         assertEquals(expectedOffsets2.size(), lastSection.getHeaderContent(1).getOffsetMapSize());
-        for (int i = 0; i < expectedOffsets2.size() ; i++) {
+        for (int i = 0; i < expectedOffsets2.size(); i++) {
             assertEquals(expectedOffsets2.get(i),
                     lastSection.getHeaderContent(1).getOffset(i).get());
         }
@@ -680,7 +683,7 @@ public class MarkdownParserTest {
                 new LineOffset(1, 11),
                 new LineOffset(1, 12));
         assertEquals(expectedOffsets.size(), lastSection.getHeaderContent(0).getOffsetMapSize());
-        for (int i = 0; i < expectedOffsets.size() ; i++) {
+        for (int i = 0; i < expectedOffsets.size(); i++) {
             assertEquals(expectedOffsets.get(i),
                     lastSection.getHeaderContent(0).getOffset(i).get());
         }
@@ -796,12 +799,45 @@ public class MarkdownParserTest {
         String sampleText = "";
         sampleText += "# Table\n\n" +
                 "|--------|-------|\n" +
-                "|Cool    | Shit  |\n" +
+                "|Cool    | Stuff  |\n" +
                 "|is this | really\n";
 
         Document doc = createFileContent(sampleText);
         Section lastSection = doc.getSection(doc.size() - 1);
         assertEquals(0, lastSection.getNumberOfParagraphs());
+    }
+
+    @Test
+    public void testJapaneseDocumentSentences() throws UnsupportedEncodingException {
+        String sampleText = "";
+        sampleText += "# 僕の事。\n";
+        sampleText += "わたしはカラオケが大好きです。\n";
+        sampleText += "わたしもお寿司が大好きです。\n";
+        sampleText += "\n";
+
+        Document doc = createFileContent(sampleText, new Configuration.ConfigurationBuilder().setLanguage("ja").build());
+
+        assertNotNull("doc is null", doc);
+        assertEquals(2, doc.size());
+        // first section
+        final Section firstSection = doc.getSection(0);
+        assertEquals(1, firstSection.getHeaderContentsListSize());
+        assertEquals("", firstSection.getHeaderContent(0).getContent());
+        assertEquals(0, firstSection.getNumberOfLists());
+        assertEquals(0, firstSection.getNumberOfParagraphs());
+        assertEquals(1, firstSection.getNumberOfSubsections());
+
+        // 2nd section
+        final Section secondSection = doc.getSection(1);
+        assertEquals(1, secondSection.getHeaderContentsListSize());
+        assertEquals("僕の事。", secondSection.getHeaderContent(0).getContent());
+        assertEquals(1, secondSection.getHeaderContent(0).getLineNumber());
+        assertEquals(2, secondSection.getHeaderContent(0).getStartPositionOffset());
+        assertEquals(0, secondSection.getNumberOfLists());
+        assertEquals(1, secondSection.getNumberOfParagraphs());
+        assertEquals(2, secondSection.getParagraph(0).getNumberOfSentences());
+        assertEquals("わたしもお寿司が大好きです。", secondSection.getParagraph(0).getSentence(1).getContent());
+        assertEquals(firstSection, secondSection.getParentSection());
     }
 
     @Test

@@ -88,6 +88,9 @@ public class JSONBySentenceFormatter extends JSONFormatter {
         }
         jsonError.put("position", asJSON(startOffset, endOffset));
 
+        // add the error position relative to the sentence's content
+        jsonError.put("subsentence", asJSON(error.getSentence(), startOffset, endOffset));
+
         return jsonError;
     }
 
@@ -117,10 +120,9 @@ public class JSONBySentenceFormatter extends JSONFormatter {
                     JSONObject sentenceError = new JSONObject();
                     sentenceError.put("sentence", error.getSentence().getContent());
                     Sentence sentence = error.getSentence();
-                    //NOTE: last position is optional (only Markdown parser provides the offset positions)
-                    LineOffset lastPosition = sentence.getOffset(sentence.getContent().length()-1).orElse(
-                            new LineOffset(sentence.getLineNumber(),
-                                    sentence.getStartPositionOffset()+sentence.getContent().length()));
+                    //NOTE: last position is optional
+                    LineOffset lastPosition = sentence.getOffset(sentence.getContent().length() - 1)
+                            .orElse(new LineOffset(sentence.getLineNumber(), sentence.getStartPositionOffset() + sentence.getContent().length()));
                     sentenceError.put("position", asJSON(
                             sentence.getLineNumber(),
                             sentence.getStartPositionOffset(),
@@ -129,6 +131,7 @@ public class JSONBySentenceFormatter extends JSONFormatter {
                     );
                     sentenceErrors = new JSONArray();
                     sentenceError.put("errors", sentenceErrors);
+
                     documentErrors.put(sentenceError);
                     lastError = error;
                 }

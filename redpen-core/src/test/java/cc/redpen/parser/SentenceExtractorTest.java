@@ -30,7 +30,7 @@ import static org.junit.Assert.assertEquals;
 public class SentenceExtractorTest {
 
     private List<Sentence> createSentences(List<Pair<Integer, Integer>> outputPositions,
-            int lastPosition, String line) {
+                                           int lastPosition, String line) {
         List<Sentence> output = new ArrayList<>();
         for (Pair<Integer, Integer> outputPosition : outputPositions) {
             output.add(new Sentence(line.substring(outputPosition.first, outputPosition.second), 0));
@@ -200,7 +200,7 @@ public class SentenceExtractorTest {
 
     @Test
     public void testJapaneseSimple() {
-        char[] stopChars = {'。','？'};
+        char[] stopChars = {'。', '？'};
         SentenceExtractor extractor = new SentenceExtractor(stopChars);
         final String input = "これは埼玉ですか？いいえ群馬です。";
         List<Pair<Integer, Integer>> outputPositions = new ArrayList<>();
@@ -214,7 +214,7 @@ public class SentenceExtractorTest {
 
     @Test
     public void testJapaneseSimpleWithSpace() {
-        char[] stopChars = {'。','？'};
+        char[] stopChars = {'。', '？'};
         SentenceExtractor extractor = new SentenceExtractor(stopChars);
         final String input = "これは埼玉ですか？ いいえ群馬です。";
         List<Pair<Integer, Integer>> outputPositions = new ArrayList<>();
@@ -228,8 +228,8 @@ public class SentenceExtractorTest {
 
     @Test
     public void testJapaneseSimpleWithEndQuotations() {
-        char[] stopChars = {'。','？'};
-        char[] rightQuotations = {'’','”'};
+        char[] stopChars = {'。', '？'};
+        char[] rightQuotations = {'’', '”'};
         SentenceExtractor extractor = new SentenceExtractor(stopChars, rightQuotations);
         final String input = "これは“群馬。”";
         List<Pair<Integer, Integer>> outputPositions = new ArrayList<>();
@@ -242,8 +242,8 @@ public class SentenceExtractorTest {
 
     @Test
     public void testJapaneseMultipleSentencesWithEndQuotations() {
-        char[] stopChars = {'。','？'};
-        char[] rightQuotations = {'’','”'};
+        char[] stopChars = {'。', '？'};
+        char[] rightQuotations = {'’', '”'};
         SentenceExtractor extractor = new SentenceExtractor(stopChars, rightQuotations);
         final String input = "これは“群馬。”あれは群馬ではない。";
         List<Pair<Integer, Integer>> outputPositions = new ArrayList<>();
@@ -257,7 +257,7 @@ public class SentenceExtractorTest {
 
     @Test
     public void testJapaneseMultipleSentencesWithPartialSplit() {
-        char[] stopChars = {'．','？'};
+        char[] stopChars = {'．', '？'};
         char[] rightQuotations = {};
         SentenceExtractor extractor = new SentenceExtractor(stopChars, rightQuotations);
         final String input = "それは異なる．たとえば，\n" +
@@ -336,7 +336,7 @@ public class SentenceExtractorTest {
         assertEquals(input.length(), lastPosition);
     }
 
-//    @Test
+    //    @Test
 //    public void testConstructPatternString() {
 //        List<Character> endCharacters = new ArrayList<>();
 //        endCharacters.add('\\.');
@@ -348,7 +348,7 @@ public class SentenceExtractorTest {
 //
     @Test
     public void testConstructPatternStringWithoutEscape() {
-        char[] endCharacters = {'.','?','!'};
+        char[] endCharacters = {'.', '?', '!'};
         SentenceExtractor extractor = new SentenceExtractor(endCharacters);
         assertEquals("\\.'|\\?'|\\!'|\\.\"|\\?\"|\\!\"|\\.|\\?|\\!", extractor.constructEndSentencePattern().pattern());
     }

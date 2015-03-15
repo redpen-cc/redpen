@@ -33,14 +33,14 @@ import java.util.Map;
 final public class SpaceBeginningOfSentenceValidator extends Validator {
     private Map<Integer, List<Sentence>> sentencePositions = new HashMap<>();
 
-    private boolean isFistInLine(Sentence sentence) {
+    private boolean isFirstInLine(Sentence sentence) {
         return sentence.isFirstSentence() || sentencePositions.get(sentence.getLineNumber()).get(0) == sentence;
     }
 
     @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {
         String content = sentence.getContent();
-        if (!isFistInLine(sentence) && content.length() > 0 && content.charAt(0) != ' ') {
+        if (!isFirstInLine(sentence) && content.length() > 0 && content.charAt(0) != ' ') {
             errors.add(createValidationErrorWithPosition(sentence,
                     sentence.getOffset(0),
                     sentence.getOffset(1)));

@@ -50,7 +50,7 @@ final public class InvalidWordValidator extends Validator {
         //NOTE: only Ascii white space since this validator works for european languages.
         for (TokenElement token : sentence.getTokens()) {
             if (invalidWords.contains(token.getSurface().toLowerCase())) {
-                errors.add(createValidationError(sentence, token.getSurface()));
+                errors.add(createValidationErrorFromToken(sentence, token));
             }
         }
     }

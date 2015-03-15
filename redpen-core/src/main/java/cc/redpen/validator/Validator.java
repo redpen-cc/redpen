@@ -25,6 +25,7 @@ import cc.redpen.model.Document;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
 import cc.redpen.parser.LineOffset;
+import cc.redpen.tokenizer.TokenElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -197,6 +198,22 @@ public abstract class Validator {
      */
     protected ValidationError createValidationError(String messageKey, Sentence sentenceWithError, Object... args) {
         return new ValidationError(this.getClass(), getLocalizedErrorMessage(Optional.of(messageKey), args), sentenceWithError);
+    }
+
+    /**
+     * create a ValidationError using the details within the given token
+     *
+     * @param sentenceWithError sentence
+     * @param token             the TokenElement that has the error
+     * @return ValidationError with localized message
+     */
+    protected ValidationError createValidationErrorFromToken(Sentence sentenceWithError, TokenElement token) {
+        return createValidationErrorWithPosition(
+                sentenceWithError,
+                sentenceWithError.getOffset(token.getOffset()),
+                sentenceWithError.getOffset(token.getOffset() + token.getSurface().length()),
+                token.getSurface()
+        );
     }
 
     /**
