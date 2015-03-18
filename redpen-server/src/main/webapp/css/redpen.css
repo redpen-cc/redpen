@@ -119,6 +119,20 @@ textarea {
     padding-right: 4px;
 }
 
+#redpen-results-report {
+    background-color: #111;
+    color: #06F400;
+    min-height: 100%;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    font-family: monospace;
+    font-size: 12px;
+    white-space: pre-wrap;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
 #redpen-settings {
     height: 100%;
     overflow-y: auto;
@@ -193,11 +207,7 @@ textarea {
     background-position: left 5px;
     background-repeat: no-repeat;
     padding-left: 18px;
-}
-
-.redpen-error-message {
-    color: rgb(205, 31, 0);
-    cursor: help;
+    margin-bottom: 24px;
 }
 
 .redpen-info-message {
@@ -218,9 +228,7 @@ textarea {
     padding: 1px;
     margin-left: 2px;
     font-size: 9px;
-    background-color: #aaa;
-    color: white;
-    border-radius: 4px;
+    color: #aaa;
     vertical-align: middle;
 }
 
@@ -274,5 +282,59 @@ textarea {
 
 .redpen-validators .checkbox i {
     color: #1C6100;
+}
+
+.redpen-error-list {
+    margin-left: 0;
+    padding-right: 0;
+    list-style-type: none;
+    padding-left: 18px;
+    margin-bottom: 20px;
+}
+
+.redpen-error-message {
+    color: rgb(124, 47, 0);
+    cursor: help;
+}
+
+.redpen-error-message-annotated::before {
+    background-color: #FF713D !important;
+}
+
+.redpen-error-list li {
+    counter-increment: step-counter;
+}
+
+.redpen-error-list li::before {
+    content: counter(step-counter);
+    margin-right: 5px;
+    font-size: 80%;
+    background-color: grey;
+    color: white;
+    padding: 0;
+    display: inline-block;
+    text-align: center;
+    min-width: 20px;
+    border-radius: 3px;
+}
+
+.redpen-annotated-sentence i {
+    color: #8d3700;
+    font-style: normal;
+}
+
+.redpen-annotated-sentence b {
+    cursor: help;
+    font-weight: normal;
+    background-color: #FF713D;
+    color: #fff;
+    border-radius: 3px;
+    font-size: 60%;
+    display: inline-block;
+    line-height: 60%;
+    padding: 3px;
+    vertical-align: top;
+    text-align: center;
+    margin-right: 1px;
 }
 

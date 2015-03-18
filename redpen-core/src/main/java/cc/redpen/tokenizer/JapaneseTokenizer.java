@@ -36,7 +36,7 @@ public class JapaneseTokenizer implements RedPenTokenizer {
     public List<TokenElement> tokenize(String content) {
         List<TokenElement> tokens = new ArrayList<>();
         for (Token token : tokenizer.tokenize(content)) {
-            tokens.add(new TokenElement(token.getSurfaceForm(), Arrays.asList(token.getAllFeaturesArray())));
+            tokens.add(new TokenElement(token.getSurfaceForm(), Arrays.asList(token.getAllFeaturesArray()), token.getPosition()));
         }
         return tokens;
     }

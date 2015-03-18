@@ -64,8 +64,8 @@ public class SymbolWithSpaceValidator extends Validator {
                     && symbol.isNeedAfterSpace()
                     && !Character.isWhitespace(sentenceStr.charAt(position + 1))) {
                 return createValidationErrorWithPosition(sentence,
+                        sentence.getOffset(position),
                         sentence.getOffset(position+1),
-                        sentence.getOffset(position+2),
                         sentenceStr.charAt(position));
             }
         }

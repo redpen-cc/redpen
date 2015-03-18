@@ -19,6 +19,7 @@ package cc.redpen.formatter;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
+import cc.redpen.model.Sentence;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.validator.ValidationError;
 import org.json.JSONArray;
@@ -120,7 +121,8 @@ public class JSONFormatter extends Formatter {
      * @throws JSONException
      */
     protected JSONObject asJSON(LineOffset startLineOffset, LineOffset endLineOffset) throws JSONException {
-        return asJSON(startLineOffset.lineNum, startLineOffset.offset, endLineOffset.lineNum, endLineOffset.offset);
+        JSONObject json = asJSON(startLineOffset.lineNum, startLineOffset.offset, endLineOffset.lineNum, endLineOffset.offset);
+        return json;
     }
 
     /**
@@ -144,6 +146,24 @@ public class JSONFormatter extends Formatter {
         offset.put("offset", endOffset);
         position.put("end", offset);
         return position;
+    }
+
+    /**
+     * Render a start and end line offsets (ie: source text coordinates) as a description of a section of the sentence.getContent() string
+     *
+     * @param sentence        the sentence in which the offsets are located
+     * @param startLineOffset the line offset denoting the start position
+     * @param endLineOffset   the line offset denoting the end position
+     * @return a JSON representation of the offsets describing a section within the sentence's getContent() string
+     * @throws JSONException
+     */
+    protected JSONObject asJSON(Sentence sentence, LineOffset startLineOffset, LineOffset endLineOffset) throws JSONException {
+        JSONObject json = new JSONObject();
+        int start = sentence.getOffsetPosition(startLineOffset);
+        int length = Math.max(sentence.getOffsetPosition(endLineOffset) - start, 0);
+        json.put("offset", start);
+        json.put("length", length);
+        return json;
     }
 
     /**

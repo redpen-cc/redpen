@@ -88,7 +88,7 @@ public class SpellingValidator extends CloneableValidator {
             }
 
             if (!this.validWords.contains(surface)) {
-                errors.add(createValidationError(sentence, surface));
+                errors.add(createValidationErrorFromToken(sentence, token));
             }
         }
     }

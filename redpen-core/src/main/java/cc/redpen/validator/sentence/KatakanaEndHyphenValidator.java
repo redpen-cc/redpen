@@ -35,16 +35,16 @@ import java.util.Locale;
  * "コンピュータ (without hyphen) ", and "コンピューター (with hypen) ".
  * This validator validate if Katakana words ending format is match
  * the predefined standard. See JIS Z8301, G.6.2.2 b) G.3.
- * <p>
+ * <p/>
  * The rules in JIS Z8301 are as follows:
- * <p>
+ * <p/>
  * a) Words of 3 characters or more can not have the end hyphen.
  * b) Words of 2 characters or less can have the end hyphen.
  * c) A compound word applies a) and b) for each component.
  * d) In the cases from a) to c), the length of a syllable
  * which are represented as a hyphen, flip syllable,
  * and stuffed syllable is 1 except for Youon.
- * <p>
+ * <p/>
  * Note that KatakanaEndHyphenValidator only checks the rules a) and b).
  */
 final public class KatakanaEndHyphenValidator extends Validator {
@@ -84,24 +84,25 @@ final public class KatakanaEndHyphenValidator extends Validator {
             if (StringUtils.isKatakana(c) && c != KATAKANA_MIDDLE_DOT) {
                 katakana.append(c);
             } else {
-                result = this.checkKatakanaEndHyphen(sentence, katakana);
+                result = this.checkKatakanaEndHyphen(sentence, katakana, i-1);
                 if (result != null) {
                     errors.addAll(result);
                 }
                 katakana.delete(0, katakana.length());
             }
         }
-        result = this.checkKatakanaEndHyphen(sentence, katakana);
+        result = this.checkKatakanaEndHyphen(sentence, katakana, sentence.getContent().length() - 1);
         if (result != null) {
             errors.addAll(result);
         }
     }
 
     private List<ValidationError> checkKatakanaEndHyphen(Sentence sentence,
-                                                         StringBuilder katakana) {
+                                                         StringBuilder katakana,
+                                                         int position) {
         List<ValidationError> errors = new ArrayList<>();
         if (isKatakanaEndHyphen(katakana)) {
-            errors.add(createValidationError(sentence, katakana.toString()));
+            errors.add(createValidationErrorWithPosition(sentence, sentence.getOffset(position), sentence.getOffset(position + 1), katakana.toString()));
         }
         return errors;
     }
