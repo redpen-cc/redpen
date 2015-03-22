@@ -28,7 +28,6 @@ import cc.redpen.validator.Validator;
 import cc.redpen.validator.ValidatorFactory;
 import junit.framework.Assert;
 import org.junit.Test;
-import sun.jvm.hotspot.runtime.VFrame;
 
 import java.util.ArrayList;
 import java.util.List;
