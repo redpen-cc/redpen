@@ -21,8 +21,8 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.util.WordListExtractor;
-import cc.redpen.validator.CloneableValidator;
 import cc.redpen.validator.ValidationError;
+import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,12 +33,13 @@ import java.util.*;
 /**
  * Detect invalid word occurrences.
  */
-final public class InvalidWordValidator extends CloneableValidator {
+final public class InvalidWordValidator extends Validator {
     private static final String DEFAULT_RESOURCE_PATH =
             "default-resources/invalid-word";
     private static final Logger LOG =
             LoggerFactory.getLogger(InvalidWordValidator.class);
-    private Set<String> invalidWords = new HashSet<>();
+    private Set<String> invalidWords;
+    private Set<String> customInvalidWords = new HashSet<>();
 
     @Override
     public List<String> getSupportedLanguages() {
@@ -49,60 +50,38 @@ final public class InvalidWordValidator extends CloneableValidator {
     public void validate(List<ValidationError> errors, Sentence sentence) {
         //NOTE: only Ascii white space since this validator works for european languages.
         for (TokenElement token : sentence.getTokens()) {
-            if (invalidWords.contains(token.getSurface().toLowerCase())) {
+            if (invalidWords.contains(token.getSurface().toLowerCase())
+                    || customInvalidWords.contains(token.getSurface().toLowerCase())) {
                 errors.add(createValidationErrorFromToken(sentence, token));
             }
         }
     }
 
-    /**
-     * Add invalid element. This method is used for testing
-     *
-     * @param invalid invalid word to be added the list
-     */
-    public void addInvalid(String invalid) {
-        invalidWords.add(invalid);
-    }
-
     @Override
     protected void init() throws RedPenException {
         String lang = getSymbolTable().getLang();
-        WordListExtractor extractor = new WordListExtractor();
-
-        LOG.info("Loading default invalid word dictionary for " +
-                "\"" + lang + "\".");
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/invalid-word-" + lang + ".dat";
-        try {
-            extractor.loadFromResource(defaultDictionaryFile);
-        } catch (IOException e) {
-            LOG.error(e.getMessage());
-            LOG.error("Failed to load default dictionary.");
-            throw new RedPenException(e);
-        }
-        LOG.info("Succeeded to load default dictionary.");
+        invalidWords = loadWordListFromResource(defaultDictionaryFile, "invalid word", false);
 
-        Optional<String> listStr = getConfigAttribute("list");
-        listStr.ifPresent(f -> {
+        WordListExtractor extractor = new WordListExtractor();
+        getConfigAttribute("list").ifPresent((f -> {
             LOG.info("User defined invalid expression list found.");
-            invalidWords.addAll(Arrays.asList(f.split(",")));
+            customInvalidWords.addAll(Arrays.asList(f.split(",")));
             LOG.info("Succeeded to add elements of user defined list.");
-        });
+        }));
 
         Optional<String> confFile = getConfigAttribute("dict");
-        confFile.ifPresent(f -> {
-            LOG.info("user dictionary file is " + f);
+        if(confFile.isPresent()){
+            LOG.info("user dictionary file is " + confFile.get());
             try {
-                extractor.load(new FileInputStream(f));
+                extractor.load(new FileInputStream(confFile.get()));
+                LOG.info("Succeeded to load specified user dictionary.");
             } catch (IOException e) {
-                LOG.error(e.getMessage());
-                LOG.error("Failed to load user dictionary.");
-                return;
+                throw new RedPenException("Failed to load user dictionary.", e);
             }
-            LOG.info("Succeeded to load specified user dictionary.");
-        });
-
-        invalidWords.addAll(extractor.get());
+        }
+        customInvalidWords.addAll(extractor.get());
     }
 
     @Override

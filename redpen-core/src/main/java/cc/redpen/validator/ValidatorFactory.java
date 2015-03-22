@@ -57,16 +57,8 @@ public class ValidatorFactory {
     // store validator constructors to save reflection API call costs
     private static final Map<String, Constructor> validatorConstructorMap = new ConcurrentHashMap<>();
 
-    // store CloneableValidators to save instantiation costs
-    private static final Map<ValidatorConfiguration, CloneableValidator> cloneableValidatorMap = new ConcurrentHashMap<>();
-
     public static Validator getInstance(ValidatorConfiguration config, SymbolTable symbolTable)
             throws RedPenException {
-        CloneableValidator cloneableValidator = cloneableValidatorMap.get(config);
-        if (cloneableValidator != null) {
-            return (Validator) cloneableValidator.clone();
-        }
-
         Constructor<?> constructor = validatorConstructorMap.computeIfAbsent(config.getValidatorClassName(), validatorClassName -> {
             try {
                 for (String validatorPackage : VALIDATOR_PACKAGES) {
@@ -75,8 +67,7 @@ public class ValidatorFactory {
                         Class<?> clazz = Class.forName(fqValidatorClassName);
                         // ensure the class extends Validator
                         Class<?> superclass = clazz.getSuperclass();
-                        if (!superclass.equals(cc.redpen.validator.Validator.class) &&
-                                !superclass.equals(cc.redpen.validator.CloneableValidator.class)) {
+                        if (!superclass.equals(cc.redpen.validator.Validator.class)) {
                             throw new RuntimeException(fqValidatorClassName + " doesn't extend cc.redpen.validator.Validator");
                         }
                         return clazz.getConstructor();
@@ -96,13 +87,9 @@ public class ValidatorFactory {
         try {
             Validator validator = (Validator) constructor.newInstance();
             validator.preInit(config, symbolTable);
-            if(validator instanceof CloneableValidator) {
-                cloneableValidatorMap.put(config, (CloneableValidator)validator);
-            }
             return validator;
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
-
     }
 }

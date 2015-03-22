@@ -24,8 +24,11 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
+import cc.redpen.validator.Validator;
+import cc.redpen.validator.ValidatorFactory;
 import junit.framework.Assert;
 import org.junit.Test;
+import sun.jvm.hotspot.runtime.VFrame;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,88 +38,102 @@ import static org.junit.Assert.assertEquals;
 
 public class StartWithCapitalLetterValidatorTest {
     @Test
-    public void testDetectStartWithSmallCharacter() {
+    public void testDetectStartWithSmallCharacter() throws RedPenException {
         List<Document> documents = new ArrayList<>();
         documents.add(new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()
                 .addSentence("this is it.", 1)
                 .build());
-        StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
+        Configuration config = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter"))
+                .setLanguage("en").build();
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
         List<ValidationError> errors = new ArrayList<>();
         validator.validate(errors, documents.get(0).getLastSection().getParagraph(0).getSentence(0));
         assertEquals(1, errors.size());
     }
 
     @Test
-    public void testDetectStartWithCapitalCharacter() {
+    public void testDetectStartWithCapitalCharacter() throws RedPenException {
         List<Document> documents = new ArrayList<>();
         documents.add(new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()
                 .addSentence("This is it.", 1)
                 .build());
-        StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
+        Configuration config = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter"))
+                .setLanguage("en").build();
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
         List<ValidationError> errors = new ArrayList<>();
         validator.validate(errors, documents.get(0).getLastSection().getParagraph(0).getSentence(0));
         assertEquals(0, errors.size());
     }
 
     @Test
-    public void testStartWithElementOfWhiteList() {
+    public void testStartWithElementOfWhiteList() throws RedPenException {
         List<Document> documents = new ArrayList<>();
         documents.add(new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()
                 .addSentence("iPhone is a mobile computer.", 1)
                 .build());
-        StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
-        validator.addWhiteList("iPhone");
+        Configuration config = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter").addAttribute("list", "iPhone"))
+                .setLanguage("en").build();
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
         List<ValidationError> errors = new ArrayList<>();
         validator.validate(errors, documents.get(0).getLastSection().getParagraph(0).getSentence(0));
         assertEquals(0, errors.size());
     }
 
     @Test
-    public void testStartWithWhiteListItemInJapaneseSentence() {
+    public void testStartWithWhiteListItemInJapaneseSentence() throws RedPenException {
         List<Document> documents = new ArrayList<>();
         documents.add(new Document.DocumentBuilder(new JapaneseTokenizer())
                 .addSection(1)
                 .addParagraph()
                 .addSentence("iPhone はカッコイイ．", 1)
                 .build());
-        StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
-        validator.addWhiteList("iPhone");
+        Configuration config = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter").addAttribute("list", "iPhone"))
+                .setLanguage("en").build();
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
         List<ValidationError> errors = new ArrayList<>();
         validator.validate(errors, documents.get(0).getLastSection().getParagraph(0).getSentence(0));
         assertEquals(0, errors.size());
     }
 
     @Test
-    public void testStartWithWhiteSpaceAndThenItemOfWhiteList() {
+    public void testStartWithWhiteSpaceAndThenItemOfWhiteList() throws RedPenException {
         List<Document> documents = new ArrayList<>();
         documents.add(new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()
                 .addSentence(" iPhone is a mobile computer.", 1)
                 .build());
-        StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
-        validator.addWhiteList("iPhone");
+        Configuration config = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter").addAttribute("list", "iPhone"))
+                .setLanguage("en").build();
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
         List<ValidationError> errors = new ArrayList<>();
         validator.validate(errors, documents.get(0).getLastSection().getParagraph(0).getSentence(0));
         assertEquals(0, errors.size());
     }
 
     @Test
-    public void testVoid() {
+    public void testVoid() throws RedPenException {
         List<Document> documents = new ArrayList<>();
         documents.add(new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()
                 .addSentence("", 1)
                 .build());
-        StartWithCapitalLetterValidator validator = new StartWithCapitalLetterValidator();
-        validator.addWhiteList("iPhone");
+        Configuration config = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter").addAttribute("list", "iPhone"))
+                .setLanguage("en").build();
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
         List<ValidationError> errors = new ArrayList<>();
         validator.validate(errors, documents.get(0).getLastSection().getParagraph(0).getSentence(0));
         assertEquals(0, errors.size());

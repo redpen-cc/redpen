@@ -21,8 +21,8 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.util.WordListExtractor;
-import cc.redpen.validator.CloneableValidator;
 import cc.redpen.validator.ValidationError;
+import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,19 +33,12 @@ import java.util.*;
 /**
  * Check if the input sentence start with a capital letter.
  */
-final public class StartWithCapitalLetterValidator extends CloneableValidator {
+final public class StartWithCapitalLetterValidator extends Validator {
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/capital-letter-exception-list";
     private static final Logger LOG =
             LoggerFactory.getLogger(SpellingValidator.class);
     private Set<String> whiteList;
-
-    public StartWithCapitalLetterValidator() {
-        this.whiteList = new HashSet<>();
-    }
-
-    public boolean addWhiteList(String item) {
-        return whiteList.add(item);
-    }
+    private Set<String> customWhiteList = new HashSet<>();
 
     @Override
     public List<String> getSupportedLanguages() {
@@ -64,7 +57,7 @@ final public class StartWithCapitalLetterValidator extends CloneableValidator {
             }
         }
 
-        if (tokens.size() == 0 || this.whiteList.contains(headWord)) {
+        if (tokens.size() == 0 || this.whiteList.contains(headWord) || this.customWhiteList.contains(headWord)) {
             return;
         }
 
@@ -87,31 +80,23 @@ final public class StartWithCapitalLetterValidator extends CloneableValidator {
 
     @Override
     protected void init() throws RedPenException {
-        WordListExtractor extractor = new WordListExtractor();
 
-        LOG.info("Loading default capital letter exception dictionary ");
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/default-capital-case-exception-list.dat";
-        try {
-            extractor.loadFromResource(defaultDictionaryFile);
-        } catch (IOException e) {
-            throw new RedPenException("Failed to load default dictionary.", e);
-        }
-        LOG.info("Succeeded to load default dictionary.");
+        whiteList = loadWordListFromResource(defaultDictionaryFile, "capital letter exception dictionary", false);
 
+        WordListExtractor extractor = new WordListExtractor();
         Optional<String> confFile = getConfigAttribute("dict");
-        confFile.ifPresent(f -> {
-            LOG.info("user dictionary file is " + f);
+        if(confFile.isPresent()){
             try {
-                extractor.load(new FileInputStream(f));
+                LOG.info("user dictionary file is " + confFile.get());
+                extractor.load(new FileInputStream(confFile.get()));
+                customWhiteList = extractor.get();
+                LOG.info("Succeeded to load specified user dictionary.");
             } catch (IOException e) {
-                LOG.error("Failed to load user dictionary.");
-                return;
+                throw new RedPenException("Failed to load user dictionary.", e);
             }
-            LOG.info("Succeeded to load specified user dictionary.");
-        });
-
-        whiteList = extractor.get();
+        }
     }
 
     @Override

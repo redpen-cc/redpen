@@ -2,13 +2,13 @@
  * redpen: a text inspection tool
  * Copyright (c) 2014-2015 Recruit Technologies Co., Ltd. and contributors
  * (see CONTRIBUTORS.md)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,8 +21,8 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.util.WordListExtractor;
-import cc.redpen.validator.CloneableValidator;
 import cc.redpen.validator.ValidationError;
+import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,38 +30,31 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
-public class SpellingValidator extends CloneableValidator {
+public class SpellingValidator extends Validator {
 
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/spellchecker";
     private static final Logger LOG =
             LoggerFactory.getLogger(SpellingValidator.class);
     private static String skipCharacters = "+~-(),\".";
     // TODO: replace more memory efficient data structure
-    private Set<String> validWords = new HashSet<>();
+    private Set<String> validWords;
+    private Set<String> customDictionary;
+
 
     @Override
     protected void init() throws RedPenException {
-        String lang = getSymbolTable().getLang();
+        String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
+                + "/spellchecker-" + getSymbolTable().getLang() + ".dat";
+        validWords = loadWordListFromResource(defaultDictionaryFile, "spell dictionary", true);
+
         WordListExtractor extractor = new WordListExtractor();
         extractor.setToLowerCase();
 
-        LOG.info("Loading default invalid expression dictionary for " +
-                "\"" + lang + "\".");
-        String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
-                + "/spellchecker-" + lang + ".dat";
-        try {
-            extractor.loadFromResource(defaultDictionaryFile);
-        } catch (IOException e) {
-            LOG.error(e.getMessage());
-            LOG.info("Failed to load default dictionary.");
-            throw new RedPenException(e);
-        }
-        LOG.info("Succeeded to load default dictionary.");
-
+        customDictionary = new HashSet<>();
         Optional<String> listStr = getConfigAttribute("list");
         listStr.ifPresent(f -> {
             LOG.info("User defined valid word list found.");
-            validWords.addAll(Arrays.asList(f.split(",")));
+            customDictionary.addAll(Arrays.asList(f.split(",")));
             LOG.info("Succeeded to add elements of user defined list.");
         });
 
@@ -76,7 +69,7 @@ public class SpellingValidator extends CloneableValidator {
             }
             LOG.info("Succeeded to load specified user dictionary.");
         });
-        validWords.addAll(extractor.get());
+        customDictionary.addAll(extractor.get());
     }
 
     @Override
@@ -87,7 +80,7 @@ public class SpellingValidator extends CloneableValidator {
                 continue;
             }
 
-            if (!this.validWords.contains(surface)) {
+            if (!this.validWords.contains(surface) && !this.customDictionary.contains(surface)) {
                 errors.add(createValidationErrorFromToken(sentence, token));
             }
         }
@@ -101,15 +94,6 @@ public class SpellingValidator extends CloneableValidator {
             }
         }
         return builder.toString();
-    }
-
-    /**
-     * Register a word. This method is for testing purpose.
-     *
-     * @param word word to register a repelling dictionary
-     */
-    public void addWord(String word) {
-        validWords.add(word);
     }
 
     @Override

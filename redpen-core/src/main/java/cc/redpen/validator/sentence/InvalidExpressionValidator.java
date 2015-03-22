@@ -20,72 +20,59 @@ package cc.redpen.validator.sentence;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.WordListExtractor;
-import cc.redpen.validator.CloneableValidator;
 import cc.redpen.validator.ValidationError;
+import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * Validate input sentences contain invalid expression.
  */
-final public class InvalidExpressionValidator extends CloneableValidator {
+final public class InvalidExpressionValidator extends Validator {
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/invalid-expression";
     private static final Logger LOG =
             LoggerFactory.getLogger(InvalidExpressionValidator.class);
-    private Set<String> invalidExpressions = new HashSet<>();
+    private Set<String> invalidExpressions;
+    private Set<String> customInvalidExpressions;
 
     @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {
-        invalidExpressions.stream().forEach(value -> {
-                    int startPosition = sentence.getContent().indexOf(value);
-                    if (startPosition != -1) {
-                        errors.add(createValidationErrorWithPosition(sentence,
-                                sentence.getOffset(startPosition),
-                                sentence.getOffset(startPosition + value.length()), value));
-                    }
-                }
-        );
-    }
+        Consumer<String> tConsumer = value -> {
+            int startPosition = sentence.getContent().indexOf(value);
+            if (startPosition != -1) {
+                errors.add(createValidationErrorWithPosition(sentence,
+                        sentence.getOffset(startPosition),
+                        sentence.getOffset(startPosition + value.length()), value));
+            }
+        };
 
-    /**
-     * Add invalid element. This method is used for testing
-     *
-     * @param invalid invalid expression to be added the list
-     */
-    public void addInvalid(String invalid) {
-        invalidExpressions.add(invalid);
+        invalidExpressions.stream().forEach(tConsumer);
+        customInvalidExpressions.stream().forEach(tConsumer);
     }
 
     @Override
     protected void init() throws RedPenException {
+
         String lang = getSymbolTable().getLang();
-        WordListExtractor extractor = new WordListExtractor();
-        LOG.info("Loading default invalid expression dictionary for " +
-                "\"" + lang + "\".");
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/invalid-expression-" + lang + ".dat";
-        try {
-            extractor.loadFromResource(defaultDictionaryFile);
-        } catch (IOException e) {
-            LOG.error("Failed to load default dictionary.");
-            LOG.error("InvalidExpressionValidator does not support dictionary for "
-                    + "\"" + lang + "\".");
-            throw new RedPenException(e);
-        }
-        LOG.info("Succeeded to load default dictionary.");
+        invalidExpressions = loadWordListFromResource(defaultDictionaryFile, "invalid expression", false);
 
+        customInvalidExpressions = new HashSet<>();
         Optional<String> listStr = getConfigAttribute("list");
         listStr.ifPresent(f -> {
             LOG.info("User defined invalid expression list found.");
-            invalidExpressions.addAll(Arrays.asList(f.split(",")));
+            customInvalidExpressions.addAll(Arrays.asList(f.split(",")));
             LOG.info("Succeeded to add elements of user defined list.");
         });
 
         Optional<String> confFile = getConfigAttribute("dict");
+        WordListExtractor extractor = new WordListExtractor();
         confFile.ifPresent(f -> {
             LOG.info("user dictionary file is " + f);
             try {
@@ -97,7 +84,7 @@ final public class InvalidExpressionValidator extends CloneableValidator {
             LOG.info("Succeeded to load specified user dictionary.");
         });
 
-        invalidExpressions.addAll(extractor.get());
+        customInvalidExpressions.addAll(extractor.get());
     }
 
     @Override
