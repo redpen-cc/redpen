@@ -81,13 +81,6 @@ final public class DoubledWordValidator extends Validator {
     }
 
     @Override
-    public String toString() {
-        return "DoubledWordValidator{" +
-                "skipList=" + skipList +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -101,6 +94,16 @@ final public class DoubledWordValidator extends Validator {
 
     @Override
     public int hashCode() {
-        return skipList != null ? skipList.hashCode() : 0;
+        int result = skipList != null ? skipList.hashCode() : 0;
+        result = 31 * result + (customSkipList != null ? customSkipList.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "DoubledWordValidator{" +
+                "skipList=" + skipList +
+                ", customSkipList=" + customSkipList +
+                '}';
     }
 }

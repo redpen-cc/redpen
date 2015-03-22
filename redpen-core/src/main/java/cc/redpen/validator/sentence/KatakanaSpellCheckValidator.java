@@ -146,14 +146,6 @@ final public class KatakanaSpellCheckValidator extends Validator {
     }
 
     @Override
-    public String toString() {
-        return "KatakanaSpellCheckValidator{" +
-                "dic=" + dic +
-                ", exceptions=" + exceptions +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -162,14 +154,24 @@ final public class KatakanaSpellCheckValidator extends Validator {
 
         if (dic != null ? !dic.equals(that.dic) : that.dic != null) return false;
         if (exceptions != null ? !exceptions.equals(that.exceptions) : that.exceptions != null) return false;
+        return !(customExceptions != null ? !customExceptions.equals(that.customExceptions) : that.customExceptions != null);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
         int result = dic != null ? dic.hashCode() : 0;
         result = 31 * result + (exceptions != null ? exceptions.hashCode() : 0);
+        result = 31 * result + (customExceptions != null ? customExceptions.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "KatakanaSpellCheckValidator{" +
+                "dic=" + dic +
+                ", exceptions=" + exceptions +
+                ", customExceptions=" + customExceptions +
+                '}';
     }
 }

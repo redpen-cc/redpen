@@ -88,24 +88,30 @@ final public class InvalidExpressionValidator extends Validator {
     }
 
     @Override
-    public String toString() {
-        return "InvalidExpressionValidator{" +
-                "invalidExpressions=" + invalidExpressions +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
         InvalidExpressionValidator that = (InvalidExpressionValidator) o;
 
-        return !(invalidExpressions != null ? !invalidExpressions.equals(that.invalidExpressions) : that.invalidExpressions != null);
+        if (invalidExpressions != null ? !invalidExpressions.equals(that.invalidExpressions) : that.invalidExpressions != null)
+            return false;
+        return !(customInvalidExpressions != null ? !customInvalidExpressions.equals(that.customInvalidExpressions) : that.customInvalidExpressions != null);
+
     }
 
     @Override
     public int hashCode() {
-        return invalidExpressions != null ? invalidExpressions.hashCode() : 0;
+        int result = invalidExpressions != null ? invalidExpressions.hashCode() : 0;
+        result = 31 * result + (customInvalidExpressions != null ? customInvalidExpressions.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "InvalidExpressionValidator{" +
+                "invalidExpressions=" + invalidExpressions +
+                ", customInvalidExpressions=" + customInvalidExpressions +
+                '}';
     }
 }

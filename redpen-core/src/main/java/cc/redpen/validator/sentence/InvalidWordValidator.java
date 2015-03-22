@@ -85,13 +85,6 @@ final public class InvalidWordValidator extends Validator {
     }
 
     @Override
-    public String toString() {
-        return "InvalidWordValidator{" +
-                "invalidWords=" + invalidWords +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -99,12 +92,22 @@ final public class InvalidWordValidator extends Validator {
         InvalidWordValidator that = (InvalidWordValidator) o;
 
         if (invalidWords != null ? !invalidWords.equals(that.invalidWords) : that.invalidWords != null) return false;
+        return !(customInvalidWords != null ? !customInvalidWords.equals(that.customInvalidWords) : that.customInvalidWords != null);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        return invalidWords != null ? invalidWords.hashCode() : 0;
+        int result = invalidWords != null ? invalidWords.hashCode() : 0;
+        result = 31 * result + (customInvalidWords != null ? customInvalidWords.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "InvalidWordValidator{" +
+                "invalidWords=" + invalidWords +
+                ", customInvalidWords=" + customInvalidWords +
+                '}';
     }
 }

@@ -77,13 +77,6 @@ final public class SuggestExpressionValidator extends Validator {
     }
 
     @Override
-    public String toString() {
-        return "SuggestExpressionValidator{" +
-                "synonyms=" + synonyms +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -97,5 +90,12 @@ final public class SuggestExpressionValidator extends Validator {
     @Override
     public int hashCode() {
         return synonyms != null ? synonyms.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "SuggestExpressionValidator{" +
+                "synonyms=" + synonyms +
+                '}';
     }
 }

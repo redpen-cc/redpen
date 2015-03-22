@@ -37,7 +37,7 @@ public class SpellingValidator extends Validator {
             LoggerFactory.getLogger(SpellingValidator.class);
     private static String skipCharacters = "+~-(),\".";
     // TODO: replace more memory efficient data structure
-    private Set<String> validWords;
+    private Set<String> defaultDictionary;
     private Set<String> customDictionary;
 
 
@@ -45,7 +45,7 @@ public class SpellingValidator extends Validator {
     protected void init() throws RedPenException {
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/spellchecker-" + getSymbolTable().getLang() + ".dat";
-        validWords = loadWordListFromResource(defaultDictionaryFile, "spell dictionary", true);
+        defaultDictionary = loadWordListFromResource(defaultDictionaryFile, "spell dictionary", true);
 
         WordListExtractor extractor = new WordListExtractor();
         extractor.setToLowerCase();
@@ -80,7 +80,7 @@ public class SpellingValidator extends Validator {
                 continue;
             }
 
-            if (!this.validWords.contains(surface) && !this.customDictionary.contains(surface)) {
+            if (!this.defaultDictionary.contains(surface) && !this.customDictionary.contains(surface)) {
                 errors.add(createValidationErrorFromToken(sentence, token));
             }
         }
@@ -97,25 +97,29 @@ public class SpellingValidator extends Validator {
     }
 
     @Override
-    public String toString() {
-        return "SpellingValidator{" +
-                "validWords=" + validWords +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
         SpellingValidator that = (SpellingValidator) o;
 
-        return !(validWords != null ? !validWords.equals(that.validWords) : that.validWords != null);
+        if (defaultDictionary != null ? !defaultDictionary.equals(that.defaultDictionary) : that.defaultDictionary != null) return false;
+        return !(customDictionary != null ? !customDictionary.equals(that.customDictionary) : that.customDictionary != null);
 
     }
 
     @Override
     public int hashCode() {
-        return validWords != null ? validWords.hashCode() : 0;
+        int result = defaultDictionary != null ? defaultDictionary.hashCode() : 0;
+        result = 31 * result + (customDictionary != null ? customDictionary.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "SpellingValidator{" +
+                "defaultDictionary=" + defaultDictionary +
+                ", customDictionary=" + customDictionary +
+                '}';
     }
 }

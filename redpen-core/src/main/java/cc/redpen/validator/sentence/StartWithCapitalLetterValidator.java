@@ -100,25 +100,29 @@ final public class StartWithCapitalLetterValidator extends Validator {
     }
 
     @Override
-    public String toString() {
-        return "StartWithCapitalLetterValidator{" +
-                "whiteList=" + whiteList +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
         StartWithCapitalLetterValidator that = (StartWithCapitalLetterValidator) o;
 
-        return !(whiteList != null ? !whiteList.equals(that.whiteList) : that.whiteList != null);
+        if (whiteList != null ? !whiteList.equals(that.whiteList) : that.whiteList != null) return false;
+        return !(customWhiteList != null ? !customWhiteList.equals(that.customWhiteList) : that.customWhiteList != null);
 
     }
 
     @Override
     public int hashCode() {
-        return whiteList != null ? whiteList.hashCode() : 0;
+        int result = whiteList != null ? whiteList.hashCode() : 0;
+        result = 31 * result + (customWhiteList != null ? customWhiteList.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "StartWithCapitalLetterValidator{" +
+                "whiteList=" + whiteList +
+                ", customWhiteList=" + customWhiteList +
+                '}';
     }
 }
