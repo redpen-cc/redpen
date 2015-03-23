@@ -28,6 +28,8 @@ import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
+import cc.redpen.validator.Validator;
+import cc.redpen.validator.ValidatorFactory;
 import junit.framework.Assert;
 import org.junit.Test;
 
@@ -40,18 +42,22 @@ import static org.junit.Assert.assertEquals;
 public class InvalidExpressionValidatorTest {
 
     @Test
-    public void testSimpleRun() {
-        InvalidExpressionValidator validator = new InvalidExpressionValidator();
-        validator.addInvalid("may");
+    public void testSimpleRun() throws RedPenException {
+        Configuration config = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(new ValidatorConfiguration("InvalidExpression").addAttribute("list", "may"))
+                .setLanguage("en").build();
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
         List<ValidationError> errors = new ArrayList<>();
         validator.validate(errors, new Sentence("The experiments may be true.", 0));
         assertEquals(1, errors.size());
     }
 
     @Test
-    public void testVoid() {
-        InvalidExpressionValidator validator = new InvalidExpressionValidator();
-        validator.addInvalid("may");
+    public void testVoid() throws RedPenException {
+        Configuration config = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(new ValidatorConfiguration("InvalidExpression").addAttribute("list", "may"))
+                .setLanguage("en").build();
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
         List<ValidationError> errors = new ArrayList<>();
         validator.validate(errors, new Sentence("", 0));
         assertEquals(0, errors.size());

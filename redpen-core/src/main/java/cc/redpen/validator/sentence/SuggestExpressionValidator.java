@@ -37,7 +37,6 @@ final public class SuggestExpressionValidator extends Validator {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(SuggestExpressionValidator.class);
-    private static final String DEFAULT_RESOURCE_PATH = "";
     private Map<String, String> synonyms = new HashMap<>();
 
     @Override
@@ -78,13 +77,6 @@ final public class SuggestExpressionValidator extends Validator {
     }
 
     @Override
-    public String toString() {
-        return "SuggestExpressionValidator{" +
-                "synonyms=" + synonyms +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -98,5 +90,12 @@ final public class SuggestExpressionValidator extends Validator {
     @Override
     public int hashCode() {
         return synonyms != null ? synonyms.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "SuggestExpressionValidator{" +
+                "synonyms=" + synonyms +
+                '}';
     }
 }

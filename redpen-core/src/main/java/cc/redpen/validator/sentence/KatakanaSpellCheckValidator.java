@@ -2,13 +2,13 @@
  * redpen: a text inspection tool
  * Copyright (c) 2014-2015 Recruit Technologies Co., Ltd. and contributors
  * (see CONTRIBUTORS.md)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -79,6 +79,8 @@ final public class KatakanaSpellCheckValidator extends Validator {
      */
     private Set<String> exceptions = new HashSet<>();
 
+    private Set<String> customExceptions = new HashSet<>();
+
     @Override
     public List<String> getSupportedLanguages() {
         return Arrays.asList(Locale.JAPANESE.getLanguage());
@@ -100,16 +102,16 @@ final public class KatakanaSpellCheckValidator extends Validator {
     }
 
     private void checkKatakanaSpell(Sentence sentence, String katakana
-            ,List<ValidationError> validationErrors) {
+            , List<ValidationError> validationErrors) {
         if (katakana.length() <= MAX_IGNORE_KATAKANA_LENGTH) {
             return;
         }
-        if (dic.containsKey(katakana) || exceptions.contains(katakana)) {
+        if (dic.containsKey(katakana) || exceptions.contains(katakana)
+                || customExceptions.contains(katakana)) {
             return;
         }
         final int minLsDistance = Math.round(katakana.length() * SIMILARITY_RATIO);
         boolean found = false;
-        List<ValidationError> errors = new ArrayList<>();
         for (String key : dic.keySet()) {
             if (LevenshteinDistance.getDistance(key, katakana) <= minLsDistance) {
                 found = true;
@@ -123,39 +125,24 @@ final public class KatakanaSpellCheckValidator extends Validator {
 
     @Override
     protected void init() throws RedPenException {
-        WordListExtractor extractor = new WordListExtractor();
-
-        LOG.info("Loading default katakana word dictionary");
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/katakana-spellcheck.dat";
-        try {
-            extractor.loadFromResource(defaultDictionaryFile);
-            LOG.info("Succeeded to load default dictionary.");
-        } catch (IOException e) {
-            throw new RedPenException("Failed to load default dictionary.", e);
-        }
+        exceptions = loadWordListFromResource(defaultDictionaryFile, "katakana word dictionary", false);
 
+        WordListExtractor extractor = new WordListExtractor();
         Optional<String> confFile = getConfigAttribute("dict");
-        confFile.ifPresent(e -> {
-            LOG.info("User dictionary file is " + e);
+        if (confFile.isPresent()) {
+            LOG.info("User dictionary file is " + confFile.get());
             try {
-                extractor.load(new FileInputStream(e));
+                extractor.load(new FileInputStream(confFile.get()));
             } catch (IOException e1) {
-                LOG.error("Failed to load user dictionary");
+                throw new RedPenException("Failed to load user dictionary", e1);
             }
-        });
-        this.exceptions = extractor.get();
+        }
+        customExceptions = extractor.get();
 
         //TODO : configurable SIMILARITY_RATIO.
         //TODO : configurable MAX_IGNORE_KATAKANA_LENGTH.
-    }
-
-    @Override
-    public String toString() {
-        return "KatakanaSpellCheckValidator{" +
-                "dic=" + dic +
-                ", exceptions=" + exceptions +
-                '}';
     }
 
     @Override
@@ -167,14 +154,24 @@ final public class KatakanaSpellCheckValidator extends Validator {
 
         if (dic != null ? !dic.equals(that.dic) : that.dic != null) return false;
         if (exceptions != null ? !exceptions.equals(that.exceptions) : that.exceptions != null) return false;
+        return !(customExceptions != null ? !customExceptions.equals(that.customExceptions) : that.customExceptions != null);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
         int result = dic != null ? dic.hashCode() : 0;
         result = 31 * result + (exceptions != null ? exceptions.hashCode() : 0);
+        result = 31 * result + (customExceptions != null ? customExceptions.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "KatakanaSpellCheckValidator{" +
+                "dic=" + dic +
+                ", exceptions=" + exceptions +
+                ", customExceptions=" + customExceptions +
+                '}';
     }
 }

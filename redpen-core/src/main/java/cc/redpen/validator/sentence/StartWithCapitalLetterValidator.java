@@ -38,14 +38,7 @@ final public class StartWithCapitalLetterValidator extends Validator {
     private static final Logger LOG =
             LoggerFactory.getLogger(SpellingValidator.class);
     private Set<String> whiteList;
-
-    public StartWithCapitalLetterValidator() {
-        this.whiteList = new HashSet<>();
-    }
-
-    public boolean addWhiteList(String item) {
-        return whiteList.add(item);
-    }
+    private Set<String> customWhiteList = new HashSet<>();
 
     @Override
     public List<String> getSupportedLanguages() {
@@ -64,7 +57,7 @@ final public class StartWithCapitalLetterValidator extends Validator {
             }
         }
 
-        if (tokens.size() == 0 || this.whiteList.contains(headWord)) {
+        if (tokens.size() == 0 || this.whiteList.contains(headWord) || this.customWhiteList.contains(headWord)) {
             return;
         }
 
@@ -87,38 +80,23 @@ final public class StartWithCapitalLetterValidator extends Validator {
 
     @Override
     protected void init() throws RedPenException {
-        WordListExtractor extractor = new WordListExtractor();
 
-        LOG.info("Loading default capital letter exception dictionary ");
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/default-capital-case-exception-list.dat";
-        try {
-            extractor.loadFromResource(defaultDictionaryFile);
-        } catch (IOException e) {
-            throw new RedPenException("Failed to load default dictionary.", e);
-        }
-        LOG.info("Succeeded to load default dictionary.");
+        whiteList = loadWordListFromResource(defaultDictionaryFile, "capital letter exception dictionary", false);
 
+        WordListExtractor extractor = new WordListExtractor();
         Optional<String> confFile = getConfigAttribute("dict");
-        confFile.ifPresent(f -> {
-            LOG.info("user dictionary file is " + f);
+        if(confFile.isPresent()){
             try {
-                extractor.load(new FileInputStream(f));
+                LOG.info("user dictionary file is " + confFile.get());
+                extractor.load(new FileInputStream(confFile.get()));
+                customWhiteList = extractor.get();
+                LOG.info("Succeeded to load specified user dictionary.");
             } catch (IOException e) {
-                LOG.error("Failed to load user dictionary.");
-                return;
+                throw new RedPenException("Failed to load user dictionary.", e);
             }
-            LOG.info("Succeeded to load specified user dictionary.");
-        });
-
-        whiteList = extractor.get();
-    }
-
-    @Override
-    public String toString() {
-        return "StartWithCapitalLetterValidator{" +
-                "whiteList=" + whiteList +
-                '}';
+        }
     }
 
     @Override
@@ -128,12 +106,23 @@ final public class StartWithCapitalLetterValidator extends Validator {
 
         StartWithCapitalLetterValidator that = (StartWithCapitalLetterValidator) o;
 
-        return !(whiteList != null ? !whiteList.equals(that.whiteList) : that.whiteList != null);
+        if (whiteList != null ? !whiteList.equals(that.whiteList) : that.whiteList != null) return false;
+        return !(customWhiteList != null ? !customWhiteList.equals(that.customWhiteList) : that.customWhiteList != null);
 
     }
 
     @Override
     public int hashCode() {
-        return whiteList != null ? whiteList.hashCode() : 0;
+        int result = whiteList != null ? whiteList.hashCode() : 0;
+        result = 31 * result + (customWhiteList != null ? customWhiteList.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "StartWithCapitalLetterValidator{" +
+                "whiteList=" + whiteList +
+                ", customWhiteList=" + customWhiteList +
+                '}';
     }
 }

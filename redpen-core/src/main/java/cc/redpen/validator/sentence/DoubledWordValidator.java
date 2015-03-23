@@ -35,18 +35,16 @@ final public class DoubledWordValidator extends Validator {
             LoggerFactory.getLogger(DoubledWordValidator.class);
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/doubled-word";
 
-    public DoubledWordValidator() {
-        this.skipList = new HashSet<>();
-    }
-
     private Set<String> skipList;
+    private Set<String> customSkipList;
 
     @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {
         Set<String> surfaces = new HashSet<>();
         for (TokenElement token : sentence.getTokens()) {
             String currentSurface = token.getSurface();
-            if (surfaces.contains(currentSurface) && !skipList.contains(currentSurface.toLowerCase())) {
+            if (surfaces.contains(currentSurface) && !skipList.contains(currentSurface.toLowerCase())
+                    && !customSkipList.contains(currentSurface.toLowerCase())) {
                 errors.add(createValidationErrorFromToken(sentence, token));
             }
             surfaces.add(currentSurface);
@@ -55,49 +53,31 @@ final public class DoubledWordValidator extends Validator {
 
     @Override
     protected void init() throws RedPenException {
-        String lang = getSymbolTable().getLang();
-        WordListExtractor extractor = new WordListExtractor();
-        LOG.info("Loading default doubled word skip list dictionary for " +
-                "\"" + lang + "\".");
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
-                + "/doubled-word-skiplist-" + lang + ".dat";
-        try {
-            extractor.loadFromResource(defaultDictionaryFile);
-        } catch (IOException e) {
-            LOG.error("Failed to load default dictionary.");
-            LOG.error("DoubledWordValidator does not support dictionary for "
-                    + "\"" + lang + "\".");
-            throw new RedPenException(e);
-        }
-        LOG.info("Succeeded to load default dictionary.");
+                + "/doubled-word-skiplist-" + getSymbolTable().getLang() + ".dat";
+        skipList = loadWordListFromResource(defaultDictionaryFile, "doubled word skip list", false);
 
+        customSkipList = new HashSet<>();
         Optional<String> skipListStr = getConfigAttribute("list");
         skipListStr.ifPresent(f -> {
             String normalized = f.toLowerCase();
             LOG.info("Found user defined skip list.");
-            skipList.addAll(Arrays.asList(normalized.split(",")));
+            customSkipList.addAll(Arrays.asList(normalized.split(",")));
             LOG.info("Succeeded to add elements of user defined skip list.");
         });
 
+        WordListExtractor extractor = new WordListExtractor();
         Optional<String> confFile = getConfigAttribute("dict");
-        confFile.ifPresent(f -> {
-            LOG.info("user dictionary file is " + f);
+        if (confFile.isPresent()) {
+            LOG.info("user dictionary file is " + confFile.get());
             try {
-                extractor.load(new FileInputStream(f));
+                extractor.load(new FileInputStream(confFile.get()));
             } catch (IOException e) {
-                LOG.error("Failed to load user dictionary.");
-                return;
+                throw new RedPenException("Failed to load user dictionary.", e);
             }
             LOG.info("Succeeded to load specified user dictionary.");
-        });
-        skipList.addAll(extractor.get());
-    }
-
-    @Override
-    public String toString() {
-        return "DoubledWordValidator{" +
-                "skipList=" + skipList +
-                '}';
+        }
+        customSkipList.addAll(extractor.get());
     }
 
     @Override
@@ -108,12 +88,22 @@ final public class DoubledWordValidator extends Validator {
         DoubledWordValidator that = (DoubledWordValidator) o;
 
         if (skipList != null ? !skipList.equals(that.skipList) : that.skipList != null) return false;
+        return !(customSkipList != null ? !customSkipList.equals(that.customSkipList) : that.customSkipList != null);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        return skipList != null ? skipList.hashCode() : 0;
+        int result = skipList != null ? skipList.hashCode() : 0;
+        result = 31 * result + (customSkipList != null ? customSkipList.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "DoubledWordValidator{" +
+                "skipList=" + skipList +
+                ", customSkipList=" + customSkipList +
+                '}';
     }
 }
