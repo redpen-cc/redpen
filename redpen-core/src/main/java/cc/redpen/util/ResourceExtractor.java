@@ -2,13 +2,13 @@
  * redpen: a text inspection tool
  * Copyright (c) 2014-2015 Recruit Technologies Co., Ltd. and contributors
  * (see CONTRIBUTORS.md)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,10 +16,6 @@
  * limitations under the License.
  */
 package cc.redpen.util;
-
-import cc.redpen.RedPenException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,16 +28,14 @@ import java.nio.charset.StandardCharsets;
  * we create a class implementing ResourceExtractor.
  */
 public abstract class ResourceExtractor<E> {
-    private static final Logger LOG = LoggerFactory.getLogger(ResourceExtractor.class);
     protected E data;
 
     /**
      * load line.
      *
      * @param line line in a file
-     * @throws RedPenException when failed to load
      */
-    abstract protected void load(String line) throws RedPenException;
+    abstract protected void load(String line);
 
     /**
      * Given a input stream, load the contents.
@@ -54,16 +48,12 @@ public abstract class ResourceExtractor<E> {
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                try {
-                    load(line);
-                } catch (RedPenException e) {
-                    LOG.error(e.getMessage()); // just skip to load the line
-                    LOG.error("Skip to load line...");
-                }
+                load(line);
             }
         }
         return data;
     }
+
     /**
      * Load a given input file combined with jar package.
      *

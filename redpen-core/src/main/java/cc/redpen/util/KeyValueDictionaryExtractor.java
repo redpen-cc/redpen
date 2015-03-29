@@ -17,7 +17,8 @@
  */
 package cc.redpen.util;
 
-import cc.redpen.RedPenException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +27,7 @@ import java.util.Map;
  * An ResourceExtractor implementation for KeyValue input data.
  */
 public class KeyValueDictionaryExtractor extends ResourceExtractor<Map<String, String>> {
+    private static final Logger LOG = LoggerFactory.getLogger(KeyValueDictionaryExtractor.class);
 
     /**
      * Constructor.
@@ -39,15 +41,15 @@ public class KeyValueDictionaryExtractor extends ResourceExtractor<Map<String, S
      * Load input file. The input file TSV with two columns.
      *
      * @param line line in a file
-     * @throws RedPenException when the input line is invalid
      */
     @Override
-    protected void load(String line) throws RedPenException {
+    protected void load(String line) {
         String[] result = line.split("\t");
-        if (result.length != 2) {
-            throw new RedPenException("Invalid line: " +  line);
+        if (result.length == 2) {
+            data.put(result[0], result[1]);
+        }else{
+            LOG.error("Skip to load line... Invalid line: " +  line);
         }
-        data.put(result[0], result[1]);
     }
 
 }

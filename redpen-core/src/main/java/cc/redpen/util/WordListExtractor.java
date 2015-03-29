@@ -46,7 +46,7 @@ public class WordListExtractor extends ResourceExtractor<Set<String>> {
      * @param line line in a file
      */
     @Override
-    protected void load(String line) throws RedPenException {
+    protected void load(String line) {
         if (this.toLowerCase) {
             line = line.toLowerCase();
         }
