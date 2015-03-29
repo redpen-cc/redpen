@@ -78,9 +78,6 @@ public abstract class ResourceExtractor<E> {
      */
     public void loadFromResource(String inputFile) throws IOException {
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(inputFile)) {
-            if (inputStream == null) {
-                throw new IOException("Failed to load input " + inputFile);
-            }
             load(inputStream);
         }
     }

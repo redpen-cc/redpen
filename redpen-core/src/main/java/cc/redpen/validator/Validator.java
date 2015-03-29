@@ -284,8 +284,8 @@ public abstract class Validator {
                 extractor.loadFromResource(path);
                 LOG.info("Succeeded to load " + dictionaryName + ".");
                 return Collections.unmodifiableSet(extractor.get());
-            } catch (IOException ioe) {
-                LOG.error(ioe.getMessage());
+            } catch (NullPointerException | IOException ex) {
+                LOG.error(ex.getMessage());
                 return null;
             }
         });
