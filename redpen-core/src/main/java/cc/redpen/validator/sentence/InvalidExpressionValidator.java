@@ -61,7 +61,7 @@ final public class InvalidExpressionValidator extends Validator {
         String lang = getSymbolTable().getLang();
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/invalid-expression-" + lang + ".dat";
-        invalidExpressions = loadWordListFromResource(defaultDictionaryFile, "invalid expression", false);
+        invalidExpressions = WordListExtractor.loadWordListFromResource(defaultDictionaryFile, "invalid expression", false);
 
         customInvalidExpressions = new HashSet<>();
         Optional<String> listStr = getConfigAttribute("list");
@@ -76,15 +76,13 @@ final public class InvalidExpressionValidator extends Validator {
         confFile.ifPresent(f -> {
             LOG.info("user dictionary file is " + f);
             try {
-                extractor.load(new FileInputStream(f));
+                customInvalidExpressions.addAll(extractor.load(new FileInputStream(f)));
             } catch (IOException e) {
                 LOG.error("Failed to load user dictionary.");
                 return;
             }
             LOG.info("Succeeded to load specified user dictionary.");
         });
-
-        customInvalidExpressions.addAll(extractor.get());
     }
 
     @Override

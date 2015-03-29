@@ -127,19 +127,18 @@ final public class KatakanaSpellCheckValidator extends Validator {
     protected void init() throws RedPenException {
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/katakana-spellcheck.dat";
-        exceptions = loadWordListFromResource(defaultDictionaryFile, "katakana word dictionary", false);
+        exceptions = WordListExtractor.loadWordListFromResource(defaultDictionaryFile, "katakana word dictionary", false);
 
         WordListExtractor extractor = new WordListExtractor();
         Optional<String> confFile = getConfigAttribute("dict");
         if (confFile.isPresent()) {
             LOG.info("User dictionary file is " + confFile.get());
             try {
-                extractor.load(new FileInputStream(confFile.get()));
+                customExceptions.addAll(extractor.load(new FileInputStream(confFile.get())));
             } catch (IOException e1) {
                 throw new RedPenException("Failed to load user dictionary", e1);
             }
         }
-        customExceptions = extractor.get();
 
         //TODO : configurable SIMILARITY_RATIO.
         //TODO : configurable MAX_IGNORE_KATAKANA_LENGTH.

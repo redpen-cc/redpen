@@ -263,36 +263,4 @@ public abstract class Validator {
             throw new AssertionError("message resource not found.");
         }
     }
-
-    private final static Map<String, Set<String>> wordListCache = new HashMap<>();
-
-    /**
-     * returns word list loaded from resource
-     * @param path resource path
-     * @param dictionaryName name of the resource
-     * @param toLowerCase words will be lowercased if set to true
-     * @return word list
-     * @throws RedPenException
-     */
-    protected static Set<String> loadWordListFromResource(String path, String dictionaryName, boolean toLowerCase) throws RedPenException {
-        Set<String> strings = wordListCache.computeIfAbsent(path, e -> {
-            WordListExtractor extractor = new WordListExtractor();
-            if (toLowerCase) {
-                extractor.setToLowerCase();
-            }
-            try {
-                extractor.loadFromResource(path);
-                LOG.info("Succeeded to load " + dictionaryName + ".");
-                return Collections.unmodifiableSet(extractor.get());
-            } catch (IOException ioe) {
-                LOG.error(ioe.getMessage());
-                return null;
-            }
-        });
-        if (strings == null) {
-            throw new RedPenException("Failed to load " + dictionaryName + ":" + path);
-        }
-        return strings;
-    }
-
 }

@@ -45,7 +45,7 @@ public class SpellingValidator extends Validator {
     protected void init() throws RedPenException {
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/spellchecker-" + getSymbolTable().getLang() + ".dat";
-        defaultDictionary = loadWordListFromResource(defaultDictionaryFile, "spell dictionary", true);
+        defaultDictionary = WordListExtractor.loadWordListFromResource(defaultDictionaryFile, "spell dictionary", true);
 
         WordListExtractor extractor = new WordListExtractor();
         extractor.setToLowerCase();
@@ -62,14 +62,13 @@ public class SpellingValidator extends Validator {
         userDictionaryFile.ifPresent(f -> {
             LOG.info("user dictionary file is " + f);
             try {
-                extractor.load(new FileInputStream(f));
+                customDictionary.addAll(extractor.load(new FileInputStream(f)));
             } catch (IOException e) {
                 LOG.error("Failed to load user dictionary.");
                 return;
             }
             LOG.info("Succeeded to load specified user dictionary.");
         });
-        customDictionary.addAll(extractor.get());
     }
 
     @Override

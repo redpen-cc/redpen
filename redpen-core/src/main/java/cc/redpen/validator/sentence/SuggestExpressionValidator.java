@@ -64,11 +64,10 @@ final public class SuggestExpressionValidator extends Validator {
         } else {
             KeyValueDictionaryExtractor extractor = new KeyValueDictionaryExtractor();
             try {
-                extractor.load(new FileInputStream(confFile.get()));
+                synonyms = extractor.load(new FileInputStream(confFile.get()));
             } catch (IOException e) {
                 throw new RedPenException("Failed to load KeyValueDictionaryExtractor", e);
             }
-            synonyms = extractor.get();
         }
     }
 

@@ -62,7 +62,7 @@ final public class InvalidWordValidator extends Validator {
         String lang = getSymbolTable().getLang();
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/invalid-word-" + lang + ".dat";
-        invalidWords = loadWordListFromResource(defaultDictionaryFile, "invalid word", false);
+        invalidWords = WordListExtractor.loadWordListFromResource(defaultDictionaryFile, "invalid word", false);
 
         WordListExtractor extractor = new WordListExtractor();
         getConfigAttribute("list").ifPresent((f -> {
@@ -75,13 +75,12 @@ final public class InvalidWordValidator extends Validator {
         if(confFile.isPresent()){
             LOG.info("user dictionary file is " + confFile.get());
             try {
-                extractor.load(new FileInputStream(confFile.get()));
+                customInvalidWords.addAll(extractor.load(new FileInputStream(confFile.get())));
                 LOG.info("Succeeded to load specified user dictionary.");
             } catch (IOException e) {
                 throw new RedPenException("Failed to load user dictionary.", e);
             }
         }
-        customInvalidWords.addAll(extractor.get());
     }
 
     @Override

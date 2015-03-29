@@ -33,6 +33,7 @@ import java.nio.charset.StandardCharsets;
  */
 public abstract class ResourceExtractor<E> {
     private static final Logger LOG = LoggerFactory.getLogger(ResourceExtractor.class);
+    protected E data;
 
     /**
      * load line.
@@ -43,19 +44,12 @@ public abstract class ResourceExtractor<E> {
     abstract protected void load(String line) throws RedPenException;
 
     /**
-     * Get the loaded container.
-     *
-     * @return container
-     */
-    abstract E get();
-
-    /**
      * Given a input stream, load the contents.
      *
      * @param inputStream input stream
      * @throws IOException when failed to create reader from the specified input stream
      */
-    public void load(InputStream inputStream) throws IOException {
+    public E load(InputStream inputStream) throws IOException {
         try (InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             String line;
@@ -68,7 +62,7 @@ public abstract class ResourceExtractor<E> {
                 }
             }
         }
-
+        return data;
     }
     /**
      * Load a given input file combined with jar package.
@@ -76,13 +70,14 @@ public abstract class ResourceExtractor<E> {
      * @param inputFile a file included in the jar file
      * @throws IOException when input stream is null
      */
-    public void loadFromResource(String inputFile) throws IOException {
+    public E loadFromResource(String inputFile) throws IOException {
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(inputFile)) {
             if (inputStream == null) {
                 throw new IOException("Failed to load input " + inputFile);
             }
             load(inputStream);
         }
+        return data;
     }
 
 }

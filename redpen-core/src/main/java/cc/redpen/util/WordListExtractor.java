@@ -18,16 +18,18 @@
 package cc.redpen.util;
 
 import cc.redpen.RedPenException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * WordListExtractor extracts word from a given line. This class is called from
  * FileLoader.
  */
 public class WordListExtractor extends ResourceExtractor<Set<String>> {
-    private final Set<String> wordList;
+    private static final Logger LOG = LoggerFactory.getLogger(WordListExtractor.class);
     private boolean toLowerCase = false;
 
     /**
@@ -35,7 +37,7 @@ public class WordListExtractor extends ResourceExtractor<Set<String>> {
      */
     public WordListExtractor() {
         super();
-        wordList = new HashSet<>();
+        data = new HashSet<>();
     }
 
     /**
@@ -48,17 +50,7 @@ public class WordListExtractor extends ResourceExtractor<Set<String>> {
         if (this.toLowerCase) {
             line = line.toLowerCase();
         }
-        wordList.add(line);
-    }
-
-    /**
-     * Get word list.
-     *
-     * @return word list
-     */
-    @Override
-    public Set<String> get() {
-        return wordList;
+        data.add(line);
     }
 
     /**
@@ -68,4 +60,33 @@ public class WordListExtractor extends ResourceExtractor<Set<String>> {
         this.toLowerCase = true;
     }
 
+    private final static Map<String, Set<String>> wordListCache = new HashMap<>();
+
+    /**
+     * returns word list loaded from resource
+     * @param path resource path
+     * @param dictionaryName name of the resource
+     * @param toLowerCase words will be lowercased if set to true
+     * @return word list
+     * @throws RedPenException
+     */
+    public static Set<String> loadWordListFromResource(String path, String dictionaryName, boolean toLowerCase) throws RedPenException {
+        Set<String> strings = wordListCache.computeIfAbsent(path, e -> {
+            WordListExtractor extractor = new WordListExtractor();
+            if (toLowerCase) {
+                extractor.setToLowerCase();
+            }
+            try {
+                return Collections.unmodifiableSet(extractor.loadFromResource(path));
+            } catch (IOException ioe) {
+                LOG.error(ioe.getMessage());
+                return null;
+            }
+        });
+        if (strings == null) {
+            throw new RedPenException("Failed to load " + dictionaryName + ":" + path);
+        }
+        LOG.info("Succeeded to load " + dictionaryName + ".");
+        return strings;
+    }
 }

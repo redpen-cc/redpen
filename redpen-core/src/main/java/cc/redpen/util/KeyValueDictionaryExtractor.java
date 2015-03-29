@@ -26,14 +26,13 @@ import java.util.Map;
  * An ResourceExtractor implementation for KeyValue input data.
  */
 public class KeyValueDictionaryExtractor extends ResourceExtractor<Map<String, String>> {
-    private final Map<String, String> map;
 
     /**
      * Constructor.
      */
     public KeyValueDictionaryExtractor() {
         super();
-        this.map = new HashMap<>();
+        this.data = new HashMap<>();
     }
 
     /**
@@ -48,11 +47,7 @@ public class KeyValueDictionaryExtractor extends ResourceExtractor<Map<String, S
         if (result.length != 2) {
             throw new RedPenException("Invalid line: " +  line);
         }
-        map.put(result[0], result[1]);
+        data.put(result[0], result[1]);
     }
 
-    @Override
-    public Map<String, String> get() {
-        return map;
-    }
 }
