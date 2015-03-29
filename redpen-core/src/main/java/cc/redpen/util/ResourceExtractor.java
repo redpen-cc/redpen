@@ -100,7 +100,7 @@ public final class ResourceExtractor<E> {
         }
     }
 
-    private final Map<String,E> wordListCache = new HashMap<>();
+    private final Map<String,E> resourceCache = new HashMap<>();
 
     /**
      * returns word list loaded from resource
@@ -110,7 +110,7 @@ public final class ResourceExtractor<E> {
      * @throws RedPenException
      */
     public E loadCachedFromResource(String path, String dictionaryName) throws RedPenException {
-        E strings = wordListCache.computeIfAbsent(path, e -> {
+        E strings = resourceCache.computeIfAbsent(path, e -> {
             try {
                 return loadFromResource(path);
             } catch (IOException ioe) {
