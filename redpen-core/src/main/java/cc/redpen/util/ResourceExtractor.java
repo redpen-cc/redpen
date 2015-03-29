@@ -17,11 +17,16 @@
  */
 package cc.redpen.util;
 
+import cc.redpen.RedPenException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -29,14 +34,41 @@ import java.util.function.Supplier;
  * ResourceExtractor is called from FileLoader. To support a file format,
  * we create a class implementing ResourceExtractor.
  */
-public abstract class ResourceExtractor<E> {
+public final class ResourceExtractor<E> {
+    private static final Logger LOG = LoggerFactory.getLogger(ResourceExtractor.class);
+
     private final Supplier<E> supplier;
     private final BiConsumer<E, String> loader;
 
-    ResourceExtractor(Supplier<E> supplier, BiConsumer<E, String> loader) {
+    private ResourceExtractor(Supplier<E> supplier, BiConsumer<E, String> loader) {
         this.supplier = supplier;
         this.loader = loader;
     }
+
+    /**
+     * Resource Extractor loads key-value dictionary
+     */
+    public final static ResourceExtractor<Map<String, String>> KEY_VALUE_DICTIONARY =
+            new ResourceExtractor<>(HashMap::new, (map, line) -> {
+                String[] result = line.split("\t");
+                if (result.length == 2) {
+                    map.put(result[0], result[1]);
+                } else {
+                    LOG.error("Skip to load line... Invalid line: " + line);
+                }
+            });
+
+    /**
+     * Resource Extractor loads word list
+     */
+    public final static ResourceExtractor<Set<String>> WORD_LIST =
+            new ResourceExtractor<>(HashSet::new, Set::add);
+
+    /**
+     * Resource Extractor loads word list while lowercasing lines
+     */
+    public final static ResourceExtractor<Set<String>> WORD_LIST_LOWERCASE =
+            new ResourceExtractor<>(HashSet::new, (set, line) -> set.add(line.toLowerCase()));
 
     /**
      * Given a input stream, load the contents.
@@ -68,4 +100,28 @@ public abstract class ResourceExtractor<E> {
         }
     }
 
+    private final Map<String,E> wordListCache = new HashMap<>();
+
+    /**
+     * returns word list loaded from resource
+     * @param path resource path
+     * @param dictionaryName name of the resource
+     * @return word list
+     * @throws RedPenException
+     */
+    public E loadCachedFromResource(String path, String dictionaryName) throws RedPenException {
+        E strings = wordListCache.computeIfAbsent(path, e -> {
+            try {
+                return loadFromResource(path);
+            } catch (IOException ioe) {
+                LOG.error(ioe.getMessage());
+                return null;
+            }
+        });
+        if (strings == null) {
+            throw new RedPenException("Failed to load " + dictionaryName + ":" + path);
+        }
+        LOG.info("Succeeded to load " + dictionaryName + ".");
+        return strings;
+    }
 }

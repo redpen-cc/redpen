@@ -20,7 +20,7 @@ package cc.redpen.validator.sentence;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.util.WordListExtractor;
+import cc.redpen.util.ResourceExtractor;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
@@ -83,14 +83,13 @@ final public class StartWithCapitalLetterValidator extends Validator {
 
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/default-capital-case-exception-list.dat";
-        whiteList = WordListExtractor.loadWordListFromResource(defaultDictionaryFile, "capital letter exception dictionary", false);
+        whiteList = ResourceExtractor.WORD_LIST.loadCachedFromResource(defaultDictionaryFile, "capital letter exception dictionary");
 
-        WordListExtractor extractor = new WordListExtractor();
         Optional<String> confFile = getConfigAttribute("dict");
         if(confFile.isPresent()){
             try {
                 LOG.info("user dictionary file is " + confFile.get());
-                customWhiteList = extractor.load(new FileInputStream(confFile.get()));
+                customWhiteList = ResourceExtractor.WORD_LIST.load(new FileInputStream(confFile.get()));
                 LOG.info("Succeeded to load specified user dictionary.");
             } catch (IOException e) {
                 throw new RedPenException("Failed to load user dictionary.", e);

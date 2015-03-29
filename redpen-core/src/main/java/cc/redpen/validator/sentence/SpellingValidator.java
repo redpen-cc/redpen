@@ -20,7 +20,7 @@ package cc.redpen.validator.sentence;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.util.WordListExtractor;
+import cc.redpen.util.ResourceExtractor;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
@@ -45,9 +45,7 @@ public class SpellingValidator extends Validator {
     protected void init() throws RedPenException {
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/spellchecker-" + getSymbolTable().getLang() + ".dat";
-        defaultDictionary = WordListExtractor.loadWordListFromResource(defaultDictionaryFile, "spell dictionary", true);
-
-        WordListExtractor extractor = new WordListExtractor(true);
+        defaultDictionary = ResourceExtractor.WORD_LIST_LOWERCASE.loadCachedFromResource(defaultDictionaryFile, "spell dictionary");
 
         customDictionary = new HashSet<>();
         Optional<String> listStr = getConfigAttribute("list");
@@ -61,7 +59,7 @@ public class SpellingValidator extends Validator {
         userDictionaryFile.ifPresent(f -> {
             LOG.info("user dictionary file is " + f);
             try {
-                customDictionary.addAll(extractor.load(new FileInputStream(f)));
+                customDictionary.addAll(ResourceExtractor.WORD_LIST_LOWERCASE.load(new FileInputStream(f)));
             } catch (IOException e) {
                 LOG.error("Failed to load user dictionary.");
                 return;

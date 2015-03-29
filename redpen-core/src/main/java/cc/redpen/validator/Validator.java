@@ -26,12 +26,9 @@ import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.util.KeyValueDictionaryExtractor;
-import cc.redpen.util.WordListExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.*;
 
