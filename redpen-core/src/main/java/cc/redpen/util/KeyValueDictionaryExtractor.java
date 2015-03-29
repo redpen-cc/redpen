@@ -33,23 +33,13 @@ public class KeyValueDictionaryExtractor extends ResourceExtractor<Map<String, S
      * Constructor.
      */
     public KeyValueDictionaryExtractor() {
-        super();
-        this.data = new HashMap<>();
+        super(HashMap::new, (map, line)->{
+            String[] result = line.split("\t");
+            if (result.length == 2) {
+                map.put(result[0], result[1]);
+            }else{
+                LOG.error("Skip to load line... Invalid line: " +  line);
+            }
+        });
     }
-
-    /**
-     * Load input file. The input file TSV with two columns.
-     *
-     * @param line line in a file
-     */
-    @Override
-    protected void load(String line) {
-        String[] result = line.split("\t");
-        if (result.length == 2) {
-            data.put(result[0], result[1]);
-        }else{
-            LOG.error("Skip to load line... Invalid line: " +  line);
-        }
-    }
-
 }

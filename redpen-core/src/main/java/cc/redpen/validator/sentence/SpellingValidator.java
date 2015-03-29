@@ -47,8 +47,7 @@ public class SpellingValidator extends Validator {
                 + "/spellchecker-" + getSymbolTable().getLang() + ".dat";
         defaultDictionary = WordListExtractor.loadWordListFromResource(defaultDictionaryFile, "spell dictionary", true);
 
-        WordListExtractor extractor = new WordListExtractor();
-        extractor.setToLowerCase();
+        WordListExtractor extractor = new WordListExtractor(true);
 
         customDictionary = new HashSet<>();
         Optional<String> listStr = getConfigAttribute("list");

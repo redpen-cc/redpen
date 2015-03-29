@@ -30,34 +30,21 @@ import java.util.*;
  */
 public class WordListExtractor extends ResourceExtractor<Set<String>> {
     private static final Logger LOG = LoggerFactory.getLogger(WordListExtractor.class);
-    private boolean toLowerCase = false;
 
     /**
-     * Constructor.
+     * @param toLowerCase set to true if inputs need to be lowercased.
      */
+    public WordListExtractor(boolean toLowerCase) {
+        super(HashSet::new, (set, line) ->{
+            if (toLowerCase) {
+                line = line.toLowerCase();
+            }
+            set.add(line);
+        });
+    }
+
     public WordListExtractor() {
-        super();
-        data = new HashSet<>();
-    }
-
-    /**
-     * Load word list file.
-     *
-     * @param line line in a file
-     */
-    @Override
-    protected void load(String line) {
-        if (this.toLowerCase) {
-            line = line.toLowerCase();
-        }
-        data.add(line);
-    }
-
-    /**
-     * Add inputs after convert the character to lowercase.
-     */
-    public void setToLowerCase() {
-        this.toLowerCase = true;
+        this(false);
     }
 
     private final static Map<String, Set<String>> wordListCache = new HashMap<>();
@@ -72,10 +59,7 @@ public class WordListExtractor extends ResourceExtractor<Set<String>> {
      */
     public static Set<String> loadWordListFromResource(String path, String dictionaryName, boolean toLowerCase) throws RedPenException {
         Set<String> strings = wordListCache.computeIfAbsent(path, e -> {
-            WordListExtractor extractor = new WordListExtractor();
-            if (toLowerCase) {
-                extractor.setToLowerCase();
-            }
+            WordListExtractor extractor = new WordListExtractor(toLowerCase);
             try {
                 return Collections.unmodifiableSet(extractor.loadFromResource(path));
             } catch (IOException ioe) {

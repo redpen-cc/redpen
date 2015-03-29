@@ -22,20 +22,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 /**
  * ResourceExtractor is called from FileLoader. To support a file format,
  * we create a class implementing ResourceExtractor.
  */
 public abstract class ResourceExtractor<E> {
-    protected E data;
+    private final Supplier<E> supplier;
+    private final BiConsumer<E, String> loader;
 
-    /**
-     * load line.
-     *
-     * @param line line in a file
-     */
-    abstract protected void load(String line);
+    ResourceExtractor(Supplier<E> supplier, BiConsumer<E, String> loader) {
+        this.supplier = supplier;
+        this.loader = loader;
+    }
 
     /**
      * Given a input stream, load the contents.
@@ -44,14 +45,12 @@ public abstract class ResourceExtractor<E> {
      * @throws IOException when failed to create reader from the specified input stream
      */
     public E load(InputStream inputStream) throws IOException {
-        try (InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                load(line);
-            }
+        E e = supplier.get();
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,
+                StandardCharsets.UTF_8))) {
+            bufferedReader.lines().forEach(line -> loader.accept(e, line));
         }
-        return data;
+        return e;
     }
 
     /**
@@ -65,9 +64,8 @@ public abstract class ResourceExtractor<E> {
             if (inputStream == null) {
                 throw new IOException("Failed to load input " + inputFile);
             }
-            load(inputStream);
+            return load(inputStream);
         }
-        return data;
     }
 
 }
