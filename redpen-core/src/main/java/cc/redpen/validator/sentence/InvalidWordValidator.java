@@ -20,7 +20,7 @@ package cc.redpen.validator.sentence;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.util.ResourceExtractor;
+import cc.redpen.util.DictionaryLoader;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
@@ -61,7 +61,7 @@ final public class InvalidWordValidator extends Validator {
         String lang = getSymbolTable().getLang();
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/invalid-word-" + lang + ".dat";
-        invalidWords = ResourceExtractor.WORD.loadCachedFromResource(defaultDictionaryFile, "invalid word");
+        invalidWords = DictionaryLoader.WORD.loadCachedFromResource(defaultDictionaryFile, "invalid word");
 
         getConfigAttribute("list").ifPresent((f -> {
             LOG.info("User defined invalid expression list found.");
@@ -73,7 +73,7 @@ final public class InvalidWordValidator extends Validator {
         if(confFile.isPresent()){
             LOG.info("user dictionary file is " + confFile.get());
             try {
-                customInvalidWords.addAll(ResourceExtractor.WORD.loadFromFile(confFile.get()));
+                customInvalidWords.addAll(DictionaryLoader.WORD.loadFromFile(confFile.get()));
                 LOG.info("Succeeded to load specified user dictionary.");
             } catch (IOException e) {
                 throw new RedPenException("Failed to load user dictionary.", e);

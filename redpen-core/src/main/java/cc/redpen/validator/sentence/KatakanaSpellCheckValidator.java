@@ -20,7 +20,7 @@ package cc.redpen.validator.sentence;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.LevenshteinDistance;
-import cc.redpen.util.ResourceExtractor;
+import cc.redpen.util.DictionaryLoader;
 import cc.redpen.util.StringUtils;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
@@ -126,13 +126,13 @@ final public class KatakanaSpellCheckValidator extends Validator {
     protected void init() throws RedPenException {
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/katakana-spellcheck.dat";
-        exceptions = ResourceExtractor.WORD.loadCachedFromResource(defaultDictionaryFile, "katakana word dictionary");
+        exceptions = DictionaryLoader.WORD.loadCachedFromResource(defaultDictionaryFile, "katakana word dictionary");
 
         Optional<String> confFile = getConfigAttribute("dict");
         if (confFile.isPresent()) {
             LOG.info("User dictionary file is " + confFile.get());
             try {
-                customExceptions.addAll(ResourceExtractor.WORD.loadFromFile(confFile.get()));
+                customExceptions.addAll(DictionaryLoader.WORD.loadFromFile(confFile.get()));
             } catch (IOException e1) {
                 throw new RedPenException("Failed to load user dictionary", e1);
             }

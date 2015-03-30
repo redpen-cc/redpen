@@ -30,13 +30,13 @@ import java.util.function.Supplier;
 /**
  * load dictionary data from input source
  */
-public final class ResourceExtractor<E> {
-    private static final Logger LOG = LoggerFactory.getLogger(ResourceExtractor.class);
+public final class DictionaryLoader<E> {
+    private static final Logger LOG = LoggerFactory.getLogger(DictionaryLoader.class);
 
     private final Supplier<E> supplier;
     private final BiConsumer<E, String> loader;
 
-    private ResourceExtractor(Supplier<E> supplier, BiConsumer<E, String> loader) {
+    private DictionaryLoader(Supplier<E> supplier, BiConsumer<E, String> loader) {
         this.supplier = supplier;
         this.loader = loader;
     }
@@ -44,8 +44,8 @@ public final class ResourceExtractor<E> {
     /**
      * Resource Extractor loads key-value dictionary
      */
-    public final static ResourceExtractor<Map<String, String>> KEY_VALUE =
-            new ResourceExtractor<>(HashMap::new, (map, line) -> {
+    public final static DictionaryLoader<Map<String, String>> KEY_VALUE =
+            new DictionaryLoader<>(HashMap::new, (map, line) -> {
                 String[] result = line.split("\t");
                 if (result.length == 2) {
                     map.put(result[0], result[1]);
@@ -57,14 +57,14 @@ public final class ResourceExtractor<E> {
     /**
      * Resource Extractor loads word list
      */
-    public final static ResourceExtractor<Set<String>> WORD =
-            new ResourceExtractor<>(HashSet::new, Set::add);
+    public final static DictionaryLoader<Set<String>> WORD =
+            new DictionaryLoader<>(HashSet::new, Set::add);
 
     /**
      * Resource Extractor loads word list while lowercasing lines
      */
-    public final static ResourceExtractor<Set<String>> WORD_LOWERCASE =
-            new ResourceExtractor<>(HashSet::new, (set, line) -> set.add(line.toLowerCase()));
+    public final static DictionaryLoader<Set<String>> WORD_LOWERCASE =
+            new DictionaryLoader<>(HashSet::new, (set, line) -> set.add(line.toLowerCase()));
 
     /**
      * Given a input stream, load the contents.

@@ -19,7 +19,7 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
-import cc.redpen.util.ResourceExtractor;
+import cc.redpen.util.DictionaryLoader;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
@@ -61,7 +61,7 @@ final public class SuggestExpressionValidator extends Validator {
             LOG.error("Dictionary file is not specified");
             throw new RedPenException("dictionary file is not specified");
         } else {
-            ResourceExtractor<Map<String, String>> extractor = ResourceExtractor.KEY_VALUE;
+            DictionaryLoader<Map<String, String>> extractor = DictionaryLoader.KEY_VALUE;
             try {
                 synonyms = extractor.loadFromFile(confFile.get());
             } catch (IOException e) {
