@@ -20,13 +20,12 @@ package cc.redpen.validator.sentence;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.util.WordListExtractor;
+import cc.redpen.util.DictionaryLoader;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -45,10 +44,7 @@ public class SpellingValidator extends Validator {
     protected void init() throws RedPenException {
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/spellchecker-" + getSymbolTable().getLang() + ".dat";
-        defaultDictionary = loadWordListFromResource(defaultDictionaryFile, "spell dictionary", true);
-
-        WordListExtractor extractor = new WordListExtractor();
-        extractor.setToLowerCase();
+        defaultDictionary = DictionaryLoader.WORD_LOWERCASE.loadCachedFromResource(defaultDictionaryFile, "spell dictionary");
 
         customDictionary = new HashSet<>();
         Optional<String> listStr = getConfigAttribute("list");
@@ -62,14 +58,13 @@ public class SpellingValidator extends Validator {
         userDictionaryFile.ifPresent(f -> {
             LOG.info("user dictionary file is " + f);
             try {
-                extractor.load(new FileInputStream(f));
+                customDictionary.addAll(DictionaryLoader.WORD_LOWERCASE.loadFromFile(f));
             } catch (IOException e) {
                 LOG.error("Failed to load user dictionary.");
                 return;
             }
             LOG.info("Succeeded to load specified user dictionary.");
         });
-        customDictionary.addAll(extractor.get());
     }
 
     @Override

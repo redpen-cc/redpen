@@ -34,9 +34,7 @@ public class FileLoaderTest {
         sampleWordSet += "Gumma\n";
         sampleWordSet += "Gifu\n";
 
-        WordListExtractor ex = new WordListExtractor();
-        ex.load(new ByteArrayInputStream(sampleWordSet.getBytes(StandardCharsets.UTF_8)));
-        Set<String> result = ex.get();
+        Set<String> result = DictionaryLoader.WORD.load(new ByteArrayInputStream(sampleWordSet.getBytes(StandardCharsets.UTF_8)));
         assertEquals(3, result.size());
     }
 
@@ -44,9 +42,7 @@ public class FileLoaderTest {
     public void testCreateVacantWordList() throws IOException {
         String sampleWordSet = "";
 
-        WordListExtractor ex = new WordListExtractor();
-        ex.load(new ByteArrayInputStream(sampleWordSet.getBytes(StandardCharsets.UTF_8)));
-        Set<String> result = ex.get();
+        Set<String> result = DictionaryLoader.WORD.load(new ByteArrayInputStream(sampleWordSet.getBytes(StandardCharsets.UTF_8)));
         assertEquals(0, result.size());
     }
 
@@ -56,9 +52,7 @@ public class FileLoaderTest {
         sampleWordSet += "Gumma\t530000\n";
         sampleWordSet += "Gifu\t1200\n";
 
-        KeyValueDictionaryExtractor ex = new KeyValueDictionaryExtractor();
-        ex.load(new ByteArrayInputStream(sampleWordSet.getBytes(StandardCharsets.UTF_8)));
-        Map<String, String> result = ex.get();
+        Map<String, String> result = DictionaryLoader.KEY_VALUE.load(new ByteArrayInputStream(sampleWordSet.getBytes(StandardCharsets.UTF_8)));
         assertEquals(3, result.size());
         assertEquals("100", result.get("Saitama"));
         assertEquals("530000", result.get("Gumma"));
@@ -68,9 +62,7 @@ public class FileLoaderTest {
     @Test
     public void testCreateVacantKeyValueList() throws IOException {
         String sampleWordSet = "";
-        KeyValueDictionaryExtractor ex = new KeyValueDictionaryExtractor();
-        ex.load(new ByteArrayInputStream(sampleWordSet.getBytes(StandardCharsets.UTF_8)));
-        Map<String, String> result = ex.get();
+        Map<String, String> result = DictionaryLoader.KEY_VALUE.load(new ByteArrayInputStream(sampleWordSet.getBytes(StandardCharsets.UTF_8)));
         assertEquals(0, result.size());
     }
 }

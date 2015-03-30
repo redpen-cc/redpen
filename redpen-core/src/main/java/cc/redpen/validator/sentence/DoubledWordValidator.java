@@ -20,13 +20,12 @@ package cc.redpen.validator.sentence;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.util.WordListExtractor;
+import cc.redpen.util.DictionaryLoader;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -55,7 +54,7 @@ final public class DoubledWordValidator extends Validator {
     protected void init() throws RedPenException {
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/doubled-word-skiplist-" + getSymbolTable().getLang() + ".dat";
-        skipList = loadWordListFromResource(defaultDictionaryFile, "doubled word skip list", false);
+        skipList = DictionaryLoader.WORD.loadCachedFromResource(defaultDictionaryFile, "doubled word skip list");
 
         customSkipList = new HashSet<>();
         Optional<String> skipListStr = getConfigAttribute("list");
@@ -66,18 +65,16 @@ final public class DoubledWordValidator extends Validator {
             LOG.info("Succeeded to add elements of user defined skip list.");
         });
 
-        WordListExtractor extractor = new WordListExtractor();
         Optional<String> confFile = getConfigAttribute("dict");
         if (confFile.isPresent()) {
             LOG.info("user dictionary file is " + confFile.get());
             try {
-                extractor.load(new FileInputStream(confFile.get()));
+                customSkipList.addAll(DictionaryLoader.WORD.loadFromFile(confFile.get()));
             } catch (IOException e) {
                 throw new RedPenException("Failed to load user dictionary.", e);
             }
             LOG.info("Succeeded to load specified user dictionary.");
         }
-        customSkipList.addAll(extractor.get());
     }
 
     @Override
