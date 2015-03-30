@@ -172,11 +172,6 @@ public final class Main {
             return -1;
         }
 
-        if (documents == null) {
-            LOG.error("Failed to create a DocumentCollection object");
-            return -1;
-        }
-
         Map<Document, List<ValidationError>> documentListMap = redPen.validate(documents);
         String result = formatter.format(documentListMap);
         System.out.println(result);

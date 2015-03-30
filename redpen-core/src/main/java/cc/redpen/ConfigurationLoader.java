@@ -137,9 +137,6 @@ public final class ConfigurationLoader {
      */
     public Configuration load(InputStream stream) throws RedPenException {
         Document doc = toDocument(stream);
-        if (doc == null) {
-            throw new RedPenException("stream is null");
-        }
 
         configBuilder = new ConfigurationBuilder();
         Element rootElement = getRootNode(doc, "redpen-conf");
