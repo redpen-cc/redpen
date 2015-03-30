@@ -21,18 +21,14 @@ import cc.redpen.RedPenException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 /**
- * ResourceExtractor is called from FileLoader. To support a file format,
- * we create a class implementing ResourceExtractor.
+ * load dictionary data from input source
  */
 public final class ResourceExtractor<E> {
     private static final Logger LOG = LoggerFactory.getLogger(ResourceExtractor.class);
@@ -48,7 +44,7 @@ public final class ResourceExtractor<E> {
     /**
      * Resource Extractor loads key-value dictionary
      */
-    public final static ResourceExtractor<Map<String, String>> KEY_VALUE_DICTIONARY =
+    public final static ResourceExtractor<Map<String, String>> KEY_VALUE =
             new ResourceExtractor<>(HashMap::new, (map, line) -> {
                 String[] result = line.split("\t");
                 if (result.length == 2) {
@@ -61,13 +57,13 @@ public final class ResourceExtractor<E> {
     /**
      * Resource Extractor loads word list
      */
-    public final static ResourceExtractor<Set<String>> WORD_LIST =
+    public final static ResourceExtractor<Set<String>> WORD =
             new ResourceExtractor<>(HashSet::new, Set::add);
 
     /**
      * Resource Extractor loads word list while lowercasing lines
      */
-    public final static ResourceExtractor<Set<String>> WORD_LIST_LOWERCASE =
+    public final static ResourceExtractor<Set<String>> WORD_LOWERCASE =
             new ResourceExtractor<>(HashSet::new, (set, line) -> set.add(line.toLowerCase()));
 
     /**
@@ -76,7 +72,7 @@ public final class ResourceExtractor<E> {
      * @param inputStream input stream
      * @throws IOException when failed to create reader from the specified input stream
      */
-    public E load(InputStream inputStream) throws IOException {
+    E load(InputStream inputStream) throws IOException {
         E e = supplier.get();
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,
                 StandardCharsets.UTF_8))) {
@@ -88,23 +84,34 @@ public final class ResourceExtractor<E> {
     /**
      * Load a given input file combined with jar package.
      *
-     * @param inputFile a file included in the jar file
-     * @throws IOException when input stream is null
+     * @param resourcePath resource path
+     * @throws IOException when resource is not found
      */
-    public E loadFromResource(String inputFile) throws IOException {
-        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(inputFile)) {
+    private E loadFromResource(String resourcePath) throws IOException {
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(resourcePath)) {
             if (inputStream == null) {
-                throw new IOException("Failed to load input " + inputFile);
+                throw new IOException("Failed to load input " + resourcePath);
             }
             return load(inputStream);
         }
     }
 
-    private final Map<String,E> resourceCache = new HashMap<>();
+    /**
+     * Load a given input file combined with jar package.
+     *
+     * @param filePath file path
+     * @throws IOException when input stream is null
+     */
+    public E loadFromFile(String filePath) throws IOException {
+        return load(new FileInputStream(filePath));
+    }
+
+    private final Map<String, E> resourceCache = new HashMap<>();
 
     /**
      * returns word list loaded from resource
-     * @param path resource path
+     *
+     * @param path           resource path
      * @param dictionaryName name of the resource
      * @return word list
      * @throws RedPenException

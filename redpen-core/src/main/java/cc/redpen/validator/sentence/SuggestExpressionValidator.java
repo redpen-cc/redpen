@@ -25,7 +25,6 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -62,9 +61,9 @@ final public class SuggestExpressionValidator extends Validator {
             LOG.error("Dictionary file is not specified");
             throw new RedPenException("dictionary file is not specified");
         } else {
-            ResourceExtractor<Map<String, String>> extractor = ResourceExtractor.KEY_VALUE_DICTIONARY;
+            ResourceExtractor<Map<String, String>> extractor = ResourceExtractor.KEY_VALUE;
             try {
-                synonyms = extractor.load(new FileInputStream(confFile.get()));
+                synonyms = extractor.loadFromFile(confFile.get());
             } catch (IOException e) {
                 throw new RedPenException("Failed to load KeyValueDictionaryExtractor", e);
             }

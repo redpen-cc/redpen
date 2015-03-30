@@ -26,10 +26,8 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Detect invalid word occurrences.
@@ -63,7 +61,7 @@ final public class InvalidWordValidator extends Validator {
         String lang = getSymbolTable().getLang();
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/invalid-word-" + lang + ".dat";
-        invalidWords = ResourceExtractor.WORD_LIST.loadCachedFromResource(defaultDictionaryFile, "invalid word");
+        invalidWords = ResourceExtractor.WORD.loadCachedFromResource(defaultDictionaryFile, "invalid word");
 
         getConfigAttribute("list").ifPresent((f -> {
             LOG.info("User defined invalid expression list found.");
@@ -75,7 +73,7 @@ final public class InvalidWordValidator extends Validator {
         if(confFile.isPresent()){
             LOG.info("user dictionary file is " + confFile.get());
             try {
-                customInvalidWords.addAll(ResourceExtractor.WORD_LIST.load(new FileInputStream(confFile.get())));
+                customInvalidWords.addAll(ResourceExtractor.WORD.loadFromFile(confFile.get()));
                 LOG.info("Succeeded to load specified user dictionary.");
             } catch (IOException e) {
                 throw new RedPenException("Failed to load user dictionary.", e);

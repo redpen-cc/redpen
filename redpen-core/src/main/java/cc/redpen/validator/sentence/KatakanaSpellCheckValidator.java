@@ -27,7 +27,6 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -127,13 +126,13 @@ final public class KatakanaSpellCheckValidator extends Validator {
     protected void init() throws RedPenException {
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/katakana-spellcheck.dat";
-        exceptions = ResourceExtractor.WORD_LIST.loadCachedFromResource(defaultDictionaryFile, "katakana word dictionary");
+        exceptions = ResourceExtractor.WORD.loadCachedFromResource(defaultDictionaryFile, "katakana word dictionary");
 
         Optional<String> confFile = getConfigAttribute("dict");
         if (confFile.isPresent()) {
             LOG.info("User dictionary file is " + confFile.get());
             try {
-                customExceptions.addAll(ResourceExtractor.WORD_LIST.load(new FileInputStream(confFile.get())));
+                customExceptions.addAll(ResourceExtractor.WORD.loadFromFile(confFile.get()));
             } catch (IOException e1) {
                 throw new RedPenException("Failed to load user dictionary", e1);
             }

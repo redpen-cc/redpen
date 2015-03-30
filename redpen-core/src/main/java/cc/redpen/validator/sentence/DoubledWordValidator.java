@@ -26,7 +26,6 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -55,7 +54,7 @@ final public class DoubledWordValidator extends Validator {
     protected void init() throws RedPenException {
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/doubled-word-skiplist-" + getSymbolTable().getLang() + ".dat";
-        skipList = ResourceExtractor.WORD_LIST.loadCachedFromResource(defaultDictionaryFile, "doubled word skip list");
+        skipList = ResourceExtractor.WORD.loadCachedFromResource(defaultDictionaryFile, "doubled word skip list");
 
         customSkipList = new HashSet<>();
         Optional<String> skipListStr = getConfigAttribute("list");
@@ -70,7 +69,7 @@ final public class DoubledWordValidator extends Validator {
         if (confFile.isPresent()) {
             LOG.info("user dictionary file is " + confFile.get());
             try {
-                customSkipList.addAll(ResourceExtractor.WORD_LIST.load(new FileInputStream(confFile.get())));
+                customSkipList.addAll(ResourceExtractor.WORD.loadFromFile(confFile.get()));
             } catch (IOException e) {
                 throw new RedPenException("Failed to load user dictionary.", e);
             }

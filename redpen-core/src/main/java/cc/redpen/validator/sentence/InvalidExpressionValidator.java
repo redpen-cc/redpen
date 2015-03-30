@@ -25,7 +25,6 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Consumer;
@@ -61,7 +60,7 @@ final public class InvalidExpressionValidator extends Validator {
         String lang = getSymbolTable().getLang();
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/invalid-expression-" + lang + ".dat";
-        invalidExpressions = ResourceExtractor.WORD_LIST.loadCachedFromResource(defaultDictionaryFile, "invalid expression");
+        invalidExpressions = ResourceExtractor.WORD.loadCachedFromResource(defaultDictionaryFile, "invalid expression");
 
         customInvalidExpressions = new HashSet<>();
         Optional<String> listStr = getConfigAttribute("list");
@@ -75,7 +74,7 @@ final public class InvalidExpressionValidator extends Validator {
         confFile.ifPresent(f -> {
             LOG.info("user dictionary file is " + f);
             try {
-                customInvalidExpressions.addAll(ResourceExtractor.WORD_LIST.load(new FileInputStream(f)));
+                customInvalidExpressions.addAll(ResourceExtractor.WORD.loadFromFile(f));
             } catch (IOException e) {
                 LOG.error("Failed to load user dictionary.");
                 return;
