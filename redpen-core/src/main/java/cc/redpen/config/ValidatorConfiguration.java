@@ -18,13 +18,14 @@
 package cc.redpen.config;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Configuration for Validators.
  */
 public final class ValidatorConfiguration {
     private final String configurationName;
-    private final HashMap<String, String> attributes;
+    private final Map<String, String> attributes;
 
     /**
      * Constructor.
@@ -34,6 +35,15 @@ public final class ValidatorConfiguration {
     public ValidatorConfiguration(String name) {
         this.configurationName = name;
         this.attributes = new HashMap<>();
+    }
+
+    /**
+     * Return the attributes map
+     *
+     * @return a map of the configuration attributes to their values
+     */
+    public Map<String, String> getAttributes() {
+        return attributes;
     }
 
     /**
@@ -57,11 +67,13 @@ public final class ValidatorConfiguration {
 
     /**
      * Get validator class name
+     *
      * @return validator class name
      */
     public String getValidatorClassName() {
         return configurationName + "Validator";
     }
+
     /**
      * Add an attribute.
      *

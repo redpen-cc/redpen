@@ -17,7 +17,7 @@
  */
 
 body {
-    background-color: #c0c5b2;
+    background-color: #C7C4BA;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
@@ -37,15 +37,36 @@ a:hover {
 
 label {
     margin-bottom: 0px;
+    min-height: 10px;
+    margin-right: 12px;
 }
 
 textarea {
     resize: none;
 }
 
+.editable-empty, .editable-empty:hover, .editable-empty:focus {
+    font-style: italic;
+    color: #815555;
+    text-decoration: none;
+}
+
+.editable-click, a.editable-click, a.editable-click:hover {
+    text-decoration: none;
+    border-bottom: none;
+}
+
+.editableform-loading {
+    background: url('../images/loading.gif') center center no-repeat;
+}
+
+.editable-clear-x {
+    background: url('../images/clear.png') center center no-repeat;
+}
+
 .navbar-default {
-    background-color: rgba(114, 117, 106, 1);
-    border-color: rgb(107, 110, 100);
+    background-color: #a9a69c;
+    border: none;
 }
 
 .navbar-default .navbar-nav>li>a {
@@ -79,7 +100,7 @@ textarea {
 }
 
 .radio, .checkbox {
-    margin-top: 0;
+    margin-top: 0 !important;
 }
 
 #main {
@@ -90,24 +111,63 @@ textarea {
     bottom: 4px;
 }
 
-#redpen-editor {
-    padding: 19px;
+.redpen-document-panel {
+    background-color: white;
+    border-radius: 4px;
+    overflow-y: auto;
 }
 
 #redpen-editor,
 #redpen-results {
-    min-height: 100%;
-    height: 100%;
-    overflow: auto;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: visible;
+    line-height: 28px;
+    padding: 19px !important;
+    margin: 0 !important;
+    word-wrap: normal;
+    white-space: pre-wrap;
+    font-size: 16px;
+    background-color: transparent;
+}
+
+#redpen-editor {
+    z-index: 2;
+    color: rgba(0, 0, 0, 0.8);
+}
+
+#redpen-editor:focus {
+    outline: none;
+}
+
+#redpen-results {
+    z-index: 1;
 }
 
 #redpen-results h4 {
-    margin-top: 0;
+    padding-top: 24px;
 }
 
 #redpen-results-json {
-    background-color: rgb(255, 245, 224);
-    color: rgb(6, 45, 5);
+    background-color:rgb(196, 236, 253);
+    color: rgb(3, 23, 3);
+    min-height: 100%;
+    height: 100%;
+    overflow: auto;
+    font-size: 11px;
+    line-height: 12px;
+    font-family: monospace;
+    white-space: pre;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+#redpen-results-request {
+    background-color: rgb(194, 228, 197);
+    color: #222;
     min-height: 100%;
     height: 100%;
     overflow: auto;
@@ -134,10 +194,10 @@ textarea {
 }
 
 #redpen-settings {
+    min-height: 100%;
     height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
+    width: 100%;
+    overflow: auto;
 }
 
 #redpen-version {
@@ -162,15 +222,16 @@ textarea {
 
 #redpen-option-results li {
     display: inline-block;
-    width: 52px;
+    width: 64px;
     padding: 4px;
     cursor: pointer;
+    color: #676F5C;
 }
 
 .redpen-option-selected {
     border-radius: 3px;
     background-color: rgba(0, 0, 0, 0.3);
-    color: white;
+    color: white !important;
 }
 
 .col-md-5 {
@@ -202,12 +263,8 @@ textarea {
 }
 
 .redpen-error-sentence {
-    background-image: url(../images/redpen-logo-nib-icon.png);
-    background-size: 16px 16px;
     background-position: left 5px;
     background-repeat: no-repeat;
-    padding-left: 18px;
-    margin-bottom: 24px;
 }
 
 .redpen-info-message {
@@ -220,7 +277,10 @@ textarea {
 }
 
 .redpen-clear-button {
-    margin-top: 4px;
+    position: absolute;
+    bottom: 1px;
+    right: 1px;
+    z-index: 3;
 }
 
 .redpen-error-validator {
@@ -267,7 +327,7 @@ textarea {
 }
 
 .redpen-validators {
-    font-size: 11px;
+    font-size: 12px;
     line-height: 18px;
 }
 
@@ -284,57 +344,92 @@ textarea {
     color: #1C6100;
 }
 
+.redpen-validator-properties {
+    float: right;
+}
+
 .redpen-error-list {
     margin-left: 0;
     padding-right: 0;
     list-style-type: none;
-    padding-left: 18px;
-    margin-bottom: 20px;
+    padding-left: 0;
+    font-size: 12px;
+    line-height: 18px;
 }
 
 .redpen-error-message {
-    color: rgb(124, 47, 0);
+    color: rgb(124, 0, 4);
     cursor: help;
 }
 
 .redpen-error-message-annotated::before {
-    background-color: #FF713D !important;
+    /*background-color: #ff0500 !important;*/
 }
 
 .redpen-error-list li {
     counter-increment: step-counter;
+    background-image: url(../images/redpen-logo-nib-icon.png);
+    background-repeat: no-repeat;
+    background-position: left 4px;
+    background-size: 16px 16px;
 }
 
 .redpen-error-list li::before {
     content: counter(step-counter);
     margin-right: 5px;
-    font-size: 80%;
-    background-color: grey;
-    color: white;
+    font-size: 11px;
+    line-height: 20px;
+    margin-left: 16px;
+    color: #ff0500;
     padding: 0;
     display: inline-block;
-    text-align: center;
+    text-align: left;
     min-width: 20px;
     border-radius: 3px;
 }
 
-.redpen-annotated-sentence i {
-    color: #8d3700;
-    font-style: normal;
+.redpen-annotated-sentence {
+    line-height: 24px;
+    color: rgba(0, 0, 255, 0);
 }
 
-.redpen-annotated-sentence b {
+.redpen-annotated-sentence i {
+    color: #777;
+    text-shadow: 0 0 12px rgba(255, 32, 0, 1);
+    font-style: normal;
+    background-image: url(../images/redpen-mark.png);
+    background-size: 16px 100%;
+}
+
+.redpen-annotated-sentence-marker {
     cursor: help;
     font-weight: normal;
-    background-color: #FF713D;
-    color: #fff;
-    border-radius: 3px;
-    font-size: 60%;
+    background-color: transparent;
+    color: rgba(255, 12, 2, 0.90);
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
+    font-size: 10px;
     display: inline-block;
-    line-height: 60%;
-    padding: 3px;
     vertical-align: top;
-    text-align: center;
-    margin-right: 1px;
+    text-align: right;
+    margin-left: -24px;
+    margin-top: -11px;
+    width: 24px;
+    z-index: 2;
 }
 
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    border-radius: 3px;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background-color: rgba(0, 0, 0, 0.6);
+}

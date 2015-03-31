@@ -20,6 +20,7 @@ package cc.redpen;
 import cc.redpen.formatter.*;
 import cc.redpen.model.Document;
 import cc.redpen.parser.DocumentParser;
+import cc.redpen.util.FormatterUtils;
 import cc.redpen.validator.ValidationError;
 import org.apache.commons.cli.*;
 import org.slf4j.Logger;
@@ -129,26 +130,10 @@ public final class Main {
 
         DocumentParser parser = DocumentParser.of(inputFormat);
 
-        Formatter formatter;
-        switch (resultFormat.toLowerCase()) {
-            case "xml":
-                formatter = new XMLFormatter();
-                break;
-            case "plain":
-                formatter = new PlainFormatter();
-                break;
-            case "plain2":
-                formatter = new PlainBySentenceFormatter();
-                break;
-            case "json":
-                formatter = new JSONFormatter();
-                break;
-            case "json2":
-                formatter = new JSONBySentenceFormatter();
-                break;
-            default:
-                LOG.error("Unsupported format: " + resultFormat + " - please use xml, plain, plain2, json or json2");
-                return -1;
+        Formatter formatter = FormatterUtils.getFormatterByName(resultFormat);
+        if (formatter == null) {
+            LOG.error("Unsupported format: " + resultFormat + " - please use xml, plain, plain2, json or json2");
+            return -1;
         }
 
         if (configFileName == null
