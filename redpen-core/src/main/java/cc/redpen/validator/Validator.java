@@ -263,14 +263,20 @@ public abstract class Validator {
         }
     }
 
+    protected Map<String, String> loadKeyValueFromResource(String path, String dictionaryName) throws RedPenException {
+        return DictionaryLoader.KEY_VALUE.loadCachedFromResource(path, dictionaryName);
+    }
+    protected Map<String, String> loadKeyValueFromFile(File file, String dictionaryName) throws RedPenException {
+        return DictionaryLoader.KEY_VALUE.loadCachedFromFile(file, dictionaryName);
+    }
     protected Set<String> loadWordListFromResource(String path, String dictionaryName) throws RedPenException {
         return DictionaryLoader.WORD.loadCachedFromResource(path, dictionaryName);
     }
-    protected Set<String> loadLowercaseWordListFromResource(String path, String dictionaryName) throws RedPenException {
-        return DictionaryLoader.WORD_LOWERCASE.loadCachedFromResource(path, dictionaryName);
-    }
     protected Set<String> loadWordListFromFile(File file, String dictionaryName) throws RedPenException {
         return DictionaryLoader.WORD.loadCachedFromFile(file, dictionaryName);
+    }
+    protected Set<String> loadLowercaseWordListFromResource(String path, String dictionaryName) throws RedPenException {
+        return DictionaryLoader.WORD_LOWERCASE.loadCachedFromResource(path, dictionaryName);
     }
     protected Set<String> loadLowercaseWordListFromFlie(File file, String dictionaryName) throws RedPenException {
         return DictionaryLoader.WORD_LOWERCASE.loadCachedFromFile(file, dictionaryName);

@@ -102,7 +102,7 @@ public final class DictionaryLoader<E> {
      * @param file file to load
      * @throws IOException when input stream is null
      */
-    public E loadFromFile(File file) throws IOException {
+    private E loadFromFile(File file) throws IOException {
         return load(new FileInputStream(file));
     }
 

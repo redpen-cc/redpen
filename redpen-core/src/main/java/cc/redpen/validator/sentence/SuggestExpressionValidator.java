@@ -2,13 +2,13 @@
  * redpen: a text inspection tool
  * Copyright (c) 2014-2015 Recruit Technologies Co., Ltd. and contributors
  * (see CONTRIBUTORS.md)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -62,12 +62,7 @@ final public class SuggestExpressionValidator extends Validator {
             LOG.error("Dictionary file is not specified");
             throw new RedPenException("dictionary file is not specified");
         } else {
-            DictionaryLoader<Map<String, String>> extractor = DictionaryLoader.KEY_VALUE;
-            try {
-                synonyms = extractor.loadFromFile(new File(confFile.get()));
-            } catch (IOException e) {
-                throw new RedPenException("Failed to load KeyValueDictionaryExtractor", e);
-            }
+            synonyms = loadKeyValueFromFile(new File(confFile.get()), "SuggestExpressionValidator dictionary");
         }
     }
 
