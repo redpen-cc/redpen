@@ -20,7 +20,6 @@ package cc.redpen.validator.sentence;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.util.DictionaryLoader;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
@@ -48,7 +47,7 @@ public class SpellingValidator extends Validator {
     protected void init() throws RedPenException {
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/spellchecker-" + getSymbolTable().getLang() + ".dat";
-        defaultDictionary = loadLowercaseWordListFromResource(defaultDictionaryFile, "spell dictionary");
+        defaultDictionary = WORD_LSIT_LOWERCASED.loadCachedFromResource(defaultDictionaryFile, "spell dictionary");
 
         customDictionary = new HashSet<>();
         Optional<String> listStr = getConfigAttribute("list");
@@ -61,7 +60,7 @@ public class SpellingValidator extends Validator {
         Optional<String> userDictionaryFile = getConfigAttribute("dict");
         if (userDictionaryFile.isPresent()) {
             String f = userDictionaryFile.get();
-            customDictionary.addAll(loadLowercaseWordListFromFlie(new File(f), "SpellingValidator user dictionary"));
+            customDictionary.addAll(WORD_LSIT_LOWERCASED.loadCachedFromFile(new File(f), "SpellingValidator user dictionary"));
         }
     }
 

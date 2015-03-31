@@ -86,11 +86,11 @@ final public class StartWithCapitalLetterValidator extends Validator {
 
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/default-capital-case-exception-list.dat";
-        whiteList = loadWordListFromResource(defaultDictionaryFile, "capital letter exception dictionary");
+        whiteList = WORD_LIST.loadCachedFromResource(defaultDictionaryFile, "capital letter exception dictionary");
 
         Optional<String> confFile = getConfigAttribute("dict");
         if (confFile.isPresent()) {
-            customWhiteList = loadWordListFromFile(new File(confFile.get()), "StartWithCapitalLetterValidator user dictionary");
+            customWhiteList = WORD_LIST.loadCachedFromFile(new File(confFile.get()), "StartWithCapitalLetterValidator user dictionary");
         }
     }
 

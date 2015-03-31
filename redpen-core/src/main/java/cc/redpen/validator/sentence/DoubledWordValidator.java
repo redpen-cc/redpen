@@ -57,7 +57,7 @@ final public class DoubledWordValidator extends Validator {
     protected void init() throws RedPenException {
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/doubled-word-skiplist-" + getSymbolTable().getLang() + ".dat";
-        skipList = loadWordListFromResource(defaultDictionaryFile, "doubled word skip list");
+        skipList = WORD_LIST.loadCachedFromResource(defaultDictionaryFile, "doubled word skip list");
 
         customSkipList = new HashSet<>();
         Optional<String> skipListStr = getConfigAttribute("list");
@@ -70,7 +70,7 @@ final public class DoubledWordValidator extends Validator {
 
         Optional<String> confFile = getConfigAttribute("dict");
         if (confFile.isPresent()) {
-            customSkipList.addAll(loadWordListFromFile(new File(confFile.get()), "DoubledWordValidator user dictionary"));
+            customSkipList.addAll(WORD_LIST.loadCachedFromFile(new File(confFile.get()), "DoubledWordValidator user dictionary"));
         }
     }
 

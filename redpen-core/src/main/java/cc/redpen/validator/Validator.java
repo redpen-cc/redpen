@@ -2,13 +2,13 @@
  * redpen: a text inspection tool
  * Copyright (c) 2014-2015 Recruit Technologies Co., Ltd. and contributors
  * (see CONTRIBUTORS.md)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -263,22 +263,26 @@ public abstract class Validator {
         }
     }
 
-    protected Map<String, String> loadKeyValueFromResource(String path, String dictionaryName) throws RedPenException {
-        return DictionaryLoader.KEY_VALUE.loadCachedFromResource(path, dictionaryName);
-    }
-    protected Map<String, String> loadKeyValueFromFile(File file, String dictionaryName) throws RedPenException {
-        return DictionaryLoader.KEY_VALUE.loadCachedFromFile(file, dictionaryName);
-    }
-    protected Set<String> loadWordListFromResource(String path, String dictionaryName) throws RedPenException {
-        return DictionaryLoader.WORD.loadCachedFromResource(path, dictionaryName);
-    }
-    protected Set<String> loadWordListFromFile(File file, String dictionaryName) throws RedPenException {
-        return DictionaryLoader.WORD.loadCachedFromFile(file, dictionaryName);
-    }
-    protected Set<String> loadLowercaseWordListFromResource(String path, String dictionaryName) throws RedPenException {
-        return DictionaryLoader.WORD_LOWERCASE.loadCachedFromResource(path, dictionaryName);
-    }
-    protected Set<String> loadLowercaseWordListFromFlie(File file, String dictionaryName) throws RedPenException {
-        return DictionaryLoader.WORD_LOWERCASE.loadCachedFromFile(file, dictionaryName);
-    }
+    /**
+     * Resource Extractor loads key-value dictionary
+     */
+    protected final static DictionaryLoader<Map<String, String>> KEY_VALUE =
+            new DictionaryLoader<>(HashMap::new, (map, line) -> {
+                String[] result = line.split("\t");
+                if (result.length == 2) {
+                    map.put(result[0], result[1]);
+                } else {
+                    LOG.error("Skip to load line... Invalid line: " + line);
+                }
+            });
+    /**
+     * Resource Extractor loads word list
+     */
+    protected final static DictionaryLoader<Set<String>> WORD_LIST =
+            new DictionaryLoader<>(HashSet::new, Set::add);
+    /**
+     * Resource Extractor loads word list while lowercasing lines
+     */
+    protected final static DictionaryLoader<Set<String>> WORD_LSIT_LOWERCASED =
+            new DictionaryLoader<>(HashSet::new, (set, line) -> set.add(line.toLowerCase()));
 }

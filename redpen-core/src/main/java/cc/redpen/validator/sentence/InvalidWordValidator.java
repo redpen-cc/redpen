@@ -65,7 +65,7 @@ final public class InvalidWordValidator extends Validator {
         String lang = getSymbolTable().getLang();
         String defaultDictionaryResource = DEFAULT_RESOURCE_PATH
                 + "/invalid-word-" + lang + ".dat";
-        invalidWords = loadWordListFromResource(defaultDictionaryResource, "invalid word");
+        invalidWords = WORD_LIST.loadCachedFromResource(defaultDictionaryResource, "invalid word");
 
         getConfigAttribute("list").ifPresent((f -> {
             LOG.info("User defined invalid expression list found.");
@@ -75,7 +75,7 @@ final public class InvalidWordValidator extends Validator {
 
         Optional<String> confFile = getConfigAttribute("dict");
         if (confFile.isPresent()) {
-            customInvalidWords.addAll(loadWordListFromFile(new File(confFile.get()), "InvalidWordValidator user dictionary"));
+            customInvalidWords.addAll(WORD_LIST.loadCachedFromFile(new File(confFile.get()), "InvalidWordValidator user dictionary"));
         }
     }
 

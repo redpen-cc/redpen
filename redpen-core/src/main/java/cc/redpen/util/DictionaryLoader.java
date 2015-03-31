@@ -36,35 +36,10 @@ public final class DictionaryLoader<E> {
     private final Supplier<E> supplier;
     private final BiConsumer<E, String> loader;
 
-    private DictionaryLoader(Supplier<E> supplier, BiConsumer<E, String> loader) {
+    public DictionaryLoader(Supplier<E> supplier, BiConsumer<E, String> loader) {
         this.supplier = supplier;
         this.loader = loader;
     }
-
-    /**
-     * Resource Extractor loads key-value dictionary
-     */
-    public final static DictionaryLoader<Map<String, String>> KEY_VALUE =
-            new DictionaryLoader<>(HashMap::new, (map, line) -> {
-                String[] result = line.split("\t");
-                if (result.length == 2) {
-                    map.put(result[0], result[1]);
-                } else {
-                    LOG.error("Skip to load line... Invalid line: " + line);
-                }
-            });
-
-    /**
-     * Resource Extractor loads word list
-     */
-    public final static DictionaryLoader<Set<String>> WORD =
-            new DictionaryLoader<>(HashSet::new, Set::add);
-
-    /**
-     * Resource Extractor loads word list while lowercasing lines
-     */
-    public final static DictionaryLoader<Set<String>> WORD_LOWERCASE =
-            new DictionaryLoader<>(HashSet::new, (set, line) -> set.add(line.toLowerCase()));
 
     /**
      * Given a input stream, load the contents.
