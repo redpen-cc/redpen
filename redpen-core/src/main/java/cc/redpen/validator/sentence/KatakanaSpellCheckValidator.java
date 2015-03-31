@@ -20,15 +20,19 @@ package cc.redpen.validator.sentence;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.LevenshteinDistance;
-import cc.redpen.util.DictionaryLoader;
 import cc.redpen.util.StringUtils;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Validate the correctness of Katakana word spelling.
@@ -126,16 +130,11 @@ final public class KatakanaSpellCheckValidator extends Validator {
     protected void init() throws RedPenException {
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/katakana-spellcheck.dat";
-        exceptions = DictionaryLoader.WORD.loadCachedFromResource(defaultDictionaryFile, "katakana word dictionary");
+        exceptions = loadWordListFromFile(defaultDictionaryFile, "katakana word dictionary");
 
         Optional<String> confFile = getConfigAttribute("dict");
         if (confFile.isPresent()) {
-            LOG.info("User dictionary file is " + confFile.get());
-            try {
-                customExceptions.addAll(DictionaryLoader.WORD.loadFromFile(confFile.get()));
-            } catch (IOException e1) {
-                throw new RedPenException("Failed to load user dictionary", e1);
-            }
+            customExceptions.addAll(loadWordListFromFile(confFile.get(), "KatakanaSpellCheckValidator user dictionary"));
         }
 
         //TODO : configurable SIMILARITY_RATIO.

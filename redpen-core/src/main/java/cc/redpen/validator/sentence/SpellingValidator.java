@@ -26,8 +26,11 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 public class SpellingValidator extends Validator {
 
@@ -55,16 +58,12 @@ public class SpellingValidator extends Validator {
         });
 
         Optional<String> userDictionaryFile = getConfigAttribute("dict");
-        userDictionaryFile.ifPresent(f -> {
+        if (userDictionaryFile.isPresent()) {
+            String f = userDictionaryFile.get();
             LOG.info("user dictionary file is " + f);
-            try {
-                customDictionary.addAll(DictionaryLoader.WORD_LOWERCASE.loadFromFile(f));
-            } catch (IOException e) {
-                LOG.error("Failed to load user dictionary.");
-                return;
-            }
+            customDictionary.addAll(DictionaryLoader.WORD_LOWERCASE.loadCachedFromFile(f, "SpellingValidator user dictionary"));
             LOG.info("Succeeded to load specified user dictionary.");
-        });
+        }
     }
 
     @Override

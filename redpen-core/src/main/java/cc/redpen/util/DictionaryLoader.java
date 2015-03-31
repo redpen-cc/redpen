@@ -131,4 +131,50 @@ public final class DictionaryLoader<E> {
         LOG.info("Succeeded to load " + dictionaryName + ".");
         return strings;
     }
+
+
+    private final Map<String, E> fileCache = new HashMap<>();
+    private final Map<String, Long> fileNameTimestampMap = new HashMap<>();
+
+    /**
+     * returns word list loaded from file
+     *
+     * @param path           file path
+     * @param dictionaryName name of the file
+     * @return word list
+     * @throws RedPenException
+     */
+    public E loadCachedFromFile(String path, String dictionaryName) throws RedPenException {
+        File file = new File(path);
+        if (!file.exists()) {
+            throw new RedPenException("File not found: " + path);
+        }
+        long currentModified = file.lastModified();
+        fileNameTimestampMap.computeIfPresent(path, (key, lastModified) -> {
+            if (lastModified != currentModified) {
+                // the file has been modified since last load
+                // clear the cache and load the file in the latter block
+                fileCache.remove(key);
+                return null;
+            } else {
+                return lastModified;
+            }
+        });
+
+        E loaded = fileCache.computeIfAbsent(path, e -> {
+            try {
+                E newlyLoaded = loadFromFile(path);
+                fileNameTimestampMap.put(path, file.lastModified());
+                return newlyLoaded;
+            } catch (IOException ioe) {
+                LOG.error(ioe.getMessage());
+                return null;
+            }
+        });
+        if (loaded == null) {
+            throw new RedPenException("Failed to load " + dictionaryName + ":" + path);
+        }
+        LOG.info("Succeeded to load " + dictionaryName + ".");
+        return loaded;
+    }
 }

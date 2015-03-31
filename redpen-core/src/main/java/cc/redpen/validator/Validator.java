@@ -26,6 +26,7 @@ import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.tokenizer.TokenElement;
+import cc.redpen.util.DictionaryLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -259,5 +260,18 @@ public abstract class Validator {
         } else {
             throw new AssertionError("message resource not found.");
         }
+    }
+
+    protected Set<String> loadWordListFromResource(String path, String dictionaryName) throws RedPenException {
+        return DictionaryLoader.WORD.loadCachedFromResource(path, dictionaryName);
+    }
+    protected Set<String> loadLowercaseWordListFromResource(String path, String dictionaryName) throws RedPenException {
+        return DictionaryLoader.WORD_LOWERCASE.loadCachedFromResource(path, dictionaryName);
+    }
+    protected Set<String> loadWordListFromFile(String filePath, String dictionaryName) throws RedPenException {
+        return DictionaryLoader.WORD.loadCachedFromFile(filePath, dictionaryName);
+    }
+    protected Set<String> loadLowercaseWordListFromFlie(String path, String dictionaryName) throws RedPenException {
+        return DictionaryLoader.WORD_LOWERCASE.loadCachedFromFile(path, dictionaryName);
     }
 }
