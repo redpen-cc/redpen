@@ -130,7 +130,7 @@ final public class KatakanaSpellCheckValidator extends Validator {
     protected void init() throws RedPenException {
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/katakana-spellcheck.dat";
-        exceptions = loadWordListFromFile(defaultDictionaryFile, "katakana word dictionary");
+        exceptions = loadWordListFromResource(defaultDictionaryFile, "katakana word dictionary");
 
         Optional<String> confFile = getConfigAttribute("dict");
         if (confFile.isPresent()) {
