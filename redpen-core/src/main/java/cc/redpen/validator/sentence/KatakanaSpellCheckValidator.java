@@ -26,6 +26,7 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -134,7 +135,7 @@ final public class KatakanaSpellCheckValidator extends Validator {
 
         Optional<String> confFile = getConfigAttribute("dict");
         if (confFile.isPresent()) {
-            customExceptions.addAll(loadWordListFromFile(confFile.get(), "KatakanaSpellCheckValidator user dictionary"));
+            customExceptions.addAll(loadWordListFromFile(new File(confFile.get()), "KatakanaSpellCheckValidator user dictionary"));
         }
 
         //TODO : configurable SIMILARITY_RATIO.

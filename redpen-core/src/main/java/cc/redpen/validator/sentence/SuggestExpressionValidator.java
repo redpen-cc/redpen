@@ -25,6 +25,7 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -63,7 +64,7 @@ final public class SuggestExpressionValidator extends Validator {
         } else {
             DictionaryLoader<Map<String, String>> extractor = DictionaryLoader.KEY_VALUE;
             try {
-                synonyms = extractor.loadFromFile(confFile.get());
+                synonyms = extractor.loadFromFile(new File(confFile.get()));
             } catch (IOException e) {
                 throw new RedPenException("Failed to load KeyValueDictionaryExtractor", e);
             }

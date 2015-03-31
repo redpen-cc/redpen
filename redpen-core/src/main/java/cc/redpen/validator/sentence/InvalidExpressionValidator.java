@@ -24,6 +24,7 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -74,7 +75,7 @@ final public class InvalidExpressionValidator extends Validator {
 
         Optional<String> confFile = getConfigAttribute("dict");
         if (confFile.isPresent()) {
-            customInvalidExpressions.addAll(loadWordListFromFile(confFile.get(), "InvalidExpressionValidator user dictionary"));
+            customInvalidExpressions.addAll(loadWordListFromFile(new File(confFile.get()), "InvalidExpressionValidator user dictionary"));
         }
     }
 

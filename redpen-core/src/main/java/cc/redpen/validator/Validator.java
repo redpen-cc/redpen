@@ -30,6 +30,7 @@ import cc.redpen.util.DictionaryLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.text.MessageFormat;
 import java.util.*;
 
@@ -268,10 +269,10 @@ public abstract class Validator {
     protected Set<String> loadLowercaseWordListFromResource(String path, String dictionaryName) throws RedPenException {
         return DictionaryLoader.WORD_LOWERCASE.loadCachedFromResource(path, dictionaryName);
     }
-    protected Set<String> loadWordListFromFile(String filePath, String dictionaryName) throws RedPenException {
-        return DictionaryLoader.WORD.loadCachedFromFile(filePath, dictionaryName);
+    protected Set<String> loadWordListFromFile(File file, String dictionaryName) throws RedPenException {
+        return DictionaryLoader.WORD.loadCachedFromFile(file, dictionaryName);
     }
-    protected Set<String> loadLowercaseWordListFromFlie(String path, String dictionaryName) throws RedPenException {
-        return DictionaryLoader.WORD_LOWERCASE.loadCachedFromFile(path, dictionaryName);
+    protected Set<String> loadLowercaseWordListFromFlie(File file, String dictionaryName) throws RedPenException {
+        return DictionaryLoader.WORD_LOWERCASE.loadCachedFromFile(file, dictionaryName);
     }
 }

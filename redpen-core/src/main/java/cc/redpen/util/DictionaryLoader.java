@@ -99,11 +99,11 @@ public final class DictionaryLoader<E> {
     /**
      * Load a given input file combined with jar package.
      *
-     * @param filePath file path
+     * @param file file to load
      * @throws IOException when input stream is null
      */
-    public E loadFromFile(String filePath) throws IOException {
-        return load(new FileInputStream(filePath));
+    public E loadFromFile(File file) throws IOException {
+        return load(new FileInputStream(file));
     }
 
     private final Map<String, E> resourceCache = new HashMap<>();
@@ -139,15 +139,15 @@ public final class DictionaryLoader<E> {
     /**
      * returns word list loaded from file
      *
-     * @param path           file path
+     * @param file           file to load
      * @param dictionaryName name of the file
      * @return word list
      * @throws RedPenException
      */
-    public E loadCachedFromFile(String path, String dictionaryName) throws RedPenException {
-        File file = new File(path);
+    public E loadCachedFromFile(File file, String dictionaryName) throws RedPenException {
+        String path = file.getAbsolutePath();
         if (!file.exists()) {
-            throw new RedPenException("File not found: " + path);
+            throw new RedPenException("File not found: " + file);
         }
         long currentModified = file.lastModified();
         fileNameTimestampMap.computeIfPresent(path, (key, lastModified) -> {
@@ -163,7 +163,7 @@ public final class DictionaryLoader<E> {
 
         E loaded = fileCache.computeIfAbsent(path, e -> {
             try {
-                E newlyLoaded = loadFromFile(path);
+                E newlyLoaded = loadFromFile(file);
                 fileNameTimestampMap.put(path, file.lastModified());
                 return newlyLoaded;
             } catch (IOException ioe) {

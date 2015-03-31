@@ -79,12 +79,12 @@ public class DictionaryLoaderTest {
         File file = path.toFile();
         Files.copy(new ByteArrayInputStream("foo".getBytes()), path, StandardCopyOption.REPLACE_EXISTING);
         Set<String> strings;
-        strings = DictionaryLoader.WORD.loadCachedFromFile(path.toFile().getAbsolutePath(), "temp file");
+        strings = DictionaryLoader.WORD.loadCachedFromFile(path.toFile(), "temp file");
         assertEquals(1, strings.size());
         assertTrue(strings.contains("foo"));
 
         // hopefully loaded from cache
-        strings = DictionaryLoader.WORD.loadCachedFromFile(path.toFile().getAbsolutePath(), "temp file");
+        strings = DictionaryLoader.WORD.loadCachedFromFile(path.toFile(), "temp file");
         assertEquals(1, strings.size());
         assertTrue(strings.contains("foo"));
 
@@ -94,13 +94,13 @@ public class DictionaryLoaderTest {
         Files.copy(new ByteArrayInputStream("foo\nbar".getBytes()), path, StandardCopyOption.REPLACE_EXISTING);
         file.setLastModified(lastModified);
         // won't be reloaded because the last modified date is not changed
-        strings = DictionaryLoader.WORD.loadCachedFromFile(path.toFile().getAbsolutePath(), "temp file");
+        strings = DictionaryLoader.WORD.loadCachedFromFile(path.toFile(), "temp file");
         assertEquals(1, strings.size());
         assertTrue(strings.contains("foo"));
 
         file.setLastModified(lastModified + 1000);
         // will be reloaded because the last modified date is changed
-        strings = DictionaryLoader.WORD.loadCachedFromFile(path.toFile().getAbsolutePath(), "temp file");
+        strings = DictionaryLoader.WORD.loadCachedFromFile(path.toFile(), "temp file");
         assertEquals(2, strings.size());
         assertTrue(strings.contains("foo"));
         assertTrue(strings.contains("bar"));
