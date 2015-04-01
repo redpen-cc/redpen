@@ -36,35 +36,10 @@ public final class DictionaryLoader<E> {
     private final Supplier<E> supplier;
     private final BiConsumer<E, String> loader;
 
-    private DictionaryLoader(Supplier<E> supplier, BiConsumer<E, String> loader) {
+    public DictionaryLoader(Supplier<E> supplier, BiConsumer<E, String> loader) {
         this.supplier = supplier;
         this.loader = loader;
     }
-
-    /**
-     * Resource Extractor loads key-value dictionary
-     */
-    public final static DictionaryLoader<Map<String, String>> KEY_VALUE =
-            new DictionaryLoader<>(HashMap::new, (map, line) -> {
-                String[] result = line.split("\t");
-                if (result.length == 2) {
-                    map.put(result[0], result[1]);
-                } else {
-                    LOG.error("Skip to load line... Invalid line: " + line);
-                }
-            });
-
-    /**
-     * Resource Extractor loads word list
-     */
-    public final static DictionaryLoader<Set<String>> WORD =
-            new DictionaryLoader<>(HashSet::new, Set::add);
-
-    /**
-     * Resource Extractor loads word list while lowercasing lines
-     */
-    public final static DictionaryLoader<Set<String>> WORD_LOWERCASE =
-            new DictionaryLoader<>(HashSet::new, (set, line) -> set.add(line.toLowerCase()));
 
     /**
      * Given a input stream, load the contents.
@@ -99,11 +74,11 @@ public final class DictionaryLoader<E> {
     /**
      * Load a given input file combined with jar package.
      *
-     * @param filePath file path
+     * @param file file to load
      * @throws IOException when input stream is null
      */
-    public E loadFromFile(String filePath) throws IOException {
-        return load(new FileInputStream(filePath));
+    private E loadFromFile(File file) throws IOException {
+        return load(new FileInputStream(file));
     }
 
     private final Map<String, E> resourceCache = new HashMap<>();
@@ -130,5 +105,51 @@ public final class DictionaryLoader<E> {
         }
         LOG.info("Succeeded to load " + dictionaryName + ".");
         return strings;
+    }
+
+
+    private final Map<String, E> fileCache = new HashMap<>();
+    private final Map<String, Long> fileNameTimestampMap = new HashMap<>();
+
+    /**
+     * returns word list loaded from file
+     *
+     * @param file           file to load
+     * @param dictionaryName name of the file
+     * @return word list
+     * @throws RedPenException
+     */
+    public E loadCachedFromFile(File file, String dictionaryName) throws RedPenException {
+        String path = file.getAbsolutePath();
+        if (!file.exists()) {
+            throw new RedPenException("File not found: " + file);
+        }
+        long currentModified = file.lastModified();
+        fileNameTimestampMap.computeIfPresent(path, (key, lastModified) -> {
+            if (lastModified != currentModified) {
+                // the file has been modified since last load
+                // clear the cache and load the file in the latter block
+                fileCache.remove(key);
+                return null;
+            } else {
+                return lastModified;
+            }
+        });
+
+        E loaded = fileCache.computeIfAbsent(path, e -> {
+            try {
+                E newlyLoaded = loadFromFile(file);
+                fileNameTimestampMap.put(path, file.lastModified());
+                return newlyLoaded;
+            } catch (IOException ioe) {
+                LOG.error(ioe.getMessage());
+                return null;
+            }
+        });
+        if (loaded == null) {
+            throw new RedPenException("Failed to load " + dictionaryName + ":" + path);
+        }
+        LOG.info("Succeeded to load " + dictionaryName + ".");
+        return loaded;
     }
 }

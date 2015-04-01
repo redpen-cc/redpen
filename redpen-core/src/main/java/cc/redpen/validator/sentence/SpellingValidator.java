@@ -20,14 +20,17 @@ package cc.redpen.validator.sentence;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.util.DictionaryLoader;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.*;
+import java.io.File;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 public class SpellingValidator extends Validator {
 
@@ -44,7 +47,7 @@ public class SpellingValidator extends Validator {
     protected void init() throws RedPenException {
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/spellchecker-" + getSymbolTable().getLang() + ".dat";
-        defaultDictionary = DictionaryLoader.WORD_LOWERCASE.loadCachedFromResource(defaultDictionaryFile, "spell dictionary");
+        defaultDictionary = WORD_LSIT_LOWERCASED.loadCachedFromResource(defaultDictionaryFile, "spell dictionary");
 
         customDictionary = new HashSet<>();
         Optional<String> listStr = getConfigAttribute("list");
@@ -55,16 +58,10 @@ public class SpellingValidator extends Validator {
         });
 
         Optional<String> userDictionaryFile = getConfigAttribute("dict");
-        userDictionaryFile.ifPresent(f -> {
-            LOG.info("user dictionary file is " + f);
-            try {
-                customDictionary.addAll(DictionaryLoader.WORD_LOWERCASE.loadFromFile(f));
-            } catch (IOException e) {
-                LOG.error("Failed to load user dictionary.");
-                return;
-            }
-            LOG.info("Succeeded to load specified user dictionary.");
-        });
+        if (userDictionaryFile.isPresent()) {
+            String f = userDictionaryFile.get();
+            customDictionary.addAll(WORD_LSIT_LOWERCASED.loadCachedFromFile(new File(f), "SpellingValidator user dictionary"));
+        }
     }
 
     @Override

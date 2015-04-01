@@ -2,13 +2,13 @@
  * redpen: a text inspection tool
  * Copyright (c) 2014-2015 Recruit Technologies Co., Ltd. and contributors
  * (see CONTRIBUTORS.md)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,14 +20,17 @@ package cc.redpen.validator.sentence;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.util.DictionaryLoader;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.*;
+import java.io.File;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 final public class DoubledWordValidator extends Validator {
     private static final Logger LOG =
@@ -54,7 +57,7 @@ final public class DoubledWordValidator extends Validator {
     protected void init() throws RedPenException {
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/doubled-word-skiplist-" + getSymbolTable().getLang() + ".dat";
-        skipList = DictionaryLoader.WORD.loadCachedFromResource(defaultDictionaryFile, "doubled word skip list");
+        skipList = WORD_LIST.loadCachedFromResource(defaultDictionaryFile, "doubled word skip list");
 
         customSkipList = new HashSet<>();
         Optional<String> skipListStr = getConfigAttribute("list");
@@ -67,13 +70,7 @@ final public class DoubledWordValidator extends Validator {
 
         Optional<String> confFile = getConfigAttribute("dict");
         if (confFile.isPresent()) {
-            LOG.info("user dictionary file is " + confFile.get());
-            try {
-                customSkipList.addAll(DictionaryLoader.WORD.loadFromFile(confFile.get()));
-            } catch (IOException e) {
-                throw new RedPenException("Failed to load user dictionary.", e);
-            }
-            LOG.info("Succeeded to load specified user dictionary.");
+            customSkipList.addAll(WORD_LIST.loadCachedFromFile(new File(confFile.get()), "DoubledWordValidator user dictionary"));
         }
     }
 
