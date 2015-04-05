@@ -240,7 +240,7 @@ public final class ConfigurationLoader {
             if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element element = (Element) nNode;
                 Symbol currentSymbol = createSymbol(element);
-                configBuilder.setSymbol(currentSymbol);
+                configBuilder.addSymbol(currentSymbol);
             }
         }
     }

@@ -109,7 +109,7 @@ public final class Configuration {
             return this;
         }
 
-        public ConfigurationBuilder setSymbol(Symbol symbol) {
+        public ConfigurationBuilder addSymbol(Symbol symbol) {
             checkBuilt();
             customSymbols.add(symbol);
             return this;
