@@ -2,13 +2,13 @@
  * redpen: a text inspection tool
  * Copyright (c) 2014-2015 Recruit Technologies Co., Ltd. and contributors
  * (see CONTRIBUTORS.md)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,7 +38,9 @@ public final class Main {
 
     private static final String PROGRAM = "redpen-cli";
 
-    private static final int EDEFAULT_LIMIT = 1;
+    private static final String DEFAULT_CONFIG_NAME = "redpen-conf.xml";
+
+    private static final int DEFAULT_LIMIT = 1;
 
     private Main() {
         super();
@@ -54,36 +56,38 @@ public final class Main {
         System.exit(run(args));
     }
 
+    @SuppressWarnings("static-access")
     public static int run(String... args) throws RedPenException {
         Options options = new Options();
         options.addOption("h", "help", false, "Displays this help information and exits");
 
-        OptionBuilder.withLongOpt("format");
-        OptionBuilder.withDescription("Input file format");
-        OptionBuilder.hasArg();
-        OptionBuilder.withArgName("FORMAT");
-        options.addOption(OptionBuilder.create("f"));
+        options.addOption(OptionBuilder.withLongOpt("format")
+                .withDescription("Input file format")
+                .hasArg()
+                .withArgName("FORMAT")
+                .create("f"));
 
-        OptionBuilder.withLongOpt("conf");
-        OptionBuilder.withDescription("Configuration file (REQUIRED)");
-        OptionBuilder.hasArg();
-        OptionBuilder.withArgName("CONF FILE");
-        options.addOption(OptionBuilder.create("c"));
+        options.addOption(OptionBuilder.withLongOpt("conf")
+                .withDescription("Configuration file (REQUIRED)")
+                .hasArg()
+                .withArgName("CONF FILE")
+                .create("c"));
 
-        OptionBuilder.withLongOpt("result-format");
-        OptionBuilder.withDescription("Output result format");
-        OptionBuilder.hasArg();
-        OptionBuilder.withArgName("RESULT FORMAT");
-        options.addOption(OptionBuilder.create("r"));
+        options.addOption(OptionBuilder.withLongOpt("result-format")
+                .withDescription("Output result format")
+                .hasArg()
+                .withArgName("RESULT FORMAT")
+                .create("r"));
 
-        OptionBuilder.withLongOpt("limit");
-        OptionBuilder.withDescription("error limit number");
-        OptionBuilder.hasArg();
-        OptionBuilder.withArgName("LIMIT NUMBER");
-        options.addOption(OptionBuilder.create("l"));
+        options.addOption(OptionBuilder.withLongOpt("limit")
+                .withDescription("error limit number")
+                .hasArg()
+                .withArgName("LIMIT NUMBER")
+                .create("l"));
 
-        options.addOption("v", "version", false,
-                "Displays version information and exits");
+        options.addOption(OptionBuilder.withLongOpt("version")
+                .withDescription("Displays version information and exits")
+                .create("v"));
 
         CommandLineParser commandLineParser = new BasicParser();
         CommandLine commandLine;
@@ -96,9 +100,9 @@ public final class Main {
         }
 
         String inputFormat = "plain";
-        String configFileName = "";
+        String configFileName = null;
         String resultFormat = "plain";
-        int limit = EDEFAULT_LIMIT;
+        int limit = DEFAULT_LIMIT;
 
         if (commandLine.hasOption("h")) {
             printHelp(options);
@@ -151,12 +155,14 @@ public final class Main {
                 return -1;
         }
 
-        if (configFileName == null
-                || configFileName.length() == 0) {
-            LOG.error("Configuration file is not specified.");
+        File configFile = resolveConfigLocation(configFileName);
+        if (configFile == null) {
+            LOG.error("Configuration file is not found.");
             printHelp(options);
             return 1;
-        } else if (inputFileNames.length == 0) {
+        }
+
+        if (inputFileNames.length == 0) {
             LOG.error("Input file is not given");
             printHelp(options);
             return 1;
@@ -165,7 +171,7 @@ public final class Main {
         RedPen redPen;
         List<Document> documents;
         try {
-            redPen = new RedPen(new File(configFileName));
+            redPen = new RedPen(configFile);
             documents = redPen.parse(parser, inputFiles);
         } catch (RedPenException e) {
             LOG.error("Failed to parse input files: " + e);
@@ -194,4 +200,30 @@ public final class Main {
         pw.flush();
     }
 
+    static File resolveConfigLocation(String configFileName) {
+File path = toFileIfExists(configFileName);
+        if (path == null) {
+            path = toFileIfExists(DEFAULT_CONFIG_NAME);
+        }
+        if (path == null) {
+            String redpenHome = System.getenv("REDPEN_HOME");
+            if (redpenHome != null) {
+                path = toFileIfExists(redpenHome + File.separator + DEFAULT_CONFIG_NAME);
+            }
+        }
+        return path;
+    }
+
+    static File toFileIfExists(String path) {
+        File absolutePath = null;
+        if (path != null) {
+            File file = new File(path);
+            if (file.exists() && file.isFile()) {
+                absolutePath = file;
+            }else{
+                LOG.error("Configuration file is not found:" + path);
+            }
+        }
+        return absolutePath;
+    }
 }
