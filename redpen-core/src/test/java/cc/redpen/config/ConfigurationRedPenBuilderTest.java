@@ -145,4 +145,13 @@ public class ConfigurationRedPenBuilderTest {
         assertTrue(new String(config.getSymbolTable()
                 .getSymbolByValue('。').getInvalidChars()).contains("●"));
     }
+
+    @Test(expected = IllegalStateException.class)
+    public void testBuildTwice(){
+        Configuration.ConfigurationBuilder builder = new Configuration.ConfigurationBuilder();
+        builder.setLanguage("en");
+        builder.build();
+        // ConfigurationBuilder is not designed to build more than one RedPen instance
+        builder.setLanguage("ja");
+    }
 }
