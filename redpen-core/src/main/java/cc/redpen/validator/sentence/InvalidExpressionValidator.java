@@ -2,13 +2,13 @@
  * redpen: a text inspection tool
  * Copyright (c) 2014-2015 Recruit Technologies Co., Ltd. and contributors
  * (see CONTRIBUTORS.md)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,14 +19,17 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
-import cc.redpen.util.DictionaryLoader;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.*;
+import java.io.File;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -60,7 +63,7 @@ final public class InvalidExpressionValidator extends Validator {
         String lang = getSymbolTable().getLang();
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/invalid-expression-" + lang + ".dat";
-        invalidExpressions = DictionaryLoader.WORD.loadCachedFromResource(defaultDictionaryFile, "invalid expression");
+        invalidExpressions = WORD_LIST.loadCachedFromResource(defaultDictionaryFile, "invalid expression");
 
         customInvalidExpressions = new HashSet<>();
         Optional<String> listStr = getConfigAttribute("list");
@@ -71,16 +74,9 @@ final public class InvalidExpressionValidator extends Validator {
         });
 
         Optional<String> confFile = getConfigAttribute("dict");
-        confFile.ifPresent(f -> {
-            LOG.info("user dictionary file is " + f);
-            try {
-                customInvalidExpressions.addAll(DictionaryLoader.WORD.loadFromFile(f));
-            } catch (IOException e) {
-                LOG.error("Failed to load user dictionary.");
-                return;
-            }
-            LOG.info("Succeeded to load specified user dictionary.");
-        });
+        if (confFile.isPresent()) {
+            customInvalidExpressions.addAll(WORD_LIST.loadCachedFromFile(new File(confFile.get()), "InvalidExpressionValidator user dictionary"));
+        }
     }
 
     @Override

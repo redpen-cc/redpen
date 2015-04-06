@@ -2,13 +2,13 @@
  * redpen: a text inspection tool
  * Copyright (c) 2014-2015 Recruit Technologies Co., Ltd. and contributors
  * (see CONTRIBUTORS.md)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,9 +26,11 @@ import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.tokenizer.TokenElement;
+import cc.redpen.util.DictionaryLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.text.MessageFormat;
 import java.util.*;
 
@@ -274,4 +276,27 @@ public abstract class Validator {
             throw new AssertionError("message resource not found.");
         }
     }
+
+    /**
+     * Resource Extractor loads key-value dictionary
+     */
+    protected final static DictionaryLoader<Map<String, String>> KEY_VALUE =
+            new DictionaryLoader<>(HashMap::new, (map, line) -> {
+                String[] result = line.split("\t");
+                if (result.length == 2) {
+                    map.put(result[0], result[1]);
+                } else {
+                    LOG.error("Skip to load line... Invalid line: " + line);
+                }
+            });
+    /**
+     * Resource Extractor loads word list
+     */
+    protected final static DictionaryLoader<Set<String>> WORD_LIST =
+            new DictionaryLoader<>(HashSet::new, Set::add);
+    /**
+     * Resource Extractor loads word list while lowercasing lines
+     */
+    protected final static DictionaryLoader<Set<String>> WORD_LSIT_LOWERCASED =
+            new DictionaryLoader<>(HashSet::new, (set, line) -> set.add(line.toLowerCase()));
 }
