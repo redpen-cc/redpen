@@ -52,7 +52,7 @@ final public class CommaNumberValidator extends Validator {
             content = content.substring(position + 1, content.length());
         }
         if (maxCommaNum < commaCount) {
-            errors.add(createValidationError(sentence, commaCount));
+            errors.add(createValidationError(sentence, commaCount, maxCommaNum));
         }
     }
 

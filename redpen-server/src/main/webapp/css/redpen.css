@@ -17,12 +17,18 @@
  */
 
 body {
-    background-color: #C7C4BA;
+    background-color: #dedbcf;
+    color: #333;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 h1, h2, h3, h4 {
     color: #414439;
+}
+
+h1, h2, h3 {
+    margin-top: 10px;
+    margin-bottom: 5px;
 }
 
 a {
@@ -45,6 +51,14 @@ textarea {
     resize: none;
 }
 
+input[type="radio"], input[type="checkbox"] {
+    margin: 3px 0 0;
+}
+
+.well {
+    border: solid 1px rgba(0, 0, 0, 0.3);
+}
+
 .editable-empty, .editable-empty:hover, .editable-empty:focus {
     font-style: italic;
     color: #815555;
@@ -64,9 +78,19 @@ textarea {
     background: url('../images/clear.png') center center no-repeat;
 }
 
+.popover-title {
+    font-size: 11px;
+}
+
+.control-label {
+    color: #838178;
+    font-size: 12px;
+}
+
 .navbar-default {
-    background-color: #a9a69c;
+    background-color: #a29e8b;
     border: none;
+    border-bottom: solid 1px rgba(0, 0, 0, 0.12);
 }
 
 .navbar-default .navbar-nav>li>a {
@@ -96,7 +120,7 @@ textarea {
 }
 
 .error strong {
-    color: red;
+    color: #a70c00;
 }
 
 .radio, .checkbox {
@@ -111,48 +135,102 @@ textarea {
     bottom: 4px;
 }
 
-.redpen-document-panel {
-    background-color: white;
-    border-radius: 4px;
-    overflow-y: auto;
+#redpen-document-panel {
 }
 
-#redpen-editor,
-#redpen-results {
+#redpen-document-top {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    border-radius: 6px;
+    border: solid 1px rgba(0, 0, 0, 0.15);
+    bottom: 46%;
+}
+
+#redpen-document-bottom {
+    position: absolute;
+    left: 0;
+    top: 54.5%;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+    border-radius: 6px;
+    border: solid 1px rgba(0, 0, 0, 0.15);
+    background-color: rgb(255, 227, 227);
+}
+
+#redpen-superimposed-editor {
+    border-radius: 6px;
     position: absolute;
     left: 0;
     top: 0;
     right: 0;
     bottom: 0;
-    overflow: visible;
-    line-height: 28px;
-    padding: 19px !important;
-    margin: 0 !important;
-    word-wrap: normal;
-    white-space: pre-wrap;
-    font-size: 16px;
-    background-color: transparent;
+    overflow: hidden;
+    background-color: white;
 }
 
 #redpen-editor {
+    border-radius: 6px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    color: rgba(0, 0, 0, 0.7);
+    background-color: transparent;
+    line-height: 28px;
+    padding: 24px !important;
+    margin: 0 !important;
+    word-wrap: normal;
+    white-space: pre-wrap;
+    font-size: 19px;
+    border: none !important;
+    outline: none !important;
     z-index: 2;
-    color: rgba(0, 0, 0, 0.8);
+    height: 100%;
+    width: 100%;
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box; /* Firefox, other Gecko */
+    box-sizing: border-box;
+    overflow-y: scroll;
+}
+
+#redpen-editor-underlay {
+    border-radius: 6px;
+    overflow-y: scroll;
+
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+
+    line-height: 28px;
+    padding: 24px !important;
+    margin: 0 !important;
+    word-wrap: normal;
+    white-space: pre-wrap;
+    font-size: 19px;
+    background-color: #fff;
+    color: transparent;
+    width: 100%;
+    border: none !important;
+    outline: none !important;
+    z-index: 1;
 }
 
 #redpen-editor:focus {
     outline: none;
 }
 
-#redpen-results {
-    z-index: 1;
-}
-
-#redpen-results h4 {
-    padding-top: 24px;
+#redpen-errors {
+    padding: 18px;
 }
 
 #redpen-results-json {
-    background-color:rgb(196, 236, 253);
+    background-color: rgb(196, 236, 253);
     color: rgb(3, 23, 3);
     min-height: 100%;
     height: 100%;
@@ -161,8 +239,8 @@ textarea {
     line-height: 12px;
     font-family: monospace;
     white-space: pre;
-    padding-left: 4px;
-    padding-right: 4px;
+    word-wrap: break-word;
+    padding: 8px;
 }
 
 #redpen-results-request {
@@ -175,22 +253,22 @@ textarea {
     line-height: 12px;
     font-family: monospace;
     white-space: pre;
-    padding-left: 4px;
-    padding-right: 4px;
+    word-wrap: break-word;
+    padding: 8px;
 }
 
 #redpen-results-report {
-    background-color: #111;
+    background-color: #454545;
+    border: solid 1px rgba(0, 0, 0, 0.6);
     color: #06F400;
     min-height: 100%;
     height: 100%;
     width: 100%;
     overflow: auto;
     font-family: monospace;
-    font-size: 12px;
+    font-size: 11px;
     white-space: pre-wrap;
-    padding-left: 4px;
-    padding-right: 4px;
+    padding: 8px;
 }
 
 #redpen-settings {
@@ -206,7 +284,7 @@ textarea {
     bottom: 0;
     font-size: 10px;
     line-height: 12px;
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.8);
     text-align: right;
 }
 
@@ -230,6 +308,7 @@ textarea {
 
 .redpen-option-selected {
     border-radius: 3px;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.37);
     background-color: rgba(0, 0, 0, 0.3);
     color: white !important;
 }
@@ -243,7 +322,7 @@ textarea {
 }
 
 .redpen-fixed-row {
-    height: 80%;
+    height: 85%;
 }
 
 .redpen-fixed-row>div {
@@ -252,7 +331,7 @@ textarea {
 
 .redpen-header-row {
     height: 10%;
-    min-height: 100px;
+    min-height: 90px;
 }
 
 .redpen-header-row>div {
@@ -278,9 +357,13 @@ textarea {
 
 .redpen-clear-button {
     position: absolute;
-    bottom: 1px;
-    right: 1px;
+    bottom: 2px;
+    right: 10px;
     z-index: 3;
+}
+
+.redpen-clear-button button {
+    line-height: 1;
 }
 
 .redpen-error-validator {
@@ -353,13 +436,12 @@ textarea {
     padding-right: 0;
     list-style-type: none;
     padding-left: 0;
-    font-size: 12px;
-    line-height: 18px;
+    font-size: 14px;
+    line-height: 16px;
 }
 
 .redpen-error-message {
-    color: rgb(124, 0, 4);
-    cursor: help;
+    color: #a70c00;
 }
 
 .redpen-error-message-annotated::before {
@@ -372,6 +454,7 @@ textarea {
     background-repeat: no-repeat;
     background-position: left 4px;
     background-size: 16px 16px;
+    cursor: help;
 }
 
 .redpen-error-list li::before {
@@ -380,7 +463,7 @@ textarea {
     font-size: 11px;
     line-height: 20px;
     margin-left: 16px;
-    color: #ff0500;
+    color: #a70c00;
     padding: 0;
     display: inline-block;
     text-align: left;
@@ -390,29 +473,30 @@ textarea {
 
 .redpen-annotated-sentence {
     line-height: 24px;
-    color: rgba(0, 0, 255, 0);
+    color: rgba(0, 0, 0, 0);
 }
 
 .redpen-annotated-sentence i {
-    color: #777;
-    text-shadow: 0 0 12px rgba(255, 32, 0, 1);
+    color: rgba(167, 12, 0, 0.3);
+    text-shadow: 0 0 2px rgba(255, 32, 0, 0.4);
     font-style: normal;
     background-image: url(../images/redpen-mark.png);
-    background-size: 16px 100%;
 }
 
 .redpen-annotated-sentence-marker {
+    letter-spacing: -1px;
     cursor: help;
     font-weight: normal;
     background-color: transparent;
-    color: rgba(255, 12, 2, 0.90);
-    text-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
-    font-size: 10px;
+    color: rgba(167, 12, 0, 0.90);
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.31);
+    font-size: 9px;
     display: inline-block;
     vertical-align: top;
     text-align: right;
     margin-left: -24px;
-    margin-top: -11px;
+    margin-top: -10px;
+    height: 20px;
     width: 24px;
     z-index: 2;
 }
@@ -424,7 +508,7 @@ textarea {
 }
 
 ::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
     border-radius: 3px;
     background-color: rgba(255, 255, 255, 0.3);
 }

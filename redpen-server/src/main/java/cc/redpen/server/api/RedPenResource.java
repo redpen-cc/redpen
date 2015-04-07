@@ -20,7 +20,8 @@ package cc.redpen.server.api;
 
 import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
-import cc.redpen.formatter.*;
+import cc.redpen.formatter.Formatter;
+import cc.redpen.formatter.JSONFormatter;
 import cc.redpen.model.Document;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.util.FormatterUtils;
@@ -35,7 +36,10 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Resource to validate documents.
@@ -106,18 +110,44 @@ public class RedPenResource {
         String documentText = getOrDefault(requestJSON, "document", "");
         String format = getOrDefault(requestJSON, "format", DEFAULT_FORMAT);
 
+        Map<String, Map<String, String>> properties = new HashMap<>();
+
         try {
-//            LOG.warn(config);
+            JSONObject validators = requestJSON.getJSONObject("config");
+            if (validators != null) {
+                Iterator keyIter = validators.keys();
+                while (keyIter.hasNext()) {
+                    String validator = String.valueOf(keyIter.next());
+                    Map<String, String> props = new HashMap<>();
+                    properties.put(validator, props);
+                    JSONObject validatorConfig = validators.getJSONObject(validator);
+                    if (validatorConfig != null) {
+                        if (validatorConfig.has("properties")) {
+                            JSONObject validatorProps = validatorConfig.getJSONObject("properties");
+                            Iterator propsIter = validatorProps.keys();
+                            while (propsIter.hasNext()) {
+                                String propname = String.valueOf(propsIter.next());
+                                props.put(propname, validatorProps.getString(propname));
+                            }
+                        }
+                    }
+                }
+            }
         } catch (Exception e) {
-            LOG.error("Exception when processing JSON request", e);
+            LOG.error("Exception when processing JSON properties", e);
         }
-        RedPen redPen = new RedPenService(context).getRedPen(lang);
+
+        RedPen redPen = new RedPenService(context).getRedPen(lang, properties);
         Document parsedDocument = redPen.parse(DocumentParser.of(documentParser), documentText);
+
         List<ValidationError> errors = redPen.validate(parsedDocument);
+
         Formatter formatter = FormatterUtils.getFormatterByName(format);
+
         if (formatter == null) {
             throw new RedPenException("Unsupported format: " + format + " - please use xml, plain, plain2, json or json2");
         }
+
         String responseJSON = formatter.format(parsedDocument, errors);
         return Response.ok().entity(responseJSON).build();
     }

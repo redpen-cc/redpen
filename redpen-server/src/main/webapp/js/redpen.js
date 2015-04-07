@@ -49,8 +49,10 @@ var redpen = (function () {
 
     // placeholder (and cheap client-side implementation) of a detect-language function
     this.detectLanguage = function (text, callback) {
-        var japanese = (text.indexOf('。') != -1) || (text.indexOf('、') != -1) || (text.indexOf('は') != -1);
-        callback(japanese ? 'ja' : 'en');
+        if (text) {
+            var japanese = (text.indexOf('。') != -1) || (text.indexOf('、') != -1) || (text.indexOf('は') != -1);
+            callback(japanese ? 'ja' : 'en');
+        }
     };
 
     // validate the document {text: text, lang: [en|ja..]}

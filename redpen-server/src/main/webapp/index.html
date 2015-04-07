@@ -65,7 +65,7 @@ var permitLanguageAutoDetect = true;
 
 // clear editor and results
 function clearResult() {
-    $('#redpen-editor').text('').trigger("input");
+    $('#redpen-editor').val('').trigger("input");
 }
 
 // paste some sample text into the editor and trigger a change
@@ -77,7 +77,7 @@ function pasteSampleText(key) {
         $("#redpen-document-parser").val(sampleDocuments[key].parser);
     }
     $("#redpen-editor")
-            .text(text ? text : "")
+            .val(text ? text : "")
             .trigger("input")
             .prop("disabled", false)
             .prop("placeholder", "Please type or paste some text here...");
@@ -85,13 +85,6 @@ function pasteSampleText(key) {
 
 $(document).ready(function () {
 
-    var editorText = function (newText) {
-        if (newText) {
-            $("#redpen-editor").text(newText);
-        }
-//        return $("#redpen-editor").text();
-        return $("#redpen-editor")[0].innerText;
-    };
     // load the configuration and build the options and controls
     redpen.getRedPens(function (configuration) {
 
@@ -99,6 +92,40 @@ $(document).ready(function () {
         var configSelect = $("#redpen-configuration");
         var languageSelect = $("#redpen-language");
         var documentParserSelect = $("#redpen-document-parser");
+
+
+        var editorText = function (newText) {
+            if (newText) {
+                $(editor).val(newText);
+            }
+            return $(editor).val();
+        };
+
+        var setEditPosition = function (error) {
+            if (error.position && error.position.end) {
+                var tarea = $(editor)[0];
+                if (tarea.setSelectionRange) {
+                    var text = $(editor).val();
+                    var line = 1;
+                    var offset = 0;
+                    var characterPosition = 0;
+                    for (var i = 0; i < text.length; i++) {
+                        if ((line >= error.position.end.line) && (offset >= error.position.end.offset)) {
+                            characterPosition = i;
+                            break;
+                        }
+                        offset++;
+                        if (text[i] == "\n") {
+                            line++;
+                            offset = 0;
+                        }
+                    }
+                    tarea.focus();
+                    tarea.setSelectionRange(characterPosition, characterPosition);
+                }
+            }
+        };
+
 
         $("#redpen-version").text("RedPen version " + configuration.version);
         var discoveredLanguages = {};
@@ -216,26 +243,29 @@ $(document).ready(function () {
                 validators[$(this).val()] = true;
             });
 
-            // display the errors
-            var results = $('#redpen-results').empty();
+            var errorsList = $('#redpen-errors').empty();
+            var editorUnderlay = $('#redpen-editor-underlay').empty();
 
+            // display an error
             var addError = function (errorList, error) {
-                if (validators[error.validator]) {
-                    $(errorList).append($('<li></li>')
-                            .addClass('redpen-error-message')
-                            .toggleClass('redpen-error-message-annotated', error.annotated)
-                            .text(error.message)
-                            .append($("<div></div>")
-                                    .addClass('redpen-error-validator')
-                                    .text(error.validator)
-                            )
-                    )
-                }
+                $(errorList).append($('<li></li>')
+                        .addClass('redpen-error-message')
+                        .toggleClass('redpen-error-message-annotated', error.annotated)
+                        .text(error.message)
+                        .append($("<div></div>")
+                                .addClass('redpen-error-validator')
+                                .text(error.validator)
+                        )
+                        .click(function () {
+                            setEditPosition(error);
+                        })
+                )
             };
 
             var annotateDocument = function (errors) {
                 var lines = getSourceLines();
                 var annotated = [];
+
                 for (var i = 1; i < lines.length; i++) {
                     var sentence = lines[i];
                     annotated[i] = [];
@@ -243,23 +273,22 @@ $(document).ready(function () {
                         annotated[i].push({char: sentence[j], errorStart: [], errorEnd: []});
                     }
                 }
+
                 for (var i = 0; i < errors.length; i++) {
-                    if (validators[errors[i].validator]) {
-                        var lineNo = errors[i].position.end.line;
-                        if (lineNo < lines.length) {
-                            var sentence = lines[lineNo];
-                            var start = errors[i].position.start.offset ? errors[i].position.start.offset : 0;
-                            var end = errors[i].position.end.offset ? errors[i].position.end.offset : 0;
-                            if ((start != 0) || (end != 0)) {
-                                if (annotated[lineNo][start]) {
-                                    annotated[lineNo][start].errorStart.push({id: i + 1, error: errors[i]});
-                                }
-                                errors[i].annotated = true;
+                    var lineNo = errors[i].position.end.line;
+                    if (lineNo < lines.length) {
+                        var sentence = lines[lineNo];
+                        var start = errors[i].position.start.offset ? errors[i].position.start.offset : 0;
+                        var end = errors[i].position.end.offset ? errors[i].position.end.offset : 0;
+                        if ((start != 0) || (end != 0)) {
+                            if (annotated[lineNo][start]) {
+                                annotated[lineNo][start].errorStart.push({id: i + 1, error: errors[i]});
                             }
-                            if (annotated[lineNo] && annotated[lineNo][end]) {
-                                annotated[lineNo][end].errorEnd.push({id: i + 1, error: errors[i]});
-                                errors[i].annotated = true;
-                            }
+                            errors[i].annotated = true;
+                        }
+                        if (annotated[lineNo] && annotated[lineNo][end]) {
+                            annotated[lineNo][end].errorEnd.push({id: i + 1, error: errors[i]});
+                            errors[i].annotated = true;
                         }
                     }
                 }
@@ -269,7 +298,9 @@ $(document).ready(function () {
                 var text = "";
                 var errorOpen = false;
                 var addText = function (highlight) {
-                    $(annotatedSpan).append($(highlight ? "<i></i>" : "<span></span>").text(text));
+                    if (text != "") {
+                        $(annotatedSpan).append($(highlight ? "<i></i>" : "<span></span>").text(text));
+                    }
                     text = "";
                 };
 
@@ -283,14 +314,23 @@ $(document).ready(function () {
                             addText(true);
                             errorOpen = false;
                         }
-                        for (var j = 0; j < annotated[line][i].errorEnd.length; j++) {
+                        if (annotated[line][i].errorEnd.length) {
+                            var ids = "";
+                            for (var j = 0; j < annotated[line][i].errorEnd.length; j++) {
+                                if (j > 3) {
+                                    ids += "&hellip;";
+                                    break;
+                                }
+                                if (ids != "") {
+                                    ids += ",";
+                                }
+                                ids += annotated[line][i].errorEnd[j].id;
+                            }
                             addText(false);
                             $(annotatedSpan).append(
                                     $('<div></div>')
                                             .addClass("redpen-annotated-sentence-marker")
-                                            .text(annotated[line][i].errorEnd[j].id)
-                                            .attr("data-toggle", "tooltip")
-                                            .prop("title", annotated[line][i].errorEnd[j].error.message.replace(/"/g, "'"))
+                                            .html(ids)
                             );
                         }
                         if (annotated[line][i].errorStart.length) {
@@ -322,15 +362,13 @@ $(document).ready(function () {
             var annotatedSentence = annotateDocument(allErrors);
             var errorDiv = $('<div></div>').addClass('redpen-error-section');
             var errorList = $('<ol></ol>').addClass('redpen-error-list');
-            results.append(errorDiv);
+            $(errorsList).append(errorDiv);
+            $(editorUnderlay)
+                    .addClass('redpen-error-sentence')
+                    .html(annotatedSentence);
             $(errorDiv)
-                    .append($('<p></p>')
-                            .addClass('redpen-error-sentence')
-                            .html(annotatedSentence)
-                    )
-                    .append($("<h4></h4>").html("<span class='redpen-red'>Red</span>Pen found " + allErrors.length + " error" + (allErrors.length == 1 ? "" : "s")))
+                    .append($("<p></p>").html("<span class='redpen-red'>Red</span>Pen found " + allErrors.length + " error" + (allErrors.length == 1 ? "" : "s")))
                     .append(errorList);
-
             for (var j = 0; j < allErrors.length; j++) {
                 addError(errorList, allErrors[j]);
             }
@@ -403,7 +441,7 @@ $(document).ready(function () {
                         $('#redpen-results-json').text(JSON.stringify(data, null, 2));
 
                         showErrorsInSitu(data['errors']);
-                        $('#redpen-results').fadeIn();
+                        $('#redpen-editor-underlay').fadeIn();
                         $('#redpen-results-report').text(createRedPenReport(data['errors']));
                     });
         };
@@ -414,10 +452,14 @@ $(document).ready(function () {
                     .empty()
                     .append(validatorConfiguration[redpenName])
                     .find('input').click(validateDocument);
-            setTimeout(function () {
-                $("#redpen-active-validators").find(".redpen-editable").editable({
+
+            $("#redpen-active-validators").find(".redpen-editable").each(function (i, n) {
+                if ($(this).text() == "add properties") { // workaround to fix x-editable empty-detection on reapplication
+                    $(this).text("");
+                }
+                $(this).editable({
                     mode: 'popup',
-                    emptytext: 'Click here to set properties',
+                    emptytext: 'add properties',
                     placement: "left",
                     type: 'text',
                     success: function (response, newValue) {
@@ -433,15 +475,20 @@ $(document).ready(function () {
                         validateDocument();
                     }
                 });
-            }, 100);
+            });
         };
 
+        // align the annotated underlay with the textarea
+        var repositionEditorUnderlay = function () {
+            $("#redpen-editor-underlay").css("top", -$("#redpen-editor").scrollTop());
+        };
 
         // debouncer for user input
         var validateTimeout = 0;
         // revalidate the document using the currently selected options
         var delayedRevalidateDocument = function () {
-            $('#redpen-results').fadeOut(50);
+            repositionEditorUnderlay();
+            $('#redpen-editor-underlay').fadeOut(50);
             if (permitLanguageAutoDetect) {
                 redpen.detectLanguage(editorText(), function (lang) {
                     setLanguage(lang);
@@ -453,7 +500,9 @@ $(document).ready(function () {
         };
 
         // bind events
-        $(editor).on("blur paste input", delayedRevalidateDocument);
+        $(editor)
+                .on("blur paste input", delayedRevalidateDocument)
+                .scroll(repositionEditorUnderlay);
 
         $(documentParserSelect).change(validateDocument);
 
@@ -472,6 +521,12 @@ $(document).ready(function () {
         setDocumentParser("PLAIN");
         setLanguage("en");
         pasteSampleText("en");
+
+        // dumb animation
+        var x = 1;
+        setInterval(function () {
+            $(".redpen-annotated-sentence i").css("background-position", (x++) + "px 0px");
+        }, 150);
     });
 })
 ;
@@ -530,29 +585,40 @@ $(document).ready(function () {
             <div class="col-md-5">
                 <ul id="redpen-option-results">
                     <li data-target='#redpen-settings' class="redpen-option-selected">Config</li>
-                    <li data-target='#redpen-results-report'>Report</li>
                     <li data-target='#redpen-results-request'>Request</li>
                     <li data-target='#redpen-results-json'>Response</li>
+                    <li data-target='#redpen-results-report'>Report</li>
                 </ul>
             </div>
         </div>
 
         <div class="row redpen-fixed-row">
-            <div class="col-md-7 redpen-document-panel">
-                <div contentEditable spellcheck="false" id="redpen-editor"></div>
-                <div id="redpen-results"></div>
-                <button type="button" class="btn btn-sm redpen-clear-button" onclick="clearResult()">Clear</button>
+            <div class="col-md-7" id="redpen-document-panel">
+                <div id="redpen-document-top">
+                    <div id="redpen-superimposed-editor">
+                        <textarea id="redpen-editor" spellcheck="false"></textarea>
+
+                        <div id="redpen-editor-underlay"></div>
+                    </div>
+                    <div class="redpen-clear-button">
+                        <button type="button" class="btn btn-sm" onclick="clearResult()">Clear</button>
+                    </div>
+                </div>
+
+                <div id="redpen-document-bottom">
+                    <div id="redpen-errors"></div>
+                </div>
             </div>
             <div class="col-md-5">
-                <div id="redpen-settings">
+                <div id="redpen-settings" class="well">
                     <div class="form-group">
-                        <label class="control-label">Document Parser
+                        <label class="control-label">Parser
                             <select id="redpen-document-parser" class="form-control"></select>
                         </label>
                         <label class="control-label">Language
                             <select id="redpen-language" class="form-control"></select>
                         </label>
-                        <label class="control-label">Configuration
+                        <label class="control-label" style="display:none">Config
                             <select id="redpen-configuration" class="form-control"> </select>
                         </label>
                     </div>
