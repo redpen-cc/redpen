@@ -859,8 +859,8 @@ public class MarkdownParserTest {
                 "以下のとおりである．";
         Configuration conf = new Configuration.ConfigurationBuilder()
                 .setLanguage("ja")
-                .setSymbol(new Symbol(FULL_STOP, '．', "."))
-                .setSymbol(new Symbol(COMMA, '，', "、"))
+                .addSymbol(new Symbol(FULL_STOP, '．', "."))
+                .addSymbol(new Symbol(COMMA, '，', "、"))
                 .build();
 
         Document doc = createFileContent(sampleText, conf);

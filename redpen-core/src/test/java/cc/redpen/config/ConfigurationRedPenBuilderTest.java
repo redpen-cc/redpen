@@ -105,7 +105,7 @@ public class ConfigurationRedPenBuilderTest {
         Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .setLanguage("ja")
-                .setSymbol(new Symbol(FULL_STOP, '.'))
+                .addSymbol(new Symbol(FULL_STOP, '.'))
                 .build();
 
         assertNotNull(config.getSymbolTable());
@@ -118,7 +118,7 @@ public class ConfigurationRedPenBuilderTest {
         Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .setLanguage("ja")
-                .setSymbol(new Symbol(SymbolType.FULL_STOP, '。', ".．●"))
+                .addSymbol(new Symbol(SymbolType.FULL_STOP, '。', ".．●"))
                 .build();
 
         assertNotNull(config.getSymbolTable());
@@ -133,7 +133,7 @@ public class ConfigurationRedPenBuilderTest {
         Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .setLanguage("ja")
-                .setSymbol(new Symbol(SymbolType.FULL_STOP, '。', ".．●"))
+                .addSymbol(new Symbol(SymbolType.FULL_STOP, '。', ".．●"))
                 .build();
 
         assertNotNull(config.getSymbolTable());
@@ -144,5 +144,14 @@ public class ConfigurationRedPenBuilderTest {
         assertTrue(config.getSymbolTable().containsSymbolByValue('。'));
         assertTrue(new String(config.getSymbolTable()
                 .getSymbolByValue('。').getInvalidChars()).contains("●"));
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testBuildTwice(){
+        Configuration.ConfigurationBuilder builder = new Configuration.ConfigurationBuilder();
+        builder.setLanguage("en");
+        builder.build();
+        // ConfigurationBuilder is not designed to build more than one RedPen instance
+        builder.setLanguage("ja");
     }
 }

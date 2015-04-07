@@ -93,31 +93,43 @@ public final class Configuration {
     public static class ConfigurationBuilder {
         private final List<ValidatorConfiguration> validatorConfigs = new ArrayList<>();
         private final List<Symbol> customSymbols = new ArrayList<>();
+        private boolean built = false;
 
         private String lang = "en";
         private Optional<String> type = Optional.empty();
 
+        private void checkBuilt(){
+            if(built){
+                throw new IllegalStateException("Configuration already built.");
+            }
+        }
         public ConfigurationBuilder setLanguage(String lang) {
+            checkBuilt();
             this.lang = lang;
             return this;
         }
 
-        public ConfigurationBuilder setSymbol(Symbol symbol) {
+        public ConfigurationBuilder addSymbol(Symbol symbol) {
+            checkBuilt();
             customSymbols.add(symbol);
             return this;
         }
 
         public ConfigurationBuilder addValidatorConfig(ValidatorConfiguration config) {
+            checkBuilt();
             validatorConfigs.add(config);
             return this;
         }
 
         public ConfigurationBuilder setType(String type) {
+            checkBuilt();
             this.type = Optional.of(type);
             return this;
         }
 
         public Configuration build() {
+            checkBuilt();
+            built = true;
             return new Configuration(new SymbolTable(lang, type, customSymbols), this.validatorConfigs, this.lang);
         }
     }
