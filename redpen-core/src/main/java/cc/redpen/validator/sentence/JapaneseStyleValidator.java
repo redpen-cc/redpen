@@ -1,18 +1,37 @@
+/**
+ * redpen: a text inspection tool
+ * Copyright (c) 2014-2015 Recruit Technologies Co., Ltd. and contributors
+ * (see CONTRIBUTORS.md)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cc.redpen.validator.sentence;
 
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class JapaneseStyleValidator extends Validator {
-    private static final Pattern futuuPattern = Pattern.compile("のだが|したが|したので|ないかと");
-    private static final Pattern teineiPattern = Pattern.compile("でしたが|でしたので|ですので|ですが");
-    private static final Pattern futuuEndPattern = Pattern.compile("(だ|である|った|ではない｜ないか)$");
-    private static final Pattern teineiEndPattern = Pattern.compile("(です|ます|ました|ません|ですね|でしょうか)$");
+    private static final Pattern FUTUU_PATTERN = Pattern.compile("のだが|したが|したので|ないかと");
+    private static final Pattern TEINEI_PATTERN = Pattern.compile("でしたが|でしたので|ですので|ですが");
+    private static final Pattern FUTUU_END_PATTERN = Pattern.compile("(だ|である|った|ではない｜ないか)$");
+    private static final Pattern TEINEI_END_PATTERN = Pattern.compile("(です|ます|ました|ません|ですね|でしょうか)$");
 
     private int futuuCount = 0;
     private int teineiCount = 0;
@@ -20,12 +39,12 @@ public class JapaneseStyleValidator extends Validator {
     @Override
     public void preValidate(Sentence sentence) {
         // match content
-        futuuCount += countMatch(sentence, futuuPattern);
-        teineiCount+= countMatch(sentence, teineiPattern);
+        futuuCount += countMatch(sentence, FUTUU_PATTERN);
+        teineiCount+= countMatch(sentence, TEINEI_PATTERN);
 
         // match end content
-        futuuCount += countEndMatch(sentence, futuuEndPattern);
-        teineiCount += countEndMatch(sentence, teineiEndPattern);
+        futuuCount += countEndMatch(sentence, FUTUU_END_PATTERN);
+        teineiCount += countEndMatch(sentence, TEINEI_END_PATTERN);
     }
 
     private int countMatch(Sentence sentence, Pattern pattern) {
@@ -55,11 +74,11 @@ public class JapaneseStyleValidator extends Validator {
     @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {
         if (futuuCount > teineiCount) {
-            detectPattern(sentence, teineiPattern, errors);
-            detectPattern(sentence, teineiEndPattern, errors);
+            detectPattern(sentence, TEINEI_PATTERN, errors);
+            detectPattern(sentence, TEINEI_END_PATTERN, errors);
         } else {
-            detectPattern(sentence, futuuPattern, errors);
-            detectPattern(sentence, futuuEndPattern, errors
+            detectPattern(sentence, FUTUU_PATTERN, errors);
+            detectPattern(sentence, FUTUU_END_PATTERN, errors
             );
         }
     }
@@ -72,5 +91,38 @@ public class JapaneseStyleValidator extends Validator {
                     sentence.getOffset(mat.end()),
                     mat.group()));
         }
+    }
+
+    @Override
+    public List<String> getSupportedLanguages() {
+        return Arrays.asList(Locale.JAPANESE.getLanguage());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        JapaneseStyleValidator that = (JapaneseStyleValidator) o;
+
+        if (futuuCount != that.futuuCount) return false;
+        if (teineiCount != that.teineiCount) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = futuuCount;
+        result = 31 * result + teineiCount;
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "JapaneseStyleValidator{" +
+                "futuuCount=" + futuuCount +
+                ", teineiCount=" + teineiCount +
+                '}';
     }
 }
