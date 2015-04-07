@@ -51,7 +51,7 @@ public class SymbolWithSpaceValidatorTest {
         Configuration conf = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
                 .setLanguage("en")
-                .setSymbol(new Symbol(SLASH, '/'))
+                .addSymbol(new Symbol(SLASH, '/'))
                 .build();
 
         RedPen redPen = new RedPen(conf);
@@ -72,7 +72,7 @@ public class SymbolWithSpaceValidatorTest {
         Configuration conf = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
                 .setLanguage("en")
-                .setSymbol(new Symbol(COLON, ':', "", false, true))
+                .addSymbol(new Symbol(COLON, ':', "", false, true))
                 .build();
 
         RedPen redPen = new RedPen(conf);
@@ -93,7 +93,7 @@ public class SymbolWithSpaceValidatorTest {
         Configuration conf = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
                 .setLanguage("en")
-                .setSymbol(new Symbol(LEFT_PARENTHESIS, '(', "", true, false))
+                .addSymbol(new Symbol(LEFT_PARENTHESIS, '(', "", true, false))
                 .build();
 
         RedPen redPen = new RedPen(conf);
@@ -114,8 +114,8 @@ public class SymbolWithSpaceValidatorTest {
         Configuration conf = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
                 .setLanguage("en")
-                .setSymbol(new Symbol(LEFT_PARENTHESIS, '(', "", true, false))
-                .setSymbol(new Symbol(RIGHT_PARENTHESIS, ')', "", false, true))
+                .addSymbol(new Symbol(LEFT_PARENTHESIS, '(', "", true, false))
+                .addSymbol(new Symbol(RIGHT_PARENTHESIS, ')', "", false, true))
                 .build();
 
         RedPen redPen = new RedPen(conf);
@@ -136,7 +136,7 @@ public class SymbolWithSpaceValidatorTest {
         Configuration conf = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
                 .setLanguage("en")
-                .setSymbol(new Symbol(ASTERISK, '*', "", true, true))
+                .addSymbol(new Symbol(ASTERISK, '*', "", true, true))
                 .build();
 
         RedPen redPen = new RedPen(conf);
