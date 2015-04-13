@@ -17,12 +17,18 @@
  */
 
 body {
-    background-color: #c0c5b2;
+    background-color: #dedbcf;
+    color: #333;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 h1, h2, h3, h4 {
     color: #414439;
+}
+
+h1, h2, h3 {
+    margin-top: 10px;
+    margin-bottom: 5px;
 }
 
 a {
@@ -37,15 +43,54 @@ a:hover {
 
 label {
     margin-bottom: 0px;
+    min-height: 10px;
+    margin-right: 12px;
 }
 
 textarea {
     resize: none;
 }
 
+input[type="radio"], input[type="checkbox"] {
+    margin: 3px 0 0;
+}
+
+.well {
+    border: solid 1px rgba(0, 0, 0, 0.3);
+}
+
+.editable-empty, .editable-empty:hover, .editable-empty:focus {
+    font-style: italic;
+    color: #815555;
+    text-decoration: none;
+}
+
+.editable-click, a.editable-click, a.editable-click:hover {
+    text-decoration: none;
+    border-bottom: none;
+}
+
+.editableform-loading {
+    background: url('../images/loading.gif') center center no-repeat;
+}
+
+.editable-clear-x {
+    background: url('../images/clear.png') center center no-repeat;
+}
+
+.popover-title {
+    font-size: 11px;
+}
+
+.control-label {
+    color: #838178;
+    font-size: 12px;
+}
+
 .navbar-default {
-    background-color: rgba(114, 117, 106, 1);
-    border-color: rgb(107, 110, 100);
+    background-color: #a29e8b;
+    border: none;
+    border-bottom: solid 1px rgba(0, 0, 0, 0.12);
 }
 
 .navbar-default .navbar-nav>li>a {
@@ -75,11 +120,11 @@ textarea {
 }
 
 .error strong {
-    color: red;
+    color: #a70c00;
 }
 
 .radio, .checkbox {
-    margin-top: 0;
+    margin-top: 0 !important;
 }
 
 #main {
@@ -90,24 +135,103 @@ textarea {
     bottom: 4px;
 }
 
+#redpen-document-panel {
+}
+
+#redpen-document-top {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    border-radius: 6px;
+    border: solid 1px rgba(0, 0, 0, 0.15);
+    bottom: 46%;
+}
+
+#redpen-document-bottom {
+    position: absolute;
+    left: 0;
+    top: 54.5%;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+    border-radius: 6px;
+    border: solid 1px rgba(0, 0, 0, 0.15);
+    background-color: rgb(255, 227, 227);
+}
+
+#redpen-superimposed-editor {
+    border-radius: 6px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    background-color: white;
+}
+
 #redpen-editor {
-    padding: 19px;
-}
-
-#redpen-editor,
-#redpen-results {
-    min-height: 100%;
+    border-radius: 6px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    color: rgba(0, 0, 0, 0.7);
+    background-color: transparent;
+    line-height: 28px;
+    padding: 24px !important;
+    margin: 0 !important;
+    word-wrap: normal;
+    white-space: pre-wrap;
+    font-size: 19px;
+    border: none !important;
+    outline: none !important;
+    z-index: 2;
     height: 100%;
-    overflow: auto;
+    width: 100%;
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box; /* Firefox, other Gecko */
+    box-sizing: border-box;
+    overflow-y: scroll;
 }
 
-#redpen-results h4 {
-    margin-top: 0;
+#redpen-editor-underlay {
+    border-radius: 6px;
+    overflow-y: scroll;
+
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+
+    line-height: 28px;
+    padding: 24px !important;
+    margin: 0 !important;
+    word-wrap: normal;
+    white-space: pre-wrap;
+    font-size: 19px;
+    background-color: #fff;
+    color: transparent;
+    width: 100%;
+    border: none !important;
+    outline: none !important;
+    z-index: 1;
+}
+
+#redpen-editor:focus {
+    outline: none;
+}
+
+#redpen-errors {
+    padding: 18px;
 }
 
 #redpen-results-json {
-    background-color: rgb(255, 245, 224);
-    color: rgb(6, 45, 5);
+    background-color: rgb(196, 236, 253);
+    color: rgb(3, 23, 3);
     min-height: 100%;
     height: 100%;
     overflow: auto;
@@ -115,29 +239,43 @@ textarea {
     line-height: 12px;
     font-family: monospace;
     white-space: pre;
-    padding-left: 4px;
-    padding-right: 4px;
+    word-wrap: break-word;
+    padding: 8px;
+}
+
+#redpen-results-request {
+    background-color: rgb(194, 228, 197);
+    color: #222;
+    min-height: 100%;
+    height: 100%;
+    overflow: auto;
+    font-size: 11px;
+    line-height: 12px;
+    font-family: monospace;
+    white-space: pre;
+    word-wrap: break-word;
+    padding: 8px;
 }
 
 #redpen-results-report {
-    background-color: #111;
+    background-color: #454545;
+    border: solid 1px rgba(0, 0, 0, 0.6);
     color: #06F400;
     min-height: 100%;
     height: 100%;
     width: 100%;
     overflow: auto;
     font-family: monospace;
-    font-size: 12px;
+    font-size: 11px;
     white-space: pre-wrap;
-    padding-left: 4px;
-    padding-right: 4px;
+    padding: 8px;
 }
 
 #redpen-settings {
+    min-height: 100%;
     height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
+    width: 100%;
+    overflow: auto;
 }
 
 #redpen-version {
@@ -146,7 +284,7 @@ textarea {
     bottom: 0;
     font-size: 10px;
     line-height: 12px;
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.8);
     text-align: right;
 }
 
@@ -162,15 +300,17 @@ textarea {
 
 #redpen-option-results li {
     display: inline-block;
-    width: 52px;
+    width: 64px;
     padding: 4px;
     cursor: pointer;
+    color: #676F5C;
 }
 
 .redpen-option-selected {
     border-radius: 3px;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.37);
     background-color: rgba(0, 0, 0, 0.3);
-    color: white;
+    color: white !important;
 }
 
 .col-md-5 {
@@ -182,7 +322,7 @@ textarea {
 }
 
 .redpen-fixed-row {
-    height: 80%;
+    height: 85%;
 }
 
 .redpen-fixed-row>div {
@@ -191,7 +331,7 @@ textarea {
 
 .redpen-header-row {
     height: 10%;
-    min-height: 100px;
+    min-height: 90px;
 }
 
 .redpen-header-row>div {
@@ -202,12 +342,8 @@ textarea {
 }
 
 .redpen-error-sentence {
-    background-image: url(../images/redpen-logo-nib-icon.png);
-    background-size: 16px 16px;
     background-position: left 5px;
     background-repeat: no-repeat;
-    padding-left: 18px;
-    margin-bottom: 24px;
 }
 
 .redpen-info-message {
@@ -220,7 +356,14 @@ textarea {
 }
 
 .redpen-clear-button {
-    margin-top: 4px;
+    position: absolute;
+    bottom: 2px;
+    right: 10px;
+    z-index: 3;
+}
+
+.redpen-clear-button button {
+    line-height: 1;
 }
 
 .redpen-error-validator {
@@ -267,7 +410,7 @@ textarea {
 }
 
 .redpen-validators {
-    font-size: 11px;
+    font-size: 12px;
     line-height: 18px;
 }
 
@@ -284,57 +427,93 @@ textarea {
     color: #1C6100;
 }
 
+.redpen-validator-properties {
+    float: right;
+}
+
 .redpen-error-list {
     margin-left: 0;
     padding-right: 0;
     list-style-type: none;
-    padding-left: 18px;
-    margin-bottom: 20px;
+    padding-left: 0;
+    font-size: 14px;
+    line-height: 16px;
 }
 
 .redpen-error-message {
-    color: rgb(124, 47, 0);
-    cursor: help;
+    color: #a70c00;
 }
 
 .redpen-error-message-annotated::before {
-    background-color: #FF713D !important;
+    /*background-color: #ff0500 !important;*/
 }
 
 .redpen-error-list li {
     counter-increment: step-counter;
+    background-image: url(../images/redpen-logo-nib-icon.png);
+    background-repeat: no-repeat;
+    background-position: left 4px;
+    background-size: 16px 16px;
+    cursor: help;
 }
 
 .redpen-error-list li::before {
     content: counter(step-counter);
     margin-right: 5px;
-    font-size: 80%;
-    background-color: grey;
-    color: white;
+    font-size: 11px;
+    line-height: 20px;
+    margin-left: 16px;
+    color: #a70c00;
     padding: 0;
     display: inline-block;
-    text-align: center;
+    text-align: left;
     min-width: 20px;
     border-radius: 3px;
 }
 
-.redpen-annotated-sentence i {
-    color: #8d3700;
-    font-style: normal;
+.redpen-annotated-sentence {
+    line-height: 24px;
+    color: rgba(0, 0, 0, 0);
 }
 
-.redpen-annotated-sentence b {
+.redpen-annotated-sentence i {
+    color: rgba(167, 12, 0, 0.3);
+    text-shadow: 0 0 2px rgba(255, 32, 0, 0.4);
+    font-style: normal;
+    background-image: url(../images/redpen-mark.png);
+}
+
+.redpen-annotated-sentence-marker {
+    letter-spacing: -1px;
     cursor: help;
     font-weight: normal;
-    background-color: #FF713D;
-    color: #fff;
-    border-radius: 3px;
-    font-size: 60%;
+    background-color: transparent;
+    color: rgba(167, 12, 0, 0.90);
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.31);
+    font-size: 9px;
     display: inline-block;
-    line-height: 60%;
-    padding: 3px;
     vertical-align: top;
-    text-align: center;
-    margin-right: 1px;
+    text-align: right;
+    margin-left: -24px;
+    margin-top: -10px;
+    height: 20px;
+    width: 24px;
+    z-index: 2;
 }
 
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    border-radius: 3px;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background-color: rgba(0, 0, 0, 0.6);
+}

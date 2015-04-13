@@ -68,8 +68,8 @@ final class PlainTextParser extends BaseDocumentParser implements Serializable {
                 if (line.equals("")) {
                     if (!paragraph.isEmpty()) {
                         this.extractSentences(startLine, paragraph, sentenceExtractor, documentBuilder);
-                        startLine = linesRead + 1;
                     }
+                    startLine = linesRead + 1;
                     documentBuilder.addParagraph();
                     paragraph = "";
                 } else {

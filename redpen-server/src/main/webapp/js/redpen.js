@@ -49,8 +49,10 @@ var redpen = (function () {
 
     // placeholder (and cheap client-side implementation) of a detect-language function
     this.detectLanguage = function (text, callback) {
-        var japanese = (text.indexOf('。') != -1) || (text.indexOf('、') != -1) || (text.indexOf('は') != -1);
-        callback(japanese ? 'ja' : 'en');
+        if (text) {
+            var japanese = (text.indexOf('。') != -1) || (text.indexOf('、') != -1) || (text.indexOf('は') != -1);
+            callback(japanese ? 'ja' : 'en');
+        }
     };
 
     // validate the document {text: text, lang: [en|ja..]}
@@ -58,13 +60,28 @@ var redpen = (function () {
         doAPICall('document/validate', parameters, callback, "POST");
     };
 
-    // validate the document {text: text, lang: [en|ja..]}
-    this.validateBySentence = function (parameters, callback) {
-        doAPICall('document/validate_by_sentence', parameters, callback, "POST");
-    };
     // get the current redpen configuration
     this.getRedPens = function (callback) {
         doAPICall('config/redpens', {}, callback);
+    };
+
+
+    // validate the document {text: text, lang: [en|ja..]}
+    this.validateJSON = function (parameters, callback) {
+        $.ajax({
+            type: "POST",
+            url: "rest/document/validate/json",
+            data: JSON.stringify(parameters),
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                if (callback) {
+                    callback(data);
+                }
+            }
+        }).fail(function (err) {
+                console.log(err);
+            });
     };
 
     return this;

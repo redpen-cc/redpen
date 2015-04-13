@@ -123,6 +123,20 @@ public abstract class Validator {
         }
     }
 
+    /**
+     * Return the configuration attributes
+     *
+     * @return a map of configuration attributes to their values
+     */
+    public Map<String, String> getConfigAttributes() {
+        return config.getAttributes();
+    }
+
+    /**
+     * Validation initialization, called after the configuration and symbol tables have been assigned
+     *
+     * @throws RedPenException
+     */
     protected void init() throws RedPenException {
     }
 

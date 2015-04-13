@@ -20,6 +20,8 @@ package cc.redpen.server.api;
 
 import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
+import cc.redpen.config.Configuration;
+import cc.redpen.config.ValidatorConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +41,11 @@ public class RedPenService {
 
     private static Map<String, RedPen> langRedPenMap = new HashMap<>();
 
+    /**
+     * Create redpens for the given context
+     *
+     * @param context the servlet context
+     */
     public RedPenService(ServletContext context) {
         synchronized (this) {
             if (langRedPenMap.size() == 0) {
@@ -71,10 +78,43 @@ public class RedPenService {
     }
 
     public RedPen getRedPen(String lang) {
-
         return langRedPenMap.getOrDefault(lang, langRedPenMap.get(DEFAULT_LANGUAGE));
     }
 
+    /**
+     * Create a new redpen for the specified language. The validator properties map is a map of validator names to their (optional) properties.
+     * Only validitors present in this map are added to the redpen configuration
+     *
+     * @param lang                the language to use
+     * @param validatorProperties a map of redpen validator names to a map of their properties
+     * @return a configured redpen instance
+     */
+    public RedPen getRedPen(String lang, Map<String, Map<String, String>> validatorProperties) {
+
+        Configuration.ConfigurationBuilder configBuilder = new Configuration.ConfigurationBuilder();
+        configBuilder.setLanguage(lang);
+
+        // add the validators and their properties
+        validatorProperties.forEach((validatorName, props) -> {
+            ValidatorConfiguration validatorConfig = new ValidatorConfiguration(validatorName);
+            props.forEach((name, value) -> {
+                validatorConfig.addAttribute(name, value);
+            });
+            configBuilder.addValidatorConfig(validatorConfig);
+        });
+        try {
+            return new RedPen(configBuilder.build());
+        } catch (RedPenException e) {
+            LOG.error("Unable to initialize RedPen", e);
+            throw new ExceptionInInitializerError(e);
+        }
+    }
+
+    /**
+     * Get all preconfigured redpen instances
+     *
+     * @return
+     */
     public Map<String, RedPen> getRedPens() {
         return langRedPenMap;
     }

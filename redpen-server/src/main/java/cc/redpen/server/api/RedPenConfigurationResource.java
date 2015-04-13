@@ -23,7 +23,6 @@ import cc.redpen.RedPenException;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.validator.Validator;
 import org.apache.wink.common.annotations.Workspace;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,15 +72,17 @@ public class RedPenConfigurationResource {
                         config.put("tokenizer", redPen.getConfiguration().getTokenizer().getClass().getName());
 
                         // add the names of the validators
-                        JSONArray validatorConfigs = new JSONArray();
+                        JSONObject validatorConfigs = new JSONObject();
                         for (Validator validator : redPen.getValidators()) {
                             JSONObject validatorJSON = new JSONObject();
-                            validatorJSON.put("name", validator.getClass().getSimpleName().endsWith("Validator")
+                            String name = validator.getClass().getSimpleName().endsWith("Validator")
                                     ? validator.getClass().getSimpleName().substring(0, validator.getClass().getSimpleName().length() - 9)
-                                    : validator.getClass().getSimpleName());
+                                    : validator.getClass().getSimpleName();
                             validatorJSON.put("languages", validator.getSupportedLanguages());
-                            validatorConfigs.put(validatorJSON);
+                            validatorJSON.put("properties", validator.getConfigAttributes());
+                            validatorConfigs.put(name, validatorJSON);
                         }
+
                         config.put("validators", validatorConfigs);
 
                         redpensJSON.put(configurationName, config);

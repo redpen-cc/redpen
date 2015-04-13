@@ -42,10 +42,10 @@ public class WinkAPIDescriber {
         sb.append("<head>\n");
         sb.append("<title>REST API Description</title>\n");
         sb.append("<style>\n");
-        sb.append("table {font:0.75em Verdana, Arial, Helvetica, sans-serif; line-height:0.75em; border-collapse: collapse; }");
-        sb.append("th {padding: 0.5em; padding-top: 2em; text-align: left; border:none;}");
-        sb.append("tr, td {border-bottom: 1px dotted #fafafa;}");
-        sb.append("td {vertical-align:top;border:none; padding: 0.5em 0.5em; background-color: #fefefe }");
+        sb.append("table {font:0.75em Verdana, Arial, Helvetica, sans-serif;line-height:0.75em;border-collapse:collapse;}");
+        sb.append("th {padding:0.5em;padding-top:2em;text-align:left;border:none;}");
+        sb.append("tr,td {border-bottom:1px dotted #fafafa;}");
+        sb.append("td {vertical-align:top;border:none;padding:0.5em 0.5em;background-color:#fefefe;}");
         sb.append("</style>\n");
         sb.append("</head>\n");
         sb.append("<body>\n");
