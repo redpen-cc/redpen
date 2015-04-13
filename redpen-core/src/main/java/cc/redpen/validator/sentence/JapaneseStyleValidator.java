@@ -27,24 +27,29 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Validate Japanese document if it contains both Desumasu and Dearu styles.
+ * 
+ */
 public class JapaneseStyleValidator extends Validator {
-    private static final Pattern FUTUU_PATTERN = Pattern.compile("のだが|したが|したので|ないかと");
-    private static final Pattern TEINEI_PATTERN = Pattern.compile("でしたが|でしたので|ですので|ですが");
-    private static final Pattern FUTUU_END_PATTERN = Pattern.compile("(だ|である|った|ではない｜ないか)$");
-    private static final Pattern TEINEI_END_PATTERN = Pattern.compile("(です|ます|ました|ません|ですね|でしょうか)$");
+    private static final Pattern DEARU_PATTERN = Pattern.compile("のだが|したが|したので|ないかと|してきた|であるから");
+    private static final Pattern DEARU_END_PATTERN = Pattern.compile("(だ|である|った|ではない｜ないか|しろ|しなさい|いただきたい|いただく|ならない|あろう|られる)$");
 
-    private int futuuCount = 0;
-    private int teineiCount = 0;
+    private static final Pattern DESUMASU_PATTERN = Pattern.compile("でしたが|でしたので|ですので|ですが");
+    private static final Pattern DESUMASU_END_PATTERN = Pattern.compile("(です|ます|ました|ません|ですね|でしょうか|ください|ませ)$");
+
+    private int dearuCount = 0;
+    private int desumasuCount = 0;
 
     @Override
     public void preValidate(Sentence sentence) {
         // match content
-        futuuCount += countMatch(sentence, FUTUU_PATTERN);
-        teineiCount+= countMatch(sentence, TEINEI_PATTERN);
+        dearuCount += countMatch(sentence, DEARU_PATTERN);
+        desumasuCount += countMatch(sentence, DESUMASU_PATTERN);
 
         // match end content
-        futuuCount += countEndMatch(sentence, FUTUU_END_PATTERN);
-        teineiCount += countEndMatch(sentence, TEINEI_END_PATTERN);
+        dearuCount += countEndMatch(sentence, DEARU_END_PATTERN);
+        desumasuCount += countEndMatch(sentence, DESUMASU_END_PATTERN);
     }
 
     private int countMatch(Sentence sentence, Pattern pattern) {
@@ -73,12 +78,12 @@ public class JapaneseStyleValidator extends Validator {
 
     @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {
-        if (futuuCount > teineiCount) {
-            detectPattern(sentence, TEINEI_PATTERN, errors);
-            detectPattern(sentence, TEINEI_END_PATTERN, errors);
+        if (dearuCount > desumasuCount) {
+            detectPattern(sentence, DESUMASU_PATTERN, errors);
+            detectPattern(sentence, DESUMASU_END_PATTERN, errors);
         } else {
-            detectPattern(sentence, FUTUU_PATTERN, errors);
-            detectPattern(sentence, FUTUU_END_PATTERN, errors
+            detectPattern(sentence, DEARU_PATTERN, errors);
+            detectPattern(sentence, DEARU_END_PATTERN, errors
             );
         }
     }
@@ -105,24 +110,24 @@ public class JapaneseStyleValidator extends Validator {
 
         JapaneseStyleValidator that = (JapaneseStyleValidator) o;
 
-        if (futuuCount != that.futuuCount) return false;
-        if (teineiCount != that.teineiCount) return false;
+        if (dearuCount != that.dearuCount) return false;
+        if (desumasuCount != that.desumasuCount) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = futuuCount;
-        result = 31 * result + teineiCount;
+        int result = dearuCount;
+        result = 31 * result + desumasuCount;
         return result;
     }
 
     @Override
     public String toString() {
         return "JapaneseStyleValidator{" +
-                "futuuCount=" + futuuCount +
-                ", teineiCount=" + teineiCount +
+                "dearuCount=" + dearuCount +
+                ", desumasuCount=" + desumasuCount +
                 '}';
     }
 }
