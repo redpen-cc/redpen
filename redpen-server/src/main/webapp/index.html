@@ -57,6 +57,15 @@ var sampleDocuments = {
     ja_md: {parser: "MARKDOWN", document: "# 分散処理\n最近利用されているソフトウェアの中には複数の計算機上で動作（分散）するものが多く存在し、このような分散ソフトウェアは複数の計算機で動作することで大量のデータを扱えたり，高負荷な状況に対処できたりします。\n" +
             "本稿では,複数の計算機（クラスタ）でで動作する各サーバーを_「インスタンス」_と呼びまます。\n" +
             "たとえば検索エンジンやデータベースではインデックスを複数のインスタンスで分割して保持します。\n" +
+            "このような場合、各インデクスの結果をマージして_clientプログラム_に渡す機構が必要となります。"},
+    en_ad: {parser: "ASCIIDOC", document: "= Instances\n" +
+            "Some software tools work in more than one machine, and such _distributed_ (cluster)systems can handle huge data or tasks, because such software tools make use of large amount of computer resources, such as\n" +
+            "* CPU\n* Disk\n* Memory\n\n" +
+            "In this article, we'll call a computer server that works as a member of a cluster an _instance_. for example, each instance in distributed search engines stores the the fractions of data." +
+            " Such distriubuted systems need a component to merge the preliminary results from member instnaces."},
+    ja_ad: {parser: "ASCIIDOC", document: "= 分散処理\n最近利用されているソフトウェアの中には複数の計算機上で動作（分散）するものが多く存在し、このような分散ソフトウェアは複数の計算機で動作することで大量のデータを扱えたり，高負荷な状況に対処できたりします。\n" +
+            "本稿では,複数の計算機（クラスタ）でで動作する各サーバーを_「インスタンス」_と呼びまます。\n" +
+            "たとえば検索エンジンやデータベースではインデックスを複数のインスタンスで分割して保持します。\n" +
             "このような場合、各インデクスの結果をマージして_clientプログラム_に渡す機構が必要となります。"}
 };
 
@@ -555,6 +564,8 @@ $(document).ready(function () {
                             <li><a onclick="pasteSampleText('ja')">Japanese Text</a></li>
                             <li><a onclick="pasteSampleText('en_md')">English Markdown</a></li>
                             <li><a onclick="pasteSampleText('ja_md')">Japanese Markdown</a></li>
+                            <li><a onclick="pasteSampleText('en_ad')">English AsciiDoc</a></li>
+                            <li><a onclick="pasteSampleText('ja_ad')">Japanese AsciiDoc</a></li>
                             <!--<li class="divider"></li>-->
                         </ul>
                     </li>

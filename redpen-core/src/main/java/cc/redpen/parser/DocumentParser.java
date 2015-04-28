@@ -86,6 +86,7 @@ public interface DocumentParser {
     public static final DocumentParser PLAIN = new PlainTextParser();
     public static final DocumentParser WIKI = new WikiParser();
     public static final DocumentParser MARKDOWN = new MarkdownParser();
+    public static final DocumentParser ASCIIDOC = new AsciiDocParser();
 
     public static final Map<String, DocumentParser> PARSER_MAP = Collections.unmodifiableMap(
             new HashMap<String, DocumentParser>() {
@@ -93,6 +94,7 @@ public interface DocumentParser {
                     put("PLAIN", PLAIN);
                     put("WIKI", WIKI);
                     put("MARKDOWN", MARKDOWN);
+                    put("ASCIIDOC", ASCIIDOC);
                 }
             });
 
