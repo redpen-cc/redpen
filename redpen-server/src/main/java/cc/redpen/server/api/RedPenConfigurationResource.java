@@ -20,6 +20,8 @@ package cc.redpen.server.api;
 
 import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
+import cc.redpen.config.Symbol;
+import cc.redpen.config.SymbolType;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.validator.Validator;
 import org.apache.wink.common.annotations.Workspace;
@@ -82,8 +84,20 @@ public class RedPenConfigurationResource {
                             validatorJSON.put("properties", validator.getConfigAttributes());
                             validatorConfigs.put(name, validatorJSON);
                         }
-
                         config.put("validators", validatorConfigs);
+
+                        // add the symbol table
+                        JSONObject symbolConfigs = new JSONObject();
+                        for (SymbolType symbolType : redPen.getConfiguration().getSymbolTable().getNames()) {
+                            JSONObject symbolJSON = new JSONObject();
+                            Symbol symbol = redPen.getConfiguration().getSymbolTable().getSymbol(symbolType);
+                            symbolJSON.put("value", String.valueOf(symbol.getValue()));
+                            symbolJSON.put("invalid_chars", String.valueOf(symbol.getInvalidChars()));
+                            symbolJSON.put("after_space", symbol.isNeedAfterSpace());
+                            symbolJSON.put("before_space", symbol.isNeedBeforeSpace());
+                            symbolConfigs.put(symbolType.toString(), symbolJSON);
+                        }
+                        config.put("symbols", symbolConfigs);
 
                         redpensJSON.put(configurationName, config);
                     } catch (Exception e) {

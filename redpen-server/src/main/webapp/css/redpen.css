@@ -431,6 +431,24 @@ input[type="radio"], input[type="checkbox"] {
     float: right;
 }
 
+.redpen-symboltable {
+    font-size: 11px;
+    width: 100%;
+    text-align:right;
+}
+
+.redpen-symboltable th {
+    color: #999;
+    text-align: right;
+    line-height: 12px;
+    vertical-align: top;
+    min-width: 32px;
+}
+
+.redpen-symboltable th:first-child,.redpen-symboltable td:first-child  {
+    text-align: left;
+}
+
 .redpen-error-list {
     margin-left: 0;
     padding-right: 0;

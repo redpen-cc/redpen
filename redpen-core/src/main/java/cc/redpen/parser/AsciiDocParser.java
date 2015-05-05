@@ -37,6 +37,8 @@ public class AsciiDocParser extends BaseDocumentParser {
     public Document parse(InputStream io, Optional<String> fileName, SentenceExtractor sentenceExtractor, RedPenTokenizer tokenizer) throws RedPenException {
         Document.DocumentBuilder documentBuilder = new Document.DocumentBuilder(tokenizer);
 
+        // CURRENTLY THERE IS NO ASCIIDOC IMPLEMENTATION
+
         return documentBuilder.build();
     }
 }

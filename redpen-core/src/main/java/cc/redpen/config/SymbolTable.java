@@ -64,7 +64,13 @@ public final class SymbolTable implements Serializable {
         }
         customSymbols.forEach(this::overrideSymbol);
     }
-    private void overrideSymbol(Symbol symbol) {
+
+    /**
+     * Override a symbol with a new definition
+     *
+     * @param symbol
+     */
+    public void overrideSymbol(Symbol symbol) {
         symbolDictionary.put(symbol.getType(), symbol);
         valueDictionary.put(symbol.getValue(), symbol);
     }
@@ -103,7 +109,7 @@ public final class SymbolTable implements Serializable {
      *
      * @param type character name
      * @return character when exist, null when the specified
-     * character does not exist
+     *         character does not exist
      */
     public char getValueOrFallbackToDefault(SymbolType type) {
         Symbol symbol = this.symbolDictionary.get(type);
@@ -115,7 +121,7 @@ public final class SymbolTable implements Serializable {
      *
      * @param value character value
      * @return character when exist, null when the specified
-     * character does not exist
+     *         character does not exist
      */
     public boolean containsSymbolByValue(char value) {
         return this.valueDictionary.get(value) != null;

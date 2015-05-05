@@ -20,6 +20,8 @@ package cc.redpen.server.api;
 
 import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
+import cc.redpen.config.Symbol;
+import cc.redpen.config.SymbolType;
 import cc.redpen.formatter.Formatter;
 import cc.redpen.formatter.JSONFormatter;
 import cc.redpen.model.Document;
@@ -102,27 +104,30 @@ public class RedPenResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @WinkAPIDescriber.Description("Process a redpen JSON validation request and returns any redpen errors")
-    public Response postJSON(JSONObject requestJSON) throws RedPenException {
+    public Response validateDocumentJSON(JSONObject requestJSON) throws RedPenException {
 
-        LOG.info("Validating JSON request");
-        String lang = getOrDefault(requestJSON, "lang", DEFAULT_LANG);
+        LOG.info("Validating document using JSON request");
         String documentParser = getOrDefault(requestJSON, "documentParser", DEFAULT_DOCUMENT_PARSER);
         String documentText = getOrDefault(requestJSON, "document", "");
         String format = getOrDefault(requestJSON, "format", DEFAULT_FORMAT);
 
-        Map<String, Map<String, String>> properties = new HashMap<>();
+        String lang = DEFAULT_LANG;
 
-        try {
-            JSONObject validators = requestJSON.getJSONObject("config");
-            if (validators != null) {
-                Iterator keyIter = validators.keys();
-                while (keyIter.hasNext()) {
-                    String validator = String.valueOf(keyIter.next());
-                    Map<String, String> props = new HashMap<>();
-                    properties.put(validator, props);
-                    JSONObject validatorConfig = validators.getJSONObject(validator);
-                    if (validatorConfig != null) {
-                        if (validatorConfig.has("properties")) {
+        Map<String, Map<String, String>> properties = new HashMap<>();
+        JSONObject config = null;
+        if (requestJSON.has("config")) {
+            try {
+                config = requestJSON.getJSONObject("config");
+                lang = getOrDefault(config, "lang", DEFAULT_LANG);
+                if (config.has("validators")) {
+                    JSONObject validators = config.getJSONObject("validators");
+                    Iterator keyIter = validators.keys();
+                    while (keyIter.hasNext()) {
+                        String validator = String.valueOf(keyIter.next());
+                        Map<String, String> props = new HashMap<>();
+                        properties.put(validator, props);
+                        JSONObject validatorConfig = validators.getJSONObject(validator);
+                        if ((validatorConfig != null) && validatorConfig.has("properties")) {
                             JSONObject validatorProps = validatorConfig.getJSONObject("properties");
                             Iterator propsIter = validatorProps.keys();
                             while (propsIter.hasNext()) {
@@ -132,12 +137,42 @@ public class RedPenResource {
                         }
                     }
                 }
+            } catch (Exception e) {
+                LOG.error("Exception when processing JSON properties", e);
             }
-        } catch (Exception e) {
-            LOG.error("Exception when processing JSON properties", e);
         }
 
         RedPen redPen = new RedPenService(context).getRedPen(lang, properties);
+
+        // override any symbols
+        if ((config != null) && config.has("symbols")) {
+            try {
+                JSONObject symbols = config.getJSONObject("symbols");
+                Iterator keyIter = symbols.keys();
+                while (keyIter.hasNext()) {
+                    String symbolName = String.valueOf(keyIter.next());
+                    try {
+                        SymbolType symbolType = SymbolType.valueOf(symbolName);
+                        JSONObject symbolConfig = symbols.getJSONObject(symbolName);
+                        Symbol originalSymbol = redPen.getConfiguration().getSymbolTable().getSymbol(symbolType);
+                        if ((originalSymbol != null) && (symbolConfig != null) && symbolConfig.has("value")) {
+                            String value = symbolConfig.has("value") ? symbolConfig.getString("value") : String.valueOf(originalSymbol.getValue());
+                            boolean spaceBefore = symbolConfig.has("before_space") ? symbolConfig.getBoolean("before_space") : originalSymbol.isNeedBeforeSpace();
+                            boolean spaceAfter = symbolConfig.has("after_space") ? symbolConfig.getBoolean("after_space") : originalSymbol.isNeedAfterSpace();
+                            String invalidChars = symbolConfig.has("invalid_chars") ? symbolConfig.getString("invalid_chars") : String.valueOf(originalSymbol.getInvalidChars());
+                            if ((value != null) && !value.isEmpty()) {
+                                redPen.getConfiguration().getSymbolTable().overrideSymbol(new Symbol(symbolType, value.charAt(0), invalidChars, spaceBefore, spaceAfter));
+                            }
+                        }
+
+                    } catch (IllegalArgumentException iae) {
+                        LOG.error("Ignoring unknown SymbolType " + symbolName);
+                    }
+                }
+            } catch (Exception e) {
+                LOG.error("Exception when processing JSON symbol overrides", e);
+            }
+        }
         Document parsedDocument = redPen.parse(DocumentParser.of(documentParser), documentText);
 
         List<ValidationError> errors = redPen.validate(parsedDocument);
@@ -159,6 +194,7 @@ public class RedPenResource {
                 return value;
             }
         } catch (Exception e) {
+            // intentionally empty
         }
         return defaultValue;
     }
