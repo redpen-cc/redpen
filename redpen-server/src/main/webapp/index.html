@@ -57,6 +57,15 @@ var sampleDocuments = {
     ja_md: {parser: "MARKDOWN", document: "# 分散処理\n最近利用されているソフトウェアの中には複数の計算機上で動作（分散）するものが多く存在し、このような分散ソフトウェアは複数の計算機で動作することで大量のデータを扱えたり，高負荷な状況に対処できたりします。\n" +
             "本稿では,複数の計算機（クラスタ）でで動作する各サーバーを_「インスタンス」_と呼びまます。\n" +
             "たとえば検索エンジンやデータベースではインデックスを複数のインスタンスで分割して保持します。\n" +
+            "このような場合、各インデクスの結果をマージして_clientプログラム_に渡す機構が必要となります。"},
+    en_ad: {parser: "ASCIIDOC", document: "= Instances\n" +
+            "Some software tools work in more than one machine, and such _distributed_ (cluster)systems can handle huge data or tasks, because such software tools make use of large amount of computer resources, such as\n" +
+            "* CPU\n* Disk\n* Memory\n\n" +
+            "In this article, we'll call a computer server that works as a member of a cluster an _instance_. for example, each instance in distributed search engines stores the the fractions of data." +
+            " Such distriubuted systems need a component to merge the preliminary results from member instnaces."},
+    ja_ad: {parser: "ASCIIDOC", document: "= 分散処理\n最近利用されているソフトウェアの中には複数の計算機上で動作（分散）するものが多く存在し、このような分散ソフトウェアは複数の計算機で動作することで大量のデータを扱えたり，高負荷な状況に対処できたりします。\n" +
+            "本稿では,複数の計算機（クラスタ）でで動作する各サーバーを_「インスタンス」_と呼びまます。\n" +
+            "たとえば検索エンジンやデータベースではインデックスを複数のインスタンスで分割して保持します。\n" +
             "このような場合、各インデクスの結果をマージして_clientプログラム_に渡す機構が必要となります。"}
 };
 
@@ -130,7 +139,7 @@ $(document).ready(function () {
         $("#redpen-version").text("RedPen version " + configuration.version);
         var discoveredLanguages = {};
         var validatorConfiguration = {};
-
+        var symbolTables = {};
 
         // build options for each configured redpen
         for (var redpenName in configuration.redpens) {
@@ -177,6 +186,56 @@ $(document).ready(function () {
                                                         .html(validatorName + (validator.languages.length ? ' <i>' + validator.languages.join(',') + '</i>' : ''))
                                                 )
                                 ).append(properties)
+                );
+            }
+
+            var symbolTableEntry = $('<table></table>').addClass('redpen-symboltable');
+            symbolTables[redpenName] = symbolTableEntry;
+            $(symbolTableEntry).append(
+                    $('<tr></tr>')
+                            .append($('<th></th>').text(""))
+                            .append($('<th></th>').text("Value"))
+                            .append($('<th></th>').html("Invalid<br/>Chars"))
+                            .append($('<th></th>').html("Space<br/>Before"))
+                            .append($('<th></th>').html("Space<br/>After"))
+            );
+            for (var symbolName in config.symbols) {
+                var symbol = config.symbols[symbolName];
+                $(symbolTableEntry).append(
+                        $('<tr></tr>')
+                                .append($('<td></td>').text(symbolName))
+                                .append($('<td></td>')
+                                        .addClass("redpen-editable")
+                                        .text(symbol.value)
+                                        .attr("name", symbolName)
+                                        .attr("data-pk", redpenName)
+                                        .attr("data-invalid-chars", false)
+                                )
+                                .append($('<td></td>')
+                                        .addClass("redpen-editable")
+                                        .text(symbol.invalid_chars)
+                                        .attr("name", symbolName)
+                                        .attr("data-pk", redpenName)
+                                        .attr("data-invalid-chars", true)
+                                )
+                                .append($('<td></td>')
+                                        .append(
+                                                $('<input/>')
+                                                        .attr("type", "checkbox")
+                                                        .attr("checked", symbol.before_space)
+                                                        .attr("name", symbolName)
+                                                        .attr("value", "before_space")
+                                                        .attr("data-pk", redpenName)
+                                        ))
+                                .append($('<td></td>')
+                                        .append(
+                                                $('<input/>')
+                                                        .attr("type", "checkbox")
+                                                        .attr("checked", symbol.after_space)
+                                                        .attr("name", symbolName)
+                                                        .attr("value", "after_space")
+                                                        .attr("data-pk", redpenName)
+                                        ))
                 );
             }
         }
@@ -411,24 +470,23 @@ $(document).ready(function () {
 
         // return the current configuration
         var getConfiguration = function () {
-            var config = {};
+            var validators = {};
             var redpen = $(configSelect).val();
             $("#redpen-active-validators").find("input:checked").each(function () {
                 var validator = $(this).val();
-                config[validator] = { };
+                validators[validator] = { };
                 if (!$.isEmptyObject(configuration.redpens[redpen].validators[validator].properties)) {
-                    config[validator].properties = configuration.redpens[redpen].validators[validator].properties;
+                    validators[validator].properties = configuration.redpens[redpen].validators[validator].properties;
                 }
             });
 
-            return config;
+            return {lang: $(languageSelect).val(), validators: validators, symbols: configuration.redpens[redpen].symbols};
         };
 
         // call RedPen to validate the document and display any errors
         var validateDocument = function () {
             var requestParams = {
                 document: editorText(),
-                lang: $(languageSelect).val(),
                 format: 'json2',
                 documentParser: $(documentParserSelect).val(),
                 config: getConfiguration()
@@ -474,6 +532,44 @@ $(document).ready(function () {
                         }
                         validateDocument();
                     }
+                });
+            });
+
+            $("#redpen-active-symbols")
+                    .empty()
+                    .append(symbolTables[redpenName]);
+
+            $("#redpen-active-symbols").find(".redpen-editable").each(function (i, n) {
+                if ($(this).text() == "none") { // workaround to fix x-editable empty-detection on reapplication
+                    $(this).text("");
+                }
+                $(this).editable({
+                    mode: 'popup',
+                    emptytext: 'none',
+                    placement: "top",
+                    type: 'text',
+                    success: function (response, newValue) {
+                        var redpen = $(this).data("pk");
+                        var symbolName = $(this).attr("name");
+                        var invalidChars = $(this).data("invalid-chars");
+                        if (invalidChars) {
+                            configuration.redpens[redpen].symbols[symbolName].invalid_chars = newValue;
+                        }
+                        else {
+                            configuration.redpens[redpen].symbols[symbolName].value = newValue[0] ? newValue[0] : "";
+                        }
+                        validateDocument();
+                    }
+                });
+            });
+
+            $("#redpen-active-symbols").find("[type=checkbox]").each(function (i, n) {
+                $(this).off("change").on("change", function () {
+                    var redpen = $(this).data("pk");
+                    var symbolName = $(this).attr("name");
+                    var property = $(this).attr("value");
+                    configuration.redpens[redpen].symbols[symbolName][property] = $(this).is(":checked");
+                    validateDocument();
                 });
             });
         };
@@ -555,7 +651,8 @@ $(document).ready(function () {
                             <li><a onclick="pasteSampleText('ja')">Japanese Text</a></li>
                             <li><a onclick="pasteSampleText('en_md')">English Markdown</a></li>
                             <li><a onclick="pasteSampleText('ja_md')">Japanese Markdown</a></li>
-                            <!--<li class="divider"></li>-->
+                            <!--<li><a onclick="pasteSampleText('en_ad')">English AsciiDoc</a></li>-->
+                            <!--<li><a onclick="pasteSampleText('ja_ad')">Japanese AsciiDoc</a></li>-->
                         </ul>
                     </li>
                     <li>
@@ -627,6 +724,11 @@ $(document).ready(function () {
                         <label class="control-label">Validators</label>
 
                         <div id="redpen-active-validators"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Symbols</label>
+
+                        <div id="redpen-active-symbols"></div>
                     </div>
                 </div>
                 <div id="redpen-results-report" style="display:none" class="well">
