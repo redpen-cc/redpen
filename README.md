@@ -26,11 +26,14 @@ Links
 * [Docs](http://redpen.cc/docs.html)
 * [JavaDoc](http://redpen.cc/javadoc/1.1/index.html)
 * [Blog](http://blog.redpen.cc)
-* [Docker Image by Naoki Ainoya](https://registry.hub.docker.com/u/ainoya/redpen-server/)
-* [Atom Editor package by griffin-stewie](https://atom.io/packages/redpen)
-* [RubyGem by akinomurasame](https://rubygems.org/gems/redpen_ruby)
-* [Homebrew formula by Kozo Nishida](http://braumeister.org/formula/redpen)
-* [Android App by Shintaro Katafuchi](https://play.google.com/store/apps/details?id=cc.redpen)
+* Tools
+  * [Docker Image by Naoki Ainoya](https://registry.hub.docker.com/u/ainoya/redpen-server/)
+  * [Atom Editor package by griffin-stewie](https://atom.io/packages/redpen)
+  * [RubyGem by akinomurasame](https://rubygems.org/gems/redpen_ruby)
+  * [Homebrew formula by Kozo Nishida](http://braumeister.org/formula/redpen)
+  * [Android App by Shintaro Katafuchi](https://play.google.com/store/apps/details?id=cc.redpen)
+  * [Python Client](https://pypi.python.org/pypi/pyredpen/)
+  * [SublimeLinter module for RedPen](https://github.com/taky/sublimelinter-redpen)
 
 Deploy
 ======
