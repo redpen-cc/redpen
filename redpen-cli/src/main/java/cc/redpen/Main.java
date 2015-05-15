@@ -186,7 +186,7 @@ public final class Main {
     }
 
     static File resolveConfigLocation(String configFileName) {
-File path = toFileIfExists(configFileName);
+        File path = toFileIfExists(configFileName);
         if (path == null) {
             path = toFileIfExists(DEFAULT_CONFIG_NAME);
         }
@@ -205,7 +205,7 @@ File path = toFileIfExists(configFileName);
             File file = new File(path);
             if (file.exists() && file.isFile()) {
                 absolutePath = file;
-            }else{
+            } else {
                 LOG.error("Configuration file is not found:" + path);
             }
         }
