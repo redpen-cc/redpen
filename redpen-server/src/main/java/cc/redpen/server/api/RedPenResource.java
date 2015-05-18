@@ -18,12 +18,12 @@
 
 package cc.redpen.server.api;
 
+import cc.redpen.ConfigurationLoader;
 import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
 import cc.redpen.config.Symbol;
 import cc.redpen.config.SymbolType;
 import cc.redpen.formatter.Formatter;
-import cc.redpen.formatter.JSONFormatter;
 import cc.redpen.model.Document;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.util.FormatterUtils;
@@ -66,6 +66,7 @@ public class RedPenResource {
      * @param document       the source text of the document
      * @param documentParser specifies one of PLAIN, WIKI, or MARKDOWN
      * @param lang           the source document language (en, ja, etc)
+     * @param config         the source of a RedPen XML configuration file
      * @return redpen validation errors
      * @throws RedPenException
      */
@@ -75,14 +76,27 @@ public class RedPenResource {
     @WinkAPIDescriber.Description("Validate a document and return any redpen errors")
     public Response validateDocument(@FormParam("document") @DefaultValue("") String document,
                                      @FormParam("documentParser") @DefaultValue(DEFAULT_DOCUMENT_PARSER) String documentParser,
-                                     @FormParam("lang") @DefaultValue(DEFAULT_CONFIGURATION) String lang) throws RedPenException {
+                                     @FormParam("lang") @DefaultValue(DEFAULT_CONFIGURATION) String lang,
+                                     @FormParam("format") @DefaultValue(DEFAULT_FORMAT) String format,
+                                     @FormParam("config") String config) throws RedPenException {
 
         LOG.info("Validating document");
-        RedPen redPen = new RedPenService(context).getRedPen(lang);
+        RedPen redPen;
+        if (config == null) {
+            redPen = new RedPenService(context).getRedPen(lang);
+        } else {
+            redPen = new RedPen(new ConfigurationLoader().loadFromString(config));
+        }
         Document parsedDocument = redPen.parse(DocumentParser.of(documentParser), document);
         List<ValidationError> errors = redPen.validate(parsedDocument);
 
-        String responseJSON = new JSONFormatter().format(parsedDocument, errors);
+        Formatter formatter = FormatterUtils.getFormatterByName(format);
+
+        if (formatter == null) {
+            throw new RedPenException("Unsupported format: " + format + " - please use xml, plain, plain2, json or json2");
+        }
+
+        String responseJSON = formatter.format(parsedDocument, errors);
         return Response.ok().entity(responseJSON).build();
     }
 
