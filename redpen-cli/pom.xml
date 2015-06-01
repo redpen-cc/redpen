@@ -7,11 +7,11 @@
     <parent>
         <groupId>cc.redpen</groupId>
         <artifactId>redpen</artifactId>
-        <version>1.1</version>
+        <version>1.2</version>
     </parent>
 
     <artifactId>redpen-cli</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
     <name>redpen-cli</name>
     <url>http://document-validator.org</url>
 
@@ -68,7 +68,7 @@
         <dependency>
             <groupId>cc.redpen</groupId>
             <artifactId>redpen-core</artifactId>
-            <version>1.1</version>
+            <version>1.2</version>
         </dependency>
         <dependency>
             <groupId>commons-cli</groupId>
