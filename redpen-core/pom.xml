@@ -157,6 +157,11 @@
             <artifactId>pegdown</artifactId>
             <version>1.4.2</version>
         </dependency>
+	<dependency>
+	  <groupId>org.apache.commons</groupId>
+	  <artifactId>commons-lang3</artifactId>
+	  <version>3.4</version>
+	</dependency>
     </dependencies>
     <repositories>
         <repository>
