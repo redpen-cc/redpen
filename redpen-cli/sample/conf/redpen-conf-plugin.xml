@@ -1,0 +1,5 @@
+<redpen-conf lang="en">
+    <validators>
+        <validator name="SamplePlugin"/>
+    </validators>
+</redpen-conf>
