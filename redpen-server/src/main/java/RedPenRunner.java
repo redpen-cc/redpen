@@ -17,6 +17,8 @@
  */
 import org.apache.commons.cli.*;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.handler.ShutdownHandler;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 import javax.servlet.ServletContext;
@@ -24,6 +26,8 @@ import java.net.URL;
 import java.security.ProtectionDomain;
 
 public class RedPenRunner {
+
+    public static final String STOP_KEY = "STOP.KEY";
 
     public static void main(String[] args) throws Exception {
         Options options = new Options();
@@ -44,6 +48,8 @@ public class RedPenRunner {
 
         options.addOption("v", "version", false,
                 "print the version information and exit");
+
+        options.addOption(new Option(STOP_KEY, true, "stop key"));
 
         CommandLineParser parser = new BasicParser();
         CommandLine commandLine = null;
@@ -80,12 +86,23 @@ public class RedPenRunner {
         ProtectionDomain domain = RedPenRunner.class.getProtectionDomain();
         URL location = domain.getCodeSource().getLocation();
 
+        HandlerList handlerList = new HandlerList();
+        if(commandLine.hasOption(STOP_KEY)) {
+            // add Shutdown handler only when STOP.KEY is specified
+            ShutdownHandler shutdownHandler = new ShutdownHandler(commandLine.getOptionValue(STOP_KEY));
+            handlerList.addHandler(shutdownHandler);
+        }
+
         WebAppContext webapp = new WebAppContext();
         webapp.setContextPath(contextPath);
         webapp.setWar(location.toExternalForm());
         ServletContext context = webapp.getServletContext();
         context.setAttribute("redpen.conf.path", configFileName);
-        server.setHandler(webapp);
+
+        handlerList.addHandler(webapp);
+
+        server.setHandler(handlerList);
+
         server.start();
         server.join();
     }
