@@ -21,7 +21,6 @@ import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ShutdownHandler;
 import org.eclipse.jetty.webapp.WebAppContext;
 
-import javax.servlet.ServletContext;
 import java.net.URL;
 import java.security.ProtectionDomain;
 
@@ -39,13 +38,6 @@ public class RedPenRunner {
         OptionBuilder.withArgName("PORT");
         options.addOption(OptionBuilder.create("p"));
 
-        OptionBuilder.withLongOpt("conf");
-        OptionBuilder.withDescription("configuration file");
-        OptionBuilder.hasArg();
-        OptionBuilder.withArgName("CONFFILE");
-        options.addOption(OptionBuilder.create("c"));
-
-
         options.addOption("v", "version", false,
                 "print the version information and exit");
 
@@ -61,7 +53,6 @@ public class RedPenRunner {
             System.exit(-1);
         }
 
-        String configFileName = "/conf/redpen-conf.xml";
         int portNum = 8080;
 
         if (commandLine.hasOption("h")) {
@@ -72,10 +63,6 @@ public class RedPenRunner {
             System.out.println("1.0");
             System.exit(0);
         }
-        if (commandLine.hasOption("c")) {
-            configFileName = commandLine.getOptionValue("c");
-        }
-
         if (commandLine.hasOption("p")) {
             portNum = Integer.parseInt(commandLine.getOptionValue("p"));
         }
@@ -96,11 +83,8 @@ public class RedPenRunner {
         WebAppContext webapp = new WebAppContext();
         webapp.setContextPath(contextPath);
         webapp.setWar(location.toExternalForm());
-        ServletContext context = webapp.getServletContext();
-        context.setAttribute("redpen.conf.path", configFileName);
 
         handlerList.addHandler(webapp);
-
         server.setHandler(handlerList);
 
         server.start();
