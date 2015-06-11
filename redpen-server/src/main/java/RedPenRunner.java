@@ -27,7 +27,7 @@ import java.security.ProtectionDomain;
 
 public class RedPenRunner {
 
-    public static final String STOP_KEY = "STOP.KEY";
+    public static final String STOP_KEY = "STOP_KEY";
 
     public static void main(String[] args) throws Exception {
         Options options = new Options();
@@ -88,7 +88,7 @@ public class RedPenRunner {
 
         HandlerList handlerList = new HandlerList();
         if(commandLine.hasOption(STOP_KEY)) {
-            // add Shutdown handler only when STOP.KEY is specified
+            // add Shutdown handler only when STOP_KEY is specified
             ShutdownHandler shutdownHandler = new ShutdownHandler(commandLine.getOptionValue(STOP_KEY));
             handlerList.addHandler(shutdownHandler);
         }
