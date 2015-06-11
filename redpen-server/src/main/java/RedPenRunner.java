@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import cc.redpen.RedPen;
 import org.apache.commons.cli.*;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
@@ -60,7 +61,7 @@ public class RedPenRunner {
             System.exit(0);
         }
         if (commandLine.hasOption("v")) {
-            System.out.println("1.0");
+            System.out.println(RedPen.VERSION);
             System.exit(0);
         }
         if (commandLine.hasOption("p")) {
