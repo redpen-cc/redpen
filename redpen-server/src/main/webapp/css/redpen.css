@@ -185,7 +185,9 @@ input[type="radio"], input[type="checkbox"] {
     margin: 0 !important;
     word-wrap: normal;
     white-space: pre-wrap;
-    font-size: 19px;
+    font-size: 17px;
+    font-weight: bold;
+    font-family: "Courier New", monospace;
     border: none !important;
     outline: none !important;
     z-index: 2;
@@ -212,7 +214,9 @@ input[type="radio"], input[type="checkbox"] {
     margin: 0 !important;
     word-wrap: normal;
     white-space: pre-wrap;
-    font-size: 19px;
+    font-size: 17px;
+    font-weight: bold;
+    font-family: "Courier New", monospace;
     background-color: #fff;
     color: transparent;
     width: 100%;
@@ -434,7 +438,7 @@ input[type="radio"], input[type="checkbox"] {
 .redpen-symboltable {
     font-size: 11px;
     width: 100%;
-    text-align:right;
+    text-align: right;
 }
 
 .redpen-symboltable th {
@@ -445,7 +449,7 @@ input[type="radio"], input[type="checkbox"] {
     min-width: 32px;
 }
 
-.redpen-symboltable th:first-child,.redpen-symboltable td:first-child  {
+.redpen-symboltable th:first-child, .redpen-symboltable td:first-child {
     text-align: left;
 }
 
@@ -499,6 +503,7 @@ input[type="radio"], input[type="checkbox"] {
     text-shadow: 0 0 2px rgba(255, 32, 0, 0.4);
     font-style: normal;
     background-image: url(../images/redpen-mark.png);
+    background-size: 48px 19px;
 }
 
 .redpen-annotated-sentence-marker {

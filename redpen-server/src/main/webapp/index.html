@@ -58,15 +58,59 @@ var sampleDocuments = {
             "本稿では,複数の計算機（クラスタ）でで動作する各サーバーを_「インスタンス」_と呼びまます。\n" +
             "たとえば検索エンジンやデータベースではインデックスを複数のインスタンスで分割して保持します。\n" +
             "このような場合、各インデクスの結果をマージして_clientプログラム_に渡す機構が必要となります。"},
-    en_ad: {parser: "ASCIIDOC", document: "= Instances\n" +
-            "Some software tools work in more than one machine, and such _distributed_ (cluster)systems can handle huge data or tasks, because such software tools make use of large amount of computer resources, such as\n" +
-            "* CPU\n* Disk\n* Memory\n\n" +
-            "In this article, we'll call a computer server that works as a member of a cluster an _instance_. for example, each instance in distributed search engines stores the the fractions of data." +
-            " Such distriubuted systems need a component to merge the preliminary results from member instnaces."},
-    ja_ad: {parser: "ASCIIDOC", document: "= 分散処理\n最近利用されているソフトウェアの中には複数の計算機上で動作（分散）するものが多く存在し、このような分散ソフトウェアは複数の計算機で動作することで大量のデータを扱えたり，高負荷な状況に対処できたりします。\n" +
-            "本稿では,複数の計算機（クラスタ）でで動作する各サーバーを_「インスタンス」_と呼びまます。\n" +
+    en_ad: {parser: "ASCIIDOC", document: "Instances Overview\n==================\nAuthor's Name <person@email.address>\nv1.2, 2015-08\n" +
+            "\nThis is the optional preamble (an untitled section body). Useful for\n" +
+            "writing simple sectionless documents consisting only of a preamble.\n\n" +
+            "NOTE: The abstract, preface, appendix, bibliography, glossary and\nindex section titles are significant ('specialsections').\n" +
+            "\n\n:numbered!:\n[abstract]\n" +
+            "Instances\n" +
+            "---------\n" +
+            "In this article, we'll call a computer server that works as a member of a cluster an _instance_. for example, each instance in distributed search engines stores the the fractions of data.\n" +
+            "\n Such distriubuted systems need a component to merge the preliminary results from member instnaces.\n\n\n" +
+            ".Instance image\n" +
+            "image::images/tiger.png[Instance image]\n\n" +
+            "A sample table:\n\n" +
+            ".A sample table\n" +
+            "[width=\"60%\",options=\"header\"]\n" +
+            "|==============================================\n" +
+            "| Option     | Description\n" +
+            "| NAME       | The name of the instance\n" +
+            "| GROUP      | The instance group.\n" +
+            "|==============================================\n\n" +
+            ".example list\n" +
+            "===============================================\n" +
+            "Lorum ipum...\n" +
+            "===============================================\n\n\n" +
+            "[bibliography]\n" +
+            "- [[[taoup]]] Eric Steven Raymond. 'The Art of Unix\n" +
+            "  Programming'. Addison-Wesley. ISBN 0-13-142901-9.\n" +
+            "- [[[walsh-muellner]]] Norman Walsh & Leonard Muellner.\n" +
+            "  'DocBook - The Definitive Guide'. O'Reilly & Associates. 1999.\n" +
+            "  ISBN 1-56592-580-7.\n\n\n" +
+            "[glossary]\n" +
+            "Example Glossary\n" +
+            "----------------\n" +
+            "Glossaries are optional. Glossaries entries are an example of a style\n" +
+            "of AsciiDoc labeled lists.\n\n" +
+            "[glossary]\n" +
+            "A glossary term::\n" +
+            "  The corresponding (indented) definition.\n\n" +
+            "A second glossary term::\n" +
+            "  The corresponding (indented) definition.\n\n\n" +
+            "ifdef::backend-docbook[]\n" +
+            "[index]\n" +
+            "Example Index\n" +
+            "-------------\n" +
+            "////////////////////////////////////////////////////////////////\n" +
+            "The index is normally left completely empty, it's contents being\n" +
+            "generated automatically by the DocBook toolchain.\n" +
+            "////////////////////////////////////////////////////////////////\n" +
+            "endif::backend-docbook[]"},
+    ja_ad: {parser: "ASCIIDOC", document: "[abstract]\n分散処理\n====\n\n最近利用されているソフトウェアの中には複数の計算機上で動作（分散）するものが多く存在し、このような分散ソフトウェアは複数の計算機で動作することで大量のデータを扱えたり，高負荷な状況に対処できたりします。\n" +
+            "本稿では,複数の計算機（クラスタ）でで動作する各サーバーを_「インスタンス」_と呼びまます。\n\n" +
             "たとえば検索エンジンやデータベースではインデックスを複数のインスタンスで分割して保持します。\n" +
             "このような場合、各インデクスの結果をマージして_clientプログラム_に渡す機構が必要となります。"}
+
 };
 
 // ensure the language autodetect doesn't override the user's selection
@@ -84,6 +128,7 @@ function pasteSampleText(key) {
         permitLanguageAutoDetect = true;
         text = sampleDocuments[key].document;
         $("#redpen-document-parser").val(sampleDocuments[key].parser);
+        $('#redpen-errors').empty();
     }
     $("#redpen-editor")
             .val(text ? text : "")
@@ -651,8 +696,8 @@ $(document).ready(function () {
                             <li><a onclick="pasteSampleText('ja')">Japanese Text</a></li>
                             <li><a onclick="pasteSampleText('en_md')">English Markdown</a></li>
                             <li><a onclick="pasteSampleText('ja_md')">Japanese Markdown</a></li>
-                            <!--<li><a onclick="pasteSampleText('en_ad')">English AsciiDoc</a></li>-->
-                            <!--<li><a onclick="pasteSampleText('ja_ad')">Japanese AsciiDoc</a></li>-->
+                            <li><a onclick="pasteSampleText('en_ad')">English AsciiDoc</a></li>
+                            <li><a onclick="pasteSampleText('ja_ad')">Japanese AsciiDoc</a></li>
                         </ul>
                     </li>
                     <li>
