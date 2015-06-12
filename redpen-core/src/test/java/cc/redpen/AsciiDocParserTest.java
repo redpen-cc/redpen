@@ -18,10 +18,12 @@
 package cc.redpen;
 
 import cc.redpen.config.Configuration;
+import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.*;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
+import cc.redpen.validator.ValidationError;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -190,76 +192,27 @@ public class AsciiDocParserTest {
                 "////////////////////////////////////////////////////////////////\n" +
                 "endif::backend-docbook[]";
 
-        sampleText  = "Instances Overview\n====================\nAuthor's Name <person@email.address>\nv1.2, 2015-08\n" +
-                "\nThis is the optional preamble (an untitled section body). Useful for\n" +
-                "writing simple sectionless documents consisting only of a preamble.\n\n" +
-                "NOTE: The abstract, preface, appendix, bibliography, glossary and\nindex section titles are significant ('specialsections').\n" +
-                "\n\n:numbered!:\n[abstract]\n" +
-                "Instances\n" +
-                "---------\n" +
-                "In this article, we'll call a computer server that works as a member of a cluster an _instance_. for example, each instance in distributed search engines stores the the fractions of data.\n" +
-                "\n Such distriubuted systems need a component to merge the preliminary results from member instnaces.\n\n\n" +
-                ".Instance image\n" +
-                "image::images/tiger.png[Instance image]\n\n" +
-                "A sample table:\n\n" +
-                ".A sample table\n" +
-                "[width=\"60%\",options=\"header\"]\n" +
-                "|==============================================\n" +
-                "| Option     | Description\n" +
-                "| NAME       | The name of the instance\n" +
-                "| GROUP      | The instance group.\n" +
-                "|==============================================\n\n" +
-                ".example list\n" +
-                "===============================================\n" +
-                "Lorum ipum...\n" +
-                "===============================================\n\n\n" +
-                "[bibliography]\n" +
-                "- [[[taoup]]] Eric Steven Raymond. 'The Art of Unix\n" +
-                "  Programming'. Addison-Wesley. ISBN 0-13-142901-9.\n" +
-                "- [[[walsh-muellner]]] Norman Walsh & Leonard Muellner.\n" +
-                "  'DocBook - The Definitive Guide'. O'Reilly & Associates. 1999.\n" +
-                "  ISBN 1-56592-580-7.\n\n\n" +
-                "[glossary]\n" +
-                "Example Glossary\n" +
-                "----------------\n" +
-                "Glossaries are optional. Glossaries entries are an example of a style\n" +
-                "of AsciiDoc labeled lists.\n\n" +
-                "[glossary]\n" +
-                "A glossary term::\n" +
-                "  The corresponding (indented) definition.\n\n" +
-                "A second glossary term::\n" +
-                "  The corresponding (indented) definition.\n\n\n" +
-                "ifdef::backend-docbook[]\n" +
-                "[index]\n" +
-                "Example Index\n" +
-                "-------------\n" +
-                "////////////////////////////////////////////////////////////////\n" +
-                "The index is normally left completely empty, it's contents being\n" +
-                "generated automatically by the DocBook toolchain.\n" +
-                "////////////////////////////////////////////////////////////////\n" +
-                "endif::backend-docbook[]";
-
         Document doc = createFileContent(sampleText);
 
         assertNotNull("doc is null", doc);
-//        assertEquals(11, doc.size());
+        assertEquals(11, doc.size());
 
-//        final Section firstSection = doc.getSection(0);
-//        assertEquals(2, firstSection.getHeaderContentsListSize());
-//        assertEquals("", firstSection.getHeaderContent(0).getContent());
-//        assertEquals(0, firstSection.getNumberOfLists());
-//        assertEquals(1, firstSection.getNumberOfParagraphs());
-//        assertEquals(0, firstSection.getNumberOfSubsections());
-//
-//        Configuration configuration = new Configuration.ConfigurationBuilder()
-//                .addValidatorConfig(new ValidatorConfiguration("SentenceLength"))
-//                .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol")).build();
-//
-//        RedPen redPen = new RedPen(configuration);
-//        List<ValidationError> errors = redPen.validate(doc);
-//        for (ValidationError error : errors) {
-//            System.out.println(error.getMessage());
-//        }
+        final Section firstSection = doc.getSection(0);
+        assertEquals(1, firstSection.getHeaderContentsListSize());
+        assertEquals("The Article Title", firstSection.getHeaderContent(0).getContent());
+        assertEquals(0, firstSection.getNumberOfLists());
+        assertEquals(1, firstSection.getNumberOfParagraphs());
+        assertEquals(0, firstSection.getNumberOfSubsections());
+
+        Configuration configuration = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(new ValidatorConfiguration("SentenceLength"))
+                .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol")).build();
+
+        RedPen redPen = new RedPen(configuration);
+        List<ValidationError> errors = redPen.validate(doc);
+        for (ValidationError error : errors) {
+            System.out.println(error.getMessage());
+        }
 
         for (Section section : doc) {
             for (Paragraph paragraph : section.getParagraphs()) {
