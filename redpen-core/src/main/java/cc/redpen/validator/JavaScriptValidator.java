@@ -141,11 +141,7 @@ public class JavaScriptValidator extends Validator {
     static class JSValidator {
         private static final Logger LOG = LoggerFactory.getLogger(JSValidator.class);
         private Invocable invocable;
-        private boolean preValidateSentenceExists = true;
-        private boolean preValidateSectionExists = true;
-        private boolean validateDocumentExists = true;
-        private boolean validateSentenceExists = true;
-        private boolean validateSectionExists = true;
+        Map<String, Boolean> functionExistenceMap = new HashMap<>();
 
         JSValidator(String js) throws RedPenException {
             ScriptEngineManager manager = new ScriptEngineManager();
@@ -161,63 +157,38 @@ public class JavaScriptValidator extends Validator {
         }
 
         void preValidate(Validator validator, Sentence sentence) {
-            if (preValidateSentenceExists) {
-                try {
-                    invocable.invokeFunction("preValidateSentence", validator, sentence);
-                } catch (ScriptException e) {
-                    LOG.error("failed to invoke preValidateSentence", e);
-                } catch (NoSuchMethodException ignore) {
-                    preValidateSentenceExists = false;
-                }
-            }
+            call("preValidateSentence", validator, sentence);
         }
 
+
         void preValidate(Validator validator, Section section) {
-            if (preValidateSectionExists) {
-                try {
-                    invocable.invokeFunction("preValidateSection", validator, section);
-                } catch (ScriptException e) {
-                    LOG.error("failed to invoke preValidateSection", e);
-                } catch (NoSuchMethodException ignore) {
-                    preValidateSectionExists = false;
-                }
-            }
+            call("preValidateSection", validator, section);
         }
 
         void validate(Validator validator, List<ValidationError> errors, Document document) {
-            if (validateDocumentExists) {
-                try {
-                    invocable.invokeFunction("validateDocument", validator, errors, document);
-                } catch (ScriptException e) {
-                    LOG.error("failed to invoke validateDocument", e);
-                } catch (NoSuchMethodException ignore) {
-                    validateDocumentExists = false;
-                }
-            }
+            call("validateDocument", validator, errors, document);
         }
 
         void validate(Validator validator, List<ValidationError> errors, Sentence sentence) {
-            if (validateSentenceExists) {
+            call("validateSentence", validator, errors, sentence);
+        }
+
+        void validate(Validator validator, List<ValidationError> errors, Section section) {
+            call("validateSection", validator, errors, section);
+        }
+
+        void call(String functionName, Object... args) {
+            Boolean functionExists = functionExistenceMap.getOrDefault(functionName, true);
+            if(functionExists){
                 try {
-                    invocable.invokeFunction("validateSentence", validator, errors, sentence);
+                    invocable.invokeFunction(functionName, args);
                 } catch (ScriptException e) {
-                    LOG.error("failed to invoke validateSentence", e);
+                    LOG.error("failed to invoke {}",  functionName, e);
                 } catch (NoSuchMethodException ignore) {
-                    validateSentenceExists = false;
+                    functionExistenceMap.put(functionName, false);
                 }
             }
         }
 
-        void validate(Validator validator, List<ValidationError> errors, Section section) {
-            if (validateSectionExists) {
-                try {
-                    invocable.invokeFunction("validateSection", validator, errors, section);
-                } catch (ScriptException e) {
-                    LOG.error("failed to invoke validateSection", e);
-                } catch (NoSuchMethodException ignore) {
-                    validateSectionExists = false;
-                }
-            }
-        }
     }
 }
