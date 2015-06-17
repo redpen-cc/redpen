@@ -267,7 +267,7 @@ public abstract class Validator {
      * @param args objects to format
      * @return localized error message
      */
-    private String getLocalizedErrorMessage(Optional<String> key, Object... args) {
+    protected String getLocalizedErrorMessage(Optional<String> key, Object... args) {
         if (errorMessages.isPresent()) {
             String suffix = key.isPresent() ? "." + key.get() : "";
             return MessageFormat.format(errorMessages.get().getString(this.getClass().getSimpleName() + suffix), args);

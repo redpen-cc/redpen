@@ -61,8 +61,8 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         javaScriptValidatorsDir.delete();
         javaScriptValidatorsDir.mkdirs();
         File validatorJS = new File(javaScriptValidatorsDir.getAbsolutePath() + File.separator + "MyValidator.js");
-        String content2 = "function validateSentence(validator, errors, sentence) {\n" +
-                "errors.add(validator.createValidationError(sentence, 'validation error in JavaScript Validator'));}";
+        String content2 = "function validateSentence(errors, sentence) {\n" +
+                "errors.add(createValidationError(sentence, 'validation error in JavaScript Validator'));}";
         Files.write(Paths.get(validatorJS.getAbsolutePath()), content2.getBytes(Charset.forName("UTF-8")));
         validatorJS.deleteOnExit();
 
@@ -88,25 +88,25 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
     public void testJSLiteralValidator() throws RedPenException, IOException {
         JavaScriptValidator validator = new JavaScriptValidator();
         validator.loadScript(
-                "function preValidateSentence(validator, sentence) {" +
+                "function preValidateSentence(sentence) {" +
                         // add function names to "calledFunctions" list upon function calls for the later assertions
                         // the following script is using Nashorn's lobal object "Java".type to access static member:
                         // http://docs.oracle.com/javase/8/docs/technotes/guides/scripting/nashorn/api.html
                         "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('preValidateSentence');}" +
-                        "function preValidateSection(validator, section) {" +
+                        "function preValidateSection(section) {" +
                         "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('preValidateSection');}" +
-                        "function validateDocument(validator, errors, document) {" +
+                        "function validateDocument(errors, document) {" +
                         "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('validateDocument');" +
                         // add ValidationError
-                        "errors.add(validator.createValidationError(document.getSection(0).getHeaderContent(0), 'doc'));}" +
-                        "function validateSentence(validator, errors, sentence) {" +
+                        "errors.add(createValidationError(document.getSection(0).getHeaderContent(0), 'doc'));}" +
+                        "function validateSentence(errors, sentence) {" +
                         "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('validateSentence');" +
                         // add ValidationError
-                        "errors.add(validator.createValidationError(sentence, 'sentence'));}" +
-                        "function validateSection(validator, errors, section) {" +
+                        "errors.add(createValidationError(sentence, 'sentence'));}" +
+                        "function validateSection(errors, section) {" +
                         "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('validateSection');" +
                         // add ValidationError
-                        "errors.add(validator.createValidationError(section.getHeaderContent(0), 'section'));}");
+                        "errors.add(createValidationError(section.getHeaderContent(0), 'section'));}");
         Document document = new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()

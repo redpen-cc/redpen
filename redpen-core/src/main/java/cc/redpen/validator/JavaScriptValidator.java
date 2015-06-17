@@ -62,7 +62,11 @@ public class JavaScriptValidator extends Validator {
         ScriptEngineManager manager = new ScriptEngineManager();
         ScriptEngine engine = manager.getEngineByName("nashorn");
         try {
-            engine.put("redpen", this);
+            engine.put("redpenToBeBound", this);
+            engine.eval("var createValidationError = Function.prototype.bind.call(redpenToBeBound.createValidationError, redpenToBeBound);" +
+                    "var createValidationErrorFromToken = Function.prototype.bind.call(redpenToBeBound.createValidationErrorFromToken, redpenToBeBound);" +
+                    "var createValidationErrorWithPosition = Function.prototype.bind.call(redpenToBeBound.createValidationErrorWithPosition, redpenToBeBound);");
+
             CompiledScript compiledScript = ((Compilable) engine).compile(js);
             compiledScript.eval();
             jsValidatorImpls.add((Invocable) engine);
@@ -98,35 +102,35 @@ public class JavaScriptValidator extends Validator {
     @Override
     public void preValidate(Sentence sentence) {
         for (Invocable invocable : jsValidatorImpls) {
-            call(invocable, "preValidateSentence", this, sentence);
+            call(invocable, "preValidateSentence", sentence);
         }
     }
 
     @Override
     public void preValidate(Section section) {
         for (Invocable invocable : jsValidatorImpls) {
-            call(invocable, "preValidateSection", this, section);
+            call(invocable, "preValidateSection", section);
         }
     }
 
     @Override
     public void validate(List<ValidationError> errors, Document document) {
         for (Invocable invocable : jsValidatorImpls) {
-            call(invocable, "validateDocument", this, errors, document);
+            call(invocable, "validateDocument", errors, document);
         }
     }
 
     @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {
         for (Invocable invocable : jsValidatorImpls) {
-            call(invocable, "validateSentence", this, errors, sentence);
+            call(invocable, "validateSentence", errors, sentence);
         }
     }
 
     @Override
     public void validate(List<ValidationError> errors, Section section) {
         for (Invocable invocable : jsValidatorImpls) {
-            call(invocable, "validateSection", this, errors, section);
+            call(invocable, "validateSection", errors, section);
         }
     }
 
