@@ -26,7 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 public class LaTeXProcessor {
     public RootNode parse(char[] stream) {
         final RootNode o = new RootNode();
-        new StreamParser(StringUtils.join(stream, ""), (final Token t) -> {
+        new StreamParser(stream, (final Token t) -> {
                 System.out.println(t.toString());
         }).parse();
         return o;
