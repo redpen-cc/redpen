@@ -37,7 +37,7 @@ import java.util.*;
 public class JavaScriptValidator extends Validator {
     private static final Logger LOG = LoggerFactory.getLogger(JavaScriptValidator.class);
     public final String DEFAULT_JS_VALIDATORS_PATH = "js";
-    private final List<JSValidator> jsValidators = new ArrayList<>();
+    private final List<Invocable> jsValidatorImpls = new ArrayList<>();
 
 
     @Override
@@ -49,13 +49,27 @@ public class JavaScriptValidator extends Validator {
             for (File file : jsValidatorFiles) {
                 if (file.isFile() && file.getName().endsWith(".js")) {
                     try {
-                        jsValidators.add(new JSValidator(loadCached(file)));
+                        loadScript(loadCached(file));
                     } catch (IOException e) {
                         LOG.error("Exception while reading js file", e);
                     }
                 }
             }
         }
+    }
+
+    void loadScript(String js) throws RedPenException {
+        ScriptEngineManager manager = new ScriptEngineManager();
+        ScriptEngine engine = manager.getEngineByName("nashorn");
+        try {
+            engine.put("redpen", this);
+            CompiledScript compiledScript = ((Compilable) engine).compile(js);
+            compiledScript.eval();
+            jsValidatorImpls.add((Invocable) engine);
+        } catch (ScriptException e) {
+            throw new RedPenException(e);
+        }
+
     }
 
     static final Map<File, String> fileCache = new HashMap<>();
@@ -83,36 +97,53 @@ public class JavaScriptValidator extends Validator {
 
     @Override
     public void preValidate(Sentence sentence) {
-        for (JSValidator jsValidator : jsValidators) {
-            jsValidator.preValidate(this, sentence);
+        for (Invocable invocable : jsValidatorImpls) {
+            call(invocable, "preValidateSentence", this, sentence);
         }
     }
 
     @Override
     public void preValidate(Section section) {
-        for (JSValidator jsValidator : jsValidators) {
-            jsValidator.preValidate(this, section);
+        for (Invocable invocable : jsValidatorImpls) {
+            call(invocable, "preValidateSection", this, section);
         }
     }
 
     @Override
     public void validate(List<ValidationError> errors, Document document) {
-        for (JSValidator jsValidator : jsValidators) {
-            jsValidator.validate(this, errors, document);
+        for (Invocable invocable : jsValidatorImpls) {
+            call(invocable, "validateDocument", this, errors, document);
         }
     }
 
     @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {
-        for (JSValidator jsValidator : jsValidators) {
-            jsValidator.validate(this, errors, sentence);
+        for (Invocable invocable : jsValidatorImpls) {
+            call(invocable, "validateSentence", this, errors, sentence);
         }
     }
 
     @Override
     public void validate(List<ValidationError> errors, Section section) {
-        for (JSValidator jsValidator : jsValidators) {
-            jsValidator.validate(this, errors, section);
+        for (Invocable invocable : jsValidatorImpls) {
+            call(invocable, "validateSection", this, errors, section);
+        }
+    }
+
+    private Map<Invocable, Map<String, Boolean>> functionExistenceMap = new HashMap<>();
+
+    void call(Invocable invocable, String functionName, Object... args) {
+        Map<String, Boolean> map = functionExistenceMap.computeIfAbsent(invocable, e -> new HashMap<>());
+        Boolean functionExists = map
+                .getOrDefault(functionName, true);
+        if (functionExists) {
+            try {
+                invocable.invokeFunction(functionName, args);
+            } catch (ScriptException e) {
+                LOG.error("failed to invoke {}", functionName, e);
+            } catch (NoSuchMethodException ignore) {
+                map.put(functionName, false);
+            }
         }
     }
 
@@ -137,58 +168,4 @@ public class JavaScriptValidator extends Validator {
         return super.createValidationErrorWithPosition(sentenceWithError, start, end, args);
     }
 
-
-    static class JSValidator {
-        private static final Logger LOG = LoggerFactory.getLogger(JSValidator.class);
-        private Invocable invocable;
-        Map<String, Boolean> functionExistenceMap = new HashMap<>();
-
-        JSValidator(String js) throws RedPenException {
-            ScriptEngineManager manager = new ScriptEngineManager();
-            ScriptEngine engine = manager.getEngineByName("nashorn");
-            try {
-                engine.put("redpen", this);
-                invocable = (Invocable) engine;
-                CompiledScript compiledScript = ((Compilable) engine).compile(js);
-                compiledScript.eval();
-            } catch (ScriptException e) {
-                throw new RedPenException(e);
-            }
-        }
-
-        void preValidate(Validator validator, Sentence sentence) {
-            call("preValidateSentence", validator, sentence);
-        }
-
-
-        void preValidate(Validator validator, Section section) {
-            call("preValidateSection", validator, section);
-        }
-
-        void validate(Validator validator, List<ValidationError> errors, Document document) {
-            call("validateDocument", validator, errors, document);
-        }
-
-        void validate(Validator validator, List<ValidationError> errors, Sentence sentence) {
-            call("validateSentence", validator, errors, sentence);
-        }
-
-        void validate(Validator validator, List<ValidationError> errors, Section section) {
-            call("validateSection", validator, errors, section);
-        }
-
-        void call(String functionName, Object... args) {
-            Boolean functionExists = functionExistenceMap.getOrDefault(functionName, true);
-            if(functionExists){
-                try {
-                    invocable.invokeFunction(functionName, args);
-                } catch (ScriptException e) {
-                    LOG.error("failed to invoke {}",  functionName, e);
-                } catch (NoSuchMethodException ignore) {
-                    functionExistenceMap.put(functionName, false);
-                }
-            }
-        }
-
-    }
 }

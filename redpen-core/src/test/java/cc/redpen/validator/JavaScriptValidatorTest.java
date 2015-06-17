@@ -82,20 +82,31 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         assertEquals("JavaScript validator validation error in JavaScript Validator", errors.get(0).getMessage());
     }
 
-    private List<String> calledFunctions;
+    public static List<String> calledFunctions;
 
     @Test
     public void testJSLiteralValidator() throws RedPenException, IOException {
-        JavaScriptValidator.JSValidator validator = new JavaScriptValidator.JSValidator(
-                "function preValidateSentence(validator, sentence) { validator.markCalled('preValidateSentence');}" +
-                        "function preValidateSection(validator, section) {validator.markCalled('preValidateSection');}" +
-                        "function validateDocument(validator, errors, document) {validator.markCalled('validateDocument');" +
+        JavaScriptValidator validator = new JavaScriptValidator();
+        validator.loadScript(
+                "function preValidateSentence(validator, sentence) {" +
+                        // add function names to "calledFunctions" list upon function calls for the later assertions
+                        // the following script is using Nashorn's lobal object "Java".type to access static member:
+                        // http://docs.oracle.com/javase/8/docs/technotes/guides/scripting/nashorn/api.html
+                        "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('preValidateSentence');}" +
+                        "function preValidateSection(validator, section) {" +
+                        "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('preValidateSection');}" +
+                        "function validateDocument(validator, errors, document) {" +
+                        "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('validateDocument');" +
+                        // add ValidationError
                         "errors.add(validator.createValidationError(document.getSection(0).getHeaderContent(0), 'doc'));}" +
-                        "function validateSentence(validator, errors, sentence) {validator.markCalled('validateSentence');" +
+                        "function validateSentence(validator, errors, sentence) {" +
+                        "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('validateSentence');" +
+                        // add ValidationError
                         "errors.add(validator.createValidationError(sentence, 'sentence'));}" +
-                        "function validateSection(validator, errors, section) {validator.markCalled('validateSection');" +
+                        "function validateSection(validator, errors, section) {" +
+                        "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('validateSection');" +
+                        // add ValidationError
                         "errors.add(validator.createValidationError(section.getHeaderContent(0), 'section'));}");
-        calledFunctions = new ArrayList<>();
         Document document = new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()
@@ -103,11 +114,13 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
                 .build();
         Section section = document.getSection(0);
         Sentence sentence = section.getHeaderContent(0);
-        validator.preValidate(this, sentence);
-        validator.preValidate(this, section);
-        validator.validate(this, errors, document);
-        validator.validate(this, errors, sentence);
-        validator.validate(this, errors, section);
+
+        calledFunctions = new ArrayList<>();
+        validator.preValidate(sentence);
+        validator.preValidate(section);
+        validator.validate(errors, document);
+        validator.validate(errors, sentence);
+        validator.validate(errors, section);
         assertEquals(5, calledFunctions.size());
         assertEquals("preValidateSentence", calledFunctions.get(0));
         assertEquals("preValidateSection", calledFunctions.get(1));
@@ -116,9 +129,9 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         assertEquals("validateSection", calledFunctions.get(4));
 
         assertEquals(3, errors.size());
-        assertEquals("js validator doc", errors.get(0).getMessage());
-        assertEquals("js validator sentence", errors.get(1).getMessage());
-        assertEquals("js validator section", errors.get(2).getMessage());
+        assertEquals("JavaScript validator doc", errors.get(0).getMessage());
+        assertEquals("JavaScript validator sentence", errors.get(1).getMessage());
+        assertEquals("JavaScript validator section", errors.get(2).getMessage());
     }
 
     ArrayList<ValidationError> errors = new ArrayList<>();
