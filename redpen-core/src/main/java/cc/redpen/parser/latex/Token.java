@@ -48,6 +48,6 @@ public class Token {
 
     @Override
     public String toString() {
-        return String.format("%s(%s) \"%s\" %s", this.t, this.pos, this.v, "[" + StringUtils.join(",", this.p) + "]");
+        return String.format("%s(%s) \"%s\" %s", this.t, this.pos, this.v, this.p);
     }
 }
