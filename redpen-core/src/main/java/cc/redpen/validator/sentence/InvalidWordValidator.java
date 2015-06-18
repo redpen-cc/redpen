@@ -20,7 +20,6 @@ package cc.redpen.validator.sentence;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,12 +49,12 @@ final public class InvalidWordValidator extends Validator {
     }
 
     @Override
-    public void validate(List<ValidationError> errors, Sentence sentence) {
+    public void validate(Sentence sentence) {
         //NOTE: only Ascii white space since this validator works for european languages.
         for (TokenElement token : sentence.getTokens()) {
             if (invalidWords.contains(token.getSurface().toLowerCase())
                     || customInvalidWords.contains(token.getSurface().toLowerCase())) {
-                errors.add(createValidationErrorFromToken(sentence, token));
+                addValidationErrorFromToken(sentence, token);
             }
         }
     }

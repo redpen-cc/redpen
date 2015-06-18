@@ -34,7 +34,8 @@ public class SentenceLengthValidatorTest {
         Sentence str = new Sentence("this is a very long long long long long long"
                 + "long long long long long long sentence.", 0);
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, str);
+        validator.setErrorList(errors);
+        validator.validate(str);
         assertEquals(1, errors.size());
     }
 
@@ -44,7 +45,8 @@ public class SentenceLengthValidatorTest {
         validator.setLengthLimit(30);
         Sentence str = new Sentence("this is a sentence.", 0);
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, str);
+        validator.setErrorList(errors);
+        validator.validate(str);
         assertEquals(0, errors.size());
     }
 
@@ -54,7 +56,8 @@ public class SentenceLengthValidatorTest {
         validator.setLengthLimit(30);
         Sentence str = new Sentence("", 0);
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, str);
+        validator.setErrorList(errors);
+        validator.validate(str);
         assertEquals(0, errors.size());
     }
 }

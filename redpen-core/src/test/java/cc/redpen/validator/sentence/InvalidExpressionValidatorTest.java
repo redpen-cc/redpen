@@ -48,7 +48,8 @@ public class InvalidExpressionValidatorTest {
                 .setLanguage("en").build();
         Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, new Sentence("The experiments may be true.", 0));
+        validator.setErrorList(errors);
+        validator.validate(new Sentence("The experiments may be true.", 0));
         assertEquals(1, errors.size());
     }
 
@@ -59,7 +60,8 @@ public class InvalidExpressionValidatorTest {
                 .setLanguage("en").build();
         Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, new Sentence("", 0));
+        validator.setErrorList(errors);
+        validator.validate(new Sentence("", 0));
         assertEquals(0, errors.size());
     }
 

@@ -21,7 +21,6 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.LevenshteinDistance;
 import cc.redpen.util.StringUtils;
-import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,22 +90,21 @@ final public class KatakanaSpellCheckValidator extends Validator {
     }
 
     @Override
-    public void validate(List<ValidationError> errors, Sentence sentence) {
+    public void validate(Sentence sentence) {
         StringBuilder katakana = new StringBuilder();
         for (int i = 0; i < sentence.getContent().length(); i++) {
             char c = sentence.getContent().charAt(i);
             if (StringUtils.isKatakana(c)) {
                 katakana.append(c);
             } else {
-                this.checkKatakanaSpell(sentence, katakana.toString(), errors);
+                this.checkKatakanaSpell(sentence, katakana.toString());
                 katakana.delete(0, katakana.length());
             }
         }
-        checkKatakanaSpell(sentence, katakana.toString(), errors);
+        checkKatakanaSpell(sentence, katakana.toString());
     }
 
-    private void checkKatakanaSpell(Sentence sentence, String katakana
-            , List<ValidationError> validationErrors) {
+    private void checkKatakanaSpell(Sentence sentence, String katakana) {
         if (katakana.length() <= MAX_IGNORE_KATAKANA_LENGTH) {
             return;
         }
@@ -119,7 +117,7 @@ final public class KatakanaSpellCheckValidator extends Validator {
         for (String key : dic.keySet()) {
             if (LevenshteinDistance.getDistance(key, katakana) <= minLsDistance) {
                 found = true;
-                validationErrors.add(createValidationError(sentence, katakana, key, dic.get(key).toString()));
+                addValidationError(sentence, katakana, key, dic.get(key).toString());
             }
         }
         if (!found) {
