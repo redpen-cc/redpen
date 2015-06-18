@@ -1,3 +1,20 @@
+/**
+ * redpen: a text inspection tool
+ * Copyright (c) 2014-2015 Recruit Technologies Co., Ltd. and contributors
+ * (see CONTRIBUTORS.md)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cc.redpen.validator;
 
 import cc.redpen.RedPenException;
@@ -15,65 +32,52 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.MessageFormat;
 import java.util.*;
 
 /**
- * Created by yusuke on 6/11/15.
- * <p>
- * Copyright 2015 yusuke
- * <p>
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- **/
+ * <p>A Validator implementation load JavaScript dynamically.</p>
+ * <p>files which name end with &quot;.js&quot; and located in &quot;js&quot; (can be specified with &quot;script-path&quot; property) directory will be treated as JavaScript validator implementation. Functions with the following signature will be called upon validation time:</p>
+ * <pre>
+ *     var message = "<i>validation error message</i> {0}";
+ *     function preValidateSentence(sentence) {
+ *     }
+ *     function preValidateSection(section) {
+ *     }
+ *     function validateDocument(errors, document) {
+ *     }
+ *     function validateSentence(errors, sentence) {
+ *     }
+ *     function validateSection(errors, section) {
+ *     }
+ * </pre>
+ */
 public class JavaScriptValidator extends Validator {
     private static final Logger LOG = LoggerFactory.getLogger(JavaScriptValidator.class);
     public final String DEFAULT_JS_VALIDATORS_PATH = "js";
-    private final List<Invocable> jsValidatorImpls = new ArrayList<>();
-
+    final List<Script> scripts = new ArrayList<>();
 
     @Override
     protected void init() throws RedPenException {
-        String jsValidatorsPath = getConfigAttribute("validator-path").orElse(DEFAULT_JS_VALIDATORS_PATH);
-        LOG.info("JavaScript validators directory: {}", jsValidatorsPath);
-        File[] jsValidatorFiles = new File(jsValidatorsPath).listFiles();
-        if (jsValidatorFiles != null) {
-            for (File file : jsValidatorFiles) {
-                if (file.isFile() && file.getName().endsWith(".js")) {
-                    try {
-                        loadScript(loadCached(file));
-                    } catch (IOException e) {
-                        LOG.error("Exception while reading js file", e);
+        String jsValidatorsPath = getConfigAttribute("script-path").orElse(DEFAULT_JS_VALIDATORS_PATH);
+        File jsDirectory = new File(jsValidatorsPath);
+        LOG.info("JavaScript validators directory: {}", jsDirectory.getAbsolutePath());
+        if(!jsDirectory.exists()){
+            jsDirectory.mkdir();
+        }else {
+            File[] jsValidatorFiles = jsDirectory.listFiles();
+            if (jsValidatorFiles != null) {
+                for (File file : jsValidatorFiles) {
+                    if (file.isFile() && file.getName().endsWith(".js")) {
+                        try {
+                            scripts.add(new Script(this, file.getName(), loadCached(file)));
+                        } catch (IOException e) {
+                            LOG.error("Exception while reading js file", e);
+                        }
                     }
                 }
             }
         }
-    }
-
-    void loadScript(String js) throws RedPenException {
-        ScriptEngineManager manager = new ScriptEngineManager();
-        ScriptEngine engine = manager.getEngineByName("nashorn");
-        try {
-            engine.put("redpenToBeBound", this);
-            engine.eval("var createValidationError = Function.prototype.bind.call(redpenToBeBound.createValidationError, redpenToBeBound);" +
-                    "var createValidationErrorFromToken = Function.prototype.bind.call(redpenToBeBound.createValidationErrorFromToken, redpenToBeBound);" +
-                    "var createValidationErrorWithPosition = Function.prototype.bind.call(redpenToBeBound.createValidationErrorWithPosition, redpenToBeBound);");
-
-            CompiledScript compiledScript = ((Compilable) engine).compile(js);
-            compiledScript.eval();
-            jsValidatorImpls.add((Invocable) engine);
-        } catch (ScriptException e) {
-            throw new RedPenException(e);
-        }
-
     }
 
     static final Map<File, String> fileCache = new HashMap<>();
@@ -101,48 +105,51 @@ public class JavaScriptValidator extends Validator {
 
     @Override
     public void preValidate(Sentence sentence) {
-        for (Invocable invocable : jsValidatorImpls) {
-            call(invocable, "preValidateSentence", sentence);
+        for (Script js : scripts) {
+            call(js, "preValidateSentence", sentence);
         }
     }
 
     @Override
     public void preValidate(Section section) {
-        for (Invocable invocable : jsValidatorImpls) {
-            call(invocable, "preValidateSection", section);
+        for (Script js : scripts) {
+            call(js, "preValidateSection", section);
         }
     }
 
     @Override
     public void validate(List<ValidationError> errors, Document document) {
-        for (Invocable invocable : jsValidatorImpls) {
-            call(invocable, "validateDocument", errors, document);
+        for (Script js : scripts) {
+            call(js, "validateDocument", errors, document);
         }
     }
 
     @Override
     public void validate(List<ValidationError> errors, Sentence sentence) {
-        for (Invocable invocable : jsValidatorImpls) {
-            call(invocable, "validateSentence", errors, sentence);
+        for (Script js : scripts) {
+            call(js, "validateSentence", errors, sentence);
         }
     }
 
     @Override
     public void validate(List<ValidationError> errors, Section section) {
-        for (Invocable invocable : jsValidatorImpls) {
-            call(invocable, "validateSection", errors, section);
+        for (Script js : scripts) {
+            call(js, "validateSection", errors, section);
         }
     }
 
-    private Map<Invocable, Map<String, Boolean>> functionExistenceMap = new HashMap<>();
+    private Map<Script, Map<String, Boolean>> functionExistenceMap = new HashMap<>();
 
-    void call(Invocable invocable, String functionName, Object... args) {
-        Map<String, Boolean> map = functionExistenceMap.computeIfAbsent(invocable, e -> new HashMap<>());
+   Script currentJS;
+
+    void call(Script js, String functionName, Object... args) {
+        this.currentJS = js;
+        Map<String, Boolean> map = functionExistenceMap.computeIfAbsent(js, e -> new HashMap<>());
         Boolean functionExists = map
                 .getOrDefault(functionName, true);
         if (functionExists) {
             try {
-                invocable.invokeFunction(functionName, args);
+                js.invocable.invokeFunction(functionName, args);
             } catch (ScriptException e) {
                 LOG.error("failed to invoke {}", functionName, e);
             } catch (NoSuchMethodException ignore) {
@@ -151,6 +158,7 @@ public class JavaScriptValidator extends Validator {
         }
     }
 
+    // give ValidationError factory methods public access so that they can be bound with JavaScript
     @Override
     public ValidationError createValidationError(Sentence sentenceWithError, Object... args) {
         return super.createValidationError(sentenceWithError, args);
@@ -170,6 +178,42 @@ public class JavaScriptValidator extends Validator {
     public ValidationError createValidationErrorWithPosition(Sentence sentenceWithError,
                                                              Optional<LineOffset> start, Optional<LineOffset> end, Object... args) {
         return super.createValidationErrorWithPosition(sentenceWithError, start, end, args);
+    }
+
+    @Override
+    protected String getLocalizedErrorMessage(Optional<String> key, Object... args) {
+        String formatted;
+        if (currentJS.message != null) {
+            formatted = MessageFormat.format(currentJS.message, args);
+        } else {
+            formatted = super.getLocalizedErrorMessage(key, args);
+        }
+        return MessageFormat.format("[{0}] {1}",currentJS.name, formatted);
+    }
+
+    class Script {
+        final String name;
+        final Invocable invocable;
+        final String message;
+        ScriptEngineManager manager = new ScriptEngineManager();
+
+        Script(JavaScriptValidator validator, String name, String script) throws RedPenException {
+            this.name = name;
+            ScriptEngine engine = manager.getEngineByName("nashorn");
+            try {
+                engine.put("redpenToBeBound", validator);
+                engine.eval("var createValidationError = Function.prototype.bind.call(redpenToBeBound.createValidationError, redpenToBeBound);" +
+                        "var createValidationErrorFromToken = Function.prototype.bind.call(redpenToBeBound.createValidationErrorFromToken, redpenToBeBound);" +
+                        "var createValidationErrorWithPosition = Function.prototype.bind.call(redpenToBeBound.createValidationErrorWithPosition, redpenToBeBound);");
+
+                CompiledScript compiledScript = ((Compilable) engine).compile(script);
+                compiledScript.eval();
+                this.message = (String)engine.get("message");
+                this.invocable = (Invocable) engine;
+            } catch (ScriptException e) {
+                throw new RedPenException(e);
+            }
+        }
     }
 
 }

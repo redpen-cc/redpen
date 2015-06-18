@@ -67,7 +67,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         validatorJS.deleteOnExit();
 
         Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(new ValidatorConfiguration("JavaScript").addAttribute("validator-path", javaScriptValidatorsDir.getAbsolutePath()))
+                .addValidatorConfig(new ValidatorConfiguration("JavaScript").addAttribute("script-path", javaScriptValidatorsDir.getAbsolutePath()))
                 .build();
 
         Document document = new Document.DocumentBuilder()
@@ -79,7 +79,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         RedPen redPen = new RedPen(config);
         List<ValidationError> errors = redPen.validate(document);
         assertEquals(1, errors.size());
-        assertEquals("JavaScript validator validation error in JavaScript Validator", errors.get(0).getMessage());
+        assertEquals("[MyValidator.js] JavaScript validator validation error in JavaScript Validator", errors.get(0).getMessage());
     }
 
     public static List<String> calledFunctions;
@@ -87,7 +87,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
     @Test
     public void testJSLiteralValidator() throws RedPenException, IOException {
         JavaScriptValidator validator = new JavaScriptValidator();
-        validator.loadScript(
+        validator.scripts.add(new Script(validator, "testScript.js",
                 "function preValidateSentence(sentence) {" +
                         // add function names to "calledFunctions" list upon function calls for the later assertions
                         // the following script is using Nashorn's lobal object "Java".type to access static member:
@@ -106,7 +106,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
                         "function validateSection(errors, section) {" +
                         "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('validateSection');" +
                         // add ValidationError
-                        "errors.add(createValidationError(section.getHeaderContent(0), 'section'));}");
+                        "errors.add(createValidationError(section.getHeaderContent(0), 'section'));}"));
         Document document = new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()
@@ -129,9 +129,31 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         assertEquals("validateSection", calledFunctions.get(4));
 
         assertEquals(3, errors.size());
-        assertEquals("JavaScript validator doc", errors.get(0).getMessage());
-        assertEquals("JavaScript validator sentence", errors.get(1).getMessage());
-        assertEquals("JavaScript validator section", errors.get(2).getMessage());
+        assertEquals("[testScript.js] JavaScript validator doc", errors.get(0).getMessage());
+        assertEquals("[testScript.js] JavaScript validator sentence", errors.get(1).getMessage());
+        assertEquals("[testScript.js] JavaScript validator section", errors.get(2).getMessage());
+    }
+
+    @Test
+    public void testEmbeddedmessage() throws RedPenException, IOException {
+        JavaScriptValidator validator = new JavaScriptValidator();
+        validator.scripts.add(new Script(validator, "testScript.js",
+                "var message = 'embedded message {0}';" +
+                        "function validateSentence(errors, sentence) {" +
+                        // add ValidationError
+                        "errors.add(createValidationError(sentence, '[placeholder]'));}"));
+        Document document = new Document.DocumentBuilder()
+                .addSection(1)
+                .addParagraph()
+                .addSentence("the good item is a good example.", 1)
+                .build();
+        Section section = document.getSection(0);
+        Sentence sentence = section.getHeaderContent(0);
+
+        calledFunctions = new ArrayList<>();
+        validator.validate(errors, sentence);
+        assertEquals(1, errors.size());
+        assertEquals("[testScript.js] embedded message [placeholder]", errors.get(0).getMessage());
     }
 
     ArrayList<ValidationError> errors = new ArrayList<>();
