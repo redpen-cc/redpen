@@ -476,12 +476,12 @@ public class StreamParserTest {
 
     @Test
     public void testPMarkImplicitParagraphRegion() {
-        assertTokensLike(
+        assertTokensEqual(
             Arrays.asList(
-                token("TEXTILE", "This is a sentence. Okay, this is IT.\nDo you hear that?"),
-                token("TEXTILE", "(You open the door.)"),
-                token("TEXTILE", "**YAAAHHHH**"),
-                token("TEXTILE", "That was close... Take care of yourself.")
+                token("TEXTILE", "This is a sentence. Okay, this is IT.\nDo you hear that?", new Position(1, 0)),
+                token("TEXTILE", "(You open the door.)", new Position(4, 0)),
+                token("TEXTILE", "**YAAAHHHH**", new Position(7, 0)),
+                token("TEXTILE", "That was close... Take care of yourself.", new Position(9, 0))
             ),
             StreamParser.P.markImplicitParagraphRegion(
                 Arrays.asList(
