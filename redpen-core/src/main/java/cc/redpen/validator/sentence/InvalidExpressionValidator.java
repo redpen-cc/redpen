@@ -19,7 +19,6 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
-import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +26,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -43,13 +41,13 @@ final public class InvalidExpressionValidator extends Validator {
     private Set<String> customInvalidExpressions;
 
     @Override
-    public void validate(List<ValidationError> errors, Sentence sentence) {
+    public void validate(Sentence sentence) {
         Consumer<String> tConsumer = value -> {
             int startPosition = sentence.getContent().indexOf(value);
             if (startPosition != -1) {
-                errors.add(createValidationErrorWithPosition(sentence,
+                addValidationErrorWithPosition(sentence,
                         sentence.getOffset(startPosition),
-                        sentence.getOffset(startPosition + value.length()), value));
+                        sentence.getOffset(startPosition + value.length()), value);
             }
         };
 

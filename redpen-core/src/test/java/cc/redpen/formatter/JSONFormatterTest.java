@@ -46,7 +46,8 @@ public class JSONFormatterTest extends Validator {
     public void testFormatSingleDocumentErrors() throws RedPenException, JSONException {
         JSONFormatter formatter = new JSONFormatter();
         List<ValidationError> errors = new ArrayList<>();
-        errors.add(createValidationError(new Sentence("testing JSONFormatter", 1)));
+        setErrorList(errors);
+        addValidationError(new Sentence("testing JSONFormatter", 1));
         Document document = new Document.DocumentBuilder().setFileName("docName").build();
         String result = formatter.format(document, errors);
         JSONObject jsonObject = new JSONObject(result);
@@ -65,7 +66,8 @@ public class JSONFormatterTest extends Validator {
     public void testFormatDocumentsAndErrors() throws RedPenException, JSONException {
         JSONFormatter formatter = new JSONFormatter();
         List<ValidationError> errors = new ArrayList<>();
-        errors.add(createValidationError(new Sentence("testing JSONFormatter", 1)));
+        setErrorList(errors);
+        addValidationError(new Sentence("testing JSONFormatter", 1));
         Document document = new Document.DocumentBuilder().setFileName("docName").build();
         Map<Document, List<ValidationError>> documentListMap = new HashMap<>();
         documentListMap.put(document, errors);

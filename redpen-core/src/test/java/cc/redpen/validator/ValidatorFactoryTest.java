@@ -31,7 +31,7 @@ class NotImplementInterfaceValidator {}
 
 class NoConstructorWithConfigsValidator extends Validator {
     @Override
-    public void validate(List<ValidationError> errors, Sentence sentence) {
+    public void validate(Sentence sentence) {
     }
 }
 

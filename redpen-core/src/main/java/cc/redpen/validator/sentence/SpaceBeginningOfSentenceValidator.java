@@ -18,7 +18,6 @@
 package cc.redpen.validator.sentence;
 
 import cc.redpen.model.Sentence;
-import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
 import java.util.HashMap;
@@ -38,12 +37,10 @@ final public class SpaceBeginningOfSentenceValidator extends Validator {
     }
 
     @Override
-    public void validate(List<ValidationError> errors, Sentence sentence) {
+    public void validate(Sentence sentence) {
         String content = sentence.getContent();
         if (!isFirstInLine(sentence) && content.length() > 0 && content.charAt(0) != ' ') {
-            errors.add(createValidationErrorWithPosition(sentence,
-                    sentence.getOffset(0),
-                    sentence.getOffset(1)));
+            addValidationErrorWithPosition(sentence, sentence.getOffset(0), sentence.getOffset(1));
         }
     }
 

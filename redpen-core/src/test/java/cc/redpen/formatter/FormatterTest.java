@@ -47,7 +47,8 @@ public class FormatterTest extends Validator {
     public void testFlushErrorWithPlainFormatter() throws RedPenException {
         PlainFormatter formatter = new PlainFormatter();
         List<ValidationError> errors = new ArrayList<>();
-        errors.add(createValidationError(new Sentence("sentence", 1)));
+        setErrorList(errors);
+        addValidationError(new Sentence("sentence", 1));
         Map<Document, List<ValidationError>> docErrorsMap = new HashMap<>();
         Document document = new Document.DocumentBuilder().build();
         docErrorsMap.put(document, errors);

@@ -45,7 +45,7 @@ public class SectionLengthValidatorTest {
         paragraph.appendSentence("it like a piece of a cake.", 0);
         section.appendParagraph(paragraph);
         List<ValidationError> errors =  new ArrayList<>();
-        validator.validate(errors, section);
+       validator.setErrorList(errors);         validator.validate(section);
         assertEquals(1, errors.size());
     }
 
@@ -56,7 +56,7 @@ public class SectionLengthValidatorTest {
         paragraph.appendSentence("it like a piece of a cake.", 0);
         section.appendParagraph(paragraph);
         List<ValidationError> errors =  new ArrayList<>();
-        validator.validate(errors, section);
+       validator.setErrorList(errors);         validator.validate(section);
         assertEquals(1, errors.size());
     }
 }

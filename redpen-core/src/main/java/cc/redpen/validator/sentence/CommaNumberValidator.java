@@ -20,12 +20,10 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
-import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
 
 import static cc.redpen.config.SymbolType.COMMA;
 
@@ -42,7 +40,7 @@ final public class CommaNumberValidator extends Validator {
     private char comma;
 
     @Override
-    public void validate(List<ValidationError> errors, Sentence sentence) {
+    public void validate(Sentence sentence) {
         String content = sentence.getContent();
         int commaCount = 0;
         int position = 0;
@@ -52,7 +50,7 @@ final public class CommaNumberValidator extends Validator {
             content = content.substring(position + 1, content.length());
         }
         if (maxCommaNum < commaCount) {
-            errors.add(createValidationError(sentence, commaCount, maxCommaNum));
+            addValidationError(sentence, commaCount, maxCommaNum);
         }
     }
 

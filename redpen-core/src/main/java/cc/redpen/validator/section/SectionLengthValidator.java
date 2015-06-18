@@ -21,12 +21,9 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
-import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 /**
  * Validate the length of one section.
@@ -38,7 +35,7 @@ final public class SectionLengthValidator extends Validator {
     private int maxSectionCharNumber;
 
     @Override
-    public void validate(List<ValidationError> errors, Section section) {
+    public void validate(Section section) {
         int sectionCharNumber = 0;
 
         for (Paragraph currentParagraph : section.getParagraphs()) {
@@ -48,7 +45,7 @@ final public class SectionLengthValidator extends Validator {
         }
 
         if (sectionCharNumber > maxSectionCharNumber) {
-            errors.add(createValidationError(section.getJoinedHeaderContents(), sectionCharNumber));
+            addValidationError(section.getJoinedHeaderContents(), sectionCharNumber);
         }
     }
 
