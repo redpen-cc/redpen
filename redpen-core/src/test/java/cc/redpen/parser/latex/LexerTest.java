@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.Assert.*;
+import static cc.redpen.parser.latex.Tools.*;
+import static cc.redpen.parser.latex.Assert.*;
 
 public class LexerTest {
     @Test
@@ -103,35 +105,4 @@ public class LexerTest {
                 ),
             tokens);
     }
-
-    private static Token token(final String type, final String value) {
-        return new Token(type, value, new Position(0,0));
-    }
-
-    private static void assertTokensLike(final List<Token> expected, final List<Token> actual) {
-        assertEquals("token streams differ in size", expected.size(), actual.size());
-        for (int i=0; i<expected.size(); ++i) {
-            final Token p = expected.get(i);
-            final Token q = actual.get(i);
-            assertTrue(String.format("token streams do not look like at index %d: expected: <%s>, got: <%s>", i, p, q), isTokenLikeTo(p, q));
-        }
-    }
-
-    private static void assertTokensEqual(final List<Token> expected, final List<Token> actual) {
-        assertEquals("token streams differ in size", expected.size(), actual.size());
-        for (int i=0; i<expected.size(); ++i) {
-            final Token p = expected.get(i);
-            final Token q = actual.get(i);
-            assertTrue(String.format("token streams differ at index %d: expected: <%s>, got: <%s>", i, p, q), isTokenEqualTo(p, q));
-        }
-    }
-
-    private static boolean isTokenLikeTo(final Token p, final Token q) {
-        return (p.t.equals(q.t) && p.v.equals(q.v));
-    }
-
-    private static boolean isTokenEqualTo(final Token p, final Token q) {
-        return String.valueOf(p).equals(String.valueOf(q));
-    }
-
 }

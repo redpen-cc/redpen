@@ -31,8 +31,6 @@ import org.apache.commons.lang3.StringUtils;
  * Experimental stream mode LaTeX parser prototype.
  */
 public class StreamParser {
-    private static final char ESCAPE_CHAR = '\uFFFD';
-
     private char[] mTarget;
 
     private Listener mListener;
@@ -63,6 +61,8 @@ public class StreamParser {
     }
 
     /*package*/ static class P {
+        public static final char ESCAPE_CHAR = '\uFFFD';
+
         public static List<Token> takeBlock(final Deque<Token> q) {
             final List<Token> o = new ArrayList<>();
             final Deque<String> reg = new ArrayDeque<>();
@@ -119,6 +119,9 @@ public class StreamParser {
             final List<String> values = new ArrayList<>();
             for (Token t : tokens) {
                 values.add(t.v);
+                if (!t.p.isEmpty()) {
+                    values.add(makeVerbatim(t.p).v);
+                }
             }
             return new Token("VERBATIM", StringUtils.join(values, ""), beginning.pos);
         }
@@ -135,7 +138,7 @@ public class StreamParser {
                     if ("CONTROL".equals(t.t)) {
                         if ("begin".equals(t.v) || "end".equals(t.v)) {
                             t.p = takeTrailingBlocks(q);
-                            switch (t.t) {
+                            switch (t.v) {
                             case "begin":
                                 t.t = "ENVIRON_BEGIN";
                                 break;
@@ -181,11 +184,10 @@ public class StreamParser {
                         final List<Token> verbatim = new ArrayList<>();
                         while (true) {
                             final Token vt = q.removeFirst();
-                            if ( ! ("ENVIRON_BEGIN".equals(vt.t) && valuesOf(vt.p).contains("verbatim")) ) {
+                            if ( ! ("ENVIRON_END".equals(vt.t) && valuesOf(vt.p).contains("verbatim")) ) {
                                 verbatim.add(vt);
                             } else {
                                 o.add(makeVerbatim(verbatim));
-                                o.add(vt);
                                 break;
                             }
                         }
@@ -205,15 +207,9 @@ public class StreamParser {
                     if ( ! ("ENVIRON_BEGIN".equals(t.t) && valuesOf(t.p).contains("tabular")) ) {
                         o.add(t);
                     } else {
-                        final List<Token> verbatim = new ArrayList<>();
                         while (true) {
                             final Token tt = q.removeFirst();
-                            if ( ! ("ENVIRON_END".equals(tt.t) && valuesOf(tt.p).contains("tabular")) ) {
-                                tt.t = "MASKED";
-                                o.add(tt);
-                            } else {
-                                tt.t = "MASKED";
-                                o.add(tt);
+                            if ("ENVIRON_END".equals(tt.t) && valuesOf(tt.p).contains("tabular")) {
                                 break;
                             }
                         }
@@ -343,14 +339,22 @@ public class StreamParser {
 
         public static int _guessRow(final Token t, final String needle) {
             final int lead = t.v.indexOf(needle);
-            return t.pos.row + countMatches(Pattern.compile("\\r?\\n"), t.v.substring(0, lead));
+            if (lead >= 0) {
+                return t.pos.row + countMatches(Pattern.compile("\\r?\\n"), t.v.substring(0, lead));
+            } else {
+                return t.pos.row;
+            }
         }
 
         public static int _guessCol(final Token t, final String needle) {
             final int lead = t.v.indexOf(needle);
-            final int lastLinebreak = t.v.substring(0, lead).lastIndexOf("\n");
-            if (lastLinebreak >= 0) {
-                return lead - lastLinebreak;
+            if (lead >= 0) {
+                final int lastLinebreak = t.v.substring(0, lead).lastIndexOf("\n");
+                if (lastLinebreak >= 0) {
+                    return 0 + (lead - (lastLinebreak + 1));
+                } else {
+                    return t.pos.col + lead;
+                }
             } else {
                 return t.pos.col;
             }
