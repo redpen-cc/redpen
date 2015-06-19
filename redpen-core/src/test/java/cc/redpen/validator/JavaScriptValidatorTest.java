@@ -1,3 +1,20 @@
+/**
+ * redpen: a text inspection tool
+ * Copyright (c) 2014-2015 Recruit Technologies Co., Ltd. and contributors
+ * (see CONTRIBUTORS.md)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cc.redpen.validator;
 
 import cc.redpen.RedPen;
@@ -19,23 +36,6 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 
-/**
- * Created by yusuke on 6/12/15.
- * <p>
- * Copyright 2015 yusuke
- * <p>
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- **/
 public class JavaScriptValidatorTest extends JavaScriptValidator {
     @Test
     public void testLoadFile() throws Exception {
@@ -61,8 +61,8 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         javaScriptValidatorsDir.delete();
         javaScriptValidatorsDir.mkdirs();
         File validatorJS = new File(javaScriptValidatorsDir.getAbsolutePath() + File.separator + "MyValidator.js");
-        String content2 = "function validateSentence(errors, sentence) {\n" +
-                "errors.add(createValidationError(sentence, 'validation error in JavaScript Validator'));}";
+        String content2 = "function validateSentence(sentence) {\n" +
+                "addValidationError(sentence, 'validation error in JavaScript Validator');}";
         Files.write(Paths.get(validatorJS.getAbsolutePath()), content2.getBytes(Charset.forName("UTF-8")));
         validatorJS.deleteOnExit();
 
@@ -95,18 +95,18 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
                         "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('preValidateSentence');}" +
                         "function preValidateSection(section) {" +
                         "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('preValidateSection');}" +
-                        "function validateDocument(errors, document) {" +
+                        "function validateDocument(document) {" +
                         "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('validateDocument');" +
                         // add ValidationError
-                        "errors.add(createValidationError(document.getSection(0).getHeaderContent(0), 'doc'));}" +
-                        "function validateSentence(errors, sentence) {" +
+                        "addValidationError(document.getSection(0).getHeaderContent(0), 'doc');}" +
+                        "function validateSentence(sentence) {" +
                         "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('validateSentence');" +
                         // add ValidationError
-                        "errors.add(createValidationError(sentence, 'sentence'));}" +
-                        "function validateSection(errors, section) {" +
+                        "addValidationError(sentence, 'sentence');}" +
+                        "function validateSection(section) {" +
                         "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('validateSection');" +
                         // add ValidationError
-                        "errors.add(createValidationError(section.getHeaderContent(0), 'section'));}"));
+                        "addValidationError(section.getHeaderContent(0), 'section');}"));
         Document document = new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()
@@ -116,11 +116,12 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         Sentence sentence = section.getHeaderContent(0);
 
         calledFunctions = new ArrayList<>();
+        validator.setErrorList(errors);
         validator.preValidate(sentence);
         validator.preValidate(section);
-        validator.validate(errors, document);
-        validator.validate(errors, sentence);
-        validator.validate(errors, section);
+        validator.validate(document);
+        validator.validate(sentence);
+        validator.validate(section);
         assertEquals(5, calledFunctions.size());
         assertEquals("preValidateSentence", calledFunctions.get(0));
         assertEquals("preValidateSection", calledFunctions.get(1));
@@ -139,9 +140,9 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         JavaScriptValidator validator = new JavaScriptValidator();
         validator.scripts.add(new Script(validator, "testScript.js",
                 "var message = 'embedded message {0}';" +
-                        "function validateSentence(errors, sentence) {" +
+                        "function validateSentence(sentence) {" +
                         // add ValidationError
-                        "errors.add(createValidationError(sentence, '[placeholder]'));}"));
+                        "addValidationError(sentence, '[placeholder]');}"));
         Document document = new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()
@@ -151,7 +152,8 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         Sentence sentence = section.getHeaderContent(0);
 
         calledFunctions = new ArrayList<>();
-        validator.validate(errors, sentence);
+        validator.setErrorList(errors);
+        validator.validate(sentence);
         assertEquals(1, errors.size());
         assertEquals("[testScript.js] embedded message [placeholder]", errors.get(0).getMessage());
     }
