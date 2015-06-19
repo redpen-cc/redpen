@@ -17,18 +17,71 @@
  */
 package cc.redpen.parser.latex;
 
-import org.pegdown.ast.RootNode;
+import java.util.List;
+import java.util.ArrayList;
+
+import org.pegdown.ast.*;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Deque;
+import java.util.ArrayDeque;
 
 /**
  * Lame Pegdown adapter for the LaTeX parser.
  */
 public class LaTeXProcessor {
     public RootNode parse(char[] stream) {
-        final RootNode o = new RootNode();
-        new StreamParser(stream, (final Token t) -> {
-                System.out.println(t.toString());
-        }).parse();
-        return o;
+        final List<Token> tokens = new ArrayList<>();
+        new StreamParser(stream, t -> tokens.add(t)).parse();
+        return (P.walk (tokens));
+    }
+
+    /*package*/ static class P {
+        public static RootNode walk(final List<Token> tokens) {
+            final Deque<SuperNode> reg = new ArrayDeque<>();
+
+            final RootNode o = new RootNode();
+            reg.addLast(o);
+
+            for (Token t : tokens) {
+                final SuperNode scope = reg.getLast();
+
+                switch (t.t) {
+                case "PART":
+                    reg.addLast(new HeaderNode(1, new TextNode(t.v)));
+                    scope.getChildren().add(reg.getLast());
+                    break;
+                case "CHAPTER":
+                    reg.addLast(new HeaderNode(2, new TextNode(t.v)));
+                    scope.getChildren().add(reg.getLast());
+                    break;
+                case "SECTION":
+                    reg.addLast(new HeaderNode(3, new TextNode(t.v)));
+                    scope.getChildren().add(reg.getLast());
+                    break;
+                case "SUBSECTION":
+                    reg.addLast(new HeaderNode(4, new TextNode(t.v)));
+                    scope.getChildren().add(reg.getLast());
+                    break;
+                case "SUBSUBSECTION":
+                    reg.addLast(new HeaderNode(5, new TextNode(t.v)));
+                    scope.getChildren().add(reg.getLast());
+                    break;
+                case "ITEM":
+                    if (t.v.length() > 0) {
+                        scope.getChildren().add(new ParaNode(new TextNode(t.v)));
+                    }
+                    break;
+                case "VERBATIM":
+                    scope.getChildren().add(new ParaNode(new VerbatimNode(t.v)));
+                    break;
+                case "TEXTILE":
+                    scope.getChildren().add(new ParaNode(new TextNode(t.v)));
+                    break;
+                }
+            }
+
+            return o;
+        }
     }
 }
