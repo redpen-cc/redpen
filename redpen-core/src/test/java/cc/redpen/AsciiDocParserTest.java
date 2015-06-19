@@ -105,7 +105,6 @@ public class AsciiDocParserTest {
         for (Section section : doc) {
             for (Paragraph paragraph : section.getParagraphs()) {
                 paragraph.getSentences().forEach(sentence -> assertNotNull(sentence.getContent()));
-                //     paragraph.getSentences().forEach(sentence -> dumpSentence(sentence));
                 section.getHeaderContents().forEach(sentence -> assertNotNull(sentence.getContent()));
                 for (ListBlock listBlock : section.getListBlocks()) {
                     for (ListElement listElement : listBlock.getListElements()) {
