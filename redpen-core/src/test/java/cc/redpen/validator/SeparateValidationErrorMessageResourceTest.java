@@ -27,23 +27,32 @@ import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
 
-public class ValidatorTest {
+public class SeparateValidationErrorMessageResourceTest extends Validator {
+
+    @Override
+    public void validate(List<ValidationError> errors, Sentence sentence) {
+        errors.add(createValidationError(sentence, 1, 2, 3, "sentence"));
+        errors.add(createValidationError("withKey", sentence, "sentence"));
+    }
+
     @Test
     public void testValidationErrorCreation() throws RedPenException {
-        ValidationErrorMessageTest validationErrorMessageTest = new ValidationErrorMessageTest();
+        SeparateValidationErrorMessageResourceTest validationErrorMessageTest = new SeparateValidationErrorMessageResourceTest();
         validationErrorMessageTest.preInit(null, null);
+        // loads SeparateValidationErrorMessageResourceTest.properties
         validationErrorMessageTest.setLocale(Locale.ENGLISH);
         List<ValidationError> validationErrors = new ArrayList<>();
         validationErrorMessageTest.validate(validationErrors, new Sentence("sentence", 1));
-        assertEquals("error str:sentence 1:1 2:2 3:3", validationErrors.get(0).getMessage());
-        assertEquals("with Key :sentence", validationErrors.get(1).getMessage());
+        // if message resource doesn't found, fallback to [ValidatorClassName].properties
+        assertEquals("separate resource error str:sentence 1:1 2:2 3:3", validationErrors.get(0).getMessage());
+        assertEquals("separate resource with Key :sentence", validationErrors.get(1).getMessage());
 
+        // loads SeparateValidationErrorMessageResourceTest_ja.properties
         validationErrorMessageTest.setLocale(Locale.JAPAN);
         validationErrors = new ArrayList<>();
         validationErrorMessageTest.validate(validationErrors, new Sentence("sentence", 1));
-        assertEquals("エラー ストリング:sentence 1:1 2:2 3:3", validationErrors.get(0).getMessage());
-        assertEquals("キー指定 :sentence", validationErrors.get(1).getMessage());
+        assertEquals("separate resource エラー ストリング:sentence 1:1 2:2 3:3", validationErrors.get(0).getMessage());
+        assertEquals("separate resource キー指定 :sentence", validationErrors.get(1).getMessage());
 
     }
 }
-
