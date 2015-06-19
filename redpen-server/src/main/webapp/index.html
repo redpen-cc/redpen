@@ -58,15 +58,16 @@ var sampleDocuments = {
             "本稿では,複数の計算機（クラスタ）でで動作する各サーバーを_「インスタンス」_と呼びまます。\n" +
             "たとえば検索エンジンやデータベースではインデックスを複数のインスタンスで分割して保持します。\n" +
             "このような場合、各インデクスの結果をマージして_clientプログラム_に渡す機構が必要となります。"},
-    en_ad: {parser: "ASCIIDOC", document: "Instances Overview\n==================\nAuthor's Name <person@email.address>\nv1.2, 2015-08\n" +
-            "\nThis is the optional preamble (an untitled section body). Useful for\n" +
+    en_ad: {parser: "ASCIIDOC", document: "Instances Overview\n==================\n" + "Author's Name <person@email.address>\nv1.2, 2015-08\n" +
+            "\nThis is the optional preamble (an untitled section body). Useful for " +
             "writing simple sectionless documents consisting only of a preamble.\n\n" +
-            "NOTE: The abstract, preface, appendix, bibliography, glossary and\nindex section titles are significant ('specialsections').\n" +
+            "NOTE: The abstract, preface, appendix, bibliography, glossary and index section titles are significant ('specialsections').\n" +
             "\n\n:numbered!:\n[abstract]\n" +
             "Instances\n" +
             "---------\n" +
-            "In this article, we'll call a computer server that works as a member of a cluster an _instance_. for example, each instance in distributed search engines stores the the fractions of data.\n" +
-            "\n Such distriubuted systems need a component to merge the preliminary results from member instnaces.\n\n\n" +
+            "In this article, we'll call a computer server that works as a member of a cluster an _instance_. " +
+            "for example, as shown in this http://redpen.ignored.url/[mishpelled link], each instance in distributed search engines stores the the fractions of data.\n" +
+            "\nSuch distriubuted systems need a component to merge the preliminary results from member instnaces.\n\n\n" +
             ".Instance image\n" +
             "image::images/tiger.png[Instance image]\n\n" +
             "A sample table:\n\n" +
@@ -74,7 +75,6 @@ var sampleDocuments = {
             "[width=\"60%\",options=\"header\"]\n" +
             "|==============================================\n" +
             "| Option     | Description\n" +
-            "| NAME       | The name of the instance\n" +
             "| GROUP      | The instance group.\n" +
             "|==============================================\n\n" +
             ".example list\n" +
@@ -116,6 +116,7 @@ var sampleDocuments = {
 // ensure the language autodetect doesn't override the user's selection
 var permitLanguageAutoDetect = true;
 
+
 // clear editor and results
 function clearResult() {
     $('#redpen-editor').val('').trigger("input");
@@ -146,7 +147,6 @@ $(document).ready(function () {
         var configSelect = $("#redpen-configuration");
         var languageSelect = $("#redpen-language");
         var documentParserSelect = $("#redpen-document-parser");
-
 
         var editorText = function (newText) {
             if (newText) {
@@ -738,12 +738,13 @@ $(document).ready(function () {
             <div class="col-md-7" id="redpen-document-panel">
                 <div id="redpen-document-top">
                     <div id="redpen-superimposed-editor">
-                        <textarea id="redpen-editor" spellcheck="false"></textarea>
+                        <textarea id="redpen-editor" class="redpen-superimposed-editor-panel"
+                                  spellcheck="false"></textarea>
 
-                        <div id="redpen-editor-underlay"></div>
+                        <pre id="redpen-editor-underlay" class="redpen-superimposed-editor-panel"></pre>
                     </div>
                     <div class="redpen-clear-button">
-                        <button type="button" class="btn btn-sm" onclick="clearResult()">Clear</button>
+                        <button type="button" class="btn btn-xs" onclick="clearResult()" title="Clear text">✕</button>
                     </div>
                 </div>
 

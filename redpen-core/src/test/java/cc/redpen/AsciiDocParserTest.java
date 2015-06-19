@@ -50,138 +50,45 @@ public class AsciiDocParserTest {
 
     @Test
     public void testBasicDocument() throws UnsupportedEncodingException, RedPenException {
-        String sampleText = "The Article Title\n" +
-                "=================\n" +
-                "Author's Name <authors@email.address>\n" +
-                "v1.0, 2003-12\n" +
-                "\n" +
-                "\n" +
-                "This is the optional preamble (an untitled section body). Useful for\n" +
-                "writing simple sectionless documents consisting only of a preamble.\n" +
-                "\n" +
-                "NOTE: The abstract, preface, appendix, bibliography, glossary and\n" +
-                "index section titles are significant ('specialsections').\n" +
-                "\n" +
-                "\n" +
-                ":numbered!:\n" +
-                "[abstract]\n" +
-                "Example Abstract\n" +
-                "----------------\n" +
-                "The optional abstract (one or more paragraphs) goes here.\n" +
-                "\n" +
-                "This document is an AsciiDoc article skeleton containing briefly\n" +
-                "annotated element placeholders plus a couple of example index entries\n" +
-                "and footnotes.\n" +
-                "\n" +
-                "This is a new paragraph that consists of this line. And also of this line.\nWith this, it would be three lines in total.\nBut this line spoils that and makes it four.\n" +
-                "\n" +
-                ":numbered:\n" +
-                "\n" +
-                "The First Section\n" +
-                "-----------------\n" +
-                "Article sections start at level 1 & can be nested up to four levels\n" +
-                "deep. Note that < and > are encoded by AsciiDoctor.\n" +
-                "footnote:[An example footnote.]\n" +
-                "indexterm:[Example index entry]\n" +
-                "\n" +
-                "And now for something completely different: ((monkeys)), lions and\n" +
-                "tigers (Bengal and Siberian) using the alternative syntax index\n" +
-                "entries.\n" +
-                "(((Big cats,Lions)))\n" +
-                "(((Big cats,Tigers,Bengal Tiger)))\n" +
-                "(((Big cats,Tigers,Siberian Tiger)))\n" +
-                "Note that multi-entry terms generate separate index entries.\n" +
-                "\n" +
-                "Here are a couple of image examples: an image:images/smallnew.png[]\n" +
-                "example inline image followed by an example block image:\n" +
-                "\n" +
-                ".Tiger block image\n" +
-                "image::images/tiger.png[Tiger image]\n" +
-                "\n" +
-                "Followed by an example table:\n" +
-                "\n" +
-                ".An example table\n" +
+        String sampleText = "Instances Overview\n==================\n" + "Author's Name <person@email.address>\nv1.2, 2015-08\n" +
+                "\nThis is the optional preamble (an untitled section body). Useful for " +
+                "writing simple sectionless documents consisting only of a preamble.\n\n" +
+                "NOTE: The abstract, preface, appendix, bibliography, glossary and index section titles are significant ('specialsections').\n" +
+                "\n\n:numbered!:\n[abstract]\n" +
+                "Instances\n" +
+                "---------\n" +
+                "In this article, we'll call a computer server that works as a member of a cluster an _instan3ce_. " +
+                "for example, as shown in this http://redpen.ignored.url/[mishpelled link], each instance in distributed search engines stores the the fractions of data.\n" +
+                "\nSuch distriubuted systems need a component to merge the preliminary results from member instnaces.\n\n\n" +
+                ".Instance image\n" +
+                "image::images/tiger.png[Instance image]\n\n" +
+                "A sample table:\n\n" +
+                ".A sample table\n" +
                 "[width=\"60%\",options=\"header\"]\n" +
                 "|==============================================\n" +
-                "| Option          | Description\n" +
-                "| -a 'USER GROUP' | Add 'USER' to 'GROUP'.\n" +
-                "| -R 'GROUP'      | Disables access to 'GROUP'.\n" +
-                "|==============================================\n" +
-                "\n" +
-                ".An example example\n" +
+                "| Option     | Description\n" +
+                "| GROUP      | The instance group.\n" +
+                "|==============================================\n\n" +
+                ".example list\n" +
                 "===============================================\n" +
                 "Lorum ipum...\n" +
-                "===============================================\n" +
-                "\n" +
-                "[[X1]]\n" +
-                "Sub-section with Anchor\n" +
-                "~~~~~~~~~~~~~~~~~~~~~~~\n" +
-                "Sub-section at level 2.\n" +
-                "\n" +
-                "A Nested Sub-section\n" +
-                "^^^^^^^^^^^^^^^^^^^^\n" +
-                "Sub-section at level 3.\n" +
-                "\n" +
-                "Yet another nested Sub-section\n" +
-                "++++++++++++++++++++++++++++++\n" +
-                "Sub-section at level 4.\n" +
-                "\n" +
-                "This is the maximum sub-section depth supported by the distributed\n" +
-                "AsciiDoc configuration.\n" +
-                "footnote:[A second example footnote.]\n" +
-                "\n" +
-                "\n" +
-                "二 セクション\n" +
-                "-------\n" +
-                "Article sections are at level 1 and can contain sub-sections nested up\n" +
-                "to four deep.\n" +
-                "\n" +
-                "An example link to anchor at start of the <<X1,first sub-section>>.\n" +
-                "indexterm:[Second example index entry]\n" +
-                "\n" +
-                "An example link to a bibliography entry <<taoup>>.\n" +
-                "\n" +
-                "\n" +
-                ":numbered!:\n" +
-                "\n" +
-                "[appendix]\n" +
-                "Example Appendix\n" +
-                "----------------\n" +
-                "AsciiDoc article appendices are just just article sections with\n" +
-                "'specialsection' titles.\n" +
-                "\n" +
-                "Appendix Sub-section\n" +
-                "~~~~~~~~~~~~~~~~~~~~\n" +
-                "Appendix sub-section at level 2.\n" +
-                "\n" +
-                "\n" +
-                "[bibliography]\n" +
-                "Example Bibliography\n" +
-                "--------------------\n" +
-                "The bibliography list is a style of AsciiDoc bulleted list.\n" +
-                "\n" +
+                "===============================================\n\n\n" +
                 "[bibliography]\n" +
                 "- [[[taoup]]] Eric Steven Raymond. 'The Art of Unix\n" +
                 "  Programming'. Addison-Wesley. ISBN 0-13-142901-9.\n" +
                 "- [[[walsh-muellner]]] Norman Walsh & Leonard Muellner.\n" +
                 "  'DocBook - The Definitive Guide'. O'Reilly & Associates. 1999.\n" +
-                "  ISBN 1-56592-580-7.\n" +
-                "\n" +
-                "\n" +
+                "  ISBN 1-56592-580-7.\n\n\n" +
                 "[glossary]\n" +
                 "Example Glossary\n" +
                 "----------------\n" +
                 "Glossaries are optional. Glossaries entries are an example of a style\n" +
-                "of AsciiDoc labeled lists.\n" +
-                "\n" +
+                "of AsciiDoc labeled lists.\n\n" +
                 "[glossary]\n" +
                 "A glossary term::\n" +
-                "  The corresponding (indented) definition.\n" +
-                "\n" +
+                "  The corresponding (indented) definition.\n\n" +
                 "A second glossary term::\n" +
-                "  The corresponding (indented) definition.\n" +
-                "\n" +
-                "\n" +
+                "  The corresponding (indented) definition.\n\n\n" +
                 "ifdef::backend-docbook[]\n" +
                 "[index]\n" +
                 "Example Index\n" +
@@ -192,31 +99,13 @@ public class AsciiDocParserTest {
                 "////////////////////////////////////////////////////////////////\n" +
                 "endif::backend-docbook[]";
 
+
         Document doc = createFileContent(sampleText);
-
-        assertNotNull("doc is null", doc);
-        assertEquals(11, doc.size());
-
-        final Section firstSection = doc.getSection(0);
-        assertEquals(1, firstSection.getHeaderContentsListSize());
-        assertEquals("The Article Title", firstSection.getHeaderContent(0).getContent());
-        assertEquals(0, firstSection.getNumberOfLists());
-        assertEquals(1, firstSection.getNumberOfParagraphs());
-        assertEquals(0, firstSection.getNumberOfSubsections());
-
-        Configuration configuration = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(new ValidatorConfiguration("SentenceLength"))
-                .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol")).build();
-
-        RedPen redPen = new RedPen(configuration);
-        List<ValidationError> errors = redPen.validate(doc);
-        for (ValidationError error : errors) {
-            System.out.println(error.getMessage());
-        }
 
         for (Section section : doc) {
             for (Paragraph paragraph : section.getParagraphs()) {
                 paragraph.getSentences().forEach(sentence -> assertNotNull(sentence.getContent()));
+                //     paragraph.getSentences().forEach(sentence -> dumpSentence(sentence));
                 section.getHeaderContents().forEach(sentence -> assertNotNull(sentence.getContent()));
                 for (ListBlock listBlock : section.getListBlocks()) {
                     for (ListElement listElement : listBlock.getListElements()) {
@@ -225,6 +114,34 @@ public class AsciiDocParserTest {
                 }
             }
         }
+
+        assertNotNull("doc is null", doc);
+        assertEquals(3, doc.size());
+
+        final Section firstSection = doc.getSection(0);
+        assertEquals(1, firstSection.getHeaderContentsListSize());
+        assertEquals("Instances Overview", firstSection.getHeaderContent(0).getContent());
+        assertEquals(0, firstSection.getNumberOfLists());
+        assertEquals(1, firstSection.getNumberOfParagraphs());
+        assertEquals(0, firstSection.getNumberOfSubsections());
+
+        Configuration configuration = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(new ValidatorConfiguration("Spelling"))
+                .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol")).build();
+
+        RedPen redPen = new RedPen(configuration);
+        List<ValidationError> errors = redPen.validate(doc);
+        for (ValidationError error : errors) {
+            System.out.println(error.getMessage());
+        }
+    }
+
+    private void dumpSentence(Sentence sentence) {
+        for (int i = 0; i < sentence.getContent().length(); i++) {
+            String offset = sentence.getOffset(i).isPresent() ? sentence.getOffset(i).get().lineNum + "," + sentence.getOffset(i).get().offset : "n/a";
+            System.out.print("[" + sentence.getContent().charAt(i) + ":" + offset + "]");
+        }
+        System.out.println();
     }
 
     private Document createFileContent(String inputDocumentString,
@@ -244,7 +161,9 @@ public class AsciiDocParserTest {
         Document doc = null;
         try {
             Configuration configuration = new Configuration.ConfigurationBuilder().build();
-            doc = parser.parse(inputDocumentString, new SentenceExtractor(configuration.getSymbolTable()),
+            doc = parser.parse(
+                    inputDocumentString,
+                    new SentenceExtractor(configuration.getSymbolTable()),
                     configuration.getTokenizer());
         } catch (RedPenException e) {
             e.printStackTrace();

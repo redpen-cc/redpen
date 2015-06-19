@@ -42,8 +42,12 @@ import java.util.Map;
  * due to the way JRuby and AsciiDoctor handle the registration of this class.
  */
 public class RedPenTreeProcessor extends Treeprocessor {
-
     private static final Logger LOG = LoggerFactory.getLogger(RedPenTreeProcessor.class);
+
+    private static final char REDPEN_ASCIIDOCTOR_BACKEND_LINE_START = '\001';
+    private static final char REDPEN_ASCIIDOCTOR_BACKEND_LINENUMBER_DELIM = '\002';
+    private static final char REDPEN_ASCIIDOCTOR_BACKEND_SUBSTITUTION_START = '\003';
+    private static final char REDPEN_ASCIIDOCTOR_BACKEND_SUBSTITUTION_END = '\004';
 
     private cc.redpen.model.Document.DocumentBuilder documentBuilder;
     private SentenceExtractor sentenceExtractor;
@@ -72,7 +76,7 @@ public class RedPenTreeProcessor extends Treeprocessor {
             if (item instanceof BlockImpl) {
                 BlockImpl block = (BlockImpl) item;
                 documentBuilder.addParagraph();
-                processParagraph(block.convert().trim());
+                processParagraph(block.convert(), block.source());
             } else if (item instanceof SectionImpl) {
                 SectionImpl section = (SectionImpl) item;
                 List<Sentence> headers = new ArrayList<>();
@@ -88,12 +92,12 @@ public class RedPenTreeProcessor extends Treeprocessor {
         }
     }
 
-    private void processParagraph(String paragraph) {
-        String sentenceText = "";
+    private void processParagraph(String paragraph, String sourceText) {
         int offset = 0;
-        String[] sublines = paragraph.split("\001");
+
+        String[] sublines = paragraph.split(String.valueOf(REDPEN_ASCIIDOCTOR_BACKEND_LINE_START));
         for (String subline : sublines) {
-            int lineNumberEndPos = subline.indexOf('\002');
+            int lineNumberEndPos = subline.indexOf(REDPEN_ASCIIDOCTOR_BACKEND_LINENUMBER_DELIM);
             if (lineNumberEndPos != -1) {
                 try {
                     lineNumber = Integer.valueOf(subline.substring(0, lineNumberEndPos));
@@ -104,51 +108,98 @@ public class RedPenTreeProcessor extends Treeprocessor {
             }
             subline = StringEscapeUtils.unescapeHtml4(subline);
 
-            sentenceText += subline;
-
             while (true) {
-                int periodPosition = sentenceExtractor.getSentenceEndPosition(sentenceText);
+                int periodPosition = sentenceExtractor.getSentenceEndPosition(subline);
                 if (periodPosition != -1) {
-                    String completeSentence = sentenceText.substring(0, periodPosition + 1);
-                    LineOffset lineOffset = addSentence(completeSentence, lineNumber, offset);
+                    String candidateSentence = subline.substring(0, periodPosition + 1);
+                    subline = subline.substring(periodPosition + 1);
+                    periodPosition = sentenceExtractor.getSentenceEndPosition(sourceText);
+                    String sourceSentence = "";
+                    if (periodPosition != -1) {
+                        sourceSentence = sourceText.substring(0, periodPosition + 1);
+                        sourceText = sourceText.substring(periodPosition + 1);
+                    }
+                    LineOffset lineOffset = addSentence(new LineOffset(lineNumber, offset), sourceSentence, candidateSentence, sentenceExtractor, documentBuilder);
                     lineNumber = lineOffset.lineNum;
                     offset = lineOffset.offset;
-                    sentenceText = sentenceText.substring(periodPosition + 1);
                 } else {
                     break;
                 }
             }
-            lineNumber++;
-        }
-
-        if (!sentenceText.trim().isEmpty()) {
-            addSentence(sentenceText, lineNumber, offset);
-        }
-    }
-
-    public LineOffset addSentence(String rawSentenceText, int lineNumber, int offset) {
-        List<LineOffset> offsetMap = new ArrayList<>();
-        String normalizedSentence = "";
-        for (int i = 0; i < rawSentenceText.length(); i++) {
-            char ch = rawSentenceText.charAt(i);
-            if (ch == '\n') {
-                if (!sentenceExtractor.getBrokenLineSeparator().isEmpty()) {
-                    offsetMap.add(new LineOffset(lineNumber, offset));
-                    normalizedSentence += sentenceExtractor.getBrokenLineSeparator();
-                }
-                lineNumber++;
-                offset = 0;
-            } else {
-                normalizedSentence += ch;
-                offsetMap.add(new LineOffset(lineNumber, offset));
-                offset++;
+            if (!subline.trim().isEmpty()) {
+                addSentence(new LineOffset(lineNumber, offset), sourceText, subline, sentenceExtractor, documentBuilder);
             }
         }
-        Sentence sentence = new Sentence(normalizedSentence, lineNumber, offset);
-        sentence.setOffsetMap(offsetMap);
-        documentBuilder.addSentence(sentence);
 
-        return new LineOffset(lineNumber, offset);
+        lineNumber++;
     }
 
+    /**
+     * Add a processed asciidoc sentence, using the raw source sentence to guide the character offsets
+     *
+     * @param source
+     * @param processed
+     * @return
+     */
+    private LineOffset addSentence(LineOffset lineOffset, String source, String processed, SentenceExtractor sentenceExtractor, cc.redpen.model.Document.DocumentBuilder builder) {
+
+        List<LineOffset> offsetMap = new ArrayList<>();
+        String normalizedSentence = "";
+
+        int lineNum = lineOffset.lineNum;
+        int offset = lineOffset.offset;
+
+        int sourceOffset = 0;
+        int window = 0;
+        int matchLength = 4;
+        for (int i = 0; i < processed.length(); i++) {
+            char ch = processed.charAt(i);
+            switch (ch) {
+                case REDPEN_ASCIIDOCTOR_BACKEND_SUBSTITUTION_START:
+                    window += 4;
+                    break;
+                case REDPEN_ASCIIDOCTOR_BACKEND_SUBSTITUTION_END:
+                    window = Math.max(0, window - 4);
+                    break;
+                default:
+                    // catch up with the source string using the window and match length
+                    if ((sourceOffset < source.length()) && (source.charAt(sourceOffset) != ch)) {
+                        String match = processed.substring(i, Math.min(processed.length(), i + matchLength));
+                        int pos = match.indexOf(REDPEN_ASCIIDOCTOR_BACKEND_SUBSTITUTION_START);
+                        if (pos != -1) {
+                            match = match.substring(0, pos);
+                        }
+                        pos = match.indexOf(REDPEN_ASCIIDOCTOR_BACKEND_SUBSTITUTION_END);
+                        if (pos != -1) {
+                            match = match.substring(0, pos);
+                        }
+                        for (int j = 0; (sourceOffset < source.length()); j++, sourceOffset++, offset++) {
+                            if (source.substring(sourceOffset).startsWith(match)) {
+                                break;
+                            }
+                        }
+                    }
+
+                    if (ch == '\n') {
+                        if (!sentenceExtractor.getBrokenLineSeparator().isEmpty()) {
+                            offsetMap.add(new LineOffset(lineNum, offset));
+                            normalizedSentence += sentenceExtractor.getBrokenLineSeparator();
+                        }
+                        lineNum++;
+                        offset = 0;
+                    } else {
+                        normalizedSentence += ch;
+                        offsetMap.add(new LineOffset(lineNum, offset));
+                        offset++;
+                    }
+
+                    sourceOffset++;
+                    break;
+            }
+        }
+        Sentence sentence = new Sentence(normalizedSentence, lineOffset.lineNum, lineOffset.offset);
+        sentence.setOffsetMap(offsetMap);
+        builder.addSentence(sentence);
+        return new LineOffset(lineNum, offset);
+    }
 }
