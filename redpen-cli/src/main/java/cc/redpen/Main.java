@@ -75,7 +75,7 @@ public final class Main {
                 .create("c"));
 
         options.addOption(OptionBuilder.withLongOpt("result-format")
-                .withDescription("Output result format")
+                .withDescription("Output result format (json,json2,plain,plain2,xml)")
                 .hasArg()
                 .withArgName("RESULT FORMAT")
                 .create("r"));
