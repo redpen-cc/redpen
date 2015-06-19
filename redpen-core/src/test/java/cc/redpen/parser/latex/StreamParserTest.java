@@ -106,15 +106,17 @@ public class StreamParserTest {
     @Test
     public void testPUnescapeRegion() {
         final char E = StreamParser.P.ESCAPE_CHAR;
-        assertEquals(
-            Arrays.asList("a     b","c d e"," fg "),
-            StreamParser.P.valuesOf(
-                StreamParser.P.unescapeRegion(
-                    Arrays.asList(
-                        token("A", "a"+E+E+E+E+E+"b"),
-                        token("B", "c"+E+"d"+E+"e"),
-                        token("C", E+"fg"+E)
-                    )
+        assertTokensLike(
+            Arrays.asList(
+                token("A", "a     b"),
+                token("B", "c d e"),
+                token("C", " fg ")
+            ),
+            StreamParser.P.unescapeRegion(
+                Arrays.asList(
+                    token("A", "a"+E+E+E+E+E+"b"),
+                    token("B", "c"+E+"d"+E+"e"),
+                    token("C", E+"fg"+E)
                 )
             )
         );
