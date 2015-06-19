@@ -30,7 +30,6 @@ import cc.redpen.util.DictionaryLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.text.MessageFormat;
 import java.util.*;
 
@@ -299,7 +298,7 @@ public abstract class Validator {
     protected final static DictionaryLoader<Set<String>> WORD_LIST =
             new DictionaryLoader<>(HashSet::new, Set::add);
     /**
-     * Resource Extractor loads word list while lowercasing lines
+     * Resource Extractor loads word list while lowercasting lines
      */
     protected final static DictionaryLoader<Set<String>> WORD_LSIT_LOWERCASED =
             new DictionaryLoader<>(HashSet::new, (set, line) -> set.add(line.toLowerCase()));
