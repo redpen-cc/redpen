@@ -39,16 +39,21 @@ import java.util.*;
  * <p>A Validator implementation load JavaScript dynamically.</p>
  * <p>files which name end with &quot;.js&quot; and located in &quot;js&quot; (can be specified with &quot;script-path&quot; property) directory will be treated as JavaScript validator implementation. Functions with the following signature will be called upon validation time:</p>
  * <pre>
- *     var message = "<i>validation error message</i> {0}";
+ *     var message = "your sentence has validation error : {0}";
  *     function preValidateSentence(sentence) {
  *     }
  *     function preValidateSection(section) {
  *     }
- *     function validateDocument(errors, document) {
+ *     function validateDocument(document) {
+ *       // your validation logic for document here
  *     }
- *     function validateSentence(errors, sentence) {
+ *     function validateSentence(sentence) {
+ *       // if(your validation logic for sentence here) {
+ *       //   addValidationError(sentence, 'specific message');
+ *       // }
  *     }
- *     function validateSection(errors, section) {
+ *     function validateSection(section) {
+ *       // your validation logic for section here
  *     }
  * </pre>
  */
