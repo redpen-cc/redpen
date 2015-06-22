@@ -63,7 +63,7 @@ public final class Main {
         options.addOption("h", "help", false, "Displays this help information and exits");
 
         options.addOption(OptionBuilder.withLongOpt("format")
-                .withDescription("Input file format")
+                .withDescription("Input file format (markdown,plain,wiki)")
                 .hasArg()
                 .withArgName("FORMAT")
                 .create("f"));
@@ -75,7 +75,7 @@ public final class Main {
                 .create("c"));
 
         options.addOption(OptionBuilder.withLongOpt("result-format")
-                .withDescription("Output result format")
+                .withDescription("Output result format (json,json2,plain,plain2,xml)")
                 .hasArg()
                 .withArgName("RESULT FORMAT")
                 .create("r"));
