@@ -20,7 +20,6 @@ package cc.redpen.validator.sentence;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +48,7 @@ final public class StartWithCapitalLetterValidator extends Validator {
     }
 
     @Override
-    public void validate(List<ValidationError> errors, Sentence sentence) {
+    public void validate(Sentence sentence) {
         String content = sentence.getContent();
         List<TokenElement> tokens = sentence.getTokens();
         String headWord = "";
@@ -77,7 +76,7 @@ final public class StartWithCapitalLetterValidator extends Validator {
         }
 
         if (Character.isLowerCase(headChar)) {
-            errors.add(createValidationError(sentence, headChar));
+            addValidationError(sentence, headChar);
         }
     }
 

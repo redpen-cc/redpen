@@ -21,10 +21,7 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
-import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
-
-import java.util.List;
 
 /**
  * Validate whether paragraph start as specified.
@@ -38,15 +35,15 @@ final public class ParagraphStartWithValidator extends Validator {
     private String beginningOfParagraph = DEFAULT_PARAGRAPH_START_WITH;
 
     @Override
-    public void validate(List<ValidationError> errors, Section section) {
+    public void validate(Section section) {
         for (Paragraph currentParagraph : section.getParagraphs()) {
             if (currentParagraph.getNumberOfSentences() == 0) {
                 continue;
             }
             Sentence firstSentence = currentParagraph.getSentence(0);
             if (firstSentence.getContent().indexOf(this.beginningOfParagraph) != 0) {
-                errors.add(createValidationError(section.getJoinedHeaderContents(),
-                        firstSentence.getContent().charAt(0)));
+                addValidationError(section.getJoinedHeaderContents(),
+                        firstSentence.getContent().charAt(0));
             }
         }
     }

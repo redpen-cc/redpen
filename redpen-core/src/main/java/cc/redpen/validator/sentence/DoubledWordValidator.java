@@ -20,7 +20,6 @@ package cc.redpen.validator.sentence;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +27,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -41,13 +39,13 @@ final public class DoubledWordValidator extends Validator {
     private Set<String> customSkipList;
 
     @Override
-    public void validate(List<ValidationError> errors, Sentence sentence) {
+    public void validate(Sentence sentence) {
         Set<String> surfaces = new HashSet<>();
         for (TokenElement token : sentence.getTokens()) {
             String currentSurface = token.getSurface();
             if (surfaces.contains(currentSurface) && !skipList.contains(currentSurface.toLowerCase())
                     && !customSkipList.contains(currentSurface.toLowerCase())) {
-                errors.add(createValidationErrorFromToken(sentence, token));
+                addValidationErrorFromToken(sentence, token);
             }
             surfaces.add(currentSurface);
         }

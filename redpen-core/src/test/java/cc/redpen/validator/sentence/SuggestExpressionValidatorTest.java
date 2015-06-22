@@ -47,7 +47,8 @@ public class SuggestExpressionValidatorTest {
     public void testSynonym() {
         Sentence str = new Sentence("it like a piece of a cake.", 0);
         List<ValidationError> errors = new ArrayList<>();
-        suggestExpressionValidator.validate(errors, str);
+        suggestExpressionValidator.setErrorList(errors);
+        suggestExpressionValidator.validate(str);
         assertEquals(1, errors.size());
     }
 
@@ -55,7 +56,8 @@ public class SuggestExpressionValidatorTest {
     public void testWithoutSynonym() {
         Sentence str = new Sentence("it love a piece of a cake.", 0);
         List<ValidationError> errors = new ArrayList<>();
-        suggestExpressionValidator.validate(errors, str);
+        suggestExpressionValidator.setErrorList(errors);
+        suggestExpressionValidator.validate(str);
         assertEquals(0, errors.size());
     }
 
@@ -63,7 +65,8 @@ public class SuggestExpressionValidatorTest {
     public void testWithMultipleSynonyms() {
         Sentence str = new Sentence("it like a the info.", 0);
         List<ValidationError> errors = new ArrayList<>();
-        suggestExpressionValidator.validate(errors, str);
+        suggestExpressionValidator.setErrorList(errors);
+        suggestExpressionValidator.validate(str);
         assertEquals(2, errors.size());
     }
 
@@ -71,7 +74,8 @@ public class SuggestExpressionValidatorTest {
     public void testWitoutZeroLengthSentence() {
         Sentence str = new Sentence("", 0);
         List<ValidationError> errors = new ArrayList<>();
-        suggestExpressionValidator.validate(errors, str);
+        suggestExpressionValidator.setErrorList(errors);
+        suggestExpressionValidator.validate(str);
         assertEquals(0, errors.size());
     }
 }

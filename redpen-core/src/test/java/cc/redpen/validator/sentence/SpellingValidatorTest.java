@@ -50,7 +50,8 @@ public class SpellingValidatorTest {
         Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
 
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, documents.get(0).getLastSection().getParagraph(0).getSentence(0));
+        validator.setErrorList(errors);
+        validator.validate(documents.get(0).getLastSection().getParagraph(0).getSentence(0));
         assertEquals(1, errors.size());
     }
 

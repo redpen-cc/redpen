@@ -23,7 +23,6 @@ import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -33,13 +32,10 @@ import java.util.Set;
 public class SymbolWithSpaceValidator extends Validator {
 
     @Override
-    public void validate(List<ValidationError> errors, Sentence sentence) {
+    public void validate(Sentence sentence) {
         Set<SymbolType> symbolTypes = getSymbolTable().getNames();
         for (SymbolType symbolType : symbolTypes) {
-            ValidationError error = validateSymbol(sentence, symbolType);
-            if (error != null) {
-                errors.add(error);
-            }
+            validateSymbol(sentence, symbolType);
         }
     }
 
@@ -55,17 +51,17 @@ public class SymbolWithSpaceValidator extends Validator {
         if (position != -1) {
             if (position > 0 && symbol.isNeedBeforeSpace()
                     && !Character.isWhitespace(sentenceStr.charAt(position - 1))) {
-                return createValidationErrorWithPosition(sentence,
+                addValidationErrorWithPosition(sentence,
                         sentence.getOffset(position),
-                        sentence.getOffset(position+1),
+                        sentence.getOffset(position + 1),
                         sentenceStr.charAt(position));
 
             } else if (position < sentenceStr.length() - 1
                     && symbol.isNeedAfterSpace()
                     && !Character.isWhitespace(sentenceStr.charAt(position + 1))) {
-                return createValidationErrorWithPosition(sentence,
+                addValidationErrorWithPosition(sentence,
                         sentence.getOffset(position),
-                        sentence.getOffset(position+1),
+                        sentence.getOffset(position + 1),
                         sentenceStr.charAt(position));
             }
         }

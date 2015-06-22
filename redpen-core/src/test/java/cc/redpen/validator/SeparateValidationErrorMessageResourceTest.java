@@ -30,9 +30,9 @@ import static org.junit.Assert.assertEquals;
 public class SeparateValidationErrorMessageResourceTest extends Validator {
 
     @Override
-    public void validate(List<ValidationError> errors, Sentence sentence) {
-        errors.add(createValidationError(sentence, 1, 2, 3, "sentence"));
-        errors.add(createValidationError("withKey", sentence, "sentence"));
+    public void validate(Sentence sentence) {
+        addValidationError(sentence, 1, 2, 3, "sentence");
+        addValidationError("withKey", sentence, "sentence");
     }
 
     @Test
@@ -42,7 +42,8 @@ public class SeparateValidationErrorMessageResourceTest extends Validator {
         // loads SeparateValidationErrorMessageResourceTest.properties
         validationErrorMessageTest.setLocale(Locale.ENGLISH);
         List<ValidationError> validationErrors = new ArrayList<>();
-        validationErrorMessageTest.validate(validationErrors, new Sentence("sentence", 1));
+        validationErrorMessageTest.setErrorList(validationErrors);
+        validationErrorMessageTest.validate(new Sentence("sentence", 1));
         // if message resource doesn't found, fallback to [ValidatorClassName].properties
         assertEquals("separate resource error str:sentence 1:1 2:2 3:3", validationErrors.get(0).getMessage());
         assertEquals("separate resource with Key :sentence", validationErrors.get(1).getMessage());
@@ -50,9 +51,10 @@ public class SeparateValidationErrorMessageResourceTest extends Validator {
         // loads SeparateValidationErrorMessageResourceTest_ja.properties
         validationErrorMessageTest.setLocale(Locale.JAPAN);
         validationErrors = new ArrayList<>();
-        validationErrorMessageTest.validate(validationErrors, new Sentence("sentence", 1));
+        validationErrorMessageTest.setErrorList(validationErrors);
+        validationErrorMessageTest.validate(new Sentence("sentence", 1));
         assertEquals("separate resource エラー ストリング:sentence 1:1 2:2 3:3", validationErrors.get(0).getMessage());
         assertEquals("separate resource キー指定 :sentence", validationErrors.get(1).getMessage());
-
     }
+
 }

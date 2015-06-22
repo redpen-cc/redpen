@@ -20,10 +20,8 @@ package cc.redpen.validator.sentence;
 import cc.redpen.config.Symbol;
 import cc.redpen.config.SymbolType;
 import cc.redpen.model.Sentence;
-import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -32,27 +30,23 @@ import java.util.Set;
 final public class InvalidSymbolValidator extends Validator {
 
     @Override
-    public void validate(List<ValidationError> errors, Sentence sentence) {
+    public void validate(Sentence sentence) {
         Set<SymbolType> symbolTypes = getSymbolTable().getNames();
         for (SymbolType symbolType : symbolTypes) {
-            ValidationError error = validateSymbol(sentence, symbolType);
-            if (error != null) {
-                errors.add(error);
-            }
+            validateSymbol(sentence, symbolType);
         }
     }
 
-    private ValidationError validateSymbol(Sentence sentence, SymbolType symbolType) {
+    private void validateSymbol(Sentence sentence, SymbolType symbolType) {
         String sentenceStr = sentence.getContent();
         Symbol symbol = getSymbolTable().getSymbol(symbolType);
         for (char invalidChar : symbol.getInvalidChars()) {
             int startPosition = sentenceStr.indexOf(invalidChar);
             if (startPosition != -1) {
-                return createValidationErrorWithPosition(sentence,
+                addValidationErrorWithPosition(sentence,
                         sentence.getOffset(startPosition),
-                        sentence.getOffset(startPosition+1), invalidChar);
+                        sentence.getOffset(startPosition + 1), invalidChar);
             }
         }
-        return null;
     }
 }
