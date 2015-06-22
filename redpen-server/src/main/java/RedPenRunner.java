@@ -15,15 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import cc.redpen.RedPen;
 import org.apache.commons.cli.*;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.handler.ShutdownHandler;
 import org.eclipse.jetty.webapp.WebAppContext;
 
-import javax.servlet.ServletContext;
 import java.net.URL;
 import java.security.ProtectionDomain;
 
 public class RedPenRunner {
+
+    public static final String STOP_KEY = "STOP_KEY";
 
     public static void main(String[] args) throws Exception {
         Options options = new Options();
@@ -35,15 +39,10 @@ public class RedPenRunner {
         OptionBuilder.withArgName("PORT");
         options.addOption(OptionBuilder.create("p"));
 
-        OptionBuilder.withLongOpt("conf");
-        OptionBuilder.withDescription("configuration file");
-        OptionBuilder.hasArg();
-        OptionBuilder.withArgName("CONFFILE");
-        options.addOption(OptionBuilder.create("c"));
-
-
         options.addOption("v", "version", false,
                 "print the version information and exit");
+
+        options.addOption(new Option(STOP_KEY, true, "stop key"));
 
         CommandLineParser parser = new BasicParser();
         CommandLine commandLine = null;
@@ -55,7 +54,6 @@ public class RedPenRunner {
             System.exit(-1);
         }
 
-        String configFileName = "/conf/redpen-conf.xml";
         int portNum = 8080;
 
         if (commandLine.hasOption("h")) {
@@ -63,13 +61,9 @@ public class RedPenRunner {
             System.exit(0);
         }
         if (commandLine.hasOption("v")) {
-            System.out.println("1.0");
+            System.out.println(RedPen.VERSION);
             System.exit(0);
         }
-        if (commandLine.hasOption("c")) {
-            configFileName = commandLine.getOptionValue("c");
-        }
-
         if (commandLine.hasOption("p")) {
             portNum = Integer.parseInt(commandLine.getOptionValue("p"));
         }
@@ -80,12 +74,20 @@ public class RedPenRunner {
         ProtectionDomain domain = RedPenRunner.class.getProtectionDomain();
         URL location = domain.getCodeSource().getLocation();
 
+        HandlerList handlerList = new HandlerList();
+        if(commandLine.hasOption(STOP_KEY)) {
+            // add Shutdown handler only when STOP_KEY is specified
+            ShutdownHandler shutdownHandler = new ShutdownHandler(commandLine.getOptionValue(STOP_KEY));
+            handlerList.addHandler(shutdownHandler);
+        }
+
         WebAppContext webapp = new WebAppContext();
         webapp.setContextPath(contextPath);
         webapp.setWar(location.toExternalForm());
-        ServletContext context = webapp.getServletContext();
-        context.setAttribute("redpen.conf.path", configFileName);
-        server.setHandler(webapp);
+
+        handlerList.addHandler(webapp);
+        server.setHandler(handlerList);
+
         server.start();
         server.join();
     }
