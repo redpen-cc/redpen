@@ -42,7 +42,8 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
     public void testNeedBeforeSpace() {
         SpaceBetweenAlphabeticalWordValidator validator = new SpaceBetweenAlphabeticalWordValidator();
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, new Sentence("きょうはCoke を飲みたい。", 0));
+        validator.setErrorList(errors);
+        validator.validate(new Sentence("きょうはCoke を飲みたい。", 0));
         assertEquals(1, errors.size());
     }
 
@@ -50,7 +51,8 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
     public void testNeedAfterSpace() {
         SpaceBetweenAlphabeticalWordValidator validator = new SpaceBetweenAlphabeticalWordValidator();
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, new Sentence("きょうは Cokeを飲みたい。", 0));
+        validator.setErrorList(errors);
+        validator.validate(new Sentence("きょうは Cokeを飲みたい。", 0));
         assertEquals(1, errors.size());
     }
 
@@ -58,7 +60,8 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
     public void testNeedBeforeAndAfterSpace() {
         SpaceBetweenAlphabeticalWordValidator validator = new SpaceBetweenAlphabeticalWordValidator();
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, new Sentence("きょうはCokeを飲みたい。", 0));
+        validator.setErrorList(errors);
+        validator.validate(new Sentence("きょうはCokeを飲みたい。", 0));
         assertEquals(2, errors.size());
     }
 
@@ -66,7 +69,8 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
     public void testNotNeedSpaces() {
         SpaceBetweenAlphabeticalWordValidator validator = new SpaceBetweenAlphabeticalWordValidator();
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, new Sentence("This Coke is cold", 0));
+        validator.setErrorList(errors);
+        validator.validate(new Sentence("This Coke is cold", 0));
         assertEquals(0, errors.size());
     }
 
@@ -74,7 +78,8 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
     public void testLatinSymbolWithoutSpace() {
         SpaceBetweenAlphabeticalWordValidator validator = new SpaceBetweenAlphabeticalWordValidator();
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, new Sentence("きょうは,コーラを飲みたい。", 0));
+        validator.setErrorList(errors);
+        validator.validate(new Sentence("きょうは,コーラを飲みたい。", 0));
         assertEquals(0, errors.size());
     }
 

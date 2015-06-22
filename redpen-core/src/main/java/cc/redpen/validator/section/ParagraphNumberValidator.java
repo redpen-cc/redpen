@@ -19,10 +19,7 @@ package cc.redpen.validator.section;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Section;
-import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
-
-import java.util.List;
 
 /**
  * Validate paragraph number. If a section has paragraphs more than specified,
@@ -37,10 +34,10 @@ final public class ParagraphNumberValidator extends Validator {
     private int maxParagraphs;
 
     @Override
-    public void validate(List<ValidationError> errors, Section section) {
+    public void validate(Section section) {
         int paragraphNumber = section.getNumberOfParagraphs();
         if (maxParagraphs < paragraphNumber) {
-            errors.add(createValidationError(section.getJoinedHeaderContents(), paragraphNumber));
+            addValidationError(section.getJoinedHeaderContents(), paragraphNumber);
         }
     }
 

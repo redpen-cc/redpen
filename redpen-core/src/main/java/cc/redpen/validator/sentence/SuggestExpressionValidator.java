@@ -19,7 +19,6 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
-import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,14 +37,14 @@ final public class SuggestExpressionValidator extends Validator {
     private Map<String, String> synonyms = new HashMap<>();
 
     @Override
-    public void validate(List<ValidationError> errors, Sentence sentence) {
+    public void validate(Sentence sentence) {
         synonyms.keySet().stream().forEach(value -> {
                     int startPosition = sentence.getContent().indexOf(value);
                     if (startPosition != -1) {
-                        errors.add(createValidationErrorWithPosition(sentence,
+                        addValidationErrorWithPosition(sentence,
                                 sentence.getOffset(startPosition),
                                 sentence.getOffset(startPosition + value.length()),
-                                synonyms.get(value)));
+                                synonyms.get(value));
                     }
                 }
         );

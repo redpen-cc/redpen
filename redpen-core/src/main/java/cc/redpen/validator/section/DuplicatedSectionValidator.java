@@ -22,7 +22,6 @@ import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
 import java.util.*;
@@ -70,7 +69,7 @@ final public class DuplicatedSectionValidator extends Validator {
     }
 
     @Override
-    public void validate(List<ValidationError> errors, Section section) {
+    public void validate(Section section) {
         Map<String, Integer> targetVector = extractWordFrequency(section);
         for (SectionVector sectionVector : sectionVectors) {
             Map<String, Integer> candidateVector = sectionVector.sectionVector;
@@ -78,8 +77,8 @@ final public class DuplicatedSectionValidator extends Validator {
             if (sectionVector.header != section.getHeaderContent(0) &&
                     calcCosine(targetVector, candidateVector) > threhold) {
                 Optional<Sentence> header = Optional.ofNullable(section.getHeaderContent(0));
-                errors.add(createValidationError(header.orElse(section.getParagraph(0).getSentence(0)),
-                        sectionVector.header.getLineNumber()));
+                addValidationError(header.orElse(section.getParagraph(0).getSentence(0)),
+                        sectionVector.header.getLineNumber());
             }
         }
     }
