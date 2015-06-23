@@ -45,7 +45,7 @@ public class SpellingValidator extends Validator {
     protected void init() throws RedPenException {
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/spellchecker-" + getSymbolTable().getLang() + ".dat";
-        defaultDictionary = WORD_LSIT_LOWERCASED.loadCachedFromResource(defaultDictionaryFile, "spell dictionary");
+        defaultDictionary = WORD_LIST_LOWERCASED.loadCachedFromResource(defaultDictionaryFile, "spell dictionary");
 
         customDictionary = new HashSet<>();
         Optional<String> listStr = getConfigAttribute("list");
@@ -58,7 +58,7 @@ public class SpellingValidator extends Validator {
         Optional<String> userDictionaryFile = getConfigAttribute("dict");
         if (userDictionaryFile.isPresent()) {
             String f = userDictionaryFile.get();
-            customDictionary.addAll(WORD_LSIT_LOWERCASED.loadCachedFromFile(new File(f), "SpellingValidator user dictionary"));
+            customDictionary.addAll(WORD_LIST_LOWERCASED.loadCachedFromFile(new File(f), "SpellingValidator user dictionary"));
         }
     }
 

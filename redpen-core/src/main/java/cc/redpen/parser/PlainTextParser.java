@@ -35,7 +35,7 @@ import java.util.Optional;
 /**
  * Parser for plain text file.
  */
-final class PlainTextParser extends BaseDocumentParser implements Serializable {
+final public class PlainTextParser extends BaseDocumentParser implements Serializable {
     private static final Logger LOG = LoggerFactory.getLogger(PlainTextParser.class);
     private static final long serialVersionUID = -4343255148183552844L;
 
@@ -88,13 +88,30 @@ final class PlainTextParser extends BaseDocumentParser implements Serializable {
 
 
     /* Add a sentence with offsets */
-    private LineOffset addSentence(LineOffset lineOffset, String rawSentenceText, SentenceExtractor sentenceExtractor, Document.DocumentBuilder builder) {
+    public static LineOffset addSentence(LineOffset lineOffset, String rawSentenceText, SentenceExtractor sentenceExtractor, Document.DocumentBuilder builder) {
 
         int lineNum = lineOffset.lineNum;
         int offset = lineOffset.offset;
+
+        int sentenceStartLineNum = lineNum;
+        int sentenceStartLineOffset = offset;
+
         List<LineOffset> offsetMap = new ArrayList<>();
         String normalizedSentence = "";
-        for (int i = 0; i < rawSentenceText.length(); i++) {
+        int i;
+        // skip leading line breaks to find the start line of the sentence
+        for (i = 0; i < rawSentenceText.length(); i++) {
+            char ch = rawSentenceText.charAt(i);
+            if (ch == '\n') {
+                sentenceStartLineNum++;
+                lineNum++;
+                sentenceStartLineOffset = 0;
+                offset = 0;
+            } else {
+                break;
+            }
+        }
+        for (; i < rawSentenceText.length(); i++) {
             char ch = rawSentenceText.charAt(i);
             if (ch == '\n') {
                 if (!sentenceExtractor.getBrokenLineSeparator().isEmpty()) {
@@ -109,7 +126,7 @@ final class PlainTextParser extends BaseDocumentParser implements Serializable {
                 offset++;
             }
         }
-        Sentence sentence = new Sentence(normalizedSentence, lineNum, lineOffset.offset);
+        Sentence sentence = new Sentence(normalizedSentence, sentenceStartLineNum, sentenceStartLineOffset);
         sentence.setOffsetMap(offsetMap);
         builder.addSentence(sentence);
 

@@ -298,6 +298,6 @@ public abstract class Validator {
     /**
      * Resource Extractor loads word list while lowercasting lines
      */
-    protected final static DictionaryLoader<Set<String>> WORD_LSIT_LOWERCASED =
+    protected final static DictionaryLoader<Set<String>> WORD_LIST_LOWERCASED =
             new DictionaryLoader<>(HashSet::new, (set, line) -> set.add(line.toLowerCase()));
 }

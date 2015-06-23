@@ -222,8 +222,8 @@ public final class Sentence implements Serializable {
             if (offsetMap.size() > position) {
                 return Optional.of(offsetMap.get(position));
             } else if ((position > 0) && (offsetMap.size() == position)) {
-                LineOffset prev = offsetMap.get(position - 1);
-                return Optional.of(new LineOffset(prev.lineNum, prev.offset + 1));
+                LineOffset last = offsetMap.get(offsetMap.size() - 1);
+                return Optional.of(new LineOffset(last.lineNum, last.offset + 1));
             }
             return Optional.of(new LineOffset(lineNumber, position));
         }
