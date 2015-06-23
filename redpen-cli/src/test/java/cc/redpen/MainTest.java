@@ -63,9 +63,9 @@ public class MainTest {
         String[] args = new String[]{
                 "-c", "sample/conf/redpen-conf-plugin.xml",
                 "sample/sample-doc/en/sampledoc-en.txt",
-                "-l", "100"
+                "-l", "1"
         };
-        assertEquals(0, Main.run(args));
+        assertEquals(1, Main.run(args));
     }
 
     @Test
