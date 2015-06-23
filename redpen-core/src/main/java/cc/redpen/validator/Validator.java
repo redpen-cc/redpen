@@ -41,7 +41,7 @@ public abstract class Validator {
     private static final Logger LOG = LoggerFactory.getLogger(Validator.class);
     private final static ResourceBundle.Control fallbackControl = ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_DEFAULT);
 
-    private Optional<ResourceBundle> errorMessages = Optional.empty();
+    private ResourceBundle errorMessages = null;
     private ValidatorConfiguration config;
     private SymbolTable symbolTable;
 
@@ -117,11 +117,15 @@ public abstract class Validator {
     }
 
     void setLocale(Locale locale) {
+        // getPackage() would return null for default package
+        String packageName = this.getClass().getPackage() != null ? this.getClass().getPackage().getName() : "";
         try {
-            // getPackage() would return null for default package
-            String packageName = this.getClass().getPackage() != null ? this.getClass().getPackage().getName() : "";
-            errorMessages = Optional.ofNullable(ResourceBundle.getBundle(packageName + ".error-messages", locale, fallbackControl));
+            errorMessages = ResourceBundle.getBundle(packageName + "." + this.getClass().getSimpleName(), locale, fallbackControl);
         } catch (MissingResourceException ignore) {
+            try {
+                errorMessages = ResourceBundle.getBundle(packageName + ".error-messages", locale, fallbackControl);
+            } catch (MissingResourceException ignoreAgain) {
+            }
         }
     }
 
@@ -266,9 +270,9 @@ public abstract class Validator {
      * @return localized error message
      */
     protected String getLocalizedErrorMessage(Optional<String> key, Object... args) {
-        if (errorMessages.isPresent()) {
+        if (errorMessages != null) {
             String suffix = key.isPresent() ? "." + key.get() : "";
-            return MessageFormat.format(errorMessages.get().getString(this.getClass().getSimpleName() + suffix), args);
+            return MessageFormat.format(errorMessages.getString(this.getClass().getSimpleName() + suffix), args);
         } else {
             throw new AssertionError("message resource not found.");
         }

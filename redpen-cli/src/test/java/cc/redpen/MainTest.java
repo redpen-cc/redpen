@@ -22,9 +22,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 public class MainTest {
 
@@ -60,6 +58,15 @@ public class MainTest {
         // environment variable cannot be set via Java program
     }
 
+    @Test
+    public void testPlugin() throws Exception {
+        String[] args = new String[]{
+                "-c", "sample/conf/redpen-conf-plugin.xml",
+                "sample/sample-doc/en/sampledoc-en.txt",
+                "-l", "1"
+        };
+        assertEquals(1, Main.run(args));
+    }
 
     @Test
     public void testMainWithoutParameters() throws RedPenException {
