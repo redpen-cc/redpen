@@ -95,7 +95,6 @@ public class LexerTest {
     public void testFormulaShouldNotAppear() {
         final String corpse = "This is $\\mathrm{science, formulated:} e^{i\\pi} = \\mathrm{cos}\\pi + i\\mathrm{sin}\\pi = 1$.\n";
         final List<Token> tokens = Lexer.on(corpse).parse();
-        System.out.println(tokens);
         assertTokensLike(
             Arrays.asList(
                 token("TEXTILE", "This is .\n")
