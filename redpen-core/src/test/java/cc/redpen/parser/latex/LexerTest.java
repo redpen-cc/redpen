@@ -31,9 +31,7 @@ public class LexerTest {
     public void testCommentShouldNotAppear() {
         final String corpse = "% This is a comment\n";
         final List<Token> tokens = Lexer.on(corpse).parse();
-        assertEquals(1, tokens.size());
-        assertEquals("TEXTILE", tokens.get(0).t);
-        assertEquals("\n", tokens.get(0).v);
+        assertEquals(0, tokens.size());
     }
 
     @Test
@@ -100,8 +98,7 @@ public class LexerTest {
         System.out.println(tokens);
         assertTokensLike(
             Arrays.asList(
-                token("TEXTILE", "This is "),
-                token("TEXTILE", ".\n")
+                token("TEXTILE", "This is .\n")
                 ),
             tokens);
     }

@@ -82,8 +82,6 @@ public class Lexer {
     private void doParseTextile(final List<Token> o, final char c) {
         switch (c) {
         case '%':
-            flush(o);
-            savePosition();
             mMode = "COMMENT";
             break;
         case '\\':
@@ -112,8 +110,6 @@ public class Lexer {
             synthesize(o, "GROUP2_END", c);
             break;
         case '$':
-            flush(o);
-            savePosition();
             mMode = "FORMULA";
             break;
         default:
@@ -127,17 +123,13 @@ public class Lexer {
 
     private void doParseFormula(final List<Token> o, final char c) {
         if (c == '$') {
-            flush(o);
-            savePosition();
             mMode = "TEXTILE";
         }
     }
 
     private void doParseComment(final List<Token> o, final char c) {
         if (c == '\n') {
-            savePosition();
             mMode = "TEXTILE";
-            doParse(o, c);
         }
     }
 

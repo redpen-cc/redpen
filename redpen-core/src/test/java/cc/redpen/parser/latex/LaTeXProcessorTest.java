@@ -64,7 +64,7 @@ public class LaTeXProcessorTest {
             + "\\end{document}\n";
         System.out.println(summary(new LaTeXProcessor().parse(code.toCharArray())));
         assertEquals(
-            "(RootNode (ParaNode (TextNode 'There are various tests.Most common one is unit test.\nIntegration test is also common.')))",
+            "(RootNode (ParaNode (TextNode 'There are various tests.\nMost common one is unit test.\nIntegration test is also common. ')))",
             summary(
                 new LaTeXProcessor().parse(code.toCharArray())
             )
