@@ -128,8 +128,15 @@ public final class Main {
 
         String[] inputFileNames = commandLine.getArgs();
         File[] inputFiles = new File[inputFileNames.length];
+        boolean markdownOnly = true;
         for (int i = 0; i < inputFileNames.length; i++) {
             inputFiles[i] = new File(inputFileNames[i]);
+            if (!inputFileNames[i].endsWith(".md")) {
+                markdownOnly = false;
+            }
+        }
+        if (!commandLine.hasOption("f") && markdownOnly) {
+            inputFormat = "markdown";
         }
 
         DocumentParser parser = DocumentParser.of(inputFormat);
