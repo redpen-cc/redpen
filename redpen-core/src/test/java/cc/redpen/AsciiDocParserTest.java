@@ -155,7 +155,7 @@ public class AsciiDocParserTest {
 
     @Test
     public void testSectionHeaderOffsetPosition() throws UnsupportedEncodingException {
-        String sampleText = "# About _Gekioko_.\n\n" +
+        String sampleText = "= About _Gekioko_.\n\n" +
                 "Gekioko is mean angry.";
 
         Document doc = createFileContent(sampleText);
