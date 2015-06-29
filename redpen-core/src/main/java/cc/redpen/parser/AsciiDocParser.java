@@ -36,7 +36,7 @@ import java.util.Optional;
 
 
 /**
- * Parser for AsciiDoc format, utilizing AsciiDoctorJ.<br/>
+ * Parser for AsciiDoc fasormat, utilizing AsciiDoctorJ.<br/>
  * <p/>
  * AsciiDoc's syntax and grammar is documented at @see http://asciidoc.org/
  */

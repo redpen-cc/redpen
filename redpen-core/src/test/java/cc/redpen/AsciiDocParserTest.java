@@ -131,17 +131,36 @@ public class AsciiDocParserTest {
 
         RedPen redPen = new RedPen(configuration);
         List<ValidationError> errors = redPen.validate(doc);
-        for (ValidationError error : errors) {
-            System.out.println(error.getMessage());
-        }
+        assertTrue(errors.size() > 0);
     }
 
-    private void dumpSentence(Sentence sentence) {
-        for (int i = 0; i < sentence.getContent().length(); i++) {
-            String offset = sentence.getOffset(i).isPresent() ? sentence.getOffset(i).get().lineNum + "," + sentence.getOffset(i).get().offset : "n/a";
-            System.out.print("[" + sentence.getContent().charAt(i) + ":" + offset + "]");
-        }
-        System.out.println();
+
+    @Test
+    public void testRemoveTextDecoration() throws UnsupportedEncodingException {
+        String sampleText = "About _Gekioko_.\n";
+        Document doc = createFileContent(sampleText);
+        assertEquals(1, doc.size());
+        assertEquals("About Gekioko.", doc.getSection(0).getParagraph(0).getSentence(0).getContent());
+    }
+
+    @Test
+    public void testSectionHeader() throws UnsupportedEncodingException {
+        String sampleText = "# About _Gekioko_.\n\n" +
+                "Gekioko is mean angry.";
+
+        Document doc = createFileContent(sampleText);
+        assertEquals(1, doc.size());
+        assertEquals("About Gekioko.", doc.getSection(0).getHeaderContent(0).getContent());
+    }
+
+    @Test
+    public void testSectionHeaderOffsetPosition() throws UnsupportedEncodingException {
+        String sampleText = "# About _Gekioko_.\n\n" +
+                "Gekioko is mean angry.";
+
+        Document doc = createFileContent(sampleText);
+        assertEquals(1, doc.size());
+        assertEquals(2, doc.getSection(0).getHeaderContent(0).getOffset(0).get().offset);
     }
 
     private Document createFileContent(String inputDocumentString,
