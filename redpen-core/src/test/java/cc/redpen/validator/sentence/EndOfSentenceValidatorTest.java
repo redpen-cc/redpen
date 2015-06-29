@@ -42,7 +42,8 @@ public class EndOfSentenceValidatorTest {
     public void testInvalidEndOfSentence() {
         EndOfSentenceValidator validator = new EndOfSentenceValidator();
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, new Sentence("He said \"that is right\".", 0));
+        validator.setErrorList(errors);
+        validator.validate(new Sentence("He said \"that is right\".", 0));
         assertEquals(1, errors.size());
     }
 
@@ -50,7 +51,8 @@ public class EndOfSentenceValidatorTest {
     public void testValidEndOfSentence() {
         EndOfSentenceValidator validator = new EndOfSentenceValidator();
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, new Sentence("He said \"that is right.\"", 0));
+        validator.setErrorList(errors);
+        validator.validate(new Sentence("He said \"that is right.\"", 0));
         assertEquals(0, errors.size());
     }
 
@@ -58,7 +60,8 @@ public class EndOfSentenceValidatorTest {
     public void testInValidEndOfSentenceWithQuestionMark() {
         EndOfSentenceValidator validator = new EndOfSentenceValidator();
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, new Sentence("He said \"Is it right\"?", 0));
+        validator.setErrorList(errors);
+        validator.validate( new Sentence("He said \"Is it right\"?", 0));
         assertEquals(1, errors.size());
     }
 
@@ -66,7 +69,8 @@ public class EndOfSentenceValidatorTest {
     public void testVoid() {
         EndOfSentenceValidator validator = new EndOfSentenceValidator();
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, new Sentence("", 0));
+        validator.setErrorList(errors);
+        validator.validate(new Sentence("", 0));
         assertEquals(0, errors.size());
     }
 

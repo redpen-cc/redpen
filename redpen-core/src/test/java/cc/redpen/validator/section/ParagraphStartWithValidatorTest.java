@@ -37,7 +37,7 @@ public class ParagraphStartWithValidatorTest {
         paragraph.appendSentence("it like a piece of a cake.", 0);
         section.appendParagraph(paragraph);
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, section);
+       validator.setErrorList(errors);         validator.validate(section);
         assertEquals(1, errors.size());
     }
 
@@ -49,7 +49,7 @@ public class ParagraphStartWithValidatorTest {
         paragraph.appendSentence(" it like a piece of a cake.", 0);
         section.appendParagraph(paragraph);
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, section);
+       validator.setErrorList(errors);         validator.validate(section);
         assertEquals(0, errors.size());
     }
 
@@ -60,7 +60,7 @@ public class ParagraphStartWithValidatorTest {
         Paragraph paragraph = new Paragraph();
         section.appendParagraph(paragraph);
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, section);
+       validator.setErrorList(errors);         validator.validate(section);
         assertEquals(0, errors.size());
     }
 }

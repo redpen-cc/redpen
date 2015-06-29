@@ -33,7 +33,8 @@ public class KatakanaEndHyphenValidatorTest {
                 = new KatakanaEndHyphenValidator();
         Sentence str = new Sentence("", 0);
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, str);
+        validator.setErrorList(errors);
+        validator.validate(str);
         assertEquals(str.toString(), 0, errors.size());
     }
 
@@ -43,7 +44,8 @@ public class KatakanaEndHyphenValidatorTest {
                 = new KatakanaEndHyphenValidator();
         Sentence str = new Sentence("あ", 0);
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, str);
+        validator.setErrorList(errors);
+        validator.validate(str);
         assertEquals(str.toString(), 0, errors.size());
     }
 
@@ -53,7 +55,8 @@ public class KatakanaEndHyphenValidatorTest {
                 = new KatakanaEndHyphenValidator();
         Sentence str = new Sentence("ア", 0);
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, str);
+        validator.setErrorList(errors);
+        validator.validate(str);
         assertEquals(str.toString(), 0, errors.size());
     }
 
@@ -63,7 +66,8 @@ public class KatakanaEndHyphenValidatorTest {
                 = new KatakanaEndHyphenValidator();
         Sentence str = new Sentence("ドア", 0);
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, str);
+        validator.setErrorList(errors);
+        validator.validate(str);
         assertEquals(str.toString(), 0, errors.size());
     }
 
@@ -73,7 +77,8 @@ public class KatakanaEndHyphenValidatorTest {
                 = new KatakanaEndHyphenValidator();
         Sentence str = new Sentence("ミラー", 0);
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, str);
+        validator.setErrorList(errors);
+        validator.validate(str);
         assertEquals(str.toString(), 0, errors.size());
     }
 
@@ -83,7 +88,8 @@ public class KatakanaEndHyphenValidatorTest {
                 = new KatakanaEndHyphenValidator();
         Sentence str = new Sentence("コーヒー", 0); // This is an error.
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, str);
+        validator.setErrorList(errors);
+        validator.validate(str);
         assertEquals(str.toString(), 1, errors.size());
     }
 
@@ -93,7 +99,8 @@ public class KatakanaEndHyphenValidatorTest {
                 = new KatakanaEndHyphenValidator();
         Sentence str = new Sentence("コンピューターが壊れた。", 0);
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, str);
+        validator.setErrorList(errors);
+        validator.validate(str);
         assertEquals(str.toString(), 1, errors.size());
     }
 
@@ -103,7 +110,8 @@ public class KatakanaEndHyphenValidatorTest {
                 = new KatakanaEndHyphenValidator();
         Sentence str = new Sentence("コンピュータが壊れた。", 0);
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, str);
+        validator.setErrorList(errors);
+        validator.validate(str);
         assertEquals(str.toString(), 0, errors.size());
     }
 
@@ -113,7 +121,8 @@ public class KatakanaEndHyphenValidatorTest {
                 = new KatakanaEndHyphenValidator();
         Sentence str = new Sentence("僕のコンピューターが壊れた。", 0);
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, str);
+        validator.setErrorList(errors);
+        validator.validate(str);
         assertEquals(str.toString(), 1, errors.size());
     }
 
@@ -123,7 +132,8 @@ public class KatakanaEndHyphenValidatorTest {
                 = new KatakanaEndHyphenValidator();
         Sentence str = new Sentence("僕のコンピュータが壊れた。", 0);
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, str);
+        validator.setErrorList(errors);
+        validator.validate(str);
         assertEquals(str.toString(), 0, errors.size());
     }
 
@@ -133,7 +143,8 @@ public class KatakanaEndHyphenValidatorTest {
                 = new KatakanaEndHyphenValidator();
         Sentence str = new Sentence("僕のコンピューター", 0);
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, str);
+        validator.setErrorList(errors);
+        validator.validate(str);
         assertEquals(str.toString(), 1, errors.size());
     }
 
@@ -143,7 +154,8 @@ public class KatakanaEndHyphenValidatorTest {
                 = new KatakanaEndHyphenValidator();
         Sentence str = new Sentence("僕のコンピュータ", 0);
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, str);
+        validator.setErrorList(errors);
+        validator.validate(str);
         assertEquals(str.toString(), 0, errors.size());
     }
 
@@ -153,7 +165,8 @@ public class KatakanaEndHyphenValidatorTest {
                 = new KatakanaEndHyphenValidator();
         Sentence str = new Sentence("コーヒー・コンピューター", 0);
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, str);
+        validator.setErrorList(errors);
+        validator.validate(str);
         assertEquals(str.toString(), 2, errors.size());
     }
 }

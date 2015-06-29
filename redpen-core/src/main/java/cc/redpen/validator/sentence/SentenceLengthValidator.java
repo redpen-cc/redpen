@@ -19,12 +19,9 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
-import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 /**
  * Validate input sentences contain more characters more than specified.
@@ -40,9 +37,9 @@ final public class SentenceLengthValidator extends Validator {
     private int maxLength = DEFAULT_MAX_LENGTH;
 
     @Override
-    public void validate(List<ValidationError> errors, Sentence sentence) {
+    public void validate(Sentence sentence) {
         if (sentence.getContent().length() > maxLength) {
-            errors.add(createValidationError(sentence, sentence.getContent().length(), maxLength));
+            addValidationError(sentence, sentence.getContent().length(), maxLength);
         }
     }
 

@@ -39,16 +39,21 @@ import java.util.*;
  * <p>A Validator implementation load JavaScript dynamically.</p>
  * <p>files which name end with &quot;.js&quot; and located in &quot;js&quot; (can be specified with &quot;script-path&quot; property) directory will be treated as JavaScript validator implementation. Functions with the following signature will be called upon validation time:</p>
  * <pre>
- *     var message = "<i>validation error message</i> {0}";
+ *     var message = "your sentence has validation error : {0}";
  *     function preValidateSentence(sentence) {
  *     }
  *     function preValidateSection(section) {
  *     }
- *     function validateDocument(errors, document) {
+ *     function validateDocument(document) {
+ *       // your validation logic for document here
  *     }
- *     function validateSentence(errors, sentence) {
+ *     function validateSentence(sentence) {
+ *       // if(your validation logic for sentence here) {
+ *       //   addValidationError(sentence, 'specific message');
+ *       // }
  *     }
- *     function validateSection(errors, section) {
+ *     function validateSection(section) {
+ *       // your validation logic for section here
  *     }
  * </pre>
  */
@@ -118,23 +123,23 @@ public class JavaScriptValidator extends Validator {
     }
 
     @Override
-    public void validate(List<ValidationError> errors, Document document) {
+    public void validate(Document document) {
         for (Script js : scripts) {
-            call(js, "validateDocument", errors, document);
+            call(js, "validateDocument", document);
         }
     }
 
     @Override
-    public void validate(List<ValidationError> errors, Sentence sentence) {
+    public void validate(Sentence sentence) {
         for (Script js : scripts) {
-            call(js, "validateSentence", errors, sentence);
+            call(js, "validateSentence", sentence);
         }
     }
 
     @Override
-    public void validate(List<ValidationError> errors, Section section) {
+    public void validate(Section section) {
         for (Script js : scripts) {
-            call(js, "validateSection", errors, section);
+            call(js, "validateSection", section);
         }
     }
 
@@ -160,24 +165,24 @@ public class JavaScriptValidator extends Validator {
 
     // give ValidationError factory methods public access so that they can be bound with JavaScript
     @Override
-    public ValidationError createValidationError(Sentence sentenceWithError, Object... args) {
-        return super.createValidationError(sentenceWithError, args);
+    public void addValidationError(Sentence sentenceWithError, Object... args) {
+        super.addValidationError(sentenceWithError, args);
     }
 
     @Override
-    public ValidationError createValidationError(String messageKey, Sentence sentenceWithError, Object... args) {
-        return super.createValidationError(messageKey, sentenceWithError, args);
+    public void addValidationError(String messageKey, Sentence sentenceWithError, Object... args) {
+        super.addValidationError(messageKey, sentenceWithError, args);
     }
 
     @Override
-    public ValidationError createValidationErrorFromToken(Sentence sentenceWithError, TokenElement token) {
-        return super.createValidationErrorFromToken(sentenceWithError, token);
+    public void addValidationErrorFromToken(Sentence sentenceWithError, TokenElement token) {
+        super.addValidationErrorFromToken(sentenceWithError, token);
     }
 
     @Override
-    public ValidationError createValidationErrorWithPosition(Sentence sentenceWithError,
+    public void addValidationErrorWithPosition(Sentence sentenceWithError,
                                                              Optional<LineOffset> start, Optional<LineOffset> end, Object... args) {
-        return super.createValidationErrorWithPosition(sentenceWithError, start, end, args);
+        super.addValidationErrorWithPosition(sentenceWithError, start, end, args);
     }
 
     @Override
@@ -202,9 +207,9 @@ public class JavaScriptValidator extends Validator {
             ScriptEngine engine = manager.getEngineByName("nashorn");
             try {
                 engine.put("redpenToBeBound", validator);
-                engine.eval("var createValidationError = Function.prototype.bind.call(redpenToBeBound.createValidationError, redpenToBeBound);" +
-                        "var createValidationErrorFromToken = Function.prototype.bind.call(redpenToBeBound.createValidationErrorFromToken, redpenToBeBound);" +
-                        "var createValidationErrorWithPosition = Function.prototype.bind.call(redpenToBeBound.createValidationErrorWithPosition, redpenToBeBound);");
+                engine.eval("var addValidationError = Function.prototype.bind.call(redpenToBeBound.addValidationError, redpenToBeBound);" +
+                        "var addValidationErrorFromToken = Function.prototype.bind.call(redpenToBeBound.addValidationErrorFromToken, redpenToBeBound);" +
+                        "var addValidationErrorWithPosition = Function.prototype.bind.call(redpenToBeBound.addValidationErrorWithPosition, redpenToBeBound);");
 
                 CompiledScript compiledScript = ((Compilable) engine).compile(script);
                 compiledScript.eval();

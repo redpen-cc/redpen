@@ -18,7 +18,6 @@
 package cc.redpen.validator.sentence;
 
 import cc.redpen.model.Sentence;
-import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
 import java.util.Arrays;
@@ -77,24 +76,23 @@ public class JapaneseStyleValidator extends Validator {
     }
 
     @Override
-    public void validate(List<ValidationError> errors, Sentence sentence) {
+    public void validate(Sentence sentence) {
         if (dearuCount > desumasuCount) {
-            detectPattern(sentence, DESUMASU_PATTERN, errors);
-            detectPattern(sentence, DESUMASU_END_PATTERN, errors);
+            detectPattern(sentence, DESUMASU_PATTERN);
+            detectPattern(sentence, DESUMASU_END_PATTERN);
         } else {
-            detectPattern(sentence, DEARU_PATTERN, errors);
-            detectPattern(sentence, DEARU_END_PATTERN, errors
-            );
+            detectPattern(sentence, DEARU_PATTERN);
+            detectPattern(sentence, DEARU_END_PATTERN);
         }
     }
 
-    private void detectPattern(Sentence sentence, Pattern pattern, List<ValidationError> errors) {
+    private void detectPattern(Sentence sentence, Pattern pattern) {
         Matcher mat = pattern.matcher(sentence.getContent());
         while(mat.find()){
-            errors.add(createValidationErrorWithPosition(sentence,
+            addValidationErrorWithPosition(sentence,
                     sentence.getOffset(mat.start()),
                     sentence.getOffset(mat.end()),
-                    mat.group()));
+                    mat.group());
         }
     }
 

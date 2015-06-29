@@ -19,7 +19,6 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
-import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
 import java.util.Arrays;
@@ -46,7 +45,7 @@ final public class EndOfSentenceValidator extends Validator {
     }
 
     @Override
-    public void validate(List<ValidationError> errors, Sentence sentence) {
+    public void validate(Sentence sentence) {
         String content = sentence.getContent();
         if (content.length() < 2) {
             return;
@@ -60,9 +59,9 @@ final public class EndOfSentenceValidator extends Validator {
                     || secondCharacter == rightDoubleQuotation) {
                 StringBuilder builder = new StringBuilder();
                 builder.append(secondCharacter).append(lastCharacter);
-                errors.add(createValidationErrorWithPosition(sentence,
-                        sentence.getOffset(content.length()-2),
-                        sentence.getOffset(content.length()-1), builder.toString()));
+                addValidationErrorWithPosition(sentence,
+                        sentence.getOffset(content.length() - 2),
+                        sentence.getOffset(content.length() - 1), builder.toString());
             }
         }
     }

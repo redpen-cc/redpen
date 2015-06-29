@@ -1,7 +1,6 @@
 package cc.redpen.validator.sentence;
 
 import cc.redpen.model.Sentence;
-import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
 import java.util.Arrays;
@@ -21,11 +20,11 @@ public class HankakuKanaValidator extends Validator {
     }
 
     @Override
-    public void validate(List<ValidationError> errors, Sentence sentence) {
+    public void validate(Sentence sentence) {
         Matcher matcher = pattern.matcher(sentence.getContent());
         while (matcher.find()) {
-            errors.add(createValidationError(sentence,
-                    sentence.getContent().charAt(matcher.start())));
+            addValidationError(sentence,
+                    sentence.getContent().charAt(matcher.start()));
         }
     }
 }
