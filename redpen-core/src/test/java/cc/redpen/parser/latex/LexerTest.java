@@ -65,11 +65,11 @@ public class LexerTest {
             Arrays.asList(
                 token("TEXTILE", "This"),
                 token("CONTROL", "control"),
-                token("TEXTILE", " is"),
+                token("TEXTILE", "is"),
                 token("CONTROL", "s3_q"),
-                token("TEXTILE", " a "),
+                token("TEXTILE", "a "),
                 token("CONTROL", "gimmeAbre@k"),
-                token("TEXTILE", " .")
+                token("TEXTILE", ".")
                 ),
             tokens);
     }

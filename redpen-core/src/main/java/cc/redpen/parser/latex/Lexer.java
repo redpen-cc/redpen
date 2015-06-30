@@ -25,6 +25,7 @@ import java.util.ArrayList;
  */
 public class Lexer {
     private static final String SPECIALS = "[-=;:'\"<>,.?%!#^&()\\/{}[]$+| \r\n\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\u0008\u0009\u000b\u000c\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f]";
+    private static final String WHITESPACE = " \r\n\t";
 
     private char[] mTarget;
     private String mMode = "TEXTILE";
@@ -147,7 +148,9 @@ public class Lexer {
                     o.add(new Token(mMode, word, mModeFrom));
                     savePosition();
                     mMode = "TEXTILE";
-                    doParse(o, c);
+                    if (WHITESPACE.indexOf(c) < 0) {
+                        doParse(o, c);
+                    }
                 }
             }
         }
