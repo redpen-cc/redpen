@@ -49,7 +49,7 @@ public class StreamParser {
         final List<Token> tokens = Lexer.on(mTarget).parse();
         for (Token t:
                  (P.unescapeRegion
-                  (P.markImplicitParagraphRegion
+                  (P.styleTextileRegion
                    (P.assembleRegion
                     (P.pruneRegion
                      (P.normalizeTextileRegion
@@ -118,7 +118,7 @@ public class StreamParser {
             final Token beginning = tokens.get(0);
             final List<String> values = new ArrayList<>();
             for (Token t : tokens) {
-                values.add(t.v);
+                values.add(t.asVerbatim());
                 if (!t.p.isEmpty()) {
                     values.add(makeVerbatim(t.p).v);
                 }
@@ -172,19 +172,27 @@ public class StreamParser {
             return o;
         }
 
+        public static List<String> textileValuesOf(final Iterable<Token> tokens) {
+            final List<String> o = new ArrayList<>();
+            for (Token t : tokens) {
+                o.add(t.asTextile());
+            }
+            return o;
+        }
+
         public static List<Token> markVerbatimRegion(final List<Token> tokens) {
             final List<Token> o = new ArrayList<>();
             final Deque<Token> q = new ArrayDeque<>(tokens);
             try {
                 while (true) {
                     final Token t = q.removeFirst();
-                    if ( ! ("ENVIRON_BEGIN".equals(t.t) && valuesOf(t.p).contains("verbatim")) ) {
+                    if ( ! ("ENVIRON_BEGIN".equals(t.t) && textileValuesOf(t.p).contains("verbatim")) ) {
                         o.add(t);
                     } else {
                         final List<Token> verbatim = new ArrayList<>();
                         while (true) {
                             final Token vt = q.removeFirst();
-                            if ( ! ("ENVIRON_END".equals(vt.t) && valuesOf(vt.p).contains("verbatim")) ) {
+                            if ( ! ("ENVIRON_END".equals(vt.t) && textileValuesOf(vt.p).contains("verbatim")) ) {
                                 verbatim.add(vt);
                             } else {
                                 o.add(makeVerbatim(verbatim));
@@ -204,12 +212,12 @@ public class StreamParser {
             try {
                 while (true) {
                     final Token t = q.removeFirst();
-                    if ( ! ("ENVIRON_BEGIN".equals(t.t) && valuesOf(t.p).contains("tabular")) ) {
+                    if ( ! ("ENVIRON_BEGIN".equals(t.t) && textileValuesOf(t.p).contains("tabular")) ) {
                         o.add(t);
                     } else {
                         while (true) {
                             final Token tt = q.removeFirst();
-                            if ("ENVIRON_END".equals(tt.t) && valuesOf(tt.p).contains("tabular")) {
+                            if ("ENVIRON_END".equals(tt.t) && textileValuesOf(tt.p).contains("tabular")) {
                                 break;
                             }
                         }
@@ -248,9 +256,7 @@ public class StreamParser {
                     if ("TEXTILE".equals(t.t)) {
                         o.add(t);
                     } else if ("CONTROL*".equals(t.t)) {
-                        o.add(new Token(t.v.toUpperCase(), StringUtils.join(valuesOf(pruneRegion(t.p)), ""), t.pos));
-                    } else {
-                        o.add(new Token("TEXTILE", StringUtils.repeat(ESCAPE_CHAR, t.v.length()), t.pos));
+                        o.add(new Token(t.v.toUpperCase(), StringUtils.join(textileValuesOf(pruneRegion(t.p)), ""), t.pos));
                     }
                 }
             } catch (final NoSuchElementException e) {
@@ -270,7 +276,7 @@ public class StreamParser {
                     } else {
                         if (!reg.isEmpty()) {
                             final Token first = reg.get(0);
-                            o.add(new Token(first.t, StringUtils.join(valuesOf(reg), ""), first.pos));
+                            o.add(new Token(first.t, StringUtils.join(textileValuesOf(reg), ""), first.pos));
                             reg.clear();
                         }
                         o.add(t);
@@ -279,14 +285,14 @@ public class StreamParser {
             } catch (final NoSuchElementException e) {
                 if (!reg.isEmpty()) {
                     final Token first = reg.get(0);
-                    o.add(new Token(first.t, StringUtils.join(valuesOf(reg), ""), first.pos));
+                    o.add(new Token(first.t, StringUtils.join(textileValuesOf(reg), ""), first.pos));
                     reg.clear();
                 }
                 return o;
             }
         }
 
-        public static List<Token> markImplicitParagraphRegion(final List<Token> tokens) {
+        public static List<Token> styleTextileRegion(final List<Token> tokens) {
             final List<Token> o = new ArrayList<>();
             final Deque<Token> q = new ArrayDeque<>(tokens);
             final Pattern EMPTY = Pattern.compile(String.format("^[ \\t\\r\\n%c]*$", ESCAPE_CHAR));
@@ -295,11 +301,9 @@ public class StreamParser {
                 while (true) {
                     final Token t = q.removeFirst();
                     if ("TEXTILE".equals(t.t)) {
-                        for (String b : LINEBREAK.split(t.v)) {
-                            if (!EMPTY.matcher(b).matches()) {
-                                final String stripped = stripTextBlock(b);
-                                o.add(new Token(t.t, compactTextBlock(maskCharactersInTextBlock(stripped)), new Position(_guessRow(t, stripped), _guessCol(t, stripped))));
-                            }
+                        if (!EMPTY.matcher(t.v).matches()) {
+                            final String stripped = stripTextBlock(t.v);
+                            o.add(new Token(t.t, maskCharactersInTextBlock(stripped), new Position(_guessRow(t, stripped), _guessCol(t, stripped))));
                         }
                     } else {
                         o.add(t);

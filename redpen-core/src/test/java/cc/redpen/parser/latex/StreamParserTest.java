@@ -86,22 +86,42 @@ public class StreamParserTest {
 
     @Test
     public void testPValuesOf() {
+        final List<Token> tokens = Arrays.asList(
+            token("A", "a"),
+            token("B", "bcd"),
+            token("C", "ef"),
+            token("D", "ghijk"),
+            token("E", "l"),
+            token("F", "mn"),
+            token("G", "opqrstuvw"),
+            token("H", "xyz")
+        );
+
         assertEquals(
-            Arrays.asList("a","bcd","ef","ghijk","l","mn","opqrstuvw","xyz"),
-            StreamParser.P.valuesOf(
-                Arrays.asList(
-                    token("A", "a"),
-                    token("B", "bcd"),
-                    token("C", "ef"),
-                    token("D", "ghijk"),
-                    token("E", "l"),
-                    token("F", "mn"),
-                    token("G", "opqrstuvw"),
-                    token("H", "xyz")
-               )
-           )
+            takenFor(t -> t.v, tokens),
+            StreamParser.P.valuesOf(tokens)
        );
     }
+
+    @Test
+    public void testPTextileValuesOf() {
+        final List<Token> tokens = Arrays.asList(
+            token("TEXTILEa", "a"),
+            token("CONTROL*", "bcd"),
+            token("C", "ef"),
+            token("D", "ghijk"),
+            token("E", "l"),
+            token("F", "mn"),
+            token("G", "opqrstuvw"),
+            token("H", "xyz")
+        );
+
+        assertEquals(
+            takenFor(t -> t.asTextile(), tokens),
+            StreamParser.P.textileValuesOf(tokens)
+        );
+    }
+
 
     @Test
     public void testPUnescapeRegion() {

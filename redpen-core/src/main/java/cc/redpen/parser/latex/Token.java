@@ -50,4 +50,16 @@ public class Token {
     public String toString() {
         return String.format("%s(%s) \"%s\" %s", this.t, this.pos, this.v, this.p);
     }
+
+    public String asTextile() {
+        if ("TEXTILE".equals(t) || t.endsWith("*")) {
+            return v;
+        } else {
+            return "";
+        }
+    }
+
+    public String asVerbatim() {
+        return v;
+    }
 }

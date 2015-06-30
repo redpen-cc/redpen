@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import java.util.regex.Pattern;
+
 import org.pegdown.ast.*;
 import org.apache.commons.lang3.StringUtils;
 
