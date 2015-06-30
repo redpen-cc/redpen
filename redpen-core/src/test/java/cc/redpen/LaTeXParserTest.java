@@ -26,6 +26,7 @@ import cc.redpen.model.Section;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
+import cc.redpen.parser.latex.LaTeXProcessor;
 import cc.redpen.validator.ValidationError;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,6 +40,7 @@ import static cc.redpen.config.SymbolType.COMMA;
 import static cc.redpen.config.SymbolType.FULL_STOP;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
+import static cc.redpen.parser.latex.Tools.*;
 
 public class LaTeXParserTest {
 

@@ -54,7 +54,7 @@ public class LaTeXProcessor {
             };
 
             for (Token t: q) {
-                for (char c: t.v.toCharArray()) {
+                for (char c: t.asTextile().toCharArray()) {
                     switch (c) {
                     case '\n':
                         flusher.run();
