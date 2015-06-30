@@ -89,11 +89,12 @@ class AsciiDoctorRedPenRubySource {
             "end\n" +
 
             "def redpen_output node, opts = {}\n" +
+            "  content = defined?(node.content) ? node.content : (defined?(node.text) ? node.text : '')\n" +
+
             "  location=''\n" +
             "  if defined?(node.source_location) && (node.source_location != nil)\n" +
             "    location = \"\\001#{node.source_location.lineno}\\002\"\n" +
             "  end\n" +
-            "  content = defined?(node.content) ? node.content : (defined?(node.text) ? node.text : '')\n" +
             "  \"#{location}\\003#{content}\\004\"\n" +
             "end\n" +
 
@@ -135,6 +136,59 @@ class AsciiDoctorRedPenRubySource {
             "alias inline_menu redpen_output\n" +
             "alias inline_quoted redpen_output\n" +
             "end\n" +
+
+            // monkey patch the parser to remember the header source lines
+            "class Parser\n"+
+            "  def self.parse_section_title(reader, document)\n" +
+            "    line1 = reader.read_line\n" +
+            "    line1_lineno = reader.cursor.lineno\n" +
+            "    sect_id = nil\n" +
+            "    sect_title = nil\n" +
+            "    sect_level = -1\n" +
+            "    sect_reftext = nil\n" +
+            "    single_line = true\n" +
+            "\n" +
+            "    first_char = line1.chr\n" +
+            "    if (first_char == '=' || (Compliance.markdown_syntax && first_char == '#')) &&\n" +
+            "        (match = AtxSectionRx.match(line1))\n" +
+            "      sect_level = single_line_section_level match[1]\n" +
+            "      sect_title = match[2]\n" +
+            "      if sect_title.end_with?(']]') && (anchor_match = InlineSectionAnchorRx.match(sect_title))\n" +
+            "        if anchor_match[2].nil?\n" +
+            "          sect_title = anchor_match[1]\n" +
+            "          sect_id = anchor_match[3]\n" +
+            "          sect_reftext = anchor_match[4]\n" +
+            "        end\n" +
+            "      end\n" +
+            "    elsif Compliance.underline_style_section_titles\n" +
+            "      if (line2 = reader.peek_line(true)) && SECTION_LEVELS.has_key?(line2.chr) && line2 =~ SetextSectionLineRx &&\n" +
+            "        (name_match = SetextSectionTitleRx.match(line1)) &&\n" +
+            "        # chomp so that a (non-visible) endline does not impact calculation\n" +
+            "        (line_length(line1) - line_length(line2)).abs <= 1\n" +
+            "        sect_title = name_match[1]\n" +
+            "        if sect_title.end_with?(']]') && (anchor_match = InlineSectionAnchorRx.match(sect_title))\n" +
+            "          if anchor_match[2].nil?\n" +
+            "            sect_title = anchor_match[1]\n" +
+            "            sect_id = anchor_match[3]\n" +
+            "            sect_reftext = anchor_match[4]\n" +
+            "          end\n" +
+            "        end\n" +
+            "        sect_level = section_level line2\n" +
+            "        single_line = false\n" +
+            "        reader.advance\n" +
+            "      end\n" +
+            "    end\n" +
+            "    if sect_level >= 0\n" +
+            "      sect_level += document.attr('leveloffset', 0).to_i\n" +
+            "    end\n" +
+            "    document.attributes['header_lines_source'] ||= []\n" +
+            "    document.attributes['header_lines_source'].push(line1)\n" +
+            "    document.attributes['header_lines_linenos'] ||= []\n" +
+            "    document.attributes['header_lines_linenos'].push(line1_lineno)\n" +
+            "    [sect_id, sect_reftext, sect_title, sect_level, single_line]\n" +
+            "  end\n\n" +
+            "end\n" +
+            "\n" +
 
             "Asciidoctor::Converter::Factory.register Asciidoctor::Converter::RedPen, [\"redpen\"]\n" +
 

@@ -18,7 +18,6 @@
 
 package org.asciidoctor;
 
-import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
@@ -28,6 +27,7 @@ import org.asciidoctor.ast.BlockImpl;
 import org.asciidoctor.ast.Document;
 import org.asciidoctor.ast.SectionImpl;
 import org.asciidoctor.extension.Treeprocessor;
+import org.jruby.RubyArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,17 +54,48 @@ public class RedPenTreeProcessor extends Treeprocessor {
 
     private int lineNumber = 1;
 
+    private int headerNumber = 0;
+    private RubyArray headerLinesSource = null;
+    private RubyArray headerLinesLineNos = null;
+
     public RedPenTreeProcessor(cc.redpen.model.Document.DocumentBuilder documentBuilder, SentenceExtractor sentenceExtractor, Map<String, Object> config) {
         super(config);
         this.documentBuilder = documentBuilder;
         this.sentenceExtractor = sentenceExtractor;
     }
 
+    private String getHeaderSource(int headerId) {
+        if ((headerLinesSource != null) && (headerId < headerLinesSource.size())) {
+            return String.valueOf(headerLinesSource.get(headerId));
+        }
+        return "";
+    }
+
+    private int getHeaderLineNo(int headerId) {
+        if ((headerLinesLineNos != null) && (headerId < headerLinesLineNos.size())) {
+            return Integer.valueOf((String) headerLinesLineNos.get(headerId));
+        }
+        return lineNumber;
+    }
+
     @Override
+    @SuppressWarnings("unchecked")
     public Document process(Document document) {
         List<Sentence> headers = new ArrayList<>();
-        headers.add(new Sentence(document.doctitle() != null ? document.doctitle() : "", 0));
-        documentBuilder.appendSection(new Section(0, headers));
+
+        headerLinesSource = (RubyArray) document.getAttributes().get("header_lines_source");
+        headerLinesLineNos = (RubyArray) document.getAttributes().get("header_lines_lineNos");
+
+        lineNumber = getHeaderLineNo(headerNumber);
+        processParagraph(document.doctitle(), getHeaderSource(headerNumber), headers);
+
+        if (headers.isEmpty()) {
+            headers.add(new Sentence(document.doctitle() != null ? document.doctitle() : "", 0));
+        }
+        documentBuilder.addSection(0, headers);
+
+        headerNumber++;
+
         traverse(document.blocks(), 0);
         return document;
     }
@@ -76,12 +107,21 @@ public class RedPenTreeProcessor extends Treeprocessor {
             if (item instanceof BlockImpl) {
                 BlockImpl block = (BlockImpl) item;
                 documentBuilder.addParagraph();
-                processParagraph(block.convert(), block.source());
+                List<Sentence> sentences = new ArrayList<>();
+                processParagraph(block.convert(), block.source(), sentences);
+                for (Sentence sentence : sentences) {
+                    documentBuilder.addSentence(sentence);
+                }
             } else if (item instanceof SectionImpl) {
                 SectionImpl section = (SectionImpl) item;
                 List<Sentence> headers = new ArrayList<>();
-                headers.add(new Sentence(section.title() != null ? section.title() : "", 0));
-                documentBuilder.appendSection(new Section(section.number(), headers));
+                lineNumber = getHeaderLineNo(headerNumber);
+                processParagraph(section.title(), getHeaderSource(headerNumber), headers);
+                if (headers.isEmpty()) {
+                    headers.add(new Sentence(section.title() != null ? section.title() : "", 0));
+                }
+                documentBuilder.addSection(section.number(), headers);
+                headerNumber++;
                 traverse(section.blocks(), indent + 1);
             } else if (item != null) {
                 AbstractBlock block = (AbstractBlock) item;
@@ -92,9 +132,10 @@ public class RedPenTreeProcessor extends Treeprocessor {
         }
     }
 
-    private void processParagraph(String paragraph, String sourceText) {
+    private void processParagraph(String paragraph, String sourceText, List<Sentence> sentences) {
+        paragraph = paragraph == null ? "" : paragraph;
+        sourceText = sourceText == null ? "" : sourceText;
         int offset = 0;
-
         String[] sublines = paragraph.split(String.valueOf(REDPEN_ASCIIDOCTOR_BACKEND_LINE_START));
         for (String subline : sublines) {
             int lineNumberEndPos = subline.indexOf(REDPEN_ASCIIDOCTOR_BACKEND_LINENUMBER_DELIM);
@@ -119,7 +160,7 @@ public class RedPenTreeProcessor extends Treeprocessor {
                         sourceSentence = sourceText.substring(0, periodPosition + 1);
                         sourceText = sourceText.substring(periodPosition + 1);
                     }
-                    LineOffset lineOffset = addSentence(new LineOffset(lineNumber, offset), sourceSentence, candidateSentence, sentenceExtractor, documentBuilder);
+                    LineOffset lineOffset = addSentence(new LineOffset(lineNumber, offset), sourceSentence, candidateSentence, sentenceExtractor, sentences);
                     lineNumber = lineOffset.lineNum;
                     offset = lineOffset.offset;
                 } else {
@@ -127,7 +168,7 @@ public class RedPenTreeProcessor extends Treeprocessor {
                 }
             }
             if (!subline.trim().isEmpty()) {
-                addSentence(new LineOffset(lineNumber, offset), sourceText, subline, sentenceExtractor, documentBuilder);
+                addSentence(new LineOffset(lineNumber, offset), sourceText, subline, sentenceExtractor, sentences);
             }
         }
 
@@ -137,11 +178,14 @@ public class RedPenTreeProcessor extends Treeprocessor {
     /**
      * Add a processed asciidoc sentence, using the raw source sentence to guide the character offsets
      *
+     * @param lineOffset
      * @param source
      * @param processed
+     * @param sentenceExtractor
+     * @param sentences
      * @return
      */
-    private LineOffset addSentence(LineOffset lineOffset, String source, String processed, SentenceExtractor sentenceExtractor, cc.redpen.model.Document.DocumentBuilder builder) {
+    private LineOffset addSentence(LineOffset lineOffset, String source, String processed, SentenceExtractor sentenceExtractor, List<Sentence> sentences) {
 
         List<LineOffset> offsetMap = new ArrayList<>();
         String normalizedSentence = "";
@@ -199,7 +243,7 @@ public class RedPenTreeProcessor extends Treeprocessor {
         }
         Sentence sentence = new Sentence(normalizedSentence, lineOffset.lineNum, lineOffset.offset);
         sentence.setOffsetMap(offsetMap);
-        builder.addSentence(sentence);
+        sentences.add(sentence);
         return new LineOffset(lineNum, offset);
     }
 }
