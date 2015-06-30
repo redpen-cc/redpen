@@ -51,4 +51,16 @@ public class Tools {
             return String.format("%s#%d", type, ((HeaderNode)node).getLevel());
         }
     }
+
+    public static <T> List<T> takenFor(final MapFunc<T> f, final List<Token> tokens) {
+        final List<T> o = new ArrayList<>();
+        for (Token t : tokens) {
+            o.add(f.f(t));
+        }
+        return o;
+    }
+
+    public interface MapFunc<T> {
+        T f(Token t);
+    }
 }
