@@ -38,13 +38,42 @@ public class LaTeXProcessor {
     }
 
     /*package*/ static class P {
+        private static List<Node> asTextileNodes(final Deque<Token> q) {
+            final List<Node> o = new ArrayList<>();
+            final List<Character> reg = new ArrayList<>();
+            final Pattern NOT_EMPTY = Pattern.compile("[^ \\t\\r\\n]");
+
+            final Runnable flusher = () -> {
+                final String content = StringUtils.join(reg, "");
+                if (NOT_EMPTY.matcher(content).find()) {
+                    o.add(new TextNode(content));
+                }
+                reg.clear();
+            };
+
+            for (Token t: q) {
+                for (char c: t.v.toCharArray()) {
+                    switch (c) {
+                    case '\n':
+                        flusher.run();
+                        o.add(new SimpleNode(SimpleNode.Type.Linebreak));
+                        break;
+                    default:
+                        reg.add(c);
+                    }
+                }
+            }
+            flusher.run();
+            return o;
+        }
+
         public static RootNode walk(final List<Token> tokens) {
             final Deque<SuperNode> reg = new ArrayDeque<>();
             final Deque<Token> regTextiles = new ArrayDeque<>();
 
-            final Runnable flush = () -> {
+            final Runnable flusher = () -> {
                 if (!regTextiles.isEmpty()) {
-                    reg.getLast().getChildren().add(new ParaNode(new TextNode(StringUtils.join(StreamParser.P.valuesOf(new LinkedList<>(regTextiles)), "")))); /* XXX */
+                    reg.getLast().getChildren().add(new ParaNode(asTextileNodes(regTextiles))); /* XXX */
                     regTextiles.clear();
                 }
             };
@@ -57,38 +86,38 @@ public class LaTeXProcessor {
 
                 switch (t.t) {
                 case "PART":
-                    flush.run();
+                    flusher.run();
                     reg.addLast(new HeaderNode(1, new TextNode(t.v)));
                     scope.getChildren().add(reg.getLast());
                     break;
                 case "CHAPTER":
-                    flush.run();
+                    flusher.run();
                     reg.addLast(new HeaderNode(2, new TextNode(t.v)));
                     scope.getChildren().add(reg.getLast());
                     break;
                 case "SECTION":
-                    flush.run();
+                    flusher.run();
                     reg.addLast(new HeaderNode(3, new TextNode(t.v)));
                     scope.getChildren().add(reg.getLast());
                     break;
                 case "SUBSECTION":
-                    flush.run();
+                    flusher.run();
                     reg.addLast(new HeaderNode(4, new TextNode(t.v)));
                     scope.getChildren().add(reg.getLast());
                     break;
                 case "SUBSUBSECTION":
-                    flush.run();
+                    flusher.run();
                     reg.addLast(new HeaderNode(5, new TextNode(t.v)));
                     scope.getChildren().add(reg.getLast());
                     break;
                 case "ITEM":
-                    flush.run();
+                    flusher.run();
                     if (t.v.length() > 0) {
                         scope.getChildren().add(new ParaNode(new TextNode(t.v)));
                     }
                     break;
                 case "VERBATIM":
-                    flush.run();
+                    flusher.run();
                     scope.getChildren().add(new ParaNode(new VerbatimNode(t.v)));
                     break;
                 case "TEXTILE":
@@ -97,7 +126,7 @@ public class LaTeXProcessor {
                 }
             }
 
-            flush.run();
+            flusher.run();
 
             return o;
         }

@@ -53,4 +53,14 @@ public class ToolsTest {
             "(RootNode (HeaderNode#5 ()))",
             summary(node));
     }
+
+    @Test
+    public void testSummary3() {
+        final Node node = new RootNode();
+        node.getChildren().add(new SimpleNode(SimpleNode.Type.Linebreak));
+
+        assertEquals(
+            "(RootNode (SimpleNode#Linebreak))",
+            summary(node));
+    }
 }

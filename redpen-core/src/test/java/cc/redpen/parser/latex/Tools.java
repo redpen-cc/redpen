@@ -7,6 +7,7 @@ import org.pegdown.ast.Node;
 import org.pegdown.ast.SuperNode;
 import org.pegdown.ast.HeaderNode;
 import org.pegdown.ast.TextNode;
+import org.pegdown.ast.SimpleNode;
 import org.apache.commons.lang3.StringUtils;
 
 public class Tools {
@@ -45,10 +46,12 @@ public class Tools {
 
     private static String typeCode(final Node node) {
         final String type = node.toString().split(" ", 2)[0];
-        if (! (node instanceof HeaderNode) ) {
-            return type;
-        } else {
+        if (node instanceof HeaderNode) {
             return String.format("%s#%d", type, ((HeaderNode)node).getLevel());
+        } else if (node instanceof SimpleNode) {
+            return String.format("%s#%s", type, ((SimpleNode)node).getType());
+        } else {
+            return type;
         }
     }
 

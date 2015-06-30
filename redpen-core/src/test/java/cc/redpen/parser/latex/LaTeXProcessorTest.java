@@ -45,7 +45,7 @@ public class LaTeXProcessorTest {
             + "\\end{document}";
 
         assertEquals(
-            "(RootNode (HeaderNode#3 (TextNode ' First Section ') (ParaNode (TextNode 'Test text. '))))",
+            "(RootNode (HeaderNode#3 (TextNode 'First Section') (ParaNode (TextNode 'Test text.') (SimpleNode#Linebreak))))",
             summary(
                 new LaTeXProcessor().parse(code.toCharArray())
             )
@@ -63,7 +63,7 @@ public class LaTeXProcessorTest {
             + "Integration test is also common.\n"
             + "\\end{document}\n";
         assertEquals(
-            "(RootNode (ParaNode (TextNode 'There are various tests.\nMost common one is unit test.\nIntegration test is also common. ')))",
+            "(RootNode (ParaNode (TextNode 'There are various tests.') (SimpleNode#Linebreak) (TextNode 'Most common one is unit test.') (SimpleNode#Linebreak) (TextNode 'Integration test is also common.') (SimpleNode#Linebreak) (SimpleNode#Linebreak)))",
             summary(
                 new LaTeXProcessor().parse(code.toCharArray())
             )
