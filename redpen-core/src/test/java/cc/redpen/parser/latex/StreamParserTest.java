@@ -449,14 +449,12 @@ public class StreamParserTest {
         assertTokensLike(
             Arrays.asList(
                 token("TEXTILE", "This"),
-                token("TEXTILE", E+E+E+E),
-                token("TEXTILE", E+E+E+E),
-                token("PART", E+"A"+E),
-                token("CHAPTER", E+"A"+E),
-                token("SECTION", E+"A"+E),
-                token("SUBSECTION", E+"A"+E),
-                token("PARAGRAPH", E+"A"+E),
-                token("SUBPARAGRAPH", E+"A"+E),
+                token("PART", "A"),
+                token("CHAPTER", "A"),
+                token("SECTION", "A"),
+                token("SUBSECTION", "A"),
+                token("PARAGRAPH", "A"),
+                token("SUBPARAGRAPH", "A"),
                 token("ITEM", "")
             ),
             StreamParser.P.pruneRegion(
@@ -497,15 +495,17 @@ public class StreamParserTest {
     }
 
     @Test
-    public void testPMarkImplicitParagraphRegion() {
-        assertTokensEqual(
+    public void testPStyleTextileRegion() {
+        assertTokensLike(
             Arrays.asList(
-                token("TEXTILE", "This is a sentence. Okay, this is IT.\nDo you hear that?", new Position(1, 0)),
-                token("TEXTILE", "(You open the door.)", new Position(4, 0)),
-                token("TEXTILE", "**YAAAHHHH**", new Position(7, 0)),
-                token("TEXTILE", "That was close... Take care of yourself.", new Position(9, 0))
+                token("TEXTILE",
+                        "This is a sentence.  Okay, this is IT.\n"
+                      + "Do you hear that?\n\n"
+                      + "(You open the door.)\n\n\n"
+                      + "**YAAAHHHH**\n\n"
+                      + "That was close...  Take care of yourself.")
             ),
-            StreamParser.P.markImplicitParagraphRegion(
+            StreamParser.P.styleTextileRegion(
                 Arrays.asList(
                     token("TEXTILE",
                             "\nThis is a sentence.  Okay, this is IT.\n"
