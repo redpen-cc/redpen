@@ -161,6 +161,37 @@ public class AsciiDocParserTest {
         Document doc = createFileContent(sampleText);
         assertEquals(1, doc.size());
         assertEquals(2, doc.getSection(0).getHeaderContent(0).getOffset(0).get().offset);
+        assertEquals("About Gekioko.", doc.getSection(0).getHeaderContent(0).getContent());
+    }
+
+    @Test
+    public void testWrappedSentence() throws UnsupportedEncodingException {
+        String sampleText = "Tokyu is a good railway company. The company is reliable. In addition it\n";
+        sampleText += "is rich. I like the company. However someone does not like it.";
+        Document doc = createFileContent(sampleText);
+        Section firstSections = doc.getSection(0);
+        Paragraph firstParagraph = firstSections.getParagraph(0);
+        assertEquals(5, firstParagraph.getNumberOfSentences());
+
+        assertEquals("Tokyu is a good railway company.", doc.getSection(0).getParagraph(0).getSentence(0).getContent());
+        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(0).getLineNumber());
+        assertEquals(0, doc.getSection(0).getParagraph(0).getSentence(0).getStartPositionOffset());
+
+        assertEquals(" The company is reliable.", doc.getSection(0).getParagraph(0).getSentence(1).getContent());
+        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(1).getLineNumber());
+        assertEquals(32, doc.getSection(0).getParagraph(0).getSentence(1).getStartPositionOffset());
+
+        assertEquals(" In addition it is rich.", doc.getSection(0).getParagraph(0).getSentence(2).getContent());
+        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(2).getLineNumber());
+        assertEquals(57, doc.getSection(0).getParagraph(0).getSentence(2).getStartPositionOffset());
+
+        assertEquals(" I like the company.", doc.getSection(0).getParagraph(0).getSentence(3).getContent());
+        assertEquals(2, doc.getSection(0).getParagraph(0).getSentence(3).getLineNumber());
+        assertEquals(8, doc.getSection(0).getParagraph(0).getSentence(3).getStartPositionOffset());
+
+        assertEquals(" However someone does not like it.", doc.getSection(0).getParagraph(0).getSentence(4).getContent());
+        assertEquals(2, doc.getSection(0).getParagraph(0).getSentence(4).getLineNumber());
+        assertEquals(28, doc.getSection(0).getParagraph(0).getSentence(4).getStartPositionOffset());
     }
 
     private Document createFileContent(String inputDocumentString,
