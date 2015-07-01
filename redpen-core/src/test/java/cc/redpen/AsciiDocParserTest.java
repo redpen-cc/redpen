@@ -194,6 +194,114 @@ public class AsciiDocParserTest {
         assertEquals(28, doc.getSection(0).getParagraph(0).getSentence(4).getStartPositionOffset());
     }
 
+    @Test
+    public void testGenerateDocumentWithTwoSentencesWithMultipleShortLine() {
+        String sampleText = "Tokyu\n" +
+                "is a good\n" +
+                "railway company. But there\n" +
+                "are competitors.";
+        Document doc = createFileContent(sampleText);
+        Section firstSections = doc.getSection(0);
+        Paragraph firstParagraph = firstSections.getParagraph(0);
+        assertEquals(2, firstParagraph.getNumberOfSentences());
+
+        assertEquals("Tokyu is a good railway company.", doc.getSection(0).getParagraph(0).getSentence(0).getContent());
+        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(0).getLineNumber());
+        assertEquals(0, doc.getSection(0).getParagraph(0).getSentence(0).getStartPositionOffset());
+        assertEquals(32, doc.getSection(0).getParagraph(0).getSentence(0).getOffsetMapSize());
+
+        assertEquals(" But there are competitors.", doc.getSection(0).getParagraph(0).getSentence(1).getContent());
+        assertEquals(3, doc.getSection(0).getParagraph(0).getSentence(1).getLineNumber());
+        assertEquals(16, doc.getSection(0).getParagraph(0).getSentence(1).getStartPositionOffset());
+    }
+
+//    @Test
+//    public void testMappingTableWithShortSentence() {
+//        String sampleText = "Tsu is a city.";
+//        Document doc = createFileContent(sampleText);
+//        Section firstSections = doc.getSection(0);
+//        Paragraph firstParagraph = firstSections.getParagraph(0);
+//        assertEquals(1, firstParagraph.getNumberOfSentences());
+//        assertEquals("Tsu is a city.", doc.getSection(0).getParagraph(0).getSentence(0).getContent());
+//
+//        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(0).getLineNumber());
+//        assertEquals(0, doc.getSection(0).getParagraph(0).getSentence(0).getStartPositionOffset());
+//        assertEquals(doc.getSection(0).getParagraph(0).getSentence(0).getContent().length(),
+//                doc.getSection(0).getParagraph(0).getSentence(0).getOffsetMapSize());
+//
+//    }
+
+    @Test
+    public void testGenerateDocumentWithList() {
+        String sampleText =
+                "Threre are several railway companies in Japan as follows.\n";
+        sampleText += "\n";
+        sampleText += "- Tokyu\n";
+        sampleText += "    - Toyoko Line\n";
+        sampleText += "    - Denentoshi Line\n";
+        sampleText += "- Keio\n";
+        sampleText += "- Odakyu\n";
+
+        Document doc = createFileContent(sampleText);
+        assertEquals(5, doc.getSection(0).getListBlock(0).getNumberOfListElements());
+        assertEquals("Tokyu", doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).getContent());
+        assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(0).getLevel());
+        assertEquals(3, doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).getLineNumber());
+        assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).getStartPositionOffset());
+
+        assertEquals("Toyoko Line", doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).getContent());
+        assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(1).getLevel());
+        assertEquals(4, doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).getLineNumber());
+        assertEquals(6, doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).getStartPositionOffset());
+
+        assertEquals("Denentoshi Line", doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).getContent());
+        assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(2).getLevel());
+        assertEquals(5, doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).getLineNumber());
+        assertEquals(6, doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).getStartPositionOffset());
+
+        assertEquals("Keio", doc.getSection(0).getListBlock(0).getListElement(3).getSentence(0).getContent());
+        assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(3).getLevel());
+        assertEquals(6, doc.getSection(0).getListBlock(0).getListElement(3).getSentence(0).getLineNumber());
+        assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(3).getSentence(0).getStartPositionOffset());
+
+        assertEquals("Odakyu", doc.getSection(0).getListBlock(0).getListElement(4).getSentence(0).getContent());
+        assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(4).getLevel());
+        assertEquals(7, doc.getSection(0).getListBlock(0).getListElement(4).getSentence(0).getLineNumber());
+        assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(4).getSentence(0).getStartPositionOffset());
+    }
+
+    @Test
+    public void testDocumentWithItalicWord() {
+        String sampleText = "It is a *good* day.";
+        Document doc = createFileContent(sampleText);
+        Section firstSections = doc.getSection(0);
+        Paragraph firstParagraph = firstSections.getParagraph(0);
+        assertEquals("It is a good day.", firstParagraph.getSentence(0).getContent());
+        List<LineOffset> expectedOffsets = initializeMappingTable(
+                new LineOffset(4, 0),  // NOTE: asciidoctor reports 4th line when a document contains only one line.
+                new LineOffset(4, 1),
+                new LineOffset(4, 2),
+                new LineOffset(4, 3),
+                new LineOffset(4, 4),
+                new LineOffset(4, 5),
+                new LineOffset(4, 6),
+                new LineOffset(4, 7),
+                new LineOffset(4, 9),
+                new LineOffset(4, 10),
+                new LineOffset(4, 11),
+                new LineOffset(4, 12),
+                new LineOffset(4, 14),
+                new LineOffset(4, 15),
+                new LineOffset(4, 16),
+                new LineOffset(4, 17),
+                new LineOffset(4, 18));
+
+        assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMapSize());
+        for (int i = 0; i < expectedOffsets.size(); i++) {
+            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i).get());
+        }
+    }
+
     private Document createFileContent(String inputDocumentString,
                                        Configuration config) {
         DocumentParser parser = DocumentParser.ASCIIDOC;
