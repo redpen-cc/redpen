@@ -69,6 +69,44 @@ public class LaTeXProcessor {
             return o;
         }
 
+        public static int outlineLevelOf(final Token t) {
+            switch (t.t) {
+            case "PART":
+                return 1;
+            case "CHAPTER":
+                return 2;
+            case "SECTION":
+                return 3;
+            case "SUBSECTION":
+                return 4;
+            case "SUBSUBSECTION":
+                return 5;
+            default:
+                throw new IllegalStateException("token is not outline");
+            }
+        }
+
+        public static int outlineLevelOf(final SuperNode n) {
+            if (n instanceof RootNode) {
+                return 0;
+            } else if (n instanceof HeaderNode) {
+                return (((HeaderNode)n).getLevel());
+            } else {
+                throw new IllegalStateException(String.format("Node %s is not outline", n));
+            }
+        }
+
+        private static SuperNode parentNodeFor(final Deque<SuperNode> reg, final SuperNode n) {
+            while (true) {
+                final SuperNode top = reg.getLast();
+                if (outlineLevelOf(n) <= outlineLevelOf(top)) {
+                    reg.removeLast();
+                } else {
+                    return top;
+                }
+            }
+        }
+
         public static RootNode walk(final List<Token> tokens) {
             final Deque<SuperNode> reg = new ArrayDeque<>();
             final Deque<Token> regTextiles = new ArrayDeque<>();
@@ -81,37 +119,26 @@ public class LaTeXProcessor {
             };
 
             final RootNode o = new RootNode();
+            final HeaderNode implicitSection = new HeaderNode(3);
+            o.getChildren().add(implicitSection);
             reg.addLast(o);
+            reg.addLast(implicitSection);
 
             for (Token t : tokens) {
                 final SuperNode scope = reg.getLast();
 
                 switch (t.t) {
                 case "PART":
-                    flusher.run();
-                    reg.addLast(new HeaderNode(1, new TextNode(t.v)));
-                    scope.getChildren().add(reg.getLast());
-                    break;
                 case "CHAPTER":
-                    flusher.run();
-                    reg.addLast(new HeaderNode(2, new TextNode(t.v)));
-                    scope.getChildren().add(reg.getLast());
-                    break;
                 case "SECTION":
-                    flusher.run();
-                    reg.addLast(new HeaderNode(3, new TextNode(t.v)));
-                    scope.getChildren().add(reg.getLast());
-                    break;
                 case "SUBSECTION":
+                case "SUBSUBSECTION": {
                     flusher.run();
-                    reg.addLast(new HeaderNode(4, new TextNode(t.v)));
-                    scope.getChildren().add(reg.getLast());
+                    final SuperNode h = new HeaderNode(outlineLevelOf(t), new TextNode(t.v));
+                    parentNodeFor(reg, h).getChildren().add(h);
+                    reg.addLast(h);
                     break;
-                case "SUBSUBSECTION":
-                    flusher.run();
-                    reg.addLast(new HeaderNode(5, new TextNode(t.v)));
-                    scope.getChildren().add(reg.getLast());
-                    break;
+                }
                 case "ITEM":
                     flusher.run();
                     if (t.v.length() > 0) {
