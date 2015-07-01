@@ -49,22 +49,28 @@ public class AsciiDocParser extends BaseDocumentParser {
         fileName.ifPresent(documentBuilder::setFileName);
         BufferedReader reader = createReader(io);
         try {
+            // create an asciidoctor instance
             Asciidoctor asciidoctor = Asciidoctor.Factory.create();
+
+            // register our 'redpen' backend
             InputStream rubySource = new ByteArrayInputStream(AsciiDoctorRedPenRubySource.SOURCE_TEXT.getBytes("UTF-8"));
             asciidoctor.rubyExtensionRegistry().loadClass(rubySource);
+
+            // set our 'redpen' backend as the active AsciiDoctor backend
             Map<String, Object> options = new HashMap<>();
             options.put("backend", "redpen");
+
+            // tell AsciiDoctor to record the source line numbers
             options.put("sourcemap", true);
             Map<String, Object> attributes = new HashMap<>();
             attributes.put("sourcemap", true);
             options.put("attributes", attributes);
 
-            // Register our documentbuilding TreeProcessor
+            // register our documentbuilding TreeProcessor
             asciidoctor.javaExtensionRegistry().treeprocessor(new RedPenTreeProcessor(documentBuilder, sentenceExtractor, options));
 
             try {
                 // trigger the tree processor, which will consequently fill the documentBuilder
-
                 asciidoctor.readDocumentStructure(reader, options);
             } catch (Exception e) {
                 LOG.error("Asciidoctor parser error: " + e.getMessage());
@@ -80,6 +86,9 @@ public class AsciiDocParser extends BaseDocumentParser {
     }
 }
 
+/**
+ * The Ruby source for the AsciiDoctor RedPen backend
+ */
 class AsciiDoctorRedPenRubySource {
     public static String SOURCE_TEXT = "# encoding: UTF-8\n" +
             "module Asciidoctor\n" +
@@ -90,11 +99,13 @@ class AsciiDoctorRedPenRubySource {
 
             "def redpen_output node, opts = {}\n" +
             "  content = defined?(node.content) ? node.content : (defined?(node.text) ? node.text : '')\n" +
-
             "  location=''\n" +
+
+            // add the line number to the text, if known, bracketed by ^A and ^B
             "  if defined?(node.source_location) && (node.source_location != nil)\n" +
             "    location = \"\\001#{node.source_location.lineno}\\002\"\n" +
             "  end\n" +
+            // return the location, and the converted content bracketed by ^C and ^D
             "  \"#{location}\\003#{content}\\004\"\n" +
             "end\n" +
 
@@ -138,7 +149,9 @@ class AsciiDoctorRedPenRubySource {
             "end\n" +
 
             // monkey patch the parser to remember the header source lines
-            "class Parser\n"+
+            // this change adds each header source line, and its line number,
+            // to document-level attributes we can retreive later
+            "class Parser\n" +
             "  def self.parse_section_title(reader, document)\n" +
             "    line1 = reader.read_line\n" +
             "    line1_lineno = reader.cursor.lineno\n" +

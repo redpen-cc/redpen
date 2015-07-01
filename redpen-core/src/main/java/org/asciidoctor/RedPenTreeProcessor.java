@@ -42,6 +42,7 @@ import java.util.Map;
  * due to the way JRuby and AsciiDoctor handle the registration of this class.
  */
 public class RedPenTreeProcessor extends Treeprocessor {
+
     private static final Logger LOG = LoggerFactory.getLogger(RedPenTreeProcessor.class);
 
     private static final char REDPEN_ASCIIDOCTOR_BACKEND_LINE_START = '\001';
@@ -53,40 +54,74 @@ public class RedPenTreeProcessor extends Treeprocessor {
     private SentenceExtractor sentenceExtractor;
 
     private int lineNumber = 1;
-
     private int headerNumber = 0;
+    /**
+     * the header source lines, and their respective line numbers,
+     * as recorded by the patched parser routing in AsciiDocParser
+     */
     private RubyArray headerLinesSource = null;
     private RubyArray headerLinesLineNos = null;
 
+    /**
+     * Build a tree processer that uses the supplied documentBuilder and sentenceExtractor
+     *
+     * @param documentBuilder   redpen document builder
+     * @param sentenceExtractor redpen sentence extractor
+     * @param config            asciidoctor's configuration map
+     */
     public RedPenTreeProcessor(cc.redpen.model.Document.DocumentBuilder documentBuilder, SentenceExtractor sentenceExtractor, Map<String, Object> config) {
         super(config);
         this.documentBuilder = documentBuilder;
         this.sentenceExtractor = sentenceExtractor;
     }
 
-    private String getHeaderSource(int headerId) {
-        if ((headerLinesSource != null) && (headerId < headerLinesSource.size())) {
-            return String.valueOf(headerLinesSource.get(headerId));
+    /**
+     * Helper method to get the source text for a header line
+     *
+     * @param headerNumber the number of the header we're after
+     * @return
+     */
+    private String getHeaderSource(int headerNumber) {
+        if ((headerLinesSource != null) && (headerNumber < headerLinesSource.size())) {
+            return String.valueOf(headerLinesSource.get(headerNumber));
         }
         return "";
     }
 
-    private int getHeaderLineNo(int headerId) {
-        if ((headerLinesLineNos != null) && (headerId < headerLinesLineNos.size())) {
-            return Integer.valueOf((String) headerLinesLineNos.get(headerId));
+    /**
+     * Helper method to get the header line numbers for a particular header line
+     *
+     * @param headerNumber the number of the header we're after
+     * @return
+     */
+    private int getHeaderLineNo(int headerNumber) {
+        if ((headerLinesLineNos != null) && (headerNumber < headerLinesLineNos.size())) {
+            try {
+                return ((Long)headerLinesLineNos.get(headerNumber)).intValue();
+            } catch (Exception ignored) {
+            }
         }
         return lineNumber;
     }
 
+    /**
+     * Process a AsciiDoctorJ document
+     *
+     * @param document this is an AsciiDoctorJ document, not a redpen document
+     * @return
+     */
     @Override
     @SuppressWarnings("unchecked")
     public Document process(Document document) {
         List<Sentence> headers = new ArrayList<>();
 
+        // our patched Parser routine should store the header source lines and their line numbers in these attributes
         headerLinesSource = (RubyArray) document.getAttributes().get("header_lines_source");
-        headerLinesLineNos = (RubyArray) document.getAttributes().get("header_lines_lineNos");
+        headerLinesLineNos = (RubyArray) document.getAttributes().get("header_lines_linenos");
 
         lineNumber = getHeaderLineNo(headerNumber);
+
+        // parse the sentences/headers from the document title
         processParagraph(document.doctitle(), getHeaderSource(headerNumber), headers);
 
         if (headers.isEmpty()) {
@@ -96,14 +131,22 @@ public class RedPenTreeProcessor extends Treeprocessor {
 
         headerNumber++;
 
+        // traverse all of the blocks in the document
         traverse(document.blocks(), 0);
         return document;
     }
 
+    /**
+     * Traverse the list of blocks, recursively traversing any lists of blocks found within each block
+     *
+     * @param blocks
+     * @param indent
+     */
     @SuppressWarnings("unchecked")
     private void traverse(List<AbstractBlock> blocks, int indent) {
         for (int i = 0; i < blocks.size(); i++) {
             Object item = blocks.get(i);
+            // A standard block - we convert the text and process the sentences inside
             if (item instanceof BlockImpl) {
                 BlockImpl block = (BlockImpl) item;
                 documentBuilder.addParagraph();
@@ -112,7 +155,9 @@ public class RedPenTreeProcessor extends Treeprocessor {
                 for (Sentence sentence : sentences) {
                     documentBuilder.addSentence(sentence);
                 }
-            } else if (item instanceof SectionImpl) {
+            }
+            // A section - this has a header, and contains other blocks
+            else if (item instanceof SectionImpl) {
                 SectionImpl section = (SectionImpl) item;
                 List<Sentence> headers = new ArrayList<>();
                 lineNumber = getHeaderLineNo(headerNumber);
@@ -123,7 +168,9 @@ public class RedPenTreeProcessor extends Treeprocessor {
                 documentBuilder.addSection(section.number(), headers);
                 headerNumber++;
                 traverse(section.blocks(), indent + 1);
-            } else if (item != null) {
+            }
+            // catchall for all other abstract blocks
+            else if (item != null) {
                 AbstractBlock block = (AbstractBlock) item;
                 traverse(block.blocks(), indent + 1);
             } else {
@@ -132,7 +179,27 @@ public class RedPenTreeProcessor extends Treeprocessor {
         }
     }
 
-    private void processParagraph(String paragraph, String sourceText, List<Sentence> sentences) {
+    /**
+     * Process a paragraph of processed text.
+     * <p/>
+     * This method takes the processed form of the text generated by the Ruby RedPen AsciiDoctor backend found in AsciiDocParser.java
+     * If the source form of the paragraph is also provided, it uses this to calculate the RedPen offsets for the characters in the text.
+     * <p/>
+     * The AsciiDoctor parser does not return the line numbers via the AsciiDoctorJ Block interface. Therefore, the custom RedPen AsciiDoctor backend
+     * encodes the line number between ^A and ^B, if known.
+     * <p/>
+     * Hence the processed text for a paragraph is typically:
+     * <p/>
+     * ^Alinenumber^Bparagraph_text
+     * <p/>
+     * This method first breaks the paragraph on these line markers and adjusts the running lineNumber variable,
+     * and then processes each sub-paragraph/sentence using standard RedPen sentence-end-position delimiting.
+     *
+     * @param paragraph  the AsciiDoctor processed text, already converted by the RedPen AsciiDoctor backend
+     * @param sourceText the raw source text
+     * @param sentences  A list of sentences discovered in the processed text
+     */
+    protected void processParagraph(String paragraph, String sourceText, List<Sentence> sentences) {
         paragraph = paragraph == null ? "" : paragraph;
         sourceText = sourceText == null ? "" : sourceText;
         int offset = 0;
@@ -160,7 +227,12 @@ public class RedPenTreeProcessor extends Treeprocessor {
                         sourceSentence = sourceText.substring(0, periodPosition + 1);
                         sourceText = sourceText.substring(periodPosition + 1);
                     }
-                    LineOffset lineOffset = addSentence(new LineOffset(lineNumber, offset), sourceSentence, candidateSentence, sentenceExtractor, sentences);
+                    LineOffset lineOffset = addSentence(
+                            new LineOffset(lineNumber, offset),
+                            candidateSentence,
+                            sourceSentence,
+                            sentenceExtractor,
+                            sentences);
                     lineNumber = lineOffset.lineNum;
                     offset = lineOffset.offset;
                 } else {
@@ -168,7 +240,12 @@ public class RedPenTreeProcessor extends Treeprocessor {
                 }
             }
             if (!subline.trim().isEmpty()) {
-                addSentence(new LineOffset(lineNumber, offset), sourceText, subline, sentenceExtractor, sentences);
+                addSentence(
+                        new LineOffset(lineNumber, offset),
+                        subline,
+                        sourceText,
+                        sentenceExtractor,
+                        sentences);
             }
         }
 
@@ -176,16 +253,39 @@ public class RedPenTreeProcessor extends Treeprocessor {
     }
 
     /**
-     * Add a processed asciidoc sentence, using the raw source sentence to guide the character offsets
+     * Add a processed AsciiDoc sentence, using the raw source sentence to guide the character offsets.
+     * <p/>
+     * Since AsciiDoctor does not return character offset positions for altered/formatted elements, this method
+     * attempts to calculate the offsets by comparing the source sentence with the post-processed sentence.
+     * <p/>
+     * To assist with the calculation, the RedPen AsciiDoctor backend places markers in the text where
+     * AsciiDoctor has subsituted or altered the source sentence.
+     * <p/>
+     * This is a normal function of AsciiDoctor. For example, AsciiDoctor's HTML backend will convert:
+     * <p/>
+     * This is *bold*.
+     * <p/>
+     * to:
+     * <p/>
+     * This is &lt;strong&gt;bold&lt;/strong&gt;.
+     * <p/>
+     * The RedPen AsciiDoctor backend uses ^C and ^D for all such substitutions, regardless of how many characters the
+     * markup originally took. For example, both _ and __ markup notations are replaced by a single ^C or ^D.
+     * So after processing using the RedPen AsciiDoctor backend, our sentence would look like:
+     * <p/>
+     * This is ^Cbold^D.
+     * <p/>
+     * This method uses these ^C/^D markers to calculate what has been omitted from the source sentence, and
+     * therefore what the source sentence character offset should be for the normalized sentence.
      *
-     * @param lineOffset
-     * @param source
-     * @param processed
-     * @param sentenceExtractor
-     * @param sentences
-     * @return
+     * @param lineOffset        the position of this line
+     * @param processed         the RedPen AsciiDoctor backend processed sentence
+     * @param source            the source sentence
+     * @param sentenceExtractor our sentence extractor
+     * @param sentences         a list of sentences to add discovered sentences to
+     * @return the new offset position, after we've processed these sentences
      */
-    private LineOffset addSentence(LineOffset lineOffset, String source, String processed, SentenceExtractor sentenceExtractor, List<Sentence> sentences) {
+    protected LineOffset addSentence(LineOffset lineOffset, String processed, String source, SentenceExtractor sentenceExtractor, List<Sentence> sentences) {
 
         List<LineOffset> offsetMap = new ArrayList<>();
         String normalizedSentence = "";
