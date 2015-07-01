@@ -54,7 +54,8 @@ public class RedPenTreeProcessor extends Treeprocessor {
 
     private int lineNumber = 1;
 
-    public RedPenTreeProcessor(cc.redpen.model.Document.DocumentBuilder documentBuilder, SentenceExtractor sentenceExtractor, Map<String, Object> config) {
+    public RedPenTreeProcessor(cc.redpen.model.Document.DocumentBuilder documentBuilder,
+            SentenceExtractor sentenceExtractor, Map<String, Object> config) {
         super(config);
         this.documentBuilder = documentBuilder;
         this.sentenceExtractor = sentenceExtractor;
@@ -63,7 +64,7 @@ public class RedPenTreeProcessor extends Treeprocessor {
     @Override
     public Document process(Document document) {
         List<Sentence> headers = new ArrayList<>();
-        headers.add(new Sentence(document.doctitle() != null ? document.doctitle() : "", 0));
+        headers.add(new Sentence(document.doctitle() != null ? document.doctitle() : "", 1));
         documentBuilder.appendSection(new Section(0, headers));
         traverse(document.blocks(), 0);
         return document;
@@ -119,7 +120,10 @@ public class RedPenTreeProcessor extends Treeprocessor {
                         sourceSentence = sourceText.substring(0, periodPosition + 1);
                         sourceText = sourceText.substring(periodPosition + 1);
                     }
-                    LineOffset lineOffset = addSentence(new LineOffset(lineNumber, offset), sourceSentence, candidateSentence, sentenceExtractor, documentBuilder);
+                    System.out.println("source: " + sourceSentence);
+                    System.out.println("candidate: " + candidateSentence);
+                    LineOffset lineOffset = addSentence(new LineOffset(lineNumber, offset),
+                            sourceSentence, candidateSentence, sentenceExtractor, documentBuilder);
                     lineNumber = lineOffset.lineNum;
                     offset = lineOffset.offset;
                 } else {
