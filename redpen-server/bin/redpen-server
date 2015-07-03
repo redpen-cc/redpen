@@ -3,7 +3,20 @@
 ## RedPen Server startup script
 ##
 
+#
+# Configurations
+#
+
+# When this key is registered RedPen server is able to by http access.
+# If you do not want such behavior, please comment out STOP_KEY.
 STOP_KEY=redpen.stop
+
+# Port number for redpen server
+REDPEN_PORT=8080
+
+#
+# Main procedure
+#
 
 # SCRIPT may be an arbitrarily deep series of symlinks. Loop until we have the concrete path.
 SCRIPT="$0"
@@ -18,16 +31,17 @@ while [ -h "$SCRIPT" ] ; do
   fi
 done
 
+# set command
+COMMAND=start
+if [ -n "$1" ]; then
+  COMMAND=$1
+fi
+
 # Find RedPen home
 REDPEN_HOME=`dirname "$SCRIPT"`/..
 
 JAVA_OPTS="$JAVA_OPTS -Dfile.encoding=UTF-8"
 REDPEN_WAR_FILE="bin/redpen-server.war"
-
-if [ -n "$STOP_KEY" ]; then
-    JAVA_OPTS="$JAVA_OPTS -DSTOP_KEY=$STOP_KEY"
-fi
-
 JAVA_CMD="$JAVA_HOME/bin/java"
 
 if [ ! -x "$JAVA_CMD" ]; then
@@ -35,4 +49,15 @@ if [ ! -x "$JAVA_CMD" ]; then
     exit 1
 fi
 
-exec "$JAVA_CMD" -jar $JAVA_OPTS $REDPEN_WAR_FILE
+if [ $COMMAND = "start" ]; then
+    if [ -n "$STOP_KEY" ]; then
+	exec "$JAVA_CMD" -jar $JAVA_OPTS $REDPEN_WAR_FILE -p $REDPEN_PORT -STOP_KEY $STOP_KEY
+    fi
+    exec "$JAVA_CMD" -jar $JAVA_OPTS $REDPEN_WAR_FILE -p $REDPEN_PORT
+elif [ $COMMAND = "stop" ]; then
+    echo "stopping redpen server" 1>&2
+    curl -d "token=redpen.stop" http://localhost:$REDPEN_PORT/shutdown
+else
+    echo "Invalid command" 1>&2
+    exit 1
+fi
