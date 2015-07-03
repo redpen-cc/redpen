@@ -5,10 +5,27 @@
 
 STOP_KEY=redpen.stop
 
+# SCRIPT may be an arbitrarily deep series of symlinks. Loop until we have the concrete path.
+SCRIPT="$0"
+while [ -h "$SCRIPT" ] ; do
+  ls=`ls -ld "$SCRIPT"`
+  # Drop everything prior to ->
+  link=`expr "$ls" : '.*-> \(.*\)$'`
+  if expr "$link" : '/.*' > /dev/null; then
+    SCRIPT="$link"
+  else
+    SCRIPT=`dirname "$SCRIPT"`/"$link"
+  fi
+done
+
+# Find RedPen home
+REDPEN_HOME=`dirname "$SCRIPT"`/..
+
 JAVA_OPTS="$JAVA_OPTS -Dfile.encoding=UTF-8"
+REDPEN_WAR_FILE="bin/redpen-server.war"
 
 if [ -n "$STOP_KEY" ]; then
-    JAVA_OPTS="JAVA_OPTS -DSTOP_KEY=$STOP_KEY"
+    JAVA_OPTS="$JAVA_OPTS -DSTOP_KEY=$STOP_KEY"
 fi
 
 JAVA_CMD="$JAVA_HOME/bin/java"
@@ -18,4 +35,4 @@ if [ ! -x "$JAVA_CMD" ]; then
     exit 1
 fi
 
-exec "$JAVA_CMD -jar" $JAVA_OPTS "$@"
+exec "$JAVA_CMD" -jar $JAVA_OPTS $REDPEN_WAR_FILE
