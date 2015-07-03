@@ -1,0 +1,21 @@
+#!/bin/sh
+##
+## RedPen Server startup script
+##
+
+STOP_KEY=redpen.stop
+
+JAVA_OPTS="$JAVA_OPTS -Dfile.encoding=UTF-8"
+
+if [ -n "$STOP_KEY" ]; then
+    JAVA_OPTS="JAVA_OPTS -DSTOP_KEY=$STOP_KEY"
+fi
+
+JAVA_CMD="$JAVA_HOME/bin/java"
+
+if [ ! -x "$JAVA_CMD" ]; then
+    echo "Error: $JAVA_CMD is not execututable. Can not start RedPen" 1>&2
+    exit 1
+fi
+
+exec "$JAVA_CMD -jar" $JAVA_OPTS "$@"
