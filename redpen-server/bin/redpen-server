@@ -65,7 +65,7 @@ if [ $COMMAND = "start" ]; then
     if [ -n "$STOP_KEY" ]; then
         echo "starting redpen with stop key..." 1>&2
         exec "$JAVA_CMD" -jar $JAVA_OPTS $REDPEN_WAR_FILE -p $REDPEN_PORT -STOP_KEY $STOP_KEY 2&>1 2>> $REDPEN_LOG_FILE &
-	exit 0
+        exit 0
     fi
     echo "starting redpen without stop key..." 1>&2
     exec "$JAVA_CMD" -jar $JAVA_OPTS $REDPEN_WAR_FILE -p $REDPEN_PORT 2&>1 2>> $REDPEN_LOG_FILE &
