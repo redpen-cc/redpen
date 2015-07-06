@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import cc.redpen.RedPen;
 import org.apache.commons.cli.*;
 import org.eclipse.jetty.server.Server;
@@ -22,6 +23,8 @@ import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ShutdownHandler;
 import org.eclipse.jetty.webapp.WebAppContext;
 
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.URL;
 import java.security.ProtectionDomain;
 
@@ -68,6 +71,11 @@ public class RedPenRunner {
             portNum = Integer.parseInt(commandLine.getOptionValue("p"));
         }
 
+        if (isPortTaken(portNum)) {
+            System.err.println("port is taken...");
+            System.exit(1);
+        }
+
         final String contextPath = System.getProperty("redpen.home", "/");
 
         Server server = new Server(portNum);
@@ -95,5 +103,16 @@ public class RedPenRunner {
     private static void printHelp(Options opt) {
         HelpFormatter formatter = new HelpFormatter();
         formatter.printHelp("redpen-server", opt);
+    }
+
+    private static boolean isPortTaken(int portNum) {
+        boolean portTaken = false;
+        try (ServerSocket socket = new ServerSocket(portNum)) {
+            // do nothing
+        } catch (IOException e) {
+            System.err.println("Detect: port is taken"); // TODO: use logger
+            portTaken = true;
+        }
+        return portTaken;
     }
 }

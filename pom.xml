@@ -19,6 +19,7 @@
         <module>redpen-plugin</module>
         <module>redpen-cli</module>
         <module>redpen-server</module>
+        <module>redpen-distribution</module>
     </modules>
 
     <build>
