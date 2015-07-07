@@ -9,4 +9,4 @@
 * Takahiro Yoshimura <altakey _at_ gmail.com>
 * Naoki Ainoya <ainonic _at_ gmail.com>
 * Gerrard Hocks
-* HAYASHI Kentaro
+* Kentaro Hayashi
