@@ -150,7 +150,9 @@ public class LaTeXProcessor {
                     scope.getChildren().add(new ParaNode(new VerbatimNode(t.v)));
                     break;
                 case "TEXTILE":
-                    regTextiles.addLast(t);
+                    if (!t.isEmptyAsTextile()) {
+                        regTextiles.addLast(t);
+                    }
                     break;
                 }
             }

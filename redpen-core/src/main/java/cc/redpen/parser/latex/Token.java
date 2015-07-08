@@ -20,6 +20,7 @@ package cc.redpen.parser.latex;
 import java.util.List;
 import java.util.ArrayList;
 import org.apache.commons.lang3.StringUtils;
+import java.util.regex.Pattern;
 
 /**
  * Token data type.
@@ -61,5 +62,9 @@ public class Token {
 
     public String asVerbatim() {
         return v;
+    }
+
+    public boolean isEmptyAsTextile() {
+        return Pattern.compile("^[ \\r\\n\\t]*$").matcher(asTextile()).matches();
     }
 }
