@@ -24,7 +24,6 @@ import cc.redpen.model.Sentence;
 import cc.redpen.parser.markdown.ToFileContentSerializer;
 import cc.redpen.parser.latex.LaTeXProcessor;
 import cc.redpen.tokenizer.RedPenTokenizer;
-import org.pegdown.ast.RootNode;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -73,13 +72,7 @@ final class LaTeXParser extends BaseDocumentParser {
         headers.add(new Sentence("", 0));
         documentBuilder.appendSection(new Section(0, headers));
 
-        // TODO create documentBuilder after parsing... overhead...
-        RootNode rootNode =
-            latexProcessor.parse(sb.toString().toCharArray());
-        ToFileContentSerializer serializer =
-            new ToFileContentSerializer(documentBuilder,
-                                        lineList, sentenceExtractor);
-        serializer.toFileContent(rootNode);
+        new LaTeXProcessor().parse(sb.toString().toCharArray(), documentBuilder, sentenceExtractor);
 
         return documentBuilder.build();
     }

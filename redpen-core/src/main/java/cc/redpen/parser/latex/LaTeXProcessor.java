@@ -23,53 +23,125 @@ import java.util.LinkedList;
 
 import java.util.regex.Pattern;
 
-import org.pegdown.ast.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Deque;
 import java.util.ArrayDeque;
 
-/**
- * Lame Pegdown adapter for the LaTeX parser.
- */
+import cc.redpen.RedPenException;
+import cc.redpen.model.Document;
+import static cc.redpen.model.Document.DocumentBuilder;
+import cc.redpen.model.Section;
+import cc.redpen.model.Sentence;
+import cc.redpen.parser.LineOffset;
+import cc.redpen.parser.SentenceExtractor;
+import cc.redpen.parser.markdown.CandidateSentence;
+import cc.redpen.parser.markdown.MergedCandidateSentence;
+import cc.redpen.util.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
+
 public class LaTeXProcessor {
-    public RootNode parse(char[] stream) {
+    private static final Logger LOG =
+        LoggerFactory.getLogger(LaTeXProcessor.class);
+
+    public void parse(final char[] stream, final DocumentBuilder builder, final SentenceExtractor extractor) {
         final List<Token> tokens = new ArrayList<>();
         new StreamParser(stream, t -> tokens.add(t)).parse();
-        return (P.walk (tokens));
+        P.walkWith(builder, extractor, tokens);
     }
 
-    /*package*/ static class P {
-        private static List<Node> asTextileNodes(final Deque<Token> q) {
-            final List<Node> o = new ArrayList<>();
-            final List<Character> reg = new ArrayList<>();
-            final Pattern NOT_EMPTY = Pattern.compile("[^ \\t\\r\\n]");
-
-            final Runnable flusher = () -> {
-                final String content = StringUtils.join(reg, "");
-                if (NOT_EMPTY.matcher(content).find()) {
-                    o.add(new TextNode(content));
-                }
-                reg.clear();
-            };
-
-            for (Token t: q) {
-                for (char c: t.asTextile().toCharArray()) {
-                    switch (c) {
-                    case '\n':
-                        flusher.run();
-                        o.add(new SimpleNode(SimpleNode.Type.Linebreak));
-                        break;
-                    default:
-                        reg.add(c);
-                    }
-                }
+    /*package*/ static class RP {
+        private static void fixSentencesInto(final DocumentBuilder builder, final SentenceExtractor sentenceExtractor, final List<CandidateSentence> candidateSentences) {
+            // 1. remain sentence append currentSection
+            //TODO need line number
+            for (Sentence sentence : compileAsSentenceList(sentenceExtractor, candidateSentences)) {
+                builder.addSentence(sentence);
             }
-            flusher.run();
-            return o;
         }
 
-        public static int outlineLevelOf(final Token t) {
+        private static CandidateSentence candidateOfSentence(Token t) {
+            return candidateOfSentence(t, null);
+        }
+
+        private static CandidateSentence candidateOfSentence(Token t, String link) {
+            return new CandidateSentence(t.pos.row, t.asTextile(), link, t.pos.col);
+        }
+
+        private static List<Sentence> compileAsSentenceList(final SentenceExtractor sentenceExtractor, final List<CandidateSentence> candidateSentences) {
+            try {
+                try {
+                    return sentencesIn(sentenceExtractor, MergedCandidateSentence.merge(candidateSentences).get());
+                } catch (final NoSuchElementException e) {
+                    return new ArrayList<Sentence>();
+                }
+            } finally {
+                try {
+                    candidateSentences.clear();
+                } catch (final UnsupportedOperationException ignore) {
+                }
+            }
+        }
+
+        private static List<Sentence> sentencesIn(final SentenceExtractor sentenceExtractor, final MergedCandidateSentence mergedCandidateSentence) {
+            final List<Sentence> outputSentences = new ArrayList<>();
+            List<Pair<Integer, Integer>> sentencePositions = new ArrayList<>();
+            final String line = mergedCandidateSentence.getContents();
+            int lastPosition = sentenceExtractor.extract(line , sentencePositions);
+
+            for (Pair<Integer, Integer> sentencePosition : sentencePositions) {
+                List<LineOffset> offsetMap =
+                    mergedCandidateSentence.getOffsetMap().subList(sentencePosition.first,
+                                                                   sentencePosition.second);
+                outputSentences.add(new Sentence(line.substring(
+                                                     sentencePosition.first, sentencePosition.second), offsetMap,
+                                                 mergedCandidateSentence.getRangedLinks(sentencePosition.first, sentencePosition.second - 1)));
+            }
+            if (lastPosition < mergedCandidateSentence.getContents().length()) {
+                List<LineOffset> offsetMap = mergedCandidateSentence.getOffsetMap().subList(lastPosition,
+                                                                                            mergedCandidateSentence.getContents().length());
+                outputSentences.add(new Sentence(line.substring(
+                                                     lastPosition, mergedCandidateSentence.getContents().length()),
+                                                 offsetMap,
+                                                 mergedCandidateSentence.getRangedLinks(lastPosition,
+                                                                                        mergedCandidateSentence.getContents().length())));
+            }
+            return outputSentences;
+        }
+
+        //FIXME wikiparser have same method. pull up or expand to utils
+        private static boolean addChild(final Section candidate, final Section child) {
+            if (candidate.getLevel() < child.getLevel()) {
+                candidate.appendSubSection(child);
+                child.setParentSection(candidate);
+            } else { // search parent
+                Section parent = candidate.getParentSection();
+                while (parent != null) {
+                    if (parent.getLevel() < child.getLevel()) {
+                        parent.appendSubSection(child);
+                        child.setParentSection(parent);
+                        break;
+                    }
+                    parent = parent.getParentSection();
+                }
+                if (parent == null) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // To deal with a header content as a paragraph
+        private static List<Sentence> asHeaderContents(final List<Sentence> headerContents) {
+            if (headerContents.size() > 0) {
+                headerContents.get(0).setIsFirstSentence(true);
+            }
+            return headerContents;
+        }
+
+        private static int outlineLevelOf(final Token t) {
             switch (t.t) {
             case "PART":
                 return 1;
@@ -82,84 +154,50 @@ public class LaTeXProcessor {
             case "SUBSUBSECTION":
                 return 5;
             default:
-                throw new IllegalStateException("token is not outline");
+                return 6;
             }
         }
 
-        public static int outlineLevelOf(final SuperNode n) {
-            if (n instanceof RootNode) {
-                return 0;
-            } else if (n instanceof HeaderNode) {
-                return (((HeaderNode)n).getLevel());
-            } else {
-                throw new IllegalStateException(String.format("Node %s is not outline", n));
+        public static void appendSection(final DocumentBuilder builder, final SentenceExtractor sentenceExtractor, final List<CandidateSentence> candidateSentences, final Token t) {
+            // 1. remain sentence flush to current section
+            fixSentencesInto(builder, sentenceExtractor, candidateSentences);
+
+            // 2. retrieve children for header content create;
+            final List<Sentence> headerContents = asHeaderContents(compileAsSentenceList(sentenceExtractor, Arrays.asList(candidateOfSentence(t))));
+
+            // 3. create new Section
+            Section currentSection = builder.getLastSection();
+            builder.appendSection(new Section(outlineLevelOf(t), headerContents));
+            //FIXME move this validate process to addChild
+            if (!addChild(currentSection, builder.getLastSection())) {
+                LOG.warn("Failed to add parent for a Section: "
+                         + builder.getLastSection().getHeaderContents().get(0));
             }
         }
+    }
 
-        private static SuperNode parentNodeFor(final Deque<SuperNode> reg, final SuperNode n) {
-            while (true) {
-                final SuperNode top = reg.getLast();
-                if (outlineLevelOf(n) <= outlineLevelOf(top)) {
-                    reg.removeLast();
-                } else {
-                    return top;
-                }
-            }
-        }
-
-        public static RootNode walk(final List<Token> tokens) {
-            final Deque<SuperNode> reg = new ArrayDeque<>();
-            final Deque<Token> regTextiles = new ArrayDeque<>();
-
-            final Runnable flusher = () -> {
-                if (!regTextiles.isEmpty()) {
-                    reg.getLast().getChildren().add(new ParaNode(asTextileNodes(regTextiles))); /* XXX */
-                    regTextiles.clear();
-                }
-            };
-
-            final RootNode o = new RootNode();
-            final HeaderNode implicitSection = new HeaderNode(3);
-            o.getChildren().add(implicitSection);
-            reg.addLast(o);
-            reg.addLast(implicitSection);
+    /*package*/ static class P {
+        public static void walkWith(final DocumentBuilder builder, final SentenceExtractor sentenceExtractor, final List<Token> tokens) {
+            int itemDepth = 0;
+            final List<CandidateSentence> candidateSentences = new ArrayList<>();
 
             for (Token t : tokens) {
-                final SuperNode scope = reg.getLast();
-
                 switch (t.t) {
                 case "PART":
                 case "CHAPTER":
                 case "SECTION":
                 case "SUBSECTION":
                 case "SUBSUBSECTION": {
-                    flusher.run();
-                    final SuperNode h = new HeaderNode(outlineLevelOf(t), new TextNode(t.v));
-                    parentNodeFor(reg, h).getChildren().add(h);
-                    reg.addLast(h);
+                    RP.appendSection(builder, sentenceExtractor, candidateSentences, t);
                     break;
                 }
-                case "ITEM":
-                    flusher.run();
-                    if (t.v.length() > 0) {
-                        scope.getChildren().add(new ParaNode(new TextNode(t.v)));
-                    }
-                    break;
-                case "VERBATIM":
-                    flusher.run();
-                    scope.getChildren().add(new ParaNode(new VerbatimNode(t.v)));
-                    break;
                 case "TEXTILE":
-                    if (!t.isEmptyAsTextile()) {
-                        regTextiles.addLast(t);
-                    }
+                    candidateSentences.add(RP.candidateOfSentence(t));
                     break;
                 }
             }
 
-            flusher.run();
-
-            return o;
+            RP.fixSentencesInto(builder, sentenceExtractor, candidateSentences);
         }
     }
 }
