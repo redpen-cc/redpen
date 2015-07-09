@@ -56,7 +56,7 @@ public class LaTeXProcessor {
     /*package*/ static class Context {
         public DocumentBuilder builder;
         public SentenceExtractor sentenceExtractor;
-        public List<CandidateSentence> candidateSentences;
+        public List<CandidateSentence> candidateSentences = new ArrayList<>();
 
         public static Context of(final DocumentBuilder builder, final SentenceExtractor sentenceExtractor) {
             final Context o = new Context();
