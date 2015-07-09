@@ -187,6 +187,18 @@ public class LaTeXProcessor {
                          + c.builder.getLastSection().getHeaderContents().get(0));
             }
         }
+
+        public static List<CandidateSentence> candidatesOfSentence(final Token t) {
+            final List<CandidateSentence> o = new ArrayList<>();
+            for (String s: t.asTextile().split("\n")) {
+                o.add(new CandidateSentence(t.pos.row /* TBD */, s, null, t.pos.col /* TBD */));
+            }
+            return o;
+        }
+
+        public static void addAsCandidate(final Context c, final Token t) {
+            c.candidateSentences.addAll(candidatesOfSentence(t));
+        }
     }
 
     /*package*/ static class P {
@@ -199,12 +211,11 @@ public class LaTeXProcessor {
                 case "CHAPTER":
                 case "SECTION":
                 case "SUBSECTION":
-                case "SUBSUBSECTION": {
+                case "SUBSUBSECTION":
                     RP.appendSection(c, t);
                     break;
-                }
                 case "TEXTILE":
-                    c.candidateSentences.add(RP.candidateOfSentence(t));
+                    RP.addAsCandidate(c, t);
                     break;
                 }
             }
