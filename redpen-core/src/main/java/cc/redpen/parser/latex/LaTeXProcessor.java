@@ -188,16 +188,23 @@ public class LaTeXProcessor {
             }
         }
 
-        public static List<CandidateSentence> candidatesOfSentence(final Token t) {
-            final List<CandidateSentence> o = new ArrayList<>();
+        public static List<CandidateSentence> candidatesOfSentence(final Token t, final String sep) {
+            final Deque<CandidateSentence> o = new ArrayDeque<>();
             for (String s: t.asTextile().split("\n")) {
-                o.add(new CandidateSentence(t.pos.row /* TBD */, s, null, t.pos.col /* TBD */));
+                o.addLast(new CandidateSentence(t.pos.row /* TBD */, s, null, t.pos.col /* TBD */));
+                o.addLast(new CandidateSentence(t.pos.row /* TBD */, sep, null, t.pos.col /* TBD */));
             }
-            return o;
+
+            try {
+                o.removeLast();
+            } catch (final NoSuchElementException ignore) {
+            }
+
+            return new ArrayList<CandidateSentence>(o);
         }
 
         public static void addAsCandidate(final Context c, final Token t) {
-            c.candidateSentences.addAll(candidatesOfSentence(t));
+            c.candidateSentences.addAll(candidatesOfSentence(t, c.sentenceExtractor.getBrokenLineSeparator()));
         }
     }
 
