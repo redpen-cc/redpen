@@ -47,18 +47,31 @@ public class LaTeXProcessor {
     private static final Logger LOG =
         LoggerFactory.getLogger(LaTeXProcessor.class);
 
-    public void parse(final char[] stream, final DocumentBuilder builder, final SentenceExtractor extractor) {
+    public void parse(final char[] stream, final DocumentBuilder builder, final SentenceExtractor sentenceExtractor) {
         final List<Token> tokens = new ArrayList<>();
         new StreamParser(stream, t -> tokens.add(t)).parse();
-        P.walkWith(builder, extractor, tokens);
+        P.walkWith(Context.of(builder, sentenceExtractor), tokens);
+    }
+
+    /*package*/ static class Context {
+        public DocumentBuilder builder;
+        public SentenceExtractor sentenceExtractor;
+        public List<CandidateSentence> candidateSentences;
+
+        public static Context of(final DocumentBuilder builder, final SentenceExtractor sentenceExtractor) {
+            final Context o = new Context();
+            o.builder = builder;
+            o.sentenceExtractor = sentenceExtractor;
+            return o;
+        }
     }
 
     /*package*/ static class RP {
-        private static void fixSentencesInto(final DocumentBuilder builder, final SentenceExtractor sentenceExtractor, final List<CandidateSentence> candidateSentences) {
+        private static void fixSentencesInto(final Context c) {
             // 1. remain sentence append currentSection
             //TODO need line number
-            for (Sentence sentence : compileAsSentenceList(sentenceExtractor, candidateSentences)) {
-                builder.addSentence(sentence);
+            for (Sentence sentence : compileAsSentenceList(c)) {
+                c.builder.addSentence(sentence);
             }
         }
 
@@ -70,26 +83,26 @@ public class LaTeXProcessor {
             return new CandidateSentence(t.pos.row, t.asTextile(), link, t.pos.col);
         }
 
-        private static List<Sentence> compileAsSentenceList(final SentenceExtractor sentenceExtractor, final List<CandidateSentence> candidateSentences) {
+        private static List<Sentence> compileAsSentenceList(final Context c) {
             try {
                 try {
-                    return sentencesIn(sentenceExtractor, MergedCandidateSentence.merge(candidateSentences).get());
+                    return sentencesIn(c, MergedCandidateSentence.merge(c.candidateSentences).get());
                 } catch (final NoSuchElementException e) {
                     return new ArrayList<Sentence>();
                 }
             } finally {
                 try {
-                    candidateSentences.clear();
+                    c.candidateSentences.clear();
                 } catch (final UnsupportedOperationException ignore) {
                 }
             }
         }
 
-        private static List<Sentence> sentencesIn(final SentenceExtractor sentenceExtractor, final MergedCandidateSentence mergedCandidateSentence) {
+        private static List<Sentence> sentencesIn(final Context c, final MergedCandidateSentence mergedCandidateSentence) {
             final List<Sentence> outputSentences = new ArrayList<>();
             List<Pair<Integer, Integer>> sentencePositions = new ArrayList<>();
             final String line = mergedCandidateSentence.getContents();
-            int lastPosition = sentenceExtractor.extract(line , sentencePositions);
+            int lastPosition = c.sentenceExtractor.extract(line , sentencePositions);
 
             for (Pair<Integer, Integer> sentencePosition : sentencePositions) {
                 List<LineOffset> offsetMap =
@@ -158,28 +171,27 @@ public class LaTeXProcessor {
             }
         }
 
-        public static void appendSection(final DocumentBuilder builder, final SentenceExtractor sentenceExtractor, final List<CandidateSentence> candidateSentences, final Token t) {
+        public static void appendSection(final Context c, final Token t) {
             // 1. remain sentence flush to current section
-            fixSentencesInto(builder, sentenceExtractor, candidateSentences);
+            fixSentencesInto(c);
 
             // 2. retrieve children for header content create;
-            final List<Sentence> headerContents = asHeaderContents(compileAsSentenceList(sentenceExtractor, Arrays.asList(candidateOfSentence(t))));
+            final List<Sentence> headerContents = asHeaderContents(compileAsSentenceList(c));
 
             // 3. create new Section
-            Section currentSection = builder.getLastSection();
-            builder.appendSection(new Section(outlineLevelOf(t), headerContents));
+            Section currentSection = c.builder.getLastSection();
+            c.builder.appendSection(new Section(outlineLevelOf(t), headerContents));
             //FIXME move this validate process to addChild
-            if (!addChild(currentSection, builder.getLastSection())) {
+            if (!addChild(currentSection, c.builder.getLastSection())) {
                 LOG.warn("Failed to add parent for a Section: "
-                         + builder.getLastSection().getHeaderContents().get(0));
+                         + c.builder.getLastSection().getHeaderContents().get(0));
             }
         }
     }
 
     /*package*/ static class P {
-        public static void walkWith(final DocumentBuilder builder, final SentenceExtractor sentenceExtractor, final List<Token> tokens) {
+        public static void walkWith(final Context c, final List<Token> tokens) {
             int itemDepth = 0;
-            final List<CandidateSentence> candidateSentences = new ArrayList<>();
 
             for (Token t : tokens) {
                 switch (t.t) {
@@ -188,16 +200,16 @@ public class LaTeXProcessor {
                 case "SECTION":
                 case "SUBSECTION":
                 case "SUBSUBSECTION": {
-                    RP.appendSection(builder, sentenceExtractor, candidateSentences, t);
+                    RP.appendSection(c, t);
                     break;
                 }
                 case "TEXTILE":
-                    candidateSentences.add(RP.candidateOfSentence(t));
+                    c.candidateSentences.add(RP.candidateOfSentence(t));
                     break;
                 }
             }
 
-            RP.fixSentencesInto(builder, sentenceExtractor, candidateSentences);
+            RP.fixSentencesInto(c);
         }
     }
 }
