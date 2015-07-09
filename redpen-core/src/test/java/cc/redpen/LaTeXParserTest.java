@@ -438,8 +438,8 @@ public class LaTeXParserTest {
         Section h2Section = doc.getSection(2);
 
         assertEquals(0, rootSection.getLevel());
-        assertEquals(1, h1Section.getLevel());
-        assertEquals(2, h2Section.getLevel());
+        assertEquals(3, h1Section.getLevel());
+        assertEquals(4, h2Section.getLevel());
 
         assertEquals(rootSection.getSubSection(0), h1Section);
         assertEquals(h1Section.getParentSection(), rootSection);
@@ -481,7 +481,7 @@ public class LaTeXParserTest {
         Section h1Section = doc.getSection(1);
 
         assertEquals(0, rootSection.getLevel());
-        assertEquals(1, h1Section.getLevel());
+        assertEquals(3, h1Section.getLevel());
 
         assertEquals(rootSection.getSubSection(0), h1Section);
         assertEquals(h1Section.getParentSection(), rootSection);
