@@ -189,7 +189,7 @@ public class LaTeXParserTest {
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
-        assertEquals(3, firstParagraph.getNumberOfSentences());
+        assertEquals(2, firstParagraph.getNumberOfSentences());
     }
 
     @Test
