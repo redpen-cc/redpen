@@ -94,8 +94,8 @@ public class LaTeXParserTest {
         final Section secondSection = doc.getSection(1);
         assertEquals(1, secondSection.getHeaderContentsListSize());
         assertEquals("About Gekioko.", secondSection.getHeaderContent(0).getContent());
-        assertEquals(6, secondSection.getHeaderContent(0).getLineNumber());
-        assertEquals(10, secondSection.getHeaderContent(0).getStartPositionOffset());
+        assertEquals(5, secondSection.getHeaderContent(0).getLineNumber());
+        assertEquals(1, secondSection.getHeaderContent(0).getStartPositionOffset());
         assertEquals(0, secondSection.getNumberOfLists());
         assertEquals(2, secondSection.getNumberOfParagraphs());
         assertEquals(1, secondSection.getNumberOfSubsections());
