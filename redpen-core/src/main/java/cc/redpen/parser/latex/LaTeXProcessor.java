@@ -181,12 +181,24 @@ public class LaTeXProcessor {
             final List<Sentence> headerContents = asHeaderContents(compileAsSentenceList(c));
 
             // 3. create new Section
-            Section currentSection = c.builder.getLastSection();
+            Section currentSection = trimmedSection(c.builder.getLastSection());
             c.builder.appendSection(new Section(outlineLevelOf(t), headerContents));
             //FIXME move this validate process to addChild
             if (!addChild(currentSection, c.builder.getLastSection())) {
                 LOG.warn("Failed to add parent for a Section: "
                          + c.builder.getLastSection().getHeaderContents().get(0));
+            }
+        }
+
+        private static Section trimmedSection(final Section s) {
+            try {
+                final Paragraph p = s.getParagraph(s.getNumberOfParagraphs() - 1);
+                if (p.getSentences().isEmpty()) {
+                    s.getParagraphs().remove(p);
+                }
+                return s;
+            } catch (final ArrayIndexOutOfBoundsException e) {
+                return s;
             }
         }
 
