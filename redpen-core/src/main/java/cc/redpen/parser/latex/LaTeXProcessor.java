@@ -75,12 +75,12 @@ public class LaTeXProcessor {
             }
         }
 
-        private static CandidateSentence candidateOfSentence(Token t) {
-            return candidateOfSentence(t, null);
+        private static CandidateSentence candidateOfSentence(Token t, Textizer textizer) {
+            return candidateOfSentence(t, null, textizer);
         }
 
-        private static CandidateSentence candidateOfSentence(Token t, String link) {
-            return new CandidateSentence(t.pos.row, t.asTextile(), link, t.pos.col);
+        private static CandidateSentence candidateOfSentence(Token t, String link, Textizer textizer) {
+            return new CandidateSentence(t.pos.row, textizer.do_(t), link, t.pos.col);
         }
 
         private static List<Sentence> compileAsSentenceList(final Context c) {
@@ -176,6 +176,7 @@ public class LaTeXProcessor {
             fixSentencesInto(c);
 
             // 2. retrieve children for header content create;
+            addAsCandidate(c, t, token -> token.asVerbatim());
             final List<Sentence> headerContents = asHeaderContents(compileAsSentenceList(c));
 
             // 3. create new Section
@@ -188,9 +189,9 @@ public class LaTeXProcessor {
             }
         }
 
-        public static List<CandidateSentence> candidatesOfSentence(final Token t, final String sep) {
+        private static List<CandidateSentence> candidatesOfSentence(final Token t, final String sep, final Textizer textizer) {
             final Deque<CandidateSentence> o = new ArrayDeque<>();
-            for (String s: t.asTextile().split("\n")) {
+            for (String s: textizer.do_(t).split("\n")) {
                 o.addLast(new CandidateSentence(t.pos.row /* TBD */, s, null, t.pos.col /* TBD */));
                 o.addLast(new CandidateSentence(t.pos.row /* TBD */, sep, null, t.pos.col /* TBD */));
             }
@@ -203,8 +204,16 @@ public class LaTeXProcessor {
             return new ArrayList<CandidateSentence>(o);
         }
 
+        private static void addAsCandidate(final Context c, final Token t, final Textizer textizer) {
+            c.candidateSentences.addAll(candidatesOfSentence(t, c.sentenceExtractor.getBrokenLineSeparator(), textizer));
+        }
+
         public static void addAsCandidate(final Context c, final Token t) {
-            c.candidateSentences.addAll(candidatesOfSentence(t, c.sentenceExtractor.getBrokenLineSeparator()));
+            c.candidateSentences.addAll(candidatesOfSentence(t, c.sentenceExtractor.getBrokenLineSeparator(), token -> token.asTextile()));
+        }
+
+        private static interface Textizer {
+            String do_(Token t);
         }
     }
 
