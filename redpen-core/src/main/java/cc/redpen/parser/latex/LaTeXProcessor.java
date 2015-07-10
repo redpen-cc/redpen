@@ -32,6 +32,7 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
 import static cc.redpen.model.Document.DocumentBuilder;
 import cc.redpen.model.Section;
+import cc.redpen.model.Paragraph;
 import cc.redpen.model.Sentence;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
@@ -213,6 +214,7 @@ public class LaTeXProcessor {
         }
 
         public static void appendParagraph(final Context c) {
+            fixSentencesInto(c);
             c.builder.addParagraph();
         }
 
