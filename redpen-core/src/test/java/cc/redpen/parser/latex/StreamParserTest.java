@@ -498,13 +498,14 @@ public class StreamParserTest {
     public void testPStyleTextileRegion() {
         assertTokensLike(
             Arrays.asList(
-                token("TEXTILE",
-                        "This is a sentence.  Okay, this is IT.\n"
-                      + "Do you hear that?\n\n"
-                      + "(You open the door.)\n\n\n"
-                      + "**YAAAHHHH**\n\n"
-                      + "That was close...  Take care of yourself.")
-            ),
+                token("TEXTILE", "This is a sentence.  Okay, this is IT.\nDo you hear that?"),
+                token("TEXTILE", ""),
+                token("TEXTILE", "(You open the door.)"),
+                token("TEXTILE", ""),
+                token("TEXTILE", "**YAAAHHHH**"),
+                token("TEXTILE", ""),
+                token("TEXTILE", "That was close...  Take care of yourself.")
+                ),
             StreamParser.P.styleTextileRegion(
                 Arrays.asList(
                     token("TEXTILE",

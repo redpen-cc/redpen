@@ -303,14 +303,26 @@ public class StreamParser {
                     if ("TEXTILE".equals(t.t)) {
                         if (!EMPTY.matcher(t.v).matches()) {
                             final String stripped = stripTextBlock(t.v);
-                            o.add(new Token(t.t, maskCharactersInTextBlock(stripped), new Position(_guessRow(t, stripped), _guessCol(t, stripped))));
+                            for (String s : LINEBREAK.split(stripped)) {
+                                final Position p = new Position(_guessRow(t, s), _guessCol(t, s));
+                                o.add(new Token(t.t, maskCharactersInTextBlock(s), p));
+                                o.add(new Token(t.t, Token.BLANK_LINE, p));
+                            }
                         }
                     } else {
                         o.add(t);
                     }
                 }
             } catch (final NoSuchElementException e) {
-                return o;
+                try {
+                    final Token last = o.get(o.size() - 1);
+                    if (last.isBlankLine()) {
+                        o.remove(last);
+                    }
+                    return o;
+                } catch (final ArrayIndexOutOfBoundsException ignore) {
+                    return o;
+                }
             }
         }
 

@@ -212,6 +212,10 @@ public class LaTeXProcessor {
             c.candidateSentences.addAll(candidatesOfSentence(t, c.sentenceExtractor.getBrokenLineSeparator(), token -> token.asTextile()));
         }
 
+        public static void appendParagraph(final Context c) {
+            c.builder.addParagraph();
+        }
+
         private static interface Textizer {
             String do_(Token t);
         }
@@ -231,7 +235,11 @@ public class LaTeXProcessor {
                     RP.appendSection(c, t);
                     break;
                 case "TEXTILE":
-                    RP.addAsCandidate(c, t);
+                    if (t.isBlankLine()) {
+                        RP.appendParagraph(c);
+                    } else {
+                        RP.addAsCandidate(c, t);
+                    }
                     break;
                 }
             }

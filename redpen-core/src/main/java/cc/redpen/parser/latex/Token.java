@@ -26,6 +26,8 @@ import java.util.regex.Pattern;
  * Token data type.
  */
 public class Token {
+    public static final String BLANK_LINE = "";
+
     public String t;
     public String v;
     public List<Token> p = new ArrayList<>();
@@ -66,5 +68,9 @@ public class Token {
 
     public boolean isEmptyAsTextile() {
         return Pattern.compile("^[ \\r\\n\\t]*$").matcher(asTextile()).matches();
+    }
+
+    public boolean isBlankLine() {
+        return ("TEXTILE".equals(t) && "".equals(v));
     }
 }
