@@ -168,14 +168,15 @@ public class LaTeXProcessor {
 
             // 2. retrieve children for header content create;
             addAsCandidate(c, t, token -> token.asVerbatim());
-            final List<Sentence> headerContents = asHeaderContents(compileAsSentenceList(c));
 
             // 3. create new Section
-            Section currentSection = trimmedSection(c.builder.getLastSection());
-            c.builder.appendSection(new Section(outlineLevelOf(t), headerContents));
-            if (!addChild(currentSection, c.builder.getLastSection())) {
+            final Section currentSection = c.builder.getLastSection();
+            final Section newSection = new Section(outlineLevelOf(t), asHeaderContents(compileAsSentenceList(c)));
+
+            c.builder.appendSection(newSection);
+            if (!addChild(trimmedSection(currentSection), newSection)) {
                 LOG.warn("Failed to add parent for a Section: "
-                         + c.builder.getLastSection().getHeaderContents().get(0));
+                         + newSection.getHeaderContents().get(0));
             }
         }
 
