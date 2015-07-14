@@ -196,7 +196,7 @@ public final class Main {
 
     static File resolveConfigLocation(String configFileName) {
         List<String> pathCandidates = new ArrayList<>();
-        if(configFileName != null) {
+        if (configFileName != null) {
             pathCandidates.add(configFileName);
         }
         pathCandidates.add(DEFAULT_CONFIG_NAME + ".xml");
@@ -205,6 +205,9 @@ public final class Main {
         if (redpenHome != null) {
             pathCandidates.add(redpenHome + File.separator + DEFAULT_CONFIG_NAME + ".xml");
             pathCandidates.add(redpenHome + File.separator
+                    + DEFAULT_CONFIG_NAME + "-" + Locale.getDefault().getLanguage() + ".xml");
+            pathCandidates.add(redpenHome + File.separator + "conf" + File.separator + DEFAULT_CONFIG_NAME + ".xml");
+            pathCandidates.add(redpenHome + File.separator + "conf" + File.separator
                     + DEFAULT_CONFIG_NAME + "-" + Locale.getDefault().getLanguage() + ".xml");
         }
         File resolved = resolve(pathCandidates);
