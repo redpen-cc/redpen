@@ -579,8 +579,8 @@ public class LaTeXParserTest {
         assertEquals(1, errors.size());
         assertEquals("InvalidSymbol", errors.get(0).getValidatorName());
         assertEquals(19, errors.get(0).getSentence().getContent().length());
-        assertEquals(Optional.of(new LineOffset(6, 18)), errors.get(0).getStartPosition());
-        assertEquals(Optional.of(new LineOffset(6, 19)), errors.get(0).getEndPosition());
+        assertEquals(Optional.of(new LineOffset(5, 18)), errors.get(0).getStartPosition());
+        assertEquals(Optional.of(new LineOffset(5, 19)), errors.get(0).getEndPosition());
     }
 
     private Document createFileContent(String inputDocumentString, Configuration conf) {
