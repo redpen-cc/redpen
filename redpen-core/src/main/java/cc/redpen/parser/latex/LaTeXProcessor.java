@@ -68,20 +68,10 @@ public class LaTeXProcessor {
     }
 
     /*package*/ static class RP {
-        private static void fixSentencesInto(final Context c) {
-            // 1. remain sentence append currentSection
-            //TODO need line number
+        private static void flushSentences(final Context c) {
             for (Sentence sentence : compileAsSentenceList(c)) {
                 c.builder.addSentence(sentence);
             }
-        }
-
-        private static CandidateSentence candidateOfSentence(Token t, Textizer textizer) {
-            return candidateOfSentence(t, null, textizer);
-        }
-
-        private static CandidateSentence candidateOfSentence(Token t, String link, Textizer textizer) {
-            return new CandidateSentence(t.pos.row, textizer.do_(t), link, t.pos.col);
         }
 
         private static List<Sentence> compileAsSentenceList(final Context c) {
@@ -174,7 +164,7 @@ public class LaTeXProcessor {
 
         public static void appendSection(final Context c, final Token t) {
             // 1. remain sentence flush to current section
-            fixSentencesInto(c);
+            flushSentences(c);
 
             // 2. retrieve children for header content create;
             addAsCandidate(c, t, token -> token.asVerbatim());
@@ -183,7 +173,6 @@ public class LaTeXProcessor {
             // 3. create new Section
             Section currentSection = trimmedSection(c.builder.getLastSection());
             c.builder.appendSection(new Section(outlineLevelOf(t), headerContents));
-            //FIXME move this validate process to addChild
             if (!addChild(currentSection, c.builder.getLastSection())) {
                 LOG.warn("Failed to add parent for a Section: "
                          + c.builder.getLastSection().getHeaderContents().get(0));
@@ -208,12 +197,7 @@ public class LaTeXProcessor {
                 o.addLast(new CandidateSentence(t.pos.row /* TBD */, s, null, t.pos.col /* TBD */));
                 o.addLast(new CandidateSentence(t.pos.row /* TBD */, sep, null, t.pos.col /* TBD */));
             }
-
-            try {
-                o.removeLast();
-            } catch (final NoSuchElementException ignore) {
-            }
-
+            o.pollLast();
             return new ArrayList<CandidateSentence>(o);
         }
 
@@ -226,7 +210,7 @@ public class LaTeXProcessor {
         }
 
         public static void appendParagraph(final Context c) {
-            fixSentencesInto(c);
+            flushSentences(c);
             c.builder.addParagraph();
         }
 
@@ -258,7 +242,7 @@ public class LaTeXProcessor {
                 }
             }
 
-            RP.fixSentencesInto(c);
+            RP.flushSentences(c);
         }
     }
 }
