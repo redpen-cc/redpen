@@ -464,7 +464,7 @@ public class LaTeXParserTest {
             + "There are 47 prefectures in Japan.\n"
             + "\n"
             + "Each prefectures has its features.\n"
-            + "\\subsection{Gunma }"
+            + "\\subsection{Gunma }\n"
             + "Gumma is very beautiful\n"
             + "\n"
             + "\\end{document}\n";
@@ -483,20 +483,20 @@ public class LaTeXParserTest {
         assertEquals(h2Section.getParentSection(), h1Section);
         assertEquals(rootSection.getParentSection(), null);
 
-        assertEquals(1, rootSection.getHeaderContent(0).getLineNumber());
+        assertEquals(0, rootSection.getHeaderContent(0).getLineNumber());
         assertEquals(0, rootSection.getNumberOfParagraphs());
 
-        assertEquals(6, h1Section.getHeaderContent(0).getLineNumber());
+        assertEquals(5, h1Section.getHeaderContent(0).getLineNumber());
         assertEquals(2, h1Section.getNumberOfParagraphs());
         assertEquals(1, h1Section.getParagraph(0).getNumberOfSentences());
-        assertEquals(7, h1Section.getParagraph(0).getSentence(0).getLineNumber());
+        assertEquals(6, h1Section.getParagraph(0).getSentence(0).getLineNumber());
         assertEquals(1, h1Section.getParagraph(1).getNumberOfSentences());
-        assertEquals(9, h1Section.getParagraph(1).getSentence(0).getLineNumber());
+        assertEquals(8, h1Section.getParagraph(1).getSentence(0).getLineNumber());
 
-        assertEquals(10, h2Section.getHeaderContent(0).getLineNumber());
+        assertEquals(9, h2Section.getHeaderContent(0).getLineNumber());
         assertEquals(1, h2Section.getNumberOfParagraphs());
         assertEquals(1, h2Section.getParagraph(0).getNumberOfSentences());
-        assertEquals(11, h2Section.getParagraph(0).getSentence(0).getLineNumber());
+        assertEquals(10, h2Section.getParagraph(0).getSentence(0).getLineNumber());
     }
 
     @Test
