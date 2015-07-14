@@ -117,24 +117,29 @@ public class LaTeXProcessor {
 
         //FIXME wikiparser have same method. pull up or expand to utils
         private static boolean addChild(final Section candidate, final Section child) {
-            if (candidate.getLevel() < child.getLevel()) {
-                candidate.appendSubSection(child);
-                child.setParentSection(candidate);
+            try {
+                final Section parent = suitableParentFor(child, candidate);
+                parent.appendSubSection(child);
+                child.setParentSection(parent);
+                return true;
+            } catch (final IllegalStateException ignore) {
+                return false;
+            }
+        }
+
+        private static Section suitableParentFor(final Section s, final Section from) throws IllegalStateException {
+            if (from.getLevel() < s.getLevel()) {
+                return from;
             } else { // search parent
-                Section parent = candidate.getParentSection();
-                while (parent != null) {
-                    if (parent.getLevel() < child.getLevel()) {
-                        parent.appendSubSection(child);
-                        child.setParentSection(parent);
-                        break;
+                for (Section parent = from.getParentSection(); ; parent = parent.getParentSection()) {
+                    if (parent == null) {
+                        throw new IllegalStateException();
                     }
-                    parent = parent.getParentSection();
-                }
-                if (parent == null) {
-                    return false;
+                    if (parent.getLevel() < s.getLevel()) {
+                        return parent;
+                    }
                 }
             }
-            return true;
         }
 
         // To deal with a header content as a paragraph
