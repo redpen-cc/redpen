@@ -19,6 +19,13 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>sample/js</directory>
+            <outputDirectory>/js</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>sample/sample-doc</directory>
             <outputDirectory>/sample-doc</outputDirectory>
             <includes>
