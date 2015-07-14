@@ -196,7 +196,9 @@ public final class Main {
 
     static File resolveConfigLocation(String configFileName) {
         List<String> pathCandidates = new ArrayList<>();
-        pathCandidates.add(configFileName);
+        if(configFileName != null) {
+            pathCandidates.add(configFileName);
+        }
         pathCandidates.add(DEFAULT_CONFIG_NAME + ".xml");
         pathCandidates.add(DEFAULT_CONFIG_NAME + "-" + Locale.getDefault().getLanguage() + ".xml");
         String redpenHome = System.getenv("REDPEN_HOME");
