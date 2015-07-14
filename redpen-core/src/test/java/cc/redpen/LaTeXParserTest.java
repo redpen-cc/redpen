@@ -524,13 +524,13 @@ public class LaTeXParserTest {
         assertEquals(h1Section.getParentSection(), rootSection);
         assertEquals(rootSection.getParentSection(), null);
 
-        assertEquals(1, rootSection.getHeaderContent(0).getLineNumber());
+        assertEquals(0, rootSection.getHeaderContent(0).getLineNumber());
         assertEquals(0, rootSection.getNumberOfParagraphs());
 
-        assertEquals(1, h1Section.getHeaderContent(0).getLineNumber());
+        assertEquals(5, h1Section.getHeaderContent(0).getLineNumber());
         assertEquals(1, h1Section.getNumberOfParagraphs());
         assertEquals(1, h1Section.getParagraph(0).getNumberOfSentences());
-        assertEquals(7, h1Section.getParagraph(0).getSentence(0).getLineNumber());
+        assertEquals(6, h1Section.getParagraph(0).getSentence(0).getLineNumber());
     }
 
     @Test
