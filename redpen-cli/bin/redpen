@@ -21,7 +21,7 @@ done
 REDPEN_HOME=`dirname "$SCRIPT"`/..
 
 # Make REDPEN_HOME absolute
-REDPEN_HOME=`cd "$REDPEN_HOME"; pwd`
+export REDPEN_HOME=`cd "$REDPEN_HOME"; pwd`
 REDPEN_CLASSPATH=$REDPEN_HOME/conf/*:$REDPEN_HOME/lib/*
 
 if [ -z "$JAVA_HOME" ]; then

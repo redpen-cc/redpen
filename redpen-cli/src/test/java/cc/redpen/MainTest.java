@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 import static org.junit.Assert.*;
 
@@ -47,11 +48,28 @@ public class MainTest {
         File defaultConfFile = new File(defaultConfPath);
         // create empty configuration file in the current directory
         if (defaultConfFile.createNewFile()) {
+            // ensure the file is deleted upon test failure
+            defaultConfFile.deleteOnExit();
             file = Main.resolveConfigLocation(defaultConfPath);
             // .//redpen-conf.xml exists
             assertNotNull(file);
             // clean up config file in the current directory
             defaultConfFile.delete();
+        }
+
+        String localeSpecificConfPath = "." + File.separator
+                + "redpen-conf-" + Locale.getDefault().getLanguage() + ".xml";
+        File localeSpecificConfFile = new File(localeSpecificConfPath);
+        // create empty configuration file in the current directory
+        if (localeSpecificConfFile.createNewFile()) {
+            // ensure the file is deleted upon test failure
+            localeSpecificConfFile.deleteOnExit();
+            // default config path resolves to locale specific config path
+            file = Main.resolveConfigLocation(defaultConfPath);
+            // .//redpen-conf-[lang].xml exists
+            assertNotNull(file);
+            // clean up config file in the current directory
+            localeSpecificConfFile.delete();
         }
 
         // skipping test code for $REDPEN_HOME/redpen-conf.xml
