@@ -111,12 +111,6 @@ public class LaTeXParserTest {
         assertEquals(8, secondSection.getParagraph(1).getSentence(0).getLineNumber());
         assertEquals(0, secondSection.getParagraph(1).getSentence(0).getStartPositionOffset());
 
-        for (int i=0; i<doc.size(); ++i) {
-            for (Paragraph p: doc.getSection(i).getParagraphs()) {
-                System.out.println(p.getSentences());
-            }
-        }
-
         // 3rd section
         Section lastSection = doc.getSection(doc.size() - 1);
         // TBD: LaTeX parser cannot handle lists yet
