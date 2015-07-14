@@ -1,0 +1,4 @@
+/redpen-distribution/target
+/redpen-cli/src/test/
+/redpen-core/src/test/
+/redpen-server/src/test/
