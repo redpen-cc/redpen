@@ -95,6 +95,7 @@ public interface DocumentParser {
                     put("PLAIN", PLAIN);
                     put("WIKI", WIKI);
                     put("MARKDOWN", MARKDOWN);
+                    put("LATEX", LATEX);
                     // put("ASCIIDOC", ASCIIDOC);
                 }
             });
