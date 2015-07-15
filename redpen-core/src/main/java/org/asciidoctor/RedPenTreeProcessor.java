@@ -22,15 +22,13 @@ import cc.redpen.model.Sentence;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.asciidoctor.ast.AbstractBlock;
-import org.asciidoctor.ast.BlockImpl;
-import org.asciidoctor.ast.Document;
-import org.asciidoctor.ast.SectionImpl;
+import org.asciidoctor.ast.*;
 import org.asciidoctor.extension.Treeprocessor;
 import org.jruby.RubyArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -50,11 +48,13 @@ public class RedPenTreeProcessor extends Treeprocessor {
     private static final char REDPEN_ASCIIDOCTOR_BACKEND_SUBSTITUTION_START = '\003';
     private static final char REDPEN_ASCIIDOCTOR_BACKEND_SUBSTITUTION_END = '\004';
 
+
     private cc.redpen.model.Document.DocumentBuilder documentBuilder;
     private SentenceExtractor sentenceExtractor;
 
     private int lineNumber = 1;
     private int headerNumber = 0;
+    private int listBlockLevel = 0;
     /**
      * the header source lines, and their respective line numbers,
      * as recorded by the patched parser routing in AsciiDocParser
@@ -97,7 +97,7 @@ public class RedPenTreeProcessor extends Treeprocessor {
     private int getHeaderLineNo(int headerNumber) {
         if ((headerLinesLineNos != null) && (headerNumber < headerLinesLineNos.size())) {
             try {
-                return ((Long)headerLinesLineNos.get(headerNumber)).intValue();
+                return ((Long) headerLinesLineNos.get(headerNumber)).intValue();
             } catch (Exception ignored) {
             }
         }
@@ -146,6 +146,7 @@ public class RedPenTreeProcessor extends Treeprocessor {
     private void traverse(List<AbstractBlock> blocks, int indent) {
         for (int i = 0; i < blocks.size(); i++) {
             Object item = blocks.get(i);
+            BlockAccessor accessor = new BlockAccessor(item);
             // A standard block - we convert the text and process the sentences inside
             if (item instanceof BlockImpl) {
                 BlockImpl block = (BlockImpl) item;
@@ -172,6 +173,20 @@ public class RedPenTreeProcessor extends Treeprocessor {
             // catchall for all other abstract blocks
             else if (item != null) {
                 AbstractBlock block = (AbstractBlock) item;
+                if (accessor.getType().equals("ulist") ||
+                        accessor.getType().equals("dlist") ||
+                        accessor.getType().equals("olist")) {
+                    if (indent <= listBlockLevel) {
+                        listBlockLevel = indent;
+                        documentBuilder.addListBlock();
+                    }
+                } else if (accessor.getType().equals("list_item")) {
+                    int listLevel = accessor.getIndent();
+                    List<Sentence> sentences = new ArrayList<>();
+                    lineNumber = accessor.getLineNo();
+                    processParagraph(accessor.getValue(), accessor.getSourceText(), sentences);
+                    documentBuilder.addListElement(listLevel, sentences);
+                }
                 traverse(block.blocks(), indent + 1);
             } else {
                 LOG.error("Unhandled AsciiDoctor Block class " + item.getClass().getSimpleName());
@@ -341,9 +356,99 @@ public class RedPenTreeProcessor extends Treeprocessor {
                     break;
             }
         }
+
         Sentence sentence = new Sentence(normalizedSentence, lineOffset.lineNum, lineOffset.offset);
         sentence.setOffsetMap(offsetMap);
         sentences.add(sentence);
         return new LineOffset(lineNum, offset);
     }
+
+    /**
+     * helper class to inspect and access important asciidoctor information
+     * obscured by JRuby (and AsciiDoctorJ)
+     */
+    protected static class BlockAccessor {
+        private static final int VAR_INDEX_TYPE_NAME = 2;
+        private static final int VAR_INDEX_CONVERTED_VALUE = 18;
+        private static final int VAR_INDEX_LIST_LEVEL = 14;
+        private static final int VAR_INDEX_SOURCE_TEXT = 20;
+        private static final int VAR_INDEX_SOURCE_POS = 17;
+        private static final int VAR_INDEX_LINE_NO_POS = 3;
+
+        private Object[] varTable = null;
+
+        @SuppressWarnings("unchecked")
+        public BlockAccessor(Object aBlock) {
+            if (aBlock instanceof AbstractBlock) {
+                AbstractBlockImpl block = (AbstractBlockImpl) aBlock;
+                varTable = getVarTable(block.delegate());
+            }
+        }
+
+        public String getType() {
+            if ((varTable == null) || (varTable.length < VAR_INDEX_TYPE_NAME)) {
+                return "";
+            }
+            return varTable[VAR_INDEX_TYPE_NAME].toString();
+        }
+
+        public String getValue() {
+            if ((varTable == null) || (varTable.length < VAR_INDEX_CONVERTED_VALUE)) {
+                return "";
+            }
+            return varTable[VAR_INDEX_CONVERTED_VALUE].toString();
+        }
+
+        public int getIndent() {
+            if ((varTable == null) || (varTable.length < VAR_INDEX_LIST_LEVEL)) {
+                return 0;
+            }
+            try {
+                return Integer.parseInt(varTable[VAR_INDEX_LIST_LEVEL].toString());
+            } catch (Exception ignored) {
+            }
+            return 0;
+        }
+
+        public String getSourceText() {
+            if ((varTable == null) || (varTable.length < VAR_INDEX_SOURCE_TEXT)) {
+                return "";
+            }
+            return varTable[VAR_INDEX_SOURCE_TEXT].toString();
+        }
+
+        public int getLineNo() {
+            if ((varTable == null) || (varTable.length < VAR_INDEX_SOURCE_POS)) {
+                return 0;
+            }
+            try {
+                Object[] sourcePos = getVarTable(varTable[VAR_INDEX_SOURCE_POS]);
+                if (sourcePos != null) {
+                    return Integer.parseInt(sourcePos[VAR_INDEX_LINE_NO_POS].toString());
+                }
+            } catch (Exception ignored) {
+            }
+            return 0;
+        }
+
+        private Object[] getVarTable(Object o) {
+            try {
+                Object self;
+                try {
+                    Field dollarSelfField = o.getClass().getDeclaredField("$self");
+                    dollarSelfField.setAccessible(true);
+                    self = dollarSelfField.get(o);
+                } catch (NoSuchFieldException ee) {
+                    self = o;
+                }
+                Field varTableField = self.getClass().getField("varTable");
+                varTableField.setAccessible(true);
+                return (Object[]) varTableField.get(self);
+            } catch (Exception e) {
+                System.err.println("Error extracting varTable from " + o + ": " + e.getMessage());
+            }
+            return null;
+        }
+    }
+
 }
