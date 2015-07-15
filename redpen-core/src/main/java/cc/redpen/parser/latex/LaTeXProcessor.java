@@ -115,7 +115,6 @@ public class LaTeXProcessor {
             return outputSentences;
         }
 
-        //FIXME wikiparser have same method. pull up or expand to utils
         private static boolean addChild(final Section candidate, final Section child) {
             try {
                 final Section parent = suitableParentFor(child, candidate);
@@ -127,22 +126,17 @@ public class LaTeXProcessor {
             }
         }
 
-        private static Section suitableParentFor(final Section s, final Section from) throws IllegalStateException {
-            if (from.getLevel() < s.getLevel()) {
-                return from;
-            } else { // search parent
-                for (Section parent = from.getParentSection(); ; parent = parent.getParentSection()) {
-                    if (parent == null) {
-                        throw new IllegalStateException();
-                    }
-                    if (parent.getLevel() < s.getLevel()) {
-                        return parent;
-                    }
+        private static Section suitableParentFor(final Section target, final Section from) throws IllegalStateException {
+            for (Section s = from; ; s = s.getParentSection()) {
+                if (s == null) {
+                    throw new IllegalStateException();
+                }
+                if (s.getLevel() < target.getLevel()) {
+                    return s;
                 }
             }
         }
 
-        // To deal with a header content as a paragraph
         private static List<Sentence> asHeaderContents(final List<Sentence> headerContents) {
             if (headerContents.size() > 0) {
                 headerContents.get(0).setIsFirstSentence(true);
