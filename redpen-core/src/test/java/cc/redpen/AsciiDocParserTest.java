@@ -245,27 +245,27 @@ public class AsciiDocParserTest {
         assertEquals("Tokyu", doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).getContent());
         assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(0).getLevel());
         assertEquals(3, doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).getLineNumber());
-        assertEquals(0, doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).getStartPositionOffset());
+        assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).getStartPositionOffset());
 
         assertEquals("Toyoko Line", doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).getContent());
         assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(1).getLevel());
         assertEquals(4, doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).getLineNumber());
-        assertEquals(0, doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).getStartPositionOffset());
+        assertEquals(4, doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).getStartPositionOffset());
 
         assertEquals("Denentoshi Line", doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).getContent());
         assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(2).getLevel());
         assertEquals(5, doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).getLineNumber());
-        assertEquals(0, doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).getStartPositionOffset());
+        assertEquals(3, doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).getStartPositionOffset());
 
         assertEquals("Keio", doc.getSection(0).getListBlock(0).getListElement(3).getSentence(0).getContent());
         assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(3).getLevel());
         assertEquals(6, doc.getSection(0).getListBlock(0).getListElement(3).getSentence(0).getLineNumber());
-        assertEquals(0, doc.getSection(0).getListBlock(0).getListElement(3).getSentence(0).getStartPositionOffset());
+        assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(3).getSentence(0).getStartPositionOffset());
 
         assertEquals("Odakyu", doc.getSection(0).getListBlock(0).getListElement(4).getSentence(0).getContent());
         assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(4).getLevel());
         assertEquals(7, doc.getSection(0).getListBlock(0).getListElement(4).getSentence(0).getLineNumber());
-        assertEquals(0, doc.getSection(0).getListBlock(0).getListElement(4).getSentence(0).getStartPositionOffset());
+        assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(4).getSentence(0).getStartPositionOffset());
     }
 
     @Test

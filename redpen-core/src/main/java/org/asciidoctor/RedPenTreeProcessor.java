@@ -173,14 +173,19 @@ public class RedPenTreeProcessor extends Treeprocessor {
             // catchall for all other abstract blocks
             else if (item != null) {
                 AbstractBlock block = (AbstractBlock) item;
+
+                // process a list
                 if (accessor.getType().equals("ulist") ||
                         accessor.getType().equals("dlist") ||
                         accessor.getType().equals("olist")) {
+                    // Nested lists in AsciiDoctor are returned as new blocks
+                    // RedPen prefers one list block with varied indents.
                     if (indent <= listBlockLevel) {
                         listBlockLevel = indent;
                         documentBuilder.addListBlock();
                     }
                 } else if (accessor.getType().equals("list_item")) {
+                    // add the list item
                     int listLevel = accessor.getIndent();
                     List<Sentence> sentences = new ArrayList<>();
                     lineNumber = accessor.getLineNo();
@@ -215,10 +220,13 @@ public class RedPenTreeProcessor extends Treeprocessor {
      * @param sentences  A list of sentences discovered in the processed text
      */
     protected void processParagraph(String paragraph, String sourceText, List<Sentence> sentences) {
+
         paragraph = paragraph == null ? "" : paragraph;
         sourceText = sourceText == null ? "" : sourceText;
         int offset = 0;
+
         String[] sublines = paragraph.split(String.valueOf(REDPEN_ASCIIDOCTOR_BACKEND_LINE_START));
+
         for (String subline : sublines) {
             int lineNumberEndPos = subline.indexOf(REDPEN_ASCIIDOCTOR_BACKEND_LINENUMBER_DELIM);
             if (lineNumberEndPos != -1) {
@@ -357,7 +365,8 @@ public class RedPenTreeProcessor extends Treeprocessor {
             }
         }
 
-        Sentence sentence = new Sentence(normalizedSentence, lineOffset.lineNum, lineOffset.offset);
+        int startOfSentenceOffset = offsetMap.isEmpty() ? lineOffset.offset : offsetMap.get(0).offset;
+        Sentence sentence = new Sentence(normalizedSentence, lineOffset.lineNum, startOfSentenceOffset);
         sentence.setOffsetMap(offsetMap);
         sentences.add(sentence);
         return new LineOffset(lineNum, offset);
@@ -377,6 +386,15 @@ public class RedPenTreeProcessor extends Treeprocessor {
 
         private Object[] varTable = null;
 
+        /**
+         * This method takes an AsciiDoctorJ JRuby object which should be an instance of
+         * an abstract block.
+         *
+         * We are attempting to get access to the underlying varTable element, which is an
+         * array of public variables stored in the JRuby object.
+         *
+         * @param aBlock an AsciiDoctorJ block
+         */
         @SuppressWarnings("unchecked")
         public BlockAccessor(Object aBlock) {
             if (aBlock instanceof AbstractBlock) {
@@ -385,6 +403,12 @@ public class RedPenTreeProcessor extends Treeprocessor {
             }
         }
 
+        /**
+         * The type element of the var table returns the type of this block, for example
+         * 'ulist' or 'list_time'
+         *
+         * @return the type of the block
+         */
         public String getType() {
             if ((varTable == null) || (varTable.length < VAR_INDEX_TYPE_NAME)) {
                 return "";
@@ -392,6 +416,10 @@ public class RedPenTreeProcessor extends Treeprocessor {
             return varTable[VAR_INDEX_TYPE_NAME].toString();
         }
 
+        /**
+         * The block's value is usually its processed or converted text form
+         * @return the block's value
+         */
         public String getValue() {
             if ((varTable == null) || (varTable.length < VAR_INDEX_CONVERTED_VALUE)) {
                 return "";
@@ -399,6 +427,11 @@ public class RedPenTreeProcessor extends Treeprocessor {
             return varTable[VAR_INDEX_CONVERTED_VALUE].toString();
         }
 
+        /**
+         * If the underlying JRuby object is a list item, then this variable is the
+         * indent of that list item.
+         * @return the indent level of the list item
+         */
         public int getIndent() {
             if ((varTable == null) || (varTable.length < VAR_INDEX_LIST_LEVEL)) {
                 return 0;
@@ -410,6 +443,18 @@ public class RedPenTreeProcessor extends Treeprocessor {
             return 0;
         }
 
+        /**
+         * The source text is a new block element inserted into the JRuby object by
+         * the Ruby code in redpen's AsciiDocParser.java. Though some blocks store the source code
+         * line alongside the processed line, certain blocks, such as list blocks, do not.
+         *
+         * Therefore the JRuby parser's list processor is overriden in redpen's AsciiDocParser.java
+         * to store the source text in a member variable.
+         *
+         * In future, we might be able to replace the other mechanisms we use to find source lines,
+         * for example header source lines, with this new mechanism.
+         * @return the source text for the block, before processing
+         */
         public String getSourceText() {
             if ((varTable == null) || (varTable.length < VAR_INDEX_SOURCE_TEXT)) {
                 return "";
@@ -417,6 +462,12 @@ public class RedPenTreeProcessor extends Treeprocessor {
             return varTable[VAR_INDEX_SOURCE_TEXT].toString();
         }
 
+        /**
+         * This returned the line number stored inside the JRuby object. The line number
+         * is stored as a file 'cursor', which is in itself a varTable. The line number is the
+         * third element of that table.
+         * @return the line number the block starts at
+         */
         public int getLineNo() {
             if ((varTable == null) || (varTable.length < VAR_INDEX_SOURCE_POS)) {
                 return 0;
@@ -431,6 +482,12 @@ public class RedPenTreeProcessor extends Treeprocessor {
             return 0;
         }
 
+        /**
+         * This method uses introspection to get access to the JRuby objects variable table,
+         * which is implemented as an array of objects.
+         * @param o JRuby object instance
+         * @return the variable table inside the JRuby object instance
+         */
         private Object[] getVarTable(Object o) {
             try {
                 Object self;
@@ -445,7 +502,7 @@ public class RedPenTreeProcessor extends Treeprocessor {
                 varTableField.setAccessible(true);
                 return (Object[]) varTableField.get(self);
             } catch (Exception e) {
-                System.err.println("Error extracting varTable from " + o + ": " + e.getMessage());
+                LOG.error("Error extracting varTable from " + o + ": " + e.getMessage());
             }
             return null;
         }
