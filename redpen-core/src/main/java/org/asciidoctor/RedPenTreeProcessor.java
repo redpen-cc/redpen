@@ -22,15 +22,13 @@ import cc.redpen.model.Sentence;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.asciidoctor.ast.AbstractBlock;
-import org.asciidoctor.ast.BlockImpl;
-import org.asciidoctor.ast.Document;
-import org.asciidoctor.ast.SectionImpl;
+import org.asciidoctor.ast.*;
 import org.asciidoctor.extension.Treeprocessor;
 import org.jruby.RubyArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -50,11 +48,13 @@ public class RedPenTreeProcessor extends Treeprocessor {
     private static final char REDPEN_ASCIIDOCTOR_BACKEND_SUBSTITUTION_START = '\003';
     private static final char REDPEN_ASCIIDOCTOR_BACKEND_SUBSTITUTION_END = '\004';
 
+
     private cc.redpen.model.Document.DocumentBuilder documentBuilder;
     private SentenceExtractor sentenceExtractor;
 
     private int lineNumber = 1;
     private int headerNumber = 0;
+    private int listBlockLevel = 0;
     /**
      * the header source lines, and their respective line numbers,
      * as recorded by the patched parser routing in AsciiDocParser
@@ -97,7 +97,7 @@ public class RedPenTreeProcessor extends Treeprocessor {
     private int getHeaderLineNo(int headerNumber) {
         if ((headerLinesLineNos != null) && (headerNumber < headerLinesLineNos.size())) {
             try {
-                return ((Long)headerLinesLineNos.get(headerNumber)).intValue();
+                return ((Long) headerLinesLineNos.get(headerNumber)).intValue();
             } catch (Exception ignored) {
             }
         }
@@ -146,6 +146,7 @@ public class RedPenTreeProcessor extends Treeprocessor {
     private void traverse(List<AbstractBlock> blocks, int indent) {
         for (int i = 0; i < blocks.size(); i++) {
             Object item = blocks.get(i);
+            BlockAccessor accessor = new BlockAccessor(item);
             // A standard block - we convert the text and process the sentences inside
             if (item instanceof BlockImpl) {
                 BlockImpl block = (BlockImpl) item;
@@ -172,6 +173,25 @@ public class RedPenTreeProcessor extends Treeprocessor {
             // catchall for all other abstract blocks
             else if (item != null) {
                 AbstractBlock block = (AbstractBlock) item;
+
+                // process a list
+                if (accessor.getType().equals("ulist") ||
+                        accessor.getType().equals("dlist") ||
+                        accessor.getType().equals("olist")) {
+                    // Nested lists in AsciiDoctor are returned as new blocks
+                    // RedPen prefers one list block with varied indents.
+                    if (indent <= listBlockLevel) {
+                        listBlockLevel = indent;
+                        documentBuilder.addListBlock();
+                    }
+                } else if (accessor.getType().equals("list_item")) {
+                    // add the list item
+                    int listLevel = accessor.getIndent();
+                    List<Sentence> sentences = new ArrayList<>();
+                    lineNumber = accessor.getLineNo();
+                    processParagraph(accessor.getValue(), accessor.getSourceText(), sentences);
+                    documentBuilder.addListElement(listLevel, sentences);
+                }
                 traverse(block.blocks(), indent + 1);
             } else {
                 LOG.error("Unhandled AsciiDoctor Block class " + item.getClass().getSimpleName());
@@ -200,10 +220,13 @@ public class RedPenTreeProcessor extends Treeprocessor {
      * @param sentences  A list of sentences discovered in the processed text
      */
     protected void processParagraph(String paragraph, String sourceText, List<Sentence> sentences) {
+
         paragraph = paragraph == null ? "" : paragraph;
         sourceText = sourceText == null ? "" : sourceText;
         int offset = 0;
+
         String[] sublines = paragraph.split(String.valueOf(REDPEN_ASCIIDOCTOR_BACKEND_LINE_START));
+
         for (String subline : sublines) {
             int lineNumberEndPos = subline.indexOf(REDPEN_ASCIIDOCTOR_BACKEND_LINENUMBER_DELIM);
             if (lineNumberEndPos != -1) {
@@ -341,9 +364,148 @@ public class RedPenTreeProcessor extends Treeprocessor {
                     break;
             }
         }
-        Sentence sentence = new Sentence(normalizedSentence, lineOffset.lineNum, lineOffset.offset);
+
+        int startOfSentenceOffset = offsetMap.isEmpty() ? lineOffset.offset : offsetMap.get(0).offset;
+        Sentence sentence = new Sentence(normalizedSentence, lineOffset.lineNum, startOfSentenceOffset);
         sentence.setOffsetMap(offsetMap);
         sentences.add(sentence);
         return new LineOffset(lineNum, offset);
     }
+
+    /**
+     * helper class to inspect and access important asciidoctor information
+     * obscured by JRuby (and AsciiDoctorJ)
+     */
+    protected static class BlockAccessor {
+        private static final int VAR_INDEX_TYPE_NAME = 2;
+        private static final int VAR_INDEX_CONVERTED_VALUE = 18;
+        private static final int VAR_INDEX_LIST_LEVEL = 14;
+        private static final int VAR_INDEX_SOURCE_TEXT = 20;
+        private static final int VAR_INDEX_SOURCE_POS = 17;
+        private static final int VAR_INDEX_LINE_NO_POS = 3;
+
+        private Object[] varTable = null;
+
+        /**
+         * This method takes an AsciiDoctorJ JRuby object which should be an instance of
+         * an abstract block.
+         *
+         * We are attempting to get access to the underlying varTable element, which is an
+         * array of public variables stored in the JRuby object.
+         *
+         * @param aBlock an AsciiDoctorJ block
+         */
+        @SuppressWarnings("unchecked")
+        public BlockAccessor(Object aBlock) {
+            if (aBlock instanceof AbstractBlock) {
+                AbstractBlockImpl block = (AbstractBlockImpl) aBlock;
+                varTable = getVarTable(block.delegate());
+            }
+        }
+
+        /**
+         * The type element of the var table returns the type of this block, for example
+         * 'ulist' or 'list_time'
+         *
+         * @return the type of the block
+         */
+        public String getType() {
+            if ((varTable == null) || (varTable.length < VAR_INDEX_TYPE_NAME)) {
+                return "";
+            }
+            return varTable[VAR_INDEX_TYPE_NAME].toString();
+        }
+
+        /**
+         * The block's value is usually its processed or converted text form
+         * @return the block's value
+         */
+        public String getValue() {
+            if ((varTable == null) || (varTable.length < VAR_INDEX_CONVERTED_VALUE)) {
+                return "";
+            }
+            return varTable[VAR_INDEX_CONVERTED_VALUE].toString();
+        }
+
+        /**
+         * If the underlying JRuby object is a list item, then this variable is the
+         * indent of that list item.
+         * @return the indent level of the list item
+         */
+        public int getIndent() {
+            if ((varTable == null) || (varTable.length < VAR_INDEX_LIST_LEVEL)) {
+                return 0;
+            }
+            try {
+                return Integer.parseInt(varTable[VAR_INDEX_LIST_LEVEL].toString());
+            } catch (Exception ignored) {
+            }
+            return 0;
+        }
+
+        /**
+         * The source text is a new block element inserted into the JRuby object by
+         * the Ruby code in redpen's AsciiDocParser.java. Though some blocks store the source code
+         * line alongside the processed line, certain blocks, such as list blocks, do not.
+         *
+         * Therefore the JRuby parser's list processor is overriden in redpen's AsciiDocParser.java
+         * to store the source text in a member variable.
+         *
+         * In future, we might be able to replace the other mechanisms we use to find source lines,
+         * for example header source lines, with this new mechanism.
+         * @return the source text for the block, before processing
+         */
+        public String getSourceText() {
+            if ((varTable == null) || (varTable.length < VAR_INDEX_SOURCE_TEXT)) {
+                return "";
+            }
+            return varTable[VAR_INDEX_SOURCE_TEXT].toString();
+        }
+
+        /**
+         * This returned the line number stored inside the JRuby object. The line number
+         * is stored as a file 'cursor', which is in itself a varTable. The line number is the
+         * third element of that table.
+         * @return the line number the block starts at
+         */
+        public int getLineNo() {
+            if ((varTable == null) || (varTable.length < VAR_INDEX_SOURCE_POS)) {
+                return 0;
+            }
+            try {
+                Object[] sourcePos = getVarTable(varTable[VAR_INDEX_SOURCE_POS]);
+                if (sourcePos != null) {
+                    return Integer.parseInt(sourcePos[VAR_INDEX_LINE_NO_POS].toString());
+                }
+            } catch (Exception ignored) {
+            }
+            return 0;
+        }
+
+        /**
+         * This method uses introspection to get access to the JRuby objects variable table,
+         * which is implemented as an array of objects.
+         * @param o JRuby object instance
+         * @return the variable table inside the JRuby object instance
+         */
+        private Object[] getVarTable(Object o) {
+            try {
+                Object self;
+                try {
+                    Field dollarSelfField = o.getClass().getDeclaredField("$self");
+                    dollarSelfField.setAccessible(true);
+                    self = dollarSelfField.get(o);
+                } catch (NoSuchFieldException ee) {
+                    self = o;
+                }
+                Field varTableField = self.getClass().getField("varTable");
+                varTableField.setAccessible(true);
+                return (Object[]) varTableField.get(self);
+            } catch (Exception e) {
+                LOG.error("Error extracting varTable from " + o + ": " + e.getMessage());
+            }
+            return null;
+        }
+    }
+
 }
