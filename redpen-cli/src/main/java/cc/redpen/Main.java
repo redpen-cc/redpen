@@ -65,7 +65,7 @@ public final class Main {
         options.addOption("h", "help", false, "Displays this help information and exits");
 
         options.addOption(OptionBuilder.withLongOpt("format")
-                .withDescription("Input file format (markdown,plain,wiki)")
+                .withDescription("Input file format (markdown,plain,wiki,asciidoc)")
                 .hasArg()
                 .withArgName("FORMAT")
                 .create("f"));
