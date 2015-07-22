@@ -429,9 +429,9 @@ public class StreamParserTest {
     public void testPNormalizeTextileRegion() {
         assertTokensLike(
             Arrays.asList(
-                token("TEXTILE", "This is \" the\"  te'X't."),
+                token("TEXTILE", "This is \"the\" te'X't."),
                 token("VERBATIM", "It’s ``The’’ te`x’t."),
-                token("TEXTILE", "That was \" THE\"  te'x't.")
+                token("TEXTILE", "That was \"THE\" te'x't.")
             ),
             StreamParser.P.normalizeTextileRegion(
                 Arrays.asList(

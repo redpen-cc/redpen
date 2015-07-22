@@ -237,7 +237,7 @@ public class StreamParser {
                     if ( ! ("TEXTILE".equals(t.t)) ) {
                         o.add(t);
                     } else {
-                        t.v = Pattern.compile("``|’’|''").matcher(t.v).replaceAll("\" ");
+                        t.v = Pattern.compile("``|’’|''").matcher(t.v).replaceAll("\"");
                         t.v = Pattern.compile("`|’").matcher(t.v).replaceAll("'");
                         o.add(t);
                     }
