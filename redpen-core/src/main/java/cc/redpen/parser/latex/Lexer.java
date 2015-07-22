@@ -31,8 +31,8 @@ public class Lexer {
     private String mMode = "TEXTILE";
     private List<Character> mRegister = new ArrayList<>();
     private Character mDelimiter = null;
-    private Position mPos = new Position(1, -1);
-    private Position mModeFrom = new Position(1, -1);
+    private Position mPos = new Position(1, 0);
+    private Position mModeFrom = new Position(1, 0);
 
     private Lexer(final char[] target) {
         mTarget = target;
@@ -50,8 +50,14 @@ public class Lexer {
     public List<Token> parse() {
         final List<Token> ret = new ArrayList<>();
         for (int i=0; i<mTarget.length; ++i) {
-            ++mPos.col;
-            doParse(ret, mTarget[i]);
+            final char c = mTarget[i];
+            doParse(ret, c);
+            if (c != '\n') {
+                ++mPos.col;
+            } else {
+                ++mPos.row;
+                mPos.col = 0;
+            }
         }
         flush(ret);
         return ret;
@@ -115,10 +121,6 @@ public class Lexer {
             break;
         default:
             mRegister.add(c);
-            if (c == '\n') {
-                ++mPos.row;
-                mPos.col = -1;
-            }
         }
     }
 
@@ -175,10 +177,6 @@ public class Lexer {
         } else {
             mMode = "TEXTILE";
             mRegister.add(c);
-            if (c == '\n') {
-                ++mPos.row;
-                mPos.col = -1;
-            }
         }
     }
 

@@ -94,7 +94,7 @@ public class LaTeXParserTest {
         final Section secondSection = doc.getSection(1);
         assertEquals(1, secondSection.getHeaderContentsListSize());
         assertEquals("About Gekioko.", secondSection.getHeaderContent(0).getContent());
-        assertEquals(5, secondSection.getHeaderContent(0).getLineNumber());
+        assertEquals(6, secondSection.getHeaderContent(0).getLineNumber());
         assertEquals(1, secondSection.getHeaderContent(0).getStartPositionOffset());
         assertEquals(0, secondSection.getNumberOfLists());
         assertEquals(2, secondSection.getNumberOfParagraphs());
@@ -104,11 +104,11 @@ public class LaTeXParserTest {
         // validate paragraph in 2nd section
         assertEquals(1, secondSection.getParagraph(0).getNumberOfSentences());
         assertEquals(true, secondSection.getParagraph(0).getSentence(0).isFirstSentence());
-        assertEquals(6, secondSection.getParagraph(0).getSentence(0).getLineNumber());
+        assertEquals(7, secondSection.getParagraph(0).getSentence(0).getLineNumber());
         assertEquals(0, secondSection.getParagraph(0).getSentence(0).getStartPositionOffset());
         assertEquals(1, secondSection.getParagraph(1).getNumberOfSentences());
         assertEquals(true, secondSection.getParagraph(1).getSentence(0).isFirstSentence());
-        assertEquals(8, secondSection.getParagraph(1).getSentence(0).getLineNumber());
+        assertEquals(9, secondSection.getParagraph(1).getSentence(0).getLineNumber());
         assertEquals(0, secondSection.getParagraph(1).getSentence(0).getStartPositionOffset());
 
         // 3rd section
@@ -139,31 +139,31 @@ public class LaTeXParserTest {
 
         assertEquals(1, lastSection.getParagraph(0).getNumberOfSentences());
         assertEquals(true, lastSection.getParagraph(0).getSentence(0).isFirstSentence());
-        assertEquals(11, lastSection.getParagraph(0).getSentence(0).getLineNumber());
+        assertEquals(12, lastSection.getParagraph(0).getSentence(0).getLineNumber());
         assertEquals(0, lastSection.getParagraph(0).getSentence(0).getStartPositionOffset());
         assertEquals(1, lastSection.getParagraph(1).getNumberOfSentences());
         assertEquals(true, lastSection.getParagraph(1).getSentence(0).isFirstSentence());
-        assertEquals(13, lastSection.getParagraph(1).getSentence(0).getLineNumber());
+        assertEquals(14, lastSection.getParagraph(1).getSentence(0).getLineNumber());
         assertEquals(1, lastSection.getParagraph(2).getNumberOfSentences());
         assertEquals(true, lastSection.getParagraph(2).getSentence(0).isFirstSentence());
-        assertEquals(15, lastSection.getParagraph(2).getSentence(0).getLineNumber());
+        assertEquals(16, lastSection.getParagraph(2).getSentence(0).getLineNumber());
         assertEquals(5, lastSection.getParagraph(2).getSentence(0).getStartPositionOffset());
         assertEquals(1, lastSection.getParagraph(3).getNumberOfSentences());
         assertEquals(true, lastSection.getParagraph(3).getSentence(0).isFirstSentence());
-        assertEquals(16, lastSection.getParagraph(3).getSentence(0).getLineNumber());
+        assertEquals(17, lastSection.getParagraph(3).getSentence(0).getLineNumber());
         assertEquals(1, lastSection.getParagraph(4).getNumberOfSentences());
         assertEquals(true, lastSection.getParagraph(4).getSentence(0).isFirstSentence());
-        assertEquals(19, lastSection.getParagraph(4).getSentence(0).getLineNumber());
+        assertEquals(20, lastSection.getParagraph(4).getSentence(0).getLineNumber());
         assertEquals(0, lastSection.getParagraph(4).getSentence(0).getStartPositionOffset());
         assertEquals(1, lastSection.getParagraph(5).getNumberOfSentences());
         assertEquals(true, lastSection.getParagraph(5).getSentence(0).isFirstSentence());
-        assertEquals(21, lastSection.getParagraph(5).getSentence(0).getLineNumber());
+        assertEquals(22, lastSection.getParagraph(5).getSentence(0).getLineNumber());
         assertEquals(2, lastSection.getParagraph(6).getNumberOfSentences());
         assertEquals(true, lastSection.getParagraph(6).getSentence(0).isFirstSentence());
-        assertEquals(24, lastSection.getParagraph(6).getSentence(0).getLineNumber());
+        assertEquals(25, lastSection.getParagraph(6).getSentence(0).getLineNumber());
         assertEquals(0, lastSection.getParagraph(6).getSentence(0).getStartPositionOffset());
         assertEquals(false, lastSection.getParagraph(6).getSentence(1).isFirstSentence());
-        assertEquals(24, lastSection.getParagraph(6).getSentence(1).getLineNumber());
+        assertEquals(25, lastSection.getParagraph(6).getSentence(1).getLineNumber());
         assertEquals(34, lastSection.getParagraph(6).getSentence(1).getStartPositionOffset());
     }
 
@@ -480,17 +480,17 @@ public class LaTeXParserTest {
         assertEquals(0, rootSection.getHeaderContent(0).getLineNumber());
         assertEquals(0, rootSection.getNumberOfParagraphs());
 
-        assertEquals(5, h1Section.getHeaderContent(0).getLineNumber());
+        assertEquals(6, h1Section.getHeaderContent(0).getLineNumber());
         assertEquals(2, h1Section.getNumberOfParagraphs());
         assertEquals(1, h1Section.getParagraph(0).getNumberOfSentences());
-        assertEquals(6, h1Section.getParagraph(0).getSentence(0).getLineNumber());
+        assertEquals(7, h1Section.getParagraph(0).getSentence(0).getLineNumber());
         assertEquals(1, h1Section.getParagraph(1).getNumberOfSentences());
-        assertEquals(8, h1Section.getParagraph(1).getSentence(0).getLineNumber());
+        assertEquals(9, h1Section.getParagraph(1).getSentence(0).getLineNumber());
 
-        assertEquals(9, h2Section.getHeaderContent(0).getLineNumber());
+        assertEquals(10, h2Section.getHeaderContent(0).getLineNumber());
         assertEquals(1, h2Section.getNumberOfParagraphs());
         assertEquals(1, h2Section.getParagraph(0).getNumberOfSentences());
-        assertEquals(10, h2Section.getParagraph(0).getSentence(0).getLineNumber());
+        assertEquals(11, h2Section.getParagraph(0).getSentence(0).getLineNumber());
     }
 
     @Test
@@ -521,10 +521,10 @@ public class LaTeXParserTest {
         assertEquals(0, rootSection.getHeaderContent(0).getLineNumber());
         assertEquals(0, rootSection.getNumberOfParagraphs());
 
-        assertEquals(5, h1Section.getHeaderContent(0).getLineNumber());
+        assertEquals(6, h1Section.getHeaderContent(0).getLineNumber());
         assertEquals(1, h1Section.getNumberOfParagraphs());
         assertEquals(1, h1Section.getParagraph(0).getNumberOfSentences());
-        assertEquals(6, h1Section.getParagraph(0).getSentence(0).getLineNumber());
+        assertEquals(7, h1Section.getParagraph(0).getSentence(0).getLineNumber());
     }
 
     @Test
