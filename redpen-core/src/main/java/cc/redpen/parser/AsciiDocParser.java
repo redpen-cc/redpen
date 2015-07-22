@@ -117,14 +117,12 @@ class AsciiDoctorRedPenRubySource {
             "alias admonition redpen_output\n" +
             "alias audio redpen_output\n" +
             "alias colist redpen_output\n" +
-            "alias dlist redpen_output\n" +
             "alias example redpen_output\n" +
             "alias floating_title redpen_output\n" +
             "alias image redpen_output\n" +
             "alias listing redpen_output\n" +
             "alias literal redpen_output\n" +
             "alias stem redpen_output\n" +
-            "alias olist redpen_output\n" +
             "alias open redpen_output\n" +
             "alias page_break redpen_output\n" +
             "alias preamble redpen_output\n" +
@@ -133,6 +131,8 @@ class AsciiDoctorRedPenRubySource {
             "alias sidebar redpen_output\n" +
             "alias table redpen_output\n" +
             "alias toc redpen_output\n" +
+            "alias dlist redpen_output\n" +
+            "alias olist redpen_output\n" +
             "alias ulist redpen_output\n" +
             "alias verse redpen_output\n" +
             "alias video redpen_output\n" +
@@ -151,6 +151,10 @@ class AsciiDoctorRedPenRubySource {
             // monkey patch the parser to remember the header source lines
             // this change adds each header source line, and its line number,
             // to document-level attributes we can retreive later
+            "class AbstractNode\n" +
+            "  attr_accessor :source_text\n" +
+            "end\n" +
+
             "class Parser\n" +
             "  def self.parse_section_title(reader, document)\n" +
             "    line1 = reader.read_line\n" +
@@ -200,6 +204,80 @@ class AsciiDoctorRedPenRubySource {
             "    document.attributes['header_lines_linenos'].push(line1_lineno)\n" +
             "    [sect_id, sect_reftext, sect_title, sect_level, single_line]\n" +
             "  end\n\n" +
+            // the list item reader did not remember the source location or source text
+            " def self.next_list_item(reader, list_block, match, sibling_trait = nil)\n" +
+            "    if (list_type = list_block.context) == :dlist\n" +
+            "      list_term = ListItem.new(list_block, match[1])\n" +
+            "      list_item = ListItem.new(list_block, match[3])\n" +
+            "      has_text = !match[3].nil_or_empty?\n" +
+            "    else\n" +
+            "      # Create list item using first line as the text of the list item\n" +
+            "      text = match[2]\n" +
+            "      checkbox = false\n" +
+            "      if list_type == :ulist && text.start_with?('[')\n" +
+            "        if text.start_with?('[ ] ')\n" +
+            "          checkbox = true\n" +
+            "          checked = false\n" +
+            "          text = text[3..-1].lstrip\n" +
+            "        elsif text.start_with?('[x] ') || text.start_with?('[*] ')\n" +
+            "          checkbox = true\n" +
+            "          checked = true\n" +
+            "          text = text[3..-1].lstrip\n" +
+            "        end\n" +
+            "      end\n" +
+            "      list_item = ListItem.new(list_block, text)\n" +
+            "      if checkbox\n" +
+            "        # FIXME checklist never makes it into the options attribute\n" +
+            "        list_block.attributes['checklist-option'] = ''\n" +
+            "        list_item.attributes['checkbox'] = ''\n" +
+            "        list_item.attributes['checked'] = '' if checked\n" +
+            "      end\n" +
+            "      sibling_trait ||= resolve_list_marker(list_type, match[1], list_block.items.size, true, reader)\n" +
+            "      list_item.marker = sibling_trait\n" +
+            "      has_text = true\n" +
+            "    end\n" +
+            "    list_item.source_location = reader.cursor\n" +
+            "    list_item.source_text = match\n" +
+            "    # first skip the line with the marker / term\n" +
+            "    reader.advance\n" +
+            "    cursor = reader.cursor\n" +
+            "    list_item_reader = Reader.new read_lines_for_list_item(reader, list_type, sibling_trait, has_text), cursor\n" +
+            "    if list_item_reader.has_more_lines?\n" +
+            "      comment_lines = list_item_reader.skip_line_comments\n" +
+            "      subsequent_line = list_item_reader.peek_line\n" +
+            "      list_item_reader.unshift_lines comment_lines unless comment_lines.empty? \n" +
+            "      if !subsequent_line.nil?\n" +
+            "        continuation_connects_first_block = subsequent_line.empty?\n" +
+            "        # if there's no continuation connecting the first block, then\n" +
+            "        # treat the lines as paragraph text (activated when has_text = false)\n" +
+            "        if !continuation_connects_first_block && list_type != :dlist\n" +
+            "          has_text = false\n" +
+            "        end\n" +
+            "        content_adjacent = !continuation_connects_first_block && !subsequent_line.empty?\n" +
+            "      else\n" +
+            "        continuation_connects_first_block = false\n" +
+            "        content_adjacent = false\n" +
+            "      end\n" +
+            "      # only relevant for :dlist\n" +
+            "      options = {:text => !has_text}\n" +
+            "      # we can look for blocks until there are no more lines (and not worry\n" +
+            "      # about sections) since the reader is confined within the boundaries of a\n" +
+            "      # list\n" +
+            "      while list_item_reader.has_more_lines?\n" +
+            "        new_block = next_block(list_item_reader, list_block, {}, options)\n" +
+            "        list_item << new_block if new_block\n" +
+            "      end\n" +
+            "      list_item.fold_first(continuation_connects_first_block, content_adjacent)\n" +
+            "    end\n" +
+            "    if list_type == :dlist\n" +
+            "      unless list_item.text? || list_item.blocks?\n" +
+            "        list_item = nil\n" +
+            "      end\n" +
+            "      [list_term, list_item]\n" +
+            "    else\n" +
+            "      list_item\n" +
+            "    end\n" +
+            "  end\n" +
             "end\n" +
             "\n" +
 
