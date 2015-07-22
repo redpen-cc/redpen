@@ -193,9 +193,13 @@ public class LaTeXProcessor {
 
         private static List<CandidateSentence> candidatesOfSentence(final Token t, final String sep, final Textizer textizer) {
             final Deque<CandidateSentence> o = new ArrayDeque<>();
+            Position p = t.pos;
+
             for (String s: textizer.do_(t).split("\n")) {
-                o.addLast(new CandidateSentence(t.pos.row /* TBD */, s, null, t.pos.col /* TBD */));
-                o.addLast(new CandidateSentence(t.pos.row /* TBD */, sep, null, t.pos.col /* TBD */));
+                o.addLast(new CandidateSentence(p.row, s, null, p.col));
+
+                p = new Position(p.row+1, 0);
+                o.addLast(new CandidateSentence(p.row, sep, null, p.col));
             }
             o.pollLast();
             return new ArrayList<CandidateSentence>(o);
