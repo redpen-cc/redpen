@@ -221,8 +221,6 @@ public class LaTeXProcessor {
 
     /*package*/ static class P {
         public static void walkWith(final Context c, final List<Token> tokens) {
-            int itemDepth = 0;
-
             for (Token t : tokens) {
                 switch (t.t) {
                 case "PART":
