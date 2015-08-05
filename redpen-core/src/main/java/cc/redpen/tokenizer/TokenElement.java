@@ -35,19 +35,19 @@ public final class TokenElement implements Serializable {
     // the character position of the token in the sentence
     final private int offset;
 
-    TokenElement(String word) {
+    public TokenElement(String word) {
         this(word, Collections.unmodifiableList(new ArrayList<>()), 0);
     }
 
-    TokenElement(String word, String tag) {
+    public TokenElement(String word, String tag) {
         this(word, Collections.unmodifiableList(Arrays.asList(tag)), 0);
     }
 
-    TokenElement(String word, List<String> tagList) {
+    public TokenElement(String word, List<String> tagList) {
         this(word, Collections.unmodifiableList(tagList), 0);
     }
 
-    TokenElement(String word, List<String> tagList, int offset) {
+    public TokenElement(String word, List<String> tagList, int offset) {
         surface = word;
         tags = Collections.unmodifiableList(tagList);
         this.offset = offset;
