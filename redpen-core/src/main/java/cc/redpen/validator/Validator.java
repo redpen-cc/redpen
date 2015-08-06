@@ -296,10 +296,7 @@ public abstract class Validator {
      * Resource Extractor loads rule dictionary
      */
     protected final static DictionaryLoader<Set<ExpressionRule>> RULE =
-            new DictionaryLoader<>(HashSet::new, (set, line) -> {
-                set.add(RuleExtractor.run(line));
-            });
-
+            new DictionaryLoader<>(HashSet::new, (set, line) -> set.add(RuleExtractor.run(line)));
 
     /**
      * Resource Extractor loads word list
