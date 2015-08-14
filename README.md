@@ -2,6 +2,12 @@
 [![Coverage Status](https://coveralls.io/repos/recruit-tech/redpen/badge.png)](https://coveralls.io/r/recruit-tech/redpen)
 [![Gitter chat](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/recruit-tech/redpen)
 
+Overview
+=========
+
+RedPen is a proofreading tool to help writers or programmers who write technical documents or manuals that need to adhere to a writing standard. RedPen automates the verifications of input documents written in natural languages
+
+
 <p align="center">
    <a href="http://redpen.cc"><img src="logo/redpen-logo.png"/></a>
 </p>
