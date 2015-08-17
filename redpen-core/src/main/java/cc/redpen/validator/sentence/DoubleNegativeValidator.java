@@ -32,11 +32,10 @@ import java.util.Set;
 /**
  * Detect double negative expressions in Japanese texts.
  */
-public class JapaneseDoubleNegativeValidator extends Validator {
-    private static final String DEFAULT_RESOURCE_PATH =
-            "default-resources/double-negative/double-negative-rule-ja.dat";
+public class DoubleNegativeValidator extends Validator {
+    private static final String DEFAULT_RESOURCE_PATH = "default-resources/double-negative/double-negative-rule-";
     private static final Logger LOG =
-            LoggerFactory.getLogger(JapaneseDoubleNegativeValidator.class);
+            LoggerFactory.getLogger(DoubleNegativeValidator.class);
     private Set<ExpressionRule> invalidPatterns;
 
     @Override
@@ -50,7 +49,9 @@ public class JapaneseDoubleNegativeValidator extends Validator {
 
     @Override
     protected void init() throws RedPenException {
-        invalidPatterns = RULE.loadCachedFromResource(DEFAULT_RESOURCE_PATH, "double negative rules");
+        invalidPatterns = RULE.loadCachedFromResource(
+                DEFAULT_RESOURCE_PATH + getSymbolTable().getLang() +".dat",
+                "double negative rules");
     }
 
     @Override

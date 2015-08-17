@@ -28,17 +28,18 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 
-public class JapaneseDoubleNegativeValidatorTest {
+public class DoubleNegativeValidatorTest {
     @Test
     public void testDetectDoubleNegative() throws Exception {
         String sampleText = "そういう話なら、理解できないこともない。";
         Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(
-                        new ValidatorConfiguration("JapaneseDoubleNegative"))
+                        new ValidatorConfiguration("DoubleNegative"))
                 .setLanguage("ja")
                 .build();
 
@@ -54,7 +55,7 @@ public class JapaneseDoubleNegativeValidatorTest {
 
         assertEquals(1, errors.get(documents.get(0)).size());
         assertEquals(1, errors.get(documents.get(0)).get(0).getLineNumber());
-        assertEquals("JapaneseDoubleNegative", errors.get(documents.get(0)).get(0).getValidatorName());
+        assertEquals("DoubleNegative", errors.get(documents.get(0)).get(0).getValidatorName());
     }
 
 
@@ -64,7 +65,7 @@ public class JapaneseDoubleNegativeValidatorTest {
                 "そういう話は理解できない。";
         Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(
-                        new ValidatorConfiguration("JapaneseDoubleNegative"))
+                        new ValidatorConfiguration("DoubleNegative"))
                 .setLanguage("ja")
                 .build();
         DocumentParser parser = DocumentParser.MARKDOWN;
@@ -86,7 +87,7 @@ public class JapaneseDoubleNegativeValidatorTest {
                 "そういう話は理解できる。";
         Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(
-                        new ValidatorConfiguration("JapaneseDoubleNegative"))
+                        new ValidatorConfiguration("DoubleNegative"))
                 .setLanguage("ja")
                 .build();
         DocumentParser parser = DocumentParser.MARKDOWN;
@@ -107,7 +108,7 @@ public class JapaneseDoubleNegativeValidatorTest {
                 "そういう話なら、ないことないでしょう。";
         Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(
-                        new ValidatorConfiguration("JapaneseDoubleNegative"))
+                        new ValidatorConfiguration("DoubleNegative"))
                 .setLanguage("ja")
                 .build();
         DocumentParser parser = DocumentParser.MARKDOWN;
@@ -121,7 +122,7 @@ public class JapaneseDoubleNegativeValidatorTest {
 
         assertEquals(1, errors.get(documents.get(0)).size());
         assertEquals(1, errors.get(documents.get(0)).get(0).getLineNumber());
-        assertEquals("JapaneseDoubleNegative", errors.get(documents.get(0)).get(0).getValidatorName());
+        assertEquals("DoubleNegative", errors.get(documents.get(0)).get(0).getValidatorName());
     }
 
 }
