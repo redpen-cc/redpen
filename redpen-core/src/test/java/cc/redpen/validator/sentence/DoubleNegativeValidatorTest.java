@@ -58,7 +58,6 @@ public class DoubleNegativeValidatorTest {
         assertEquals("DoubleNegative", errors.get(documents.get(0)).get(0).getValidatorName());
     }
 
-
     @Test
     public void testNotDetectSingleNegative() throws Exception {
         String sampleText =
@@ -114,6 +113,30 @@ public class DoubleNegativeValidatorTest {
         DocumentParser parser = DocumentParser.MARKDOWN;
         List<Document> documents = new ArrayList<>();
         Document document  = parser.parse(sampleText, new SentenceExtractor(config.getSymbolTable()),
+                config.getTokenizer());
+        documents.add(document);
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+
+        assertEquals(1, errors.get(documents.get(0)).size());
+        assertEquals(1, errors.get(documents.get(0)).get(0).getLineNumber());
+        assertEquals("DoubleNegative", errors.get(documents.get(0)).get(0).getValidatorName());
+    }
+
+    @Test
+    public void testDetectEnDoubleNegative() throws Exception {
+        String sampleText = "We believe it, unless not that is true";
+        Configuration config = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(
+                        new ValidatorConfiguration("DoubleNegative"))
+                .setLanguage("en")
+                .build();
+
+        DocumentParser parser = DocumentParser.MARKDOWN;
+        List<Document> documents = new ArrayList<>();
+        Document document  = parser.parse(sampleText,
+                new SentenceExtractor(config.getSymbolTable()),
                 config.getTokenizer());
         documents.add(document);
 
