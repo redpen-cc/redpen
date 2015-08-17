@@ -19,6 +19,7 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
+import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.validator.ExpressionRule;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
@@ -33,25 +34,50 @@ import java.util.Set;
  * Detect double negative expressions in Japanese texts.
  */
 public class DoubleNegativeValidator extends Validator {
-    private static final String DEFAULT_RESOURCE_EXPRESSION_PATH = "default-resources/double-negative/double-negative-expression-";
+    private static final String DEFAULT_RESOURCE_EXPRESSION_PATH =
+            "default-resources/double-negative/double-negative-expression-";
+    private static final String DEFAULT_RESOURCE_WORD_PATH =
+            "default-resources/double-negative/double-negative-word-";
     private static final Logger LOG =
             LoggerFactory.getLogger(DoubleNegativeValidator.class);
-    private Set<ExpressionRule> invalidPatterns;
+    private Set<ExpressionRule> invalidExpressions;
+    private Set<String> negativeWords;
 
     @Override
     public void validate(Sentence sentence) {
-        for (ExpressionRule rule : invalidPatterns) {
+        // validate with expressions (phrase)
+        for (ExpressionRule rule : invalidExpressions) {
             if (rule.match(sentence.getTokens())) {
                 addValidationError(sentence, rule.toString());
+                return;
+            }
+        }
+
+        // validate with set of negative words
+        int count = 0;
+        for (String negativeWord : negativeWords) {
+            List<TokenElement> tokens = sentence.getTokens();
+            for (TokenElement token : tokens) {
+                if (token.getSurface().equals(negativeWord)) {
+                    count++;
+                }
+                if (count >= 2) {
+                    addValidationErrorFromToken(sentence, token);
+                    return;
+                }
             }
         }
     }
 
     @Override
     protected void init() throws RedPenException {
-        invalidPatterns = RULE.loadCachedFromResource(
-                DEFAULT_RESOURCE_EXPRESSION_PATH + getSymbolTable().getLang() +".dat",
-                "double negative rules");
+        invalidExpressions = RULE.loadCachedFromResource(
+                DEFAULT_RESOURCE_EXPRESSION_PATH + getSymbolTable().getLang() + ".dat",
+                "double negative expression rules");
+
+        negativeWords = WORD_LIST_LOWERCASED.loadCachedFromResource(
+                DEFAULT_RESOURCE_WORD_PATH + getSymbolTable().getLang() +".dat",
+                "double negative words");
     }
 
     @Override
