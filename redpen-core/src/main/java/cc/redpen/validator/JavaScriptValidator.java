@@ -39,7 +39,6 @@ import java.util.*;
  * <p>A Validator implementation load JavaScript dynamically.</p>
  * <p>files which name end with &quot;.js&quot; and located in &quot;js&quot; (can be specified with &quot;script-path&quot; property) directory will be treated as JavaScript validator implementation. Functions with the following signature will be called upon validation time:</p>
  * <pre>
- *     var message = "your sentence has validation error : {0}";
  *     function preValidateSentence(sentence) {
  *     }
  *     function preValidateSection(section) {
@@ -49,7 +48,7 @@ import java.util.*;
  *     }
  *     function validateSentence(sentence) {
  *       // if(your validation logic for sentence here) {
- *       //   addValidationError(sentence, 'specific message');
+ *       //   addError('validation error message', sentence);
  *       // }
  *     }
  *     function validateSection(section) {
@@ -165,6 +164,19 @@ public class JavaScriptValidator extends Validator {
 
     // give ValidationError factory methods public access so that they can be bound with JavaScript
     @Override
+    public void addError(String message, Sentence sentenceWithError) {
+        super.addError(String.format("[%s] %s", currentJS.name, message), sentenceWithError);
+    }
+
+
+    @Override
+    public void addErrorWithPosition(String message, Sentence sentenceWithError,
+                                     Optional<LineOffset> start, Optional<LineOffset> end) {
+        super.addValidationErrorWithPosition(String.format("[%s] %s", currentJS.name, message),
+                sentenceWithError, start, end);
+    }
+
+    @Override
     public void addValidationError(Sentence sentenceWithError, Object... args) {
         super.addValidationError(sentenceWithError, args);
     }
@@ -207,7 +219,9 @@ public class JavaScriptValidator extends Validator {
             ScriptEngine engine = manager.getEngineByName("nashorn");
             try {
                 engine.put("redpenToBeBound", validator);
-                engine.eval("var addValidationError = Function.prototype.bind.call(redpenToBeBound.addValidationError, redpenToBeBound);" +
+                engine.eval("var addError = Function.prototype.bind.call(redpenToBeBound.addError, redpenToBeBound);" +
+                        "var addErrorWithPosition = Function.prototype.bind.call(redpenToBeBound.addErrorWithPosition, redpenToBeBound);" +
+                        "var addValidationError = Function.prototype.bind.call(redpenToBeBound.addValidationError, redpenToBeBound);" +
                         "var addValidationErrorFromToken = Function.prototype.bind.call(redpenToBeBound.addValidationErrorFromToken, redpenToBeBound);" +
                         "var addValidationErrorWithPosition = Function.prototype.bind.call(redpenToBeBound.addValidationErrorWithPosition, redpenToBeBound);");
 

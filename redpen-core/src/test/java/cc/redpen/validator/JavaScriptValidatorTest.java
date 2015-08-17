@@ -98,6 +98,8 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
                         "function validateDocument(document) {" +
                         "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('validateDocument');" +
                         // add ValidationError
+                        "addError('validation error', document.getSection(0).getHeaderContent(0));" +
+                        // add ValidationError
                         "addValidationError(document.getSection(0).getHeaderContent(0), 'doc');}" +
                         "function validateSentence(sentence) {" +
                         "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('validateSentence');" +
@@ -129,10 +131,11 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         assertEquals("validateSentence", calledFunctions.get(3));
         assertEquals("validateSection", calledFunctions.get(4));
 
-        assertEquals(3, errors.size());
-        assertEquals("[testScript.js] JavaScript validator doc", errors.get(0).getMessage());
-        assertEquals("[testScript.js] JavaScript validator sentence", errors.get(1).getMessage());
-        assertEquals("[testScript.js] JavaScript validator section", errors.get(2).getMessage());
+        assertEquals(4, errors.size());
+        assertEquals("[testScript.js] validation error", errors.get(0).getMessage());
+        assertEquals("[testScript.js] JavaScript validator doc", errors.get(1).getMessage());
+        assertEquals("[testScript.js] JavaScript validator sentence", errors.get(2).getMessage());
+        assertEquals("[testScript.js] JavaScript validator section", errors.get(3).getMessage());
     }
 
     @Test

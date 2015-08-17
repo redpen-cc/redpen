@@ -1,10 +1,8 @@
-var message = "word [{0}] is too long. length: {1}";
-
 function validateSentence(sentence) {
     var content = sentence.getContent().split(" ");
     for(var i = 0; i<content.length;i++){
         if(content[i].length >= 10){
-            addValidationError(sentence, content[i], content[i].length);
+            addError("word [" + content[i] +"] is too long. length: " + content[i].length, sentence);
         }
     }
 }
