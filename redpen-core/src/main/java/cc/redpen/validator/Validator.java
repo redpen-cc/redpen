@@ -27,6 +27,7 @@ import cc.redpen.model.Sentence;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.util.DictionaryLoader;
+import cc.redpen.util.RuleExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -290,6 +291,13 @@ public abstract class Validator {
                     LOG.error("Skip to load line... Invalid line: " + line);
                 }
             });
+
+    /**
+     * Resource Extractor loads rule dictionary
+     */
+    protected final static DictionaryLoader<Set<ExpressionRule>> RULE =
+            new DictionaryLoader<>(HashSet::new, (set, line) -> set.add(RuleExtractor.run(line)));
+
     /**
      * Resource Extractor loads word list
      */
