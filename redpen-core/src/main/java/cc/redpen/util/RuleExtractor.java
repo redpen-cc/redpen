@@ -39,7 +39,7 @@ public class RuleExtractor {
             if (wordSegments.length > 1) {
                 tagStr = wordSegments[1];
             }
-            rule.addElement(new TokenElement(surface, Arrays.asList(tagStr.split(","))));
+            rule.addElement(new TokenElement(surface, Arrays.asList(tagStr.split(",")), 0));
         }
         return rule;
     }

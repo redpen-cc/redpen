@@ -126,7 +126,7 @@ public class DoubleNegativeValidatorTest {
 
     @Test
     public void testDetectEnDoubleNegative() throws Exception {
-        String sampleText = "We believe it, unless not that is true";
+        String sampleText = "We believe it, unless it is not true";
         Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(
                         new ValidatorConfiguration("DoubleNegative"))

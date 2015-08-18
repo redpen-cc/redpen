@@ -26,14 +26,14 @@ import static org.junit.Assert.assertEquals;
 public class TokenElementTest {
     @Test(expected = UnsupportedOperationException.class)
     public void testTagsImmutable() {
-        TokenElement token = new TokenElement("foobar", "tag");
+        TokenElement token = new TokenElement("foobar", java.util.Arrays.asList("tag"), 0);
         List<String> tags = token.getTags();
         tags.add("baz");
     }
 
     @Test
     public void testSurfaceImmutable() {
-        TokenElement token = new TokenElement("foobar", "tag");
+        TokenElement token = new TokenElement("foobar", java.util.Arrays.asList("tag"), 0);
         String surface = token.getSurface();
         surface = "baz";
         assertEquals("foobar", token.getSurface());

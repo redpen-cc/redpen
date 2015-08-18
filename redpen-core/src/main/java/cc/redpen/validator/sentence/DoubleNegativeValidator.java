@@ -58,7 +58,7 @@ public class DoubleNegativeValidator extends Validator {
         for (String negativeWord : negativeWords) {
             List<TokenElement> tokens = sentence.getTokens();
             for (TokenElement token : tokens) {
-                if (token.getSurface().equals(negativeWord)) {
+                if (token.getSurface().toLowerCase().equals(negativeWord)) {
                     count++;
                 }
                 if (count >= 2) {
