@@ -75,14 +75,69 @@ public class KatakanaSpellCheckValidatorTest {
 
         List<Document> documents = new ArrayList<>();documents.add(
                 new Document.DocumentBuilder(new JapaneseTokenizer())
-                                .addSection(1)
-                                .addParagraph()
-                                .addSentence("あのインデクスとこのインデックス", 1)
-                                .build());
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("あのインデクスとこのインデックス", 1)
+                        .build());
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(0, errors.get(documents.get(0)).size());
     }
 
+    @Test
+    public void testDefaultSetting() throws RedPenException {
+        Configuration config = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck"))
+                .setLanguage("ja").build();
+
+        List<Document> documents = new ArrayList<>();documents.add(
+                new Document.DocumentBuilder(new JapaneseTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("あのミニマムサポートとこのミニマムサポータ", 1)
+                        .build());
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        Assert.assertEquals(1, errors.get(documents.get(0)).size());
+    }
+
+    @Test
+    public void testSetMinimumRatio() throws RedPenException {
+        Configuration config = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck")
+                        .addAttribute("min_ratio", "0.001"))
+                .setLanguage("ja").build();
+
+        List<Document> documents = new ArrayList<>();documents.add(
+                new Document.DocumentBuilder(new JapaneseTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("あのミニマムサポートとこのミニマムサポータ", 1)
+                        .build());
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        Assert.assertEquals(0, errors.get(documents.get(0)).size());
+    }
+
+    @Test
+    public void testSetMinimumFrequency() throws RedPenException {
+        Configuration config = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck")
+                        .addAttribute("min_freq", "0"))
+                .setLanguage("ja").build();
+
+        List<Document> documents = new ArrayList<>();documents.add(
+                new Document.DocumentBuilder(new JapaneseTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("あのミニマムサポートとこのミニマムサポータ", 1)
+                        .build());
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        Assert.assertEquals(0, errors.get(documents.get(0)).size());
+    }
 }

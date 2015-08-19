@@ -26,13 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Validate the correctness of Katakana word spelling.
@@ -56,9 +50,15 @@ import java.util.Set;
  */
 final public class KatakanaSpellCheckValidator extends Validator {
     /**
-     * The default similarity ratio between the length and the distance.
+     * The default threshold of similarity ratio between the length and the distance. <br/>
+     * <p/>
+     * The similarities are computed by edit distance.
      */
-    private static final float SIMILARITY_RATIO = 0.3f;
+    private static final float DEFAULT_SIMILARITY_RATIO = 0.3f;
+    /**
+     * The default threshold of word frequencies of Katakana Words.
+     */
+    private static final int DEFAULT_MINIMUM_FREQUENCIES = 5;
     /**
      * The default threshold value for the length of Katakana word
      * to ignore.
@@ -73,6 +73,7 @@ final public class KatakanaSpellCheckValidator extends Validator {
      */
     private static final Logger LOG =
             LoggerFactory.getLogger(KatakanaSpellCheckValidator.class);
+
     /**
      * Katakana word dic with line number.
      */
@@ -84,9 +85,42 @@ final public class KatakanaSpellCheckValidator extends Validator {
 
     private Set<String> customExceptions = new HashSet<>();
 
+    private Map<String, Integer> katakanaWordFrequencies = new HashMap<>();
+
+    private float minimumRatio = DEFAULT_SIMILARITY_RATIO;
+
+    private int minimumFrequencies = DEFAULT_MINIMUM_FREQUENCIES;
+
     @Override
     public List<String> getSupportedLanguages() {
         return Arrays.asList(Locale.JAPANESE.getLanguage());
+    }
+
+    @Override
+    public void preValidate(Sentence sentence) {
+        // collect katakana words
+        StringBuilder katakana = new StringBuilder();
+        for (int i = 0; i < sentence.getContent().length(); i++) {
+            char c = sentence.getContent().charAt(i);
+            if (StringUtils.isKatakana(c)) {
+                katakana.append(c);
+            } else {
+                String katakanaWord = katakana.toString();
+                addKatakana(katakanaWord);
+                katakana.delete(0, katakana.length());
+            }
+        }
+        if (katakana.length() > 0) {
+            addKatakana(katakana.toString());
+        }
+    }
+
+    private void addKatakana(String katakanaWord) {
+        if (katakanaWordFrequencies.get(katakanaWord) == null) {
+            katakanaWordFrequencies.put(katakanaWord, 0);
+        }
+        katakanaWordFrequencies.put(katakanaWord,
+                katakanaWordFrequencies.get(katakanaWord)+1);
     }
 
     @Override
@@ -109,10 +143,12 @@ final public class KatakanaSpellCheckValidator extends Validator {
             return;
         }
         if (dic.containsKey(katakana) || exceptions.contains(katakana)
-                || customExceptions.contains(katakana)) {
+                || customExceptions.contains(katakana) ||
+                (katakanaWordFrequencies.get(katakana) != null
+                        && katakanaWordFrequencies.get(katakana) > minimumFrequencies)) {
             return;
         }
-        final int minLsDistance = Math.round(katakana.length() * SIMILARITY_RATIO);
+        final int minLsDistance = Math.round(katakana.length() * minimumRatio);
         boolean found = false;
         for (String key : dic.keySet()) {
             if (LevenshteinDistance.getDistance(key, katakana) <= minLsDistance) {
@@ -135,8 +171,9 @@ final public class KatakanaSpellCheckValidator extends Validator {
         if (confFile.isPresent()) {
             customExceptions.addAll(WORD_LIST.loadCachedFromFile(new File(confFile.get()), "KatakanaSpellCheckValidator user dictionary"));
         }
+        minimumRatio = (float) getConfigAttributeAsDouble("min_ratio", DEFAULT_SIMILARITY_RATIO);
+        minimumFrequencies = getConfigAttributeAsInt("min_freq", DEFAULT_MINIMUM_FREQUENCIES);
 
-        //TODO : configurable SIMILARITY_RATIO.
         //TODO : configurable MAX_IGNORE_KATAKANA_LENGTH.
     }
 
