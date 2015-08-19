@@ -48,19 +48,19 @@ public class StreamParser {
     public void parse() {
         final List<Token> tokens = Lexer.on(mTarget).parse();
         for (Token t:
-                 (P.unescapeRegion
-                  (P.styleTextileRegion
-                   (P.assembleRegion
-                    (P.pruneRegion
-                     (P.normalizeTextileRegion
-                      (P.maskTabularLikeRegion
-                       (P.markVerbatimRegion
-                        (P.collapse (tokens)))))))))) {
+                 (Parsing.unescapeRegion
+                  (Parsing.styleTextileRegion
+                   (Parsing.assembleRegion
+                    (Parsing.pruneRegion
+                     (Parsing.normalizeTextileRegion
+                      (Parsing.maskTabularLikeRegion
+                       (Parsing.markVerbatimRegion
+                        (Parsing.collapse (tokens)))))))))) {
             mListener.element(t);
         }
     }
 
-    /*package*/ static class P {
+    /*package*/ static class Parsing {
         public static final char ESCAPE_CHAR = '\uFFFD';
 
         public static List<Token> takeBlock(final Deque<Token> q) {

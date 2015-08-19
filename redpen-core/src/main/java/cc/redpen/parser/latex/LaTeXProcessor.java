@@ -51,7 +51,7 @@ public class LaTeXProcessor {
     public void parse(final char[] stream, final DocumentBuilder builder, final SentenceExtractor sentenceExtractor) {
         final List<Token> tokens = new ArrayList<>();
         new StreamParser(stream, t -> tokens.add(t)).parse();
-        P.walkWith(Context.of(builder, sentenceExtractor), tokens);
+        Processing.walkWith(Context.of(builder, sentenceExtractor), tokens);
     }
 
     /*package*/ static class Context {
@@ -67,7 +67,7 @@ public class LaTeXProcessor {
         }
     }
 
-    /*package*/ static class RP {
+    /*package*/ static class Documents {
         private static void flushSentences(final Context c) {
             for (Sentence sentence : compileAsSentenceList(c)) {
                 c.builder.addSentence(sentence);
@@ -223,7 +223,7 @@ public class LaTeXProcessor {
         }
     }
 
-    /*package*/ static class P {
+    /*package*/ static class Processing {
         public static void walkWith(final Context c, final List<Token> tokens) {
             for (Token t : tokens) {
                 switch (t.t) {
@@ -232,19 +232,19 @@ public class LaTeXProcessor {
                 case "SECTION":
                 case "SUBSECTION":
                 case "SUBSUBSECTION":
-                    RP.appendSection(c, t);
+                    Documents.appendSection(c, t);
                     break;
                 case "TEXTILE":
                     if (t.isBlankLine()) {
-                        RP.appendParagraph(c);
+                        Documents.appendParagraph(c);
                     } else {
-                        RP.addAsCandidate(c, t);
+                        Documents.addAsCandidate(c, t);
                     }
                     break;
                 }
             }
 
-            RP.flushSentences(c);
+            Documents.flushSentences(c);
         }
     }
 }

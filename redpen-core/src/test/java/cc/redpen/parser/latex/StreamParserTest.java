@@ -32,60 +32,60 @@ import static cc.redpen.parser.latex.Assert.*;
 
 public class StreamParserTest {
     @Test
-    public void testPCountMatches() {
-        assertEquals(3, StreamParser.P.countMatches(Pattern.compile("abc"), "abc abcd abcde"));
+    public void testParsingCountMatches() {
+        assertEquals(3, StreamParser.Parsing.countMatches(Pattern.compile("abc"), "abc abcd abcde"));
     }
 
     @Test
-    public void testPGuessRow() {
+    public void testParsingGuessRow() {
         final int r = 12;
         final int c = 34;
         final Token target = new Token("TEXTILE", "This is a pen.\nThat is not a pen.\n", new Position(r, c));
-        assertEquals(0 + r, StreamParser.P._guessRow(target, "This"));
-        assertEquals(0 + r, StreamParser.P._guessRow(target, "a pen"));
-        assertEquals(1 + r, StreamParser.P._guessRow(target, "That"));
-        assertEquals(1 + r, StreamParser.P._guessRow(target, "not a pen"));
-        assertEquals(0 + r, StreamParser.P._guessRow(target, "nonexistent"));
+        assertEquals(0 + r, StreamParser.Parsing._guessRow(target, "This"));
+        assertEquals(0 + r, StreamParser.Parsing._guessRow(target, "a pen"));
+        assertEquals(1 + r, StreamParser.Parsing._guessRow(target, "That"));
+        assertEquals(1 + r, StreamParser.Parsing._guessRow(target, "not a pen"));
+        assertEquals(0 + r, StreamParser.Parsing._guessRow(target, "nonexistent"));
     }
 
     @Test
-    public void testPGuessCol() {
+    public void testParsingGuessCol() {
         final int r = 12;
         final int c = 34;
         final Token target = new Token("TEXTILE", "This is a pen.\nThat is not a pen.\n", new Position(r, c));
-        assertEquals(0 + c, StreamParser.P._guessCol(target, "This"));
-        assertEquals(8 + c, StreamParser.P._guessCol(target, "a pen"));
-        assertEquals(0    , StreamParser.P._guessCol(target, "That"));
-        assertEquals(8    , StreamParser.P._guessCol(target, "not a pen"));
-        assertEquals(0 + c, StreamParser.P._guessCol(target, "nonexistent"));
+        assertEquals(0 + c, StreamParser.Parsing._guessCol(target, "This"));
+        assertEquals(8 + c, StreamParser.Parsing._guessCol(target, "a pen"));
+        assertEquals(0    , StreamParser.Parsing._guessCol(target, "That"));
+        assertEquals(8    , StreamParser.Parsing._guessCol(target, "not a pen"));
+        assertEquals(0 + c, StreamParser.Parsing._guessCol(target, "nonexistent"));
     }
 
     @Test
-    public void testPStripTextBlock() {
+    public void testParsingStripTextBlock() {
         assertEquals(
             "Get a life.",
-            StreamParser.P.stripTextBlock("\n\n\n   Get a life.")
+            StreamParser.Parsing.stripTextBlock("\n\n\n   Get a life.")
         );
     }
 
     @Test
-    public void testPCompactTextBlock() {
+    public void testParsingCompactTextBlock() {
         assertEquals(
             "This is a text. Get a life.",
-            StreamParser.P.compactTextBlock("This  \t is \t\t\t a  text.\n\n\n   Get   a   life.")
+            StreamParser.Parsing.compactTextBlock("This  \t is \t\t\t a  text.\n\n\n   Get   a   life.")
         );
     }
 
     @Test
-    public void testPMaskCharactersInTextBlock() {
+    public void testParsingMaskCharactersInTextBlock() {
         assertEquals(
             "cite ctrl",
-            StreamParser.P.maskCharactersInTextBlock("cite~ctrl")
+            StreamParser.Parsing.maskCharactersInTextBlock("cite~ctrl")
         );
     }
 
     @Test
-    public void testPValuesOf() {
+    public void testParsingValuesOf() {
         final List<Token> tokens = Arrays.asList(
             token("A", "a"),
             token("B", "bcd"),
@@ -99,12 +99,12 @@ public class StreamParserTest {
 
         assertEquals(
             takenFor(t -> t.v, tokens),
-            StreamParser.P.valuesOf(tokens)
+            StreamParser.Parsing.valuesOf(tokens)
        );
     }
 
     @Test
-    public void testPTextileValuesOf() {
+    public void testParsingTextileValuesOf() {
         final List<Token> tokens = Arrays.asList(
             token("TEXTILEa", "a"),
             token("CONTROL*", "bcd"),
@@ -118,21 +118,21 @@ public class StreamParserTest {
 
         assertEquals(
             takenFor(t -> t.asTextile(), tokens),
-            StreamParser.P.textileValuesOf(tokens)
+            StreamParser.Parsing.textileValuesOf(tokens)
         );
     }
 
 
     @Test
-    public void testPUnescapeRegion() {
-        final char E = StreamParser.P.ESCAPE_CHAR;
+    public void testParsingUnescapeRegion() {
+        final char E = StreamParser.Parsing.ESCAPE_CHAR;
         assertTokensLike(
             Arrays.asList(
                 token("A", "a     b"),
                 token("B", "c d e"),
                 token("C", " fg ")
             ),
-            StreamParser.P.unescapeRegion(
+            StreamParser.Parsing.unescapeRegion(
                 Arrays.asList(
                     token("A", "a"+E+E+E+E+E+"b"),
                     token("B", "c"+E+"d"+E+"e"),
@@ -143,13 +143,13 @@ public class StreamParserTest {
     }
 
     @Test
-    public void testPCollapseInterestsEnvironment() {
+    public void testParsingCollapseInterestsEnvironment() {
         assertTokensLike(
             Arrays.asList(
                 token("ENVIRON_BEGIN", "begin", Arrays.asList(token("GROUP1_BEGIN", "{"), token("TEXTILE", "document"), token("GROUP1_END", "}"))),
                 token("ENVIRON_END", "end", Arrays.asList(token("GROUP1_BEGIN", "{"), token("TEXTILE", "document"), token("GROUP1_END", "}")))
             ),
-            StreamParser.P.collapse(
+            StreamParser.Parsing.collapse(
                 Arrays.asList(
                     token("CONTROL", "begin"),
                     token("GROUP1_BEGIN", "{"), token("TEXTILE", "document"), token("GROUP1_END", "}"),
@@ -161,7 +161,7 @@ public class StreamParserTest {
     }
 
     @Test
-    public void testPCollapseInstrests() {
+    public void testParsingCollapseInstrests() {
         final List<Token> garbage =
             Arrays.asList(
                 token("GROUP1_BEGIN", "{"), token("TEXTILE", "a"), token("GROUP1_END", "}")
@@ -182,12 +182,12 @@ public class StreamParserTest {
 
         assertTokensLike(
             expected,
-            StreamParser.P.collapse(tokens)
+            StreamParser.Parsing.collapse(tokens)
         );
     }
 
     @Test
-    public void testPCollapseIgnores() {
+    public void testParsingCollapseIgnores() {
         final List<Token> garbage =
             Arrays.asList(
                 token("GROUP2_BEGIN", "["), token("TEXTILE", "a"), token("GROUP2_END", "]"),
@@ -211,12 +211,12 @@ public class StreamParserTest {
 
         assertTokensLike(
             expected,
-            StreamParser.P.collapse(tokens)
+            StreamParser.Parsing.collapse(tokens)
         );
     }
 
     @Test
-    public void testPCollapseNeutrals() {
+    public void testParsingCollapseNeutrals() {
         final List<Token> garbage =
             Arrays.asList(
                 token("GROUP1_BEGIN", "{"), token("TEXTILE", "a"), token("GROUP1_END", "}")
@@ -243,12 +243,12 @@ public class StreamParserTest {
 
         assertTokensLike(
             expected,
-            StreamParser.P.collapse(tokens)
+            StreamParser.Parsing.collapse(tokens)
         );
     }
 
     @Test
-    public void testPTakeBlock() {
+    public void testParsingTakeBlock() {
         final Deque<Token> q = new ArrayDeque<Token>(
             Arrays.asList(
                 token("GROUP2_BEGIN", "["), token("GROUP1_BEGIN", "{"), token("TEXTILE", "text"), token("GROUP2_BEGIN", "["), token("GROUP2_END", "]"), token("GROUP1_END", "}"), token("GROUP2_END", "]"),
@@ -264,7 +264,7 @@ public class StreamParserTest {
             Arrays.asList(
                 token("GROUP2_BEGIN", "["), token("GROUP1_BEGIN", "{"), token("TEXTILE", "text"), token("GROUP2_BEGIN", "["), token("GROUP2_END", "]"), token("GROUP1_END", "}"), token("GROUP2_END", "]")
                 ),
-            StreamParser.P.takeBlock(q));
+            StreamParser.Parsing.takeBlock(q));
         assertTokensLike(
             Arrays.asList(
                 token("GROUP1_BEGIN", "{"), token("TEXTILE", "text2"), token("GROUP2_BEGIN", "["), token("GROUP2_END", "]"), token("GROUP1_END", "}"),
@@ -279,7 +279,7 @@ public class StreamParserTest {
             Arrays.asList(
                 token("GROUP1_BEGIN", "{"), token("TEXTILE", "text2"), token("GROUP2_BEGIN", "["), token("GROUP2_END", "]"), token("GROUP1_END", "}")
             ),
-            StreamParser.P.takeBlock(q));
+            StreamParser.Parsing.takeBlock(q));
         assertTokensLike(
             Arrays.asList(
                 token("GROUP2_BEGIN", "["), token("TEXTILE", "text3"), token("GROUP2_END", "]"),
@@ -293,7 +293,7 @@ public class StreamParserTest {
             Arrays.asList(
                 token("GROUP2_BEGIN", "["), token("TEXTILE", "text3"), token("GROUP2_END", "]")
             ),
-            StreamParser.P.takeBlock(q));
+            StreamParser.Parsing.takeBlock(q));
         assertTokensLike(
             Arrays.asList(
                 token("CONTROL", "test"),
@@ -304,7 +304,7 @@ public class StreamParserTest {
 
         assertTokensLike(
             Arrays.asList(),
-            StreamParser.P.takeBlock(q));
+            StreamParser.Parsing.takeBlock(q));
         assertTokensLike(
             Arrays.asList(
                 token("CONTROL", "test"),
@@ -315,7 +315,7 @@ public class StreamParserTest {
     }
 
     @Test
-    public void testPTakeTrailingBlocks() {
+    public void testParsingTakeTrailingBlocks() {
         final Deque<Token> q = new ArrayDeque<Token>(
             Arrays.asList(
                 token("GROUP2_BEGIN", "["), token("GROUP1_BEGIN", "{"), token("TEXTILE", "text"), token("GROUP2_BEGIN", "["), token("GROUP2_END", "]"), token("GROUP1_END", "}"), token("GROUP2_END", "]"),
@@ -333,7 +333,7 @@ public class StreamParserTest {
                 token("GROUP1_BEGIN", "{"), token("TEXTILE", "text2"), token("GROUP2_BEGIN", "["), token("GROUP2_END", "]"), token("GROUP1_END", "}"),
                 token("GROUP2_BEGIN", "["), token("TEXTILE", "text3"), token("GROUP2_END", "]")
                 ),
-            StreamParser.P.takeTrailingBlocks(q));
+            StreamParser.Parsing.takeTrailingBlocks(q));
         assertTokensLike(
             Arrays.asList(
                 token("CONTROL", "test"),
@@ -344,7 +344,7 @@ public class StreamParserTest {
 
         assertTokensLike(
             Arrays.asList(),
-            StreamParser.P.takeTrailingBlocks(q));
+            StreamParser.Parsing.takeTrailingBlocks(q));
         assertTokensLike(
             Arrays.asList(
                 token("CONTROL", "test"),
@@ -355,13 +355,13 @@ public class StreamParserTest {
     }
 
     @Test
-    public void testPMakeVerbatim() {
+    public void testParsingMakeVerbatim() {
         assertTokensLike(
             Arrays.asList(
                 token("VERBATIM", "this is a text.")
             ),
             Arrays.asList(
-                StreamParser.P.makeVerbatim(
+                StreamParser.Parsing.makeVerbatim(
                     Arrays.asList(
                         token("A", "this "),
                         token("B", "is "),
@@ -374,13 +374,13 @@ public class StreamParserTest {
     }
 
     @Test
-    public void testPMarkVerbatimRegion() {
+    public void testParsingMarkVerbatimRegion() {
         assertTokensLike(
             Arrays.asList(
                 token("VERBATIM", "abegin{center}bend{center}c")
                 ),
-            StreamParser.P.markVerbatimRegion(
-                StreamParser.P.collapse(
+            StreamParser.Parsing.markVerbatimRegion(
+                StreamParser.Parsing.collapse(
                     Arrays.asList(
                         token("CONTROL", "begin"),
                         token("GROUP1_BEGIN", "{"), token("TEXTILE", "verbatim"), token("GROUP1_END", "}"),
@@ -400,14 +400,14 @@ public class StreamParserTest {
     }
 
     @Test
-    public void testPMaskTabularLikeRegion() {
+    public void testParsingMaskTabularLikeRegion() {
         assertTokensLike(
             Arrays.asList(
                 token("TEXTILE", "This is the table."),
                 token("TEXTILE", "That was the table.")
             ),
-            StreamParser.P.maskTabularLikeRegion(
-                StreamParser.P.collapse(
+            StreamParser.Parsing.maskTabularLikeRegion(
+                StreamParser.Parsing.collapse(
                     Arrays.asList(
                         token("TEXTILE", "This is the table."),
                         token("CONTROL", "begin"),
@@ -426,14 +426,14 @@ public class StreamParserTest {
     }
 
     @Test
-    public void testPNormalizeTextileRegion() {
+    public void testParsingNormalizeTextileRegion() {
         assertTokensLike(
             Arrays.asList(
                 token("TEXTILE", "This is \"the\" te'X't."),
                 token("VERBATIM", "It’s ``The’’ te`x’t."),
                 token("TEXTILE", "That was \"THE\" te'x't.")
             ),
-            StreamParser.P.normalizeTextileRegion(
+            StreamParser.Parsing.normalizeTextileRegion(
                 Arrays.asList(
                     token("TEXTILE", "This is ``the’’ te`X’t."),
                     token("VERBATIM", "It’s ``The’’ te`x’t."),
@@ -444,8 +444,8 @@ public class StreamParserTest {
     }
 
     @Test
-    public void testPPruneRegion() {
-        final String E = String.valueOf(StreamParser.P.ESCAPE_CHAR);
+    public void testParsingPruneRegion() {
+        final String E = String.valueOf(StreamParser.Parsing.ESCAPE_CHAR);
         assertTokensLike(
             Arrays.asList(
                 token("TEXTILE", "This"),
@@ -457,7 +457,7 @@ public class StreamParserTest {
                 token("SUBPARAGRAPH", "A"),
                 token("ITEM", "")
             ),
-            StreamParser.P.pruneRegion(
+            StreamParser.Parsing.pruneRegion(
                 Arrays.asList(
                     token("TEXTILE", "This"),
                     token("VERBATIM", "That"),
@@ -475,13 +475,13 @@ public class StreamParserTest {
     }
 
     @Test
-    public void testPAssembleRegion() {
+    public void testParsingAssembleRegion() {
         assertTokensLike(
             Arrays.asList(
                 token("TEXTILE", "ThisThatWhat?"),
                 token("CONTROL", "control")
             ),
-            StreamParser.P.assembleRegion(
+            StreamParser.Parsing.assembleRegion(
                 Arrays.asList(
                     token("TEXTILE", "This"),
                     token("TEXTILE", ""),
@@ -495,7 +495,7 @@ public class StreamParserTest {
     }
 
     @Test
-    public void testPStyleTextileRegion() {
+    public void testParsingStyleTextileRegion() {
         assertTokensLike(
             Arrays.asList(
                 token("TEXTILE", "This is a sentence.  Okay, this is IT.\nDo you hear that?"),
@@ -506,7 +506,7 @@ public class StreamParserTest {
                 token("TEXTILE", ""),
                 token("TEXTILE", "That was close...  Take care of yourself.")
                 ),
-            StreamParser.P.styleTextileRegion(
+            StreamParser.Parsing.styleTextileRegion(
                 Arrays.asList(
                     token("TEXTILE",
                             "\nThis is a sentence.  Okay, this is IT.\n"
