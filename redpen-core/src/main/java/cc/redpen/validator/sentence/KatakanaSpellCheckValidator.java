@@ -58,7 +58,7 @@ final public class KatakanaSpellCheckValidator extends Validator {
     /**
      * The default similarity ratio between the length and the distance.
      */
-    private static final float SIMILARITY_RATIO = 0.3f;
+    private static final float DEFAULT_SIMILARITY_RATIO = 0.3f;
     /**
      * The default threshold value for the length of Katakana word
      * to ignore.
@@ -83,6 +83,8 @@ final public class KatakanaSpellCheckValidator extends Validator {
     private Set<String> exceptions = new HashSet<>();
 
     private Set<String> customExceptions = new HashSet<>();
+
+    private float minimumRatio = DEFAULT_SIMILARITY_RATIO;
 
     @Override
     public List<String> getSupportedLanguages() {
@@ -112,7 +114,7 @@ final public class KatakanaSpellCheckValidator extends Validator {
                 || customExceptions.contains(katakana)) {
             return;
         }
-        final int minLsDistance = Math.round(katakana.length() * SIMILARITY_RATIO);
+        final int minLsDistance = Math.round(katakana.length() * minimumRatio);
         boolean found = false;
         for (String key : dic.keySet()) {
             if (LevenshteinDistance.getDistance(key, katakana) <= minLsDistance) {
@@ -135,8 +137,8 @@ final public class KatakanaSpellCheckValidator extends Validator {
         if (confFile.isPresent()) {
             customExceptions.addAll(WORD_LIST.loadCachedFromFile(new File(confFile.get()), "KatakanaSpellCheckValidator user dictionary"));
         }
+        minimumRatio = (float) getConfigAttributeAsDouble("min_ratio", DEFAULT_SIMILARITY_RATIO);
 
-        //TODO : configurable SIMILARITY_RATIO.
         //TODO : configurable MAX_IGNORE_KATAKANA_LENGTH.
     }
 
