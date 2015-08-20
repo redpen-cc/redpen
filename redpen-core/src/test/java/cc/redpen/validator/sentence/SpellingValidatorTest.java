@@ -22,6 +22,7 @@ import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
+import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import cc.redpen.validator.ValidatorFactory;
@@ -41,7 +42,7 @@ public class SpellingValidatorTest {
         documents.add(new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()
-                .addSentence("this iz a pen", 1)
+                .addSentence(new Sentence("this iz a pen", 1))
                 .build());
 
         Configuration config = new Configuration.ConfigurationBuilder()
@@ -65,7 +66,7 @@ public class SpellingValidatorTest {
         documents.add(new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()
-                .addSentence("this iz goody", 1)
+                .addSentence(new Sentence("this iz goody", 1))
                 .build());
 
         RedPen redPen = new RedPen(config);
@@ -83,7 +84,7 @@ public class SpellingValidatorTest {
         documents.add(new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()
-                .addSentence("This iz goody", 1)
+                .addSentence(new Sentence("This iz goody", 1))
                 .build());
 
         RedPen redPen = new RedPen(config);
@@ -102,7 +103,7 @@ public class SpellingValidatorTest {
         documents.add(new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()
-                .addSentence("That is true, but there is a condition", 1)
+                .addSentence(new Sentence("That is true, but there is a condition", 1))
                 .build());
 
         RedPen redPen = new RedPen(config);
@@ -120,7 +121,7 @@ public class SpellingValidatorTest {
         documents.add(new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()
-                .addSentence("Abeshi is a word used in a comic.", 1)
+                .addSentence(new Sentence("Abeshi is a word used in a comic.", 1))
                 .build());
 
         RedPen redPen = new RedPen(config);
@@ -138,7 +139,7 @@ public class SpellingValidatorTest {
         documents.add(new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()
-                .addSentence("That is true.", 1)
+                .addSentence(new Sentence("That is true.", 1))
                 .build());
 
         RedPen redPen = new RedPen(config);
@@ -156,7 +157,7 @@ public class SpellingValidatorTest {
         documents.add(new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()
-                .addSentence("", 1)
+                .addSentence(new Sentence("", 1))
                 .build());
 
         RedPen redPen = new RedPen(config);

@@ -34,8 +34,8 @@ public class DocumentCollectionTest {
                 .addSection(0)
                 .addSectionHeader("baz")
                 .addParagraph()
-                .addSentence("sentence0", 0)
-                .addSentence("sentence1", 1)
+                .addSentence(new Sentence("sentence0", 1))
+                .addSentence(new Sentence("sentence1", 2))
                 .build());
 
         assertEquals(1, docs.size());
@@ -47,10 +47,10 @@ public class DocumentCollectionTest {
         assertEquals(2, docs.get(0).getSection(0).getParagraph(0).getNumberOfSentences());
         assertEquals("sentence0", docs.get(0).getSection(0).getParagraph(0).getSentence(0).getContent());
         assertEquals(true, docs.get(0).getSection(0).getParagraph(0).getSentence(0).isFirstSentence());
-        assertEquals(0, docs.get(0).getSection(0).getParagraph(0).getSentence(0).getLineNumber());
+        assertEquals(1, docs.get(0).getSection(0).getParagraph(0).getSentence(0).getLineNumber());
         assertEquals("sentence1", docs.get(0).getSection(0).getParagraph(0).getSentence(1).getContent());
         assertEquals(false, docs.get(0).getSection(0).getParagraph(0).getSentence(1).isFirstSentence());
-        assertEquals(1, docs.get(0).getSection(0).getParagraph(0).getSentence(1).getLineNumber());
+        assertEquals(2, docs.get(0).getSection(0).getParagraph(0).getSentence(1).getLineNumber());
     }
 
     @Test
@@ -61,15 +61,15 @@ public class DocumentCollectionTest {
                 .addSection(0)
                 .addSectionHeader("sec1")
                 .addParagraph()
-                .addSentence("sentence00", 0)
-                .addSentence("sentence01", 1).build());
+                .addSentence(new Sentence("sentence00", 1))
+                .addSentence(new Sentence("sentence01", 2)).build());
         docs.add(new Document.DocumentBuilder()
                 .setFileName("doc2")
                 .addSection(0)
                 .addSectionHeader("sec2")
                 .addParagraph()
-                .addSentence("sentence10", 0)
-                .addSentence("sentence11", 1)
+                .addSentence(new Sentence("sentence10", 1))
+                .addSentence(new Sentence("sentence11", 2))
                 .build());
 
         assertEquals(2, docs.size());
@@ -83,10 +83,10 @@ public class DocumentCollectionTest {
         assertEquals(2, docs.get(0).getSection(0).getParagraph(0).getNumberOfSentences());
         assertEquals("sentence00", docs.get(0).getSection(0).getParagraph(0).getSentence(0).getContent());
         assertEquals(true, docs.get(0).getSection(0).getParagraph(0).getSentence(0).isFirstSentence());
-        assertEquals(0, docs.get(0).getSection(0).getParagraph(0).getSentence(0).getLineNumber());
+        assertEquals(1, docs.get(0).getSection(0).getParagraph(0).getSentence(0).getLineNumber());
         assertEquals("sentence01", docs.get(0).getSection(0).getParagraph(0).getSentence(1).getContent());
         assertEquals(false, docs.get(0).getSection(0).getParagraph(0).getSentence(1).isFirstSentence());
-        assertEquals(1, docs.get(0).getSection(0).getParagraph(0).getSentence(1).getLineNumber());
+        assertEquals(2, docs.get(0).getSection(0).getParagraph(0).getSentence(1).getLineNumber());
 
         // second document
         assertEquals(1, docs.get(1).size());
@@ -97,9 +97,9 @@ public class DocumentCollectionTest {
         assertEquals(2, docs.get(1).getSection(0).getParagraph(0).getNumberOfSentences());
         assertEquals("sentence10", docs.get(1).getSection(0).getParagraph(0).getSentence(0).getContent());
         assertEquals(true, docs.get(1).getSection(0).getParagraph(0).getSentence(0).isFirstSentence());
-        assertEquals(0, docs.get(1).getSection(0).getParagraph(0).getSentence(0).getLineNumber());
+        assertEquals(1, docs.get(1).getSection(0).getParagraph(0).getSentence(0).getLineNumber());
         assertEquals("sentence11", docs.get(1).getSection(0).getParagraph(0).getSentence(1).getContent());
         assertEquals(false, docs.get(1).getSection(0).getParagraph(0).getSentence(1).isFirstSentence());
-        assertEquals(1, docs.get(1).getSection(0).getParagraph(0).getSentence(1).getLineNumber());
+        assertEquals(2, docs.get(1).getSection(0).getParagraph(0).getSentence(1).getLineNumber());
     }
 }

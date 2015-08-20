@@ -73,7 +73,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         Document document = new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()
-                .addSentence("the good item is a good example.", 1)
+                .addSentence(new Sentence("the good item is a good example.", 1))
                 .build();
 
         RedPen redPen = new RedPen(config);
@@ -110,7 +110,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         Document document = new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()
-                .addSentence("the good item is a good example.", 1)
+                .addSentence(new Sentence("the good item is a good example.", 1))
                 .build();
         Section section = document.getSection(0);
         Sentence sentence = section.getHeaderContent(0);
@@ -146,7 +146,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         Document document = new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()
-                .addSentence("the good item is a good example.", 1)
+                .addSentence(new Sentence("the good item is a good example.", 1))
                 .build();
         Section section = document.getSection(0);
         Sentence sentence = section.getHeaderContent(0);

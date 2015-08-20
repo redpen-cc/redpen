@@ -23,6 +23,7 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.Symbol;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
+import cc.redpen.model.Sentence;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
@@ -45,7 +46,7 @@ public class SymbolWithSpaceValidatorTest {
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("I like apple/orange", 1)
+                        .addSentence(new Sentence("I like apple/orange", 1))
                         .build());
 
         Configuration conf = new Configuration.ConfigurationBuilder()
@@ -66,7 +67,7 @@ public class SymbolWithSpaceValidatorTest {
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("I like her:yes it is", 1)
+                        .addSentence(new Sentence("I like her:yes it is", 1))
                         .build());
 
         Configuration conf = new Configuration.ConfigurationBuilder()
@@ -87,7 +88,7 @@ public class SymbolWithSpaceValidatorTest {
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("I like her(Nancy) very much.", 1)
+                        .addSentence(new Sentence("I like her(Nancy) very much.", 1))
                         .build());
 
         Configuration conf = new Configuration.ConfigurationBuilder()
@@ -108,7 +109,7 @@ public class SymbolWithSpaceValidatorTest {
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("I like her(Nancy)very much.", 1)
+                        .addSentence(new Sentence("I like her(Nancy)very much.", 1))
                         .build());
 
         Configuration conf = new Configuration.ConfigurationBuilder()
@@ -130,7 +131,7 @@ public class SymbolWithSpaceValidatorTest {
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("I like 1*10.", 1)
+                        .addSentence(new Sentence("I like 1*10.", 1))
                         .build());
 
         Configuration conf = new Configuration.ConfigurationBuilder()

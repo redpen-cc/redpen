@@ -22,6 +22,7 @@ import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
+import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
@@ -42,9 +43,7 @@ public class SuccessiveWordValidatorTest {
                 documents.add(new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence(
-                                "the item is is a good.",
-                                1)
+                        .addSentence(new Sentence("the item is is a good.", 1))
                         .build());
 
         RedPen redPen = new RedPen(config);
@@ -62,7 +61,7 @@ public class SuccessiveWordValidatorTest {
                 documents.add(new Document.DocumentBuilder(new JapaneseTokenizer())
                 .addSection(1)
                 .addParagraph()
-                .addSentence("私はは嬉しい.", 1)
+                .addSentence(new Sentence("私はは嬉しい.", 1))
                 .build());
 
         RedPen redPen = new RedPen(config);
@@ -80,7 +79,7 @@ public class SuccessiveWordValidatorTest {
                 documents.add(new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("the item is a item good.", 1)
+                        .addSentence(new Sentence("the item is a item good.", 1))
                         .build());
 
         RedPen redPen = new RedPen(config);

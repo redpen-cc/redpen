@@ -22,6 +22,7 @@ import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
+import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
@@ -42,7 +43,7 @@ public class StartWithCapitalLetterValidatorTest {
         documents.add(new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()
-                .addSentence("this is it.", 1)
+                .addSentence(new Sentence("this is it.", 1))
                 .build());
         Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter"))
@@ -60,7 +61,7 @@ public class StartWithCapitalLetterValidatorTest {
         documents.add(new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()
-                .addSentence("This is it.", 1)
+                .addSentence(new Sentence("This is it.", 1))
                 .build());
         Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter"))
@@ -78,7 +79,7 @@ public class StartWithCapitalLetterValidatorTest {
         documents.add(new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()
-                .addSentence("iPhone is a mobile computer.", 1)
+                .addSentence(new Sentence("iPhone is a mobile computer.", 1))
                 .build());
         Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter").addAttribute("list", "iPhone"))
@@ -96,7 +97,7 @@ public class StartWithCapitalLetterValidatorTest {
         documents.add(new Document.DocumentBuilder(new JapaneseTokenizer())
                 .addSection(1)
                 .addParagraph()
-                .addSentence("iPhone はカッコイイ．", 1)
+                .addSentence(new Sentence("iPhone はカッコイイ．", 1))
                 .build());
         Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter").addAttribute("list", "iPhone"))
@@ -114,7 +115,7 @@ public class StartWithCapitalLetterValidatorTest {
         documents.add(new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()
-                .addSentence(" iPhone is a mobile computer.", 1)
+                .addSentence(new Sentence(" iPhone is a mobile computer.", 1))
                 .build());
         Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter").addAttribute("list", "iPhone"))
@@ -132,7 +133,7 @@ public class StartWithCapitalLetterValidatorTest {
         documents.add(new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()
-                .addSentence("", 1)
+                .addSentence(new Sentence("", 1))
                 .build());
         Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter").addAttribute("list", "iPhone"))
@@ -154,7 +155,7 @@ public class StartWithCapitalLetterValidatorTest {
         documents.add(new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()
-                .addSentence("mixi is a Japanese company.", 1)
+                .addSentence(new Sentence("mixi is a Japanese company.", 1))
                 .build());
 
         RedPen redPen = new RedPen(config);
@@ -173,8 +174,8 @@ public class StartWithCapitalLetterValidatorTest {
         documents.add(new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()
-                .addSentence("This is true.", 1)
-                .addSentence(" that is also true.", 1)
+                .addSentence(new Sentence("This is true.", 1))
+                .addSentence(new Sentence(" that is also true.", 1))
                 .build());
 
         RedPen redPen = new RedPen(config);

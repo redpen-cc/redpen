@@ -22,6 +22,7 @@ import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
+import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
@@ -42,7 +43,7 @@ public class DoubledWordValidatorTest {
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("the good item is a good example.", 1)
+                        .addSentence(new Sentence("the good item is a good example.", 1))
                         .build());
 
         RedPen redPen = new RedPen(config);
@@ -60,7 +61,7 @@ public class DoubledWordValidatorTest {
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("That is true, as far as I know.", 1)
+                        .addSentence(new Sentence("That is true, as far as I know.", 1))
                         .build());
 
         RedPen redPen = new RedPen(config);
@@ -79,7 +80,7 @@ public class DoubledWordValidatorTest {
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("RedPen is RedPen right?", 1)
+                        .addSentence(new Sentence("RedPen is RedPen right?", 1))
                         .build());
 
         RedPen redPen = new RedPen(config);
@@ -98,7 +99,7 @@ public class DoubledWordValidatorTest {
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("redPen is redPen right?", 1)
+                        .addSentence(new Sentence("redPen is redPen right?", 1))
                         .build());
 
         RedPen redPen = new RedPen(config);
@@ -116,7 +117,7 @@ public class DoubledWordValidatorTest {
                 new Document.DocumentBuilder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("それは真実であり，それが正しい", 1)
+                        .addSentence(new Sentence("それは真実であり，それが正しい", 1))
                         .build());
 
         RedPen redPen = new RedPen(config);

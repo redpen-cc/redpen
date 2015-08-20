@@ -22,6 +22,7 @@ import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
+import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -44,11 +45,11 @@ public class DuplicatedSectionValidatorTest {
                         .addSection(1)
                         .addSectionHeader("this is header")
                         .addParagraph()
-                        .addSentence("he is a super man.", 1)
+                        .addSentence(new Sentence("he is a super man.", 1))
                         .addSection(1)
                         .addSectionHeader("this is header 2")
                         .addParagraph()
-                        .addSentence("he is a super man.", 2)
+                        .addSentence(new Sentence("he is a super man.", 2))
                         .build());
 
         RedPen redPen = new RedPen(config);
@@ -69,11 +70,11 @@ public class DuplicatedSectionValidatorTest {
                         .addSection(1)
                         .addSectionHeader("foobar")
                         .addParagraph()
-                        .addSentence("baz baz baz", 1)
+                        .addSentence(new Sentence("baz baz baz", 1))
                         .addSection(1)
                         .addSectionHeader("aho")
                         .addParagraph()
-                        .addSentence("zoo zoo zoo", 2)
+                        .addSentence(new Sentence("zoo zoo zoo", 2))
                         .build());
 
         RedPen redPen = new RedPen(config);
@@ -93,11 +94,11 @@ public class DuplicatedSectionValidatorTest {
                         .addSection(1)
                         .addSectionHeader("this is header.")
                         .addParagraph()
-                        .addSentence("he is a super man.", 1)
+                        .addSentence(new Sentence("he is a super man.", 1))
                         .addSection(1)
                         .addSectionHeader("this is header.")
                         .addParagraph()
-                        .addSentence("he is a super man.", 2)
+                        .addSentence(new Sentence("he is a super man.", 2))
                         .build());
 
         RedPen redPen = new RedPen(config);
@@ -118,11 +119,11 @@ public class DuplicatedSectionValidatorTest {
                 .addSection(1)
                 .addSectionHeader("foobar")
                 .addParagraph()
-                .addSentence("baz foo foo", 1)
+                .addSentence(new Sentence("baz foo foo", 1))
                 .addSection(1)
                 .addSectionHeader("aho")
                 .addParagraph()
-                .addSentence("baz zoo zoo", 2)
+                .addSentence(new Sentence("baz zoo zoo", 2))
                 .build());
 
         RedPen redPen = new RedPen(config);
