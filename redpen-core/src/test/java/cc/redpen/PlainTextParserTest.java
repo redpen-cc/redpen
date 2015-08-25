@@ -201,9 +201,9 @@ public class PlainTextParserTest {
         }
 
         // make sure the sentences tokenized correctly
-        assertEquals(6, paragraph1.getSentence(0).getTokens().size());
-        assertEquals(3, paragraph1.getSentence(1).getTokens().size());
-        assertEquals(12, paragraph1.getSentence(2).getTokens().size());
+        assertEquals(7, paragraph1.getSentence(0).getTokens().size());
+        assertEquals(4, paragraph1.getSentence(1).getTokens().size());
+        assertEquals(14, paragraph1.getSentence(2).getTokens().size());
         assertEquals(3, paragraph1.getSentence(3).getTokens().size());
 
         // ensure that we can recover the original position of a token
@@ -212,7 +212,7 @@ public class PlainTextParserTest {
         assertEquals(1, token.getOffset());
         assertEquals(new LineOffset(1, 47), paragraph1.getSentence(2).getOffset(token.getOffset()).get());
 
-        token = paragraph1.getSentence(2).getTokens().get(8); // line 3, offset 0, "crater"
+        token = paragraph1.getSentence(2).getTokens().get(9); // line 3, offset 0, "crater"
         assertEquals("crater", token.getSurface());
         assertEquals(53, token.getOffset());
         assertEquals(new LineOffset(3, 0), paragraph1.getSentence(2).getOffset(token.getOffset()).get());
