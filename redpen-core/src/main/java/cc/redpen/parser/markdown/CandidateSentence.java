@@ -37,12 +37,12 @@ final public class CandidateSentence {
 
     private List<LineOffset> offsetMap;
 
-    CandidateSentence(int lineNum,
+    public CandidateSentence(int lineNum,
                       String content, String link) {
         this(lineNum, content, link, 0);
     }
 
-    CandidateSentence(int lineNum, String content, String link,
+    public CandidateSentence(int lineNum, String content, String link,
             int positionOffset) {
         this.lineNum = lineNum;
         this.content = content;
