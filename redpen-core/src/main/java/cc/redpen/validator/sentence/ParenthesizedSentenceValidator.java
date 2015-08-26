@@ -32,15 +32,15 @@ public class ParenthesizedSentenceValidator extends Validator {
     private static final String CLOSE_PARENS = ")）";
 
     private int nestingLevelMax = 2;
-    private int subsentenceCountMax = 0;
+    private int subsentenceCountMax = 1;
     private int subsentenceLengthMax = 3;
 
     @Override
     protected void init() throws RedPenException {
         super.init();
-        nestingLevelMax = getConfigAttributeAsInt("subsentence_nesting_level_max", 1);
-        subsentenceCountMax = getConfigAttributeAsInt("subsentence_count_max", 0);
-        subsentenceLengthMax = getConfigAttributeAsInt("subsentence_length_max", 3);
+        nestingLevelMax = getConfigAttributeAsInt("max_nesting_level", 1);
+        subsentenceCountMax = getConfigAttributeAsInt("max_count", 1);
+        subsentenceLengthMax = getConfigAttributeAsInt("max_length", 3);
     }
 
     @Override

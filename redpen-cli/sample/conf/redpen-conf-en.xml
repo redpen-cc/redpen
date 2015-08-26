@@ -16,5 +16,14 @@
         <validator name="EndOfSentence" />
         <validator name="SpaceBeginningOfSentence" />
         <validator name="JavaScript" />
+
+        <validator name="FrequentSentenceStart"/>
+        <validator name="FrequentlyUsedWord"/>
+        <validator name="UnexpandedAcronym"/>
+        <validator name="NumberFormat"/>
+        <validator name="ParenthesizedSentence"/>
+        <validator name="GenderSpecificPronoun"/>
+        <validator name="Hyphenation"/>
+        <validator name="WeakExpression"/>
     </validators>
 </redpen-conf>

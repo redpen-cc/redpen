@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Check that too many sentences don't start with the same few words
+ * Check that too many sentences don't start with the same words
  */
 public class FrequentSentenceStartValidator extends Validator {
 
@@ -39,9 +39,9 @@ public class FrequentSentenceStartValidator extends Validator {
     @Override
     protected void init() throws RedPenException {
         super.init();
-        leadingWordLimit = getConfigAttributeAsInt("leadingWordLimit", leadingWordLimit);
-        percentageThreshold = getConfigAttributeAsInt("percentageThreshold", percentageThreshold);
-        minimumSentenceCount = getConfigAttributeAsInt("minimumSentenceCount", minimumSentenceCount);
+        leadingWordLimit = getConfigAttributeAsInt("leading_word_limit", leadingWordLimit);
+        percentageThreshold = getConfigAttributeAsInt("percentage_threshold", percentageThreshold);
+        minimumSentenceCount = getConfigAttributeAsInt("min_sentence_count", minimumSentenceCount);
     }
 
     private void processSentence(Sentence sentence) {
@@ -82,6 +82,5 @@ public class FrequentSentenceStartValidator extends Validator {
                 }
             }
         }
-
     }
 }

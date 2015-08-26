@@ -33,7 +33,7 @@ public class NumberFormatValidator extends Validator {
     @Override
     protected void init() throws RedPenException {
         super.init();
-        boolean decimalDelimiterComma = getConfigAttributeAsBoolean("decimal_delimiter_comma", false);
+        boolean decimalDelimiterComma = getConfigAttributeAsBoolean("decimal_delimiter_is_comma", false);
         if (decimalDelimiterComma) {
             decimalDelimiters = COMMA_DELIMITERS;
         } else {

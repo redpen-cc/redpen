@@ -33,8 +33,7 @@ import java.util.Set;
 public class SpellingValidator extends Validator {
 
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/spellchecker";
-    private static final Logger LOG =
-            LoggerFactory.getLogger(SpellingValidator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SpellingValidator.class);
     private static String skipCharacters = "+~-(),\".";
     // TODO: replace more memory efficient data structure
     private Set<String> defaultDictionary;
@@ -93,7 +92,8 @@ public class SpellingValidator extends Validator {
 
         SpellingValidator that = (SpellingValidator) o;
 
-        if (defaultDictionary != null ? !defaultDictionary.equals(that.defaultDictionary) : that.defaultDictionary != null) return false;
+        if (defaultDictionary != null ? !defaultDictionary.equals(that.defaultDictionary) : that.defaultDictionary != null)
+            return false;
         return !(customDictionary != null ? !customDictionary.equals(that.customDictionary) : that.customDictionary != null);
 
     }

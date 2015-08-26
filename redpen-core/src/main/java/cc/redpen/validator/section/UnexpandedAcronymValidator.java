@@ -45,7 +45,7 @@ public class UnexpandedAcronymValidator extends Validator {
     @Override
     protected void init() throws RedPenException {
         super.init();
-        minAcronymLength = getConfigAttributeAsInt("minAcronymLength", MIN_ACRONYM_LENGTH_DEFAULT);
+        minAcronymLength = getConfigAttributeAsInt("min_acronym_length", MIN_ACRONYM_LENGTH_DEFAULT);
         smallWords.add("of");
         smallWords.add("the");
         smallWords.add("for");
