@@ -20,10 +20,8 @@ package cc.redpen.validator.sentence;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.StringUtils;
-import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -76,35 +74,26 @@ final public class KatakanaEndHyphenValidator extends Validator {
     }
 
     @Override
-    public void validate(List<ValidationError> errors, Sentence sentence) {
-        List<ValidationError> result;
+    public void validate(Sentence sentence) {
         StringBuilder katakana = new StringBuilder("");
         for (int i = 0; i < sentence.getContent().length(); i++) {
             char c = sentence.getContent().charAt(i);
             if (StringUtils.isKatakana(c) && c != KATAKANA_MIDDLE_DOT) {
                 katakana.append(c);
             } else {
-                result = this.checkKatakanaEndHyphen(sentence, katakana, i-1);
-                if (result != null) {
-                    errors.addAll(result);
-                }
+                this.checkKatakanaEndHyphen(sentence, katakana, i-1);
                 katakana.delete(0, katakana.length());
             }
         }
-        result = this.checkKatakanaEndHyphen(sentence, katakana, sentence.getContent().length() - 1);
-        if (result != null) {
-            errors.addAll(result);
-        }
+        this.checkKatakanaEndHyphen(sentence, katakana, sentence.getContent().length() - 1);
     }
 
-    private List<ValidationError> checkKatakanaEndHyphen(Sentence sentence,
+    private void checkKatakanaEndHyphen(Sentence sentence,
                                                          StringBuilder katakana,
                                                          int position) {
-        List<ValidationError> errors = new ArrayList<>();
         if (isKatakanaEndHyphen(katakana)) {
-            errors.add(createValidationErrorWithPosition(sentence, sentence.getOffset(position), sentence.getOffset(position + 1), katakana.toString()));
+            addValidationErrorWithPosition(sentence, sentence.getOffset(position), sentence.getOffset(position + 1), katakana.toString());
         }
-        return errors;
     }
 
     @Override

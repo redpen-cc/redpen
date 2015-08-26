@@ -46,7 +46,7 @@ import java.util.Map;
 public class RedPen {
     private static final Logger LOG = LoggerFactory.getLogger(RedPen.class);
 
-    public static final String VERSION = "1.1.2";
+    public static final String VERSION = "1.3.0";
 
     private final Configuration configuration;
     private final SentenceExtractor sentenceExtractor;
@@ -176,7 +176,7 @@ public class RedPen {
     private void runDocumentValidators(List<Document> documents, Map<Document, List<ValidationError>> docErrorsMap) {
         for (Document document : documents) {
             List<ValidationError> errors = new ArrayList<>();
-            validators.forEach(e -> e.validate(errors, document));
+            validators.forEach(e -> {e.setErrorList(errors); e.validate(document);});
             docErrorsMap.put(document, errors);
         }
     }
@@ -191,10 +191,8 @@ public class RedPen {
         // run Section validator to documents
         for (Document document : documents) {
             for (Section section : document) {
-                List<ValidationError> newErrors = new ArrayList<>();
-                validators.forEach(e -> e.validate(newErrors, section));
-                List<ValidationError> validationErrors = docErrorsMap.get(document);
-                validationErrors.addAll(newErrors);
+                List<ValidationError> errors = docErrorsMap.get(document);
+                validators.forEach(e -> {e.setErrorList(errors); e.validate(section);});
             }
         }
     }
@@ -222,22 +220,21 @@ public class RedPen {
         // run Sentence Validators to documents
         for (Document document : documents) {
             for (Section section : document) {
-                List<ValidationError> newErrors = new ArrayList<>();
+                List<ValidationError> errors = docErrorsMap.get(document);
 
                 // apply SentenceValidations to section
                 // apply paragraphs
                 for (Paragraph paragraph : section.getParagraphs()) {
-                    validators.forEach(e -> paragraph.getSentences().forEach(sentence -> e.validate(newErrors, sentence)));
+                    validators.forEach(e ->{e.setErrorList(errors);  paragraph.getSentences().forEach(sentence -> e.validate(sentence));});
                 }
                 // apply to section header
-                validators.forEach(e -> section.getHeaderContents().forEach(sentence -> e.validate(newErrors, sentence)));
+                validators.forEach(e -> {e.setErrorList(errors); section.getHeaderContents().forEach(sentence -> e.validate(sentence));});
                 // apply to lists
                 for (ListBlock listBlock : section.getListBlocks()) {
                     for (ListElement listElement : listBlock.getListElements()) {
-                        validators.forEach(e -> listElement.getSentences().forEach(sentence -> e.validate(newErrors, sentence)));
+                        validators.forEach(e -> {e.setErrorList(errors); listElement.getSentences().forEach(sentence -> e.validate(sentence));});
                     }
                 }
-                docErrorsMap.get(document).addAll(newErrors);
             }
         }
     }

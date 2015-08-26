@@ -2,7 +2,7 @@
     <id>assembled</id>
     <formats>
         <format>tar.gz</format>
-        <format>zip</format>
+        <format>dir</format>
     </formats>
     <fileSets>
         <fileSet>
@@ -15,6 +15,13 @@
         <fileSet>
             <directory>sample/conf</directory>
             <outputDirectory>/conf</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>sample/js</directory>
+            <outputDirectory>/js</outputDirectory>
             <includes>
                 <include>**/*</include>
             </includes>

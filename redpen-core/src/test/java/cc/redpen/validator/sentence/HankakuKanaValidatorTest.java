@@ -15,7 +15,8 @@ public class HankakuKanaValidatorTest {
     public void testDetectHankakuKana() {
         Validator validator = new HankakuKanaValidator();
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, new Sentence("岩の木陰にﾊﾅが咲いている", 0));
+        validator.setErrorList(errors);
+        validator.validate(new Sentence("岩の木陰にﾊﾅが咲いている", 0));
         assertEquals(2, errors.size());
     }
 
@@ -23,7 +24,8 @@ public class HankakuKanaValidatorTest {
     public void testRunValidatorWithoutHanakakuKana() {
         Validator validator = new HankakuKanaValidator();
         List<ValidationError> errors = new ArrayList<>();
-        validator.validate(errors, new Sentence("岩の木陰にハナが咲いている", 0));
+        validator.setErrorList(errors);
+        validator.validate(new Sentence("岩の木陰にハナが咲いている", 0));
         assertEquals(0, errors.size());
     }
 }

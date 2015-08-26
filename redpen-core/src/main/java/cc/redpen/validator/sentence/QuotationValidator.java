@@ -20,7 +20,6 @@ package cc.redpen.validator.sentence;
 import cc.redpen.RedPenException;
 import cc.redpen.config.Symbol;
 import cc.redpen.model.Sentence;
-import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 
 import java.util.ArrayList;
@@ -56,17 +55,12 @@ public class QuotationValidator extends Validator {
     }
 
     @Override
-    public void validate(List<ValidationError> errors, Sentence sentence) {
+    public void validate(Sentence sentence) {
         // validate single quotation
-        List<ValidationError> result = this.checkQuotation(sentence,
-                leftSingleQuotationMark, rightSingleQuotationMark);
-        if (result != null) {
-            errors.addAll(result);
-        }
+        this.checkQuotation(sentence, leftSingleQuotationMark, rightSingleQuotationMark);
 
         // validate double quotation
-        errors.addAll(this.checkQuotation(sentence,
-                leftDoubleQuotationMark, rightDoubleQuotationMark));
+        this.checkQuotation(sentence, leftDoubleQuotationMark, rightDoubleQuotationMark);
     }
 
     @Override
@@ -91,11 +85,10 @@ public class QuotationValidator extends Validator {
         }
     }
 
-    private List<ValidationError> checkQuotation(Sentence sentence,
+    private void checkQuotation(Sentence sentence,
                                                  Symbol leftQuotation,
                                                  Symbol rightQuotation) {
         String sentenceString = sentence.getContent();
-        List<ValidationError> errors = new ArrayList<>();
         int leftPosition = 0;
         int rightPosition = 0;
         while (leftPosition >= 0 && rightPosition < sentenceString.length()) {
@@ -115,12 +108,12 @@ public class QuotationValidator extends Validator {
 
             // validate if left and right quote pair exists
             if (leftPosition >= 0 && rightPosition < 0) {
-                errors.add(createValidationError("RightExist", sentence));
+                addValidationError("RightExist", sentence);
                 break;
             }
 
             if (leftPosition < 0 && rightPosition >= 0) {
-                errors.add(createValidationError("LeftExist", sentence));
+                addValidationError("LeftExist", sentence);
                 break;
             }
 
@@ -134,27 +127,26 @@ public class QuotationValidator extends Validator {
                     leftPosition + 1);
 
             if (nextLeftPosition < rightPosition && nextLeftPosition > 0) {
-                errors.add(createValidationError("DoubleRight", sentence));
+                addValidationError("DoubleRight", sentence);
             }
 
             if (nextRightPosition < leftPosition && nextRightPosition > 0) {
-                errors.add(createValidationError("DoubleLeft", sentence));
+                addValidationError("DoubleLeft", sentence);
             }
 
             // validate if quotes have white spaces
             if (leftPosition > 0 && leftQuotation.isNeedBeforeSpace()
                     && (sentenceString.charAt(leftPosition - 1) != ' ')) {
-                errors.add(createValidationError("LeftSpace", sentence));
+                addValidationError("LeftSpace", sentence);
             }
 
             if (rightPosition > 0 && rightPosition < sentenceString.length() - 1
                     && rightQuotation.isNeedAfterSpace()
                     && (sentenceString.charAt(rightPosition + 1) != ' '
                     && sentenceString.charAt(rightPosition + 1) != this.period)) {
-                errors.add(createValidationError("RightSpace", sentence));
+                addValidationError("RightSpace", sentence);
             }
         }
-        return errors;
     }
 
     private int getQuotePosition(String sentenceStr, char quote,

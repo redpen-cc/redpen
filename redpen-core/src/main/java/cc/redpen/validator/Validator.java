@@ -27,10 +27,10 @@ import cc.redpen.model.Sentence;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.util.DictionaryLoader;
+import cc.redpen.util.RuleExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.text.MessageFormat;
 import java.util.*;
 
@@ -42,12 +42,18 @@ public abstract class Validator {
     private static final Logger LOG = LoggerFactory.getLogger(Validator.class);
     private final static ResourceBundle.Control fallbackControl = ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_DEFAULT);
 
-    private Optional<ResourceBundle> errorMessages = Optional.empty();
+    private ResourceBundle errorMessages = null;
     private ValidatorConfiguration config;
     private SymbolTable symbolTable;
 
     public Validator() {
         setLocale(Locale.getDefault());
+    }
+
+    private List<ValidationError> errors;
+
+    public void setErrorList(List<ValidationError> errors){
+        this.errors = errors;
     }
 
     /**
@@ -72,30 +78,27 @@ public abstract class Validator {
      * validate the input document and returns the invalid points.
      * {@link cc.redpen.validator.Validator} provides empty implementation. Validator implementation validates documents can override this method.
      *
-     * @param errorList list of validation errors. Validator implementations will add Validation errors to this list.
      * @param document  input
      */
-    public void validate(List<ValidationError> errorList, Document document) {
+    public void validate(Document document) {
     }
 
     /**
      * validate the input document and returns the invalid points.
      * {@link cc.redpen.validator.Validator} provides empty implementation. Validator implementation validates sentences can override this method.
      *
-     * @param errors   list of validation errors. Validator implementations will add Validation errors to this list.
      * @param sentence input
      */
-    public void validate(List<ValidationError> errors, Sentence sentence) {
+    public void validate(Sentence sentence) {
     }
 
     /**
      * validate the input document and returns the invalid points.
      * {@link cc.redpen.validator.Validator} provides empty implementation. Validator implementation validates sections can override this method.
      *
-     * @param errors  list of validation errors. Validator implementations will add Validation errors to this list.
      * @param section input
      */
-    public void validate(List<ValidationError> errors, Section section) {
+    public void validate(Section section) {
     }
 
     /**
@@ -115,11 +118,15 @@ public abstract class Validator {
     }
 
     void setLocale(Locale locale) {
+        // getPackage() would return null for default package
+        String packageName = this.getClass().getPackage() != null ? this.getClass().getPackage().getName() : "";
         try {
-            // getPackage() would return null for default package
-            String packageName = this.getClass().getPackage() != null ? this.getClass().getPackage().getName() : "";
-            errorMessages = Optional.ofNullable(ResourceBundle.getBundle(packageName + ".error-messages", locale, fallbackControl));
+            errorMessages = ResourceBundle.getBundle(packageName + "." + this.getClass().getSimpleName(), locale, fallbackControl);
         } catch (MissingResourceException ignore) {
+            try {
+                errorMessages = ResourceBundle.getBundle(packageName + ".error-messages", locale, fallbackControl);
+            } catch (MissingResourceException ignoreAgain) {
+            }
         }
     }
 
@@ -198,10 +205,9 @@ public abstract class Validator {
      *
      * @param sentenceWithError sentence
      * @param args              objects to format
-     * @return ValidationError with localized message
      */
-    protected ValidationError createValidationError(Sentence sentenceWithError, Object... args) {
-        return new ValidationError(this.getClass(), getLocalizedErrorMessage(Optional.empty(), args), sentenceWithError);
+    protected void addValidationError(Sentence sentenceWithError, Object... args) {
+        errors.add(new ValidationError(this.getClass(), getLocalizedErrorMessage(Optional.empty(), args), sentenceWithError));
     }
 
     /**
@@ -210,10 +216,9 @@ public abstract class Validator {
      * @param messageKey        messageKey
      * @param sentenceWithError sentence
      * @param args              objects to format
-     * @return ValidationError with localized message
      */
-    protected ValidationError createValidationError(String messageKey, Sentence sentenceWithError, Object... args) {
-        return new ValidationError(this.getClass(), getLocalizedErrorMessage(Optional.of(messageKey), args), sentenceWithError);
+    protected void addValidationError(String messageKey, Sentence sentenceWithError, Object... args) {
+        errors.add(new ValidationError(this.getClass(), getLocalizedErrorMessage(Optional.of(messageKey), args), sentenceWithError));
     }
 
     /**
@@ -221,10 +226,9 @@ public abstract class Validator {
      *
      * @param sentenceWithError sentence
      * @param token             the TokenElement that has the error
-     * @return ValidationError with localized message
      */
-    protected ValidationError createValidationErrorFromToken(Sentence sentenceWithError, TokenElement token) {
-        return createValidationErrorWithPosition(
+    protected void addValidationErrorFromToken(Sentence sentenceWithError, TokenElement token) {
+        addValidationErrorWithPosition(
                 sentenceWithError,
                 sentenceWithError.getOffset(token.getOffset()),
                 sentenceWithError.getOffset(token.getOffset() + token.getSurface().length()),
@@ -239,11 +243,10 @@ public abstract class Validator {
      * @param start             start position
      * @param end               end position
      * @param args              objects to format
-     * @return ValidationError with localized message
      */
-    protected ValidationError createValidationErrorWithPosition(Sentence sentenceWithError,
-                                                                Optional<LineOffset> start, Optional<LineOffset> end, Object... args) {
-        return new ValidationError(this.getClass(), getLocalizedErrorMessage(Optional.empty(), args), sentenceWithError, start, end);
+    protected void addValidationErrorWithPosition(Sentence sentenceWithError,
+                                                  Optional<LineOffset> start, Optional<LineOffset> end, Object... args) {
+        errors.add(new ValidationError(this.getClass(), getLocalizedErrorMessage(Optional.empty(), args), sentenceWithError, start, end));
     }
 
     /**
@@ -254,11 +257,10 @@ public abstract class Validator {
      * @param start             start position
      * @param end               end position
      * @param args              objects to format
-     * @return ValidationError with localized message
      */
-    protected ValidationError createValidationErrorWithPosition(String messageKey, Sentence sentenceWithError,
-                                                                Optional<LineOffset> start, Optional<LineOffset> end, Object... args) {
-        return new ValidationError(this.getClass(), getLocalizedErrorMessage(Optional.of(messageKey), args), sentenceWithError, start, end);
+    protected void addValidationErrorWithPosition(String messageKey, Sentence sentenceWithError,
+                                                  Optional<LineOffset> start, Optional<LineOffset> end, Object... args) {
+        errors.add(new ValidationError(this.getClass(), getLocalizedErrorMessage(Optional.of(messageKey), args), sentenceWithError, start, end));
     }
 
     /**
@@ -268,10 +270,10 @@ public abstract class Validator {
      * @param args objects to format
      * @return localized error message
      */
-    private String getLocalizedErrorMessage(Optional<String> key, Object... args) {
-        if (errorMessages.isPresent()) {
+    protected String getLocalizedErrorMessage(Optional<String> key, Object... args) {
+        if (errorMessages != null) {
             String suffix = key.isPresent() ? "." + key.get() : "";
-            return MessageFormat.format(errorMessages.get().getString(this.getClass().getSimpleName() + suffix), args);
+            return MessageFormat.format(errorMessages.getString(this.getClass().getSimpleName() + suffix), args);
         } else {
             throw new AssertionError("message resource not found.");
         }
@@ -289,14 +291,21 @@ public abstract class Validator {
                     LOG.error("Skip to load line... Invalid line: " + line);
                 }
             });
+
+    /**
+     * Resource Extractor loads rule dictionary
+     */
+    protected final static DictionaryLoader<Set<ExpressionRule>> RULE =
+            new DictionaryLoader<>(HashSet::new, (set, line) -> set.add(RuleExtractor.run(line)));
+
     /**
      * Resource Extractor loads word list
      */
     protected final static DictionaryLoader<Set<String>> WORD_LIST =
             new DictionaryLoader<>(HashSet::new, Set::add);
     /**
-     * Resource Extractor loads word list while lowercasing lines
+     * Resource Extractor loads word list while lowercasting lines
      */
-    protected final static DictionaryLoader<Set<String>> WORD_LSIT_LOWERCASED =
+    protected final static DictionaryLoader<Set<String>> WORD_LIST_LOWERCASED =
             new DictionaryLoader<>(HashSet::new, (set, line) -> set.add(line.toLowerCase()));
 }

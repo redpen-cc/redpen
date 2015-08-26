@@ -35,7 +35,8 @@ public class WordNumberValidatorTest {
         Sentence str = new Sentence(
                 "this sentence is short.", 0);
         List<ValidationError> errors = new ArrayList<>();
-        maxWordNumberValidator.validate(errors, str);
+        maxWordNumberValidator.setErrorList(errors);
+        maxWordNumberValidator.validate(str);
         assertNotNull(errors);
         assertEquals(0, errors.size());
     }
@@ -47,7 +48,8 @@ public class WordNumberValidatorTest {
                 "this sentence is very very very very very very very very very very" +
                         " very very very very very very very very very very very very very very long", 0);
         List<ValidationError> errors = new ArrayList<>();
-        maxWordNumberValidator.validate(errors, str);
+        maxWordNumberValidator.setErrorList(errors);
+        maxWordNumberValidator.validate(str);
         assertNotNull(errors);
         assertEquals(0, errors.size());
     }
@@ -57,7 +59,8 @@ public class WordNumberValidatorTest {
         WordNumberValidator maxWordNumberValidator = new WordNumberValidator();
         Sentence str = new Sentence("", 0);
         List<ValidationError> errors = new ArrayList<>();
-        maxWordNumberValidator.validate(errors, str);
+        maxWordNumberValidator.setErrorList(errors);
+        maxWordNumberValidator.validate(str);
         assertNotNull(errors);
         assertEquals(0, errors.size());
     }

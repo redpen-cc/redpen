@@ -1,0 +1,29 @@
+<assembly>
+    <id>assembled</id>
+    <formats>
+        <format>tar.gz</format>
+    </formats>
+    <fileSets>
+        <fileSet>
+            <directory>../redpen-cli/target/redpen-cli-${version}-assembled/redpen-cli-${version}</directory>
+            <outputDirectory>/</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../redpen-server/target</directory>
+            <outputDirectory>/bin/</outputDirectory>
+            <includes>
+                <include>redpen-server.war</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../redpen-server/bin/</directory>
+            <outputDirectory>/bin/</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+</assembly>

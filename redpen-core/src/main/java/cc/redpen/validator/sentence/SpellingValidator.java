@@ -20,7 +20,6 @@ package cc.redpen.validator.sentence;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +27,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -47,7 +45,7 @@ public class SpellingValidator extends Validator {
     protected void init() throws RedPenException {
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
                 + "/spellchecker-" + getSymbolTable().getLang() + ".dat";
-        defaultDictionary = WORD_LSIT_LOWERCASED.loadCachedFromResource(defaultDictionaryFile, "spell dictionary");
+        defaultDictionary = WORD_LIST_LOWERCASED.loadCachedFromResource(defaultDictionaryFile, "spell dictionary");
 
         customDictionary = new HashSet<>();
         Optional<String> listStr = getConfigAttribute("list");
@@ -60,12 +58,12 @@ public class SpellingValidator extends Validator {
         Optional<String> userDictionaryFile = getConfigAttribute("dict");
         if (userDictionaryFile.isPresent()) {
             String f = userDictionaryFile.get();
-            customDictionary.addAll(WORD_LSIT_LOWERCASED.loadCachedFromFile(new File(f), "SpellingValidator user dictionary"));
+            customDictionary.addAll(WORD_LIST_LOWERCASED.loadCachedFromFile(new File(f), "SpellingValidator user dictionary"));
         }
     }
 
     @Override
-    public void validate(List<ValidationError> errors, Sentence sentence) {
+    public void validate(Sentence sentence) {
         for (TokenElement token : sentence.getTokens()) {
             String surface = normalize(token.getSurface());
             if (surface.length() == 0) {
@@ -73,7 +71,7 @@ public class SpellingValidator extends Validator {
             }
 
             if (!this.defaultDictionary.contains(surface) && !this.customDictionary.contains(surface)) {
-                errors.add(createValidationErrorFromToken(sentence, token));
+                addValidationErrorFromToken(sentence, token);
             }
         }
     }

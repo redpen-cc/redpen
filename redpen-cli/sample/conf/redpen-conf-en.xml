@@ -15,5 +15,6 @@
         <validator name="SuccessiveWord" />
         <validator name="EndOfSentence" />
         <validator name="SpaceBeginningOfSentence" />
+        <validator name="JavaScript" />
     </validators>
 </redpen-conf>

@@ -28,7 +28,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -39,7 +41,7 @@ public final class Main {
 
     private static final String PROGRAM = "redpen-cli";
 
-    private static final String DEFAULT_CONFIG_NAME = "redpen-conf.xml";
+    private static final String DEFAULT_CONFIG_NAME = "redpen-conf";
 
     private static final int DEFAULT_LIMIT = 1;
 
@@ -63,7 +65,7 @@ public final class Main {
         options.addOption("h", "help", false, "Displays this help information and exits");
 
         options.addOption(OptionBuilder.withLongOpt("format")
-                .withDescription("Input file format")
+                .withDescription("Input file format (markdown,plain,wiki,asciidoc)")
                 .hasArg()
                 .withArgName("FORMAT")
                 .create("f"));
@@ -75,7 +77,7 @@ public final class Main {
                 .create("c"));
 
         options.addOption(OptionBuilder.withLongOpt("result-format")
-                .withDescription("Output result format")
+                .withDescription("Output result format (json,json2,plain,plain2,xml)")
                 .hasArg()
                 .withArgName("RESULT FORMAT")
                 .create("r"));
@@ -128,8 +130,15 @@ public final class Main {
 
         String[] inputFileNames = commandLine.getArgs();
         File[] inputFiles = new File[inputFileNames.length];
+        boolean markdownOnly = true;
         for (int i = 0; i < inputFileNames.length; i++) {
             inputFiles[i] = new File(inputFileNames[i]);
+            if (!inputFileNames[i].endsWith(".md")) {
+                markdownOnly = false;
+            }
+        }
+        if (!commandLine.hasOption("f") && markdownOnly) {
+            inputFormat = "markdown";
         }
 
         DocumentParser parser = DocumentParser.of(inputFormat);
@@ -186,29 +195,38 @@ public final class Main {
     }
 
     static File resolveConfigLocation(String configFileName) {
-        File path = toFileIfExists(configFileName);
-        if (path == null) {
-            path = toFileIfExists(DEFAULT_CONFIG_NAME);
+        List<String> pathCandidates = new ArrayList<>();
+        if (configFileName != null) {
+            pathCandidates.add(configFileName);
         }
-        if (path == null) {
-            String redpenHome = System.getenv("REDPEN_HOME");
-            if (redpenHome != null) {
-                path = toFileIfExists(redpenHome + File.separator + DEFAULT_CONFIG_NAME);
-            }
+        pathCandidates.add(DEFAULT_CONFIG_NAME + ".xml");
+        pathCandidates.add(DEFAULT_CONFIG_NAME + "-" + Locale.getDefault().getLanguage() + ".xml");
+        String redpenHome = System.getenv("REDPEN_HOME");
+        if (redpenHome != null) {
+            pathCandidates.add(redpenHome + File.separator + DEFAULT_CONFIG_NAME + ".xml");
+            pathCandidates.add(redpenHome + File.separator
+                    + DEFAULT_CONFIG_NAME + "-" + Locale.getDefault().getLanguage() + ".xml");
+            pathCandidates.add(redpenHome + File.separator + "conf" + File.separator + DEFAULT_CONFIG_NAME + ".xml");
+            pathCandidates.add(redpenHome + File.separator + "conf" + File.separator
+                    + DEFAULT_CONFIG_NAME + "-" + Locale.getDefault().getLanguage() + ".xml");
         }
-        return path;
+        File resolved = resolve(pathCandidates);
+        if (resolved != null && resolved.exists() && resolved.isFile()) {
+            LOG.info("Configuration file: {}", resolved.getAbsolutePath());
+        } else {
+            resolved = null;
+        }
+        return resolved;
     }
 
-    static File toFileIfExists(String path) {
-        File absolutePath = null;
-        if (path != null) {
-            File file = new File(path);
-            if (file.exists() && file.isFile()) {
-                absolutePath = file;
-            } else {
-                LOG.error("Configuration file is not found:" + path);
+    static File resolve(List<String> pathCandidates) {
+        File resolved;
+        for (String pathCandidate : pathCandidates) {
+            resolved = new File(pathCandidate);
+            if (resolved.exists() && resolved.isFile()) {
+                return resolved;
             }
         }
-        return absolutePath;
+        return null;
     }
 }

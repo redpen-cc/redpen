@@ -8,3 +8,5 @@
 * Shintaro Katafuchi <hot.chemistry21 at gmail.com>
 * Takahiro Yoshimura <altakey _at_ gmail.com>
 * Naoki Ainoya <ainonic _at_ gmail.com>
+* Gerrard Hocks
+* Kentaro Hayashi

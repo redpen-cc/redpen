@@ -278,6 +278,22 @@ public class PlainTextParserTest {
     }
 
     @Test
+    public void testPlainTextOffsets() {
+        String sampleText = "ラ、、になる。ラ、、\nになる。ラ、、になる。";
+        Document doc = generateDocument(sampleText, "ja");
+        Section section = doc.getLastSection();
+        List<Paragraph> paragraphs = extractParagraphs(section);
+        assertEquals(1, paragraphs.size());
+        assertEquals(3, getTotalSentenceCount(section));
+        Paragraph paragraph1 = paragraphs.get(0);
+
+        assertEquals(3, paragraph1.getNumberOfSentences());
+
+        assertEquals(7, paragraph1.getSentence(1).getStartPositionOffset());
+        assertEquals(1, paragraph1.getSentence(1).getLineNumber());
+    }
+
+    @Test
     public void testPlainTextReverseOffsets() {
         String sampleText = "お祖母さんの鉛筆は田の\n中にあります。お祖母さんの鉛筆が中にあるの\n田はどこですか？私の家\nの後ろあります";
         Document doc = generateDocument(sampleText, "ja");
@@ -328,7 +344,6 @@ public class PlainTextParserTest {
         assertEquals(1, errors.size());
         assertEquals("InvalidSymbol", errors.get(0).getValidatorName());
         assertEquals(19, errors.get(0).getSentence().getContent().length());
-        // plain text parser does not support error position.
         assertEquals(Optional.of(new LineOffset(1, 18)), errors.get(0).getStartPosition());
         assertEquals(Optional.of(new LineOffset(1, 19)), errors.get(0).getEndPosition());
     }

@@ -21,10 +21,9 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 public class MainTest {
 
@@ -49,6 +48,8 @@ public class MainTest {
         File defaultConfFile = new File(defaultConfPath);
         // create empty configuration file in the current directory
         if (defaultConfFile.createNewFile()) {
+            // ensure the file is deleted upon test failure
+            defaultConfFile.deleteOnExit();
             file = Main.resolveConfigLocation(defaultConfPath);
             // .//redpen-conf.xml exists
             assertNotNull(file);
@@ -56,10 +57,34 @@ public class MainTest {
             defaultConfFile.delete();
         }
 
+        String localeSpecificConfPath = "." + File.separator
+                + "redpen-conf-" + Locale.getDefault().getLanguage() + ".xml";
+        File localeSpecificConfFile = new File(localeSpecificConfPath);
+        // create empty configuration file in the current directory
+        if (localeSpecificConfFile.createNewFile()) {
+            // ensure the file is deleted upon test failure
+            localeSpecificConfFile.deleteOnExit();
+            // default config path resolves to locale specific config path
+            file = Main.resolveConfigLocation(defaultConfPath);
+            // .//redpen-conf-[lang].xml exists
+            assertNotNull(file);
+            // clean up config file in the current directory
+            localeSpecificConfFile.delete();
+        }
+
         // skipping test code for $REDPEN_HOME/redpen-conf.xml
         // environment variable cannot be set via Java program
     }
 
+    @Test
+    public void testPlugin() throws Exception {
+        String[] args = new String[]{
+                "-c", "sample/conf/redpen-conf-plugin.xml",
+                "sample/sample-doc/en/sampledoc-en.txt",
+                "-l", "1"
+        };
+        assertEquals(1, Main.run(args));
+    }
 
     @Test
     public void testMainWithoutParameters() throws RedPenException {

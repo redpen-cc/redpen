@@ -171,53 +171,45 @@ input[type="radio"], input[type="checkbox"] {
     background-color: white;
 }
 
-#redpen-editor {
+.redpen-superimposed-editor-panel {
     border-radius: 6px;
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
-    color: rgba(0, 0, 0, 0.7);
-    background-color: transparent;
-    line-height: 28px;
-    padding: 24px !important;
+    line-height: 28px !important;
+    padding: 12px !important;
     margin: 0 !important;
-    word-wrap: normal;
-    white-space: pre-wrap;
-    font-size: 19px;
+    word-wrap: normal !important;
+    white-space: pre-wrap !important;
+    word-break: normal !important;
+    font-size: 14px !important;
+    font-weight: normal !important;
+    font-family: monospace !important;
+
+    width: 100%;
+
     border: none !important;
     outline: none !important;
-    z-index: 2;
-    height: 100%;
-    width: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
     -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
     -moz-box-sizing: border-box; /* Firefox, other Gecko */
     box-sizing: border-box;
-    overflow-y: scroll;
+}
+
+#redpen-editor {
+    color: rgba(0, 0, 0, 0.9);
+    background-color: transparent;
+    height: 100%;
+    z-index: 2;
 }
 
 #redpen-editor-underlay {
-    border-radius: 6px;
-    overflow-y: scroll;
-
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-
-    line-height: 28px;
-    padding: 24px !important;
-    margin: 0 !important;
-    word-wrap: normal;
-    white-space: pre-wrap;
-    font-size: 19px;
-    background-color: #fff;
+    background-color: rgba(220, 255, 220, 0.4);
     color: transparent;
-    width: 100%;
-    border: none !important;
-    outline: none !important;
     z-index: 1;
 }
 
@@ -357,9 +349,10 @@ input[type="radio"], input[type="checkbox"] {
 
 .redpen-clear-button {
     position: absolute;
-    bottom: 2px;
-    right: 10px;
+    bottom: 3px;
+    right: 18px;
     z-index: 3;
+    color: #777;
 }
 
 .redpen-clear-button button {
@@ -434,7 +427,7 @@ input[type="radio"], input[type="checkbox"] {
 .redpen-symboltable {
     font-size: 11px;
     width: 100%;
-    text-align:right;
+    text-align: right;
 }
 
 .redpen-symboltable th {
@@ -445,7 +438,7 @@ input[type="radio"], input[type="checkbox"] {
     min-width: 32px;
 }
 
-.redpen-symboltable th:first-child,.redpen-symboltable td:first-child  {
+.redpen-symboltable th:first-child, .redpen-symboltable td:first-child {
     text-align: left;
 }
 
@@ -499,6 +492,7 @@ input[type="radio"], input[type="checkbox"] {
     text-shadow: 0 0 2px rgba(255, 32, 0, 0.4);
     font-style: normal;
     background-image: url(../images/redpen-mark.png);
+    background-size: 48px 16px;
 }
 
 .redpen-annotated-sentence-marker {
@@ -508,15 +502,15 @@ input[type="radio"], input[type="checkbox"] {
     background-color: transparent;
     color: rgba(167, 12, 0, 0.90);
     text-shadow: 0 0 1px rgba(0, 0, 0, 0.31);
-    font-size: 9px;
+    font-size: 8px;
     display: inline-block;
     vertical-align: top;
     text-align: right;
-    margin-left: -24px;
+    margin-left: -18px;
     margin-top: -10px;
-    height: 20px;
-    width: 24px;
-    z-index: 2;
+    height: 10px;
+    width: 18px;
+    z-index: 3;
 }
 
 ::-webkit-scrollbar-track {
