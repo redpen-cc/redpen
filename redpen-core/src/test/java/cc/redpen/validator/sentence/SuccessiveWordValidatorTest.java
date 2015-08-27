@@ -58,7 +58,7 @@ public class SuccessiveWordValidatorTest {
                 .setLanguage("ja").build();
 
         List<Document> documents = new ArrayList<>(); // TODO: fix
-                documents.add(new Document.DocumentBuilder(new JapaneseTokenizer())
+        documents.add(new Document.DocumentBuilder(new JapaneseTokenizer())
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("私はは嬉しい.", 1))
