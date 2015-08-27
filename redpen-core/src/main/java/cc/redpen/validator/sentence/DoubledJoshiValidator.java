@@ -30,6 +30,8 @@ import java.util.*;
  * Note: this validator works only for Japanese texts.
  */
 public class DoubledJoshiValidator extends Validator {
+    private Set<String> skipList = new HashSet<>();
+
     @Override
     public void validate(Sentence sentence) {
         Map<String, Integer> counts = new HashMap<>();
@@ -38,18 +40,21 @@ public class DoubledJoshiValidator extends Validator {
                 if (!counts.containsKey(tokenElement.getSurface())) {
                     counts.put(tokenElement.getSurface(), 0);
                 }
-                counts.put(tokenElement.getSurface(), counts.get(tokenElement.getSurface())+1);
+                counts.put(tokenElement.getSurface(),
+                        counts.get(tokenElement.getSurface())+1);
             }
         }
         counts.entrySet().stream()
-                .filter(e -> e.getValue() >= 2)
+                .filter(e -> e.getValue() >= 2 && !skipList.contains(e.getKey()))
                 .forEach(e -> addValidationError(sentence, e.getKey()));
     }
 
     @Override
     protected void init() throws RedPenException {
         //TODO: filter with the kind of Joshi such as Kakujoshi, KakariJoshi etc...
-        //TODO: skip list
+        getConfigAttribute("list").ifPresent((f -> {
+            skipList.addAll(Arrays.asList(f.split(",")));
+        }));
     }
 
     @Override

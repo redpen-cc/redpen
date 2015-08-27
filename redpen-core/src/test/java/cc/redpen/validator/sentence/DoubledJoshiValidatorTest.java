@@ -68,4 +68,23 @@ public class DoubledJoshiValidatorTest {
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         assertEquals(0, errors.get(documents.get(0)).size());
     }
+
+    @Test
+    public void testLoadSkipList() throws Exception {
+        List<Document> documents = new ArrayList<>();
+        documents.add(new Document.DocumentBuilder(new JapaneseTokenizer())
+                .addSection(1)
+                .addParagraph()
+                .addSentence(new Sentence("私は彼は好き。", 1))
+                .build());
+
+        Configuration config = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(new ValidatorConfiguration("DoubledJoshi").addAttribute("list", "は"))
+                .setLanguage("ja").build();
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        assertEquals(0, errors.get(documents.get(0)).size());
+    }
+
 }
