@@ -24,7 +24,7 @@ import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.validator.Validator;
 
 /**
- * Warn if too many, or overly long, or nested parenthesized sentences (where you do this) are used in a sentence
+ * Warn if too many (or overly long (or nested parenthesized sentences (where you do this))) are used in a sentence
  */
 public class ParenthesizedSentenceValidator extends Validator {
 

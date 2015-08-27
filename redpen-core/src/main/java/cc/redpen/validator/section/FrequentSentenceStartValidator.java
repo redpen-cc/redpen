@@ -33,7 +33,7 @@ public class FrequentSentenceStartValidator extends Validator {
 
     private Map<String, Integer> sentenceStartHistogram = new HashMap<>();
     private int leadingWordLimit = 3; // number of words starting each sentence to consider
-    private int percentageThreshold = 15; // maximum percentage of sentences that can start with the same words
+    private int percentageThreshold = 25; // maximum percentage of sentences that can start with the same words
     private int minimumSentenceCount = 5; // must have at least this number of sentences
 
     @Override

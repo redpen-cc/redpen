@@ -20,6 +20,7 @@ package cc.redpen.validator.sentence;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
+import cc.redpen.util.SpellingUtils;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,8 +33,8 @@ import java.util.Set;
 
 public class SpellingValidator extends Validator {
 
-    private static final String DEFAULT_RESOURCE_PATH = "default-resources/spellchecker";
     private static final Logger LOG = LoggerFactory.getLogger(SpellingValidator.class);
+
     private static String skipCharacters = "+~-(),\".";
     // TODO: replace more memory efficient data structure
     private Set<String> defaultDictionary;
@@ -42,11 +43,10 @@ public class SpellingValidator extends Validator {
 
     @Override
     protected void init() throws RedPenException {
-        String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
-                + "/spellchecker-" + getSymbolTable().getLang() + ".dat";
-        defaultDictionary = WORD_LIST_LOWERCASED.loadCachedFromResource(defaultDictionaryFile, "spell dictionary");
+        defaultDictionary = SpellingUtils.getDictionary(getSymbolTable().getLang());
 
         customDictionary = new HashSet<>();
+
         Optional<String> listStr = getConfigAttribute("list");
         listStr.ifPresent(f -> {
             LOG.info("User defined valid word list found.");

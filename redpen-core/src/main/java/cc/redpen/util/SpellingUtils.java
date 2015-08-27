@@ -17,43 +17,47 @@
  */
 package cc.redpen.util;
 
-import cc.redpen.RedPenException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Spelling utility
  */
 public class SpellingUtils {
 
+    private static final String DEFAULT_LANGUAGE = "en";
     private static final Logger LOG = LoggerFactory.getLogger(SpellingUtils.class);
-    private static Set<String> dictionary = null;
+
+    // a map of dictionaries per language
+    private static Map<String, Set<String>> dictionaries = new HashMap<>();
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/spellchecker";
 
-
-    @Override
-    protected void init() throws RedPenException {
-        String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
-                + "/spellchecker-" + getSymbolTable().getLang() + ".dat";
-        dictionary = WORD_LIST_LOWERCASED.loadCachedFromResource(defaultDictionaryFile, "spell dictionary");
-
-        Optional<String> listStr = getConfigAttribute("list");
-        listStr.ifPresent(f -> {
-            LOG.info("User defined valid word list found.");
-            dictionary.addAll(Arrays.asList(f.split(",")));
-            LOG.info("Succeeded to add elements of user defined list.");
-        });
-
-        Optional<String> userDictionaryFile = getConfigAttribute("dict");
-        if (userDictionaryFile.isPresent()) {
-            String f = userDictionaryFile.get();
-            dictionary.addAll(WORD_LIST_LOWERCASED.loadCachedFromFile(new File(f), "SpellingValidator user dictionary"));
+    protected static void loadDictionary(String lang) {
+        if (dictionaries.get(lang) == null) {
+            String defaultDictionaryFile = DEFAULT_RESOURCE_PATH + "/spellchecker-" + lang + ".dat";
+            Set<String> dictionary;
+            try {
+                dictionary = new DictionaryLoader<HashSet<String>>(
+                        HashSet::new, (set, line) -> set.add(line.toLowerCase())
+                ).loadCachedFromResource(defaultDictionaryFile, "spell dictionary");
+            } catch (Exception e) {
+                dictionary = new HashSet<>();
+            }
+            dictionaries.put(lang, Collections.unmodifiableSet(dictionary));
         }
+    }
+
+    /**
+     * Get the default dictionary entries for the specified language
+     *
+     * @param lang
+     * @return
+     */
+    public static Set<String> getDictionary(String lang) {
+        loadDictionary(lang == null ? DEFAULT_LANGUAGE : lang);
+        return dictionaries.get(lang);
     }
 
 }

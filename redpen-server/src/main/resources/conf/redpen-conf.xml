@@ -47,7 +47,6 @@
         <validator name="UnexpandedAcronym"/>
         <validator name="NumberFormat"/>
         <validator name="ParenthesizedSentence"/>
-        <validator name="GenderSpecificPronoun"/>
         <validator name="Hyphenation"/>
         <validator name="WeakExpression"/>
 

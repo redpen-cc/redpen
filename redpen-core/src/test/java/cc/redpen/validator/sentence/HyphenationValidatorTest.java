@@ -15,10 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cc.redpen.validator.section;
+package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
+import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.ValidatorFactory;
@@ -29,29 +30,33 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class UnexpandedAcronymValidatorTest {
-
+public class HyphenationValidatorTest {
     @Test
-    public void testDocument() throws RedPenException {
-        UnexpandedAcronymValidator validator = (UnexpandedAcronymValidator) ValidatorFactory.getInstance("UnexpandedAcronym");
+    public void testSingleSentence() throws RedPenException {
+        HyphenationValidator validator = (HyphenationValidator) ValidatorFactory.getInstance("Hyphenation");
 
-        Document document =
+        List<Document> documents = new ArrayList<>();
+        documents.add(
                 new Document.DocumentBuilder(new WhiteSpaceTokenizer())
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("When it comes to the Subject Of Cake (the sweet and delicious baked delicacy), one should" +
-                                " always remember (or at least consider)" +
-                                " this foodstuff's effect on one's ever-expanding waistline.", 1)
-                        .addSentence("Now we know what SOC stands for but there is no mention of TTP.", 2)
-                        .addSentence("The acronym CPU stands for Central Processing Unit (CPU).", 3)
-                        .addSentence("The acronym AAAS is the American Association for the Advancement of Science.", 4)
-                        .addSentence("ABC can stand form the Australian Broadcasting Commission, but HELLO is just a capitalized word.", 5)
-                        .build();
+                        .addSentence("Hyphenation is very useful to stop a sentence such as bad tempered " +
+                                "man from meaning a bad man that is tempered.", 1)
+                        .addSentence("Part-time job is a valid hyphenation, since it binds " +
+                                "part to time rather than the job, which is not ill advised.", 2)
+                        .build());
 
+        Sentence st = documents.get(0).getLastSection().getParagraph(0).getSentence(0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
-        validator.validate(document);
+        validator.validate(st);
+        assertEquals(st.toString(), 1, errors.size());
 
-        assertEquals(1, errors.size());
+        st = documents.get(0).getLastSection().getParagraph(0).getSentence(1);
+        errors = new ArrayList<>();
+        validator.setErrorList(errors);
+        validator.validate(st);
+        assertEquals(st.toString(), 1, errors.size());
+
     }
 }

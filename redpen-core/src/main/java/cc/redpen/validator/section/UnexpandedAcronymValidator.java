@@ -22,6 +22,7 @@ import cc.redpen.model.Document;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
+import cc.redpen.util.SpellingUtils;
 import cc.redpen.validator.Validator;
 
 import java.util.ArrayList;
@@ -42,9 +43,12 @@ public class UnexpandedAcronymValidator extends Validator {
     private Set<String> expandedAcronyms = new HashSet<>();
     private Set<String> contractedAcronyms = new HashSet<>();
 
+    private Set<String> dictionary;
+
     @Override
     protected void init() throws RedPenException {
         super.init();
+        dictionary = SpellingUtils.getDictionary(getSymbolTable().getLang());
         minAcronymLength = getConfigAttributeAsInt("min_acronym_length", MIN_ACRONYM_LENGTH_DEFAULT);
         smallWords.add("of");
         smallWords.add("the");
@@ -58,7 +62,7 @@ public class UnexpandedAcronymValidator extends Validator {
             String word = token.getSurface();
             if (!word.trim().isEmpty()) {
                 if (isAllCapitals(word)) {
-                    if (word.length() >= minAcronymLength) {
+                    if ((word.length() >= minAcronymLength) && !dictionary.contains(word.toLowerCase())) {
                         contractedAcronyms.add(word);
                     }
                 } else if (isCapitalized(word)) {

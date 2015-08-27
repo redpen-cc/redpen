@@ -2,13 +2,13 @@
  * redpen: a text inspection tool
  * Copyright (c) 2014-2015 Recruit Technologies Co., Ltd. and contributors
  * (see CONTRIBUTORS.md)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,10 +18,47 @@
 package cc.redpen.validator.sentence;
 
 
+import cc.redpen.model.Sentence;
+import cc.redpen.tokenizer.TokenElement;
+import cc.redpen.util.SpellingUtils;
 import cc.redpen.validator.Validator;
 
 /**
- * Ensure pairs of words that are hyphenated in the dictionary are hyphenated in the sentence
+ * Ensure groups of words that are hyphenated in the dictionary are hyphenated in the sentence
  */
 public class HyphenationValidator extends Validator {
+
+    @Override
+    public void validate(Sentence sentence) {
+        String lang = getSymbolTable().getLang();
+
+        TokenElement tokens[] = new TokenElement[]{null, null, null};
+
+        for (int i = 0; i < sentence.getTokens().size(); i++) {
+
+            // shift left
+            for (int j = 0; j < tokens.length - 1; j++) {
+                tokens[j] = tokens[j + 1];
+            }
+            tokens[tokens.length - 1] = sentence.getTokens().get(i);
+
+            if (tokens[0] != null) {
+                // check all groups to see if they are tokenized in the dictionary
+                String hyphenatedForm = tokens[0].getSurface();
+                for (int j = 1; j < tokens.length; j++) {
+                    hyphenatedForm += "-" + tokens[j].getSurface();
+                    System.out.println(hyphenatedForm);
+                    if (SpellingUtils.getDictionary(lang).contains(hyphenatedForm.toLowerCase())) {
+                        addValidationErrorWithPosition(
+                                "HyphenatedInDictionary",
+                                sentence,
+                                sentence.getOffset(tokens[0].getOffset()),
+                                sentence.getOffset(tokens[j].getOffset() + tokens[j].getSurface().length()),
+                                hyphenatedForm);
+                        break;
+                    }
+                }
+            }
+        }
+    }
 }
