@@ -22,6 +22,7 @@ import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
+import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
@@ -44,9 +45,7 @@ public class InvalidWordValidatorTest {
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence(
-                                "He is a foolish guy.",
-                                1)
+                        .addSentence(new Sentence("He is a foolish guy.", 1))
                         .build());
 
         Configuration config = new Configuration.ConfigurationBuilder()
@@ -66,9 +65,7 @@ public class InvalidWordValidatorTest {
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence(
-                                "",
-                                1)
+                        .addSentence(new Sentence("", 1))
                         .build());
 
         Configuration config = new Configuration.ConfigurationBuilder()
@@ -91,7 +88,7 @@ public class InvalidWordValidatorTest {
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("he is a foolish man.", 1)
+                        .addSentence(new Sentence("he is a foolish man.", 1))
                         .build());
 
         RedPen redPen = new RedPen(config);
@@ -111,7 +108,7 @@ public class InvalidWordValidatorTest {
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("Domo is a greeting word in Japan.", 1)
+                        .addSentence(new Sentence("Domo is a greeting word in Japan.", 1))
                         .build());
 
         RedPen redPen = new RedPen(config);
@@ -132,7 +129,7 @@ public class InvalidWordValidatorTest {
                 new Document.DocumentBuilder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("こんにちは、群馬にきました。", 1)
+                        .addSentence(new Sentence("こんにちは、群馬にきました。", 1))
                         .build());
 
         RedPen redPen = new RedPen(config);

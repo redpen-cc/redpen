@@ -93,7 +93,7 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
                 new Document.DocumentBuilder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("きょうは（Coke）を飲みたい。", 1)
+                        .addSentence(new Sentence("きょうは（Coke）を飲みたい。", 1))
                         .build());
 
         RedPen redPen = new RedPen(config);
@@ -111,7 +111,7 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
                 new Document.DocumentBuilder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("きょうは、Coke を飲みたい。", 1)
+                        .addSentence(new Sentence("きょうは、Coke を飲みたい。", 1))
                         .build());
 
         RedPen redPen = new RedPen(config);

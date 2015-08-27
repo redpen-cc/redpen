@@ -23,6 +23,7 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.Symbol;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
+import cc.redpen.model.Sentence;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
@@ -46,7 +47,7 @@ public class InvalidSymbolValidatorTest {
                 new Document.DocumentBuilder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("わたしはカラオケが大好き！", 1)
+                        .addSentence(new Sentence("わたしはカラオケが大好き！", 1))
                         .build());
 
         Configuration conf = new Configuration.ConfigurationBuilder()
@@ -69,7 +70,7 @@ public class InvalidSymbolValidatorTest {
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("I like Karaoke", 1)
+                        .addSentence(new Sentence("I like Karaoke", 1))
                         .build());
 
         Configuration conf = new Configuration.ConfigurationBuilder()
@@ -91,7 +92,7 @@ public class InvalidSymbolValidatorTest {
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("わたしは、カラオケが大好き！", 1) // NOTE: two invalid symbols
+                        .addSentence(new Sentence("わたしは、カラオケが大好き！", 1)) // NOTE: two invalid symbols
                         .build());
 
         Configuration conf = new Configuration.ConfigurationBuilder()

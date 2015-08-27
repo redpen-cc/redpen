@@ -84,7 +84,7 @@ public class EndOfSentenceValidatorTest {
                 new Document.DocumentBuilder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("彼は言った，“今日は誕生日”。", 1)
+                        .addSentence(new Sentence("彼は言った，“今日は誕生日”。", 1))
                         .build());
 
         RedPen redPen = new RedPen(config);
