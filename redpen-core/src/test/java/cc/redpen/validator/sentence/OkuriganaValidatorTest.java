@@ -77,7 +77,6 @@ public class OkuriganaValidatorTest {
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
 
         assertEquals(0, errors.get(documents.get(0)).size());
-        assertEquals(0, errors.get(documents.get(0)).get(0).getLineNumber());
     }
 
 
