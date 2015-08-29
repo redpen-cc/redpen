@@ -24,9 +24,10 @@ import cc.redpen.validator.Validator;
 import java.util.*;
 
 // Checks if the Japanese input sentences contain the invalid Okurigana style.
-public class OkuriganaValidator extends Validator {
+public final class OkuriganaValidator extends Validator {
     private static final Set<String> invalidOkurigana;
 
+    // TODO: add more okurigana invalid cases
     static {
         invalidOkurigana = new HashSet<>();
         invalidOkurigana.add("押え");
@@ -143,5 +144,10 @@ public class OkuriganaValidator extends Validator {
     @Override
     protected void init() throws RedPenException {
         // TODO: user dictionary
+    }
+
+    @Override
+    public String toString() {
+        return "OkuriganaValidator{}";
     }
 }
