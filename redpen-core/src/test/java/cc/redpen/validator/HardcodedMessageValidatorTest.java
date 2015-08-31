@@ -18,13 +18,26 @@
 package cc.redpen.validator;
 
 import cc.redpen.model.Sentence;
+import org.junit.Test;
 
-class ValidationErrorMessageTest extends Validator {
+import java.util.ArrayList;
+import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
+
+public class HardcodedMessageValidatorTest extends Validator {
     @Override
     public void validate(Sentence sentence) {
-        addValidationError(sentence, 1, 2, 3, "sentence");
-        addValidationError("withKey", sentence, "sentence");
-        addValidationErrorFromToken(sentence, sentence.getTokens().get(0));
+        addError("hard-coded error message", sentence);
+    }
+
+    @Test
+    public void testAddError() {
+        HardcodedMessageValidatorTest validator = new HardcodedMessageValidatorTest();
+        List<ValidationError> errors = new ArrayList<>();
+        validator.setErrorList(errors);
+        validator.validate(new Sentence("the good item is a good example.", 1));
+        assertEquals(1, errors.size());
+        assertEquals("hard-coded error message", errors.get(0).getMessage());
     }
 }

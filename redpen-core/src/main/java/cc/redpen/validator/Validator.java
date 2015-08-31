@@ -201,6 +201,31 @@ public abstract class Validator {
     }
 
     /**
+     * create a ValidationError for the specified position with specified message
+     *
+     * @param message        message
+     * @param sentenceWithError sentence
+     */
+    protected void addError(String message, Sentence sentenceWithError) {
+        errors.add(new ValidationError(this.getClass(), message, sentenceWithError));
+    }
+
+    /**
+     * create a ValidationError for the specified position with specified message
+     *
+     * @param message        message
+     * @param sentenceWithError sentence
+     * @param start             start position
+     * @param end               end position
+     */
+    protected void addErrorWithPosition(String message, Sentence sentenceWithError,
+                                                  Optional<LineOffset> start, Optional<LineOffset> end) {
+        errors.add(new ValidationError(this.getClass(), message, sentenceWithError, start, end));
+    }
+
+
+
+    /**
      * create a ValidationError for the specified position with default error message
      *
      * @param sentenceWithError sentence
