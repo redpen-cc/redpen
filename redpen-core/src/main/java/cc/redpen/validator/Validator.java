@@ -201,7 +201,7 @@ public abstract class Validator {
     }
 
     /**
-     * create a ValidationError for the specified position with specified message key
+     * create a ValidationError for the specified position with specified message
      *
      * @param message        message
      * @param sentenceWithError sentence
