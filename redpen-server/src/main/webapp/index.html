@@ -109,8 +109,40 @@ var sampleDocuments = {
     ja_ad: {parser: "ASCIIDOC", document: "[abstract]\n分散処理\n====\n\n最近利用されているソフトウェアの中には複数の計算機上で動作（分散）するものが多く存在し、このような分散ソフトウェアは複数の計算機で動作することで大量のデータを扱えたり，高負荷な状況に対処できたりします。\n" +
             "本稿では,複数の計算機（クラスタ）でで動作する各サーバーを_「インスタンス」_と呼びまます。\n\n" +
             "たとえば検索エンジンやデータベースではインデックスを複数のインスタンスで分割して保持します。\n" +
-            "このような場合、各インデクスの結果をマージして_clientプログラム_に渡す機構が必要となります。"}
-
+            "このような場合、各インデクスの結果をマージして_clientプログラム_に渡す機構が必要となります。"},
+    ja_tex: {parser: "LATEX", document: "\\documentclass[a4paper, 10pt]{jarticle}\n" +
+            "\\usepackage{url}\n" +
+            "\\usepackage{color}\n" +
+            "\\usepackage{listings}\n\n" +
+            "\\title{分散処理ついて}\n" +
+            "\\author{本田 太郎}\n\n" +
+            "\\begin{document}\n"+
+            "\\maketitle\n\n" +
+            "\\begin{abstract}\n" +
+            "本稿では分散処理について解説します。\n" +
+            "\\end{abstract}\n" +
+            "\\section{要約}\n" +
+            "最近利用されているソフトウェアの中には複数の計算機上で動作（分散）するものが多く存在し、このような分散ソフトウェアは複数の計算機で動作することで大量のデータを扱えたり，高負荷な状況に対処できたりします。\n" +
+            "本稿では,複数の計算機（クラスタ）でで動作する各サーバーを「インスタンス」と呼びまます。\n" +
+            "たとえば検索エンジンやデータベースではインデックスを複数のインスタンスで分割して保持します。\n" +
+            "このような場合、各インデクスの結果をマージしてclientプログラムに渡す機構が必要となります。\n" +
+            "\end{document}"},
+     en_tex: {parser: "LATEX", document: "\\documentclass[a4paper, 10pt]{article}\n" +
+            "\\usepackage{url}\n" +
+            "\\usepackage{color}\n" +
+            "\\usepackage{listings}\n\n" +
+            "\\title{Distributed System}\n" +
+            "\\author{Nick Simhon}\n\n" +
+            "\\begin{document}\n" +
+            "\\maketitle\n\n" +
+            "\\begin{abstract}\n" +
+            "This article covers distributed systems.\n" +
+            "\\end{abstract}\n\n" +
+            "\\section{Summary}\n" +
+            "Some software tools work in more than one machine, and such distributed (cluster)systems can handle huge data or tasks, because such software tools make use of large amount of computer resources.\n" +
+            "In this article, we'll call a computer server that works as a member of a cluster an ``instance''. for example, each instance in distributed search engines stores the the fractions of data.æ\n" +
+            "Such distriubuted systems need a component to merge the preliminary results from member instnaces.\n" +
+            "\\end{document}"}
 };
 
 // ensure the language autodetect doesn't override the user's selection
@@ -698,6 +730,8 @@ $(document).ready(function () {
                             <li><a onclick="pasteSampleText('ja_md')">Japanese Markdown</a></li>
                             <li><a onclick="pasteSampleText('en_ad')">English AsciiDoc</a></li>
                             <li><a onclick="pasteSampleText('ja_ad')">Japanese AsciiDoc</a></li>
+                            <li><a onclick="pasteSampleText('en_tex')">English LaTeX</a></li>
+                            <li><a onclick="pasteSampleText('ja_tex')">Japanese LaTeX</a></li>
                         </ul>
                     </li>
                     <li>
