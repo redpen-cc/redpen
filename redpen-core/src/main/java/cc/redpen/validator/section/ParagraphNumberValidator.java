@@ -37,7 +37,7 @@ final public class ParagraphNumberValidator extends Validator {
     public void validate(Section section) {
         int paragraphNumber = section.getNumberOfParagraphs();
         if (maxParagraphs < paragraphNumber) {
-            addValidationError(section.getJoinedHeaderContents(), paragraphNumber);
+            addLocalizedError(section.getJoinedHeaderContents(), paragraphNumber);
         }
     }
 

@@ -31,8 +31,8 @@ public class SeparateValidationErrorMessageResourceTest extends Validator {
 
     @Override
     public void validate(Sentence sentence) {
-        addValidationError(sentence, 1, 2, 3, "sentence");
-        addValidationError("withKey", sentence, "sentence");
+        addLocalizedError(sentence, 1, 2, 3, "sentence");
+        addLocalizedError("withKey", sentence, "sentence");
     }
 
     @Test

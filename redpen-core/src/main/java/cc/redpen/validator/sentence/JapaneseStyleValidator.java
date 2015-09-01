@@ -89,9 +89,9 @@ public class JapaneseStyleValidator extends Validator {
     private void detectPattern(Sentence sentence, Pattern pattern) {
         Matcher mat = pattern.matcher(sentence.getContent());
         while(mat.find()){
-            addValidationErrorWithPosition(sentence,
-                    sentence.getOffset(mat.start()),
-                    sentence.getOffset(mat.end()),
+            addLocalizedErrorWithPosition(sentence,
+                    mat.start(),
+                    mat.end(),
                     mat.group());
         }
     }

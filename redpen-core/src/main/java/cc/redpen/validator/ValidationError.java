@@ -31,8 +31,8 @@ public final class ValidationError implements java.io.Serializable {
     private final String message;
     private final String validatorName;
     private final Sentence sentence;
-    private final Optional<LineOffset> startPosition;
-    private final Optional<LineOffset> endPosition;
+    private final LineOffset startPosition;
+    private final LineOffset endPosition;
 
     /**
      * Constructor.
@@ -47,8 +47,8 @@ public final class ValidationError implements java.io.Serializable {
         this.message = errorMessage;
         this.validatorName = validatorClass.getSimpleName();
         this.sentence = sentenceWithError;
-        this.startPosition = Optional.empty();
-        this.endPosition = Optional.empty();
+        this.startPosition = null;
+        this.endPosition = null;
     }
 
     /**
@@ -61,7 +61,25 @@ public final class ValidationError implements java.io.Serializable {
      * @param endPosition       position where error ends
      */
     ValidationError(Class validatorClass, String errorMessage, Sentence sentenceWithError,
-            Optional<LineOffset> startPosition, Optional<LineOffset> endPosition) {
+            int startPosition, int endPosition) {
+        this.message = errorMessage;
+        this.validatorName = validatorClass.getSimpleName();
+        this.sentence = sentenceWithError;
+        this.startPosition = sentenceWithError.getOffset(startPosition).get();
+        this.endPosition = sentenceWithError.getOffset(endPosition).get();
+    }
+
+    /**
+     *
+     * @param validatorClass    validator class
+     * @param errorMessage      error message
+     * @param sentenceWithError sentence containing validation error
+     * @param startPosition     position where error starts
+     * @param endPosition       position where error ends
+     * @deprecated
+     */
+    ValidationError(Class validatorClass, String errorMessage, Sentence sentenceWithError,
+                    LineOffset startPosition, LineOffset endPosition) {
         this.message = errorMessage;
         this.validatorName = validatorClass.getSimpleName();
         this.sentence = sentenceWithError;
@@ -125,7 +143,7 @@ public final class ValidationError implements java.io.Serializable {
      * @return error start position (Note: some validation error does not specify the error position)
      */
     public Optional<LineOffset> getStartPosition() {
-        return startPosition;
+        return Optional.ofNullable(startPosition);
     }
 
     /**
@@ -134,6 +152,6 @@ public final class ValidationError implements java.io.Serializable {
      * @return error end position (Note: some validation error does not specify the error position)
      */
     public Optional<LineOffset> getEndPosition() {
-        return endPosition;
+        return Optional.ofNullable(endPosition);
     }
 }

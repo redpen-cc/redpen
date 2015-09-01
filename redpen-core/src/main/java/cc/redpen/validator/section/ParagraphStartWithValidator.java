@@ -42,7 +42,7 @@ final public class ParagraphStartWithValidator extends Validator {
             }
             Sentence firstSentence = currentParagraph.getSentence(0);
             if (firstSentence.getContent().indexOf(this.beginningOfParagraph) != 0) {
-                addValidationError(section.getJoinedHeaderContents(),
+                addLocalizedError(section.getJoinedHeaderContents(),
                         firstSentence.getContent().charAt(0));
             }
         }

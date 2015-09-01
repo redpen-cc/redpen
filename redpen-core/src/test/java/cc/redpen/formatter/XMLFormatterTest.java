@@ -50,7 +50,7 @@ public class XMLFormatterTest extends Validator {
     public void testConvertValidationError() throws RedPenException {
         List<ValidationError> errors = new ArrayList<>();
         setErrorList(errors);
-        addValidationError(new Sentence("This is a sentence", 0));
+        addLocalizedError(new Sentence("This is a sentence", 0));
         XMLFormatter formatter = new XMLFormatter();
         cc.redpen.model.Document document1 = new cc.redpen.model.Document.DocumentBuilder(new WhiteSpaceTokenizer())
                 .setFileName("foobar.md").build();
@@ -80,7 +80,7 @@ public class XMLFormatterTest extends Validator {
     public void testConvertValidationErrorWithoutFileName() throws RedPenException {
         List<ValidationError> errors = new ArrayList<>();
         setErrorList(errors);
-        addValidationError(new Sentence("text", 0));
+        addLocalizedError(new Sentence("text", 0));
         XMLFormatter formatter = new XMLFormatter();
         List<ValidationError> validationErrors = Arrays.asList(errors.get(0));
         String resultString = formatter.format(new cc.redpen.model.Document.DocumentBuilder(new WhiteSpaceTokenizer()).build(), validationErrors);

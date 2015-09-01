@@ -43,10 +43,8 @@ final public class InvalidSymbolValidator extends Validator {
         for (char invalidChar : symbol.getInvalidChars()) {
             int startPosition = sentenceStr.indexOf(invalidChar);
             if (startPosition != -1) {
-                addValidationErrorWithPosition(sentence,
-                        sentence.getOffset(startPosition),
-                        sentence.getOffset(startPosition + 1), invalidChar);
-            }
+                addLocalizedErrorWithPosition(sentence, startPosition,
+                        startPosition + 1, invalidChar);}
         }
     }
 }

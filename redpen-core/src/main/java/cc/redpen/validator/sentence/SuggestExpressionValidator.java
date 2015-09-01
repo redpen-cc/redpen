@@ -24,7 +24,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * If input sentences contain invalid expressions, this validator
@@ -41,9 +43,9 @@ final public class SuggestExpressionValidator extends Validator {
         synonyms.keySet().stream().forEach(value -> {
                     int startPosition = sentence.getContent().indexOf(value);
                     if (startPosition != -1) {
-                        addValidationErrorWithPosition(sentence,
-                                sentence.getOffset(startPosition),
-                                sentence.getOffset(startPosition + value.length()),
+                        addLocalizedErrorWithPosition(sentence,
+                                startPosition,
+                                startPosition + value.length(),
                                 synonyms.get(value));
                     }
                 }

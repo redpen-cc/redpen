@@ -45,7 +45,7 @@ final public class DoubledWordValidator extends Validator {
             String currentSurface = token.getSurface();
             if (surfaces.contains(currentSurface) && !skipList.contains(currentSurface.toLowerCase())
                     && !customSkipList.contains(currentSurface.toLowerCase())) {
-                addValidationErrorFromToken(sentence, token);
+                addLocalizedErrorFromToken(sentence, token);
             }
             surfaces.add(currentSurface);
         }
