@@ -21,7 +21,6 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
-import cc.redpen.parser.LineOffset;
 import cc.redpen.tokenizer.TokenElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -171,34 +170,34 @@ public class JavaScriptValidator extends Validator {
 
     @Override
     public void addErrorWithPosition(String message, Sentence sentenceWithError,
-                                     Optional<LineOffset> start, Optional<LineOffset> end) {
-        super.addValidationErrorWithPosition(String.format("[%s] %s", currentJS.name, message),
+                                     int start, int end) {
+        super.addLocalizedErrorWithPosition(String.format("[%s] %s", currentJS.name, message),
                 sentenceWithError, start, end);
     }
 
     @Override
-    public void addValidationError(Sentence sentenceWithError, Object... args) {
-        super.addValidationError(sentenceWithError, args);
+    public void addLocalizedError(Sentence sentenceWithError, Object... args) {
+        super.addLocalizedError(sentenceWithError, args);
     }
 
     @Override
-    public void addValidationError(String messageKey, Sentence sentenceWithError, Object... args) {
-        super.addValidationError(messageKey, sentenceWithError, args);
+    public void addLocalizedError(String messageKey, Sentence sentenceWithError, Object... args) {
+        super.addLocalizedError(messageKey, sentenceWithError, args);
     }
 
     @Override
-    public void addValidationErrorFromToken(Sentence sentenceWithError, TokenElement token) {
-        super.addValidationErrorFromToken(sentenceWithError, token);
+    public void addLocalizedErrorFromToken(Sentence sentenceWithError, TokenElement token) {
+        super.addLocalizedErrorFromToken(sentenceWithError, token);
     }
 
     @Override
-    public void addValidationErrorWithPosition(Sentence sentenceWithError,
-                                                             Optional<LineOffset> start, Optional<LineOffset> end, Object... args) {
-        super.addValidationErrorWithPosition(sentenceWithError, start, end, args);
+    public void addLocalizedErrorWithPosition(Sentence sentenceWithError,
+                                              int start, int end, Object... args) {
+        super.addLocalizedErrorWithPosition(sentenceWithError, start, end, args);
     }
 
     @Override
-    protected String getLocalizedErrorMessage(Optional<String> key, Object... args) {
+    protected String getLocalizedErrorMessage(String key, Object... args) {
         String formatted;
         if (currentJS.message != null) {
             formatted = MessageFormat.format(currentJS.message, args);
@@ -221,9 +220,9 @@ public class JavaScriptValidator extends Validator {
                 engine.put("redpenToBeBound", validator);
                 engine.eval("var addError = Function.prototype.bind.call(redpenToBeBound.addError, redpenToBeBound);" +
                         "var addErrorWithPosition = Function.prototype.bind.call(redpenToBeBound.addErrorWithPosition, redpenToBeBound);" +
-                        "var addValidationError = Function.prototype.bind.call(redpenToBeBound.addValidationError, redpenToBeBound);" +
-                        "var addValidationErrorFromToken = Function.prototype.bind.call(redpenToBeBound.addValidationErrorFromToken, redpenToBeBound);" +
-                        "var addValidationErrorWithPosition = Function.prototype.bind.call(redpenToBeBound.addValidationErrorWithPosition, redpenToBeBound);");
+                        "var addLocalizedError = Function.prototype.bind.call(redpenToBeBound.addLocalizedError, redpenToBeBound);" +
+                        "var addLocalizedErrorFromToken = Function.prototype.bind.call(redpenToBeBound.addLocalizedErrorFromToken, redpenToBeBound);" +
+                        "var addLocalizedErrorWithPosition = Function.prototype.bind.call(redpenToBeBound.addLocalizedErrorWithPosition, redpenToBeBound);");
 
                 CompiledScript compiledScript = ((Compilable) engine).compile(script);
                 compiledScript.eval();

@@ -48,7 +48,7 @@ public class FormatterTest extends Validator {
         PlainFormatter formatter = new PlainFormatter();
         List<ValidationError> errors = new ArrayList<>();
         setErrorList(errors);
-        addValidationError(new Sentence("sentence", 1));
+        addLocalizedError(new Sentence("sentence", 1));
         Map<Document, List<ValidationError>> docErrorsMap = new HashMap<>();
         Document document = new Document.DocumentBuilder().build();
         docErrorsMap.put(document, errors);

@@ -40,7 +40,7 @@ final public class SpaceBeginningOfSentenceValidator extends Validator {
     public void validate(Sentence sentence) {
         String content = sentence.getContent();
         if (!isFirstInLine(sentence) && content.length() > 0 && content.charAt(0) != ' ') {
-            addValidationErrorWithPosition(sentence, sentence.getOffset(0), sentence.getOffset(1));
+            addLocalizedErrorWithPosition(sentence, 0, 1);
         }
     }
 

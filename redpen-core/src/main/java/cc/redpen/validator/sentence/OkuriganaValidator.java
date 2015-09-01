@@ -126,9 +126,9 @@ public final class OkuriganaValidator extends Validator {
         invalidOkurigana.stream().forEach(value -> {
                     int startPosition = sentence.getContent().indexOf(value);
                     if (startPosition != -1) {
-                        addValidationErrorWithPosition(sentence,
-                                sentence.getOffset(startPosition),
-                                sentence.getOffset(startPosition + value.length()),
+                        addLocalizedErrorWithPosition(sentence,
+                               startPosition,
+                               startPosition + value.length(),
                                 value);
                     }
                 }

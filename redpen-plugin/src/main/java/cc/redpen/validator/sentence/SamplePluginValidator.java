@@ -7,7 +7,7 @@ public class SamplePluginValidator extends Validator {
     @Override
     public void validate(Sentence sentence) {
         if (sentence.getContent().length() < 100) {
-            addValidationError(sentence, sentence.getContent().length(), 10);
+            addLocalizedError(sentence, sentence.getContent().length(), 10);
         }
     }
 }

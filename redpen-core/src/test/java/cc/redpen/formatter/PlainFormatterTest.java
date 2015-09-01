@@ -35,7 +35,7 @@ public class PlainFormatterTest extends Validator {
     public void testConvertValidationError() {
         List<ValidationError> errors = new ArrayList<>();
         setErrorList(errors);
-        addValidationError(new Sentence("This is a sentence", 0));
+        addLocalizedError(new Sentence("This is a sentence", 0));
         Formatter formatter = new PlainFormatter();
         Document document = new cc.redpen.model.Document.DocumentBuilder(new WhiteSpaceTokenizer())
                 .setFileName("foobar.md").build();
@@ -48,7 +48,7 @@ public class PlainFormatterTest extends Validator {
     public void testConvertValidationErrorWithoutFileName() {
         List<ValidationError> errors = new ArrayList<>();
         setErrorList(errors);
-        addValidationError(new Sentence("This is a sentence", 0));
+        addLocalizedError(new Sentence("This is a sentence", 0));
         Formatter formatter = new PlainFormatter();
         Document document = new cc.redpen.model.Document.DocumentBuilder(new WhiteSpaceTokenizer()).build();
         List<ValidationError> validationErrors = Arrays.asList(errors.get(0));

@@ -23,8 +23,8 @@ class ValidationErrorMessageTest extends Validator {
 
     @Override
     public void validate(Sentence sentence) {
-        addValidationError(sentence, 1, 2, 3, "sentence");
-        addValidationError("withKey", sentence, "sentence");
-        addValidationErrorFromToken(sentence, sentence.getTokens().get(0));
+        addLocalizedError(sentence, 1, 2, 3, "sentence");
+        addLocalizedError("withKey", sentence, "sentence");
+        addLocalizedErrorFromToken(sentence, sentence.getTokens().get(0));
     }
 }

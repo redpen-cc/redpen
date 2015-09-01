@@ -108,12 +108,12 @@ public class QuotationValidator extends Validator {
 
             // validate if left and right quote pair exists
             if (leftPosition >= 0 && rightPosition < 0) {
-                addValidationError("RightExist", sentence);
+                addLocalizedError("RightExist", sentence);
                 break;
             }
 
             if (leftPosition < 0 && rightPosition >= 0) {
-                addValidationError("LeftExist", sentence);
+                addLocalizedError("LeftExist", sentence);
                 break;
             }
 
@@ -127,24 +127,24 @@ public class QuotationValidator extends Validator {
                     leftPosition + 1);
 
             if (nextLeftPosition < rightPosition && nextLeftPosition > 0) {
-                addValidationError("DoubleRight", sentence);
+                addLocalizedError("DoubleRight", sentence);
             }
 
             if (nextRightPosition < leftPosition && nextRightPosition > 0) {
-                addValidationError("DoubleLeft", sentence);
+                addLocalizedError("DoubleLeft", sentence);
             }
 
             // validate if quotes have white spaces
             if (leftPosition > 0 && leftQuotation.isNeedBeforeSpace()
                     && (sentenceString.charAt(leftPosition - 1) != ' ')) {
-                addValidationError("LeftSpace", sentence);
+                addLocalizedError("LeftSpace", sentence);
             }
 
             if (rightPosition > 0 && rightPosition < sentenceString.length() - 1
                     && rightQuotation.isNeedAfterSpace()
                     && (sentenceString.charAt(rightPosition + 1) != ' '
                     && sentenceString.charAt(rightPosition + 1) != this.period)) {
-                addValidationError("RightSpace", sentence);
+                addLocalizedError("RightSpace", sentence);
             }
         }
     }

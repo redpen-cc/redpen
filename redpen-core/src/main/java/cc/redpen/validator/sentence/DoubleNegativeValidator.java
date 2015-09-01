@@ -48,7 +48,7 @@ public class DoubleNegativeValidator extends Validator {
         // validate with expressions (phrase)
         for (ExpressionRule rule : invalidExpressions) {
             if (rule.match(sentence.getTokens())) {
-                addValidationError(sentence, rule.toString());
+                addLocalizedError(sentence, rule.toString());
                 return;
             }
         }
@@ -62,7 +62,7 @@ public class DoubleNegativeValidator extends Validator {
                     count++;
                 }
                 if (count >= 2) {
-                    addValidationErrorFromToken(sentence, token);
+                    addLocalizedErrorFromToken(sentence, token);
                     return;
                 }
             }

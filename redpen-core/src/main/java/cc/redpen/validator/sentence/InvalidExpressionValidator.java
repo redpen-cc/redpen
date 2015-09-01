@@ -45,9 +45,7 @@ final public class InvalidExpressionValidator extends Validator {
         Consumer<String> tConsumer = value -> {
             int startPosition = sentence.getContent().indexOf(value);
             if (startPosition != -1) {
-                addValidationErrorWithPosition(sentence,
-                        sentence.getOffset(startPosition),
-                        sentence.getOffset(startPosition + value.length()), value);
+                addLocalizedErrorWithPosition(sentence, startPosition, startPosition + value.length(), value);
             }
         };
 

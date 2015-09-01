@@ -29,7 +29,7 @@ public class SuccessiveWordValidator extends Validator {
         for (TokenElement token : sentence.getTokens()) {
             String currentSurface = token.getSurface();
             if (prevSurface.equals(currentSurface) && currentSurface.length() > 0) {
-                addValidationErrorFromToken(sentence, token);
+                addLocalizedErrorFromToken(sentence, token);
             }
             prevSurface = currentSurface;
         }

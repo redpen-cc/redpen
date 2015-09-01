@@ -62,7 +62,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         javaScriptValidatorsDir.mkdirs();
         File validatorJS = new File(javaScriptValidatorsDir.getAbsolutePath() + File.separator + "MyValidator.js");
         String content2 = "function validateSentence(sentence) {\n" +
-                "addValidationError(sentence, 'validation error in JavaScript Validator');}";
+                "addLocalizedError(sentence, 'validation error in JavaScript Validator');}";
         Files.write(Paths.get(validatorJS.getAbsolutePath()), content2.getBytes(Charset.forName("UTF-8")));
         validatorJS.deleteOnExit();
 
@@ -100,15 +100,15 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
                         // add ValidationError
                         "addError('validation error', document.getSection(0).getHeaderContent(0));" +
                         // add ValidationError
-                        "addValidationError(document.getSection(0).getHeaderContent(0), 'doc');}" +
+                        "addLocalizedError(document.getSection(0).getHeaderContent(0), 'doc');}" +
                         "function validateSentence(sentence) {" +
                         "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('validateSentence');" +
                         // add ValidationError
-                        "addValidationError(sentence, 'sentence');}" +
+                        "addLocalizedError(sentence, 'sentence');}" +
                         "function validateSection(section) {" +
                         "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('validateSection');" +
                         // add ValidationError
-                        "addValidationError(section.getHeaderContent(0), 'section');}"));
+                        "addLocalizedError(section.getHeaderContent(0), 'section');}"));
         Document document = new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()
@@ -145,7 +145,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
                 "var message = 'embedded message {0}';" +
                         "function validateSentence(sentence) {" +
                         // add ValidationError
-                        "addValidationError(sentence, '[placeholder]');}"));
+                        "addLocalizedError(sentence, '[placeholder]');}"));
         Document document = new Document.DocumentBuilder()
                 .addSection(1)
                 .addParagraph()

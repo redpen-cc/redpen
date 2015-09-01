@@ -132,7 +132,7 @@ final public class ContractionValidator extends Validator {
             String surface = token.getSurface().toLowerCase();
             if (foundNonContractionNum >= foundContractionNum
                     && contractions.contains(surface)) {
-                addValidationErrorFromToken(sentence, token);
+                addLocalizedErrorFromToken(sentence, token);
             }
         }
     }
