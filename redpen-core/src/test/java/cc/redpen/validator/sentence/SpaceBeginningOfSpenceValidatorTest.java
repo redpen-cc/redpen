@@ -22,6 +22,7 @@ import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
+import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import org.junit.Test;
 
@@ -42,8 +43,8 @@ public class SpaceBeginningOfSpenceValidatorTest {
                 documents.add(new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("this is a test.", 1) // ok since the sentence begins with the beginning of the line 1
-                        .addSentence("this is a test.", 1) // error in second sentence (need space)
+                        .addSentence(new Sentence("this is a test.", 1)) // ok since the sentence begins with the beginning of the line 1
+                        .addSentence(new Sentence("this is a test.", 1)) // error in second sentence (need space)
                         .build());
 
         RedPen redPen = new RedPen(config);
@@ -61,8 +62,8 @@ public class SpaceBeginningOfSpenceValidatorTest {
                 documents.add(new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("this is a test", 1)
-                        .addSentence(" this is a test", 1)
+                        .addSentence(new Sentence("this is a test", 1))
+                        .addSentence(new Sentence(" this is a test", 1))
                         .build());
 
         RedPen redPen = new RedPen(config);
@@ -80,7 +81,7 @@ public class SpaceBeginningOfSpenceValidatorTest {
                 documents.add(new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("This is a test", 0)
+                        .addSentence(new Sentence("This is a test", 1))
                         .build());
 
         RedPen redPen = new RedPen(config);
@@ -98,7 +99,7 @@ public class SpaceBeginningOfSpenceValidatorTest {
                 documents.add(new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("", 0)
+                        .addSentence(new Sentence("", 0))
                         .build());
 
         RedPen redPen = new RedPen(config);
@@ -116,8 +117,8 @@ public class SpaceBeginningOfSpenceValidatorTest {
                 documents.add(new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("this is a test.", 1)
-                        .addSentence("this is a test.", 2) // ok since the sentence start from the beginning of the line
+                        .addSentence(new Sentence("this is a test.", 1))
+                        .addSentence(new Sentence("this is a test.", 2)) // ok since the sentence start from the beginning of the line
                         .build());
 
         RedPen redPen = new RedPen(config);
@@ -135,7 +136,7 @@ public class SpaceBeginningOfSpenceValidatorTest {
                 documents.add(new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("", 1)
+                        .addSentence(new Sentence("", 1))
                         .build());
 
         RedPen redPen = new RedPen(config);

@@ -22,6 +22,7 @@ import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
+import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -42,9 +43,9 @@ public class ContractionValidatorTest {
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("he is a super man.", 1)
-                        .addSentence("he is not a bat man.", 2)
-                        .addSentence("he's also a business man.", 3)
+                        .addSentence(new Sentence("he is a super man.", 1))
+                        .addSentence(new Sentence("he is not a bat man.", 2))
+                        .addSentence(new Sentence("he's also a business man.", 3))
                         .build());
 
         RedPen redPen = new RedPen(config);
@@ -63,9 +64,9 @@ public class ContractionValidatorTest {
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("he is a super man.", 1)
-                        .addSentence("he is not a bat man.", 2)
-                        .addSentence("he is a business man.", 3)
+                        .addSentence(new Sentence("he is a super man.", 1))
+                        .addSentence(new Sentence("he is not a bat man.", 2))
+                        .addSentence(new Sentence("he is a business man.", 3))
                         .build());
 
         RedPen redPen = new RedPen(config);
@@ -84,9 +85,9 @@ public class ContractionValidatorTest {
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("He is a super man.", 1)
-                        .addSentence("He is not a bat man.", 2)
-                        .addSentence("He's also a business man.", 3)
+                        .addSentence(new Sentence("He is a super man.", 1))
+                        .addSentence(new Sentence("He is not a bat man.", 2))
+                        .addSentence(new Sentence("He's also a business man.", 3))
                         .build());
 
         RedPen redPen = new RedPen(config);
@@ -108,9 +109,9 @@ public class ContractionValidatorTest {
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("he's a super man.", 1)
-                        .addSentence("he's not a bat man.", 2)
-                        .addSentence("he is a business man.", 3)
+                        .addSentence(new Sentence("he's a super man.", 1))
+                        .addSentence(new Sentence("he's not a bat man.", 2))
+                        .addSentence(new Sentence("he is a business man.", 3))
                         .build());
 
         RedPen redPen = new RedPen(config);

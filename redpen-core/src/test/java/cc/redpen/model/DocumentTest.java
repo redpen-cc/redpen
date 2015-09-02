@@ -39,8 +39,8 @@ public class DocumentTest {
                 .addSection(0)
                 .addSectionHeader("baz")
                 .addParagraph()
-                .addSentence("sentence0", 0)
-                .addSentence("sentence1", 1)
+                .addSentence(new Sentence("sentence0", 1))
+                .addSentence(new Sentence("sentence1", 2))
                 .addListBlock()
                 .addListElement(0, "list0")
                 .addListElement(0, "list1")
@@ -54,10 +54,10 @@ public class DocumentTest {
         assertEquals(1, doc.getSection(0).getNumberOfParagraphs());
         assertEquals("sentence0", doc.getSection(0).getParagraph(0).getSentence(0).getContent());
         assertEquals(true, doc.getSection(0).getParagraph(0).getSentence(0).isFirstSentence());
-        assertEquals(0, doc.getSection(0).getParagraph(0).getSentence(0).getLineNumber());
+        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(0).getLineNumber());
         assertEquals("sentence1", doc.getSection(0).getParagraph(0).getSentence(1).getContent());
         assertEquals(false, doc.getSection(0).getParagraph(0).getSentence(1).isFirstSentence());
-        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(1).getLineNumber());
+        assertEquals(2, doc.getSection(0).getParagraph(0).getSentence(1).getLineNumber());
         assertEquals(1, doc.getSection(0).getNumberOfLists());
         assertEquals(3, doc.getSection(0).getListBlock(0).getNumberOfListElements());
         assertEquals(0, doc.getSection(0).getListBlock(0).getListElement(0).getLevel());
@@ -75,7 +75,7 @@ public class DocumentTest {
                 .addSection(0)
                 .addSectionHeader("baz")
                 .addParagraph()
-                .addSentence("This is a foobar.", 0)
+                .addSentence(new Sentence("This is a foobar.", 1))
                 .build();
         assertEquals(1, doc.size());
         assertEquals(5, doc.getSection(0).getParagraph(0).getSentence(0).getTokens().size());
@@ -88,7 +88,7 @@ public class DocumentTest {
                 .addSection(0)
                 .addSectionHeader("天気")
                 .addParagraph()
-                .addSentence("今日は晴天だ。", 0)
+                .addSentence(new Sentence("今日は晴天だ。", 1))
                 .build();
         assertEquals(1, doc.size());
         assertEquals(5, doc.getSection(0).getParagraph(0).getSentence(0).getTokens().size());

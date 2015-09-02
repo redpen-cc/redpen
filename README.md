@@ -17,7 +17,7 @@ See the detail usage in the RedPen [home page](http://redpen.cc/).
 Keywords
 ========
 
-proofreading,  document inspection, spellchecker
+proofreading,  document inspection, spellchecker, markup texts (Wiki, Markdown, AsciiDoc and LaTeX)
 
 How to contribute
 ==================

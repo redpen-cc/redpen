@@ -18,7 +18,7 @@
         <validator name="JavaScript" />
 
         <validator name="FrequentSentenceStart"/>
-        <validator name="FrequentlyUsedWord"/>
+        <validator name="WordFrequency"/>
         <validator name="UnexpandedAcronym"/>
         <validator name="NumberFormat"/>
         <validator name="ParenthesizedSentence"/>

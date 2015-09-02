@@ -39,7 +39,7 @@ public class UnexpandedAcronymValidator extends Validator {
     private static final int MIN_ACRONYM_LENGTH_DEFAULT = 3; // TLA
 
     private int minAcronymLength = MIN_ACRONYM_LENGTH_DEFAULT;
-    private Set<String> smallWords = new HashSet<>();
+    private Set<String> acronymJoiningWords = new HashSet<>();
     private Set<String> expandedAcronyms = new HashSet<>();
     private Set<String> contractedAcronyms = new HashSet<>();
 
@@ -50,10 +50,10 @@ public class UnexpandedAcronymValidator extends Validator {
         super.init();
         dictionary = SpellingUtils.getDictionary(getSymbolTable().getLang());
         minAcronymLength = getConfigAttributeAsInt("min_acronym_length", MIN_ACRONYM_LENGTH_DEFAULT);
-        smallWords.add("of");
-        smallWords.add("the");
-        smallWords.add("for");
-        smallWords.add("in");
+        acronymJoiningWords.add("of");
+        acronymJoiningWords.add("the");
+        acronymJoiningWords.add("for");
+        acronymJoiningWords.add("in");
     }
 
     private void processSentence(Sentence sentence) {
@@ -67,7 +67,7 @@ public class UnexpandedAcronymValidator extends Validator {
                     }
                 } else if (isCapitalized(word)) {
                     sequence.add(word);
-                } else if (!smallWords.contains(word) && !sequence.isEmpty()) {
+                } else if (!acronymJoiningWords.contains(word) && !sequence.isEmpty()) {
                     String acronym = "";
                     for (String s : sequence) {
                         acronym += s.charAt(0);

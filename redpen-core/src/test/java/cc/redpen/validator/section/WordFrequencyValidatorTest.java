@@ -30,11 +30,11 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class FrequentSentenceStartValidatorTest {
+public class WordFrequencyValidatorTest {
 
     @Test
     public void testDocument() throws RedPenException {
-        FrequentSentenceStartValidator validator = (FrequentSentenceStartValidator) ValidatorFactory.getInstance("FrequentSentenceStart");
+        UnexpandedAcronymValidator validator = (UnexpandedAcronymValidator) ValidatorFactory.getInstance("WordFrequency");
 
         Document document =
                 new Document.DocumentBuilder(new WhiteSpaceTokenizer())
@@ -55,10 +55,6 @@ public class FrequentSentenceStartValidatorTest {
         validator.setErrorList(errors);
         validator.validate(document);
 
-        for (ValidationError error : errors) {
-            System.err.println(error.getMessage());
-        }
-
-        assertEquals(5, errors.size());
+        assertEquals(1, errors.size());
     }
 }

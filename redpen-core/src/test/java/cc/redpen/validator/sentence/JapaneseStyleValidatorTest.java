@@ -22,6 +22,7 @@ import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
+import cc.redpen.model.Sentence;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.tokenizer.JapaneseTokenizer;
@@ -72,9 +73,9 @@ public class JapaneseStyleValidatorTest {
                 new Document.DocumentBuilder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("今日はいい天気ですね。", 1)
-                        .addSentence("昨日は雨だったのですが、持ち直しました。", 2)
-                        .addSentence("明日もいい天気だといいですね。", 3)
+                        .addSentence(new Sentence("今日はいい天気ですね。", 1))
+                        .addSentence(new Sentence("昨日は雨だったのですが、持ち直しました。", 2))
+                        .addSentence(new Sentence("明日もいい天気だといいですね。", 3))
                         .build());
 
         RedPen redPen = new RedPen(config);
@@ -93,9 +94,9 @@ public class JapaneseStyleValidatorTest {
                 new Document.DocumentBuilder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("今日はいい天気である。", 1)
-                        .addSentence("昨日は雨だったのであったが、持ち直した。", 2)
-                        .addSentence("明日もいい天気だとに期待する。", 3)
+                        .addSentence(new Sentence("今日はいい天気である。", 1))
+                        .addSentence(new Sentence("昨日は雨だったのであったが、持ち直した。", 2))
+                        .addSentence(new Sentence("明日もいい天気だとに期待する。", 3))
                         .build());
 
         RedPen redPen = new RedPen(config);
