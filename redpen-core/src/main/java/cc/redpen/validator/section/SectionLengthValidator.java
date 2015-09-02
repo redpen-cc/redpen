@@ -45,7 +45,7 @@ final public class SectionLengthValidator extends Validator {
         }
 
         if (sectionCharNumber > maxSectionCharNumber) {
-            addValidationError(section.getJoinedHeaderContents(), sectionCharNumber);
+            addLocalizedError(section.getJoinedHeaderContents(), sectionCharNumber);
         }
     }
 

@@ -54,7 +54,7 @@ final public class InvalidWordValidator extends Validator {
         for (TokenElement token : sentence.getTokens()) {
             if (invalidWords.contains(token.getSurface().toLowerCase())
                     || customInvalidWords.contains(token.getSurface().toLowerCase())) {
-                addValidationErrorFromToken(sentence, token);
+                addLocalizedErrorFromToken(sentence, token);
             }
         }
     }

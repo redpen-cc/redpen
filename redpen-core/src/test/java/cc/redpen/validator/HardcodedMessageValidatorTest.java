@@ -15,23 +15,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cc.redpen.validator.sentence;
+package cc.redpen.validator;
 
 import cc.redpen.model.Sentence;
-import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.validator.Validator;
+import org.junit.Test;
 
-public class SuccessiveWordValidator extends Validator {
+import java.util.ArrayList;
+import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
+
+public class HardcodedMessageValidatorTest extends Validator {
     @Override
     public void validate(Sentence sentence) {
-        String prevSurface = "";
-        for (TokenElement token : sentence.getTokens()) {
-            String currentSurface = token.getSurface();
-            if (prevSurface.equals(currentSurface) && currentSurface.length() > 0) {
-                addLocalizedErrorFromToken(sentence, token);
-            }
-            prevSurface = currentSurface;
-        }
+        addError("hard-coded error message", sentence);
+    }
+
+    @Test
+    public void testAddError() {
+        HardcodedMessageValidatorTest validator = new HardcodedMessageValidatorTest();
+        List<ValidationError> errors = new ArrayList<>();
+        validator.setErrorList(errors);
+        validator.validate(new Sentence("the good item is a good example.", 1));
+        assertEquals(1, errors.size());
+        assertEquals("hard-coded error message", errors.get(0).getMessage());
     }
 }

@@ -153,7 +153,7 @@ final public class KatakanaSpellCheckValidator extends Validator {
         for (String key : dic.keySet()) {
             if (LevenshteinDistance.getDistance(key, katakana) <= minLsDistance) {
                 found = true;
-                addValidationError(sentence, katakana, key, dic.get(key).toString());
+                addLocalizedError(sentence, katakana, key, dic.get(key).toString());
             }
         }
         if (!found) {

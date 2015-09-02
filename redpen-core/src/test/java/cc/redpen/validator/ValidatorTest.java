@@ -19,9 +19,11 @@ package cc.redpen.validator;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
+import cc.redpen.tokenizer.TokenElement;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -35,14 +37,16 @@ public class ValidatorTest {
         validationErrorMessageTest.setLocale(Locale.ENGLISH);
         List<ValidationError> validationErrors = new ArrayList<>();
         validationErrorMessageTest.setErrorList(validationErrors);
-        validationErrorMessageTest.validate(new Sentence("sentence", 1));
+        Sentence sentence = new Sentence("sentence", 1);
+        sentence.setTokens(Arrays.asList(new TokenElement("word", Arrays.asList(""), 0)));
+        validationErrorMessageTest.validate(sentence);
         assertEquals("error str:sentence 1:1 2:2 3:3", validationErrors.get(0).getMessage());
         assertEquals("with Key :sentence", validationErrors.get(1).getMessage());
 
         validationErrorMessageTest.setLocale(Locale.JAPAN);
         validationErrors = new ArrayList<>();
         validationErrorMessageTest.setErrorList(validationErrors);
-        validationErrorMessageTest.validate(new Sentence("sentence", 1));
+        validationErrorMessageTest.validate(sentence);
         assertEquals("エラー ストリング:sentence 1:1 2:2 3:3", validationErrors.get(0).getMessage());
         assertEquals("キー指定 :sentence", validationErrors.get(1).getMessage());
 

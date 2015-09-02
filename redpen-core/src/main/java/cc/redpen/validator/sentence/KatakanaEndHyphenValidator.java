@@ -92,7 +92,7 @@ final public class KatakanaEndHyphenValidator extends Validator {
                                                          StringBuilder katakana,
                                                          int position) {
         if (isKatakanaEndHyphen(katakana)) {
-            addValidationErrorWithPosition(sentence, sentence.getOffset(position), sentence.getOffset(position + 1), katakana.toString());
+            addLocalizedErrorWithPosition(sentence, position, position + 1, katakana.toString());
         }
     }
 

@@ -38,16 +38,12 @@ public class SpaceBetweenAlphabeticalWordValidator extends Validator {
                     && prevCharacter != leftParenthesis && prevCharacter != comma
                     && StringUtils.isBasicLatin(character)
                     && Character.isLetter(character)) {
-                addValidationErrorWithPosition("Before", sentence,
-                        sentence.getOffset(idx),
-                        sentence.getOffset(idx + 1));
+                addLocalizedErrorWithPosition("Before", sentence, idx, idx + 1);
             } else if (
                     !StringUtils.isBasicLatin(character) && character != rightParenthesis
                             && StringUtils.isBasicLatin(prevCharacter)
                             && Character.isLetter(prevCharacter)) {
-                addValidationErrorWithPosition("After", sentence,
-                        sentence.getOffset(idx),
-                        sentence.getOffset(idx + 1));
+                addLocalizedErrorWithPosition("After", sentence, idx, idx + 1);
             }
             prevCharacter = character;
             idx++;

@@ -40,7 +40,7 @@ final public class WordNumberValidator extends Validator {
     public void validate(Sentence sentence) {
         int wordNum = sentence.getTokens().size();
         if (wordNum > maxWordNumber) {
-            addValidationError(sentence, wordNum, maxWordNumber);
+            addLocalizedError(sentence, wordNum, maxWordNumber);
         }
     }
 

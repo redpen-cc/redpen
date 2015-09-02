@@ -201,52 +201,77 @@ public abstract class Validator {
     }
 
     /**
-     * create a ValidationError for the specified position with default error message
+     * create a ValidationError for the specified position with specified message
+     *
+     * @param message        message
+     * @param sentenceWithError sentence
+     */
+    protected void addError(String message, Sentence sentenceWithError) {
+        errors.add(new ValidationError(this.getClass(), message, sentenceWithError));
+    }
+
+    /**
+     * create a ValidationError for the specified position with specified message
+     *
+     * @param message        message
+     * @param sentenceWithError sentence
+     * @param start             start position
+     * @param end               end position
+     */
+    protected void addErrorWithPosition(String message, Sentence sentenceWithError,
+                                        int start, int end) {
+        errors.add(new ValidationError(this.getClass(), message, sentenceWithError, start, end));
+    }
+
+
+
+    /**
+     * create a ValidationError for the specified position with localized default error message
      *
      * @param sentenceWithError sentence
      * @param args              objects to format
      */
-    protected void addValidationError(Sentence sentenceWithError, Object... args) {
-        errors.add(new ValidationError(this.getClass(), getLocalizedErrorMessage(Optional.empty(), args), sentenceWithError));
+    protected void addLocalizedError(Sentence sentenceWithError, Object... args) {
+        errors.add(new ValidationError(this.getClass(), getLocalizedErrorMessage(null, args), sentenceWithError));
     }
 
     /**
-     * create a ValidationError for the specified position with specified message key
+     * create a ValidationError for the specified position with localized message with specified message key
      *
      * @param messageKey        messageKey
      * @param sentenceWithError sentence
      * @param args              objects to format
      */
-    protected void addValidationError(String messageKey, Sentence sentenceWithError, Object... args) {
-        errors.add(new ValidationError(this.getClass(), getLocalizedErrorMessage(Optional.of(messageKey), args), sentenceWithError));
+    protected void addLocalizedError(String messageKey, Sentence sentenceWithError, Object... args) {
+        errors.add(new ValidationError(this.getClass(), getLocalizedErrorMessage(messageKey, args), sentenceWithError));
     }
 
     /**
-     * create a ValidationError using the details within the given token
+     * create a ValidationError using the details within the given token &amp; localized message
      *
      * @param sentenceWithError sentence
      * @param token             the TokenElement that has the error
      */
-    protected void addValidationErrorFromToken(Sentence sentenceWithError, TokenElement token) {
-        addValidationErrorWithPosition(
+    protected void addLocalizedErrorFromToken(Sentence sentenceWithError, TokenElement token) {
+        addLocalizedErrorWithPosition(
                 sentenceWithError,
-                sentenceWithError.getOffset(token.getOffset()),
-                sentenceWithError.getOffset(token.getOffset() + token.getSurface().length()),
+                token.getOffset(),
+                token.getOffset() + token.getSurface().length(),
                 token.getSurface()
         );
     }
 
     /**
-     * create a ValidationError for the specified position with default error message
+     * create a ValidationError for the specified position with default localized error message
      *
      * @param sentenceWithError sentence
-     * @param start             start position
-     * @param end               end position
+     * @param start             start position in parsed sentence
+     * @param end               end position in parsed sentence
      * @param args              objects to format
      */
-    protected void addValidationErrorWithPosition(Sentence sentenceWithError,
-                                                  Optional<LineOffset> start, Optional<LineOffset> end, Object... args) {
-        errors.add(new ValidationError(this.getClass(), getLocalizedErrorMessage(Optional.empty(), args), sentenceWithError, start, end));
+    protected void addLocalizedErrorWithPosition(Sentence sentenceWithError,
+                                                 int start, int end, Object... args) {
+        addLocalizedErrorWithPosition(null, sentenceWithError, start, end, args);
     }
 
     /**
@@ -254,13 +279,13 @@ public abstract class Validator {
      *
      * @param messageKey        messageKey
      * @param sentenceWithError sentence
-     * @param start             start position
-     * @param end               end position
+     * @param start             start position in parsed sentence
+     * @param end               end position in parsed sentence
      * @param args              objects to format
      */
-    protected void addValidationErrorWithPosition(String messageKey, Sentence sentenceWithError,
-                                                  Optional<LineOffset> start, Optional<LineOffset> end, Object... args) {
-        errors.add(new ValidationError(this.getClass(), getLocalizedErrorMessage(Optional.of(messageKey), args), sentenceWithError, start, end));
+    protected void addLocalizedErrorWithPosition(String messageKey, Sentence sentenceWithError,
+                                                 int start, int end, Object... args) {
+        errors.add(new ValidationError(this.getClass(), getLocalizedErrorMessage(messageKey, args), sentenceWithError, start, end));
     }
 
     /**
@@ -270,15 +295,79 @@ public abstract class Validator {
      * @param args objects to format
      * @return localized error message
      */
-    protected String getLocalizedErrorMessage(Optional<String> key, Object... args) {
+    protected String getLocalizedErrorMessage(String key, Object... args) {
         if (errorMessages != null) {
-            String suffix = key.isPresent() ? "." + key.get() : "";
+            String suffix = key != null ? "." + key : "";
             return MessageFormat.format(errorMessages.getString(this.getClass().getSimpleName() + suffix), args);
         } else {
             throw new AssertionError("message resource not found.");
         }
     }
 
+
+
+    /**
+     * create a ValidationError for the specified position with default error message
+     *
+     * @param sentenceWithError sentence
+     * @param args              objects to format
+     * @deprecated use {@link #addLocalizedError(Sentence, Object...)} instead
+     */
+    protected void addValidationError(Sentence sentenceWithError, Object... args) {
+        addLocalizedError(sentenceWithError, args);
+    }
+
+    /**
+     * create a ValidationError for the specified position with specified message key
+     *
+     * @param messageKey        messageKey
+     * @param sentenceWithError sentence
+     * @param args              objects to format
+     * @deprecated use {@link #addLocalizedError(String, Sentence, Object...)} instead
+     */
+    protected void addValidationError(String messageKey, Sentence sentenceWithError, Object... args) {
+        addLocalizedError(messageKey, sentenceWithError, args);
+    }
+
+    /**
+     * create a ValidationError using the details within the given token
+     *
+     * @param sentenceWithError sentence
+     * @param token             the TokenElement that has the error
+     * @deprecated use {@link #addLocalizedErrorFromToken(Sentence, TokenElement)} instead
+     */
+    protected void addValidationErrorFromToken(Sentence sentenceWithError, TokenElement token) {
+        addLocalizedError(sentenceWithError, token);
+    }
+
+    /**
+     * create a ValidationError for the specified position with default error message
+     *
+     * @param sentenceWithError sentence
+     * @param start             start position
+     * @param end               end position
+     * @param args              objects to format
+     * @deprecated use {@link #addLocalizedErrorWithPosition(Sentence, int, int, Object...)} instead
+     */
+    protected void addValidationErrorWithPosition(Sentence sentenceWithError,
+                                                  Optional<LineOffset> start, Optional<LineOffset> end, Object... args) {
+        errors.add(new ValidationError(this.getClass(), getLocalizedErrorMessage(null, args), sentenceWithError, start.get(), end.get()));
+    }
+
+    /**
+     * create a ValidationError for the specified position with specified message key
+     *
+     * @param messageKey        messageKey
+     * @param sentenceWithError sentence
+     * @param start             start position
+     * @param end               end position
+     * @param args              objects to format
+     * @deprecated use {@link #addLocalizedErrorWithPosition(String, Sentence, int, int, Object...)} instead
+     */
+    protected void addValidationErrorWithPosition(String messageKey, Sentence sentenceWithError,
+                                                  Optional<LineOffset> start, Optional<LineOffset> end, Object... args) {
+        errors.add(new ValidationError(this.getClass(), getLocalizedErrorMessage(messageKey, args), sentenceWithError, start.get(), end.get()));
+    }
     /**
      * Resource Extractor loads key-value dictionary
      */

@@ -46,7 +46,7 @@ public class DoubledJoshiValidator extends Validator {
         }
         counts.entrySet().stream()
                 .filter(e -> e.getValue() >= 2 && !skipList.contains(e.getKey()))
-                .forEach(e -> addValidationError(sentence, e.getKey()));
+                .forEach(e -> addLocalizedError(sentence, e.getKey()));
     }
 
     @Override

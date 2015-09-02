@@ -23,7 +23,7 @@ public class HankakuKanaValidator extends Validator {
     public void validate(Sentence sentence) {
         Matcher matcher = pattern.matcher(sentence.getContent());
         while (matcher.find()) {
-            addValidationError(sentence,
+            addLocalizedError(sentence,
                     sentence.getContent().charAt(matcher.start()));
         }
     }

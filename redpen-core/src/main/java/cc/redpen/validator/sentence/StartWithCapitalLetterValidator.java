@@ -76,7 +76,7 @@ final public class StartWithCapitalLetterValidator extends Validator {
         }
 
         if (Character.isLowerCase(headChar)) {
-            addValidationError(sentence, headChar);
+            addLocalizedError(sentence, headChar);
         }
     }
 

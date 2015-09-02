@@ -28,7 +28,7 @@ public class JSONBySentenceFormatterTest extends Validator {
         JSONFormatter formatter = new JSONBySentenceFormatter();
         List<ValidationError> errors = new ArrayList<>();
         setErrorList(errors);
-        addValidationError(new Sentence("testing JSONFormatter", 1));
+        addLocalizedError(new Sentence("testing JSONFormatter", 1));
         Document document = new Document.DocumentBuilder().setFileName("docName").build();
         String result = formatter.format(document, errors);
 

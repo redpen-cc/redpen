@@ -70,7 +70,7 @@ public class SpellingValidator extends Validator {
             }
 
             if (!this.defaultDictionary.contains(surface) && !this.customDictionary.contains(surface)) {
-                addValidationErrorFromToken(sentence, token);
+                addLocalizedErrorFromToken(sentence, token);
             }
         }
     }
