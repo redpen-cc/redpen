@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public class FrequentSentenceStartValidator extends Validator {
 
-    private Map<String, Integer> sentenceStartHistogram = new HashMap<>();
+    private Map<String, Integer> sentenceStartHistogram = new HashMap<>(); // histogram of sentence starts
     private int leadingWordLimit = 3; // number of words starting each sentence to consider
     private int percentageThreshold = 25; // maximum percentage of sentences that can start with the same words
     private int minimumSentenceCount = 5; // must have at least this number of sentences
@@ -44,6 +44,11 @@ public class FrequentSentenceStartValidator extends Validator {
         minimumSentenceCount = getConfigAttributeAsInt("min_sentence_count", minimumSentenceCount);
     }
 
+    /**
+     * Add sequences of tokens, up to leadingWordLimit, in the histogram
+     *
+     * @param sentence
+     */
     private void processSentence(Sentence sentence) {
         if (sentence.getTokens().size() > leadingWordLimit) {
             String leadingPhrase = "";
@@ -61,6 +66,7 @@ public class FrequentSentenceStartValidator extends Validator {
     @Override
     public void validate(Document document) {
 
+        // remember the last sentence since we can't add an error without a sentence
         Sentence lastSentence = null;
         int sentenceCount = 0;
         for (int i = 0; i < document.size(); i++) {
@@ -73,12 +79,13 @@ public class FrequentSentenceStartValidator extends Validator {
             }
         }
 
+        // make sure we have enough sentences to make this validation worthwhile
         if (sentenceCount >= minimumSentenceCount) {
             for (String start : sentenceStartHistogram.keySet()) {
                 int count = sentenceStartHistogram.get(start);
                 int percentage = (int) ((100.0 * (float) count / (float) sentenceStartHistogram.size()));
                 if (percentage > percentageThreshold) {
-                    addValidationError("SentenceStartTooFrequent", lastSentence, percentage, start);
+                    addLocalizedError("SentenceStartTooFrequent", lastSentence, percentage, start);
                 }
             }
         }

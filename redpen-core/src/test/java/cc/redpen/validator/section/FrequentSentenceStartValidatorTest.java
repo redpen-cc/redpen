@@ -40,10 +40,8 @@ public class FrequentSentenceStartValidatorTest {
                 new Document.DocumentBuilder(new WhiteSpaceTokenizer())
                         .addSection(1)
                         .addParagraph()
-                        .addSentence(new Sentence(
-                                "When it comes to the Subject Of Cake (the sweet and delicious baked delicacy), one should" +
-                                        " always remember (or at least consider)" +
-                                        " this foodstuff's effect on one's ever-expanding waistline.", 1))
+                        .addSentence(new Sentence("When it comes to the Subject Of Cake (the sweet and delicious baked delicacy), one should" +
+                                " always remember (or at least consider) this foodstuff's effect on one's ever-expanding waistline.", 1))
                         .addSentence(new Sentence("When it comes to fish, tuna is pretty nice.", 2))
                         .addSentence(new Sentence("When it comes to celery, the thing to consider is the crunch.", 3))
                         .addSentence(new Sentence("When it comes to how to start a sentence, variety is the key.", 4))
@@ -54,10 +52,6 @@ public class FrequentSentenceStartValidatorTest {
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(document);
-
-        for (ValidationError error : errors) {
-            System.err.println(error.getMessage());
-        }
 
         assertEquals(5, errors.size());
     }

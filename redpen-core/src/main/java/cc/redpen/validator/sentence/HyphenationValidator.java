@@ -32,28 +32,27 @@ public class HyphenationValidator extends Validator {
     public void validate(Sentence sentence) {
         String lang = getSymbolTable().getLang();
 
-        TokenElement tokens[] = new TokenElement[]{null, null, null};
+        // consider hyphenated words of this array's length
+        TokenElement tokens[] = new TokenElement[]{null, null, null, null};
 
+        // combine sequences of tokens together with hyphens and test
+        // for their presence in the dictionary
         for (int i = 0; i < sentence.getTokens().size(); i++) {
-
-            // shift left
             for (int j = 0; j < tokens.length - 1; j++) {
-                tokens[j] = tokens[j + 1];
+                tokens[j] = i + j < sentence.getTokens().size() ? sentence.getTokens().get(i + j) : null;
             }
-            tokens[tokens.length - 1] = sentence.getTokens().get(i);
 
             if (tokens[0] != null) {
                 // check all groups to see if they are tokenized in the dictionary
                 String hyphenatedForm = tokens[0].getSurface();
-                for (int j = 1; j < tokens.length; j++) {
+                for (int j = 1; (j < tokens.length) && (tokens[j] != null); j++) {
                     hyphenatedForm += "-" + tokens[j].getSurface();
-                    System.out.println(hyphenatedForm);
                     if (SpellingUtils.getDictionary(lang).contains(hyphenatedForm.toLowerCase())) {
-                        addValidationErrorWithPosition(
+                        addLocalizedErrorWithPosition(
                                 "HyphenatedInDictionary",
                                 sentence,
-                                sentence.getOffset(tokens[0].getOffset()),
-                                sentence.getOffset(tokens[j].getOffset() + tokens[j].getSurface().length()),
+                                tokens[0].getOffset(),
+                                tokens[j].getOffset() + tokens[j].getSurface().length(),
                                 hyphenatedForm);
                         break;
                     }

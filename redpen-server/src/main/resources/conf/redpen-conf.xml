@@ -43,11 +43,11 @@
         <validator name="WordNumber"/>
 
         <validator name="FrequentSentenceStart"/>
-        <validator name="WordFrequency"/>
         <validator name="UnexpandedAcronym"/>
+        <validator name="WordFrequency"/>
+        <validator name="Hyphenation"/>
         <validator name="NumberFormat"/>
         <validator name="ParenthesizedSentence"/>
-        <validator name="Hyphenation"/>
         <validator name="WeakExpression"/>
 
         <!--<validator name="SpaceBeginningOfSentence"/>-->

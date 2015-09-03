@@ -28,12 +28,18 @@ public class NumberFormatValidator extends Validator {
     private static final String DOT_DELIMITERS = ".・";
     private static final String COMMA_DELIMITERS = "、,";
 
+    // specifies which characters delimite the decimal part of a number
     private String decimalDelimiters = DOT_DELIMITERS;
+    // should we ignore years (basically four digit integers)
+    boolean ignoreYears = false;
 
     @Override
     protected void init() throws RedPenException {
         super.init();
+
+        // set the following to true to support EU formats such as 1.000,00
         boolean decimalDelimiterComma = getConfigAttributeAsBoolean("decimal_delimiter_is_comma", false);
+        ignoreYears = getConfigAttributeAsBoolean("ignore_years", false);
         if (decimalDelimiterComma) {
             decimalDelimiters = COMMA_DELIMITERS;
         } else {
@@ -41,9 +47,13 @@ public class NumberFormatValidator extends Validator {
         }
     }
 
+    /**
+     * Search for numbers in the sentence and ensure they are correctly formatted
+     *
+     * @param sentence input
+     */
     @Override
     public void validate(Sentence sentence) {
-        // locate a number (regex or plain?)
         String text = sentence.getContent();
         String number = "";
         boolean haveNumber = false;
@@ -66,26 +76,41 @@ public class NumberFormatValidator extends Validator {
         validateNumber(sentence, startPosition, number);
     }
 
+    /**
+     * Inspect how a number is formatted and generate an error where appropriate
+     *
+     * @param sentence
+     * @param position
+     * @param number
+     */
     private void validateNumber(Sentence sentence, int position, String number) {
         if (!number.isEmpty()) {
             // ensure there is one decimal delimiter
+            boolean isInteger = true;
             String integerPortion = number;
             for (char delimiter : decimalDelimiters.toCharArray()) {
                 int decimalPosition = number.indexOf(delimiter);
                 if (decimalPosition != -1) {
+                    isInteger = false;
                     integerPortion = number.substring(0, decimalPosition);
                     // test for another decimal
                     if (number.indexOf(delimiter, decimalPosition + 1) != -1) {
-                        addValidationErrorWithPosition(
+                        addLocalizedErrorWithPosition(
                                 "TooManyDecimals",
                                 sentence,
-                                sentence.getOffset(position),
-                                sentence.getOffset(position + number.length()),
+                                position,
+                                position + number.length(),
                                 number);
                     }
                     break;
                 }
             }
+
+            // if it's a four digit integer and we are ignoring years, ignore this
+            if (ignoreYears && isInteger && (integerPortion.length() == 4)) {
+                return;
+            }
+
             // ensure that within the integer portion there are no sequences of digits longer than 3 characters
             int sequenceLength = 0;
             int sequenceStart = 0;
@@ -98,19 +123,19 @@ public class NumberFormatValidator extends Validator {
                     sequenceLength = 0;
                 }
                 if (sequenceLength > 3) {
-                    addValidationErrorWithPosition(
+                    addLocalizedErrorWithPosition(
                             "UndelimitedSequenceTooLong",
                             sentence,
-                            sentence.getOffset(position),
-                            sentence.getOffset(position + number.length()),
+                            position,
+                            position + number.length(),
                             number);
                     break;
                 } else if (sequenceStart != 0) {
-                    addValidationErrorWithPosition(
+                    addLocalizedErrorWithPosition(
                             "UndelimitedSequenceTooShort",
                             sentence,
-                            sentence.getOffset(position),
-                            sentence.getOffset(position + number.length()),
+                            position,
+                            position + number.length(),
                             number);
                     break;
                 }

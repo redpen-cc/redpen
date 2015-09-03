@@ -18,11 +18,11 @@
         <validator name="JavaScript" />
 
         <validator name="FrequentSentenceStart"/>
-        <validator name="WordFrequency"/>
         <validator name="UnexpandedAcronym"/>
+        <validator name="WordFrequency"/>
+        <validator name="Hyphenation"/>
         <validator name="NumberFormat"/>
         <validator name="ParenthesizedSentence"/>
-        <validator name="Hyphenation"/>
         <validator name="WeakExpression"/>
     </validators>
 </redpen-conf>

@@ -17,8 +17,12 @@
  */
 package cc.redpen.validator.sentence;
 
+import cc.redpen.RedPenException;
+import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
+import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidationError;
+import cc.redpen.validator.ValidatorFactory;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -26,32 +30,30 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class NumberFormatValidatorTest {
+public class WeakExpressionValidatorTest {
     @Test
-    public void testSingleSentence() {
-        NumberFormatValidator validator = new NumberFormatValidator();
-        Sentence st = new Sentence("ハロー、20ハロ。あの10000インデクス200とこの10,000,0.0インデックス50100,0"
-                , 0);
+    public void testSingleSentence() throws RedPenException {
+        WeakExpressionValidator validator = (WeakExpressionValidator) ValidatorFactory.getInstance("WeakExpression");
+
+        List<Document> documents = new ArrayList<>();
+        documents.add(
+                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("As a matter of fact, some things are very small.", 1)
+                        .addSentence("Things are mentioned a lot.", 2)
+                        .build());
+
+        Sentence st = documents.get(0).getLastSection().getParagraph(0).getSentence(0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(st);
-        assertEquals(st.toString(), 3, errors.size());
-    }
 
-    @Test
-    public void testMultiSentence() {
-        NumberFormatValidator validator = new NumberFormatValidator();
-        List<ValidationError> errors = new ArrayList<>();
-        Sentence st;
-        st = new Sentence("1000.029.00に１４３１１２３、00.00ある", 0);
-
-        validator.ignoreYears = true;
-        validator.setErrorList(errors);
-        validator.validate(st);
-        assertEquals(st.toString(), 3, errors.size());
-        st = new Sentence("There are 100・00 things in 1984 that are clearly 12.0 or 212 rr 123123", 1);
-        validator.validate(st);
         assertEquals(st.toString(), 4, errors.size());
+        st = documents.get(0).getLastSection().getParagraph(0).getSentence(1);
+        errors = new ArrayList<>();
+        validator.setErrorList(errors);
+        validator.validate(st);
+        assertEquals(st.toString(), 2, errors.size());
     }
-
 }

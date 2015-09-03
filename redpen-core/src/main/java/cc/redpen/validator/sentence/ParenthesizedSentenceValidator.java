@@ -31,9 +31,9 @@ public class ParenthesizedSentenceValidator extends Validator {
     private static final String OPEN_PARENS = "(（";
     private static final String CLOSE_PARENS = ")）";
 
-    private int nestingLevelMax = 2;
-    private int subsentenceCountMax = 1;
-    private int subsentenceLengthMax = 3;
+    private int nestingLevelMax = 2; // the limit on how many parenthesized expressions are permitted
+    private int subsentenceCountMax = 1; // the number of parenthesized expressions allowed
+    private int subsentenceLengthMax = 4; // the maximum number of words in a parenthesized expression
 
     @Override
     protected void init() throws RedPenException {
@@ -43,6 +43,10 @@ public class ParenthesizedSentenceValidator extends Validator {
         subsentenceLengthMax = getConfigAttributeAsInt("max_length", 3);
     }
 
+    /**
+     * Look for parenthesized expressions in the sentence and generate an error where appropriate
+     * @param sentence input
+     */
     @Override
     public void validate(Sentence sentence) {
         int nestingLevel = 0;
@@ -54,22 +58,22 @@ public class ParenthesizedSentenceValidator extends Validator {
                 if (OPEN_PARENS.indexOf(token.getSurface().charAt(0)) != -1) {
                     nestingLevel++;
                     if (nestingLevel > nestingLevelMax) {
-                        addValidationErrorWithPosition(
+                        addLocalizedErrorWithPosition(
                                 "NestingLevelTooDeep",
                                 sentence,
-                                sentence.getOffset(token.getOffset()),
-                                sentence.getOffset(token.getOffset() + token.getSurface().length()));
+                                token.getOffset(),
+                                token.getOffset() + token.getSurface().length());
                     }
                 } else if (CLOSE_PARENS.indexOf(token.getSurface().charAt(0)) != -1) {
                     nestingLevel = Math.max(0, nestingLevel - 1);
                     if (nestingLevel == 0) {
                         subsentenceCount++;
                         if (subsentenceLength > subsentenceLengthMax) {
-                            addValidationErrorWithPosition(
+                            addLocalizedErrorWithPosition(
                                     "SubsentenceTooLong",
                                     sentence,
-                                    sentence.getOffset(token.getOffset()),
-                                    sentence.getOffset(token.getOffset() + token.getSurface().length()));
+                                    token.getOffset(),
+                                    token.getOffset() + token.getSurface().length());
                         }
                         subsentenceLength = 0;
                     }
@@ -82,7 +86,7 @@ public class ParenthesizedSentenceValidator extends Validator {
         }
 
         if (subsentenceCount > subsentenceCountMax) {
-            addValidationError("SubsentenceTooFrequent", sentence);
+            addLocalizedError("SubsentenceTooFrequent", sentence);
         }
 
     }

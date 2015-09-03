@@ -38,11 +38,16 @@ public class UnexpandedAcronymValidator extends Validator {
 
     private static final int MIN_ACRONYM_LENGTH_DEFAULT = 3; // TLA
 
+    // ignore uppercase words smaller than this length
     private int minAcronymLength = MIN_ACRONYM_LENGTH_DEFAULT;
+    // a set of small words used to join acronyms, such as 'of', 'the' and 'for'
     private Set<String> acronymJoiningWords = new HashSet<>();
+    // the set of acronyms we've deduced from sequences of capitalized words
     private Set<String> expandedAcronyms = new HashSet<>();
+    // the set of acronyms we found literally within the document
     private Set<String> contractedAcronyms = new HashSet<>();
 
+    // a dictionary to filter out acronyms that are just uppercase words
     private Set<String> dictionary;
 
     @Override
@@ -54,6 +59,8 @@ public class UnexpandedAcronymValidator extends Validator {
         acronymJoiningWords.add("the");
         acronymJoiningWords.add("for");
         acronymJoiningWords.add("in");
+        acronymJoiningWords.add("and");
+        acronymJoiningWords.add("&");
     }
 
     private void processSentence(Sentence sentence) {
@@ -84,6 +91,12 @@ public class UnexpandedAcronymValidator extends Validator {
         }
     }
 
+    /**
+     * Return true of the supplied word is all in capitals
+     *
+     * @param word
+     * @return
+     */
     private boolean isAllCapitals(String word) {
         if (word.length() > 1) {
             for (int i = 0; i < word.length(); i++) {
@@ -96,6 +109,12 @@ public class UnexpandedAcronymValidator extends Validator {
         return false;
     }
 
+    /**
+     * Return true if the word only starts with a capital letter
+     *
+     * @param word
+     * @return
+     */
     private boolean isCapitalized(String word) {
         if (!word.isEmpty()) {
             if (Character.isAlphabetic(word.charAt(0)) && Character.isUpperCase(word.charAt(0))) {
@@ -118,6 +137,7 @@ public class UnexpandedAcronymValidator extends Validator {
     @Override
     public void validate(Document document) {
 
+        // process all sentences and remember the last sentence
         Sentence lastSentence = null;
         for (int i = 0; i < document.size(); i++) {
             for (Paragraph para : document.getSection(i).getParagraphs()) {
@@ -128,10 +148,10 @@ public class UnexpandedAcronymValidator extends Validator {
             }
         }
 
-        // TODO: permit errors to be added that are not bound to a sentence
+        // if the contracted acronyms aren't in the expanded acronyms, generate an error
         for (String acronym : contractedAcronyms) {
             if (!expandedAcronyms.contains(acronym)) {
-                addValidationError("UnexpandedAcronym", lastSentence, acronym);
+                addLocalizedError("UnexpandedAcronym", lastSentence, acronym);
             }
         }
     }
