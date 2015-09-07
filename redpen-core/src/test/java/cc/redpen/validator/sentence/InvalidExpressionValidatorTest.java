@@ -75,9 +75,7 @@ public class InvalidExpressionValidatorTest {
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
-                        .addSentence(
-                                "You know. He is a super man.",
-                                1)
+                        .addSentence(new Sentence("You know. He is a super man.", 1))
                         .build());
 
         RedPen redPen = new RedPen(config);
@@ -95,7 +93,7 @@ public class InvalidExpressionValidatorTest {
                 new Document.DocumentBuilder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("明日地球が滅亡するってマジですか。", 1)
+                        .addSentence(new Sentence("明日地球が滅亡するってマジですか。", 1))
                         .build());
 
         RedPen redPen = new RedPen(config);
@@ -114,7 +112,7 @@ public class InvalidExpressionValidatorTest {
                 new Document.DocumentBuilder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("うふぉっ本当ですか？", 1)
+                        .addSentence(new Sentence("うふぉっ本当ですか？", 1))
                         .build());
 
         RedPen redPen = new RedPen(config);

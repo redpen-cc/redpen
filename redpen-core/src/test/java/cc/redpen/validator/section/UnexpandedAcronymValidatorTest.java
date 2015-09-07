@@ -19,6 +19,7 @@ package cc.redpen.validator.section;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
+import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.ValidatorFactory;
@@ -39,13 +40,13 @@ public class UnexpandedAcronymValidatorTest {
                 new Document.DocumentBuilder(new WhiteSpaceTokenizer())
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("When it comes to the Subject Of Cake (the sweet and delicious baked delicacy), one should" +
+                        .addSentence(new Sentence("When it comes to the Subject Of Cake (the sweet and delicious baked delicacy), one should" +
                                 " always remember (or at least consider)" +
-                                " this foodstuff's effect on one's ever-expanding waistline.", 1)
-                        .addSentence("Now we know what SOC stands for but there is no mention of TTP.", 2)
-                        .addSentence("The acronym CPU stands for Central Processing Unit (CPU).", 3)
-                        .addSentence("The acronym AAAS is the American Association for the Advancement of Science.", 4)
-                        .addSentence("ABC can stand form the Australian Broadcasting Commission, but HELLO is just a capitalized word.", 5)
+                                " this foodstuff's effect on one's ever-expanding waistline.", 1))
+                        .addSentence(new Sentence("Now we know what SOC stands for but there is no mention of TTP.", 2))
+                        .addSentence(new Sentence("The acronym CPU stands for Central Processing Unit (CPU).", 3))
+                        .addSentence(new Sentence("The acronym AAAS is the American Association for the Advancement of Science.", 4))
+                        .addSentence(new Sentence("ABC can stand form the Australian Broadcasting Commission, but HELLO is just a capitalized word.", 5))
                         .build();
 
         List<ValidationError> errors = new ArrayList<>();

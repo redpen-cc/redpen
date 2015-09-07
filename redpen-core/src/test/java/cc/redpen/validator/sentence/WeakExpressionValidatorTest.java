@@ -40,8 +40,8 @@ public class WeakExpressionValidatorTest {
                 new Document.DocumentBuilder(new WhiteSpaceTokenizer())
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("As a matter of fact, some things are very small.", 1)
-                        .addSentence("Things are mentioned a lot.", 2)
+                        .addSentence(new Sentence("As a matter of fact, some things are very small.", 1))
+                        .addSentence(new Sentence("Things are mentioned a lot.", 2))
                         .build());
 
         Sentence st = documents.get(0).getLastSection().getParagraph(0).getSentence(0);

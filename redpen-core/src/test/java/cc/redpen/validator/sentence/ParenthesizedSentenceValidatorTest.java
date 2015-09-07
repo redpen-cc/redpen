@@ -38,11 +38,11 @@ public class ParenthesizedSentenceValidatorTest {
                 new Document.DocumentBuilder(new WhiteSpaceTokenizer())
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("When it comes to the subject of cake (the sweet and delicious baked delicacy), one should" +
+                        .addSentence(new Sentence("When it comes to the subject of cake (the sweet and delicious baked delicacy), one should" +
                                 " always remember (or at least consider)" +
-                                " this foodstuff's effect on one's ever-expanding waistline.", 1)
-                        .addSentence(" I aimlessly wandered the streets near my abode (here, in the middle of (merry) England)" +
-                                " and tripped over a (discarded) matchstick.", 2)
+                                " this foodstuff's effect on one's ever-expanding waistline.", 1))
+                        .addSentence(new Sentence(" I aimlessly wandered the streets near my abode (here, in the middle of (merry) England)" +
+                                " and tripped over a (discarded) matchstick.", 2))
                         .build());
 
         Sentence st = documents.get(0).getLastSection().getParagraph(0).getSentence(0);

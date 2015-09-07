@@ -30,28 +30,22 @@ public class NumberFormatValidatorTest {
     @Test
     public void testSingleSentence() {
         NumberFormatValidator validator = new NumberFormatValidator();
-        Sentence st = new Sentence("ハロー、20ハロ。あの10000インデクス200とこの10,000,0.0インデックス50100,0"
-                , 0);
+        Sentence st0 = new Sentence("1, 10, 200, 1,000.00, and 10,000 and 10,000.00 and 100,000.00 and 10,000,000.0 should all be fine.", 0);
+        Sentence st1 = new Sentence("10000 gives an error because it should really be formatted as 10,000.", 0);
+        Sentence st2 = new Sentence("100,00 has a comma in the wrong position but 100.00 does not.", 0);
+        Sentence st3 = new Sentence("10,0000,000 also has a comma in the wrong position.", 0);
+        Sentence st4 = new Sentence("10000.0.0 has too many decimal places and requires a delimiter.", 0);
+        Sentence st5 = new Sentence("100,00,000.0 has a sequence of digits that is too short.", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
-        validator.validate(st);
-        assertEquals(st.toString(), 3, errors.size());
-    }
+        validator.validate(st0);
+        validator.validate(st1); // 1 error
+        validator.validate(st2); // 1 error
+        validator.validate(st3); // 1 error
+        validator.validate(st4); // 2 errors
+        validator.validate(st5); // 1 error
 
-    @Test
-    public void testMultiSentence() {
-        NumberFormatValidator validator = new NumberFormatValidator();
-        List<ValidationError> errors = new ArrayList<>();
-        Sentence st;
-        st = new Sentence("1000.029.00に１４３１１２３、00.00ある", 0);
-
-        validator.ignoreYears = true;
-        validator.setErrorList(errors);
-        validator.validate(st);
-        assertEquals(st.toString(), 3, errors.size());
-        st = new Sentence("There are 100・00 things in 1984 that are clearly 12.0 or 212 rr 123123", 1);
-        validator.validate(st);
-        assertEquals(st.toString(), 4, errors.size());
+        assertEquals(st1.toString(), 6, errors.size());
     }
 
 }

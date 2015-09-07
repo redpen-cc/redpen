@@ -30,6 +30,7 @@ public class NumberFormatValidator extends Validator {
 
     // specifies which characters delimite the decimal part of a number
     private String decimalDelimiters = DOT_DELIMITERS;
+
     // should we ignore years (basically four digit integers)
     boolean ignoreYears = false;
 
@@ -60,6 +61,13 @@ public class NumberFormatValidator extends Validator {
         int startPosition = 0;
         for (int i = 0; i < text.length(); i++) {
             char ch = text.charAt(i);
+
+            // ignore fullstop at end of sentence
+            if ((i == text.length() - 1) && (DOT_DELIMITERS.indexOf(ch) != -1)) {
+                break;
+            }
+
+            // is this character part of a number?
             if (Character.isDigit(ch) ||
                     (haveNumber && ((COMMA_DELIMITERS.indexOf(ch) != -1) || (DOT_DELIMITERS.indexOf(ch) != -1)))) {
                 number += text.charAt(i);
@@ -116,23 +124,36 @@ public class NumberFormatValidator extends Validator {
             int sequenceStart = 0;
             for (int i = 0; i < integerPortion.length(); i++) {
                 char ch = integerPortion.charAt(i);
+
                 if (Character.isDigit(ch)) {
                     sequenceLength++;
+                    if ((sequenceStart != 0) && (i == integerPortion.length() - 1) && (sequenceLength > 0) && (sequenceLength < 3)) {
+                        addLocalizedErrorWithPosition(
+                                "UndelimitedSequenceTooShort",
+                                sentence,
+                                position,
+                                position + number.length(),
+                                number);
+                        break;
+                    }
                 } else {
+                    if ((sequenceStart != 0) && (sequenceLength > 0) && (sequenceLength < 3)) {
+                        addLocalizedErrorWithPosition(
+                                "UndelimitedSequenceTooShort",
+                                sentence,
+                                position,
+                                position + number.length(),
+                                number);
+                        break;
+                    }
+
                     sequenceStart = i;
                     sequenceLength = 0;
                 }
+
                 if (sequenceLength > 3) {
                     addLocalizedErrorWithPosition(
                             "UndelimitedSequenceTooLong",
-                            sentence,
-                            position,
-                            position + number.length(),
-                            number);
-                    break;
-                } else if (sequenceStart != 0) {
-                    addLocalizedErrorWithPosition(
-                            "UndelimitedSequenceTooShort",
                             sentence,
                             position,
                             position + number.length(),

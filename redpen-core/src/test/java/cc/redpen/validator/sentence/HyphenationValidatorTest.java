@@ -40,10 +40,10 @@ public class HyphenationValidatorTest {
                 new Document.DocumentBuilder(new WhiteSpaceTokenizer())
                         .addSection(1)
                         .addParagraph()
-                        .addSentence("Hyphenation is very useful to stop a sentence such as bad tempered " +
-                                "man from meaning a bad man that is tempered.", 1)
-                        .addSentence("Part-time job is a valid hyphenation, since it binds " +
-                                "part to time rather than the job, which is not ill advised.", 2)
+                        .addSentence(new Sentence("Hyphenation is very useful to stop a sentence such as bad tempered " +
+                                "man from meaning a bad man that is tempered.", 1))
+                        .addSentence(new Sentence("Part-time job is a valid hyphenation, since it binds " +
+                                "part to time rather than the job, which is not ill advised.", 2))
                         .build());
 
         Sentence st = documents.get(0).getLastSection().getParagraph(0).getSentence(0);
