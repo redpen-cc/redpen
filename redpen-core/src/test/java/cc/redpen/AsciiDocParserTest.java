@@ -2,13 +2,13 @@
  * redpen: a text inspection tool
  * Copyright (c) 2014-2015 Recruit Technologies Co., Ltd. and contributors
  * (see CONTRIBUTORS.md)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -298,14 +298,6 @@ public class AsciiDocParserTest {
         for (int i = 0; i < expectedOffsets.size(); i++) {
             assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i).get());
         }
-    }
-
-    private void dumpSentence(Sentence sentence) {
-        for (int i = 0; i < sentence.getContent().length(); i++) {
-            String offset = sentence.getOffset(i).isPresent() ? sentence.getOffset(i).get().lineNum + "," + sentence.getOffset(i).get().offset : "n/a";
-            System.out.print("[" + sentence.getContent().charAt(i) + ":" + offset + "]");
-        }
-        System.out.println();
     }
 
     private Document createFileContent(String inputDocumentString,

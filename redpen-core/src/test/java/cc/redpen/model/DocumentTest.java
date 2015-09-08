@@ -78,7 +78,7 @@ public class DocumentTest {
                 .addSentence(new Sentence("This is a foobar.", 1))
                 .build();
         assertEquals(1, doc.size());
-        assertEquals(4, doc.getSection(0).getParagraph(0).getSentence(0).getTokens().size());
+        assertEquals(5, doc.getSection(0).getParagraph(0).getSentence(0).getTokens().size());
     }
 
     @Test

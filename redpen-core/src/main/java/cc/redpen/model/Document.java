@@ -314,6 +314,19 @@ public class Document implements Iterable<Section>, Serializable {
 
 
         /**
+         * Add sentence to document.
+         *
+         * @param content    sentence content
+         * @param lineNumber line number
+         * @return builder
+         */
+        public DocumentBuilder addSentence(String content, int lineNumber) {
+            ensureNotBuilt();
+            addSentence(new Sentence(content, lineNumber));
+            return this;
+        }
+
+        /**
          * Set file name.
          *
          * @param name file name

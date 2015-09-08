@@ -42,6 +42,14 @@
         <validator name="StartWithCapitalLetter"/>
         <validator name="WordNumber"/>
 
+        <validator name="FrequentSentenceStart"/>
+        <validator name="UnexpandedAcronym"/>
+        <validator name="WordFrequency"/>
+        <validator name="Hyphenation"/>
+        <validator name="NumberFormat"/>
+        <validator name="ParenthesizedSentence"/>
+        <validator name="WeakExpression"/>
+
         <!--<validator name="SpaceBeginningOfSentence"/>-->
         <!--<validator name="ParagraphStartWith"/>-->
         <!--<validator name="DuplicatedSection"/>-->
