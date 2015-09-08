@@ -1,5 +1,5 @@
 <redpen-conf lang="en">
     <validators>
-        <validator name="SamplePlugin"/>
+        <validator name="NumberOfCharacters"/>
     </validators>
 </redpen-conf>
