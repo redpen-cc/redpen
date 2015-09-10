@@ -87,8 +87,6 @@ final class PortableObjectParser extends BaseDocumentParser {
         boolean isMsgidBlock = false;
         BufferedReader br = createReader(inputStream);
 
-        documentBuilder.addParagraph();
-
         try {
             while ((line = br.readLine()) != null) {
                 if (check(COMMENT_PATTERN, line)) {
@@ -110,8 +108,8 @@ final class PortableObjectParser extends BaseDocumentParser {
                     }
                 } else if (line.equals("")) {
                     if (msgid.length() > 0) {
-                        this.extractSentences(lineNumMsgstr, msgstr.toString(), sentenceExtractor, documentBuilder);
                         documentBuilder.addParagraph();
+                        this.extractSentences(lineNumMsgstr, msgstr.toString(), sentenceExtractor, documentBuilder);
                     }
                     msgid.delete(0, msgid.length());
                     msgstr.delete(0, msgstr.length());
@@ -119,8 +117,8 @@ final class PortableObjectParser extends BaseDocumentParser {
                 lineNum++;
             }
             if (msgstr.length() > 0) {
-                this.extractSentences(lineNumMsgstr, msgstr.toString(), sentenceExtractor, documentBuilder);
                 documentBuilder.addParagraph();
+                this.extractSentences(lineNumMsgstr, msgstr.toString(), sentenceExtractor, documentBuilder);
             }
         } catch (IOException e) {
             throw new RedPenException(e);
