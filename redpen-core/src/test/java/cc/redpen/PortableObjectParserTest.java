@@ -131,4 +131,26 @@ public class PortableObjectParserTest {
         assertEquals(6, section.getParagraph(1).getSentence(0).getLineNumber());
         assertEquals("RedPenは文章の校正ツールです。", section.getParagraph(1).getSentence(0).getContent());
     }
+
+    @Test
+    public void testExtractedMultipleSentences() {
+        String sampleText = "";
+        sampleText += "msgid \"\"\n";
+        sampleText += "\"RedPen is a proofreading tool.\"\n";
+        sampleText += "\"It helps programmers who write technical documents \"\n";
+        sampleText += "\"that need to adhere to a writing standard.\"\n";
+        sampleText += "msgstr \"\"\n";
+        sampleText += "\"RedPenは文章の校正ツールです。プログラマが技術文書を規約にしたがって記述するのを支援します。\"\n";
+
+        Document doc = generateDocument(sampleText);
+        Section section = doc.getLastSection();
+        assertEquals(2, getTotalSentenceCount(section));
+        assertEquals(1, extractParagraphs(section).size());
+
+        assertEquals(2, section.getParagraph(0).getNumberOfSentences());
+        assertEquals(5, section.getParagraph(0).getSentence(0).getLineNumber());
+        assertEquals("RedPenは文章の校正ツールです。", section.getParagraph(0).getSentence(0).getContent());
+        assertEquals("プログラマが技術文書を規約にしたがって記述するのを支援します。", section.getParagraph(0).getSentence(1).getContent());
+    }
+
 }
