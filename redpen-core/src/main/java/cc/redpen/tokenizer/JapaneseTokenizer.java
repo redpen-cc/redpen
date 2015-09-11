@@ -17,8 +17,8 @@
  */
 package cc.redpen.tokenizer;
 
-import org.atilika.kuromoji.Token;
-import org.atilika.kuromoji.Tokenizer;
+import com.atilika.kuromoji.ipadic.Token;
+import com.atilika.kuromoji.ipadic.Tokenizer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,14 +29,14 @@ public class JapaneseTokenizer implements RedPenTokenizer {
     private Tokenizer tokenizer;
 
     public JapaneseTokenizer() {
-        this.tokenizer = Tokenizer.builder().build();
+        this.tokenizer = new Tokenizer();
     }
 
     @Override
     public List<TokenElement> tokenize(String content) {
         List<TokenElement> tokens = new ArrayList<>();
         for (Token token : tokenizer.tokenize(content)) {
-            tokens.add(new TokenElement(token.getSurfaceForm(), Arrays.asList(token.getAllFeaturesArray()), token.getPosition()));
+            tokens.add(new TokenElement(token.getSurface(), Arrays.asList(token.getAllFeaturesArray()), token.getPosition()));
         }
         return tokens;
     }
