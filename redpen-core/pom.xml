@@ -174,10 +174,4 @@
             <version>3.4</version>
         </dependency>
     </dependencies>
-    <repositories>
-        <repository>
-            <id>sonatype-nexus-staging</id>
-            <url>https://oss.sonatype.org/content/repositories/comatilika-1002/</url>
-        </repository>
-    </repositories>
 </project>
