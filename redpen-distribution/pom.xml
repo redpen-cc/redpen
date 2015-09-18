@@ -11,6 +11,9 @@
 
     <artifactId>redpen-distribution</artifactId>
 
+    <prerequisites>
+        <maven>3.0.0</maven>
+    </prerequisites>
     <build>
         <plugins>
             <plugin>
