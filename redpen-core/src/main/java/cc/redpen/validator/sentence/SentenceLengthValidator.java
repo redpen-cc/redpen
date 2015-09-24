@@ -31,7 +31,7 @@ final public class SentenceLengthValidator extends Validator {
      * Default maximum length of sentences.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final int DEFAULT_MAX_LENGTH = 30;
+    public static final int DEFAULT_MAX_LENGTH = 120;
     private static final Logger LOG =
             LoggerFactory.getLogger(SentenceLengthValidator.class);
     private int maxLength = DEFAULT_MAX_LENGTH;
