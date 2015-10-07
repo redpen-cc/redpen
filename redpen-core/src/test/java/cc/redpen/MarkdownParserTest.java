@@ -897,6 +897,24 @@ public class MarkdownParserTest {
         assertEquals(new LineOffset(1, 19), errors.get(0).getEndPosition().get());
     }
 
+    @Test
+    public void testInvalidSentenceInBlockquote() throws UnsupportedEncodingException, RedPenException {
+        String sampleText = "> This is a good day。\n"; // invalid end of sentence symbol
+        Configuration conf = new Configuration.ConfigurationBuilder()
+                .setLanguage("en")
+                .build();
+        List<Document> documents = new ArrayList<>();
+        documents.add(createFileContent(sampleText, conf));
+
+        Configuration configuration = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(
+                        new ValidatorConfiguration("InvalidSymbol"))
+                .build();
+        RedPen redPen = new RedPen(configuration);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
+        assertEquals(0, errors.size());
+    }
+
     private Document createFileContent(String inputDocumentString,
                                        Configuration config) {
         DocumentParser parser = DocumentParser.MARKDOWN;
