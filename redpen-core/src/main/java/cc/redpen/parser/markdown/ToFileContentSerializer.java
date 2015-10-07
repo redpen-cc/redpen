@@ -238,7 +238,6 @@ public class ToFileContentSerializer implements Visitor {
     }
 
     public void visit(BlockQuoteNode blockQuoteNode) {
-        visitChildren(blockQuoteNode);
     }
 
     public void visit(CodeNode codeNode) {
