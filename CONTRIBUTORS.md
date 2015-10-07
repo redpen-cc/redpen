@@ -10,3 +10,4 @@
 * Naoki Ainoya <ainonic _at_ gmail.com>
 * Gerrard Hocks
 * Kentaro Hayashi
+* [karronoli](https://github.com/karronoli)
