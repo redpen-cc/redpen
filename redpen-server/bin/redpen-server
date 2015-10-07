@@ -37,6 +37,7 @@ REDPEN_PORT=8080
 
 # RedPen log file
 REDPEN_LOG_DIR=$REDPEN_HOME/logs
+test -w $REDPEN_LOG_DIR || REDPEN_LOG_DIR=/tmp
 REDPEN_LOG_FILE=$REDPEN_LOG_DIR/redpen.log
 
 #####################################################
