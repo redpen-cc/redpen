@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION=1.3
+VERSION=1.4
 
 run_test() {
     echo "Building RedPen Version $VERSION"
