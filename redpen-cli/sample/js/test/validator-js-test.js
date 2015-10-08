@@ -18,8 +18,8 @@ steps to run this test:
  $ mocha
 
  */
-assert = require('assert');
-redpen = require('./redpen');
+var assert = require('assert');
+var redpen = require('./redpen');
 
 describe('redpen-test', function () {
     it('test validator.js', function (done) {
