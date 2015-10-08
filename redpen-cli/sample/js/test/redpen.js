@@ -1,4 +1,4 @@
-httpReq = require('http');
+var http = require('http');
 
 exports.callRedPen = function (request, assertion) {
     var options = {
@@ -8,7 +8,7 @@ exports.callRedPen = function (request, assertion) {
         headers: {'Content-Type': 'application/json'}
     };
 
-    var req = httpReq.request(options, function (res) {
+    var req = http.request(options, function (res) {
         var data = '';
         res.on('data', function (chunk) {
             data += chunk;
