@@ -37,8 +37,7 @@ REDPEN_PORT=8080
 
 # RedPen log file
 REDPEN_LOG_DIR=$REDPEN_HOME/logs
-test -w $REDPEN_LOG_DIR || REDPEN_LOG_DIR=/tmp
-REDPEN_LOG_FILE=$REDPEN_LOG_DIR/redpen.log
+REDPEN_LOG_FILENAME=redpen.log
 
 #####################################################
 #
@@ -64,8 +63,15 @@ fi
 if [ ! -e "$REDPEN_LOG_DIR" ]; then
     echo "not found log dir: $REDPEN_LOG_DIR" 1>&2
     echo "creating log dir: $REDPEN_LOG_DIR" 1>&2
-    mkdir $REDPEN_LOG_DIR
+    mkdir $REDPEN_LOG_DIR 2>/dev/null
+    if [ -e "$REDPEN_LOG_DIR" ]; then
+        echo "created log dir: $REDPEN_LOG_DIR" 1>&2
+    else
+        REDPEN_LOG_DIR=/tmp
+        echo "temporarily changed log dir: $REDPEN_LOG_DIR" 1>&2
+    fi
 fi
+REDPEN_LOG_FILE="$REDPEN_LOG_DIR/$REDPEN_LOG_FILENAME"
 
 if [ $COMMAND = "start" ]; then
     if [ -n "$STOP_KEY" ]; then
