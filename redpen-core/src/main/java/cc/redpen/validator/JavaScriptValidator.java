@@ -64,10 +64,10 @@ public class JavaScriptValidator extends Validator {
     protected void init() throws RedPenException {
         String jsValidatorsPath = getConfigAttribute("script-path").orElse(DEFAULT_JS_VALIDATORS_PATH);
         File jsDirectory = new File(jsValidatorsPath);
-        LOG.info("JavaScript validators directory: {}", jsDirectory.getAbsolutePath());
         if(!jsDirectory.exists()){
-            jsDirectory.mkdir();
+            LOG.info("JavaScript validators directory is missing: {}", jsDirectory.getAbsolutePath());
         }else {
+            LOG.info("JavaScript validators directory: {}", jsDirectory.getAbsolutePath());
             File[] jsValidatorFiles = jsDirectory.listFiles();
             if (jsValidatorFiles != null) {
                 for (File file : jsValidatorFiles) {
