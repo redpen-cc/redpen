@@ -10,11 +10,11 @@ steps to run this test:
  $ ./redpen-server
 
  3. rename validator.js.example to enable the validator implementation
- $ cd $REDPEN_HOME/sample
+ $ cd $REDPEN_HOME/js
  $ mv validator.js.example validator.js
 
  4. run mocha
- $ cd $REDPEN_HOME/sample
+ $ cd $REDPEN_HOME/js
  $ mocha
 
  */
