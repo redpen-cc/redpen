@@ -9,7 +9,7 @@ set SCRIPT_DIR=%~dp0
 for %%I in ("%SCRIPT_DIR%..") do set REDPEN_HOME=%%~dpfI
 
 set REDPEN_CLASSPATH=%REDPEN_HOME%/conf;%REDPEN_HOME%/lib/*
-set JAVA_OPTS=%JAVA_OPTS%
+set JAVA_OPTS=%JAVA_OPTS% -Dfile.encoding=UTF-8
 
 "%JAVA_HOME%\bin\java" %JAVA_OPTS% -classpath "%REDPEN_CLASSPATH%" cc.redpen.Main %*
 goto finally
