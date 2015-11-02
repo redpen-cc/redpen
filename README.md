@@ -42,7 +42,7 @@ Links
   * [SublimeLinter module for RedPen](https://github.com/taky/sublimelinter-redpen)
   * [Emacs redpen-paragraph by karronoli](https://libraries.io/emacs/redpen-paragraph/v0.2)
 * Extensions
-   * [unsuggested-kanji](https://github.com/so-c/redpen-validator) by soc
+   * [unsuggested-kanji](https://github.com/so-c/redpen-validator) by so-c
    * [ra-removed-word](http://www.clear-code.com/blog/2015/8/29.html) by ClearCode
 
 Deploy
