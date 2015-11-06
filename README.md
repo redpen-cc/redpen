@@ -19,6 +19,18 @@ Keywords
 
 proofreading,  document inspection, spellchecker, markup texts (Wiki, Markdown, AsciiDoc and LaTeX)
 
+Features
+=========
+
+- Language Independent
+- Highly customizable
+- Support markup text formats
+- Practical REST API and UI
+
+<p align="center">
+   <a href="http://redpen.cc"><img src="logo/redpen-ui.png"/></a>
+</p>
+
 How to contribute
 ==================
 
