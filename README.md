@@ -24,12 +24,15 @@ Features
 
 - Language Independent
 - Highly customizable
-- Support markup text formats
+- Support various markup text formats
 - Practical REST API and UI
+- [Plugin system (users can write their extensions with JavaScript](http://blog.redpen.cc/2015/09/08/writing-extension-with-javascript/)
 
 <p align="center">
-   <a href="http://redpen.cc"><img src="logo/redpen-ui.png"/></a>
+   <a href="http://redpen.herokuapp.com/"><img src="logo/redpen-ui.png"/></a>
 </p>
+
+
 
 How to contribute
 ==================
