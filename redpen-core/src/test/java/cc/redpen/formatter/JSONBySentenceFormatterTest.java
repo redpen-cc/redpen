@@ -84,7 +84,6 @@ public class JSONBySentenceFormatterTest extends Validator {
         assertNotNull(sentenceErrors.getJSONArray("errors"));
         assertEquals(1, sentenceErrors.getJSONArray("errors").length());
         JSONObject error = sentenceErrors.getJSONArray("errors").getJSONObject(0);
-        assertEquals("Found invalid symbol \"。\".", error.getString("message"));
         assertEquals("InvalidSymbol", error.getString("validator"));
 
     }
