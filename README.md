@@ -22,7 +22,7 @@ Features
 - Multi platform (MacOS, Windows, and Linux)
 - Support various markup text formats
 - [Plugin system: users can write their extensions with JavaScript](http://blog.redpen.cc/2015/09/08/writing-extension-with-javascript/)
-- Practical REST API and UI
+- [Practical REST API and UI](http://redpen.herokuapp.com/)
 <p align="center">
    <a href="http://redpen.herokuapp.com/"><img src="logo/redpen-ui.png"/></a>
 </p>
