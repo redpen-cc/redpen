@@ -2,13 +2,13 @@
  * redpen: a text inspection tool
  * Copyright (c) 2014-2015 Recruit Technologies Co., Ltd. and contributors
  * (see CONTRIBUTORS.md)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,6 +23,7 @@ import cc.redpen.model.Document;
 import cc.redpen.tokenizer.RedPenTokenizer;
 import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.RedPenTreeProcessor;
+import org.asciidoctor.internal.IOUtils;
 import org.pegdown.ParsingTimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,11 +38,13 @@ import java.util.Optional;
 
 /**
  * Parser for AsciiDoc format, utilizing AsciiDoctorJ.<br/>
- * <p/>
+ * <p>
  * AsciiDoc's syntax and grammar is documented at @see http://asciidoc.org/
  */
 public class AsciiDocParser extends BaseDocumentParser {
     private static final Logger LOG = LoggerFactory.getLogger(AsciiDocParser.class);
+
+    private static String ASCIIDOCTOR_EOF = "\n----\nEOF\n----\n";
 
     @Override
     public Document parse(InputStream io, Optional<String> fileName, SentenceExtractor sentenceExtractor, RedPenTokenizer tokenizer) throws RedPenException {
@@ -69,11 +72,14 @@ public class AsciiDocParser extends BaseDocumentParser {
             // register our documentbuilding TreeProcessor
             asciidoctor.javaExtensionRegistry().treeprocessor(new RedPenTreeProcessor(documentBuilder, sentenceExtractor, options));
 
+            // we need to add an EOF marker to asciidoctor's input text
+            // so that it correctly calculates the line number of the last line
+            String documentText = IOUtils.readFull(reader) + ASCIIDOCTOR_EOF;
             try {
                 // trigger the tree processor, which will consequently fill the documentBuilder
-                asciidoctor.readDocumentStructure(reader, options);
+                asciidoctor.readDocumentStructure(documentText, options);
             } catch (Exception e) {
-                LOG.error("Asciidoctor parser error: " + e.getMessage());
+                LOG.info("Asciidoctor parser error: " + e.getMessage());
             }
 
         } catch (ParsingTimeoutException e) {
