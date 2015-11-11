@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 public class AsciiDocParserTest {
 
@@ -116,7 +115,7 @@ public class AsciiDocParserTest {
         }
 
         assertNotNull("doc is null", doc);
-        assertEquals(2, doc.size());
+        assertEquals(3, doc.size());
 
         final Section firstSection = doc.getSection(0);
         assertEquals(1, firstSection.getHeaderContentsListSize());
@@ -133,6 +132,36 @@ public class AsciiDocParserTest {
         List<ValidationError> errors = redPen.validate(doc);
     }
 
+    @Test
+    public void testBlocks() throws UnsupportedEncodingException, RedPenException {
+        String sampleText = "= Test Blocks\n" +
+                "\n" +
+                "The following block should be ignored.\n" +
+                "\n" +
+                "[source,fake]\n" +
+                "----\n" +
+                "Ingredient dashi = KitchenImplements.grate(Fish.KATSUO);\n" +
+                "----\n" +
+                "\n" +
+                "This text is after the block. It appears on line ten.\n" +
+                "\n" +
+                "This text is after the text after the block. It appears on line twelve.";
+
+        Document doc = createFileContent(sampleText);
+
+        assertNotNull("doc is null", doc);
+        assertEquals(1, doc.size());
+
+        final Section firstSection = doc.getSection(0);
+        assertEquals(1, firstSection.getHeaderContentsListSize());
+        assertEquals("Test Blocks", firstSection.getHeaderContent(0).getContent());
+
+        assertEquals(3, firstSection.getNumberOfParagraphs());
+
+        assertEquals(10, firstSection.getParagraph(1).getSentence(0).getLineNumber());
+        assertEquals(12, firstSection.getParagraph(2).getSentence(0).getLineNumber());
+
+    }
 
     @Test
     public void testRemoveTextDecoration() throws UnsupportedEncodingException {
@@ -214,21 +243,21 @@ public class AsciiDocParserTest {
         assertEquals(16, doc.getSection(0).getParagraph(0).getSentence(1).getStartPositionOffset());
     }
 
-//    @Test
-//    public void testMappingTableWithShortSentence() {
-//        String sampleText = "Tsu is a city.";
-//        Document doc = createFileContent(sampleText);
-//        Section firstSections = doc.getSection(0);
-//        Paragraph firstParagraph = firstSections.getParagraph(0);
-//        assertEquals(1, firstParagraph.getNumberOfSentences());
-//        assertEquals("Tsu is a city.", doc.getSection(0).getParagraph(0).getSentence(0).getContent());
-//
-//        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(0).getLineNumber());
-//        assertEquals(0, doc.getSection(0).getParagraph(0).getSentence(0).getStartPositionOffset());
-//        assertEquals(doc.getSection(0).getParagraph(0).getSentence(0).getContent().length(),
-//                doc.getSection(0).getParagraph(0).getSentence(0).getOffsetMapSize());
-//
-//    }
+    @Test
+    public void testMappingTableWithShortSentence() {
+        String sampleText = "Tsu is a city.";
+        Document doc = createFileContent(sampleText);
+        Section firstSections = doc.getSection(0);
+        Paragraph firstParagraph = firstSections.getParagraph(0);
+        assertEquals(1, firstParagraph.getNumberOfSentences());
+        assertEquals("Tsu is a city.", doc.getSection(0).getParagraph(0).getSentence(0).getContent());
+
+        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(0).getLineNumber());
+        assertEquals(0, doc.getSection(0).getParagraph(0).getSentence(0).getStartPositionOffset());
+        assertEquals(doc.getSection(0).getParagraph(0).getSentence(0).getContent().length(),
+                doc.getSection(0).getParagraph(0).getSentence(0).getOffsetMapSize());
+
+    }
 
     @Test
     public void testGenerateDocumentWithList() {
@@ -276,29 +305,30 @@ public class AsciiDocParserTest {
         Paragraph firstParagraph = firstSections.getParagraph(0);
         assertEquals("It is a good day.", firstParagraph.getSentence(0).getContent());
         List<LineOffset> expectedOffsets = initializeMappingTable(
-                new LineOffset(4, 0),  // NOTE: asciidoctor reports 4th line when a document contains only one line.
-                new LineOffset(4, 1),
-                new LineOffset(4, 2),
-                new LineOffset(4, 3),
-                new LineOffset(4, 4),
-                new LineOffset(4, 5),
-                new LineOffset(4, 6),
-                new LineOffset(4, 7),
-                new LineOffset(4, 9),
-                new LineOffset(4, 10),
-                new LineOffset(4, 11),
-                new LineOffset(4, 12),
-                new LineOffset(4, 14),
-                new LineOffset(4, 15),
-                new LineOffset(4, 16),
-                new LineOffset(4, 17),
-                new LineOffset(4, 18));
+                new LineOffset(1, 0),
+                new LineOffset(1, 1),
+                new LineOffset(1, 2),
+                new LineOffset(1, 3),
+                new LineOffset(1, 4),
+                new LineOffset(1, 5),
+                new LineOffset(1, 6),
+                new LineOffset(1, 7),
+                new LineOffset(1, 9),
+                new LineOffset(1, 10),
+                new LineOffset(1, 11),
+                new LineOffset(1, 12),
+                new LineOffset(1, 14),
+                new LineOffset(1, 15),
+                new LineOffset(1, 16),
+                new LineOffset(1, 17),
+                new LineOffset(1, 18));
 
         assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMapSize());
         for (int i = 0; i < expectedOffsets.size(); i++) {
             assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i).get());
         }
     }
+
 
     private Document createFileContent(String inputDocumentString,
                                        Configuration config) {
