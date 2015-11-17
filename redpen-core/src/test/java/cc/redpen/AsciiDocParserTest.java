@@ -27,6 +27,7 @@ import cc.redpen.validator.ValidationError;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -115,7 +116,7 @@ public class AsciiDocParserTest {
         }
 
         assertNotNull("doc is null", doc);
-        assertEquals(3, doc.size());
+        assertEquals(4, doc.size());
 
         final Section firstSection = doc.getSection(0);
         assertEquals(1, firstSection.getHeaderContentsListSize());
@@ -329,6 +330,36 @@ public class AsciiDocParserTest {
         }
     }
 
+    @Test
+    public void testSampleDocuments() {
+        Document doc;
+
+        doc = createResourceContent("test_document_1.adoc");
+        doc = createResourceContent("test_document_2.adoc");
+
+        Section firstSections = doc.getSection(0);
+        Paragraph firstParagraph = firstSections.getParagraph(0);
+    }
+
+
+    private Document createResourceContent(String filename) {
+        DocumentParser parser = DocumentParser.ASCIIDOC;
+
+        Document doc = null;
+        try {
+            InputStream in = new FileInputStream(this.getClass().getClassLoader().getResource("asciidoc/" + filename).getFile());
+            Configuration configuration = new Configuration.ConfigurationBuilder().build();
+            doc = parser.parse(
+                    in,
+                    new SentenceExtractor(configuration.getSymbolTable()),
+                    configuration.getTokenizer());
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        return doc;
+    }
 
     private Document createFileContent(String inputDocumentString,
                                        Configuration config) {

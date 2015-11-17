@@ -20,280 +20,791 @@ package cc.redpen.parser;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
+import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.RedPenTokenizer;
-import org.asciidoctor.Asciidoctor;
-import org.asciidoctor.RedPenTreeProcessor;
-import org.asciidoctor.internal.IOUtils;
-import org.pegdown.ParsingTimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 
 /**
- * Parser for AsciiDoc format, utilizing AsciiDoctorJ.<br/>
+ * Erasing parser for the AsciiDoc format<br/>
+ * <p>
+ * One of the requirements for RedPen is that the parsed text's line & column position (ie: offset)
+ * be preserved throughout parsing and validation.
+ * <p>
+ * This parser attempts to solve this requirement by maintaining a model of the source
+ * document's characters and their original position, and then logically 'erasing' the parts of
+ * that model, usually the markup, that should not be presented to RedPen for validation.
+ * <p>
+ * Finally the remaining enerased text is transformed into RedPen's document model.
  * <p>
  * AsciiDoc's syntax and grammar is documented at @see http://asciidoc.org/
  */
 public class AsciiDocParser extends BaseDocumentParser {
-    private static final Logger LOG = LoggerFactory.getLogger(AsciiDocParser.class);
 
-    private static String ASCIIDOCTOR_EOF = "\n----\nEOF\n----\n";
+    private static final Logger LOG = LoggerFactory.getLogger(AsciiDocParser.class);
+    private static final Line EMPTY_LINE = new Line("", 0);
+
+    /**
+     * An array of AsciiDoctor macros
+     */
+    private static final String[] MACROS = {
+            "ifdef::",
+            "ifndef::",
+            "ifeval::",
+            "endif::",
+    };
+
+    /**
+     * An array of AsciiDoc admonitions
+     */
+    private static final String[] ADMONITIONS = {
+            "NOTE: ",
+            "TIP: ",
+            "IMPORTANT: ",
+            "CAUTION: ",
+            "WARNING: "
+    };
+
+    /**
+     * current parse state
+     */
+    private class State {
+        // are we in a block
+        public boolean inBlock = false;
+        // are we in a list?
+        public boolean inList = false;
+        // should we erase lines within the current block?
+        public boolean eraseBlock = true;
+        // the sort of block we are in
+        public char blockMarker = 0;
+        // length of the lead block marker
+        public int blockMarkerLength = 0;
+    }
+
+    /**
+     * The different ways embedded inline markers can be erased
+     */
+    private enum EraseStyle {
+        All,
+        None,
+        Markers,
+        InlineMarkup,
+        PreserveLabel,
+        CloseMarkerContainsDelimiters
+    }
+
+
+    /**
+     * An 'erasing' string utility class that stores the original offset for each preserved character
+     */
+    private static class Line {
+        // value returned for comparison if a character is escaped
+        static final char ESCAPED_CHARACTER_VALUE = 'ø';
+        static final String INLINE_MARKUP_DELIMITERS = " _*`#^~";
+
+        // a list of offsets for each character
+        List<Integer> offsets = new ArrayList<>();
+        // the text for the line
+        List<Character> text = new ArrayList<>();
+        // marks erased characters as invalid
+        List<Boolean> valid = new ArrayList<>();
+        // remembers which characters were escaped in the original string
+        List<Boolean> escaped = new ArrayList<>();
+
+        private int lineno = 0;
+        private boolean allSameCharacter = false;
+        private boolean erased = false;
+        private boolean inBlock = false;
+
+        private int sectionLevel = 0;
+        private int listLevel = 0;
+
+        public Line(String str, int lineno) {
+            this.lineno = lineno;
+            if (!str.isEmpty()) {
+                allSameCharacter = true;
+                char lastCh = 0;
+                for (int i = 0; i < str.length(); i++) {
+                    char ch = str.charAt(i);
+
+                    if ((i < str.length() - 1) && (ch == '\\')) {
+                        i++;
+                        ch = str.charAt(i);
+                        escaped.add(true);
+                    }
+                    else {
+                        escaped.add(false);
+                    }
+
+                    offsets.add(i);
+                    text.add(ch);
+                    valid.add(true);
+
+                    if ((lastCh != 0) && (lastCh != ch)) {
+                        allSameCharacter = false;
+                    }
+                    lastCh = ch;
+                }
+            }
+
+            // trim the end
+            while (!text.isEmpty() &&
+                    Character.isWhitespace(text.get(text.size() - 1))) {
+                text.remove(text.size() - 1);
+            }
+        }
+
+        public boolean isAllSameCharacter() {
+            return allSameCharacter;
+        }
+
+        public boolean isErased() {
+            return erased;
+        }
+
+        public boolean isInBlock() {
+            return inBlock;
+        }
+
+        public void setInBlock(boolean inBlock) {
+            this.inBlock = inBlock;
+        }
+
+        public int getSectionLevel() {
+            return sectionLevel;
+        }
+
+        public void setSectionLevel(int newSectionLevel) {
+            this.sectionLevel = newSectionLevel;
+        }
+
+        public int getListLevel() {
+            return listLevel;
+        }
+
+        public void setListLevel(int newListLevel) {
+            this.listLevel = newListLevel;
+        }
+
+        public void erase(int pos, int length) {
+            if ((pos >= 0) && (pos < valid.size())) {
+                for (int i = pos; (i < valid.size()) && (i < pos + length); i++) {
+                    valid.set(i, false);
+                }
+            }
+        }
+
+        public void erase() {
+            for (int i = 0; i < valid.size(); i++) {
+                valid.set(i, false);
+            }
+            erased = true;
+        }
+
+        public void erase(String segment) {
+            for (int i = 0; i < text.size(); i++) {
+                boolean found = true;
+                for (int j = 0; j < segment.length(); j++) {
+                    if (charAt(j + i) != segment.charAt(j)) {
+                        found = false;
+                        break;
+                    }
+                }
+                if (found) {
+                    erase(i, segment.length());
+                    i += segment.length();
+                }
+            }
+        }
+
+        /**
+         * Erase the open and close markers, and optionally all the text inside them
+         * Returns the position of the first enclosure or -1 if no enclosure was found
+         *
+         * @param open
+         * @param close
+         * @param eraseStyle
+         * @return position of first enclosure
+         */
+        public int eraseEnclosure(String open,
+                                  String close,
+                                  EraseStyle eraseStyle) {
+            boolean inEnclosure = false;
+            int firstEnclosurePosition = -1;
+            int lastCommaPosition = -1;
+            int enclosureStart = 0;
+            for (int i = 0; i < length(); i++) {
+                if (valid.get(i)) {
+                    if (!inEnclosure) {
+                        // look for the open string
+                        boolean foundOpen = true;
+                        for (int j = 0; j < open.length(); j++) {
+                            if (charAt(i + j) != open.charAt(j)) {
+                                foundOpen = false;
+                                break;
+                            }
+                        }
+                        // inline requires start of line or a space before the marker
+                        if (foundOpen && (eraseStyle == EraseStyle.InlineMarkup)) {
+                            if ((i != 0) &&
+                                    (INLINE_MARKUP_DELIMITERS.indexOf(charAt(i - 1)) == -1)) {
+                                foundOpen = false;
+                            }
+                        }
+                        if (foundOpen) {
+                            enclosureStart = i;
+                            inEnclosure = true;
+                            firstEnclosurePosition = i;
+                        }
+                    }
+                    else {
+                        // look for the close string
+                        boolean foundClose = true;
+                        if (eraseStyle == EraseStyle.CloseMarkerContainsDelimiters) {
+                            foundClose = (close.indexOf(charAt(i)) != -1);
+                        }
+                        else {
+                            for (int j = 0; j < close.length(); j++) {
+                                if (charAt(i + j) != close.charAt(j)) {
+                                    foundClose = false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (foundClose && (eraseStyle == EraseStyle.InlineMarkup)) {
+                            if ((i != length() - 1) &&
+                                    (INLINE_MARKUP_DELIMITERS.indexOf(charAt(i + close.length())) == -1)) {
+                                foundClose = false;
+                            }
+                        }
+
+                        if (foundClose) {
+                            switch (eraseStyle) {
+                                case All:
+                                    erase(enclosureStart, (i - enclosureStart) + close.length());
+                                    break;
+                                case Markers:
+                                case InlineMarkup:
+                                    erase(enclosureStart, open.length());
+                                    erase(i, close.length());
+                                    break;
+                                case PreserveLabel:
+                                    if (lastCommaPosition != -1) {
+                                        erase(enclosureStart, (lastCommaPosition + 1) - enclosureStart);
+                                        erase(i, close.length());
+                                    }
+                                    else {
+                                        erase(enclosureStart, open.length());
+                                        erase(i, close.length());
+                                    }
+                                    break;
+                                case CloseMarkerContainsDelimiters:
+                                    erase(enclosureStart, (i - enclosureStart));
+                                    break;
+                                case None:
+                                    break;
+                            }
+                            inEnclosure = false;
+                            lastCommaPosition = -1;
+                        }
+                        else if (charAt(i) == ',') {
+                            lastCommaPosition = i;
+                        }
+                    }
+                }
+            }
+            return firstEnclosurePosition;
+        }
+
+        public int length() {
+            return text.size();
+        }
+
+        public char charAt(int i) {
+            return charAt(i, false);
+        }
+
+        public char charAt(int i, boolean includeInvalid) {
+            if ((i >= 0) && (i < text.size())) {
+                if (escaped.get(i)) {
+                    return ESCAPED_CHARACTER_VALUE;
+                }
+                if (includeInvalid || valid.get(i)) {
+                    return text.get(i);
+                }
+            }
+            return 0;
+        }
+
+        public boolean isEmpty() {
+            for (int i = 0; i < text.size(); i++) {
+                if (!Character.isWhitespace(text.get(i))) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public boolean startsWith(String s) {
+            for (int i = 0; i < s.length(); i++) {
+                if (charAt(i) != s.charAt(i)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public Sentence toSentence() {
+            String content = "";
+            List<LineOffset> offsets = new ArrayList<>();
+            for (int i = 0; i < text.size(); i++) {
+                if (valid.get(i)) {
+                    content += text.get(i);
+                    offsets.add(new LineOffset(lineno, i));
+                }
+            }
+            if (content.isEmpty()) {
+                offsets.add(new LineOffset(lineno, 0));
+            }
+            Sentence sentence = new Sentence(content, offsets, Collections.EMPTY_LIST);
+            return sentence;
+        }
+
+        @Override
+        public String toString() {
+            String result = "";
+            for (int i = 0; i < text.size(); i++) {
+                if (valid.get(i)) {
+                    result += text.get(i);
+                }
+                else {
+                    result += "·" + text.get(i);
+                }
+            }
+            return (erased ? "X" : " ") +
+                    (inBlock ? "[" : " ") +
+                    sectionLevel + "-" +
+                    listLevel + "-" +
+                    String.format("%03d", lineno) + ": " +
+                    result;
+        }
+    }
+
+    /**
+     * A model of the original document, represented as an array of lines
+     */
+    private class Model {
+        private List<Line> lines = new ArrayList<>();
+
+        /**
+         * Return the offset string from the model at the given line number
+         *
+         * @param lineNumber
+         * @return
+         */
+        public Line getLine(int lineNumber) {
+            int index = lineNumber - 1;
+            if ((index >= 0) && (index < lines.size())) {
+                return lines.get(index);
+            }
+            return EMPTY_LINE;
+        }
+
+        public int lineCount() {
+            return lines.size();
+        }
+
+        public void addToBuilder(Document.DocumentBuilder builder) {
+            if (!lines.isEmpty()) {
+                if (lines.get(0).getSectionLevel() == 0) {
+                    // no header
+                    builder.addSection(0);
+                }
+                for (Line line : lines) {
+                    Sentence sentence = line.toSentence();
+                    if (line.getSectionLevel() != 0) {
+                        List<Sentence> headerSentences = new ArrayList<>();
+                        builder.addSection(line.getSectionLevel(), headerSentences);
+                    }
+                    else {
+                        builder.addSentence(sentence);
+                    }
+                }
+            }
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            for (Line ostring : lines) {
+                sb.append(ostring.toString());
+                sb.append("\n");
+            }
+            return sb.toString();
+        }
+    }
 
     @Override
     public Document parse(InputStream io, Optional<String> fileName, SentenceExtractor sentenceExtractor, RedPenTokenizer tokenizer) throws RedPenException {
         Document.DocumentBuilder documentBuilder = new Document.DocumentBuilder(tokenizer);
         fileName.ifPresent(documentBuilder::setFileName);
+
+        State state = new State();
+        Model model = new Model();
+
         BufferedReader reader = createReader(io);
+
+        int lineno = 0;
         try {
-            // create an asciidoctor instance
-            Asciidoctor asciidoctor = Asciidoctor.Factory.create();
-
-            // register our 'redpen' backend
-            InputStream rubySource = new ByteArrayInputStream(AsciiDoctorRedPenRubySource.SOURCE_TEXT.getBytes("UTF-8"));
-            asciidoctor.rubyExtensionRegistry().loadClass(rubySource);
-
-            // set our 'redpen' backend as the active AsciiDoctor backend
-            Map<String, Object> options = new HashMap<>();
-            options.put("backend", "redpen");
-
-            // tell AsciiDoctor to record the source line numbers
-            options.put("sourcemap", true);
-            Map<String, Object> attributes = new HashMap<>();
-            attributes.put("sourcemap", true);
-            options.put("attributes", attributes);
-
-            // register our documentbuilding TreeProcessor
-            asciidoctor.javaExtensionRegistry().treeprocessor(new RedPenTreeProcessor(documentBuilder, sentenceExtractor, options));
-
-            // we need to add an EOF marker to asciidoctor's input text
-            // so that it correctly calculates the line number of the last line
-            String documentText = IOUtils.readFull(reader) + ASCIIDOCTOR_EOF;
-            try {
-                // trigger the tree processor, which will consequently fill the documentBuilder
-                asciidoctor.readDocumentStructure(documentText, options);
-            } catch (Exception e) {
-                LOG.info("Asciidoctor parser error: " + e.getMessage());
+            // add the lines to the model
+            while (true) {
+                String line = reader.readLine();
+                if (line == null) {
+                    break;
+                }
+                lineno++;
+                model.lines.add(new Line(line, lineno));
             }
+            reader.close();
 
-        } catch (ParsingTimeoutException e) {
-            throw new RedPenException("Failed to parse timeout: ", e);
+            // process the model
+            for (Line offsetLine : model.lines) {
+                processLine(offsetLine, model, state);
+            }
+            processHeader(model);
+
         } catch (Exception e) {
-            throw new RedPenException("Exception when configuring AsciiDoctor", e);
+            e.printStackTrace();
+            LOG.error("Exception when parsing AsciiDoc file", e);
         }
+
+        System.out.println(model.toString());
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("AsciiDoc parser erasures:\n" + model.toString());
+        }
+
+        model.addToBuilder(documentBuilder);
 
         return documentBuilder.build();
     }
+
+    /**
+     * Does the give line start a list?
+     *
+     * @param line
+     * @return
+     */
+    private boolean isListElement(Line line) {
+
+        int pos = 0;
+        while (Character.isWhitespace(line.charAt(pos))) {
+            pos++;
+        }
+
+        // is the first non-space character a suitable list marker?
+        if (".-*".indexOf(line.charAt(pos)) != -1) {
+            char listMarker = line.charAt(pos);
+            int level = 1;
+            pos++;
+            // count the list marker's size
+            while (line.charAt(pos) == listMarker) {
+                pos++;
+                level++;
+            }
+            // we need a whitespace
+            if (Character.isWhitespace(line.charAt(pos))) {
+                // remember the list level
+                line.setListLevel(level);
+                // remove the list markup
+                line.erase(0, pos + 1);
+                return true;
+            }
+        }
+
+        // test for labelled lists
+        if ((line.charAt(line.length() - 1) == ':') &&
+                (line.charAt(line.length() - 2) == ':')) {
+            int level = 1;
+            pos = line.length() - 3;
+            while ((pos > 0) && line.charAt(pos) == ':') {
+                pos--;
+                level++;
+            }
+            line.setListLevel(level);
+            line.erase();
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Process the header, erasing the annotations that can follow it
+     *
+     * @param model
+     */
+    private void processHeader(Model model) {
+        // look for "= Text of header" or "Text of header\n==========="
+        if (model.lineCount() > 1) {
+            boolean haveHeader = false;
+            if ((model.getLine(1).charAt(0, true) == '=') &&
+                    (model.getLine(1).charAt(1, true) == ' ')) {
+                haveHeader = true;
+            }
+            else if ((model.getLine(1).length() == model.getLine(2).length()) &&
+                    model.getLine(2).isAllSameCharacter() &&
+                    (model.getLine(2).charAt(0, true) == '=')) {
+                haveHeader = true;
+            }
+
+            if (haveHeader) {
+                model.getLine(1).setSectionLevel(1);
+                // erase lines up until an empty line
+                for (int i = 2; i <= model.lineCount(); i++) {
+                    if (!model.getLine(i).isErased() && model.getLine(i).isEmpty()) {
+                        break;
+                    }
+                    model.getLine(i).erase();
+                }
+            }
+        }
+    }
+
+    /**
+     * Process the current line, removing asciidoc tags and markup and setting the current state
+     *
+     * @param line
+     * @param state the current state
+     */
+    private void processLine(Line line, Model model, State state) {
+
+        if (!line.isErased()) {
+
+            Line previousLine = model.getLine(line.lineno - 1);
+
+            if (state.inList && (line.getListLevel() == 0)) {
+                line.setListLevel(previousLine.getListLevel());
+            }
+
+            char firstChar = line.charAt(0);
+            char secondChar = line.charAt(1);
+
+            // check for block end
+            if (state.inBlock) {
+                if (line.isAllSameCharacter() &&
+                        (firstChar == state.blockMarker) &&
+                        (line.length() == state.blockMarkerLength)) {
+                    // end a regular block
+                    line.erase();
+                    state.inBlock = false;
+                }
+                else if ((line.length() >= 4) && (firstChar == '|') && (secondChar == '=')) {
+                    // end a table
+                    line.erase();
+                    state.inBlock = false;
+                }
+                // erase the block content
+                line.setInBlock(true);
+                if (state.eraseBlock) {
+                    line.erase();
+                }
+                return;
+            }
+
+
+            // check for old style heading (line followed by single-char-line of same length)
+            if (line.isAllSameCharacter() &&
+                    (line.length() == previousLine.length()) &&
+                    ("=-~^+".indexOf(firstChar) != -1) &&
+                    (". [".indexOf(previousLine.charAt(0, true)) == -1)) {
+                previousLine.setSectionLevel(1);
+                line.erase();
+                return;
+            }
+
+            // horizontal rule
+            if (line.isAllSameCharacter() && (line.length() == 3) && (line.charAt(0) == '\'')) {
+                line.erase();
+                return;
+            }
+
+            // fenced block
+            if (line.isAllSameCharacter() && (line.length() == 3) && (line.charAt(0) == '`')) {
+                state.inBlock = true;
+                state.eraseBlock = true;
+                state.blockMarker = firstChar;
+                state.blockMarkerLength = line.length();
+                line.setInBlock(true);
+                line.erase();
+                return;
+            }
+
+            // see if we are starting other blocks
+            if (line.isAllSameCharacter() && (line.length() >= 4)) {
+                switch (firstChar) {
+                    case '-':
+                    case '=':
+                    case '&':
+                    case '/':
+                    case '+':
+                    case '.':
+                        // blocks that have their innards erased
+                        state.inBlock = true;
+                        state.eraseBlock = true;
+                        state.blockMarker = firstChar;
+                        state.blockMarkerLength = line.length();
+                        line.setInBlock(true);
+                        line.erase();
+                        return;
+                    case '_':
+                    case '*':
+                        // blocks whose innards are preserved
+                        state.inBlock = true;
+                        state.eraseBlock = false;
+                        state.blockMarker = firstChar;
+                        state.blockMarkerLength = line.length();
+                        line.setInBlock(true);
+                        line.erase();
+                        return;
+                }
+            }
+
+            // see if this is a table marker
+            if ((line.length() >= 4) && (firstChar == '|') && (secondChar == '=')) {
+                line.erase();
+                state.inBlock = true;
+                state.eraseBlock = true;
+                state.blockMarker = '|';
+                state.blockMarkerLength = 1;
+                line.setInBlock(true);
+                return;
+            }
+
+            // check for a single-line literal sentence
+            if (!state.inList && (firstChar == ' ')) {
+                line.erase();
+                return;
+            }
+
+            // maybe we have a comment?
+            if ((firstChar == '/') && (secondChar == '/')) {
+                line.erase();
+                return;
+            }
+
+            // 'open' block marker
+            if ((firstChar == '-') && (secondChar == '-')) {
+                line.erase();
+                return;
+            }
+
+            // attributes
+            if (line.eraseEnclosure(":", ":", EraseStyle.None) == 0) {
+                line.erase();
+            }
+            if (line.eraseEnclosure("[", "]", EraseStyle.None) == 0) {
+                line.erase();
+            }
+
+            // check for a title
+            if ((firstChar == '.') && (" .".indexOf(secondChar) == -1)) {
+                line.erase(0, 1);
+            }
+
+            // erase urls and links
+            line.eraseEnclosure("link:", " ,[", EraseStyle.CloseMarkerContainsDelimiters);
+            line.eraseEnclosure("http://", " ,[", EraseStyle.CloseMarkerContainsDelimiters);
+
+            // other directives (image, include etc)
+            line.eraseEnclosure("image:", " ,[", EraseStyle.CloseMarkerContainsDelimiters);
+            line.eraseEnclosure("include:", " ,[", EraseStyle.CloseMarkerContainsDelimiters);
+
+            // enclosed directives
+            line.eraseEnclosure("+++", "+++", EraseStyle.All);
+            line.eraseEnclosure("[[", "]]", EraseStyle.All);
+
+            line.eraseEnclosure("<<", ">>", EraseStyle.PreserveLabel);
+
+            line.eraseEnclosure("{", "}", EraseStyle.Markers); // NOTE: should we make substitutions?
+            line.eraseEnclosure("[", "]", EraseStyle.Markers);
+
+            // headers
+            int headerIndent = 0;
+            while (line.charAt(headerIndent) == '=') {
+                headerIndent++;
+            }
+            if ((headerIndent > 0) && (line.charAt(headerIndent) == ' ')) {
+                line.erase(0, headerIndent + 1);
+                line.setSectionLevel(headerIndent);
+            }
+
+            // lists!
+            if (isListElement(line)) {
+                state.inList = true;
+            }
+
+            // continuation markers
+            if (line.charAt(line.length() - 1) == '+') {
+                if (line.length() == 0) {
+                    line.erase();
+                }
+                else {
+                    line.erase(line.length() - 1, 1);
+                }
+            }
+
+            // a blank line will cancel any list element we are in
+            if (state.inList && (line.length() == 0)) {
+                state.inList = false;
+                line.setListLevel(0);
+            }
+
+            // macros
+            for (String macro : MACROS) {
+                if (line.startsWith(macro)) {
+                    line.erase();
+                    break;
+                }
+            }
+            // admonitions
+            for (String admonition : ADMONITIONS) {
+                if (line.startsWith(admonition)) {
+                    line.erase(0, admonition.length());
+                    break;
+                }
+            }
+
+            // inline markup (bold, italics etc)
+            line.eraseEnclosure("__", "__", EraseStyle.Markers);
+            line.eraseEnclosure("**", "**", EraseStyle.Markers);
+            line.eraseEnclosure("``", "``", EraseStyle.Markers);
+            line.eraseEnclosure("##", "##", EraseStyle.Markers);
+            line.eraseEnclosure("^", "^", EraseStyle.Markers);
+            line.eraseEnclosure("~", "~", EraseStyle.Markers);
+
+            line.eraseEnclosure("_", "_", EraseStyle.InlineMarkup);
+            line.eraseEnclosure("*", "*", EraseStyle.InlineMarkup);
+            line.eraseEnclosure("`", "`", EraseStyle.InlineMarkup);
+            line.eraseEnclosure("#", "#", EraseStyle.InlineMarkup);
+
+            line.erase("'`");
+            line.erase("`'");
+            line.erase("\"`");
+            line.erase("`\"");
+            line.erase("(C)");
+            line.erase("(R)");
+            line.erase("(TM)");
+        }
+    }
 }
 
-/**
- * The Ruby source for the AsciiDoctor RedPen backend
- */
-class AsciiDoctorRedPenRubySource {
-    public static String SOURCE_TEXT = "# encoding: UTF-8\n" +
-            "module Asciidoctor\n" +
-            "class Converter::RedPen < Converter::BuiltIn\n" +
-
-            "def initialize backend, opts = {}\n" +
-            "end\n" +
-
-            "def redpen_output node, opts = {}\n" +
-            "  content = defined?(node.content) ? node.content : (defined?(node.text) ? node.text : '')\n" +
-            "  location=''\n" +
-
-            // add the line number to the text, if known, bracketed by ^A and ^B
-            "  if defined?(node.source_location) && (node.source_location != nil)\n" +
-            "    location = \"\\001#{node.source_location.lineno}\\002\"\n" +
-            "  end\n" +
-            // return the location, and the converted content bracketed by ^C and ^D
-            "  \"#{location}\\003#{content}\\004\"\n" +
-            "end\n" +
-
-            "alias paragraph redpen_output\n" +
-            "alias document redpen_output\n" +
-            "alias embedded redpen_output\n" +
-            "alias outline redpen_output\n" +
-            "alias section redpen_output\n" +
-            "alias admonition redpen_output\n" +
-            "alias audio redpen_output\n" +
-            "alias colist redpen_output\n" +
-            "alias example redpen_output\n" +
-            "alias floating_title redpen_output\n" +
-            "alias image redpen_output\n" +
-            "alias listing redpen_output\n" +
-            "alias literal redpen_output\n" +
-            "alias stem redpen_output\n" +
-            "alias open redpen_output\n" +
-            "alias page_break redpen_output\n" +
-            "alias preamble redpen_output\n" +
-            "alias quote redpen_output\n" +
-            "alias thematic_break redpen_output\n" +
-            "alias sidebar redpen_output\n" +
-            "alias table redpen_output\n" +
-            "alias toc redpen_output\n" +
-            "alias dlist redpen_output\n" +
-            "alias olist redpen_output\n" +
-            "alias ulist redpen_output\n" +
-            "alias verse redpen_output\n" +
-            "alias video redpen_output\n" +
-            "alias inline_anchor redpen_output\n" +
-            "alias inline_break redpen_output\n" +
-            "alias inline_button redpen_output\n" +
-            "alias inline_callout redpen_output\n" +
-            "alias inline_footnote redpen_output\n" +
-            "alias inline_image redpen_output\n" +
-            "alias inline_indexterm redpen_output\n" +
-            "alias inline_kbd redpen_output\n" +
-            "alias inline_menu redpen_output\n" +
-            "alias inline_quoted redpen_output\n" +
-            "end\n" +
-
-            // monkey patch the parser to remember the header source lines
-            // this change adds each header source line, and its line number,
-            // to document-level attributes we can retreive later
-            "class AbstractNode\n" +
-            "  attr_accessor :source_text\n" +
-            "end\n" +
-
-            "class Parser\n" +
-            "  def self.parse_section_title(reader, document)\n" +
-            "    line1 = reader.read_line\n" +
-            "    line1_lineno = reader.cursor.lineno\n" +
-            "    sect_id = nil\n" +
-            "    sect_title = nil\n" +
-            "    sect_level = -1\n" +
-            "    sect_reftext = nil\n" +
-            "    single_line = true\n" +
-            "\n" +
-            "    first_char = line1.chr\n" +
-            "    if (first_char == '=' || (Compliance.markdown_syntax && first_char == '#')) &&\n" +
-            "        (match = AtxSectionRx.match(line1))\n" +
-            "      sect_level = single_line_section_level match[1]\n" +
-            "      sect_title = match[2]\n" +
-            "      if sect_title.end_with?(']]') && (anchor_match = InlineSectionAnchorRx.match(sect_title))\n" +
-            "        if anchor_match[2].nil?\n" +
-            "          sect_title = anchor_match[1]\n" +
-            "          sect_id = anchor_match[3]\n" +
-            "          sect_reftext = anchor_match[4]\n" +
-            "        end\n" +
-            "      end\n" +
-            "    elsif Compliance.underline_style_section_titles\n" +
-            "      if (line2 = reader.peek_line(true)) && SECTION_LEVELS.has_key?(line2.chr) && line2 =~ SetextSectionLineRx &&\n" +
-            "        (name_match = SetextSectionTitleRx.match(line1)) &&\n" +
-            "        # chomp so that a (non-visible) endline does not impact calculation\n" +
-            "        (line_length(line1) - line_length(line2)).abs <= 1\n" +
-            "        sect_title = name_match[1]\n" +
-            "        if sect_title.end_with?(']]') && (anchor_match = InlineSectionAnchorRx.match(sect_title))\n" +
-            "          if anchor_match[2].nil?\n" +
-            "            sect_title = anchor_match[1]\n" +
-            "            sect_id = anchor_match[3]\n" +
-            "            sect_reftext = anchor_match[4]\n" +
-            "          end\n" +
-            "        end\n" +
-            "        sect_level = section_level line2\n" +
-            "        single_line = false\n" +
-            "        reader.advance\n" +
-            "      end\n" +
-            "    end\n" +
-            "    if sect_level >= 0\n" +
-            "      sect_level += document.attr('leveloffset', 0).to_i\n" +
-            "    end\n" +
-            "    document.attributes['header_lines_source'] ||= []\n" +
-            "    document.attributes['header_lines_source'].push(line1)\n" +
-            "    document.attributes['header_lines_linenos'] ||= []\n" +
-            "    document.attributes['header_lines_linenos'].push(line1_lineno)\n" +
-            "    [sect_id, sect_reftext, sect_title, sect_level, single_line]\n" +
-            "  end\n\n" +
-            // the list item reader did not remember the source location or source text
-            " def self.next_list_item(reader, list_block, match, sibling_trait = nil)\n" +
-            "    if (list_type = list_block.context) == :dlist\n" +
-            "      list_term = ListItem.new(list_block, match[1])\n" +
-            "      list_item = ListItem.new(list_block, match[3])\n" +
-            "      has_text = !match[3].nil_or_empty?\n" +
-            "    else\n" +
-            "      # Create list item using first line as the text of the list item\n" +
-            "      text = match[2]\n" +
-            "      checkbox = false\n" +
-            "      if list_type == :ulist && text.start_with?('[')\n" +
-            "        if text.start_with?('[ ] ')\n" +
-            "          checkbox = true\n" +
-            "          checked = false\n" +
-            "          text = text[3..-1].lstrip\n" +
-            "        elsif text.start_with?('[x] ') || text.start_with?('[*] ')\n" +
-            "          checkbox = true\n" +
-            "          checked = true\n" +
-            "          text = text[3..-1].lstrip\n" +
-            "        end\n" +
-            "      end\n" +
-            "      list_item = ListItem.new(list_block, text)\n" +
-            "      if checkbox\n" +
-            "        # FIXME checklist never makes it into the options attribute\n" +
-            "        list_block.attributes['checklist-option'] = ''\n" +
-            "        list_item.attributes['checkbox'] = ''\n" +
-            "        list_item.attributes['checked'] = '' if checked\n" +
-            "      end\n" +
-            "      sibling_trait ||= resolve_list_marker(list_type, match[1], list_block.items.size, true, reader)\n" +
-            "      list_item.marker = sibling_trait\n" +
-            "      has_text = true\n" +
-            "    end\n" +
-            "    list_item.source_location = reader.cursor\n" +
-            "    list_item.source_text = match\n" +
-            "    # first skip the line with the marker / term\n" +
-            "    reader.advance\n" +
-            "    cursor = reader.cursor\n" +
-            "    list_item_reader = Reader.new read_lines_for_list_item(reader, list_type, sibling_trait, has_text), cursor\n" +
-            "    if list_item_reader.has_more_lines?\n" +
-            "      comment_lines = list_item_reader.skip_line_comments\n" +
-            "      subsequent_line = list_item_reader.peek_line\n" +
-            "      list_item_reader.unshift_lines comment_lines unless comment_lines.empty? \n" +
-            "      if !subsequent_line.nil?\n" +
-            "        continuation_connects_first_block = subsequent_line.empty?\n" +
-            "        # if there's no continuation connecting the first block, then\n" +
-            "        # treat the lines as paragraph text (activated when has_text = false)\n" +
-            "        if !continuation_connects_first_block && list_type != :dlist\n" +
-            "          has_text = false\n" +
-            "        end\n" +
-            "        content_adjacent = !continuation_connects_first_block && !subsequent_line.empty?\n" +
-            "      else\n" +
-            "        continuation_connects_first_block = false\n" +
-            "        content_adjacent = false\n" +
-            "      end\n" +
-            "      # only relevant for :dlist\n" +
-            "      options = {:text => !has_text}\n" +
-            "      # we can look for blocks until there are no more lines (and not worry\n" +
-            "      # about sections) since the reader is confined within the boundaries of a\n" +
-            "      # list\n" +
-            "      while list_item_reader.has_more_lines?\n" +
-            "        new_block = next_block(list_item_reader, list_block, {}, options)\n" +
-            "        list_item << new_block if new_block\n" +
-            "      end\n" +
-            "      list_item.fold_first(continuation_connects_first_block, content_adjacent)\n" +
-            "    end\n" +
-            "    if list_type == :dlist\n" +
-            "      unless list_item.text? || list_item.blocks?\n" +
-            "        list_item = nil\n" +
-            "      end\n" +
-            "      [list_term, list_item]\n" +
-            "    else\n" +
-            "      list_item\n" +
-            "    end\n" +
-            "  end\n" +
-            "end\n" +
-            "\n" +
-
-            "Asciidoctor::Converter::Factory.register Asciidoctor::Converter::RedPen, [\"redpen\"]\n" +
-
-            // need to prevent AsciiDoctor's substitutors from replacing quotes with fancy-quotes, and (c) with the &copy; etc
-            "Substitutors::SUBS[:basic]=[:specialcharacters]\n" +
-            "Substitutors::SUBS[:normal]=[:specialcharacters, :quotes, :attributes,  :macros, :post_replacements]\n" +
-            "Substitutors::SUBS[:verbatim]=[:specialcharacters, :callouts]\n" +
-            "Substitutors::SUBS[:title]=[:specialcharacters, :quotes, :macros, :attributes, :post_replacements]\n" +
-            "Substitutors::SUBS[:header]=[:specialcharacters, :attributes]\n" +
-            "end\n";
-}
