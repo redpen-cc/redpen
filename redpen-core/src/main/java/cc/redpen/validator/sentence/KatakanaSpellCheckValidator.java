@@ -171,6 +171,13 @@ final public class KatakanaSpellCheckValidator extends Validator {
         if (confFile.isPresent()) {
             customExceptions.addAll(WORD_LIST.loadCachedFromFile(new File(confFile.get()), "KatakanaSpellCheckValidator user dictionary"));
         }
+
+        getConfigAttribute("list").ifPresent((f -> {
+            LOG.info("User defined Katakana words list found.");
+            customExceptions.addAll(Arrays.asList(f.split(",")));
+            LOG.info("Succeeded to add elements of user defined list.");
+        }));
+
         minimumRatio = (float) getConfigAttributeAsDouble("min_ratio", DEFAULT_SIMILARITY_RATIO);
         minimumFrequencies = getConfigAttributeAsInt("min_freq", DEFAULT_MINIMUM_FREQUENCIES);
 
