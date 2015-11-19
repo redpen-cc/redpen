@@ -54,7 +54,9 @@ public class AsciiDocParserTest {
         String sampleText = "Instances Overview\n==================\n" + "Author's Name <person@email.address>\nv1.2, 2015-08\n" +
                 "\nThis is the optional preamble (an untitled section body). Useful for " +
                 "writing simple sectionless documents consisting only of a preamble.\n\n" +
+
                 "NOTE: The abstract, preface, appendix, bibliography, glossary and index section titles are significant ('specialsections').\n" +
+
                 "\n\n:numbered!:\n[abstract]\n" +
                 "Instances\n" +
                 "---------\n" +
@@ -122,7 +124,7 @@ public class AsciiDocParserTest {
         assertEquals(1, firstSection.getHeaderContentsListSize());
         assertEquals("Instances Overview", firstSection.getHeaderContent(0).getContent());
         assertEquals(0, firstSection.getNumberOfLists());
-        assertEquals(1, firstSection.getNumberOfParagraphs());
+        assertEquals(2, firstSection.getNumberOfParagraphs());
         assertEquals(0, firstSection.getNumberOfSubsections());
 
         Configuration configuration = new Configuration.ConfigurationBuilder()
@@ -174,7 +176,7 @@ public class AsciiDocParserTest {
 
     @Test
     public void testSectionHeader() throws UnsupportedEncodingException {
-        String sampleText = "# About _Gekioko_.\n\n" +
+        String sampleText = "= About _Gekioko_.\n\n" +
                 "Gekioko means angry.";
 
         Document doc = createFileContent(sampleText);
@@ -265,7 +267,7 @@ public class AsciiDocParserTest {
         String sampleText = "There are several railway companies in Japan as follows.\n";
         sampleText += "\n";
         sampleText += "* Tokyu\n";
-        sampleText += "**  Toyoko Line\n";
+        sampleText += "  **  Toyoko Line\n";
         sampleText += "** Denentoshi Line\n";
         sampleText += "* Keio\n";
         sampleText += "* Odakyu\n";
@@ -280,7 +282,7 @@ public class AsciiDocParserTest {
         assertEquals("Toyoko Line", doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).getContent());
         assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(1).getLevel());
         assertEquals(4, doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).getLineNumber());
-        assertEquals(4, doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).getStartPositionOffset());
+        assertEquals(6, doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).getStartPositionOffset());
 
         assertEquals("Denentoshi Line", doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).getContent());
         assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(2).getLevel());
@@ -296,6 +298,43 @@ public class AsciiDocParserTest {
         assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(4).getLevel());
         assertEquals(7, doc.getSection(0).getListBlock(0).getListElement(4).getSentence(0).getLineNumber());
         assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(4).getSentence(0).getStartPositionOffset());
+
+    }
+
+    @Test
+    public void testLabelledList() {
+        String sampleText = "= SampleDoc\n" +
+                "v0.0.2, 2015-11-17\n" +
+                ":last-update-label!:\n" +
+                "\n" +
+                "== 用語定義\n" +
+                "ユビキタス言語を定義します。\n" +
+                "\n" +
+                "Some word::\n" +
+                "なにかの意味をのせて用例をのせます。\n" +
+                "\n" +
+                "リリース::\n" +
+                "ソフトウェアを顧客に提供することです。\n" +
+                "\n" +
+                "redpen::\n" +
+                "RedPen はオープンソースの校正ツールです。RedPen は技術文書が文書規約に従って書かれているかを自動検査します。 現在の RedPen 日本語ドキュメントは十分検査されておりません。校正にはもう少々時間がかかる予定です。誤りなど見つかりましたら、https://github.com/redpen-cc/redpen-doc-ja に Issue 登録しておしらせ頂けると幸いです。";
+
+        Document doc = createFileContent(sampleText);
+        assertEquals(3, doc.getSection(1).getListBlock(0).getNumberOfListElements());
+        assertEquals("なにかの意味をのせて用例をのせます。", doc.getSection(1).getListBlock(0).getListElement(0).getSentence(0).getContent());
+        assertEquals(15, doc.getSection(1).getListBlock(0).getListElement(2).getSentence(0).getLineNumber());
+
+    }
+
+    @Test
+    public void testEscapedMarkup() {
+        String sampleText = "It is a \\*good* day.";
+        Document doc = createFileContent(sampleText);
+        Paragraph firstParagraph = doc.getSection(0).getParagraph(0);
+        assertEquals("It is a *good* day.", firstParagraph.getSentence(0).getContent());
+
+        // the offset of the 8th character (ie: *) is actually 9
+        assertEquals(9, firstParagraph.getSentence(0).getOffset(8).get().offset);
     }
 
     @Test

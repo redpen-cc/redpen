@@ -27,23 +27,20 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 /**
  * Erasing parser for the AsciiDoc format<br/>
  * <p>
- * One of the requirements for RedPen is that the parsed text's line & column position (ie: offset)
- * be preserved throughout parsing and validation.
+ * One of the requirements for RedPen is that the line & column position (ie: offset) for
+ * each character in the parsed text be preserved throughout parsing and validation.
  * <p>
- * This parser attempts to solve this requirement by maintaining a model of the source
+ * This AsciiDoc parser attempts to solve this requirement by maintaining a model of the source
  * document's characters and their original position, and then logically 'erasing' the parts of
- * that model, usually the markup, that should not be presented to RedPen for validation.
+ * that model - usually the markup - that should not be presented to RedPen for validation.
  * <p>
- * Finally the remaining enerased text is transformed into RedPen's document model.
+ * The remaining "un-erased" text is transformed into RedPen's document model.
  * <p>
  * AsciiDoc's syntax and grammar is documented at @see http://asciidoc.org/
  */
@@ -53,7 +50,7 @@ public class AsciiDocParser extends BaseDocumentParser {
     private static final Line EMPTY_LINE = new Line("", 0);
 
     /**
-     * An array of AsciiDoctor macros
+     * An array of AsciiDoctor macros to erase
      */
     private static final String[] MACROS = {
             "ifdef::",
@@ -63,7 +60,7 @@ public class AsciiDocParser extends BaseDocumentParser {
     };
 
     /**
-     * An array of AsciiDoc admonitions
+     * An array of AsciiDoc admonitions to erase
      */
     private static final String[] ADMONITIONS = {
             "NOTE: ",
@@ -74,7 +71,7 @@ public class AsciiDocParser extends BaseDocumentParser {
     };
 
     /**
-     * current parse state
+     * current parser state
      */
     private class State {
         // are we in a block
@@ -108,7 +105,7 @@ public class AsciiDocParser extends BaseDocumentParser {
     private static class Line {
         // value returned for comparison if a character is escaped
         static final char ESCAPED_CHARACTER_VALUE = 'ø';
-        static final String INLINE_MARKUP_DELIMITERS = " _*`#^~";
+        static final String INLINE_MARKUP_DELIMITERS = " _*`#^~.,";
 
         // a list of offsets for each character
         List<Integer> offsets = new ArrayList<>();
@@ -119,16 +116,23 @@ public class AsciiDocParser extends BaseDocumentParser {
         // remembers which characters were escaped in the original string
         List<Boolean> escaped = new ArrayList<>();
 
-        private int lineno = 0;
+        private int lineNo = 0;
         private boolean allSameCharacter = false;
         private boolean erased = false;
         private boolean inBlock = false;
 
         private int sectionLevel = 0;
         private int listLevel = 0;
+        private boolean listStart = false;
 
+        /**
+         * Construct a line using the supplied string
+         *
+         * @param str    the text of the line
+         * @param lineno the original line number
+         */
         public Line(String str, int lineno) {
-            this.lineno = lineno;
+            this.lineNo = lineno;
             if (!str.isEmpty()) {
                 allSameCharacter = true;
                 char lastCh = 0;
@@ -162,38 +166,84 @@ public class AsciiDocParser extends BaseDocumentParser {
             }
         }
 
+        /**
+         * Is this line a repeating set of the same character?
+         *
+         * @return
+         */
         public boolean isAllSameCharacter() {
             return allSameCharacter;
         }
 
+        /**
+         * Has this line been completely erased?
+         *
+         * @return
+         */
         public boolean isErased() {
             return erased;
         }
 
+        /**
+         * Is this line in a block?
+         *
+         * @return
+         */
         public boolean isInBlock() {
             return inBlock;
+        }
+
+
+        /**
+         * Is this line the start of a new list item?
+         *
+         * @return
+         */
+        public boolean isListStart() {
+            return listStart;
+        }
+
+        /**
+         * Return the list level for this line, or zero if it is not in a list.
+         *
+         * @return the list level, or zero if not in a list
+         */
+        public int getListLevel() {
+            return listLevel;
+        }
+
+        /**
+         * If the line is a section header, return the section level,
+         * or zero if the line is not a section header
+         *
+         * @return the section level or zero if not a section header
+         */
+        public int getSectionLevel() {
+            return sectionLevel;
         }
 
         public void setInBlock(boolean inBlock) {
             this.inBlock = inBlock;
         }
 
-        public int getSectionLevel() {
-            return sectionLevel;
-        }
-
         public void setSectionLevel(int newSectionLevel) {
             this.sectionLevel = newSectionLevel;
-        }
-
-        public int getListLevel() {
-            return listLevel;
         }
 
         public void setListLevel(int newListLevel) {
             this.listLevel = newListLevel;
         }
 
+        public void setListStart(boolean listStart) {
+            this.listStart = listStart;
+        }
+
+        /**
+         * Erase length characters in the line, starting at pos
+         *
+         * @param pos
+         * @param length
+         */
         public void erase(int pos, int length) {
             if ((pos >= 0) && (pos < valid.size())) {
                 for (int i = pos; (i < valid.size()) && (i < pos + length); i++) {
@@ -202,6 +252,9 @@ public class AsciiDocParser extends BaseDocumentParser {
             }
         }
 
+        /**
+         * Erase the whole line
+         */
         public void erase() {
             for (int i = 0; i < valid.size(); i++) {
                 valid.set(i, false);
@@ -209,6 +262,11 @@ public class AsciiDocParser extends BaseDocumentParser {
             erased = true;
         }
 
+        /**
+         * Erase all occurances of the given string
+         *
+         * @param segment
+         */
         public void erase(String segment) {
             for (int i = 0; i < text.size(); i++) {
                 boolean found = true;
@@ -325,14 +383,33 @@ public class AsciiDocParser extends BaseDocumentParser {
             return firstEnclosurePosition;
         }
 
+        /**
+         * Return the length of the line
+         *
+         * @return
+         */
         public int length() {
             return text.size();
         }
 
+        /**
+         * Return the character at the given position. Erase characters will return 0 rather
+         * than the actual character
+         *
+         * @param i
+         * @return
+         */
         public char charAt(int i) {
             return charAt(i, false);
         }
 
+        /**
+         * Return the character at the given position, optionally including erased characters
+         *
+         * @param i
+         * @param includeInvalid
+         * @return
+         */
         public char charAt(int i, boolean includeInvalid) {
             if ((i >= 0) && (i < text.size())) {
                 if (escaped.get(i)) {
@@ -345,15 +422,81 @@ public class AsciiDocParser extends BaseDocumentParser {
             return 0;
         }
 
-        public boolean isEmpty() {
-            for (int i = 0; i < text.size(); i++) {
-                if (!Character.isWhitespace(text.get(i))) {
-                    return false;
+        /**
+         * Return the offset for the character at the given position
+         *
+         * @param i
+         * @return
+         */
+        public int getOffset(int i) {
+            if (i >= 0) {
+                if (i < offsets.size()) {
+                    return offsets.get(i);
+                }
+                else {
+                    return offsets.size();
                 }
             }
+            return 0;
+        }
+
+        /**
+         * Return the original line number for this line
+         *
+         * @return
+         */
+        public int getLineNo() {
+            return lineNo;
+        }
+
+        /**
+         * Return the raw character at the specified position, ignoring its validity.
+         *
+         * @param i
+         * @return
+         */
+        public char rawCharAt(int i) {
+            if ((i >= 0) && (i < text.size())) {
+                return text.get(i);
+            }
+            return ' ';
+        }
+
+        /**
+         * Is the character at the given position valid?
+         *
+         * @param i
+         * @return
+         */
+        public boolean isValid(int i) {
+            if ((i >= 0) && (i < text.size())) {
+                return valid.get(i);
+            }
+            return false;
+        }
+
+        /**
+         * Is the character at the given position empty (ie: whitespace or invalid)
+         *
+         * @return
+         */
+        public boolean isEmpty() {
+            for (int i = 0; i < text.size(); i++) {
+                if (!Character.isWhitespace(text.get(i)))
+                    if (valid.get(i)) {
+                        return false;
+                    }
+            }
+
             return true;
         }
 
+        /**
+         * Does the line start with the given string?
+         *
+         * @param s
+         * @return
+         */
         public boolean startsWith(String s) {
             for (int i = 0; i < s.length(); i++) {
                 if (charAt(i) != s.charAt(i)) {
@@ -362,22 +505,6 @@ public class AsciiDocParser extends BaseDocumentParser {
             }
 
             return true;
-        }
-
-        public Sentence toSentence() {
-            String content = "";
-            List<LineOffset> offsets = new ArrayList<>();
-            for (int i = 0; i < text.size(); i++) {
-                if (valid.get(i)) {
-                    content += text.get(i);
-                    offsets.add(new LineOffset(lineno, i));
-                }
-            }
-            if (content.isEmpty()) {
-                offsets.add(new LineOffset(lineno, 0));
-            }
-            Sentence sentence = new Sentence(content, offsets, Collections.EMPTY_LIST);
-            return sentence;
         }
 
         @Override
@@ -395,7 +522,9 @@ public class AsciiDocParser extends BaseDocumentParser {
                     (inBlock ? "[" : " ") +
                     sectionLevel + "-" +
                     listLevel + "-" +
-                    String.format("%03d", lineno) + ": " +
+                    String.format("%03d", lineNo) +
+                    (listStart ? "*" : ":") +
+                    " " +
                     result;
         }
     }
@@ -405,6 +534,19 @@ public class AsciiDocParser extends BaseDocumentParser {
      */
     private class Model {
         private List<Line> lines = new ArrayList<>();
+
+        private int lineIndex = 0;
+        private SentenceExtractor sentenceExtractor;
+
+        /**
+         * Construct a model. The sentence extract will be used delimit sentences and
+         * join lines together when adding the model to the document builder
+         *
+         * @param sentenceExtractor
+         */
+        public Model(SentenceExtractor sentenceExtractor) {
+            this.sentenceExtractor = sentenceExtractor;
+        }
 
         /**
          * Return the offset string from the model at the given line number
@@ -420,27 +562,119 @@ public class AsciiDocParser extends BaseDocumentParser {
             return EMPTY_LINE;
         }
 
+        /**
+         * Add a line to the model
+         *
+         * @param line
+         */
+        public void add(Line line) {
+            lines.add(line);
+        }
+
+        /**
+         * Return the number of lines in the model
+         *
+         * @return
+         */
         public int lineCount() {
             return lines.size();
         }
 
-        public void addToBuilder(Document.DocumentBuilder builder) {
-            if (!lines.isEmpty()) {
-                if (lines.get(0).getSectionLevel() == 0) {
-                    // no header
-                    builder.addSection(0);
-                }
-                for (Line line : lines) {
-                    Sentence sentence = line.toSentence();
-                    if (line.getSectionLevel() != 0) {
-                        List<Sentence> headerSentences = new ArrayList<>();
-                        builder.addSection(line.getSectionLevel(), headerSentences);
+        /**
+         * Set the line pointer to the first  line
+         */
+        public void rewind() {
+            lineIndex = 0;
+        }
+
+        /**
+         * Get the next line from the model, or null if there are no more lines
+         *
+         * @return
+         */
+        public Line getNextLine() {
+            if (lineIndex < lines.size()) {
+                Line line = lines.get(lineIndex);
+                lineIndex++;
+                return line;
+            }
+            return null;
+        }
+
+        /**
+         * Return the current line from the model, or null if we've run out of lines
+         *
+         * @return
+         */
+        public Line getCurrentLine() {
+            if (lineIndex < lines.size()) {
+                Line line = lines.get(lineIndex);
+                return line;
+            }
+            return null;
+        }
+
+        /**
+         * Are there more lines to iterate through?
+         *
+         * @return
+         */
+        public boolean isMore() {
+            return lineIndex < lines.size();
+        }
+
+        /**
+         * Convert the single line into an array of sentences
+         *
+         * @param line
+         * @return
+         */
+        public List<Sentence> convertToSentences(Line line) {
+            List<Line> lines = new ArrayList<>();
+            lines.add(line);
+            return convertToSentences(lines);
+        }
+
+        /**
+         * Convert a list of Lines into sentences by breaking them up appropriately, whilst
+         * tracking their original line number and offset
+         *
+         * @param lines
+         * @return
+         */
+        public List<Sentence> convertToSentences(List<Line> lines) {
+            List<Sentence> sentences = new ArrayList<>();
+
+            String content = "";
+            List<LineOffset> offsets = new ArrayList<>();
+            for (int ln = 0; ln < lines.size(); ln++) {
+                Line line = lines.get(ln);
+
+                for (int i = 0; i < line.length(); i++) {
+                    if (line.isValid(i)) {
+                        content += line.rawCharAt(i);
+                        offsets.add(new LineOffset(line.getLineNo(), line.getOffset(i)));
+                        // check for end of sentence
+                        if (sentenceExtractor.getSentenceEndPosition("" + line.rawCharAt(i)) != -1) {
+                            sentences.add(new Sentence(content, offsets, Collections.EMPTY_LIST));
+                            content = "";
+                            offsets = new ArrayList<>();
+                        }
                     }
-                    else {
-                        builder.addSentence(sentence);
+                }
+                // join lines
+                if ((lines.size() > 1) && (ln != lines.size() - 1)) {
+                    for (char c : sentenceExtractor.getBrokenLineSeparator().toCharArray()) {
+                        content += c;
+                        offsets.add(new LineOffset(line.getLineNo(), line.getOffset(line.length())));
                     }
                 }
             }
+            // add remaining line
+            if (!content.trim().isEmpty()) {
+                sentences.add(new Sentence(content, offsets, Collections.EMPTY_LIST));
+            }
+            return sentences;
         }
 
         @Override
@@ -452,6 +686,7 @@ public class AsciiDocParser extends BaseDocumentParser {
             }
             return sb.toString();
         }
+
     }
 
     @Override
@@ -460,7 +695,7 @@ public class AsciiDocParser extends BaseDocumentParser {
         fileName.ifPresent(documentBuilder::setFileName);
 
         State state = new State();
-        Model model = new Model();
+        Model model = new Model(sentenceExtractor);
 
         BufferedReader reader = createReader(io);
 
@@ -473,7 +708,7 @@ public class AsciiDocParser extends BaseDocumentParser {
                     break;
                 }
                 lineno++;
-                model.lines.add(new Line(line, lineno));
+                model.add(new Line(line, lineno));
             }
             reader.close();
 
@@ -488,23 +723,86 @@ public class AsciiDocParser extends BaseDocumentParser {
             LOG.error("Exception when parsing AsciiDoc file", e);
         }
 
-        System.out.println(model.toString());
         if (LOG.isDebugEnabled()) {
-            LOG.debug("AsciiDoc parser erasures:\n" + model.toString());
+            LOG.debug("AsciiDoc parser model (X=erased line,[=block,section-listlevel-lineno,*=list item):\n" + model.toString());
         }
 
-        model.addToBuilder(documentBuilder);
+        convertModel(model, documentBuilder);
 
         return documentBuilder.build();
+    }
+
+    /**
+     * Conver the parser's model to the RedPen document model
+     *
+     * @param model
+     * @param builder
+     */
+    private void convertModel(Model model, Document.DocumentBuilder builder) {
+        model.rewind();
+
+        // add a header if there isn't one in the model
+        if ((model.getCurrentLine() != null) && (model.getCurrentLine().getSectionLevel() == 0)) {
+            builder.addSection(0);
+        }
+
+        while (model.isMore()) {
+
+            // skip blank lines
+            while (model.isMore() && model.getCurrentLine().isEmpty()) {
+                model.getNextLine();
+            }
+
+            if (model.isMore()) {
+                // check for new sections
+                if (model.getCurrentLine().getSectionLevel() > 0) {
+                    builder.addSection(
+                            model.getCurrentLine().getSectionLevel(),
+                            model.convertToSentences(model.getCurrentLine())
+                    );
+                    model.getNextLine();
+                }
+                // check for a list item
+                else if (model.getCurrentLine().isListStart()) {
+                    List<Line> listElementLines = new ArrayList<>();
+                    int listLevel = model.getCurrentLine().getListLevel();
+
+                    // add the list start line
+                    listElementLines.add(model.getCurrentLine());
+
+                    // test the following lines to see if they continue this list item
+                    model.getNextLine();
+                    while (model.isMore() &&
+                            !model.getCurrentLine().isListStart() &&
+                            (model.getCurrentLine().getListLevel() == listLevel)) {
+                        listElementLines.add(model.getCurrentLine());
+                        model.getNextLine();
+                    }
+                    builder.addListElement(listLevel, model.convertToSentences(listElementLines));
+                }
+                // process a paragraph
+                else {
+                    List<Line> paragraphLines = new ArrayList<>();
+                    // current line can't be empty, so this loop will enter at least once
+                    while (model.isMore() && !model.getCurrentLine().isEmpty()) {
+                        paragraphLines.add(model.getCurrentLine());
+                        model.getNextLine();
+                    }
+                    builder.addParagraph();
+                    model.convertToSentences(paragraphLines).forEach(builder::addSentence);
+                }
+            }
+        }
     }
 
     /**
      * Does the give line start a list?
      *
      * @param line
+     * @param nextLine the subsequent line
      * @return
      */
-    private boolean isListElement(Line line) {
+    private boolean isListElement(Line line, Line nextLine) {
 
         int pos = 0;
         while (Character.isWhitespace(line.charAt(pos))) {
@@ -525,8 +823,14 @@ public class AsciiDocParser extends BaseDocumentParser {
             if (Character.isWhitespace(line.charAt(pos))) {
                 // remember the list level
                 line.setListLevel(level);
+                line.setListStart(true);
                 // remove the list markup
-                line.erase(0, pos + 1);
+                line.erase(0, pos);
+                // remove whitespace
+                while (Character.isWhitespace(line.charAt(pos))) {
+                    line.erase(pos, 1);
+                    pos++;
+                }
                 return true;
             }
         }
@@ -540,7 +844,8 @@ public class AsciiDocParser extends BaseDocumentParser {
                 pos--;
                 level++;
             }
-            line.setListLevel(level);
+            nextLine.setListLevel(level);
+            nextLine.setListStart(true);
             line.erase();
             return true;
         }
@@ -590,7 +895,8 @@ public class AsciiDocParser extends BaseDocumentParser {
 
         if (!line.isErased()) {
 
-            Line previousLine = model.getLine(line.lineno - 1);
+            Line previousLine = model.getLine(line.lineNo - 1);
+            Line nextLine = model.getLine(line.lineNo + 1);
 
             if (state.inList && (line.getListLevel() == 0)) {
                 line.setListLevel(previousLine.getListLevel());
@@ -749,7 +1055,7 @@ public class AsciiDocParser extends BaseDocumentParser {
             }
 
             // lists!
-            if (isListElement(line)) {
+            if (isListElement(line, nextLine)) {
                 state.inList = true;
             }
 
@@ -784,27 +1090,37 @@ public class AsciiDocParser extends BaseDocumentParser {
                 }
             }
 
-            // inline markup (bold, italics etc)
-            line.eraseEnclosure("__", "__", EraseStyle.Markers);
-            line.eraseEnclosure("**", "**", EraseStyle.Markers);
-            line.eraseEnclosure("``", "``", EraseStyle.Markers);
-            line.eraseEnclosure("##", "##", EraseStyle.Markers);
-            line.eraseEnclosure("^", "^", EraseStyle.Markers);
-            line.eraseEnclosure("~", "~", EraseStyle.Markers);
-
-            line.eraseEnclosure("_", "_", EraseStyle.InlineMarkup);
-            line.eraseEnclosure("*", "*", EraseStyle.InlineMarkup);
-            line.eraseEnclosure("`", "`", EraseStyle.InlineMarkup);
-            line.eraseEnclosure("#", "#", EraseStyle.InlineMarkup);
-
-            line.erase("'`");
-            line.erase("`'");
-            line.erase("\"`");
-            line.erase("`\"");
-            line.erase("(C)");
-            line.erase("(R)");
-            line.erase("(TM)");
+            eraseInlineMarkup(line);
         }
+    }
+
+
+    /**
+     * Erase all inline markup (bold, italics, special tokens etc)
+     *
+     * @param line
+     */
+    private void eraseInlineMarkup(Line line) {
+        // inline markup (bold, italics etc)
+        line.eraseEnclosure("__", "__", EraseStyle.Markers);
+        line.eraseEnclosure("**", "**", EraseStyle.Markers);
+        line.eraseEnclosure("``", "``", EraseStyle.Markers);
+        line.eraseEnclosure("##", "##", EraseStyle.Markers);
+        line.eraseEnclosure("^", "^", EraseStyle.Markers);
+        line.eraseEnclosure("~", "~", EraseStyle.Markers);
+
+        line.eraseEnclosure("_", "_", EraseStyle.InlineMarkup);
+        line.eraseEnclosure("*", "*", EraseStyle.InlineMarkup);
+        line.eraseEnclosure("`", "`", EraseStyle.InlineMarkup);
+        line.eraseEnclosure("#", "#", EraseStyle.InlineMarkup);
+
+        line.erase("'`");
+        line.erase("`'");
+        line.erase("\"`");
+        line.erase("`\"");
+        line.erase("(C)");
+        line.erase("(R)");
+        line.erase("(TM)");
     }
 }
 
