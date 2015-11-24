@@ -11,4 +11,5 @@
 * Gerrard Hocks
 * Kentaro Hayashi
 * Tomokazu Kagawa 
+* Shota Kubota
 
