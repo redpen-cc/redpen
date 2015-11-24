@@ -10,6 +10,30 @@
     <name>redpen</name>
     <packaging>pom</packaging>
 
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>Takahiko Ito</id>
+            <name>Takahiko Ito</name>
+            <email>takahiko03@gmail.com</email>
+            <url>http://unigram.org/</url>
+            <roles>
+                <role>lead</role>
+            </roles>
+            <timezone>9</timezone>
+        </developer>
+    </developers>
+    <scm>
+        <url>https://github.com/redpen-cc/redpen</url>
+        <connection>scm:git:git://github.com/redpen-cc/redpen.git</connection>
+        <developerConnection>scm:git:git://github.com/redpen-cc/redpen.git</developerConnection>
+    </scm>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
