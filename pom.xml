@@ -30,8 +30,8 @@
     </developers>
     <scm>
         <url>https://github.com/redpen-cc/redpen</url>
-        <connection>scm:git:git://github.com/redpen-cc/redpen.git</connection>
-        <developerConnection>scm:git:git://github.com/redpen-cc/redpen.git</developerConnection>
+        <connection>scm:git:https://github.com/redpen-cc/redpen.git</connection>
+        <developerConnection>scm:git:https://github.com/redpen-cc/redpen.git</developerConnection>
     </scm>
 
     <properties>
