@@ -14,6 +14,34 @@
     <prerequisites>
         <maven>3.0.0</maven>
     </prerequisites>
+
+    <name>redpen-distribution</name>
+    <description>RedPen is an open source proofreading tool a tool to check if your technical documents meet the writing standard . RedPen supports various markup text formats (Markdown, Textile, AsciiDoc, and LaTeX).</description>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>Takahiko Ito</id>
+            <name>Takahiko Ito</name>
+            <email>takahiko03@gmail.com</email>
+            <url>http://unigram.org/</url>
+            <roles>
+                <role>lead</role>
+            </roles>
+            <timezone>9</timezone>
+        </developer>
+    </developers>
+    <scm>
+        <url>https://github.com/redpen-cc/redpen</url>
+        <connection>scm:git:git://github.com/redpen-cc/redpen.git</connection>
+        <developerConnection>scm:git:git://github.com/redpen-cc/redpen.git</developerConnection>
+    </scm>
+
     <build>
         <plugins>
             <plugin>

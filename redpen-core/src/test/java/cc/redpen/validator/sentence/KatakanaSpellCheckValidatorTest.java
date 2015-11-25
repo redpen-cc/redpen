@@ -73,7 +73,8 @@ public class KatakanaSpellCheckValidatorTest {
                 .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck"))
                 .setLanguage("ja").build();
 
-        List<Document> documents = new ArrayList<>();documents.add(
+        List<Document> documents = new ArrayList<>();
+        documents.add(
                 new Document.DocumentBuilder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
@@ -111,7 +112,8 @@ public class KatakanaSpellCheckValidatorTest {
                         .addAttribute("min_ratio", "0.001"))
                 .setLanguage("ja").build();
 
-        List<Document> documents = new ArrayList<>();documents.add(
+        List<Document> documents = new ArrayList<>();
+        documents.add(
                 new Document.DocumentBuilder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
@@ -130,7 +132,8 @@ public class KatakanaSpellCheckValidatorTest {
                         .addAttribute("min_freq", "0"))
                 .setLanguage("ja").build();
 
-        List<Document> documents = new ArrayList<>();documents.add(
+        List<Document> documents = new ArrayList<>();
+        documents.add(
                 new Document.DocumentBuilder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
@@ -148,7 +151,8 @@ public class KatakanaSpellCheckValidatorTest {
                 .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck").addAttribute("list", "ミニマムサポート,ミニマムサポータ"))
                 .setLanguage("ja").build();
 
-        List<Document> documents = new ArrayList<>();documents.add(
+        List<Document> documents = new ArrayList<>();
+        documents.add(
                 new Document.DocumentBuilder()
                         .addSection(1)
                         .addParagraph()
@@ -158,5 +162,23 @@ public class KatakanaSpellCheckValidatorTest {
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(0, errors.get(documents.get(0)).size());
+    }
+
+    @Test
+    public void testDisableDefaultDictionary() throws RedPenException {
+        Configuration config = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck").addAttribute("disable-default", "true"))
+                .setLanguage("ja").build();
+
+        List<Document> documents = new ArrayList<>();documents.add(
+                new Document.DocumentBuilder()
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(new Sentence("あのインデクスとこのインデックス", 1))
+                        .build());
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        Assert.assertEquals(1, errors.get(documents.get(0)).size());
     }
 }
