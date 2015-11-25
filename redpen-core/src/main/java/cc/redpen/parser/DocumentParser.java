@@ -19,6 +19,7 @@ package cc.redpen.parser;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
+import cc.redpen.parser.asciidoc.AsciiDocParser;
 import cc.redpen.tokenizer.RedPenTokenizer;
 
 import java.io.File;

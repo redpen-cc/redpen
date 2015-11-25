@@ -26,6 +26,8 @@ import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.validator.ValidationError;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -36,6 +38,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class AsciiDocParserTest {
+    private static final Logger LOG = LoggerFactory.getLogger(AsciiDocParserTest.class);
 
     @Before
     public void setup() {
@@ -338,6 +341,32 @@ public class AsciiDocParserTest {
     }
 
     @Test
+    public void testCommentsAndTables() {
+        String sampleText = "// BLAH BLAH" +
+                "\n" +
+                "Potato" +
+                "\n" +
+                "|===\n" +
+                "|Hex |RGB |CMYK nibble\n" +
+                "\n" +
+                "|ffffff または #ffffff asd asd\n" +
+                "|[255,255,255]\n" +
+                "|[0, 0, 0, 0] または [0, 0, 0, 0%]\n" +
+                "|===\n" +
+                "\n";
+        Document doc = createFileContent(sampleText);
+
+        for (Section section : doc) {
+            for (Paragraph paragraph : section.getParagraphs()) {
+                paragraph.getSentences().forEach(sentence -> {
+                    assertEquals("Potato", sentence.getContent());
+                });
+            }
+        }
+
+    }
+
+    @Test
     public void testDocumentWithItalicWord() {
         String sampleText = "It is a *good* day.";
         Document doc = createFileContent(sampleText);
@@ -371,23 +400,42 @@ public class AsciiDocParserTest {
 
     @Test
     public void testSampleDocuments() {
-        Document doc;
-
-        doc = createResourceContent("test_document_1.adoc");
-        doc = createResourceContent("test_document_2.adoc");
-
-        Section firstSections = doc.getSection(0);
-        Paragraph firstParagraph = firstSections.getParagraph(0);
+        checkForStrippedItems(createResourceContent("test_document_1.adoc", "en"));
+        checkForStrippedItems(createResourceContent("test_document_2.adoc", "en"));
+        checkForStrippedItems(createResourceContent("test_document_3.adoc", "ja"));
     }
 
+    private void checkForStrippedItems(Document doc) {
+        // some simple illegal symbol tests
+        for (Section section : doc) {
+            for (Paragraph paragraph : section.getParagraphs()) {
+                paragraph.getSentences().forEach(sentence -> {
+                    // should be no URLS
+                    assertEquals("Possible URL: " + sentence.getContent(), -1, sentence.getContent().indexOf("http://"));
+                    assertEquals("Possible URL: " + sentence.getContent(), -1, sentence.getContent().indexOf("https://"));
+                    // should be no table markers
+                    assertEquals("Possible table symbol: " + sentence.getContent(), -1, sentence.getContent().indexOf("|="));
+                    // should be no heading symbols
+                    assertEquals("Possible header symbol: " + sentence.getContent(), -1, sentence.getContent().indexOf("----"));
+                    assertEquals("Possible header symbol: " + sentence.getContent(), -1, sentence.getContent().indexOf("****"));
+                    assertEquals("Possible header symbol: " + sentence.getContent(), -1, sentence.getContent().indexOf("==="));
+                });
+            }
+        }
+
+    }
 
     private Document createResourceContent(String filename) {
+        return createResourceContent(filename, "en");
+    }
+
+    private Document createResourceContent(String filename, String lang) {
         DocumentParser parser = DocumentParser.ASCIIDOC;
 
         Document doc = null;
         try {
             InputStream in = new FileInputStream(this.getClass().getClassLoader().getResource("asciidoc/" + filename).getFile());
-            Configuration configuration = new Configuration.ConfigurationBuilder().build();
+            Configuration configuration = new Configuration.ConfigurationBuilder().setLanguage(lang).build();
             doc = parser.parse(
                     in,
                     new SentenceExtractor(configuration.getSymbolTable()),
