@@ -33,6 +33,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import javax.script.ScriptEngine;
+import javax.script.ScriptException;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -87,7 +89,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
     @Test
     public void testJSLiteralValidator() throws RedPenException, IOException {
         JavaScriptValidator validator = new JavaScriptValidator();
-        validator.scripts.add(new Script(validator, "testScript.js",
+        validator.scripts.add(new UnconfinedScript(validator, "testScript.js",
                 "function preValidateSentence(sentence) {" +
                         // add function names to "calledFunctions" list upon function calls for the later assertions
                         // the following script is using Nashorn's lobal object "Java".type to access static member:
@@ -161,9 +163,45 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         assertEquals("[testScript.js] embedded message [placeholder]", errors.get(0).getMessage());
     }
 
+    @Test
+    public void testJSValidatorIsConfinedByDefault() throws RedPenException, IOException {
+        JavaScriptValidator validator = new JavaScriptValidator();
+        validator.scripts.add(new Script(validator, "testScript.js",
+                                         "function validateSentence(sentence) {"
+                                         + "if (java || javax || Java || redpenToBeBound || load) {"
+                                         + "addLocalizedError(sentence, 'runtime environment is NOT confined');"
+                                         + "} else {"
+                                         + "addLocalizedError(sentence, 'runtime environment is confined');"
+                                         + "}"
+                                         + "}"));
+        Document document = new Document.DocumentBuilder()
+                .addSection(1)
+                .addParagraph()
+                .addSentence(new Sentence("the good item is a good example.", 1))
+                .build();
+        Section section = document.getSection(0);
+        Sentence sentence = section.getHeaderContent(0);
+
+        calledFunctions = new ArrayList<>();
+        validator.setErrorList(errors);
+        validator.validate(sentence);
+        assertEquals(1, errors.size());
+        assertEquals("[testScript.js] JavaScript validator runtime environment is confined", errors.get(0).getMessage());
+    }
+
     ArrayList<ValidationError> errors = new ArrayList<>();
 
     public void markCalled(String msg) {
         calledFunctions.add(msg);
+    }
+
+    private class UnconfinedScript extends Script {
+        UnconfinedScript(JavaScriptValidator validator, String name, String script) throws RedPenException {
+            super(validator, name, script);
+        }
+
+        @Override
+        protected void applySandbox(final ScriptEngine engine) throws ScriptException {
+        }
     }
 }
