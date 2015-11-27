@@ -103,7 +103,7 @@ public class RedPenResource {
 
     /**
      * Validate a request encoded in JSON. Valid properties are:
-     * <p/>
+     * <p>
      * document : the source text of the document
      * documentParser : specifies one of PLAIN, WIKI, or MARKDOWN
      * lang : the source document language (en, ja, etc)

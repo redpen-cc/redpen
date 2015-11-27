@@ -68,7 +68,7 @@ public final class SymbolTable implements Serializable {
     /**
      * Override a symbol with a new definition
      *
-     * @param symbol
+     * @param symbol symbol to define
      */
     public void overrideSymbol(Symbol symbol) {
         symbolDictionary.put(symbol.getType(), symbol);

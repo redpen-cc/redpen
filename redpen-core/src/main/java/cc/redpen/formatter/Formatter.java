@@ -44,8 +44,8 @@ public abstract class Formatter {
      *
      * @param printWriter  The printwriter destination for the errors
      * @param docErrorsMap a map of documents to the corresponding list of errors
-     * @throws RedPenException
-     * @throws IOException
+     * @throws RedPenException when failed to format docErrorsMap
+     * @throws IOException when failed to output
      */
     public abstract void format(PrintWriter printWriter, Map<Document, List<ValidationError>> docErrorsMap) throws RedPenException, IOException;
 
@@ -55,7 +55,7 @@ public abstract class Formatter {
      * @param document the document the error is for
      * @param error    the error to format
      * @return A formatted error
-     * @throws RedPenException
+     * @throws RedPenException when failed to format ValidationError
      */
     public abstract String formatError(Document document, ValidationError error) throws RedPenException;
 
@@ -64,8 +64,8 @@ public abstract class Formatter {
      *
      * @param outputStream the output stream destination for the errors
      * @param docErrorsMap a map of documents to the corresponding list of errors
-     * @throws RedPenException
-     * @throws IOException
+     * @throws RedPenException when failed to format docErrorsMap
+     * @throws IOException when failed to output
      */
     public void format(OutputStream outputStream, Map<Document, List<ValidationError>> docErrorsMap) throws RedPenException, IOException {
         format(new PrintWriter(outputStream), docErrorsMap);

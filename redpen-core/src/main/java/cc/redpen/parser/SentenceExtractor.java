@@ -167,7 +167,7 @@ public final class SentenceExtractor {
 
     /**
      * Return the string that should be used to re-join lines broken with \n in
-     * <p/>
+     * <p>
      * For English, this is a space.
      * For Japanese, it is an empty string.
      *
