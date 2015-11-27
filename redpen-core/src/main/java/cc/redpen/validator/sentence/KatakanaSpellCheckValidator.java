@@ -50,8 +50,8 @@ import java.util.*;
  */
 final public class KatakanaSpellCheckValidator extends Validator {
     /**
-     * The default threshold of similarity ratio between the length and the distance. <br/>
-     * <p/>
+     * The default threshold of similarity ratio between the length and the distance. <br>
+     * <p>
      * The similarities are computed by edit distance.
      */
     private static final float DEFAULT_SIMILARITY_RATIO = 0.3f;

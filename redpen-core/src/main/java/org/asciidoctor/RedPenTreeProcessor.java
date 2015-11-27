@@ -108,7 +108,7 @@ public class RedPenTreeProcessor extends Treeprocessor {
      * Process a AsciiDoctorJ document
      *
      * @param document this is an AsciiDoctorJ document, not a redpen document
-     * @return
+     * @return processed document
      */
     @Override
     @SuppressWarnings("unchecked")

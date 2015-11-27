@@ -26,7 +26,7 @@ import java.util.*;
 
 /**
  * DoubledJoshiValidator checks if the input texts has duplicated Kakujoshi words in one setnences.
- * <br/>
+ * <br>
  * Note: this validator works only for Japanese texts.
  */
 public class DoubledJoshiValidator extends Validator {

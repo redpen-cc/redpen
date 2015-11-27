@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Parser for Markdown format.<br/>
+ * Parser for Markdown format.<br>
  * <p>
  * Markdown Syntax @see http://daringfireball.net/projects/markdown/
  */

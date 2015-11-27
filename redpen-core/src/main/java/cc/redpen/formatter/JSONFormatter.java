@@ -79,7 +79,7 @@ public class JSONFormatter extends Formatter {
      *
      * @param error the redpen error
      * @return a JSON object representing the redpen error
-     * @throws JSONException
+     * @throws JSONException when failed to construct JSONObject
      */
     protected JSONObject asJSON(ValidationError error) throws JSONException {
         JSONObject jsonError = new JSONObject();
@@ -104,6 +104,7 @@ public class JSONFormatter extends Formatter {
      *
      * @param lineOffset the line offset
      * @return a JSON object representing the line offset
+     * @throws JSONException when failed to construct JSONObject
      */
     protected JSONObject asJSON(LineOffset lineOffset) throws JSONException {
         JSONObject offset = new JSONObject();
@@ -118,7 +119,7 @@ public class JSONFormatter extends Formatter {
      * @param startLineOffset the line offset denoting the start position
      * @param endLineOffset   the line offset denoting the end position
      * @return a JSON representation of this 'position'
-     * @throws JSONException
+     * @throws JSONException when failed to construct JSONObject
      */
     protected JSONObject asJSON(LineOffset startLineOffset, LineOffset endLineOffset) throws JSONException {
         JSONObject json = asJSON(startLineOffset.lineNum, startLineOffset.offset, endLineOffset.lineNum, endLineOffset.offset);
@@ -133,7 +134,7 @@ public class JSONFormatter extends Formatter {
      * @param endLine     the line offset denoting the end position
      * @param endOffset   the offset within endLine the position ends
      * @return a JSON representation of this 'position'
-     * @throws JSONException
+     * @throws JSONException when failed to construct JSONObject
      */
     protected JSONObject asJSON(int startLine, int startOffset, int endLine, int endOffset) throws JSONException {
         JSONObject position = new JSONObject();
@@ -155,7 +156,7 @@ public class JSONFormatter extends Formatter {
      * @param startLineOffset the line offset denoting the start position
      * @param endLineOffset   the line offset denoting the end position
      * @return a JSON representation of the offsets describing a section within the sentence's getContent() string
-     * @throws JSONException
+     * @throws JSONException when failed to construct JSONObject
      */
     protected JSONObject asJSON(Sentence sentence, LineOffset startLineOffset, LineOffset endLineOffset) throws JSONException {
         JSONObject json = new JSONObject();
