@@ -8,6 +8,7 @@
     <artifactId>redpen</artifactId>
     <url>http://redpen.cc</url>
     <name>redpen</name>
+    <description>RedPen is an open source proofreading tool a tool to check if your technical documents meet the writing standard . RedPen supports various markup text formats (Markdown, Textile, AsciiDoc, and LaTeX).</description>
     <packaging>pom</packaging>
 
     <licenses>
