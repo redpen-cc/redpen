@@ -19,6 +19,8 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
+import cc.redpen.tokenizer.TokenElement;
+import cc.redpen.validator.ExpressionRule;
 import cc.redpen.validator.Validator;
 
 import java.util.*;
@@ -26,8 +28,16 @@ import java.util.*;
 // Checks if the Japanese input sentences contain the invalid Okurigana style.
 public final class OkuriganaValidator extends Validator {
     private static final Set<String> invalidOkurigana;
+    private static final Set<ExpressionRule> invalidOkuriganaTokens;
 
-    // TODO: add more okurigana invalid cases
+    static {
+        invalidOkuriganaTokens = new HashSet<>();
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("合さ", Arrays.asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("合し", Arrays.asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("合す", Arrays.asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("合せ", Arrays.asList("動詞", "自立"), 0)));
+    }
+
     static {
         invalidOkurigana = new HashSet<>();
         invalidOkurigana.add("押え");
@@ -89,10 +99,6 @@ public final class OkuriganaValidator extends Validator {
         invalidOkurigana.add("落す");
         invalidOkurigana.add("落せ");
         invalidOkurigana.add("終る");
-        invalidOkurigana.add("合さ");
-        invalidOkurigana.add("合し");
-        invalidOkurigana.add("合す");
-        invalidOkurigana.add("合せ");
         invalidOkurigana.add("果さ");
         invalidOkurigana.add("果し");
         invalidOkurigana.add("果す");
@@ -134,6 +140,11 @@ public final class OkuriganaValidator extends Validator {
                 }
         );
 
+        for (ExpressionRule rule : invalidOkuriganaTokens) {
+            if (rule.match(sentence.getTokens())) {
+                addLocalizedError(sentence, rule.toString());
+            }
+        }
     }
 
     @Override

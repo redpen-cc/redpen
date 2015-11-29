@@ -80,4 +80,51 @@ public class OkuriganaValidatorTest {
     }
 
 
+    @Test
+    public void testInvalidOkuriganaWithRule() throws Exception {
+        String sampleText = "彼に合せた。";
+        Configuration config = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(
+                        new ValidatorConfiguration("Okurigana"))
+                .setLanguage("ja")
+                .build();
+
+        DocumentParser parser = DocumentParser.MARKDOWN;
+        List<Document> documents = new ArrayList<>();
+        Document document  = parser.parse(sampleText,
+                new SentenceExtractor(config.getSymbolTable()),
+                config.getTokenizer());
+        documents.add(document);
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+
+        assertEquals(1, errors.get(documents.get(0)).size());
+        assertEquals(1, errors.get(documents.get(0)).get(0).getLineNumber());
+        assertEquals("Okurigana", errors.get(documents.get(0)).get(0).getValidatorName());
+    }
+
+
+    // Fix Issue #517 (https://github.com/redpen-cc/redpen/issues/517)
+    @Test
+    public void testValidOkuriganaWithRule() throws Exception {
+        String sampleText = "それとは競合している。";
+        Configuration config = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(
+                        new ValidatorConfiguration("Okurigana"))
+                .setLanguage("ja")
+                .build();
+
+        DocumentParser parser = DocumentParser.MARKDOWN;
+        List<Document> documents = new ArrayList<>();
+        Document document  = parser.parse(sampleText,
+                new SentenceExtractor(config.getSymbolTable()),
+                config.getTokenizer());
+        documents.add(document);
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+
+        assertEquals(0, errors.get(documents.get(0)).size());
+    }
 }
