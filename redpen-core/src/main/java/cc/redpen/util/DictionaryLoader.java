@@ -89,7 +89,7 @@ public final class DictionaryLoader<E> {
      * @param path           resource path
      * @param dictionaryName name of the resource
      * @return word list
-     * @throws RedPenException
+     * @throws RedPenException when failed to load the dictionary
      */
     public E loadCachedFromResource(String path, String dictionaryName) throws RedPenException {
         E strings = resourceCache.computeIfAbsent(path, e -> {
@@ -117,7 +117,7 @@ public final class DictionaryLoader<E> {
      * @param file           file to load
      * @param dictionaryName name of the file
      * @return word list
-     * @throws RedPenException
+     * @throws RedPenException when the file is not found
      */
     public E loadCachedFromFile(File file, String dictionaryName) throws RedPenException {
         String path = file.getAbsolutePath();
