@@ -65,7 +65,7 @@ public class JSONBySentenceFormatter extends JSONFormatter {
      *
      * @param error the redpen error
      * @return a JSON object representing the redpen error
-     * @throws org.json.JSONException
+     * @throws org.json.JSONException when failed to construct JSONObject
      */
     @Override
     protected JSONObject asJSON(ValidationError error) throws JSONException {

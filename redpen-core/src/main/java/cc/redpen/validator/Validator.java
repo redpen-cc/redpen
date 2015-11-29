@@ -142,7 +142,7 @@ public abstract class Validator {
     /**
      * Validation initialization, called after the configuration and symbol tables have been assigned
      *
-     * @throws RedPenException
+     * @throws RedPenException when failed to initialize
      */
     protected void init() throws RedPenException {
     }

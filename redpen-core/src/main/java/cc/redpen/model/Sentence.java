@@ -53,7 +53,7 @@ public final class Sentence implements Serializable {
     private boolean isFirstSentence;
     /**
      * A list of tokens.
-     * <p/>
+     * <p>
      * Note: the contents of the tokens are added in DocumentCollectionBuilder
      */
     private List<TokenElement> tokens;

@@ -52,8 +52,8 @@ public class SpellingUtils {
     /**
      * Get the default dictionary entries for the specified language
      *
-     * @param lang
-     * @return
+     * @param lang language to retrieve
+     * @return default dictionary for the specified language
      */
     public static Set<String> getDictionary(String lang) {
         loadDictionary(lang == null ? DEFAULT_LANGUAGE : lang);
