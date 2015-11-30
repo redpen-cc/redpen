@@ -29,8 +29,9 @@ public class ExpressionRule {
         this.elements = new ArrayList<>();
     }
 
-    public void addElement(TokenElement element) {
+    public ExpressionRule addElement(TokenElement element) {
         this.elements.add(element);
+        return this;
     }
 
     @Override
