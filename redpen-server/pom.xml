@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>redpen</artifactId>
         <groupId>cc.redpen</groupId>
-        <version>1.4.1</version>
+        <version>1.4.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -33,11 +31,25 @@
             <timezone>9</timezone>
         </developer>
     </developers>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>sonatype-nexus-staging</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>sonatype-nexus-staging</id>
+            <name>Nexus Release Repository</name>
+            <uniqueVersion>false</uniqueVersion>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/
+            </url>
+        </repository>
+    </distributionManagement>
     <scm>
         <url>https://github.com/redpen-cc/redpen</url>
-        <connection>scm:git:git://github.com/redpen-cc/redpen.git</connection>
-        <developerConnection>scm:git:git://github.com/redpen-cc/redpen.git</developerConnection>
-    </scm>
+        <connection>scm:git:https://github.com/redpen-cc/redpen.git</connection>
+        <developerConnection>scm:git:https://github.com/redpen-cc/redpen.git</developerConnection>
+      <tag>HEAD</tag>
+  </scm>
 
     <build>
         <finalName>redpen-server</finalName>
@@ -85,7 +97,7 @@
                             <target>
                                 <move todir="${project.build.directory}/${project.artifactId}/">
                                     <fileset dir="${project.build.directory}/classes/">
-                                        <include name="RedPenRunner.class"/>
+                                        <include name="RedPenRunner.class" />
                                     </fileset>
                                 </move>
                             </target>
@@ -153,7 +165,7 @@
         <dependency>
             <groupId>cc.redpen</groupId>
             <artifactId>redpen-core</artifactId>
-            <version>1.4.1</version>
+            <version>1.4.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.wink</groupId>

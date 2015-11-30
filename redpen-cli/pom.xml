@@ -1,17 +1,15 @@
 <?xml version="1.0"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-         xmlns="http://maven.apache.org/POM/4.0.0">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>cc.redpen</groupId>
         <artifactId>redpen</artifactId>
-        <version>1.4.1</version>
+        <version>1.4.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>redpen-cli</artifactId>
-    <version>1.4.1</version>
+    <version>1.4.2-SNAPSHOT</version>
     <name>redpen-cli</name>
     <description>RedPen is an open source proofreading tool a tool to check if your technical documents meet the writing standard . RedPen supports various markup text formats (Markdown, Textile, AsciiDoc, and LaTeX).</description>
     <url>http://redpen.cc</url>
@@ -35,11 +33,25 @@
         </developer>
     </developers>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <id>sonatype-nexus-staging</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>sonatype-nexus-staging</id>
+            <name>Nexus Release Repository</name>
+            <uniqueVersion>false</uniqueVersion>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/
+            </url>
+        </repository>
+    </distributionManagement>
     <scm>
         <url>https://github.com/redpen-cc/redpen</url>
-        <connection>scm:git:git://github.com/redpen-cc/redpen.git</connection>
-        <developerConnection>scm:git:git://github.com/redpen-cc/redpen.git</developerConnection>
-    </scm>
+        <connection>scm:git:https://github.com/redpen-cc/redpen.git</connection>
+        <developerConnection>scm:git:https://github.com/redpen-cc/redpen.git</developerConnection>
+      <tag>HEAD</tag>
+  </scm>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -82,7 +94,7 @@
                         <manifest>
                             <mainClass>cc.redpen.Main</mainClass>
                             <addClasspath>true</addClasspath>
-                            <classpathPrefix></classpathPrefix>
+                            <classpathPrefix />
                         </manifest>
                     </archive>
                 </configuration>
@@ -94,12 +106,12 @@
         <dependency>
             <groupId>cc.redpen</groupId>
             <artifactId>redpen-core</artifactId>
-            <version>1.4.1</version>
+            <version>1.4.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>cc.redpen</groupId>
             <artifactId>redpen-plugin</artifactId>
-            <version>1.4.1</version>
+            <version>1.4.2-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
