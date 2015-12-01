@@ -104,7 +104,7 @@ public class Line {
     /**
      * Is this line a repeating set of the same character?
      *
-     * @return
+     * @return true is all same character
      */
     public boolean isAllSameCharacter() {
         return allSameCharacter;
@@ -113,7 +113,7 @@ public class Line {
     /**
      * Has this line been completely erased?
      *
-     * @return
+     * @return true if erased
      */
     public boolean isErased() {
         return erased;
@@ -122,7 +122,7 @@ public class Line {
     /**
      * Is this line in a block?
      *
-     * @return
+     * @return true is it's in a block
      */
     public boolean isInBlock() {
         return inBlock;
@@ -132,7 +132,7 @@ public class Line {
     /**
      * Is this line the start of a new list item?
      *
-     * @return
+     * @return true if it's list start
      */
     public boolean isListStart() {
         return listStart;
@@ -176,8 +176,8 @@ public class Line {
     /**
      * Erase length characters in the line, starting at pos
      *
-     * @param pos
-     * @param length
+     * @param pos start position
+     * @param length length to erase
      */
     public void erase(int pos, int length) {
         if ((pos >= 0) && (pos < valid.size())) {
@@ -198,9 +198,9 @@ public class Line {
     }
 
     /**
-     * Erase all occurances of the given string
+     * Erase all occurrences of the given string
      *
-     * @param segment
+     * @param segment segment to be erased
      */
     public void erase(String segment) {
         for (int i = 0; i < text.size(); i++) {
@@ -222,9 +222,9 @@ public class Line {
      * Erase the open and close markers, and optionally all the text inside them
      * Returns the position of the first enclosure or -1 if no enclosure was found
      *
-     * @param open
-     * @param close
-     * @param eraseStyle
+     * @param open open marker to be erased
+     * @param close close marker to be erased
+     * @param eraseStyle erase style
      * @return position of first enclosure
      */
     public int eraseEnclosure(String open,
@@ -323,7 +323,7 @@ public class Line {
     /**
      * Return the length of the line
      *
-     * @return
+     * @return length of the line
      */
     public int length() {
         return text.size();
@@ -333,8 +333,8 @@ public class Line {
      * Return the character at the given position. Erase characters will return 0 rather
      * than the actual character
      *
-     * @param i
-     * @return
+     * @param i index
+     * @return extracted character
      */
     public char charAt(int i) {
         return charAt(i, false);
@@ -343,9 +343,9 @@ public class Line {
     /**
      * Return the character at the given position, optionally including erased characters
      *
-     * @param i
-     * @param includeInvalid
-     * @return
+     * @param i index
+     * @param includeInvalid true if include invalid
+     * @return extracted character
      */
     public char charAt(int i, boolean includeInvalid) {
         if ((i >= 0) && (i < text.size())) {
@@ -362,8 +362,8 @@ public class Line {
     /**
      * Return the offset for the character at the given position
      *
-     * @param i
-     * @return
+     * @param i index
+     * @return offset
      */
     public int getOffset(int i) {
         if (i >= 0) {
@@ -380,7 +380,7 @@ public class Line {
     /**
      * Return the original line number for this line
      *
-     * @return
+     * @return line number
      */
     public int getLineNo() {
         return lineNo;
@@ -389,8 +389,8 @@ public class Line {
     /**
      * Return the raw character at the specified position, ignoring its validity.
      *
-     * @param i
-     * @return
+     * @param i index
+     * @return raw character at the specified position
      */
     public char rawCharAt(int i) {
         if ((i >= 0) && (i < text.size())) {
@@ -402,8 +402,8 @@ public class Line {
     /**
      * Is the character at the given position valid?
      *
-     * @param i
-     * @return
+     * @param i index
+     * @return true if the character at the given position valid
      */
     public boolean isValid(int i) {
         if ((i >= 0) && (i < text.size())) {
@@ -415,7 +415,7 @@ public class Line {
     /**
      * Is the character at the given position empty (ie: whitespace or invalid)
      *
-     * @return
+     * @return true if it's empty
      */
     public boolean isEmpty() {
         for (int i = 0; i < text.size(); i++) {
@@ -431,8 +431,8 @@ public class Line {
     /**
      * Does the line start with the given string?
      *
-     * @param s
-     * @return
+     * @param s string to test
+     * @return true if the string starts with the specified string
      */
     public boolean startsWith(String s) {
         for (int i = 0; i < s.length(); i++) {
@@ -453,7 +453,7 @@ public class Line {
      * *         = list item
      * ·         = next character erased
      *
-     * @return
+     * @return string representation of this instance
      */
     @Override
     public String toString() {

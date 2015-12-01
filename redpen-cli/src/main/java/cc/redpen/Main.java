@@ -53,7 +53,7 @@ public final class Main {
      * When the errors reported by RedPen is more than the specified limit, this method returns 1 otherwise return 0.
      *
      * @param args arguments
-     * @throws RedPenException
+     * @throws RedPenException when failed to process validation
      */
     public static void main(String... args) throws RedPenException {
         System.exit(run(args));

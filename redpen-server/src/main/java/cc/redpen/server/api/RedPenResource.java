@@ -66,9 +66,10 @@ public class RedPenResource {
      * @param document       the source text of the document
      * @param documentParser specifies one of PLAIN, WIKI, or MARKDOWN
      * @param lang           the source document language (en, ja, etc)
+     * @param format         document format
      * @param config         the source of a RedPen XML configuration file
      * @return redpen validation errors
-     * @throws RedPenException
+     * @throws RedPenException when failed to parse document
      */
     @Path("/validate")
     @POST
@@ -112,6 +113,7 @@ public class RedPenResource {
      *
      * @param requestJSON the request, in JSON
      * @return redpen validation errors
+     * @throws RedPenException when failed to validate the json
      */
     @Path("/validate/json")
     @POST
