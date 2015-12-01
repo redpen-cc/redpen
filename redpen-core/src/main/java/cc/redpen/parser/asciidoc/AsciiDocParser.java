@@ -34,9 +34,9 @@ import java.util.Optional;
 
 
 /**
- * Erasing parser for the AsciiDoc format<br/>
+ * Erasing parser for the AsciiDoc format<br>
  * <p>
- * One of the requirements for RedPen is that the line & column position (ie: offset) for
+ * One of the requirements for RedPen is that the line &amp; column position (ie: offset) for
  * each character in the parsed text be preserved throughout parsing and validation.
  * <p>
  * This AsciiDoc parser attempts to solve this requirement by maintaining a model of the source
@@ -118,6 +118,8 @@ public class AsciiDocParser extends BaseDocumentParser {
 
     /**
      * populate the erasable model with the text from the inputstream
+     * @param model model to populate
+     * @param io stream to read
      */
     protected void populateModel(Model model, InputStream io) {
         State state = new State();
@@ -155,8 +157,8 @@ public class AsciiDocParser extends BaseDocumentParser {
     /**
      * Conver the parser's model to the RedPen document model
      *
-     * @param model
-     * @param builder
+     * @param model model to convert
+     * @param builder doc builder
      */
     protected void convertModel(Model model, Document.DocumentBuilder builder) {
         model.rewind();

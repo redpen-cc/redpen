@@ -40,7 +40,7 @@ public class Model {
      * Construct a model. The sentence extract will be used delimit sentences and
      * join lines together when adding the model to the document builder
      *
-     * @param sentenceExtractor
+     * @param sentenceExtractor sentence extractor
      */
     public Model(SentenceExtractor sentenceExtractor) {
         this.sentenceExtractor = sentenceExtractor;
@@ -49,8 +49,8 @@ public class Model {
     /**
      * Return the offset string from the model at the given line number
      *
-     * @param lineNumber
-     * @return
+     * @param lineNumber line number
+     * @return the line
      */
     public Line getLine(int lineNumber) {
         int index = lineNumber - 1;
@@ -63,7 +63,7 @@ public class Model {
     /**
      * Add a line to the model
      *
-     * @param line
+     * @param line line to be added
      */
     public void add(Line line) {
         lines.add(line);
@@ -72,7 +72,7 @@ public class Model {
     /**
      * Return the number of lines in the model
      *
-     * @return
+     * @return line count
      */
     public int lineCount() {
         return lines.size();
@@ -88,7 +88,7 @@ public class Model {
     /**
      * Get the next line from the model, or null if there are no more lines
      *
-     * @return
+     * @return next line
      */
     public Line getNextLine() {
         if (lineIndex < lines.size()) {
@@ -102,7 +102,7 @@ public class Model {
     /**
      * Return the current line from the model, or null if we've run out of lines
      *
-     * @return
+     * @return line from the model
      */
     public Line getCurrentLine() {
         if (lineIndex < lines.size()) {
@@ -115,7 +115,7 @@ public class Model {
     /**
      * Are there more lines to iterate through?
      *
-     * @return
+     * @return has more lines
      */
     public boolean isMore() {
         return lineIndex < lines.size();
@@ -124,8 +124,8 @@ public class Model {
     /**
      * Convert the single line into an array of sentences
      *
-     * @param line
-     * @return
+     * @param line line to be converted to sentence
+     * @return list of converted sentence
      */
     public List<Sentence> convertToSentences(Line line) {
         List<Line> lines = new ArrayList<>();
@@ -137,8 +137,8 @@ public class Model {
      * Convert a list of Lines into sentences by breaking them up appropriately, whilst
      * tracking their original line number and offset
      *
-     * @param lines
-     * @return
+     * @param lines lines to be converted
+     * @return list of converted sentence
      */
     public List<Sentence> convertToSentences(List<Line> lines) {
         List<Sentence> sentences = new ArrayList<>();

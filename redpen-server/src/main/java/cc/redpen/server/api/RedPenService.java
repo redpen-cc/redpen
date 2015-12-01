@@ -113,7 +113,7 @@ public class RedPenService {
     /**
      * Get all preconfigured redpen instances
      *
-     * @return
+     * @return map of available RedPens
      */
     public Map<String, RedPen> getRedPens() {
         return langRedPenMap;
