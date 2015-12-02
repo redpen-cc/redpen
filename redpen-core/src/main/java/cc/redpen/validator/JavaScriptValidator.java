@@ -223,8 +223,9 @@ public class JavaScriptValidator extends Validator {
                         "var addErrorWithPosition = Function.prototype.bind.call(redpenToBeBound.addErrorWithPosition, redpenToBeBound);" +
                         "var addLocalizedError = Function.prototype.bind.call(redpenToBeBound.addLocalizedError, redpenToBeBound);" +
                         "var addLocalizedErrorFromToken = Function.prototype.bind.call(redpenToBeBound.addLocalizedErrorFromToken, redpenToBeBound);" +
-                        "var addLocalizedErrorWithPosition = Function.prototype.bind.call(redpenToBeBound.addLocalizedErrorWithPosition, redpenToBeBound);");
-                applySandbox(engine);
+                        "var addLocalizedErrorWithPosition = Function.prototype.bind.call(redpenToBeBound.addLocalizedErrorWithPosition, redpenToBeBound);" +
+                        "var _JavaScriptValidatorTest = Java.type('cc.redpen.validator.JavaScriptValidatorTest');" +
+                        "java = undefined; javax = undefined; Java = undefined; load = undefined; redpenToBeBound = undefined;");
 
                 CompiledScript compiledScript = ((Compilable) engine).compile(script);
                 compiledScript.eval();
@@ -233,10 +234,6 @@ public class JavaScriptValidator extends Validator {
             } catch (ScriptException e) {
                 throw new RedPenException(e);
             }
-        }
-
-        protected void applySandbox(final ScriptEngine engine) throws ScriptException {
-            engine.eval("java = undefined; javax = undefined; Java = undefined; load = undefined; redpenToBeBound = undefined;");
         }
     }
 

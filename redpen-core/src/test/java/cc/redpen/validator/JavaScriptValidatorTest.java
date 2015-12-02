@@ -89,26 +89,26 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
     @Test
     public void testJSLiteralValidator() throws RedPenException, IOException {
         JavaScriptValidator validator = new JavaScriptValidator();
-        validator.scripts.add(new UnconfinedScript(validator, "testScript.js",
+        validator.scripts.add(new Script(validator, "testScript.js",
                 "function preValidateSentence(sentence) {" +
                         // add function names to "calledFunctions" list upon function calls for the later assertions
                         // the following script is using Nashorn's lobal object "Java".type to access static member:
                         // http://docs.oracle.com/javase/8/docs/technotes/guides/scripting/nashorn/api.html
-                        "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('preValidateSentence');}" +
+                        "_JavaScriptValidatorTest.calledFunctions.add('preValidateSentence');}" +
                         "function preValidateSection(section) {" +
-                        "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('preValidateSection');}" +
+                        "_JavaScriptValidatorTest.calledFunctions.add('preValidateSection');}" +
                         "function validateDocument(document) {" +
-                        "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('validateDocument');" +
+                        "_JavaScriptValidatorTest.calledFunctions.add('validateDocument');" +
                         // add ValidationError
                         "addError('validation error', document.getSection(0).getHeaderContent(0));" +
                         // add ValidationError
                         "addLocalizedError(document.getSection(0).getHeaderContent(0), 'doc');}" +
                         "function validateSentence(sentence) {" +
-                        "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('validateSentence');" +
+                        "_JavaScriptValidatorTest.calledFunctions.add('validateSentence');" +
                         // add ValidationError
                         "addLocalizedError(sentence, 'sentence');}" +
                         "function validateSection(section) {" +
-                        "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('validateSection');" +
+                        "_JavaScriptValidatorTest.calledFunctions.add('validateSection');" +
                         // add ValidationError
                         "addLocalizedError(section.getHeaderContent(0), 'section');}"));
         Document document = new Document.DocumentBuilder()
@@ -193,15 +193,5 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
 
     public void markCalled(String msg) {
         calledFunctions.add(msg);
-    }
-
-    private class UnconfinedScript extends Script {
-        UnconfinedScript(JavaScriptValidator validator, String name, String script) throws RedPenException {
-            super(validator, name, script);
-        }
-
-        @Override
-        protected void applySandbox(final ScriptEngine engine) throws ScriptException {
-        }
     }
 }
