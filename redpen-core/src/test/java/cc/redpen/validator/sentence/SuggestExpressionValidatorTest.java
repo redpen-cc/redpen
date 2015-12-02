@@ -86,7 +86,7 @@ public class SuggestExpressionValidatorTest {
         suggestExpressionValidator.setErrorList(errors);
         suggestExpressionValidator.validate(str);
         assertEquals(1, errors.size());
-        assertEquals("Found invalid word \"info\". Use the synonym \"information\" instead.", errors.get(0).getMessage());
+        assertEquals("Found invalid word \"info\". Use the synonym \"infomation\" instead.", errors.get(0).getMessage());
     }
 
 
