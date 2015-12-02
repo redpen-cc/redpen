@@ -39,7 +39,7 @@ public class SuggestExpressionValidatorTest {
         suggestExpressionValidator = new SuggestExpressionValidator();
         Map<String, String> synonymSamples = new HashMap<>();
         synonymSamples.put("like", "such as");
-        synonymSamples.put("info", "infomation");
+        synonymSamples.put("info", "information");
         suggestExpressionValidator.setSynonyms(synonymSamples);
     }
 
@@ -86,7 +86,7 @@ public class SuggestExpressionValidatorTest {
         suggestExpressionValidator.setErrorList(errors);
         suggestExpressionValidator.validate(str);
         assertEquals(1, errors.size());
-        assertEquals("Found invalid word \"info\". Use the synonym \"infomation\" instead.", errors.get(0).getMessage());
+        assertEquals("Found invalid word \"info\". Use the synonym \"information\" instead.", errors.get(0).getMessage());
     }
 
 
