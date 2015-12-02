@@ -43,10 +43,12 @@ final public class SuggestExpressionValidator extends Validator {
         synonyms.keySet().stream().forEach(value -> {
                     int startPosition = sentence.getContent().indexOf(value);
                     if (startPosition != -1) {
+                        final String word = value;
+                        final String suggested = synonyms.get(value);
                         addLocalizedErrorWithPosition(sentence,
                                 startPosition,
                                 startPosition + value.length(),
-                                synonyms.get(value));
+                                word, suggested);
                     }
                 }
         );
