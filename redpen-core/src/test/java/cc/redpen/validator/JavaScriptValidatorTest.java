@@ -33,6 +33,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import javax.script.ScriptEngine;
+import javax.script.ScriptException;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -92,21 +94,21 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
                         // add function names to "calledFunctions" list upon function calls for the later assertions
                         // the following script is using Nashorn's lobal object "Java".type to access static member:
                         // http://docs.oracle.com/javase/8/docs/technotes/guides/scripting/nashorn/api.html
-                        "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('preValidateSentence');}" +
+                        "_JavaScriptValidatorTest.calledFunctions.add('preValidateSentence');}" +
                         "function preValidateSection(section) {" +
-                        "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('preValidateSection');}" +
+                        "_JavaScriptValidatorTest.calledFunctions.add('preValidateSection');}" +
                         "function validateDocument(document) {" +
-                        "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('validateDocument');" +
+                        "_JavaScriptValidatorTest.calledFunctions.add('validateDocument');" +
                         // add ValidationError
                         "addError('validation error', document.getSection(0).getHeaderContent(0));" +
                         // add ValidationError
                         "addLocalizedError(document.getSection(0).getHeaderContent(0), 'doc');}" +
                         "function validateSentence(sentence) {" +
-                        "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('validateSentence');" +
+                        "_JavaScriptValidatorTest.calledFunctions.add('validateSentence');" +
                         // add ValidationError
                         "addLocalizedError(sentence, 'sentence');}" +
                         "function validateSection(section) {" +
-                        "Java.type('cc.redpen.validator.JavaScriptValidatorTest').calledFunctions.add('validateSection');" +
+                        "_JavaScriptValidatorTest.calledFunctions.add('validateSection');" +
                         // add ValidationError
                         "addLocalizedError(section.getHeaderContent(0), 'section');}"));
         Document document = new Document.DocumentBuilder()
@@ -159,6 +161,32 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         validator.validate(sentence);
         assertEquals(1, errors.size());
         assertEquals("[testScript.js] embedded message [placeholder]", errors.get(0).getMessage());
+    }
+
+    @Test
+    public void testJSValidatorIsConfinedByDefault() throws RedPenException, IOException {
+        JavaScriptValidator validator = new JavaScriptValidator();
+        validator.scripts.add(new Script(validator, "testScript.js",
+                                         "function validateSentence(sentence) {"
+                                         + "if (java || javax || Java || redpenToBeBound || load) {"
+                                         + "addLocalizedError(sentence, 'runtime environment is NOT confined');"
+                                         + "} else {"
+                                         + "addLocalizedError(sentence, 'runtime environment is confined');"
+                                         + "}"
+                                         + "}"));
+        Document document = new Document.DocumentBuilder()
+                .addSection(1)
+                .addParagraph()
+                .addSentence(new Sentence("the good item is a good example.", 1))
+                .build();
+        Section section = document.getSection(0);
+        Sentence sentence = section.getHeaderContent(0);
+
+        calledFunctions = new ArrayList<>();
+        validator.setErrorList(errors);
+        validator.validate(sentence);
+        assertEquals(1, errors.size());
+        assertEquals("[testScript.js] JavaScript validator runtime environment is confined", errors.get(0).getMessage());
     }
 
     ArrayList<ValidationError> errors = new ArrayList<>();
