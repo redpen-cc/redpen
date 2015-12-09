@@ -104,10 +104,33 @@ public class RedPenResourceTest extends MockServletInvocationTest {
         assertEquals("HTTP status", HttpStatus.OK.getCode(), response.getStatus());
     }
 
+    public void testJSValidatorRuns() throws Exception {
+        MockHttpServletRequest request =
+            constructMockRequest("POST", "/document/validate/json", MediaType.WILDCARD, MediaType.APPLICATION_JSON);
+        request.setContent(String.format("{\"document\":\"Test, this is a test.\",\"format\":\"json2\",\"documentParser\":\"PLAIN\",\"config\":{\"lang\":\"en\",\"validators\":{\"JavaScript\":{\"properties\":{\"script-path\":\"%s\"}}}}}", "./src/test/resources/js").getBytes());
+        MockServletContext context = new MockServletContext();
+        MockHttpServletResponse response = invoke(request);
+
+        assertEquals("HTTP status", HttpStatus.OK.getCode(), response.getStatus());
+        final JSONArray errors = new JSONObject(response.getContentAsString()).getJSONArray("errors");
+        assertTrue(errors.length() > 0);
+        for (int i=0; i<errors.length(); ++i) {
+            final JSONObject o = errors.getJSONObject(i).getJSONArray("errors").getJSONObject(0);
+            assertEquals("[pass.js] called", o.getString("message"));
+        }
+    }
+
     // test helper
     private MockHttpServletRequest constructMockRequest(String method,
                                                         String requestURI,
                                                         String acceptHeader) {
+        return constructMockRequest(method, requestURI, acceptHeader, MediaType.APPLICATION_FORM_URLENCODED);
+    }
+
+    private MockHttpServletRequest constructMockRequest(String method,
+                                                        String requestURI,
+                                                        String acceptHeader,
+                                                        String contentType) {
         MockHttpServletRequest mockRequest = new MockHttpServletRequest() {
             public String getPathTranslated() {
                 return null; // prevent Spring to resolve the file on the filesystem which fails
@@ -118,8 +141,9 @@ public class RedPenResourceTest extends MockServletInvocationTest {
         mockRequest.setRequestURI(requestURI);
         mockRequest.setServerPort(8080);
         mockRequest.addHeader("Accept", acceptHeader);
-        mockRequest.addHeader("Content-Type", MediaType.APPLICATION_FORM_URLENCODED);
-        mockRequest.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        mockRequest.addHeader("Content-Type", contentType);
+        mockRequest.setContentType(contentType);
         return mockRequest;
     }
+
 }
