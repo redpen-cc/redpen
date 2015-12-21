@@ -21,6 +21,14 @@ import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import org.junit.Test;
 
+import cc.redpen.RedPen;
+import cc.redpen.RedPenException;
+import cc.redpen.config.Configuration;
+import cc.redpen.config.ValidatorConfiguration;
+import cc.redpen.model.Document;
+import cc.redpen.model.Sentence;
+import java.util.Map;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -168,5 +176,43 @@ public class KatakanaEndHyphenValidatorTest {
         validator.setErrorList(errors);
         validator.validate(str);
         assertEquals(str.toString(), 2, errors.size());
+    }
+
+    @Test
+    public void testHonorsSkipWordList() throws RedPenException {
+        Configuration config = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(new ValidatorConfiguration("KatakanaEndHyphen")
+                        .addAttribute("list", "コーヒー"))
+                .setLanguage("ja").build();
+
+        List<Document> documents = new ArrayList<>();documents.add(
+                new Document.DocumentBuilder()
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(new Sentence("濃いコーヒーは胃にわるい。", 1))
+                        .build());
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        assertEquals(0, errors.get(documents.get(0)).size());
+    }
+
+    @Test
+    public void testHonorsSkipWordDict() throws RedPenException {
+        Configuration config = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(new ValidatorConfiguration("KatakanaEndHyphen")
+                        .addAttribute("dict", "src/test/resources/cc/redpen/validator/KatakanaEndHyphenValidatorTest-skipworddict.txt")) // XXX
+                .setLanguage("ja").build();
+
+        List<Document> documents = new ArrayList<>();documents.add(
+                new Document.DocumentBuilder()
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(new Sentence("コーヒーと紅茶と、どちらがお好きですか。", 1))
+                        .build());
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        assertEquals(0, errors.get(documents.get(0)).size());
     }
 }
