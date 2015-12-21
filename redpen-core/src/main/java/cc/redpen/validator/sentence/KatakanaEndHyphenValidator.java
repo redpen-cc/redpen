@@ -74,7 +74,7 @@ final public class KatakanaEndHyphenValidator extends Validator {
         super();
     }
 
-    public static boolean isKatakanaEndHyphen(StringBuilder katakana) {
+    public static boolean isKatakanaEndHyphen(String katakana) {
         return (DEFAULT_KATAKANA_LIMIT_LENGTH < katakana.length()
                 && katakana.charAt(katakana.length() - 1) == HYPHEN);
     }
@@ -92,19 +92,19 @@ final public class KatakanaEndHyphenValidator extends Validator {
             if (StringUtils.isKatakana(c) && c != KATAKANA_MIDDLE_DOT) {
                 katakana.append(c);
             } else {
-                this.checkKatakanaEndHyphen(sentence, katakana, i-1);
+                this.checkKatakanaEndHyphen(sentence, katakana.toString(), i-1);
                 katakana.delete(0, katakana.length());
             }
         }
-        this.checkKatakanaEndHyphen(sentence, katakana, sentence.getContent().length() - 1);
+        this.checkKatakanaEndHyphen(sentence, katakana.toString(), sentence.getContent().length() - 1);
     }
 
     private void checkKatakanaEndHyphen(Sentence sentence,
-                                                         StringBuilder katakana,
+                                                         String katakana,
                                                          int position) {
-        if ( !(customSkipList != null && customSkipList.contains(katakana.toString())) ) {
+        if ( !(customSkipList != null && customSkipList.contains(katakana)) ) {
             if (isKatakanaEndHyphen(katakana)) {
-                addLocalizedErrorWithPosition(sentence, position, position + 1, katakana.toString());
+                addLocalizedErrorWithPosition(sentence, position, position + 1, katakana);
             }
         }
     }
