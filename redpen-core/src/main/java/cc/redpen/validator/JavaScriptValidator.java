@@ -22,6 +22,7 @@ import cc.redpen.model.Document;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
+import cc.redpen.util.DictionaryLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,13 +63,16 @@ public class JavaScriptValidator extends Validator {
 
     @Override
     protected void init() throws RedPenException {
+        String home = System.getenv("REDPEN_HOME");
         String jsValidatorsPath = getConfigAttribute("script-path").orElse(
-                System.getenv("REDPEN_HOME") + "/" + DEFAULT_JS_VALIDATORS_PATH);
+                home + "/" + DEFAULT_JS_VALIDATORS_PATH);
         File jsDirectory = new File(jsValidatorsPath);
+        String jsDirectoryPath = jsDirectory.getAbsolutePath();
         if(!jsDirectory.exists()){
-            LOG.info("JavaScript validators directory is missing: {}", jsDirectory.getAbsolutePath());
+            LOG.info("JavaScript validators directory is missing: {}", jsDirectoryPath);
         }else {
-            LOG.info("JavaScript validators directory: {}", jsDirectory.getAbsolutePath());
+            LOG.info("JavaScript validators directory: {}", jsDirectoryPath);
+            DictionaryLoader.ensureFileIsInsideRedPenHome(jsDirectoryPath);
             File[] jsValidatorFiles = jsDirectory.listFiles();
             if (jsValidatorFiles != null) {
                 for (File file : jsValidatorFiles) {
