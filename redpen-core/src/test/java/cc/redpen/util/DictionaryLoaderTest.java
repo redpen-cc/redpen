@@ -25,12 +25,15 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class DictionaryLoaderTest extends Validator {
     @Test
@@ -102,5 +105,21 @@ public class DictionaryLoaderTest extends Validator {
         assertEquals(2, strings.size());
         assertTrue(strings.contains("foo"));
         assertTrue(strings.contains("bar"));
+    }
+
+    @Test
+    public void testEnsureFileIsInsideRedPenHome() throws RedPenException, IOException {
+        File tempFile = File.createTempFile("redpenTest", "redpenTest");
+        String path = tempFile.getAbsolutePath();
+        System.setProperty("REDPEN_HOME", path);
+        String s = File.separator;
+        System.out.println(s);
+        DictionaryLoader.ensureFileIsInsideRedPenHome(path + File.separator + "test");
+        try {
+            File file = new File(path + File.separator + ".." + File.separator + "test");
+            DictionaryLoader.ensureFileIsInsideRedPenHome(file.getCanonicalPath());
+            fail("expecting RedPenException");
+        } catch (RedPenException expected) {
+        }
     }
 }

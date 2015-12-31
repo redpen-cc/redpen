@@ -62,6 +62,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         // delete the temporary file, make a directory, and store JavaScript validator in it
         javaScriptValidatorsDir.delete();
         javaScriptValidatorsDir.mkdirs();
+        System.setProperty("REDPEN_HOME",javaScriptValidatorsDir.getAbsolutePath());
         File validatorJS = new File(javaScriptValidatorsDir.getAbsolutePath() + File.separator + "MyValidator.js");
         String content2 = "function validateSentence(sentence) {\n" +
                 "addLocalizedError(sentence, 'validation error in JavaScript Validator');}";
