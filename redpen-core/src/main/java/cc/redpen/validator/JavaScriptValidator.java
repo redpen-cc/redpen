@@ -63,7 +63,7 @@ public class JavaScriptValidator extends Validator {
     @Override
     protected void init() throws RedPenException {
         String jsValidatorsPath = getConfigAttribute("script-path").orElse(
-                System.getenv("REDPEN_HOME") + "/" + DEFAULT_JS_VALIDATORS_PATH);
+                System.getenv("REDPEN_HOME") + File.separator + DEFAULT_JS_VALIDATORS_PATH);
         File jsDirectory = new File(jsValidatorsPath);
         if(!jsDirectory.exists()){
             LOG.info("JavaScript validators directory is missing: {}", jsDirectory.getAbsolutePath());
