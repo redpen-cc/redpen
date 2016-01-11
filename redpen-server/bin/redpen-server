@@ -53,11 +53,21 @@ fi
 
 JAVA_OPTS="$JAVA_OPTS -Dfile.encoding=UTF-8"
 REDPEN_WAR_FILE="$REDPEN_HOME/bin/redpen-server.war"
-JAVA_CMD="$JAVA_HOME/bin/java"
+JAVA_CMD=java
 
-if [ ! -x "$JAVA_CMD" ]; then
-    echo "Error: $JAVA_CMD is not executable. Can not start RedPen" 1>&2
-    exit 1
+which $JAVA_CMD >/dev/null
+if [ $? != 0 ]; then
+  if [ -z "$JAVA_HOME" ]; then
+      echo "Error: JAVA_HOME is not defined. Can not start RedPen" 1>&2
+      exit 1
+  else
+    JAVA_CMD=$JAVA_HOME/bin/java
+
+    if [ ! -x "$JAVA_CMD" ]; then
+      echo "Error: $JAVA_CMD is not execututable. Can not start RedPen" 1>&2
+      exit 1
+    fi
+  fi
 fi
 
 if [ ! -e "$REDPEN_LOG_DIR" ]; then
