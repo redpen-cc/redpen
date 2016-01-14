@@ -21,14 +21,16 @@ public class RedPenDemoTest {
   public void setUp() throws Exception {
     try {
       new URL(redpenServerUrl).openConnection().connect();
-      System.setProperty("browser", "phantomjs");
+      // Run tests in PhantomJS by default if browser property is not set
+      if (System.getProperty("browser") == null)
+        System.setProperty("browser", "phantomjs");
       open(redpenServerUrl);
     }
     catch (ConnectException e) {
       assumeNoException("RedPen server is not running, skipping UI tests", e);
     }
     catch (IllegalStateException e) {
-      assumeNoException("Please install PhantomJS for UI tests to run", e);
+      assumeNoException("Please install " + System.getProperty("browser") + " for UI tests to run", e);
     }
   }
 
