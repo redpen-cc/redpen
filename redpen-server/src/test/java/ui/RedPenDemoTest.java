@@ -9,11 +9,18 @@ import org.openqa.selenium.By;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeNoException;
 
 public class RedPenDemoTest {
   @Before
   public void setUp() throws Exception {
-    open("http://localhost:8080/");
+    try {
+      System.setProperty("browser", "phantomjs");
+      open("http://localhost:8080/");
+    }
+    catch (IllegalStateException e) {
+      assumeNoException("Please install PhantomJS for UI tests to run", e);
+    }
   }
 
   @Test
