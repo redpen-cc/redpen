@@ -42,6 +42,9 @@ public class RedPenDemoTest {
 
   @Test
   public void userCanChooseSampleTexts() throws Exception {
+    if ($(".navbar-toggle").isDisplayed())
+      $(".navbar-toggle").click();
+
     $("#themes").click();
     $(By.linkText("JAPANESE TEXT")).click();
 
