@@ -11,11 +11,10 @@ env:
 
 before_script:
   - sudo apt-get update
-  - sudo apt-get install oracle-java8-installer phantomjs
+  - sudo apt-get install phantomjs
 
 script:
-  - java -version
-  - sh ./run_test.sh
+  - ./run_test.sh
 
 after_success:
   - cd redpen-core/
