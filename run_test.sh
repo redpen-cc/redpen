@@ -1,12 +1,8 @@
-#!/bin/bash
+#!/bin/bash -e
 
 run_test() {
     echo "Building RedPen"
     mvn clean install
-    if [ $? -ne 0 ]; then
-        echo "Error in the build..."
-        exit 1
-    fi
 
     echo "Running application"
     cd redpen-cli/target;
@@ -14,7 +10,7 @@ run_test() {
     cd redpen-cli-*
     bin/redpen -c conf/redpen-conf-en.xml -l 100 sample-doc/en/sampledoc-en.txt
     if [ $? -ne 0 ]; then
-        echo "Error runnig application..."
+        echo "Error running application..."
         exit 1
     fi
     cd ../../..
