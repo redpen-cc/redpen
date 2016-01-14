@@ -6,26 +6,30 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
+import java.net.ConnectException;
+import java.net.URL;
+
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeNoException;
 
 public class RedPenDemoTest {
+  private String redpenServerUrl = "http://localhost:8080/";
+
   @Before
   public void setUp() throws Exception {
     try {
+      new URL(redpenServerUrl).openConnection().connect();
       System.setProperty("browser", "phantomjs");
-      open("http://localhost:8080/");
+      open(redpenServerUrl);
+    }
+    catch (ConnectException e) {
+      assumeNoException("RedPen server is not running, skipping UI tests", e);
     }
     catch (IllegalStateException e) {
       assumeNoException("Please install PhantomJS for UI tests to run", e);
     }
-  }
-
-  @Test
-  public void welcomeIsDisplayed() throws Exception {
-    $("h1").shouldHave(text("Welcome to RedPen!"));
   }
 
   @Test
