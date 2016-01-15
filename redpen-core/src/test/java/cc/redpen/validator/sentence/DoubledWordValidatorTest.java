@@ -45,6 +45,17 @@ public class DoubledWordValidatorTest extends BaseValidatorTest {
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
         Assert.assertEquals(1, errors.get(document).size());
+        Assert.assertEquals("Found repeated word \"good\".", errors.get(document).get(0).getMessage());
+    }
+
+    @Test
+    public void testDoubledWordWithDifferentCase() throws RedPenException {
+        Document document = prepareSimpleDocument("Good item is a good example.");
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        Assert.assertEquals(1, errors.get(document).size());
+        Assert.assertEquals("Found repeated word \"good\".", errors.get(document).get(0).getMessage());
     }
 
     @Test
