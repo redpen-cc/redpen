@@ -98,12 +98,38 @@ public class SpellingValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testEndPeriod() throws RedPenException {
-        Document document = prepareSimpleDocument("That is true.");
-
+    public void testPunctuation() throws RedPenException {
         RedPen redPen = new RedPen(config);
-        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
-        assertEquals(0, errors.get(document).size());
+
+        Document document = prepareSimpleDocument("That is true.");
+        assertEquals(0, redPen.validate(singletonList(document)).get(document).size());
+
+        document = prepareSimpleDocument("That is true!");
+        assertEquals(0, redPen.validate(singletonList(document)).get(document).size());
+
+        document = prepareSimpleDocument("That is true?");
+        assertEquals(0, redPen.validate(singletonList(document)).get(document).size());
+
+        document = prepareSimpleDocument("That: true");
+        assertEquals(0, redPen.validate(singletonList(document)).get(document).size());
+
+        document = prepareSimpleDocument("That; and also this");
+        assertEquals(0, redPen.validate(singletonList(document)).get(document).size());
+
+        document = prepareSimpleDocument("That - is good");
+        assertEquals(0, redPen.validate(singletonList(document)).get(document).size());
+
+        document = prepareSimpleDocument("That / That");
+        assertEquals(0, redPen.validate(singletonList(document)).get(document).size());
+
+        document = prepareSimpleDocument("Number 1");
+        assertEquals(0, redPen.validate(singletonList(document)).get(document).size());
+
+        document = prepareSimpleDocument("The price is $123 or 100€ or ¥1000");
+        assertEquals(0, redPen.validate(singletonList(document)).get(document).size());
+
+        document = prepareSimpleDocument("100%");
+        assertEquals(0, redPen.validate(singletonList(document)).get(document).size());
     }
 
     @Test

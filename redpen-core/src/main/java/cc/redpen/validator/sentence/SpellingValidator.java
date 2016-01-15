@@ -35,7 +35,7 @@ public class SpellingValidator extends Validator {
 
     private static final Logger LOG = LoggerFactory.getLogger(SpellingValidator.class);
 
-    private static String skipCharacters = "+~-(),\".";
+    private static String skipCharacters = "[\\!-/:-@\\[-`{-~]";
     // TODO: replace more memory efficient data structure
     private Set<String> defaultDictionary;
     private Set<String> customDictionary;
@@ -75,14 +75,8 @@ public class SpellingValidator extends Validator {
         }
     }
 
-    private String normalize(String line) {
-        StringBuilder builder = new StringBuilder(line.length());
-        for (char ch : line.toCharArray()) {
-            if (skipCharacters.indexOf(ch) == -1) {
-                builder.append(Character.toLowerCase(ch));
-            }
-        }
-        return builder.toString();
+    private String normalize(String token) {
+        return token.toLowerCase().replaceAll(skipCharacters, "");
     }
 
     @Override

@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 public class WhiteSpaceTokenizer implements RedPenTokenizer {
 
     private static final Pattern[] BLACKLIST_TOKEN_PATTERNS = new Pattern[]{
-            Pattern.compile("^[-+]?\\d+(\\.\\d+)?$") // a number [+-]n[.n]
+            Pattern.compile("^[-+#$€£¥]?\\d+(\\.\\d+)?[%€¥¢₽]?$") // a number [+-]n[.n]
     };
 
     private static final String DELIMITERS = " \t\n\r?!,:;.()\u2014\"";
