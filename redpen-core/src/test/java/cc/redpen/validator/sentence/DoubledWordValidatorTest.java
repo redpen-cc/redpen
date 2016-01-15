@@ -22,13 +22,11 @@ import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
-import cc.redpen.model.Sentence;
 import cc.redpen.validator.BaseValidatorTest;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,16 +40,11 @@ public class DoubledWordValidatorTest extends BaseValidatorTest {
 
     @Test
     public void testDoubledWord() throws RedPenException {
-        List<Document> documents = new ArrayList<>();documents.add(
-                new Document.DocumentBuilder()
-                        .addSection(1)
-                        .addParagraph()
-                        .addSentence(new Sentence("the good item is a good example.", 1))
-                        .build());
+        Document document = prepareSimpleDocument("the good item is a good example.");
 
         RedPen redPen = new RedPen(config);
-        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(1, errors.get(documents.get(0)).size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        Assert.assertEquals(1, errors.get(document).size());
     }
 
     @Test
