@@ -60,7 +60,7 @@ var redpen = (function ($) {
         }
     };
 
-    // validate the document {text: text, lang: [en|ja..]}
+    // validate the document {document: text, lang: [en|ja..]}
     this.validate = function (parameters, callback) {
         doAPICall('document/validate', parameters, callback, "POST");
     };
@@ -71,11 +71,11 @@ var redpen = (function ($) {
     };
 
 
-    // validate the document {text: text, lang: [en|ja..]}
+    // validate the document {document: text, lang: [en|ja..]}
     this.validateJSON = function (parameters, callback) {
         $.ajax({
             type: "POST",
-            url: "rest/document/validate/json",
+            url: baseUrl + "rest/document/validate/json",
             data: JSON.stringify(parameters),
             dataType: 'json',
             contentType: "application/json; charset=utf-8",
