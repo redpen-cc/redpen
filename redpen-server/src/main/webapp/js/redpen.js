@@ -27,14 +27,15 @@
  * @param callback
  */
 
-var redpen = (function () {
+var redpen = (function ($) {
+    var baseUrl = "";
 
     // basic API call
     var doAPICall = function (method, parameters, callback, type) {
         type = type ? type : "GET";
         $.ajax({
             type: type,
-            url: "rest/" + method,
+            url: baseUrl + "rest/" + method,
             data: parameters,
             success: function (data) {
                 if (callback) {
@@ -45,6 +46,10 @@ var redpen = (function () {
         }).fail(function (err) {
                 console.log(err);
             });
+    };
+
+    this.setBaseUrl = function(url) {
+        baseUrl = url;
     };
 
     // placeholder (and cheap client-side implementation) of a detect-language function
@@ -85,4 +90,4 @@ var redpen = (function () {
     };
 
     return this;
-})();
+})(jQuery);
