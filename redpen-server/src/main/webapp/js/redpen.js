@@ -27,14 +27,15 @@
  * @param callback
  */
 
-var redpen = (function () {
+var redpen = (function ($) {
+    var baseUrl = "";
 
     // basic API call
     var doAPICall = function (method, parameters, callback, type) {
         type = type ? type : "GET";
         $.ajax({
             type: type,
-            url: "rest/" + method,
+            url: baseUrl + "rest/" + method,
             data: parameters,
             success: function (data) {
                 if (callback) {
@@ -47,6 +48,10 @@ var redpen = (function () {
             });
     };
 
+    this.setBaseUrl = function(url) {
+        baseUrl = url;
+    };
+
     // placeholder (and cheap client-side implementation) of a detect-language function
     this.detectLanguage = function (text, callback) {
         if (text) {
@@ -55,7 +60,7 @@ var redpen = (function () {
         }
     };
 
-    // validate the document {text: text, lang: [en|ja..]}
+    // validate the document {document: text, lang: [en|ja..]}
     this.validate = function (parameters, callback) {
         doAPICall('document/validate', parameters, callback, "POST");
     };
@@ -66,11 +71,11 @@ var redpen = (function () {
     };
 
 
-    // validate the document {text: text, lang: [en|ja..]}
+    // validate the document {document: text, lang: [en|ja..]}
     this.validateJSON = function (parameters, callback) {
         $.ajax({
             type: "POST",
-            url: "rest/document/validate/json",
+            url: baseUrl + "rest/document/validate/json",
             data: JSON.stringify(parameters),
             dataType: 'json',
             contentType: "application/json; charset=utf-8",
@@ -85,4 +90,4 @@ var redpen = (function () {
     };
 
     return this;
-})();
+})(jQuery);
