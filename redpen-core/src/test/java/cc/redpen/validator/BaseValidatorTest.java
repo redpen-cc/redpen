@@ -6,11 +6,17 @@ import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 
 public abstract class BaseValidatorTest {
-  protected Configuration config = getConfiguration("en");
+  protected String validatorName;
+  protected Configuration config;
+
+  public BaseValidatorTest(String validatorName) {
+    this.validatorName = validatorName;
+    this.config = getConfiguration("en");
+  }
 
   protected Configuration getConfiguration(String language) {
     return new Configuration.ConfigurationBuilder()
-      .addValidatorConfig(new ValidatorConfiguration("SuccessiveWord"))
+      .addValidatorConfig(new ValidatorConfiguration(validatorName))
       .setLanguage(language).build();
   }
 

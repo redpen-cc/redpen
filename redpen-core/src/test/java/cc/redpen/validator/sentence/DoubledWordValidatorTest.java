@@ -23,7 +23,7 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
-import cc.redpen.tokenizer.JapaneseTokenizer;
+import cc.redpen.validator.BaseValidatorTest;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -32,13 +32,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class DoubledWordValidatorTest {
+import static java.util.Collections.singletonList;
+
+public class DoubledWordValidatorTest extends BaseValidatorTest {
+
+    public DoubledWordValidatorTest() {
+        super("DoubledWord");
+    }
+
     @Test
     public void testDoubledWord() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(new ValidatorConfiguration("DoubledWord"))
-                .setLanguage("en").build();
-
         List<Document> documents = new ArrayList<>();documents.add(
                 new Document.DocumentBuilder()
                         .addSection(1)
@@ -53,75 +56,51 @@ public class DoubledWordValidatorTest {
 
     @Test
     public void testDoubledSkipListWord() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(new ValidatorConfiguration("DoubledWord"))
-                .setLanguage("en").build();
-
-        List<Document> documents = new ArrayList<>();documents.add(
-                new Document.DocumentBuilder()
-                        .addSection(1)
-                        .addParagraph()
-                        .addSentence(new Sentence("That is true, as far as I know.", 1))
-                        .build());
+        Document document = prepareSimpleDocument("That is true, as far as I know.");
 
         RedPen redPen = new RedPen(config);
-        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.get(0)).size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        Assert.assertEquals(0, errors.get(document).size());
     }
 
     @Test
     public void testDoubledUserDefinedSkipWord() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(new ValidatorConfiguration("DoubledWord")
+        config = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(new ValidatorConfiguration(validatorName)
                         .addAttribute("list", "redpen,tool"))
                 .setLanguage("en").build();
 
-        List<Document> documents = new ArrayList<>();documents.add(
-                new Document.DocumentBuilder()
-                        .addSection(1)
-                        .addParagraph()
-                        .addSentence(new Sentence("RedPen is RedPen right?", 1))
-                        .build());
+        Document document = prepareSimpleDocument("RedPen is RedPen right?");
 
         RedPen redPen = new RedPen(config);
-        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.get(0)).size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        Assert.assertEquals(0, errors.get(document).size());
     }
 
     @Test
     public void testDoubledUserDefinedSkipWordWithoutNormalization() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(new ValidatorConfiguration("DoubledWord")
+        config = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(new ValidatorConfiguration(validatorName)
                         .addAttribute("list", "RedPen,Tool"))
                 .setLanguage("en").build();
 
-        List<Document> documents = new ArrayList<>();documents.add(
-                new Document.DocumentBuilder()
-                        .addSection(1)
-                        .addParagraph()
-                        .addSentence(new Sentence("redPen is redPen right?", 1))
-                        .build());
+        Document document = prepareSimpleDocument("redPen is redPen right?");
 
         RedPen redPen = new RedPen(config);
-        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.get(0)).size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        Assert.assertEquals(0, errors.get(document).size());
     }
 
     @Test
     public void testDoubledWordInJapaneseSentence() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(new ValidatorConfiguration("DoubledWord"))
+        config = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(new ValidatorConfiguration(validatorName))
                 .setLanguage("ja").build();
 
-        List<Document> documents = new ArrayList<>();documents.add(
-                new Document.DocumentBuilder(new JapaneseTokenizer())
-                        .addSection(1)
-                        .addParagraph()
-                        .addSentence(new Sentence("それは真実であり，それが正しい", 1))
-                        .build());
+        Document document = prepareSimpleDocument("それは真実であり，それが正しい");
 
         RedPen redPen = new RedPen(config);
-        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(1, errors.get(documents.get(0)).size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        Assert.assertEquals(1, errors.get(document).size());
     }
 }

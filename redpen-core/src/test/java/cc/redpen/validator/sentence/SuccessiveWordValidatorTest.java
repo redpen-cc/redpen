@@ -31,6 +31,11 @@ import static java.util.Collections.singletonList;
 import static junit.framework.Assert.assertEquals;
 
 public class SuccessiveWordValidatorTest extends BaseValidatorTest {
+
+    public SuccessiveWordValidatorTest() {
+        super("SuccessiveWord");
+    }
+
     @Test
     public void testDetectSuccessiveWord() throws RedPenException {
         Document document = prepareSimpleDocument("the item is is a good.");
