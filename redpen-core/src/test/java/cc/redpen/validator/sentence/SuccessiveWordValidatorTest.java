@@ -20,10 +20,10 @@ package cc.redpen.validator.sentence;
 import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.JapaneseTokenizer;
+import cc.redpen.validator.BaseValidatorTest;
 import cc.redpen.validator.ValidationError;
 import org.junit.Test;
 
@@ -33,12 +33,10 @@ import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 
-public class SuccessiveWordValidatorTest {
+public class SuccessiveWordValidatorTest extends BaseValidatorTest {
     @Test
     public void testDetectSuccessiveWord() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(new ValidatorConfiguration("SuccessiveWord"))
-                .setLanguage("en").build();
+        Configuration config = getConfiguration("en");
 
         List<Document> documents = new ArrayList<>();
                 documents.add(new Document.DocumentBuilder()
@@ -55,9 +53,7 @@ public class SuccessiveWordValidatorTest {
 
     @Test
     public void testDetectSuccessiveWordWithDifferentCase() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(new ValidatorConfiguration("SuccessiveWord"))
-                .setLanguage("en").build();
+        Configuration config = getConfiguration("en");
 
         List<Document> documents = new ArrayList<>();
                 documents.add(new Document.DocumentBuilder()
@@ -74,9 +70,7 @@ public class SuccessiveWordValidatorTest {
 
     @Test
     public void testDetectJapaneseSuccessiveWord() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(new ValidatorConfiguration("SuccessiveWord"))
-                .setLanguage("ja").build();
+        Configuration config = getConfiguration("ja");
 
         List<Document> documents = new ArrayList<>(); // TODO: fix
         documents.add(new Document.DocumentBuilder(new JapaneseTokenizer())
@@ -92,9 +86,7 @@ public class SuccessiveWordValidatorTest {
 
     @Test
     public void testNonSuccessiveDoubledWord() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(new ValidatorConfiguration("SuccessiveWord"))
-                .setLanguage("en").build();
+        Configuration config = getConfiguration("en");
 
         List<Document> documents = new ArrayList<>();
                 documents.add(new Document.DocumentBuilder()
