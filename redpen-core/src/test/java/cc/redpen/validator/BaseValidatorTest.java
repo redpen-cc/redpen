@@ -4,6 +4,8 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 
 public abstract class BaseValidatorTest {
+  protected Configuration config = getConfiguration("en");
+
   protected Configuration getConfiguration(String language) {
     return new Configuration.ConfigurationBuilder()
       .addValidatorConfig(new ValidatorConfiguration("SuccessiveWord"))
