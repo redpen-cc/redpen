@@ -24,13 +24,13 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.validator.BaseValidatorTest;
 import cc.redpen.validator.ValidationError;
-import junit.framework.Assert;
 import org.junit.Test;
 
 import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.singletonList;
+import static junit.framework.Assert.assertEquals;
 
 public class DoubledWordValidatorTest extends BaseValidatorTest {
 
@@ -44,8 +44,8 @@ public class DoubledWordValidatorTest extends BaseValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
-        Assert.assertEquals(1, errors.get(document).size());
-        Assert.assertEquals("Found repeated word \"good\".", errors.get(document).get(0).getMessage());
+        assertEquals(1, errors.get(document).size());
+        assertEquals("Found repeated word \"good\".", errors.get(document).get(0).getMessage());
     }
 
     @Test
@@ -54,8 +54,8 @@ public class DoubledWordValidatorTest extends BaseValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
-        Assert.assertEquals(1, errors.get(document).size());
-        Assert.assertEquals("Found repeated word \"good\".", errors.get(document).get(0).getMessage());
+        assertEquals(1, errors.get(document).size());
+        assertEquals("Found repeated word \"good\".", errors.get(document).get(0).getMessage());
     }
 
     @Test
@@ -64,7 +64,7 @@ public class DoubledWordValidatorTest extends BaseValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
-        Assert.assertEquals(0, errors.get(document).size());
+        assertEquals(0, errors.get(document).size());
     }
 
     @Test
@@ -78,7 +78,7 @@ public class DoubledWordValidatorTest extends BaseValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
-        Assert.assertEquals(0, errors.get(document).size());
+        assertEquals(0, errors.get(document).size());
     }
 
     @Test
@@ -92,7 +92,7 @@ public class DoubledWordValidatorTest extends BaseValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
-        Assert.assertEquals(0, errors.get(document).size());
+        assertEquals(0, errors.get(document).size());
     }
 
     @Test
@@ -105,6 +105,6 @@ public class DoubledWordValidatorTest extends BaseValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
-        Assert.assertEquals(1, errors.get(document).size());
+        assertEquals(1, errors.get(document).size());
     }
 }
