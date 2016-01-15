@@ -25,12 +25,13 @@ import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
-import junit.framework.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static junit.framework.Assert.assertEquals;
 
 public class SuccessiveWordValidatorTest {
     @Test
@@ -48,7 +49,27 @@ public class SuccessiveWordValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(1, errors.get(documents.get(0)).size());
+        assertEquals(1, errors.get(documents.get(0)).size());
+        assertEquals("Found word \"is\" repeated twice in succession.", errors.get(documents.get(0)).get(0).getMessage());
+    }
+
+    @Test
+    public void testDetectSuccessiveWordWithDifferentCase() throws RedPenException {
+        Configuration config = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(new ValidatorConfiguration("SuccessiveWord"))
+                .setLanguage("en").build();
+
+        List<Document> documents = new ArrayList<>();
+                documents.add(new Document.DocumentBuilder()
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(new Sentence("Welcome welcome to Estonia.", 1))
+                        .build());
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        assertEquals(1, errors.get(documents.get(0)).size());
+        assertEquals("Found word \"welcome\" repeated twice in succession.", errors.get(documents.get(0)).get(0).getMessage());
     }
 
     @Test
@@ -66,7 +87,7 @@ public class SuccessiveWordValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(1, errors.get(documents.get(0)).size());
+        assertEquals(1, errors.get(documents.get(0)).size());
     }
 
     @Test
@@ -84,6 +105,6 @@ public class SuccessiveWordValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.get(0)).size());
+        assertEquals(0, errors.get(documents.get(0)).size());
     }
 }
