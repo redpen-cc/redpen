@@ -20,76 +20,55 @@ package cc.redpen.validator.sentence;
 import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
-import cc.redpen.model.Sentence;
-import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.BaseValidatorTest;
 import cc.redpen.validator.ValidationError;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Collections.singletonList;
 import static junit.framework.Assert.assertEquals;
 
 public class SuccessiveWordValidatorTest extends BaseValidatorTest {
     @Test
     public void testDetectSuccessiveWord() throws RedPenException {
-        List<Document> documents = new ArrayList<>();
-                documents.add(new Document.DocumentBuilder()
-                        .addSection(1)
-                        .addParagraph()
-                        .addSentence(new Sentence("the item is is a good.", 1))
-                        .build());
+        Document document = prepareSimpleDocument("the item is is a good.");
 
         RedPen redPen = new RedPen(config);
-        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        assertEquals(1, errors.get(documents.get(0)).size());
-        assertEquals("Found word \"is\" repeated twice in succession.", errors.get(documents.get(0)).get(0).getMessage());
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        assertEquals(1, errors.get(document).size());
+        assertEquals("Found word \"is\" repeated twice in succession.", errors.get(document).get(0).getMessage());
     }
 
     @Test
     public void testDetectSuccessiveWordWithDifferentCase() throws RedPenException {
-        List<Document> documents = new ArrayList<>();
-                documents.add(new Document.DocumentBuilder()
-                        .addSection(1)
-                        .addParagraph()
-                        .addSentence(new Sentence("Welcome welcome to Estonia.", 1))
-                        .build());
+        Document document = prepareSimpleDocument("Welcome welcome to Estonia.");
 
         RedPen redPen = new RedPen(config);
-        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        assertEquals(1, errors.get(documents.get(0)).size());
-        assertEquals("Found word \"welcome\" repeated twice in succession.", errors.get(documents.get(0)).get(0).getMessage());
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        assertEquals(1, errors.get(document).size());
+        assertEquals("Found word \"welcome\" repeated twice in succession.", errors.get(document).get(0).getMessage());
     }
 
     @Test
     public void testDetectJapaneseSuccessiveWord() throws RedPenException {
         config = getConfiguration("ja");
 
-        List<Document> documents = new ArrayList<>(); // TODO: fix
-        documents.add(new Document.DocumentBuilder(new JapaneseTokenizer())
-                .addSection(1)
-                .addParagraph()
-                .addSentence(new Sentence("私はは嬉しい.", 1))
-                .build());
+        Document document = prepareSimpleDocument("私はは嬉しい.");
 
         RedPen redPen = new RedPen(config);
-        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        assertEquals(1, errors.get(documents.get(0)).size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        assertEquals(1, errors.get(document).size());
+        assertEquals("Found word \"は\" repeated twice in succession.", errors.get(document).get(0).getMessage());
     }
 
     @Test
     public void testNonSuccessiveDoubledWord() throws RedPenException {
-        List<Document> documents = new ArrayList<>();
-                documents.add(new Document.DocumentBuilder()
-                        .addSection(1)
-                        .addParagraph()
-                        .addSentence(new Sentence("the item is a item good.", 1))
-                        .build());
+        Document document = prepareSimpleDocument("the item is a item good.");
 
         RedPen redPen = new RedPen(config);
-        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        assertEquals(0, errors.get(documents.get(0)).size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        assertEquals(0, errors.get(document).size());
     }
 }
