@@ -25,10 +25,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 
 final public class DoubledWordValidator extends Validator {
     private static final Logger LOG =
@@ -42,9 +44,9 @@ final public class DoubledWordValidator extends Validator {
     public void validate(Sentence sentence) {
         Set<String> surfaces = new HashSet<>();
         for (TokenElement token : sentence.getTokens()) {
-            String currentSurface = token.getSurface();
-            if (surfaces.contains(currentSurface) && !skipList.contains(currentSurface.toLowerCase())
-                    && !customSkipList.contains(currentSurface.toLowerCase())) {
+            String currentSurface = token.getSurface().toLowerCase();
+            if (surfaces.contains(currentSurface) && !skipList.contains(currentSurface)
+                    && !customSkipList.contains(currentSurface)) {
                 addLocalizedErrorFromToken(sentence, token);
             }
             surfaces.add(currentSurface);
@@ -62,7 +64,7 @@ final public class DoubledWordValidator extends Validator {
         skipListStr.ifPresent(f -> {
             String normalized = f.toLowerCase();
             LOG.info("Found user defined skip list.");
-            customSkipList.addAll(Arrays.asList(normalized.split(",")));
+            customSkipList.addAll(asList(normalized.split(",")).stream().map(String::toLowerCase).collect(toList()));
             LOG.info("Succeeded to add elements of user defined skip list.");
         });
 

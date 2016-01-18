@@ -22,7 +22,7 @@ import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
-import cc.redpen.model.Sentence;
+import cc.redpen.validator.BaseValidatorTest;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import cc.redpen.validator.ValidatorFactory;
@@ -32,136 +32,112 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Collections.singletonList;
 import static junit.framework.Assert.assertEquals;
 
-public class SpellingValidatorTest {
+public class SpellingValidatorTest extends BaseValidatorTest {
+    public SpellingValidatorTest() {
+        super("Spelling");
+    }
 
     @Test
     public void testValidate() throws Exception {
-        List<Document> documents = new ArrayList<>();
-        documents.add(new Document.DocumentBuilder()
-                .addSection(1)
-                .addParagraph()
-                .addSentence(new Sentence("this iz a pen", 1))
-                .build());
+        config = new Configuration.ConfigurationBuilder()
+          .addValidatorConfig(new ValidatorConfiguration(validatorName).addAttribute("list", "this,a,pen"))
+          .setLanguage("en").build();
 
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(new ValidatorConfiguration("Spelling").addAttribute("list", "this,a,pen"))
-                .setLanguage("en").build();
+        Document document = prepareSimpleDocument("this iz a pen");
+
         Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
 
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
-        validator.validate(documents.get(0).getLastSection().getParagraph(0).getSentence(0));
+        validator.validate(document.getLastSection().getParagraph(0).getSentence(0));
         assertEquals(1, errors.size());
     }
 
     @Test
     public void testLoadDefaultDictionary() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(new ValidatorConfiguration("Spelling"))
-                .setLanguage("en").build();
-
-        List<Document> documents = new ArrayList<>();
-        documents.add(new Document.DocumentBuilder()
-                .addSection(1)
-                .addParagraph()
-                .addSentence(new Sentence("this iz goody", 1))
-                .build());
+        Document document = prepareSimpleDocument("this iz goody");
 
         RedPen redPen = new RedPen(config);
-        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        assertEquals(1, errors.get(documents.get(0)).size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        assertEquals(1, errors.get(document).size());
     }
 
     @Test
     public void testUpperCase() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(new ValidatorConfiguration("Spelling"))
-                .setLanguage("en").build();
-
-        List<Document> documents = new ArrayList<>();
-        documents.add(new Document.DocumentBuilder()
-                .addSection(1)
-                .addParagraph()
-                .addSentence(new Sentence("This iz goody", 1))
-                .build());
+        Document document = prepareSimpleDocument("This iz goody");
 
         RedPen redPen = new RedPen(config);
-        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        assertEquals(1, errors.get(documents.get(0)).size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        assertEquals(1, errors.get(document).size());
     }
 
 
     @Test
     public void testSkipCharacterCase() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(new ValidatorConfiguration("Spelling"))
-                .setLanguage("en").build();
-
-        List<Document> documents = new ArrayList<>();
-        documents.add(new Document.DocumentBuilder()
-                .addSection(1)
-                .addParagraph()
-                .addSentence(new Sentence("That is true, but there is a condition", 1))
-                .build());
+        Document document = prepareSimpleDocument("That is true, but there is a condition");
 
         RedPen redPen = new RedPen(config);
-        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        assertEquals(0, errors.get(documents.get(0)).size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        assertEquals(0, errors.get(document).size());
     }
 
     @Test
     public void testUserSkipList() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(new ValidatorConfiguration("Spelling").addAttribute("list", "abeshi,baz"))
+        config = new Configuration.ConfigurationBuilder()
+                .addValidatorConfig(new ValidatorConfiguration(validatorName).addAttribute("list", "abeshi,baz"))
                 .setLanguage("en").build();
 
-        List<Document> documents = new ArrayList<>();
-        documents.add(new Document.DocumentBuilder()
-                .addSection(1)
-                .addParagraph()
-                .addSentence(new Sentence("Abeshi is a word used in a comic.", 1))
-                .build());
+        Document document = prepareSimpleDocument("Abeshi is a word used in a comic.");
 
         RedPen redPen = new RedPen(config);
-        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        assertEquals(0, errors.get(documents.get(0)).size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        assertEquals(0, errors.get(document).size());
     }
 
     @Test
-    public void testEndPeriod() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(new ValidatorConfiguration("Spelling"))
-                .setLanguage("en").build();
-
-        List<Document> documents = new ArrayList<>();
-        documents.add(new Document.DocumentBuilder()
-                .addSection(1)
-                .addParagraph()
-                .addSentence(new Sentence("That is true.", 1))
-                .build());
-
+    public void testPunctuation() throws RedPenException {
         RedPen redPen = new RedPen(config);
-        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        assertEquals(0, errors.get(documents.get(0)).size());
+
+        Document document = prepareSimpleDocument("That is true.");
+        assertEquals(0, redPen.validate(singletonList(document)).get(document).size());
+
+        document = prepareSimpleDocument("That is true!");
+        assertEquals(0, redPen.validate(singletonList(document)).get(document).size());
+
+        document = prepareSimpleDocument("That is true?");
+        assertEquals(0, redPen.validate(singletonList(document)).get(document).size());
+
+        document = prepareSimpleDocument("That: true");
+        assertEquals(0, redPen.validate(singletonList(document)).get(document).size());
+
+        document = prepareSimpleDocument("That; and also this");
+        assertEquals(0, redPen.validate(singletonList(document)).get(document).size());
+
+        document = prepareSimpleDocument("That - is good");
+        assertEquals(0, redPen.validate(singletonList(document)).get(document).size());
+
+        document = prepareSimpleDocument("That / That");
+        assertEquals(0, redPen.validate(singletonList(document)).get(document).size());
+
+        document = prepareSimpleDocument("Number 1");
+        assertEquals(0, redPen.validate(singletonList(document)).get(document).size());
+
+        document = prepareSimpleDocument("The price is $123 or 100€ or ¥1000");
+        assertEquals(0, redPen.validate(singletonList(document)).get(document).size());
+
+        document = prepareSimpleDocument("100%");
+        assertEquals(0, redPen.validate(singletonList(document)).get(document).size());
     }
 
     @Test
     public void testVoid() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(new ValidatorConfiguration("Spelling"))
-                .setLanguage("en").build();
-
-        List<Document> documents = new ArrayList<>();
-        documents.add(new Document.DocumentBuilder()
-                .addSection(1)
-                .addParagraph()
-                .addSentence(new Sentence("", 1))
-                .build());
+        Document document = prepareSimpleDocument("");
 
         RedPen redPen = new RedPen(config);
-        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        assertEquals(0, errors.get(documents.get(0)).size());
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        assertEquals(0, errors.get(document).size());
     }
 }
