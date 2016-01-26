@@ -26,7 +26,8 @@ import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
-import cc.redpen.model.Sentence;
+
+import java.io.File;
 import java.util.Map;
 
 import java.util.ArrayList;
@@ -211,6 +212,7 @@ public class KatakanaEndHyphenValidatorTest {
                         .addSentence(new Sentence("コーヒーと紅茶と、どちらがお好きですか。", 1))
                         .build());
 
+        System.setProperty("REDPEN_HOME",new File("src/test/resources/").getAbsolutePath());
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         assertEquals(0, errors.get(documents.get(0)).size());
