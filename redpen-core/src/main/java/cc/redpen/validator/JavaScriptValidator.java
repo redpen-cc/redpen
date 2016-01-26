@@ -80,7 +80,7 @@ public class JavaScriptValidator extends Validator {
                         } catch (IOException e) {
                             LOG.error("Exception while reading js file", e);
                         }
-                1    }
+                    }
                 }
             }
         }
