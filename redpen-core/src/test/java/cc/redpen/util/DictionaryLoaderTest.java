@@ -25,15 +25,12 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class DictionaryLoaderTest extends Validator {
     @Test
@@ -78,7 +75,6 @@ public class DictionaryLoaderTest extends Validator {
     public void testLoadCachedFile() throws IOException, RedPenException {
         Path path = Files.createTempFile("test", "txt");
         File file = path.toFile();
-        System.setProperty("REDPEN_HOME", file.getAbsolutePath());
         Files.copy(new ByteArrayInputStream("foo".getBytes()), path, StandardCopyOption.REPLACE_EXISTING);
         Set<String> strings;
         strings = WORD_LIST.loadCachedFromFile(path.toFile(), "temp file");
