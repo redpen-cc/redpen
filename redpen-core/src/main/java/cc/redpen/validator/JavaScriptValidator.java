@@ -22,6 +22,7 @@ import cc.redpen.model.Document;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
+import cc.redpen.util.DictionaryLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,7 +80,7 @@ public class JavaScriptValidator extends Validator {
                         } catch (IOException e) {
                             LOG.error("Exception while reading js file", e);
                         }
-                    }
+                1    }
                 }
             }
         }
