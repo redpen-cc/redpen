@@ -107,14 +107,15 @@ public class DictionaryLoaderTest extends Validator {
     }
 
     @Test
-    public void testEnsureFileIsInsideRedPenHome() throws RedPenException, IOException {
+    public void testEnsureFileIsInsideRedPenHomeOrWorkingDirectory() throws RedPenException, IOException {
         File tempFile = File.createTempFile("redpenTest", "redpenTest");
         String path = tempFile.getAbsolutePath();
         System.setProperty("REDPEN_HOME", path);
-        DictionaryLoader.ensureFileIsInsideRedPenHome(path + File.separator + "test");
+        DictionaryLoader.ensureFileIsInsideRedPenHomeOrWorkingDirectory(path + File.separator + "test");
+        DictionaryLoader.ensureFileIsInsideRedPenHomeOrWorkingDirectory(new File("fileInCurrentDirectory.txt").getCanonicalPath());
         try {
             File file = new File(path + File.separator + ".." + File.separator + "test");
-            DictionaryLoader.ensureFileIsInsideRedPenHome(file.getCanonicalPath());
+            DictionaryLoader.ensureFileIsInsideRedPenHomeOrWorkingDirectory(file.getCanonicalPath());
             fail("expecting RedPenException");
         } catch (RedPenException expected) {
         }

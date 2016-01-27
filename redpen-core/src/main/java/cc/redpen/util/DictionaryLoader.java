@@ -122,7 +122,7 @@ public final class DictionaryLoader<E> {
      */
     public E loadCachedFromFile(File file, String dictionaryName) throws RedPenException {
         String path = file.getAbsolutePath();
-        ensureFileIsInsideRedPenHome(path);
+        ensureFileIsInsideRedPenHomeOrWorkingDirectory(path);
         if (!file.exists()) {
             throw new RedPenException("File not found: " + file);
         }
@@ -156,22 +156,33 @@ public final class DictionaryLoader<E> {
     }
 
     /**
-     * Test the specified path is inside $REDPEN_HOME. If not, throw RedPenException
-     * @param canonicalPath path to test
+     * Test the specified path is inside $REDPEN_HOME, or JVM working directory. If not, throw RedPenException
+     *
+     * @param path path to test
      * @throws RedPenException the specified path is not inside $REDPEN_HOME
      */
-    public static void ensureFileIsInsideRedPenHome(String canonicalPath) throws RedPenException{
-        String home = System.getenv("REDPEN_HOME");
-        if(home == null){
-            home = System.getProperty("REDPEN_HOME");
-        }
+    public static void ensureFileIsInsideRedPenHomeOrWorkingDirectory(String path) throws RedPenException {
+            try {
+                String canonicalPath = new File(path).getCanonicalPath();
+                String currentDirectory = new File("").getCanonicalPath();
+                if (canonicalPath.startsWith(currentDirectory)) {
+                    return;
+                }
+                String home = System.getProperty("REDPEN_HOME", System.getenv("REDPEN_HOME"));
+                String homeCanonicalPath;
+                if (home != null) {
+                    homeCanonicalPath = new File(home).getCanonicalPath();
+                    if (canonicalPath.startsWith(homeCanonicalPath)) {
+                        return;
+                    }
+                }else{
+                    homeCanonicalPath = "not specified";
+                }
+                throw new RedPenException(String.format("%s  is not under $REDPEN_HOME(%s) or current directory(%s).",
+                        canonicalPath , homeCanonicalPath, currentDirectory));
 
-        if (home != null) {
-            String homeAbsolutePath = new File(home).getAbsolutePath();
-            if (!canonicalPath.startsWith(homeAbsolutePath)) {
-                throw new RedPenException(canonicalPath + " is not under $REDPEN_HOME:" + homeAbsolutePath);
+            } catch (IOException e) {
+                throw new RedPenException(e);
             }
-        }
-
     }
 }
