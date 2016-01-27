@@ -76,6 +76,7 @@ public class DictionaryLoaderTest extends Validator {
     public void testLoadCachedFile() throws IOException, RedPenException {
         Path path = Files.createTempFile("test", "txt");
         File file = path.toFile();
+        System.setProperty("REDPEN_HOME", file.getParentFile().getAbsolutePath());
         Files.copy(new ByteArrayInputStream("foo".getBytes()), path, StandardCopyOption.REPLACE_EXISTING);
         Set<String> strings;
         strings = WORD_LIST.loadCachedFromFile(path.toFile(), "temp file");
