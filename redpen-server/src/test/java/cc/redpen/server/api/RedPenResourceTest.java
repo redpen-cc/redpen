@@ -33,16 +33,6 @@ import java.util.Set;
 public class RedPenResourceTest extends MockServletInvocationTest {
 
     @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-
-    @Override
     protected Class<?>[] getClasses() {
         try {
             Set<Class<?>> classes = new ApplicationFileLoader("application").getClasses();
