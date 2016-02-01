@@ -33,7 +33,7 @@ public final class SymbolTable implements Serializable {
     private static final long serialVersionUID = 1612920745151501631L;
     private final Map<SymbolType, Symbol> symbolDictionary = new HashMap<>();
     private final Map<Character, Symbol> valueDictionary = new HashMap<>();
-    private final String type;
+    private String type;
     private String lang;
     private static final Logger LOG = LoggerFactory.getLogger(SymbolTable.class);
 
@@ -55,7 +55,8 @@ public final class SymbolTable implements Serializable {
                 this.overrideSymbol(new Symbol(FULL_STOP, '．', "。."));
                 this.overrideSymbol(new Symbol(COMMA, '，', "、,"));
             } else {
-                LOG.info("\"normal\" type is specified");
+                this.type = "zenkaku";
+                LOG.info("\"zenkaku\" type is specified");
                 JAPANESE_SYMBOLS.values().forEach(this::overrideSymbol);
             }
         } else {
@@ -129,6 +130,10 @@ public final class SymbolTable implements Serializable {
 
     public String getLang() {
         return lang;
+    }
+
+    public String getType() {
+        return type;
     }
 
     @Override
