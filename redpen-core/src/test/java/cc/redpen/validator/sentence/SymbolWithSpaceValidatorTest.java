@@ -72,6 +72,8 @@ public class SymbolWithSpaceValidatorTest extends BaseValidatorTest {
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
         assertEquals(1, errors.get(document).size());
+        assertEquals("Need whitespace before or after symbol \":\".", errors.get(document).get(0).getMessage());
+        assertEquals(10, errors.get(document).get(0).getStartPosition().get().offset);
     }
 
     @Test
@@ -87,6 +89,8 @@ public class SymbolWithSpaceValidatorTest extends BaseValidatorTest {
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
         assertEquals(1, errors.get(document).size());
+        assertEquals("Need whitespace before or after symbol \"(\".", errors.get(document).get(0).getMessage());
+        assertEquals(10, errors.get(document).get(0).getStartPosition().get().offset);
     }
 
     @Test
@@ -103,6 +107,8 @@ public class SymbolWithSpaceValidatorTest extends BaseValidatorTest {
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
         assertEquals(2, errors.get(document).size());
+        assertEquals("Need whitespace before or after symbol \")\".", errors.get(document).get(0).getMessage());
+        assertEquals("Need whitespace before or after symbol \"(\".", errors.get(document).get(1).getMessage());
     }
 
     @Test
@@ -118,6 +124,7 @@ public class SymbolWithSpaceValidatorTest extends BaseValidatorTest {
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
         assertEquals(1, errors.get(document).size());
+        assertEquals("Need whitespace before or after symbol \"*\".", errors.get(document).get(0).getMessage());
     }
 
     @Test

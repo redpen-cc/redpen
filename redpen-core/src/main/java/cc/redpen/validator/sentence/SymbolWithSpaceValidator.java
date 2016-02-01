@@ -62,7 +62,7 @@ public class SymbolWithSpaceValidator extends Validator {
                 addLocalizedErrorWithPosition(sentence,
                         position,
                         position + 1,
-                        position);
+                        sentenceStr.charAt(position));
             }
         }
         return null;
