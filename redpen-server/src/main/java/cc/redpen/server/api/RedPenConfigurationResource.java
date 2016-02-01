@@ -48,6 +48,10 @@ public class RedPenConfigurationResource {
     @Context
     private ServletContext context;
 
+    RedPenService getRedPenService() {
+        return new RedPenService(context);
+    }
+
     @Path("/redpens")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -62,7 +66,7 @@ public class RedPenConfigurationResource {
             response.put("documentParsers", DocumentParser.PARSER_MAP.keySet());
 
             // add matching configurations
-            Map<String, RedPen> redpens = new RedPenService(context).getRedPens();
+            Map<String, RedPen> redpens = getRedPenService().getRedPens();
             final JSONObject redpensJSON = new JSONObject();
             response.put("redpens", redpensJSON);
             redpens.forEach((configurationName, redPen) -> {
@@ -79,8 +83,8 @@ public class RedPenConfigurationResource {
                         for (Validator validator : redPen.getValidators()) {
                             JSONObject validatorJSON = new JSONObject();
                             String name = validator.getClass().getSimpleName().endsWith("Validator")
-                                    ? validator.getClass().getSimpleName().substring(0, validator.getClass().getSimpleName().length() - 9)
-                                    : validator.getClass().getSimpleName();
+                              ? validator.getClass().getSimpleName().substring(0, validator.getClass().getSimpleName().length() - 9)
+                              : validator.getClass().getSimpleName();
                             validatorJSON.put("languages", validator.getSupportedLanguages());
                             validatorJSON.put("properties", validator.getConfigAttributes());
                             validatorConfigs.put(name, validatorJSON);
@@ -101,12 +105,14 @@ public class RedPenConfigurationResource {
                         config.put("symbols", symbolConfigs);
 
                         redpensJSON.put(configurationName, config);
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e) {
                         LOG.error("Exception when rendering RedPen to JSON for configuration " + configurationName, e);
                     }
                 }
             });
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             LOG.error("Exception when rendering RedPen to JSON", e);
         }
 

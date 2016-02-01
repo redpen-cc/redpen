@@ -20,13 +20,13 @@ package cc.redpen.server.api;
 import cc.redpen.RedPen;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.tokenizer.JapaneseTokenizer;
-import cc.redpen.tokenizer.WhiteSpaceTokenizer;
+import com.google.common.collect.ImmutableMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 public class RedPenConfigurationResourceTest {
     RedPenConfigurationResource resource = new RedPenConfigurationResource();
@@ -45,17 +45,27 @@ public class RedPenConfigurationResourceTest {
 
     @Test
     public void allConfigurationsIfLangNotSpecified() throws Exception {
+        RedPenService service = mock(RedPenService.class);
+        RedPen redPen = mock(RedPen.class, RETURNS_DEEP_STUBS);
+        doReturn(ImmutableMap.of("en", redPen, "ja", redPen, "et", redPen)).when(service).getRedPens();
+
+        resource = spy(resource);
+        doReturn(service).when(resource).getRedPenService();
+
         JSONObject response = (JSONObject)resource.getRedPens(null).getEntity();
         JSONObject redpens = response.getJSONObject("redpens");
 
         assertEquals(3, redpens.length());
 
-        JSONObject en = redpens.getJSONObject("en");
-        assertEquals("en", en.getString("lang"));
-        assertEquals("", en.getString("type"));
-        assertEquals(WhiteSpaceTokenizer.class.getName(), en.getString("tokenizer"));
-        assertTrue(!en.getString("validators").isEmpty());
-        assertTrue(!en.getString("symbols").isEmpty());
+        assertNotNull(redpens.getJSONObject("en"));
+        assertNotNull(redpens.getJSONObject("ja"));
+        assertNotNull(redpens.getJSONObject("et"));
+    }
+
+    @Test
+    public void redPenFields() throws Exception {
+        JSONObject response = (JSONObject)resource.getRedPens(null).getEntity();
+        JSONObject redpens = response.getJSONObject("redpens");
 
         JSONObject ja = redpens.getJSONObject("ja");
         assertEquals("ja", ja.getString("lang"));

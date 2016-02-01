@@ -30,7 +30,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 /**
  * Contains Settings used throughout {@link cc.redpen.RedPen}.
  */
-public final class Configuration {
+public class Configuration {
     private final SymbolTable symbolTable;
     private final List<ValidatorConfiguration> validatorConfigs = new ArrayList<>();
     private String lang;
