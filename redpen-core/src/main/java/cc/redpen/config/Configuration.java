@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 /**
  * Contains Settings used throughout {@link cc.redpen.RedPen}.
  */
@@ -94,6 +96,14 @@ public final class Configuration {
      */
     public RedPenTokenizer getTokenizer() {
         return tokenizer;
+    }
+
+    /**
+     * @return unique key for this lang and type combination
+     */
+    public String getKey() {
+        if (getLang().equals("ja") && getType().equals("zenkaku")) return "ja";
+        return getLang() + (isEmpty(getType()) ? "" : "." + getType());
     }
 
     /**

@@ -12,9 +12,17 @@ public class RedPenServiceTest {
   public void twoConfigurationsByDefault() throws Exception {
     RedPenService service = new RedPenService(null);
     Map<String, RedPen> redPens = service.getRedPens();
-    assertEquals(3, redPens.size());
+    assertEquals(5, redPens.size());
     assertEquals("en", redPens.get("default").getConfiguration().getLang());
     assertEquals("en", redPens.get("en").getConfiguration().getLang());
+
     assertEquals("ja", redPens.get("ja").getConfiguration().getLang());
+    assertEquals("zenkaku", redPens.get("ja").getConfiguration().getType());
+
+    assertEquals("ja", redPens.get("ja.zenkaku2").getConfiguration().getLang());
+    assertEquals("zenkaku2", redPens.get("ja.zenkaku2").getConfiguration().getType());
+
+    assertEquals("ja", redPens.get("ja.hankaku").getConfiguration().getLang());
+    assertEquals("hankaku", redPens.get("ja.hankaku").getConfiguration().getType());
   }
 }

@@ -60,8 +60,9 @@ public class RedPenService {
                 LOG.info("Creating RedPen instances");
                 try {
                     for (String fileName : findConfFiles()) {
-                        RedPen conf = new RedPen(fileName);
-                        langRedPenMap.put(conf.getConfiguration().getLang(), conf);
+                        RedPen redPen = new RedPen(fileName);
+                        Configuration config = redPen.getConfiguration();
+                        langRedPenMap.put(config.getKey(), redPen);
                     }
 
                     String configPath = context != null ? context.getInitParameter("redpen.conf.path") : null;
