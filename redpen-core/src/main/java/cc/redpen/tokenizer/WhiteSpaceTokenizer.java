@@ -21,13 +21,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static java.lang.Character.isWhitespace;
+
 public class WhiteSpaceTokenizer implements RedPenTokenizer {
 
     private static final Pattern[] BLACKLIST_TOKEN_PATTERNS = new Pattern[]{
             Pattern.compile("^[-+#$€£¥]?\\d+(\\.\\d+)?[%€¥¢₽]?$") // a number [+-]n[.n]
     };
 
-    private static final String DELIMITERS = " \t\n\r?!,:;.()\u2014\"";
+    private static final String DELIMITERS = " \u00A0\t\n\r?!,:;.()\u2014\"";
 
     public WhiteSpaceTokenizer() {
     }
@@ -46,7 +48,7 @@ public class WhiteSpaceTokenizer implements RedPenTokenizer {
                 if (isSuitableToken(surface)) {
                     tokens.add(new TokenElement(surface, tags, offset));
                 }
-                if (!Character.isWhitespace(ch)) {
+                if (!isWhitespace(ch) && ch != '\u00A0') {
                     tokens.add(new TokenElement(String.valueOf(ch), tags, i));
                 }
                 surface = "";
