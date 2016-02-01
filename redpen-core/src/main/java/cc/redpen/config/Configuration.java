@@ -79,6 +79,15 @@ public final class Configuration {
     }
 
     /**
+     * returns symbol table type targeted by this configuration
+     *
+     * @return type
+     */
+    public String getType() {
+        return getSymbolTable().getType();
+    }
+
+    /**
      * returns Tokenizer aasociated with this configuration
      *
      * @return tokenizer

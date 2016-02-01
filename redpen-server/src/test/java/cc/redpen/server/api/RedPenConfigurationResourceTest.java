@@ -19,11 +19,14 @@ package cc.redpen.server.api;
 
 import cc.redpen.RedPen;
 import cc.redpen.parser.DocumentParser;
+import cc.redpen.tokenizer.JapaneseTokenizer;
+import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class RedPenConfigurationResourceTest {
     RedPenConfigurationResource resource = new RedPenConfigurationResource();
@@ -38,5 +41,27 @@ public class RedPenConfigurationResourceTest {
     public void availableDocumentParsersAreReturned() throws Exception {
         JSONObject response = (JSONObject)resource.getRedPens("").getEntity();
         assertEquals(new JSONArray(DocumentParser.PARSER_MAP.keySet()).toString(), response.get("documentParsers").toString());
+    }
+
+    @Test
+    public void allConfigurationsIfLangNotSpecified() throws Exception {
+        JSONObject response = (JSONObject)resource.getRedPens(null).getEntity();
+        JSONObject redpens = response.getJSONObject("redpens");
+
+        assertEquals(2, redpens.length());
+
+        JSONObject en = redpens.getJSONObject("en");
+        assertEquals("en", en.getString("lang"));
+        assertEquals("", en.getString("type"));
+        assertEquals(WhiteSpaceTokenizer.class.getName(), en.getString("tokenizer"));
+        assertTrue(!en.getString("validators").isEmpty());
+        assertTrue(!en.getString("symbols").isEmpty());
+
+        JSONObject ja = redpens.getJSONObject("ja");
+        assertEquals("ja", ja.getString("lang"));
+        assertEquals("zenkaku", ja.getString("type"));
+        assertEquals(JapaneseTokenizer.class.getName(), ja.getString("tokenizer"));
+        assertTrue(!ja.getString("validators").isEmpty());
+        assertTrue(!ja.getString("symbols").isEmpty());
     }
 }
