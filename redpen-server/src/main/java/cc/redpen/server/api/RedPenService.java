@@ -56,17 +56,15 @@ public class RedPenService {
                     RedPen japaneseRedPen = new RedPen("/conf/redpen-conf-ja.xml");
                     langRedPenMap.put("ja", japaneseRedPen);
 
-                    String configPath;
-                    if (context != null) {
-                        configPath = context.getInitParameter("redpen.conf.path");
-                        if (configPath != null) {
-                            LOG.info("Config Path is set to \"{}\"", configPath);
-                            RedPen defaultRedPen = new RedPen(configPath);
-                            langRedPenMap.put(DEFAULT_LANGUAGE, defaultRedPen);
-                        } else {
-                            // if config path is not set, fallback to default config path
-                            LOG.info("Config Path is set to \"{}\"", DEFAULT_INTERNAL_CONFIG_PATH);
-                        }
+                    String configPath = context != null ? context.getInitParameter("redpen.conf.path") : null;
+                    if (configPath != null) {
+                        LOG.info("Config Path is set to \"{}\"", configPath);
+                        RedPen defaultRedPen = new RedPen(configPath);
+                        langRedPenMap.put(DEFAULT_LANGUAGE, defaultRedPen);
+                    } else {
+                        // if config path is not set, fallback to default config path
+                        LOG.info("Config Path is set to \"{}\"", DEFAULT_INTERNAL_CONFIG_PATH);
+                        langRedPenMap.put(DEFAULT_LANGUAGE, englishRedPen);
                     }
                     LOG.info("Document Validator Server is running.");
                 } catch (RedPenException e) {

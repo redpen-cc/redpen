@@ -48,7 +48,7 @@ public class RedPenConfigurationResourceTest {
         JSONObject response = (JSONObject)resource.getRedPens(null).getEntity();
         JSONObject redpens = response.getJSONObject("redpens");
 
-        assertEquals(2, redpens.length());
+        assertEquals(3, redpens.length());
 
         JSONObject en = redpens.getJSONObject("en");
         assertEquals("en", en.getString("lang"));
