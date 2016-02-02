@@ -17,12 +17,12 @@ public class RedPenServiceTest {
     assertEquals("en", redPens.get("en").getConfiguration().getLang());
 
     assertEquals("ja", redPens.get("ja").getConfiguration().getLang());
-    assertEquals("zenkaku", redPens.get("ja").getConfiguration().getType());
+    assertEquals("zenkaku", redPens.get("ja").getConfiguration().getVariant());
 
     assertEquals("ja", redPens.get("ja.zenkaku2").getConfiguration().getLang());
-    assertEquals("zenkaku2", redPens.get("ja.zenkaku2").getConfiguration().getType());
+    assertEquals("zenkaku2", redPens.get("ja.zenkaku2").getConfiguration().getVariant());
 
     assertEquals("ja", redPens.get("ja.hankaku").getConfiguration().getLang());
-    assertEquals("hankaku", redPens.get("ja.hankaku").getConfiguration().getType());
+    assertEquals("hankaku", redPens.get("ja.hankaku").getConfiguration().getVariant());
   }
 }

@@ -69,7 +69,7 @@ public class RedPenConfigurationResourceTest {
 
         JSONObject ja = redpens.getJSONObject("ja");
         assertEquals("ja", ja.getString("lang"));
-        assertEquals("zenkaku", ja.getString("type"));
+        assertEquals("zenkaku", ja.getString("variant"));
         assertEquals(JapaneseTokenizer.class.getName(), ja.getString("tokenizer"));
         assertTrue(!ja.getString("validators").isEmpty());
         assertTrue(!ja.getString("symbols").isEmpty());

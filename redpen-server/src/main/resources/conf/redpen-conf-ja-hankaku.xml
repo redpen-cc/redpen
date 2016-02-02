@@ -1,4 +1,4 @@
-<redpen-conf lang="ja" type="hankaku">
+<redpen-conf lang="ja" variant="hankaku">
     <validators>
         <validator name="SentenceLength">
             <property name="max_len" value="100"/>

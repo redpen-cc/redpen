@@ -13,13 +13,13 @@ public class SymbolTableTest {
   @Test
   public void englishDoesNotHaveAType() throws Exception {
     SymbolTable table = new SymbolTable("en", Optional.empty(), emptyList());
-    assertEquals("", table.getType());
+    assertEquals("", table.getVariant());
   }
 
   @Test
   public void japaneseUsesZenkakuByDefault() throws Exception {
     SymbolTable table = new SymbolTable("ja", Optional.empty(), emptyList());
-    assertEquals("zenkaku", table.getType());
+    assertEquals("zenkaku", table.getVariant());
     assertEquals('。', table.getSymbol(FULL_STOP).getValue());
     assertEquals('、', table.getSymbol(COMMA).getValue());
   }
@@ -27,7 +27,7 @@ public class SymbolTableTest {
   @Test
   public void japaneseCanUseAVariationOfZenkaku() throws Exception {
     SymbolTable table = new SymbolTable("ja", Optional.of("zenkaku2"), emptyList());
-    assertEquals("zenkaku2", table.getType());
+    assertEquals("zenkaku2", table.getVariant());
     assertEquals('．', table.getSymbol(FULL_STOP).getValue());
     assertEquals('，', table.getSymbol(COMMA).getValue());
   }
@@ -35,7 +35,7 @@ public class SymbolTableTest {
   @Test
   public void japaneseCanUseHankaku() throws Exception {
     SymbolTable table = new SymbolTable("ja", Optional.of("hankaku"), emptyList());
-    assertEquals("hankaku", table.getType());
+    assertEquals("hankaku", table.getVariant());
     assertEquals('.', table.getSymbol(FULL_STOP).getValue());
     assertEquals(',', table.getSymbol(COMMA).getValue());
   }
