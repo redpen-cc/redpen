@@ -49,20 +49,24 @@ public class SymbolWithSpaceValidator extends Validator {
         char target = symbol.getValue();
         int position = sentenceStr.indexOf(target);
         if (position != -1) {
+            String key = "";
+
             if (position > 0 && symbol.isNeedBeforeSpace()
                     && !Character.isWhitespace(sentenceStr.charAt(position - 1))) {
-                addLocalizedErrorWithPosition(sentence,
-                        position,
-                        position + 1,
-                        sentenceStr.charAt(position));
+                key = "Before";
+            }
 
-            } else if (position < sentenceStr.length() - 1
+            if (position < sentenceStr.length() - 1
                     && symbol.isNeedAfterSpace()
                     && !Character.isWhitespace(sentenceStr.charAt(position + 1))) {
-                addLocalizedErrorWithPosition(sentence,
-                        position,
-                        position + 1,
-                        position);
+                key += "After";
+            }
+
+            if (!key.isEmpty()) {
+                addLocalizedErrorWithPosition(key, sentence,
+                  position,
+                  position + 1,
+                  sentenceStr.charAt(position));
             }
         }
         return null;
