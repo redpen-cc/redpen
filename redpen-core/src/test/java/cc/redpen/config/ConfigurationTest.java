@@ -19,6 +19,9 @@ package cc.redpen.config;
 
 import org.junit.Test;
 
+import java.util.Optional;
+
+import static java.util.Collections.emptyList;
 import static org.junit.Assert.*;
 
 /**
@@ -69,5 +72,23 @@ public class ConfigurationTest {
         Configuration configuration = new Configuration.ConfigurationBuilder().build(); // NOTE: load "en" setting when lang is not specified
         assertEquals("en", configuration.getLang());
         assertNotNull(configuration.getLang());
+    }
+
+    @Test
+    public void keyIsLangAndType() throws Exception {
+        SymbolTable symbolTable = new SymbolTable("ja", Optional.of("hankaku"), emptyList());
+        assertEquals("ja.hankaku", new Configuration(symbolTable, emptyList(), "ja").getKey());
+    }
+
+    @Test
+    public void keyIsLangOnlyIfTypeIsMissing() throws Exception {
+        SymbolTable symbolTable = new SymbolTable("en", Optional.empty(), emptyList());
+        assertEquals("en", new Configuration(symbolTable, emptyList(), "en").getKey());
+    }
+
+    @Test
+    public void keyIsLangOnlyForZenkaku() throws Exception {
+        SymbolTable symbolTable = new SymbolTable("ja", Optional.of("zenkaku"), emptyList());
+        assertEquals("ja", new Configuration(symbolTable, emptyList(), "ja").getKey());
     }
 }

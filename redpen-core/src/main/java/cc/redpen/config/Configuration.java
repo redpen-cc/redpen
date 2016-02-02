@@ -25,10 +25,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 /**
  * Contains Settings used throughout {@link cc.redpen.RedPen}.
  */
-public final class Configuration {
+public class Configuration {
     private final SymbolTable symbolTable;
     private final List<ValidatorConfiguration> validatorConfigs = new ArrayList<>();
     private String lang;
@@ -79,12 +81,29 @@ public final class Configuration {
     }
 
     /**
+     * returns symbol table type targeted by this configuration
+     *
+     * @return type
+     */
+    public String getType() {
+        return getSymbolTable().getType();
+    }
+
+    /**
      * returns Tokenizer aasociated with this configuration
      *
      * @return tokenizer
      */
     public RedPenTokenizer getTokenizer() {
         return tokenizer;
+    }
+
+    /**
+     * @return unique key for this lang and type combination
+     */
+    public String getKey() {
+        if (getLang().equals("ja") && getType().equals("zenkaku")) return "ja";
+        return getLang() + (isEmpty(getType()) ? "" : "." + getType());
     }
 
     /**

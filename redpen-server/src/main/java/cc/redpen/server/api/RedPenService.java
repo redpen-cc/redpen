@@ -24,10 +24,18 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import javax.servlet.ServletContext;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Stream;
+
+import static java.util.Collections.emptySet;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * Helper class to access RedPen instances for use within the webapp
@@ -51,22 +59,21 @@ public class RedPenService {
             if (langRedPenMap.size() == 0) {
                 LOG.info("Creating RedPen instances");
                 try {
-                    RedPen englishRedPen = new RedPen(DEFAULT_INTERNAL_CONFIG_PATH);
-                    langRedPenMap.put("en", englishRedPen);
-                    RedPen japaneseRedPen = new RedPen("/conf/redpen-conf-ja.xml");
-                    langRedPenMap.put("ja", japaneseRedPen);
+                    for (String fileName : findConfFiles()) {
+                        RedPen redPen = new RedPen(fileName);
+                        Configuration config = redPen.getConfiguration();
+                        langRedPenMap.put(config.getKey(), redPen);
+                    }
 
-                    String configPath;
-                    if (context != null) {
-                        configPath = context.getInitParameter("redpen.conf.path");
-                        if (configPath != null) {
-                            LOG.info("Config Path is set to \"{}\"", configPath);
-                            RedPen defaultRedPen = new RedPen(configPath);
-                            langRedPenMap.put(DEFAULT_LANGUAGE, defaultRedPen);
-                        } else {
-                            // if config path is not set, fallback to default config path
-                            LOG.info("Config Path is set to \"{}\"", DEFAULT_INTERNAL_CONFIG_PATH);
-                        }
+                    String configPath = context != null ? context.getInitParameter("redpen.conf.path") : null;
+                    if (configPath != null) {
+                        LOG.info("Config Path is set to \"{}\"", configPath);
+                        RedPen defaultRedPen = new RedPen(configPath);
+                        langRedPenMap.put(DEFAULT_LANGUAGE, defaultRedPen);
+                    } else {
+                        // if config path is not set, fallback to default config path
+                        LOG.info("Config Path is set to \"{}\"", DEFAULT_INTERNAL_CONFIG_PATH);
+                        langRedPenMap.put(DEFAULT_LANGUAGE, langRedPenMap.get("en"));
                     }
                     LOG.info("Document Validator Server is running.");
                 } catch (RedPenException e) {
@@ -74,6 +81,17 @@ public class RedPenService {
                     throw new ExceptionInInitializerError(e);
                 }
             }
+        }
+    }
+
+    private Set<String> findConfFiles() {
+        try {
+            Resource[] resources = new PathMatchingResourcePatternResolver(getClass().getClassLoader()).getResources("classpath*:conf/*.xml");
+            return Stream.of(resources).map(r -> "/conf/" + r.getFilename()).collect(toSet());
+        }
+        catch (IOException e) {
+            LOG.error("Failed to load default config files", e);
+            return emptySet();
         }
     }
 
