@@ -41,22 +41,21 @@ var redpen = (function ($) {
                 if (callback) {
                     callback(data);
                 }
-            },
-            dataType: "json"
+            }
         }).fail(function (err) {
-                console.log(err);
-            });
+            console.error(err);
+        });
     };
 
     this.setBaseUrl = function(url) {
         baseUrl = url;
     };
 
-    // placeholder (and cheap client-side implementation) of a detect-language function
     this.detectLanguage = function (text, callback) {
         if (text) {
-            var japanese = (text.indexOf('。') != -1) || (text.indexOf('、') != -1) || (text.indexOf('は') != -1);
-            callback(japanese ? 'ja' : 'en');
+            doAPICall('document/language', {document: text}, function(data) {
+                callback(data.key);
+            }, 'POST');
         }
     };
 
