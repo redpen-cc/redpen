@@ -27,7 +27,7 @@ public class WhiteSpaceTokenizerTest {
     @Test
     public void testTokenize() {
         RedPenTokenizer tokenizer = new WhiteSpaceTokenizer();
-        List<TokenElement> results = tokenizer.tokenize("this is a pen");
+        List<TokenElement> results = tokenizer.tokenize("this is a\u00A0pen");
         assertEquals(4, results.size());
         assertEquals("this", results.get(0).getSurface());
         assertEquals(0, results.get(0).getTags().size());
