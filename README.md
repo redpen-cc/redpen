@@ -51,13 +51,14 @@ Links
   * [RubyGem by akinomurasame](https://rubygems.org/gems/redpen_ruby)
   * [Python Client](https://pypi.python.org/pypi/pyredpen/)
   * [Android App by Shintaro Katafuchi](https://play.google.com/store/apps/details?id=cc.redpen)
-* Editor pacakges
+* Editor support
   * [Atom Editor package by griffin-stewie](https://atom.io/packages/redpen)
   * [SublimeLinter module for RedPen](https://github.com/taky/sublimelinter-redpen)
   * [Emacs redpen-paragraph by karronoli](https://libraries.io/emacs/redpen-paragraph/v0.2)
+  * [WordPress plugin](https://github.com/redpen-cc/redpen-wordpress-plugin)
 * Extensions
-   * [unsuggested-kanji](https://github.com/so-c/redpen-validator) by so-c
-   * [ra-removed-word](http://www.clear-code.com/blog/2015/8/29.html) by ClearCode
+  * [unsuggested-kanji](https://github.com/so-c/redpen-validator) by so-c
+  * [ra-removed-word](http://www.clear-code.com/blog/2015/8/29.html) by ClearCode
 
 Deploy
 ======
