@@ -12,4 +12,4 @@
 * Kentaro Hayashi
 * Tomokazu Kagawa 
 * Shota Kubota
-
+* Kozo Nishida <knishida _at_ riken.jp>
