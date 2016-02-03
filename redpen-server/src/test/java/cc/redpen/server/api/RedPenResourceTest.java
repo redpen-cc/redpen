@@ -110,6 +110,11 @@ public class RedPenResourceTest extends MockServletInvocationTest {
         }
     }
 
+    public void testDetectLanguage() throws Exception {
+        assertEquals("en", new RedPenResource().detectLanguage("Hello World").getString("key"));
+        assertEquals("ja", new RedPenResource().detectLanguage("こんにちは世界").getString("key"));
+    }
+
     // test helper
     private MockHttpServletRequest constructMockRequest(String method,
                                                         String requestURI,

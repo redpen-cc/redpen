@@ -17,9 +17,24 @@
  */
 package cc.redpen.util;
 
+import static java.lang.Character.UnicodeBlock.*;
+
 public class StringUtils {
     public static boolean isKatakana(char c) {
-        return Character.UnicodeBlock.of(c) == Character.UnicodeBlock.KATAKANA;
+        return Character.UnicodeBlock.of(c) == KATAKANA;
+    }
+
+    public static boolean isHiragana(char c) {
+        return Character.UnicodeBlock.of(c) == HIRAGANA;
+    }
+
+    public static boolean isCJK(char c) {
+        return Character.UnicodeBlock.of(c) == CJK_UNIFIED_IDEOGRAPHS;
+    }
+
+    public static boolean isProbablyJapanese(char c) {
+        Character.UnicodeBlock block = Character.UnicodeBlock.of(c);
+        return block == KATAKANA || block == HIRAGANA || block == CJK_UNIFIED_IDEOGRAPHS;
     }
 
     public static boolean isBasicLatin(char c) {
