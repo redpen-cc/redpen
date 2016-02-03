@@ -20,10 +20,7 @@ package cc.redpen;
 import cc.redpen.config.Configuration;
 import org.junit.Test;
 
-import static cc.redpen.config.SymbolType.EXCLAMATION_MARK;
-import static cc.redpen.config.SymbolType.LEFT_SINGLE_QUOTATION_MARK;
-import static cc.redpen.config.SymbolType.COMMA;
-
+import static cc.redpen.config.SymbolType.*;
 import static org.junit.Assert.*;
 
 public class ConfigurationLoaderTest {
@@ -81,6 +78,7 @@ public class ConfigurationLoaderTest {
         Configuration configuration = configurationLoader.loadFromString(sampleConfigString);
 
         assertNotNull(configuration);
+        assertEquals("zenkaku", configuration.getVariant());
         assertEquals(2, configuration.getValidatorConfigs().size());
         assertEquals("SentenceLength",
                 configuration.getValidatorConfigs().get(0).getConfigurationName());
@@ -98,9 +96,9 @@ public class ConfigurationLoaderTest {
     }
 
     @Test
-    public void testLoadJapaneseConfigurationWithHankakuType() throws RedPenException{
+    public void testLoadJapaneseConfigurationWithHankakuVariant() throws RedPenException{
         String sampleConfigString =
-                "<redpen-conf lang=\"ja\" type=\"hankaku\">" +
+                "<redpen-conf lang=\"ja\" variant=\"hankaku\">" +
                         "<validators>" +
                         "<validator name=\"SentenceLength\">" +
                         "<property name=\"max_length\" value=\"200\" />" +
@@ -113,6 +111,7 @@ public class ConfigurationLoaderTest {
         Configuration configuration = configurationLoader.loadFromString(sampleConfigString);
 
         assertNotNull(configuration);
+        assertEquals("hankaku", configuration.getVariant());
         assertEquals(2, configuration.getValidatorConfigs().size());
         assertEquals("SentenceLength",
                 configuration.getValidatorConfigs().get(0).getConfigurationName());
@@ -129,11 +128,20 @@ public class ConfigurationLoaderTest {
                 .getSymbol(EXCLAMATION_MARK).getInvalidChars()[0]);
     }
 
+    @Test
+    public void testVariantCanBeSpecifiedAsTypeForBackwardsCompatibility() throws RedPenException{
+        String sampleConfigString = "<redpen-conf lang=\"ja\" type=\"hankaku\"><validators/></redpen-conf>";
+
+        ConfigurationLoader configurationLoader = new ConfigurationLoader();
+        Configuration configuration = configurationLoader.loadFromString(sampleConfigString);
+
+        assertEquals("hankaku", configuration.getVariant());
+    }
 
     @Test
-    public void testLoadJapaneseConfigurationWithZenkaku2Type() throws RedPenException{
+    public void testLoadJapaneseConfigurationWithZenkaku2Variant() throws RedPenException{
         String sampleConfigString =
-                "<redpen-conf lang=\"ja\" type=\"zenkaku2\">" +
+                "<redpen-conf lang=\"ja\" variant=\"zenkaku2\">" +
                         "<validators>" +
                         "<validator name=\"SentenceLength\">" +
                         "<property name=\"max_length\" value=\"200\" />" +
@@ -146,6 +154,7 @@ public class ConfigurationLoaderTest {
         Configuration configuration = configurationLoader.loadFromString(sampleConfigString);
 
         assertNotNull(configuration);
+        assertEquals("zenkaku2", configuration.getVariant());
         assertEquals(2, configuration.getValidatorConfigs().size());
         assertEquals("SentenceLength",
                 configuration.getValidatorConfigs().get(0).getConfigurationName());
@@ -180,6 +189,7 @@ public class ConfigurationLoaderTest {
         Configuration configuration = configurationLoader.loadFromString(sampleConfigString);
 
         assertNotNull(configuration);
+        assertEquals("en", configuration.getLang());
         assertEquals(2, configuration.getValidatorConfigs().size());
         assertEquals("SentenceLength",
                 configuration.getValidatorConfigs().get(0).getConfigurationName());

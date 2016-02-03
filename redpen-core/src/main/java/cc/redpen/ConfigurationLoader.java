@@ -33,14 +33,8 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
 
 import static cc.redpen.config.Configuration.ConfigurationBuilder;
 
@@ -141,23 +135,25 @@ public final class ConfigurationLoader {
         configBuilder = new ConfigurationBuilder();
         Element rootElement = getRootNode(doc, "redpen-conf");
 
-        Node langNode = rootElement.getAttributes().getNamedItem("lang");
-        String language = "en";
-        if (langNode != null) {
-            language = langNode.getNodeValue();
+        String language = rootElement.getAttribute("lang");
+        if (!language.isEmpty()) {
             LOG.info("Language is set to \"{}\"", language);
         } else {
             LOG.warn("No language configuration...");
             LOG.info("Set language to en");
+            language = "en";
         }
 
-        Node typeNode = rootElement.getAttributes().getNamedItem("type");
-        Optional<String> type = Optional.empty();
-        if (typeNode != null) {
-            type = Optional.of(typeNode.getNodeValue());
-            LOG.info("Type is set to \"{}\"", type.get());
+        String variant = rootElement.getAttribute("variant");
+        if (variant.isEmpty()) {
+            variant = rootElement.getAttribute("type");
+            if (!variant.isEmpty()) LOG.info("Deprecated: use \"variant\" attribute instead of \"type\"");
+        }
+
+        if (variant.isEmpty()) {
+            LOG.warn("No variant configuration...");
         } else {
-            LOG.warn("No type configuration...");
+            LOG.info("Variant is set to \"{}\"", variant);
         }
 
         // extract validator configurations
@@ -179,7 +175,7 @@ public final class ConfigurationLoader {
         NodeList symbolTableConfigElementList =
                 getSpecifiedNodeList(rootElement, "symbols");
         configBuilder.setLanguage(language);
-        type.ifPresent(configBuilder::setType);
+        if (!variant.isEmpty()) configBuilder.setVariant(variant);
 
         if (symbolTableConfigElementList != null) {
             extractSymbolConfig(symbolTableConfigElementList, language);

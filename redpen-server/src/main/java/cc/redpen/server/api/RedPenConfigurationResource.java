@@ -75,7 +75,7 @@ public class RedPenConfigurationResource {
                         // add specific configuration items
                         JSONObject config = new JSONObject();
                         config.put("lang", redPen.getConfiguration().getLang());
-                        config.put("type", redPen.getConfiguration().getType());
+                        config.put("variant", redPen.getConfiguration().getVariant());
                         config.put("tokenizer", redPen.getConfiguration().getTokenizer().getClass().getName());
 
                         // add the names of the validators

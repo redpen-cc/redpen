@@ -85,8 +85,8 @@ public class Configuration {
      *
      * @return type
      */
-    public String getType() {
-        return getSymbolTable().getType();
+    public String getVariant() {
+        return getSymbolTable().getVariant();
     }
 
     /**
@@ -102,8 +102,8 @@ public class Configuration {
      * @return unique key for this lang and type combination
      */
     public String getKey() {
-        if (getLang().equals("ja") && getType().equals("zenkaku")) return "ja";
-        return getLang() + (isEmpty(getType()) ? "" : "." + getType());
+        if (getLang().equals("ja") && getVariant().equals("zenkaku")) return "ja";
+        return getLang() + (isEmpty(getVariant()) ? "" : "." + getVariant());
     }
 
     /**
@@ -115,7 +115,7 @@ public class Configuration {
         private boolean built = false;
 
         private String lang = "en";
-        private Optional<String> type = Optional.empty();
+        private Optional<String> variant = Optional.empty();
 
         private void checkBuilt(){
             if(built){
@@ -140,16 +140,16 @@ public class Configuration {
             return this;
         }
 
-        public ConfigurationBuilder setType(String type) {
+        public ConfigurationBuilder setVariant(String variant) {
             checkBuilt();
-            this.type = Optional.of(type);
+            this.variant = Optional.of(variant);
             return this;
         }
 
         public Configuration build() {
             checkBuilt();
             built = true;
-            return new Configuration(new SymbolTable(lang, type, customSymbols), this.validatorConfigs, this.lang);
+            return new Configuration(new SymbolTable(lang, variant, customSymbols), this.validatorConfigs, this.lang);
         }
     }
 }

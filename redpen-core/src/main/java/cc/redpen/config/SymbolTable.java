@@ -33,30 +33,29 @@ public class SymbolTable implements Serializable {
     private static final long serialVersionUID = 1612920745151501631L;
     private final Map<SymbolType, Symbol> symbolDictionary = new HashMap<>();
     private final Map<Character, Symbol> valueDictionary = new HashMap<>();
-    private String type;
+    private String variant;
     private String lang;
     private static final Logger LOG = LoggerFactory.getLogger(SymbolTable.class);
 
     /**
      * Constructor.
      */
-    SymbolTable(String lang, Optional<String> type, List<Symbol> customSymbols) {
-        super();
+    SymbolTable(String lang, Optional<String> variant, List<Symbol> customSymbols) {
         this.lang = lang;
-        this.type = type.orElse("");
+        this.variant = variant.orElse("");
         if (lang.equals("ja")) {
             LOG.info("\"ja\" is specified.");
-            if (this.type.equals("hankaku")) {
-                LOG.info("\"hankaku\" type is specified");
+            if (this.variant.equals("hankaku")) {
+                LOG.info("\"hankaku\" variant is specified");
                 JAPANESE_HANKAKU_SYMBOLS.values().forEach(this::overrideSymbol);
-            } else if (this.type.equals("zenkaku2")) {
-                LOG.info("\"zenkaku2\" type is specified");
+            } else if (this.variant.equals("zenkaku2")) {
+                LOG.info("\"zenkaku2\" variant is specified");
                 JAPANESE_SYMBOLS.values().forEach(this::overrideSymbol);
                 this.overrideSymbol(new Symbol(FULL_STOP, '．', "。."));
                 this.overrideSymbol(new Symbol(COMMA, '，', "、,"));
             } else {
-                this.type = "zenkaku";
-                LOG.info("\"zenkaku\" type is specified");
+                this.variant = "zenkaku";
+                LOG.info("\"zenkaku\" variant is specified");
                 JAPANESE_SYMBOLS.values().forEach(this::overrideSymbol);
             }
         } else {
@@ -132,8 +131,8 @@ public class SymbolTable implements Serializable {
         return lang;
     }
 
-    public String getType() {
-        return type;
+    public String getVariant() {
+        return variant;
     }
 
     @Override
@@ -146,7 +145,7 @@ public class SymbolTable implements Serializable {
         if (lang != null ? !lang.equals(that.lang) : that.lang != null) return false;
         if (symbolDictionary != null ? !symbolDictionary.equals(that.symbolDictionary) : that.symbolDictionary != null)
             return false;
-        if (type != null ? !type.equals(that.type) : that.type != null) return false;
+        if (variant != null ? !variant.equals(that.variant) : that.variant != null) return false;
         if (valueDictionary != null ? !valueDictionary.equals(that.valueDictionary) : that.valueDictionary != null)
             return false;
 
@@ -157,7 +156,7 @@ public class SymbolTable implements Serializable {
     public int hashCode() {
         int result = symbolDictionary != null ? symbolDictionary.hashCode() : 0;
         result = 31 * result + (valueDictionary != null ? valueDictionary.hashCode() : 0);
-        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (variant != null ? variant.hashCode() : 0);
         result = 31 * result + (lang != null ? lang.hashCode() : 0);
         return result;
     }
@@ -167,7 +166,7 @@ public class SymbolTable implements Serializable {
         return "SymbolTable{" +
                 "symbolDictionary=" + symbolDictionary +
                 ", valueDictionary=" + valueDictionary +
-                ", type='" + type + '\'' +
+                ", type='" + variant + '\'' +
                 ", lang='" + lang + '\'' +
                 '}';
     }

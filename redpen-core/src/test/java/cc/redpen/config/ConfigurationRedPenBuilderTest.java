@@ -92,7 +92,7 @@ public class ConfigurationRedPenBuilderTest {
         Configuration config = new Configuration.ConfigurationBuilder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .setLanguage("ja")
-                .setType("hankaku")
+                .setVariant("hankaku")
                 .build();
 
         assertNotNull(config.getSymbolTable());
