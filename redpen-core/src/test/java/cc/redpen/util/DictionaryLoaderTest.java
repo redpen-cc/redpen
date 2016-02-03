@@ -31,6 +31,7 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class DictionaryLoaderTest extends Validator {
     @Test
@@ -75,6 +76,7 @@ public class DictionaryLoaderTest extends Validator {
     public void testLoadCachedFile() throws IOException, RedPenException {
         Path path = Files.createTempFile("test", "txt");
         File file = path.toFile();
+        System.setProperty("REDPEN_HOME", file.getParentFile().getAbsolutePath());
         Files.copy(new ByteArrayInputStream("foo".getBytes()), path, StandardCopyOption.REPLACE_EXISTING);
         Set<String> strings;
         strings = WORD_LIST.loadCachedFromFile(path.toFile(), "temp file");
@@ -102,5 +104,20 @@ public class DictionaryLoaderTest extends Validator {
         assertEquals(2, strings.size());
         assertTrue(strings.contains("foo"));
         assertTrue(strings.contains("bar"));
+    }
+
+    @Test
+    public void testEnsureFileIsInsideRedPenHomeOrWorkingDirectory() throws RedPenException, IOException {
+        File tempFile = File.createTempFile("redpenTest", "redpenTest");
+        String path = tempFile.getAbsolutePath();
+        System.setProperty("REDPEN_HOME", path);
+        DictionaryLoader.ensureFileIsInsideRedPenHomeOrWorkingDirectory(path + File.separator + "test");
+        DictionaryLoader.ensureFileIsInsideRedPenHomeOrWorkingDirectory(new File("fileInCurrentDirectory.txt").getCanonicalPath());
+        try {
+            File file = new File(path + File.separator + ".." + File.separator + "test");
+            DictionaryLoader.ensureFileIsInsideRedPenHomeOrWorkingDirectory(file.getCanonicalPath());
+            fail("expecting RedPenException");
+        } catch (RedPenException expected) {
+        }
     }
 }
