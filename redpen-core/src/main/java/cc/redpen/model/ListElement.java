@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * Element of List in semi-structured text format such as wiki.
  */
-public final class ListElement {
+public class ListElement {
     private final List<Sentence> contents;
     private final int level;
 
