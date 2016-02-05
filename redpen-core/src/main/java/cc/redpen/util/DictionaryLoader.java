@@ -31,7 +31,7 @@ import java.util.function.Supplier;
 /**
  * load dictionary data from input source
  */
-public final class DictionaryLoader<E> {
+public class DictionaryLoader<E> {
     private static final Logger LOG = LoggerFactory.getLogger(DictionaryLoader.class);
 
     private final Supplier<E> supplier;

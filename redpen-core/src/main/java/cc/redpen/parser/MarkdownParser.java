@@ -40,7 +40,7 @@ import java.util.Optional;
  * <p>
  * Markdown Syntax @see http://daringfireball.net/projects/markdown/
  */
-final class MarkdownParser extends BaseDocumentParser {
+class MarkdownParser extends BaseDocumentParser {
 
     private PegDownProcessor pegDownProcessor = new PegDownProcessor(
             Extensions.HARDWRAPS

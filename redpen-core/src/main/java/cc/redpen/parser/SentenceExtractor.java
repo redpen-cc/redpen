@@ -34,7 +34,7 @@ import static cc.redpen.config.SymbolType.*;
 /**
  * Utility Class to extract a Sentence list from given String.
  */
-public final class SentenceExtractor {
+public class SentenceExtractor {
 
     private static final Logger LOG = LoggerFactory.getLogger(SentenceExtractor.class);
     private Pattern fullStopPattern;

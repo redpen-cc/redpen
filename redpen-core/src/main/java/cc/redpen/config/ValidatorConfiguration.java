@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * Configuration for Validators.
  */
-public final class ValidatorConfiguration {
+public class ValidatorConfiguration {
     private final String configurationName;
     private final Map<String, String> attributes;
 

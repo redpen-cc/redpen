@@ -25,7 +25,7 @@ import java.util.Optional;
 /**
  * Error to report invalid point from Validators.
  */
-public final class ValidationError implements java.io.Serializable {
+public class ValidationError implements java.io.Serializable {
 
     private static final long serialVersionUID = -7759439419047004667L;
     private final String message;
