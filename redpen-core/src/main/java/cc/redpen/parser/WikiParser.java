@@ -38,7 +38,7 @@ import java.util.regex.Pattern;
 /**
  * Parser for wiki formatted file.
  */
-final class WikiParser extends BaseDocumentParser {
+class WikiParser extends BaseDocumentParser {
     private static final Logger LOG = LoggerFactory.getLogger(WikiParser.class);
     /**
      * *************************************************************************

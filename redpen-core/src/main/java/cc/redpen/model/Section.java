@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Represent a section in semi-structured text format such as wiki.
  */
-public final class Section {
+public class Section {
     /* Subsections */
     private final List<Section> subsections;
     /* Paragraphs in this section. */

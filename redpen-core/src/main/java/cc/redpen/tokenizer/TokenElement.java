@@ -21,7 +21,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-public final class TokenElement implements Serializable {
+public class TokenElement implements Serializable {
     private static final long serialVersionUID = -7779529873101010570L;
 
     // the surface form of the token

@@ -19,11 +19,12 @@ package cc.redpen.config;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Configuration for Validators.
  */
-public final class ValidatorConfiguration {
+public class ValidatorConfiguration implements Cloneable {
     private final String configurationName;
     private final Map<String, String> attributes;
 
@@ -98,4 +99,30 @@ public final class ValidatorConfiguration {
         return this;
     }
 
+    @Override public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ValidatorConfiguration)) return false;
+        ValidatorConfiguration that = (ValidatorConfiguration)o;
+        return Objects.equals(configurationName, that.configurationName);
+    }
+
+    @Override public int hashCode() {
+        return Objects.hash(configurationName);
+    }
+
+    @Override public String toString() {
+        return configurationName;
+    }
+
+    /**
+     * @return a copy of ValidatorConfiguration
+     */
+    @Override public ValidatorConfiguration clone() {
+        try {
+            return (ValidatorConfiguration)super.clone();
+        }
+        catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -21,7 +21,6 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
-import cc.redpen.parser.markdown.ToFileContentSerializer;
 import cc.redpen.parser.latex.LaTeXProcessor;
 import cc.redpen.tokenizer.RedPenTokenizer;
 
@@ -35,7 +34,7 @@ import java.util.Optional;
 /**
  * Parser for LaTeX format (based on the Markdown parser.)
  */
-final class LaTeXParser extends BaseDocumentParser {
+class LaTeXParser extends BaseDocumentParser {
 
     private LaTeXProcessor latexProcessor = new LaTeXProcessor();
 

@@ -23,7 +23,7 @@ import java.util.Arrays;
 /**
  * Represent a character settings.
  */
-public final class Symbol implements Serializable {
+public class Symbol implements Serializable {
     private static final long serialVersionUID = 3826499136262740992L;
     private final SymbolType name;
     private final char value;

@@ -17,7 +17,7 @@
  */
 package cc.redpen.parser;
 
-public final class LineOffset implements Comparable {
+public class LineOffset implements Comparable {
     public final int lineNum;
     public final int offset;
 

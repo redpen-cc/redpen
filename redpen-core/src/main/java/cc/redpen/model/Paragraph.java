@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Represent a paragraph of text.
  */
-public final class Paragraph {
+public class Paragraph {
     private final List<Sentence> sentences;
 
     /**

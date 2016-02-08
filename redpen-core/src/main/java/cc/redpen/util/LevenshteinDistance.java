@@ -25,7 +25,7 @@ package cc.redpen.util;
  * or substitutions). The default cost for each edit
  * is 1, and each value is configurable.
  */
-public final class LevenshteinDistance {
+public class LevenshteinDistance {
     /**
      * A constant holding the default insertion cost.
      */

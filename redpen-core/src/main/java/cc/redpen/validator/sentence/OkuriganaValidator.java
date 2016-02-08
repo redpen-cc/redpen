@@ -26,7 +26,7 @@ import cc.redpen.validator.Validator;
 import java.util.*;
 
 // Checks if the Japanese input sentences contain the invalid Okurigana style.
-public final class OkuriganaValidator extends Validator {
+public class OkuriganaValidator extends Validator {
     private static final Set<String> invalidOkurigana;
     private static final Set<ExpressionRule> invalidOkuriganaTokens;
 

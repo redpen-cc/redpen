@@ -91,4 +91,23 @@ public class ConfigurationTest {
         SymbolTable symbolTable = new SymbolTable("ja", Optional.of("zenkaku"), emptyList());
         assertEquals("ja", new Configuration(symbolTable, emptyList(), "ja").getKey());
     }
+
+    @Test
+    public void configurationCanBeCloned() throws Exception {
+        Configuration conf = new Configuration.ConfigurationBuilder()
+          .setLanguage("ja")
+          .setVariant("hankaku")
+          .addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
+
+        Configuration conf2 = conf.clone();
+        assertNotSame(conf, conf2);
+        assertEquals("ja", conf2.getLang());
+        assertEquals("hankaku", conf2.getVariant());
+
+        assertNotSame(conf.getValidatorConfigs().get(0), conf2.getValidatorConfigs().get(0));
+        assertEquals(conf.getValidatorConfigs(), conf2.getValidatorConfigs());
+
+        assertNotSame(conf.getSymbolTable(), conf2.getSymbolTable());
+        assertEquals(conf.getSymbolTable(), conf2.getSymbolTable());
+    }
 }

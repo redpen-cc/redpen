@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Represent List in semi-structured format such as wiki.
  */
-public final class ListBlock {
+public class ListBlock {
     private final List<ListElement> listElements;
 
     /**

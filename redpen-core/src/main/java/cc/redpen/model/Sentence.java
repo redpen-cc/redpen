@@ -28,7 +28,7 @@ import java.util.Optional;
 /**
  * Sentence block in a Document.
  */
-public final class Sentence implements Serializable {
+public class Sentence implements Serializable {
     private static final long serialVersionUID = 3761982769692999924L;
     /**
      * Links (including internal and external ones).
