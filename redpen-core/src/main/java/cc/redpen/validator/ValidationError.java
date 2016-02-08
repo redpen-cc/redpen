@@ -20,12 +20,13 @@ package cc.redpen.validator;
 import cc.redpen.model.Sentence;
 import cc.redpen.parser.LineOffset;
 
+import java.io.Serializable;
 import java.util.Optional;
 
 /**
  * Error to report invalid point from Validators.
  */
-public class ValidationError implements java.io.Serializable {
+public class ValidationError implements Serializable {
 
     private static final long serialVersionUID = -7759439419047004667L;
     private final String message;
