@@ -29,7 +29,7 @@ import static cc.redpen.config.SymbolType.*;
 /**
  * Configuration table of characters used in {@link cc.redpen.RedPen}.
  */
-public class SymbolTable implements Serializable {
+public class SymbolTable implements Serializable, Cloneable {
     private static final long serialVersionUID = 1612920745151501631L;
     private final Map<SymbolType, Symbol> symbolDictionary = new HashMap<>();
     private final Map<Character, Symbol> valueDictionary = new HashMap<>();
@@ -159,6 +159,15 @@ public class SymbolTable implements Serializable {
         result = 31 * result + (variant != null ? variant.hashCode() : 0);
         result = 31 * result + (lang != null ? lang.hashCode() : 0);
         return result;
+    }
+
+    @Override public SymbolTable clone() {
+        try {
+            return (SymbolTable)super.clone();
+        }
+        catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

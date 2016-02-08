@@ -25,14 +25,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
  * Contains Settings used throughout {@link cc.redpen.RedPen}.
  */
-public class Configuration {
-    private final SymbolTable symbolTable;
-    private final List<ValidatorConfiguration> validatorConfigs = new ArrayList<>();
+public class Configuration implements Cloneable {
+    private SymbolTable symbolTable;
+    private List<ValidatorConfiguration> validatorConfigs = new ArrayList<>();
     private String lang;
     private RedPenTokenizer tokenizer;
 
@@ -107,6 +108,22 @@ public class Configuration {
     }
 
     /**
+     * @return a deep copy of this configuration
+     */
+    @Override public Configuration clone() {
+        Configuration clone;
+        try {
+            clone = (Configuration)super.clone();
+            clone.validatorConfigs = validatorConfigs.stream().map(ValidatorConfiguration::clone).collect(toList());
+            clone.symbolTable = symbolTable.clone();
+            return clone;
+        }
+        catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * Builder class of Configuration.
      */
     public static class ConfigurationBuilder {
@@ -117,7 +134,7 @@ public class Configuration {
         private String lang = "en";
         private Optional<String> variant = Optional.empty();
 
-        private void checkBuilt(){
+        private void checkBuilt() {
             if(built){
                 throw new IllegalStateException("Configuration already built.");
             }
