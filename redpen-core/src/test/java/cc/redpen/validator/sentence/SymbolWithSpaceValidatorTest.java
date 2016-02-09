@@ -35,7 +35,9 @@ import java.util.List;
 import java.util.Map;
 
 import static cc.redpen.config.SymbolType.*;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 
 public class SymbolWithSpaceValidatorTest extends BaseValidatorTest {
@@ -107,9 +109,8 @@ public class SymbolWithSpaceValidatorTest extends BaseValidatorTest {
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
         assertEquals(2, errors.get(document).size());
-        //NOTE: commented out since the following asserts fails because order of the errors could be changed depending on the environment.
-        //assertEquals("Need whitespace after symbol \")\".", errors.get(document).get(0).getMessage());
-        //assertEquals("Need whitespace before symbol \"(\".", errors.get(document).get(1).getMessage());
+        assertEquals(asList("Need whitespace after symbol \")\".", "Need whitespace before symbol \"(\"."),
+          errors.get(document).stream().map(ValidationError::getMessage).sorted().collect(toList()));
     }
 
     @Test
