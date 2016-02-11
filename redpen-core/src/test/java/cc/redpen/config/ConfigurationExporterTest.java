@@ -4,14 +4,10 @@ import org.junit.After;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
-import java.util.LinkedHashSet;
 
 import static cc.redpen.config.SymbolType.*;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.*;
 
 public class ConfigurationExporterTest {
   ConfigurationExporter exporter = new ConfigurationExporter();
@@ -55,16 +51,10 @@ public class ConfigurationExporterTest {
 
   @Test
   public void symbols() throws Exception {
-    Configuration config = mock(Configuration.class, RETURNS_DEEP_STUBS);
-
-    when(config.getLang()).thenReturn("en");
-    when(config.getVariant()).thenReturn("");
-    when(config.getValidatorConfigs()).thenReturn(emptyList());
-
-    when(config.getSymbolTable().getSymbol(ASTERISK)).thenReturn(new Symbol(ASTERISK, 'X'));
-    when(config.getSymbolTable().getSymbol(COLON)).thenReturn(new Symbol(COLON, ';', ":", false, true));
-    when(config.getSymbolTable().getSymbol(SEMICOLON)).thenReturn(new Symbol(SEMICOLON, ':', ";&", true, false));
-    when(config.getSymbolTable().getNames()).thenReturn(new LinkedHashSet<>(asList(ASTERISK, COLON, SEMICOLON)));
+    Configuration config = new Configuration.ConfigurationBuilder()
+      .addSymbol(new Symbol(ASTERISK, 'X'))
+      .addSymbol(new Symbol(COLON, ';', ":", false, true))
+      .addSymbol(new Symbol(SEMICOLON, ':', ";&", true, false)).build();
 
     exporter.export(config, out);
 

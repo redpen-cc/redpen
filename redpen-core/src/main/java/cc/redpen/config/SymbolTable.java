@@ -31,8 +31,8 @@ import static cc.redpen.config.SymbolType.*;
  */
 public class SymbolTable implements Serializable, Cloneable {
     private static final long serialVersionUID = 1612920745151501631L;
-    private final Map<SymbolType, Symbol> symbolDictionary = new HashMap<>();
-    private final Map<Character, Symbol> valueDictionary = new HashMap<>();
+    private final Map<SymbolType, Symbol> symbolDictionary = new LinkedHashMap<>();
+    private final Map<Character, Symbol> valueDictionary = new LinkedHashMap<>();
     private String variant;
     private String lang;
     private static final Logger LOG = LoggerFactory.getLogger(SymbolTable.class);
