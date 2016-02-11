@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cc.redpen;
+package cc.redpen.config;
 
-import cc.redpen.config.Configuration;
+import cc.redpen.RedPenException;
 import org.junit.Test;
 
 import static cc.redpen.config.SymbolType.*;
@@ -26,7 +26,7 @@ import static org.junit.Assert.assertNotNull;
 
 public class ConfigurationLoaderTest {
     @Test
-    public void emptyConfiguration() throws RedPenException{
+    public void emptyConfiguration() throws RedPenException {
         Configuration configuration = new ConfigurationLoader().loadFromString("<redpen-conf/>");
 
         assertNotNull(configuration);

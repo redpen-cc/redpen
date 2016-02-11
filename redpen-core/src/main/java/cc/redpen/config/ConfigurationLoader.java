@@ -15,12 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cc.redpen;
+package cc.redpen.config;
 
-import cc.redpen.config.Configuration;
-import cc.redpen.config.Symbol;
-import cc.redpen.config.SymbolType;
-import cc.redpen.config.ValidatorConfiguration;
+import cc.redpen.RedPenException;
 import cc.redpen.util.SAXErrorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +38,7 @@ import static cc.redpen.config.Configuration.ConfigurationBuilder;
 /**
  * Load the central configuration of {@link cc.redpen.RedPen}.
  */
-public final class ConfigurationLoader {
+public class ConfigurationLoader {
     private static final Logger LOG =
             LoggerFactory.getLogger(ConfigurationLoader.class);
     private ConfigurationBuilder configBuilder = new ConfigurationBuilder();
