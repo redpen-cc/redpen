@@ -157,19 +157,14 @@ public final class ConfigurationLoader {
         }
 
         // extract validator configurations
-        NodeList validatorConfigElementList =
-                getSpecifiedNodeList(rootElement, "validators");
+        NodeList validatorConfigElementList = getSpecifiedNodeList(rootElement, "validators");
+
         if (validatorConfigElementList == null) {
-            LOG.error("There is no validator-list block");
-            return null;
+            LOG.warn("There is no validators block");
+        } else {
+            NodeList validatorElementList = validatorConfigElementList.item(0).getChildNodes();
+            extractValidatorConfigurations(validatorElementList);
         }
-        NodeList validatorElementList =
-                validatorConfigElementList.item(0).getChildNodes();
-        if (validatorElementList == null) {
-            LOG.error("There is no validator block");
-            return null;
-        }
-        extractValidatorConfigurations(validatorElementList);
 
         // extract symbol configurations
         NodeList symbolTableConfigElementList =
