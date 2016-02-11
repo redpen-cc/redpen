@@ -1,6 +1,6 @@
 package cc.redpen.config;
 
-import com.sun.xml.internal.txw2.output.IndentingXMLStreamWriter;
+import cc.redpen.util.IndentingXMLStreamWriter;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
