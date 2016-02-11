@@ -1,84 +1,79 @@
 package cc.redpen.config;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+import com.sun.xml.internal.txw2.output.IndentingXMLStreamWriter;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStreamWriter;
+import java.util.List;
 import java.util.Map;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.stream.Collectors.toList;
+
 public class ConfigurationExporter {
-  DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-  TransformerFactory tf = TransformerFactory.newInstance();
 
   public void export(Configuration config, ByteArrayOutputStream out) {
     try {
-      Document xml = dbf.newDocumentBuilder().newDocument();
-      Element root = createRoot(config, xml);
-      addValidators(config, root);
-      addNonDefaultSymbols(config, root);
-      serialize(xml, out);
+      XMLOutputFactory sf = XMLOutputFactory.newInstance();
+      XMLStreamWriter sax = new IndentingXMLStreamWriter(sf.createXMLStreamWriter(new OutputStreamWriter(out, UTF_8)));
+
+      addRoot(config, sax);
+      addValidators(config.getValidatorConfigs(), sax);
+      addNonDefaultSymbols(config.getSymbolTable(), sax);
+
+      sax.writeEndElement();
+      sax.flush();
     }
-    catch (ParserConfigurationException | TransformerException e) {
+    catch (XMLStreamException e) {
       throw new RuntimeException(e);
     }
   }
 
-  private void addValidators(Configuration config, Element root) {
-    Node validators = addElement(root, "validators");
-    config.getValidatorConfigs().forEach(v -> {
-      Element validator = addElement(validators, "validator");
-      validator.setAttribute("name", v.getConfigurationName());
-      v.getAttributes().forEach((name, value) -> {
-        Element property = addElement(validator, "property");
-        property.setAttribute("name", name);
-        property.setAttribute("value", value);
-      });
-    });
-  }
-
-  private void addNonDefaultSymbols(Configuration config, Element root) {
-    SymbolTable symbolTable = config.getSymbolTable();
-    Map<SymbolType, Symbol> defaults = symbolTable.getDefaultSymbols();
-    Node symbols = root.getOwnerDocument().createElement("symbols");
-    symbolTable.getNames().forEach(n -> {
-      Symbol symbol = symbolTable.getSymbol(n);
-      if (symbol.equals(defaults.get(n))) return;
-      Element node = addElement(symbols, "symbol");
-      node.setAttribute("name", n.toString());
-      node.setAttribute("value", String.valueOf(symbol.getValue()));
-      if (symbol.getInvalidChars().length > 0) node.setAttribute("invalid-chars", String.valueOf(symbol.getInvalidChars()));
-      if (symbol.isNeedAfterSpace()) node.setAttribute("space-after", "true");
-    });
-    if (symbols.hasChildNodes()) root.appendChild(symbols);
-  }
-
-  private Element addElement(Node parent, String name) {
-    return (Element) parent.appendChild(parent.getOwnerDocument().createElement(name));
-  }
-
-  private Element createRoot(Configuration config, Document xml) {
-    Element root = xml.createElement("redpen-conf");
-    root.setAttribute("lang", config.getLang());
+  private void addRoot(Configuration config, XMLStreamWriter sax) throws XMLStreamException {
+    sax.writeStartElement("redpen-conf");
+    sax.writeAttribute("lang", config.getLang());
     if (!config.getVariant().isEmpty())
-      root.setAttribute("variant", config.getVariant());
-    xml.appendChild(root);
-    return root;
+      sax.writeAttribute("variant", config.getVariant());
   }
 
-  private void serialize(Document xml, ByteArrayOutputStream out) throws TransformerException {
-    Transformer transformer = tf.newTransformer();
-    transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-    transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-    transformer.transform(new DOMSource(xml), new StreamResult(out));
+  private void addValidators(List<ValidatorConfiguration> validators, XMLStreamWriter sax) throws XMLStreamException {
+    if (validators.isEmpty()) return;
+    sax.writeStartElement("validators");
+
+    for (ValidatorConfiguration v : validators) {
+      if (v.getAttributes().isEmpty()) sax.writeEmptyElement("validator"); else sax.writeStartElement("validator");
+      sax.writeAttribute("name", v.getConfigurationName());
+      for (Map.Entry<String, String> attr : v.getAttributes().entrySet()) {
+        sax.writeEmptyElement("property");
+        sax.writeAttribute("name", attr.getKey());
+        sax.writeAttribute("value", attr.getValue());
+      }
+      if (!v.getAttributes().isEmpty()) sax.writeEndElement();
+    }
+
+    sax.writeEndElement();
+  }
+
+  private void addNonDefaultSymbols(SymbolTable symbolTable, XMLStreamWriter sax) throws XMLStreamException {
+    Map<SymbolType, Symbol> defaults = symbolTable.getDefaultSymbols();
+    List<Symbol> nonDefaultSymbols = symbolTable.getNames().stream()
+      .map(symbolTable::getSymbol)
+      .filter(s -> !s.equals(defaults.get(s.getType()))).collect(toList());
+
+    if (nonDefaultSymbols.isEmpty()) return;
+
+    sax.writeStartElement("symbols");
+    for (Symbol symbol : nonDefaultSymbols) {
+      sax.writeEmptyElement("symbol");
+      sax.writeAttribute("name", symbol.getType().toString());
+      sax.writeAttribute("value", String.valueOf(symbol.getValue()));
+      if (symbol.getInvalidChars().length > 0) sax.writeAttribute("invalid-chars", String.valueOf(symbol.getInvalidChars()));
+      if (symbol.isNeedBeforeSpace()) sax.writeAttribute("before-space", "true");
+      if (symbol.isNeedAfterSpace()) sax.writeAttribute("after-space", "true");
+    }
+    sax.writeEndElement();
   }
 }

@@ -7,6 +7,7 @@ import java.util.LinkedHashSet;
 
 import static cc.redpen.config.SymbolType.*;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -19,9 +20,7 @@ public class ConfigurationExporterTest {
     Configuration config = new Configuration.ConfigurationBuilder().build();
     exporter.export(config, out);
     assertEquals(
-      "<redpen-conf lang=\"en\">\n" +
-      "  <validators/>\n" +
-      "</redpen-conf>\n", new String(out.toByteArray()));
+      "<redpen-conf lang=\"en\"></redpen-conf>", new String(out.toByteArray()));
   }
 
   @Test
@@ -29,9 +28,7 @@ public class ConfigurationExporterTest {
     Configuration config = new Configuration.ConfigurationBuilder().setLanguage("ja").build();
     exporter.export(config, out);
     assertEquals(
-      "<redpen-conf lang=\"ja\" variant=\"zenkaku\">\n" +
-      "  <validators/>\n" +
-      "</redpen-conf>\n", new String(out.toByteArray()));
+      "<redpen-conf lang=\"ja\" variant=\"zenkaku\"></redpen-conf>", new String(out.toByteArray()));
   }
 
   @Test
@@ -48,7 +45,7 @@ public class ConfigurationExporterTest {
       "      <property name=\"hello\" value=\"world\"/>\n" +
       "    </validator>\n" +
       "  </validators>\n" +
-      "</redpen-conf>\n", new String(out.toByteArray()));
+      "</redpen-conf>", new String(out.toByteArray()));
   }
 
   @Test
@@ -57,6 +54,7 @@ public class ConfigurationExporterTest {
 
     when(config.getLang()).thenReturn("en");
     when(config.getVariant()).thenReturn("");
+    when(config.getValidatorConfigs()).thenReturn(emptyList());
 
     when(config.getSymbolTable().getSymbol(ASTERISK)).thenReturn(new Symbol(ASTERISK, 'X'));
     when(config.getSymbolTable().getSymbol(COLON)).thenReturn(new Symbol(COLON, ';', ":", false, true));
@@ -67,12 +65,11 @@ public class ConfigurationExporterTest {
 
     assertEquals(
       "<redpen-conf lang=\"en\">\n" +
-      "  <validators/>\n" +
       "  <symbols>\n" +
       "    <symbol name=\"ASTERISK\" value=\"X\"/>\n" +
       "    <symbol name=\"COLON\" value=\";\" invalid-chars=\":\" after-space=\"true\"/>\n" +
       "    <symbol name=\"SEMICOLON\" value=\":\" invalid-chars=\";&amp;\" before-space=\"true\"/>\n" +
       "  </symbols>\n" +
-      "</redpen-conf>\n", new String(out.toByteArray()));
+      "</redpen-conf>", new String(out.toByteArray()));
   }
 }
