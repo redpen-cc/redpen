@@ -5,7 +5,7 @@ import cc.redpen.util.IndentingXMLStreamWriter;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +15,7 @@ import static java.util.stream.Collectors.toList;
 
 public class ConfigurationExporter {
 
-  public void export(Configuration config, ByteArrayOutputStream out) {
+  public void export(Configuration config, OutputStream out) {
     try {
       XMLOutputFactory sf = XMLOutputFactory.newInstance();
       XMLStreamWriter sax = new IndentingXMLStreamWriter(sf.createXMLStreamWriter(new OutputStreamWriter(out, UTF_8)));
