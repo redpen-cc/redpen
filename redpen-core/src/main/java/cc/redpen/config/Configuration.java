@@ -82,9 +82,9 @@ public class Configuration implements Cloneable {
     }
 
     /**
-     * returns symbol table type targeted by this configuration
+     * returns symbol table variant targeted by this configuration
      *
-     * @return type
+     * @return variant, or empty String if none
      */
     public String getVariant() {
         return getSymbolTable().getVariant();

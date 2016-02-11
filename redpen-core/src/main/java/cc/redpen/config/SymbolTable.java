@@ -43,26 +43,29 @@ public class SymbolTable implements Serializable, Cloneable {
     SymbolTable(String lang, Optional<String> variant, List<Symbol> customSymbols) {
         this.lang = lang;
         this.variant = variant.orElse("");
+        getDefaultSymbols().values().forEach(this::overrideSymbol);
+        customSymbols.forEach(this::overrideSymbol);
+    }
+
+    public Map<SymbolType, Symbol> getDefaultSymbols() {
         if (lang.equals("ja")) {
             LOG.info("\"ja\" is specified.");
-            if (this.variant.equals("hankaku")) {
-                LOG.info("\"hankaku\" variant is specified");
-                JAPANESE_HANKAKU_SYMBOLS.values().forEach(this::overrideSymbol);
-            } else if (this.variant.equals("zenkaku2")) {
-                LOG.info("\"zenkaku2\" variant is specified");
-                JAPANESE_SYMBOLS.values().forEach(this::overrideSymbol);
-                this.overrideSymbol(new Symbol(FULL_STOP, '．', "。."));
-                this.overrideSymbol(new Symbol(COMMA, '，', "、,"));
-            } else {
-                this.variant = "zenkaku";
-                LOG.info("\"zenkaku\" variant is specified");
-                JAPANESE_SYMBOLS.values().forEach(this::overrideSymbol);
+            switch (this.variant) {
+                case "hankaku":
+                    LOG.info("\"hankaku\" variant is specified");
+                    return JAPANESE_HANKAKU_SYMBOLS;
+                case "zenkaku2":
+                    LOG.info("\"zenkaku2\" variant is specified");
+                    return JAPANESE_ZENKAKU2_SYMBOLS;
+                default:
+                    this.variant = "zenkaku";
+                    LOG.info("\"zenkaku\" variant is specified");
+                    return JAPANESE_SYMBOLS;
             }
         } else {
             LOG.info("Default symbol settings are loaded");
-            DEFAULT_SYMBOLS.values().forEach(this::overrideSymbol);
+            return DEFAULT_SYMBOLS;
         }
-        customSymbols.forEach(this::overrideSymbol);
     }
 
     /**
@@ -182,10 +185,11 @@ public class SymbolTable implements Serializable, Cloneable {
 
     private static final Map<SymbolType, Symbol> DEFAULT_SYMBOLS;
     private static final Map<SymbolType, Symbol> JAPANESE_SYMBOLS;
+    private static final Map<SymbolType, Symbol> JAPANESE_ZENKAKU2_SYMBOLS;
     private static final Map<SymbolType, Symbol> JAPANESE_HANKAKU_SYMBOLS;
 
     private static Map<SymbolType, Symbol> initializeSymbols(Symbol... newSymbols) {
-        HashMap<SymbolType, Symbol> symbolTypeSymbolMap = new HashMap<>();
+        Map<SymbolType, Symbol> symbolTypeSymbolMap = new LinkedHashMap<>();
         for (Symbol symbol : newSymbols) {
             symbolTypeSymbolMap.put(symbol.getType(), symbol);
         }
@@ -292,6 +296,10 @@ public class SymbolTable implements Serializable, Cloneable {
                 , new Symbol(DIGIT_EIGHT, '8', "")
                 , new Symbol(DIGIT_NINE, '9', ""));
 
+        JAPANESE_ZENKAKU2_SYMBOLS = new LinkedHashMap<>(JAPANESE_SYMBOLS);
+        JAPANESE_ZENKAKU2_SYMBOLS.put(FULL_STOP, new Symbol(FULL_STOP, '．', "。."));
+        JAPANESE_ZENKAKU2_SYMBOLS.put(COMMA, new Symbol(COMMA, '，', "、,"));
+
         JAPANESE_HANKAKU_SYMBOLS = initializeSymbols(
                 new Symbol(SPACE, '　', " ")
                 , new Symbol(EXCLAMATION_MARK, '!', "！")
@@ -340,5 +348,4 @@ public class SymbolTable implements Serializable, Cloneable {
                 , new Symbol(DIGIT_EIGHT, '8', "８")
                 , new Symbol(DIGIT_NINE, '9', "９"));
     }
-
 }
