@@ -18,9 +18,9 @@
 
 package cc.redpen.server.api;
 
-import cc.redpen.ConfigurationLoader;
 import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
+import cc.redpen.config.ConfigurationLoader;
 import cc.redpen.config.Symbol;
 import cc.redpen.config.SymbolType;
 import cc.redpen.formatter.Formatter;

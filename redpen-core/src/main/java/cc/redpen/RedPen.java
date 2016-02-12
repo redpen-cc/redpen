@@ -18,12 +18,9 @@
 package cc.redpen;
 
 import cc.redpen.config.Configuration;
+import cc.redpen.config.ConfigurationLoader;
 import cc.redpen.config.ValidatorConfiguration;
-import cc.redpen.model.Document;
-import cc.redpen.model.ListBlock;
-import cc.redpen.model.ListElement;
-import cc.redpen.model.Paragraph;
-import cc.redpen.model.Section;
+import cc.redpen.model.*;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.validator.ValidationError;
@@ -34,11 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Validate all input files using appended Validators.
