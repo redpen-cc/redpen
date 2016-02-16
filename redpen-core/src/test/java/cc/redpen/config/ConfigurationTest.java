@@ -93,21 +93,22 @@ public class ConfigurationTest {
     }
 
     @Test
-    public void configurationCanBeCloned() throws Exception {
+    public void canBeCloned() throws Exception {
         Configuration conf = new Configuration.ConfigurationBuilder()
           .setLanguage("ja")
           .setVariant("hankaku")
           .addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
 
-        Configuration conf2 = conf.clone();
-        assertNotSame(conf, conf2);
-        assertEquals("ja", conf2.getLang());
-        assertEquals("hankaku", conf2.getVariant());
+        Configuration clone = conf.clone();
+        assertNotSame(conf, clone);
+        assertEquals(conf.getLang(), clone.getLang());
+        assertEquals(conf.getVariant(), clone.getVariant());
 
-        assertNotSame(conf.getValidatorConfigs().get(0), conf2.getValidatorConfigs().get(0));
-        assertEquals(conf.getValidatorConfigs(), conf2.getValidatorConfigs());
+        assertNotSame(conf.getValidatorConfigs(), clone.getValidatorConfigs());
+        assertNotSame(conf.getValidatorConfigs().get(0), clone.getValidatorConfigs().get(0));
+        assertEquals(conf.getValidatorConfigs(), clone.getValidatorConfigs());
 
-        assertNotSame(conf.getSymbolTable(), conf2.getSymbolTable());
-        assertEquals(conf.getSymbolTable(), conf2.getSymbolTable());
+        assertNotSame(conf.getSymbolTable(), clone.getSymbolTable());
+        assertEquals(conf.getSymbolTable(), clone.getSymbolTable());
     }
 }

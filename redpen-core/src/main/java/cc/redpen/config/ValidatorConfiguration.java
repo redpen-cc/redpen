@@ -26,7 +26,7 @@ import java.util.Objects;
  */
 public class ValidatorConfiguration implements Cloneable {
     private final String configurationName;
-    private final Map<String, String> attributes;
+    private Map<String, String> attributes;
 
     /**
      * Constructor.
@@ -119,7 +119,9 @@ public class ValidatorConfiguration implements Cloneable {
      */
     @Override public ValidatorConfiguration clone() {
         try {
-            return (ValidatorConfiguration)super.clone();
+            ValidatorConfiguration clone = (ValidatorConfiguration)super.clone();
+            clone.attributes = new HashMap<>(attributes);
+            return clone;
         }
         catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);

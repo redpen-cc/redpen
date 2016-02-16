@@ -4,10 +4,11 @@ import org.junit.Test;
 
 import java.util.Optional;
 
-import static cc.redpen.config.SymbolType.COMMA;
-import static cc.redpen.config.SymbolType.FULL_STOP;
+import static cc.redpen.config.SymbolType.*;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 
 public class SymbolTableTest {
   @Test
@@ -38,5 +39,20 @@ public class SymbolTableTest {
     assertEquals("hankaku", table.getVariant());
     assertEquals('.', table.getSymbol(FULL_STOP).getValue());
     assertEquals(',', table.getSymbol(COMMA).getValue());
+  }
+
+  @Test
+  public void canBeCloned() throws Exception {
+    SymbolTable symbolTable = new SymbolTable("ja", Optional.of("hankaku"), singletonList(new Symbol(BACKSLASH, '+')));
+    SymbolTable clone = symbolTable.clone();
+
+    assertNotSame(symbolTable, clone);
+    assertEquals(symbolTable, clone);
+    assertEquals(symbolTable.getLang(), clone.getLang());
+    assertEquals(symbolTable.getVariant(), clone.getVariant());
+
+    symbolTable.overrideSymbol(new Symbol(AMPERSAND, ','));
+    assertEquals('&', clone.getSymbol(AMPERSAND).getValue());
+    assertEquals(COMMA, clone.getSymbolByValue(',').getType());
   }
 }
