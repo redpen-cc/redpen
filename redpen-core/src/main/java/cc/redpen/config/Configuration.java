@@ -21,6 +21,9 @@ import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.tokenizer.RedPenTokenizer;
 import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -32,11 +35,11 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 /**
  * Contains Settings used throughout {@link cc.redpen.RedPen}.
  */
-public class Configuration implements Cloneable {
+public class Configuration implements Serializable, Cloneable {
     private SymbolTable symbolTable;
     private List<ValidatorConfiguration> validatorConfigs = new ArrayList<>();
     private final String lang;
-    private final RedPenTokenizer tokenizer;
+    private transient RedPenTokenizer tokenizer;
 
     /**
      * Constructor.
@@ -46,13 +49,11 @@ public class Configuration implements Cloneable {
 
         this.validatorConfigs.addAll(validatorConfigs);
         this.lang = lang;
-        switch (lang) {
-            case "ja":
-                this.tokenizer = new JapaneseTokenizer();
-                break;
-            default:
-                this.tokenizer = new WhiteSpaceTokenizer();
-        }
+        initTokenizer();
+    }
+
+    private void initTokenizer() {
+        this.tokenizer = lang.equals("ja") ? new JapaneseTokenizer() : new WhiteSpaceTokenizer();
     }
 
     /**
@@ -122,6 +123,11 @@ public class Configuration implements Cloneable {
         catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        initTokenizer();
     }
 
     @Override public boolean equals(Object o) {

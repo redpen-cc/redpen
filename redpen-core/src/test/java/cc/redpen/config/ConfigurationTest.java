@@ -19,6 +19,10 @@ package cc.redpen.config;
 
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Optional;
 
 import static cc.redpen.config.SymbolType.AMPERSAND;
@@ -130,5 +134,23 @@ public class ConfigurationTest {
         clone = conf.clone();
         clone.getSymbolTable().overrideSymbol(new Symbol(AMPERSAND, '^'));
         assertFalse(conf.equals(clone));
+    }
+
+    @Test
+    public void serializable() throws Exception {
+        Configuration conf = new Configuration.ConfigurationBuilder()
+          .setLanguage("ja")
+          .setVariant("hankaku")
+          .addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
+
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        ObjectOutputStream out = new ObjectOutputStream(bytes);
+        out.writeObject(conf);
+
+        ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bytes.toByteArray()));
+        Configuration conf2 = (Configuration)in.readObject();
+
+        assertEquals(conf, conf2);
+        assertEquals(conf.getTokenizer().getClass(), conf2.getTokenizer().getClass());
     }
 }
