@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import java.util.Optional;
 
+import static cc.redpen.config.SymbolType.AMPERSAND;
 import static java.util.Collections.emptyList;
 import static org.junit.Assert.*;
 
@@ -110,5 +111,24 @@ public class ConfigurationTest {
 
         assertNotSame(conf.getSymbolTable(), clone.getSymbolTable());
         assertEquals(conf.getSymbolTable(), clone.getSymbolTable());
+    }
+
+    @Test
+    public void equals() throws Exception {
+        Configuration conf = new Configuration.ConfigurationBuilder()
+          .setLanguage("ja")
+          .setVariant("hankaku")
+          .addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
+
+        Configuration clone = conf.clone();
+        assertEquals(conf, clone);
+        assertEquals(conf.hashCode(), clone.hashCode());
+
+        clone.getValidatorConfigs().remove(0);
+        assertFalse(conf.equals(clone));
+
+        clone = conf.clone();
+        clone.getSymbolTable().overrideSymbol(new Symbol(AMPERSAND, '^'));
+        assertFalse(conf.equals(clone));
     }
 }

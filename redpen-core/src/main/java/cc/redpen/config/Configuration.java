@@ -23,6 +23,7 @@ import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
@@ -34,8 +35,8 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 public class Configuration implements Cloneable {
     private SymbolTable symbolTable;
     private List<ValidatorConfiguration> validatorConfigs = new ArrayList<>();
-    private String lang;
-    private RedPenTokenizer tokenizer;
+    private final String lang;
+    private final RedPenTokenizer tokenizer;
 
     /**
      * Constructor.
@@ -121,6 +122,19 @@ public class Configuration implements Cloneable {
         catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Configuration)) return false;
+        Configuration that = (Configuration)o;
+        return Objects.equals(lang, that.lang) &&
+          Objects.equals(symbolTable, that.symbolTable) &&
+          Objects.equals(validatorConfigs, that.validatorConfigs);
+    }
+
+    @Override public int hashCode() {
+        return getKey().hashCode();
     }
 
     /**
