@@ -19,6 +19,7 @@ package cc.redpen.config;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Represent a character settings.
@@ -120,25 +121,17 @@ public class Symbol implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Symbol symbol = (Symbol) o;
-
-        if (needAfterSpace != symbol.needAfterSpace) return false;
-        if (needBeforeSpace != symbol.needBeforeSpace) return false;
-        if (value != symbol.value) return false;
-        if (!Arrays.equals(invalidChars, symbol.invalidChars)) return false;
-        if (name != symbol.name) return false;
-
-        return true;
+        Symbol that = (Symbol) o;
+        return Objects.equals(name, that.name) &&
+               Objects.equals(value, that.value) &&
+               Arrays.equals(invalidChars, that.invalidChars) &&
+               Objects.equals(needBeforeSpace, that.needBeforeSpace) &&
+               Objects.equals(needAfterSpace, that.needAfterSpace);
     }
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (int) value;
-        result = 31 * result + (invalidChars != null ? Arrays.hashCode(invalidChars) : 0);
-        result = 31 * result + (needBeforeSpace ? 1 : 0);
-        result = 31 * result + (needAfterSpace ? 1 : 0);
-        return result;
+        return Objects.hashCode(name);
     }
 
     @Override

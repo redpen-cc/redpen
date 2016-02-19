@@ -31,8 +31,8 @@ import static cc.redpen.config.SymbolType.*;
  */
 public class SymbolTable implements Serializable, Cloneable {
     private static final long serialVersionUID = 1612920745151501631L;
-    private final Map<SymbolType, Symbol> symbolDictionary = new LinkedHashMap<>();
-    private final Map<Character, Symbol> valueDictionary = new LinkedHashMap<>();
+    private Map<SymbolType, Symbol> symbolDictionary = new LinkedHashMap<>();
+    private Map<Character, Symbol> valueDictionary = new LinkedHashMap<>();
     private String variant;
     private String lang;
     private static final Logger LOG = LoggerFactory.getLogger(SymbolTable.class);
@@ -144,29 +144,23 @@ public class SymbolTable implements Serializable, Cloneable {
         if (o == null || getClass() != o.getClass()) return false;
 
         SymbolTable that = (SymbolTable) o;
-
-        if (lang != null ? !lang.equals(that.lang) : that.lang != null) return false;
-        if (symbolDictionary != null ? !symbolDictionary.equals(that.symbolDictionary) : that.symbolDictionary != null)
-            return false;
-        if (variant != null ? !variant.equals(that.variant) : that.variant != null) return false;
-        if (valueDictionary != null ? !valueDictionary.equals(that.valueDictionary) : that.valueDictionary != null)
-            return false;
-
-        return true;
+        return Objects.equals(lang, that.lang) &&
+               Objects.equals(variant, that.variant) &&
+               Objects.equals(symbolDictionary, that.symbolDictionary);
     }
 
     @Override
     public int hashCode() {
-        int result = symbolDictionary != null ? symbolDictionary.hashCode() : 0;
-        result = 31 * result + (valueDictionary != null ? valueDictionary.hashCode() : 0);
-        result = 31 * result + (variant != null ? variant.hashCode() : 0);
-        result = 31 * result + (lang != null ? lang.hashCode() : 0);
-        return result;
+        return Objects.hash(lang, variant, symbolDictionary);
     }
 
-    @Override public SymbolTable clone() {
+    @Override
+    public SymbolTable clone() {
         try {
-            return (SymbolTable)super.clone();
+            SymbolTable clone = (SymbolTable)super.clone();
+            clone.symbolDictionary = new LinkedHashMap<>(symbolDictionary);
+            clone.valueDictionary = new LinkedHashMap<>(valueDictionary);
+            return clone;
         }
         catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);

@@ -19,8 +19,13 @@ package cc.redpen.config;
 
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Optional;
 
+import static cc.redpen.config.SymbolType.AMPERSAND;
 import static java.util.Collections.emptyList;
 import static org.junit.Assert.*;
 
@@ -93,21 +98,59 @@ public class ConfigurationTest {
     }
 
     @Test
-    public void configurationCanBeCloned() throws Exception {
+    public void canBeCloned() throws Exception {
         Configuration conf = new Configuration.ConfigurationBuilder()
           .setLanguage("ja")
           .setVariant("hankaku")
           .addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
 
-        Configuration conf2 = conf.clone();
-        assertNotSame(conf, conf2);
-        assertEquals("ja", conf2.getLang());
-        assertEquals("hankaku", conf2.getVariant());
+        Configuration clone = conf.clone();
+        assertNotSame(conf, clone);
+        assertEquals(conf.getLang(), clone.getLang());
+        assertEquals(conf.getVariant(), clone.getVariant());
 
-        assertNotSame(conf.getValidatorConfigs().get(0), conf2.getValidatorConfigs().get(0));
-        assertEquals(conf.getValidatorConfigs(), conf2.getValidatorConfigs());
+        assertNotSame(conf.getValidatorConfigs(), clone.getValidatorConfigs());
+        assertNotSame(conf.getValidatorConfigs().get(0), clone.getValidatorConfigs().get(0));
+        assertEquals(conf.getValidatorConfigs(), clone.getValidatorConfigs());
 
-        assertNotSame(conf.getSymbolTable(), conf2.getSymbolTable());
-        assertEquals(conf.getSymbolTable(), conf2.getSymbolTable());
+        assertNotSame(conf.getSymbolTable(), clone.getSymbolTable());
+        assertEquals(conf.getSymbolTable(), clone.getSymbolTable());
+    }
+
+    @Test
+    public void equals() throws Exception {
+        Configuration conf = new Configuration.ConfigurationBuilder()
+          .setLanguage("ja")
+          .setVariant("hankaku")
+          .addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
+
+        Configuration clone = conf.clone();
+        assertEquals(conf, clone);
+        assertEquals(conf.hashCode(), clone.hashCode());
+
+        clone.getValidatorConfigs().remove(0);
+        assertFalse(conf.equals(clone));
+
+        clone = conf.clone();
+        clone.getSymbolTable().overrideSymbol(new Symbol(AMPERSAND, '^'));
+        assertFalse(conf.equals(clone));
+    }
+
+    @Test
+    public void serializable() throws Exception {
+        Configuration conf = new Configuration.ConfigurationBuilder()
+          .setLanguage("ja")
+          .setVariant("hankaku")
+          .addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
+
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        ObjectOutputStream out = new ObjectOutputStream(bytes);
+        out.writeObject(conf);
+
+        ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bytes.toByteArray()));
+        Configuration conf2 = (Configuration)in.readObject();
+
+        assertEquals(conf, conf2);
+        assertEquals(conf.getTokenizer().getClass(), conf2.getTokenizer().getClass());
     }
 }

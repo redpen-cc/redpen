@@ -17,6 +17,7 @@
  */
 package cc.redpen.config;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -24,9 +25,9 @@ import java.util.Objects;
 /**
  * Configuration for Validators.
  */
-public class ValidatorConfiguration implements Cloneable {
+public class ValidatorConfiguration implements Serializable, Cloneable {
     private final String configurationName;
-    private final Map<String, String> attributes;
+    private Map<String, String> attributes;
 
     /**
      * Constructor.
@@ -119,7 +120,9 @@ public class ValidatorConfiguration implements Cloneable {
      */
     @Override public ValidatorConfiguration clone() {
         try {
-            return (ValidatorConfiguration)super.clone();
+            ValidatorConfiguration clone = (ValidatorConfiguration)super.clone();
+            clone.attributes = new HashMap<>(attributes);
+            return clone;
         }
         catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
