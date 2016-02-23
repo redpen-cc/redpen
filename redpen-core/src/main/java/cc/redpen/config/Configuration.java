@@ -152,6 +152,14 @@ public class Configuration implements Serializable, Cloneable {
           '}';
     }
 
+    public static ConfigurationBuilder builder() {
+        return new ConfigurationBuilder();
+    }
+
+    public static ConfigurationBuilder builder(String lang) {
+        return new ConfigurationBuilder().setLanguage(lang);
+    }
+
     /**
      * Builder class of Configuration.
      */
