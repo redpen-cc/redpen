@@ -37,7 +37,7 @@ public class WeakExpressionValidatorTest {
 
         List<Document> documents = new ArrayList<>();
         documents.add(
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                Document.builder(new WhiteSpaceTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("As a matter of fact, some things are very small.", 1))

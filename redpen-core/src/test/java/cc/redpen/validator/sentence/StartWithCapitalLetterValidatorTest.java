@@ -40,7 +40,7 @@ public class StartWithCapitalLetterValidatorTest {
     @Test
     public void testDetectStartWithSmallCharacter() throws RedPenException {
         List<Document> documents = new ArrayList<>();
-        documents.add(new Document.DocumentBuilder()
+        documents.add(Document.builder()
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("this is it.", 1))
@@ -58,7 +58,7 @@ public class StartWithCapitalLetterValidatorTest {
     @Test
     public void testDetectStartWithCapitalCharacter() throws RedPenException {
         List<Document> documents = new ArrayList<>();
-        documents.add(new Document.DocumentBuilder()
+        documents.add(Document.builder()
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("This is it.", 1))
@@ -76,7 +76,7 @@ public class StartWithCapitalLetterValidatorTest {
     @Test
     public void testStartWithElementOfWhiteList() throws RedPenException {
         List<Document> documents = new ArrayList<>();
-        documents.add(new Document.DocumentBuilder()
+        documents.add(Document.builder()
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("iPhone is a mobile computer.", 1))
@@ -94,7 +94,7 @@ public class StartWithCapitalLetterValidatorTest {
     @Test
     public void testStartWithWhiteListItemInJapaneseSentence() throws RedPenException {
         List<Document> documents = new ArrayList<>();
-        documents.add(new Document.DocumentBuilder(new JapaneseTokenizer())
+        documents.add(Document.builder(new JapaneseTokenizer())
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("iPhone はカッコイイ．", 1))
@@ -112,7 +112,7 @@ public class StartWithCapitalLetterValidatorTest {
     @Test
     public void testStartWithWhiteSpaceAndThenItemOfWhiteList() throws RedPenException {
         List<Document> documents = new ArrayList<>();
-        documents.add(new Document.DocumentBuilder()
+        documents.add(Document.builder()
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence(" iPhone is a mobile computer.", 1))
@@ -130,7 +130,7 @@ public class StartWithCapitalLetterValidatorTest {
     @Test
     public void testVoid() throws RedPenException {
         List<Document> documents = new ArrayList<>();
-        documents.add(new Document.DocumentBuilder()
+        documents.add(Document.builder()
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("", 1))
@@ -152,7 +152,7 @@ public class StartWithCapitalLetterValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();
-        documents.add(new Document.DocumentBuilder()
+        documents.add(Document.builder()
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("mixi is a Japanese company.", 1))
@@ -171,7 +171,7 @@ public class StartWithCapitalLetterValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();
-        documents.add(new Document.DocumentBuilder()
+        documents.add(Document.builder()
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("This is true.", 1))

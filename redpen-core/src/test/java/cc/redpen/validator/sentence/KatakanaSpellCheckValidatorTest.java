@@ -75,7 +75,7 @@ public class KatakanaSpellCheckValidatorTest {
 
         List<Document> documents = new ArrayList<>();
         documents.add(
-                new Document.DocumentBuilder(new JapaneseTokenizer())
+                Document.builder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("あのインデクスとこのインデックス", 1))
@@ -94,7 +94,7 @@ public class KatakanaSpellCheckValidatorTest {
 
         List<Document> documents = new ArrayList<>();
         documents.add(
-                new Document.DocumentBuilder(new JapaneseTokenizer())
+                Document.builder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("あのミニマムサポートとこのミニマムサポータ", 1))
@@ -113,7 +113,7 @@ public class KatakanaSpellCheckValidatorTest {
 
         List<Document> documents = new ArrayList<>();
         documents.add(
-                new Document.DocumentBuilder(new JapaneseTokenizer())
+                Document.builder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("あのミニマムサポートとこのミニマムサポータ", 1))
@@ -132,7 +132,7 @@ public class KatakanaSpellCheckValidatorTest {
 
         List<Document> documents = new ArrayList<>();
         documents.add(
-                new Document.DocumentBuilder(new JapaneseTokenizer())
+                Document.builder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("あのミニマムサポートとこのミニマムサポータ", 1))
@@ -151,7 +151,7 @@ public class KatakanaSpellCheckValidatorTest {
 
         List<Document> documents = new ArrayList<>();
         documents.add(
-                new Document.DocumentBuilder()
+                Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("あのミニマムサポートとこのミニマムサポータ。", 1))
@@ -169,7 +169,7 @@ public class KatakanaSpellCheckValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                new Document.DocumentBuilder()
+                Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("あのインデクスとこのインデックス", 1))

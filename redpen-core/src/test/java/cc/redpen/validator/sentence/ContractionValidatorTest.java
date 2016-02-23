@@ -40,7 +40,7 @@ public class ContractionValidatorTest {
 
         List<Document> documents = new ArrayList<>();
         documents.add(
-                new Document.DocumentBuilder()
+                Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("he is a super man.", 1))
@@ -61,7 +61,7 @@ public class ContractionValidatorTest {
 
         List<Document> documents = new ArrayList<>();
         documents.add(
-                new Document.DocumentBuilder()
+                Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("he is a super man.", 1))
@@ -82,7 +82,7 @@ public class ContractionValidatorTest {
 
         List<Document> documents = new ArrayList<>();
         documents.add(
-                new Document.DocumentBuilder()
+                Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("He is a super man.", 1))
@@ -106,7 +106,7 @@ public class ContractionValidatorTest {
 
         List<Document> documents = new ArrayList<>();
         documents.add(
-                new Document.DocumentBuilder()
+                Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("he's a super man.", 1))

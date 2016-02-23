@@ -21,7 +21,7 @@ public abstract class BaseValidatorTest {
   }
 
   protected Document prepareSimpleDocument(String sentrence) {
-    return new Document.DocumentBuilder(config.getTokenizer())
+    return Document.builder(config.getTokenizer())
       .addSection(1)
       .addParagraph()
       .addSentence(new Sentence(sentrence, 1))

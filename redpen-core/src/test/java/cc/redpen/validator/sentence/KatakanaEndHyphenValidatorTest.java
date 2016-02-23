@@ -184,7 +184,7 @@ public class KatakanaEndHyphenValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                new Document.DocumentBuilder()
+                Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("濃いコーヒーは胃にわるい。", 1))
@@ -203,7 +203,7 @@ public class KatakanaEndHyphenValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                new Document.DocumentBuilder()
+                Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("コーヒーと紅茶と、どちらがお好きですか。", 1))

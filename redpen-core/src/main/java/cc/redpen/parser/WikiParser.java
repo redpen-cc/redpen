@@ -94,7 +94,7 @@ class WikiParser extends BaseDocumentParser {
     @Override
     public Document parse(InputStream is, Optional<String> filename, SentenceExtractor sentenceExtractor,
                           RedPenTokenizer tokenizer) throws RedPenException{
-        Document.DocumentBuilder documentBuilder = new Document.DocumentBuilder(tokenizer);
+        Document.DocumentBuilder documentBuilder = Document.builder(tokenizer);
         filename.ifPresent(documentBuilder::setFileName);
         BufferedReader br;
 

@@ -81,7 +81,7 @@ public class EndOfSentenceValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                new Document.DocumentBuilder(new JapaneseTokenizer())
+                Document.builder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("彼は言った，“今日は誕生日”。", 1))

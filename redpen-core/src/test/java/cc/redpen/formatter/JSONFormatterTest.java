@@ -48,7 +48,7 @@ public class JSONFormatterTest extends Validator {
         List<ValidationError> errors = new ArrayList<>();
         setErrorList(errors);
         addLocalizedError(new Sentence("testing JSONFormatter", 1));
-        Document document = new Document.DocumentBuilder().setFileName("docName").build();
+        Document document = Document.builder().setFileName("docName").build();
         String result = formatter.format(document, errors);
         JSONObject jsonObject = new JSONObject(result);
         String docName = jsonObject.getString("document");
@@ -68,7 +68,7 @@ public class JSONFormatterTest extends Validator {
         List<ValidationError> errors = new ArrayList<>();
         setErrorList(errors);
         addLocalizedError(new Sentence("testing JSONFormatter", 1));
-        Document document = new Document.DocumentBuilder().setFileName("docName").build();
+        Document document = Document.builder().setFileName("docName").build();
         Map<Document, List<ValidationError>> documentListMap = new HashMap<>();
         documentListMap.put(document, errors);
 

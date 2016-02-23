@@ -71,7 +71,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
                 .addValidatorConfig(new ValidatorConfiguration("JavaScript").addAttribute("script-path", javaScriptValidatorsDir.getAbsolutePath()))
                 .build();
 
-        Document document = new Document.DocumentBuilder()
+        Document document = Document.builder()
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("the good item is a good example.", 1))
@@ -110,7 +110,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
                         "_JavaScriptValidatorTest.calledFunctions.add('validateSection');" +
                         // add ValidationError
                         "addLocalizedError(section.getHeaderContent(0), 'section');}"));
-        Document document = new Document.DocumentBuilder()
+        Document document = Document.builder()
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("the good item is a good example.", 1))
@@ -147,7 +147,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
                         "function validateSentence(sentence) {" +
                         // add ValidationError
                         "addLocalizedError(sentence, '[placeholder]');}"));
-        Document document = new Document.DocumentBuilder()
+        Document document = Document.builder()
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("the good item is a good example.", 1))
@@ -173,7 +173,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
                                          + "addLocalizedError(sentence, 'runtime environment is confined');"
                                          + "}"
                                          + "}"));
-        Document document = new Document.DocumentBuilder()
+        Document document = Document.builder()
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("the good item is a good example.", 1))

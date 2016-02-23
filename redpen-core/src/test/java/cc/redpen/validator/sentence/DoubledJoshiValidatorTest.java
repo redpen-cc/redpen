@@ -36,7 +36,7 @@ public class DoubledJoshiValidatorTest {
     @Test
     public void testDetectDoubledJoshi() throws Exception {
         List<Document> documents = new ArrayList<>();
-        documents.add(new Document.DocumentBuilder(new JapaneseTokenizer())
+        documents.add(Document.builder(new JapaneseTokenizer())
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("私は彼は好き。", 1))
@@ -54,7 +54,7 @@ public class DoubledJoshiValidatorTest {
     @Test
     public void testNotDetectSingleJoshi() throws Exception {
         List<Document> documents = new ArrayList<>();
-        documents.add(new Document.DocumentBuilder(new JapaneseTokenizer())
+        documents.add(Document.builder(new JapaneseTokenizer())
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("私は彼が好き。", 1))
@@ -72,7 +72,7 @@ public class DoubledJoshiValidatorTest {
     @Test
     public void testLoadSkipList() throws Exception {
         List<Document> documents = new ArrayList<>();
-        documents.add(new Document.DocumentBuilder(new JapaneseTokenizer())
+        documents.add(Document.builder(new JapaneseTokenizer())
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("私は彼は好き。", 1))

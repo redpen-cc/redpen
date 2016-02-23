@@ -68,7 +68,7 @@ public class JapaneseStyleValidatorTest {
 
         List<Document> documents = new ArrayList<>();
         documents.add(
-                new Document.DocumentBuilder(new JapaneseTokenizer())
+                Document.builder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("今日はいい天気ですね。", 1))
@@ -89,7 +89,7 @@ public class JapaneseStyleValidatorTest {
 
         List<Document> documents = new ArrayList<>();
         documents.add(
-                new Document.DocumentBuilder(new JapaneseTokenizer())
+                Document.builder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("今日はいい天気である。", 1))

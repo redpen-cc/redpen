@@ -90,7 +90,7 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                new Document.DocumentBuilder(new JapaneseTokenizer())
+                Document.builder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("きょうは（Coke）を飲みたい。", 1))
@@ -108,7 +108,7 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                new Document.DocumentBuilder(new JapaneseTokenizer())
+                Document.builder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("きょうは、Coke を飲みたい。", 1))

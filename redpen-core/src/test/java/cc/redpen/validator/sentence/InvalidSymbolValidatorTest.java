@@ -44,7 +44,7 @@ public class InvalidSymbolValidatorTest {
     public void testWithInvalidSymbol() throws RedPenException {
         List<Document> documents = new ArrayList<>();
         documents.add(
-                new Document.DocumentBuilder(new JapaneseTokenizer())
+                Document.builder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("わたしはカラオケが大好き！", 1))
@@ -66,7 +66,7 @@ public class InvalidSymbolValidatorTest {
     public void testWithoutInvalidSymbol() throws RedPenException {
         List<Document> documents = new ArrayList<>();
         documents.add(
-                new Document.DocumentBuilder()
+                Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("I like Karaoke", 1))
@@ -87,7 +87,7 @@ public class InvalidSymbolValidatorTest {
 
         List<Document> documents = new ArrayList<>();
         documents.add(
-                new Document.DocumentBuilder()
+                Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("わたしは、カラオケが大好き！", 1)) // NOTE: two invalid symbols

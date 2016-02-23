@@ -72,7 +72,7 @@ public class InvalidExpressionValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                new Document.DocumentBuilder()
+                Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("You know. He is a super man.", 1))
@@ -90,7 +90,7 @@ public class InvalidExpressionValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                new Document.DocumentBuilder(new JapaneseTokenizer())
+                Document.builder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("明日地球が滅亡するってマジですか。", 1))
@@ -109,7 +109,7 @@ public class InvalidExpressionValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                new Document.DocumentBuilder(new JapaneseTokenizer())
+                Document.builder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("うふぉっ本当ですか？", 1))

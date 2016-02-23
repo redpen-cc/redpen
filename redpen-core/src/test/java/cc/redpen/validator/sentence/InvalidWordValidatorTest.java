@@ -42,7 +42,7 @@ public class InvalidWordValidatorTest {
     @Test
     public void testSimpleRun() throws RedPenException {
         List<Document> documents = new ArrayList<>();documents.add(
-                new Document.DocumentBuilder()
+                Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("He is a foolish guy.", 1))
@@ -62,7 +62,7 @@ public class InvalidWordValidatorTest {
     @Test
     public void testVoid() throws RedPenException {
         List<Document> documents = new ArrayList<>();documents.add(
-                new Document.DocumentBuilder()
+                Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("", 1))
@@ -85,7 +85,7 @@ public class InvalidWordValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                new Document.DocumentBuilder()
+                Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("he is a foolish man.", 1))
@@ -105,7 +105,7 @@ public class InvalidWordValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                new Document.DocumentBuilder()
+                Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("Domo is a greeting word in Japan.", 1))
@@ -126,7 +126,7 @@ public class InvalidWordValidatorTest {
                 .build(); // NOTE: no dictionary for japanese or other languages whose words are not split by white space.
 
         List<Document> documents = new ArrayList<>();documents.add(
-                new Document.DocumentBuilder(new JapaneseTokenizer())
+                Document.builder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("こんにちは、群馬にきました。", 1))

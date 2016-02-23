@@ -27,14 +27,14 @@ import static org.junit.Assert.assertEquals;
 public class DocumentTest {
     @Test
     public void testCreateDocument() {
-        Document doc = new Document.DocumentBuilder()
+        Document doc = Document.builder()
                         .setFileName("Foobar").build();
         assertEquals(0, doc.size());
     }
 
     @Test
     public void testCreateDocumentWithList() {
-        Document doc = new Document.DocumentBuilder()
+        Document doc = Document.builder()
                 .setFileName("Foobar")
                 .addSection(0)
                 .addSectionHeader("baz")
@@ -70,7 +70,7 @@ public class DocumentTest {
 
     @Test
     public void testSentenceIsTokenized() {
-        Document doc = new Document.DocumentBuilder()
+        Document doc = Document.builder()
                 .setFileName("foobar")
                 .addSection(0)
                 .addSectionHeader("baz")
@@ -83,7 +83,7 @@ public class DocumentTest {
 
     @Test
     public void testJapaneseSentenceIsTokenized() {
-        Document doc = new Document.DocumentBuilder(new JapaneseTokenizer())
+        Document doc = Document.builder(new JapaneseTokenizer())
                 .setFileName("今日")
                 .addSection(0)
                 .addSectionHeader("天気")
@@ -96,7 +96,7 @@ public class DocumentTest {
 
     @Test(expected = IllegalStateException.class)
     public void testCreateParagraphBeforeSection() {
-        new Document.DocumentBuilder()
+        Document.builder()
                 .setFileName("Foobar")
                 .addParagraph()
                 .addSection(0)
@@ -105,7 +105,7 @@ public class DocumentTest {
 
     @Test(expected = IllegalStateException.class)
     public void testCreateListBlockBeforeSection() {
-        new Document.DocumentBuilder()
+        Document.builder()
                 .setFileName("Foobar")
                 .addListBlock()
                 .addSection(0)
@@ -114,7 +114,7 @@ public class DocumentTest {
 
     @Test(expected = IllegalStateException.class)
     public void testCreateListElementBeforeListBlock() {
-        new Document.DocumentBuilder()
+        Document.builder()
                 .setFileName("Foobar")
                 .addListElement(0, "foo")
                 .addListBlock()

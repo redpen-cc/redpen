@@ -40,7 +40,7 @@ public class SpaceBeginningOfSpenceValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();
-                documents.add(new Document.DocumentBuilder()
+                documents.add(Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("this is a test.", 1)) // ok since the sentence begins with the beginning of the line 1
@@ -59,7 +59,7 @@ public class SpaceBeginningOfSpenceValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();
-                documents.add(new Document.DocumentBuilder()
+                documents.add(Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("this is a test", 1))
@@ -78,7 +78,7 @@ public class SpaceBeginningOfSpenceValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();
-                documents.add(new Document.DocumentBuilder()
+                documents.add(Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("This is a test", 1))
@@ -96,7 +96,7 @@ public class SpaceBeginningOfSpenceValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();
-                documents.add(new Document.DocumentBuilder()
+                documents.add(Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("", 0))
@@ -114,7 +114,7 @@ public class SpaceBeginningOfSpenceValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();
-                documents.add(new Document.DocumentBuilder()
+                documents.add(Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("this is a test.", 1))
@@ -133,7 +133,7 @@ public class SpaceBeginningOfSpenceValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();
-                documents.add(new Document.DocumentBuilder()
+                documents.add(Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("", 1))

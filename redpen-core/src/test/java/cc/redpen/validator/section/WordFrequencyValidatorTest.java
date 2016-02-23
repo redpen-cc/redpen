@@ -51,7 +51,7 @@ public class WordFrequencyValidatorTest {
                 "By 1285, following a period of social and environmental instability driven by a series of severe and prolonged droughts, they abandoned the area and moved south to locations in Arizona and New Mexico, including Rio Chama, Pajarito Plateau, and Santa Fe."
         };
 
-        Document.DocumentBuilder builder = new Document.DocumentBuilder(new WhiteSpaceTokenizer()).addSection(1).addParagraph();
+        Document.DocumentBuilder builder = Document.builder(new WhiteSpaceTokenizer()).addSection(1).addParagraph();
         int sentenceNumber = 1;
         for (String line : text) {
             builder.addSentence(new Sentence(line, sentenceNumber++));
