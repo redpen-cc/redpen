@@ -42,9 +42,9 @@ public class SpellingValidatorTest extends BaseValidatorTest {
 
     @Test
     public void testValidate() throws Exception {
-        config = new Configuration.ConfigurationBuilder()
+        config = Configuration.builder()
           .addValidatorConfig(new ValidatorConfiguration(validatorName).addAttribute("list", "this,a,pen"))
-          .setLanguage("en").build();
+          .build();
 
         Document document = prepareSimpleDocument("this iz a pen");
 
@@ -86,9 +86,9 @@ public class SpellingValidatorTest extends BaseValidatorTest {
 
     @Test
     public void testUserSkipList() throws RedPenException {
-        config = new Configuration.ConfigurationBuilder()
+        config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration(validatorName).addAttribute("list", "abeshi,baz"))
-                .setLanguage("en").build();
+                .build();
 
         Document document = prepareSimpleDocument("Abeshi is a word used in a comic.");
 

@@ -98,8 +98,7 @@ public class ConfigurationTest {
 
     @Test
     public void canBeCloned() throws Exception {
-        Configuration conf = Configuration.builder()
-          .setLanguage("ja")
+        Configuration conf = Configuration.builder("ja")
           .setVariant("hankaku")
           .addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
 
@@ -118,8 +117,7 @@ public class ConfigurationTest {
 
     @Test
     public void equals() throws Exception {
-        Configuration conf = Configuration.builder()
-          .setLanguage("ja")
+        Configuration conf = Configuration.builder("ja")
           .setVariant("hankaku")
           .addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
 
@@ -137,8 +135,7 @@ public class ConfigurationTest {
 
     @Test
     public void serializable() throws Exception {
-        Configuration conf = Configuration.builder()
-          .setLanguage("ja")
+        Configuration conf = Configuration.builder("ja")
           .setVariant("hankaku")
           .addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
 

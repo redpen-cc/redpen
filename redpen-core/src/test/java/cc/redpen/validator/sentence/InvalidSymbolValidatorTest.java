@@ -50,9 +50,8 @@ public class InvalidSymbolValidatorTest {
                         .addSentence(new Sentence("わたしはカラオケが大好き！", 1))
                         .build());
 
-        Configuration conf = new Configuration.ConfigurationBuilder()
+        Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
-                .setLanguage("en")
                 .addSymbol(new Symbol(EXCLAMATION_MARK, '!', "！"))
                 .build();
 
@@ -73,9 +72,8 @@ public class InvalidSymbolValidatorTest {
                         .addSentence(new Sentence("I like Karaoke", 1))
                         .build());
 
-        Configuration conf = new Configuration.ConfigurationBuilder()
+        Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
-                .setLanguage("en")
                 .addSymbol(new Symbol(EXCLAMATION_MARK, '!', "！"))
                 .build();
 
@@ -95,9 +93,8 @@ public class InvalidSymbolValidatorTest {
                         .addSentence(new Sentence("わたしは、カラオケが大好き！", 1)) // NOTE: two invalid symbols
                         .build());
 
-        Configuration conf = new Configuration.ConfigurationBuilder()
+        Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
-                .setLanguage("en")
                 .addSymbol(new Symbol(EXCLAMATION_MARK, '!', "！"))
                 .addSymbol(new Symbol(COMMA, ',', "、"))
                 .build();

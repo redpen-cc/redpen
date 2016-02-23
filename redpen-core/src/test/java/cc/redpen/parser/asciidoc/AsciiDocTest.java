@@ -32,8 +32,7 @@ public class AsciiDocTest {
      */
     @Test
     public void testModelErasure() {
-
-        Configuration configuration = new Configuration.ConfigurationBuilder().build();
+        Configuration configuration = Configuration.builder().build();
 
         String asciidocText =
                 "[[purpose]]\n" +

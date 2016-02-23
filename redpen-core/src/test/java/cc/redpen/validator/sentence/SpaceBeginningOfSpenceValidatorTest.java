@@ -35,9 +35,9 @@ import static org.junit.Assert.assertEquals;
 public class SpaceBeginningOfSpenceValidatorTest {
     @Test
     public void testProcessSentenceWithoutEndSpace() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBeginningOfSentence"))
-                .setLanguage("en").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();
                 documents.add(new Document.DocumentBuilder()
@@ -54,9 +54,9 @@ public class SpaceBeginningOfSpenceValidatorTest {
 
     @Test
     public void testProcessFirstSpace() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBeginningOfSentence"))
-                .setLanguage("en").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();
                 documents.add(new Document.DocumentBuilder()
@@ -73,9 +73,9 @@ public class SpaceBeginningOfSpenceValidatorTest {
 
     @Test
     public void testProcessHeadSentenceInAParagraph() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBeginningOfSentence"))
-                .setLanguage("en").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();
                 documents.add(new Document.DocumentBuilder()
@@ -91,9 +91,9 @@ public class SpaceBeginningOfSpenceValidatorTest {
 
     @Test
     public void testProcessZeroLengthSentence() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBeginningOfSentence"))
-                .setLanguage("en").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();
                 documents.add(new Document.DocumentBuilder()
@@ -109,9 +109,9 @@ public class SpaceBeginningOfSpenceValidatorTest {
 
     @Test
     public void testProcessNewLineSentenceWithoutEndSpace() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBeginningOfSentence"))
-                .setLanguage("en").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();
                 documents.add(new Document.DocumentBuilder()
@@ -128,9 +128,9 @@ public class SpaceBeginningOfSpenceValidatorTest {
 
     @Test
     public void testProcessVoidSentence() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBeginningOfSentence"))
-                .setLanguage("en").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();
                 documents.add(new Document.DocumentBuilder()

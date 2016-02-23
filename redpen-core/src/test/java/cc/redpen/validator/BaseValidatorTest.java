@@ -15,7 +15,7 @@ public abstract class BaseValidatorTest {
   }
 
   protected Configuration getConfiguration(String language) {
-    return new Configuration.ConfigurationBuilder()
+    return Configuration.builder()
       .addValidatorConfig(new ValidatorConfiguration(validatorName))
       .setLanguage(language).build();
   }

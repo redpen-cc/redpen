@@ -69,9 +69,9 @@ public class KatakanaSpellCheckValidatorTest {
 
     @Test
     public void testLoadDefaultDictionary() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck"))
-                .setLanguage("ja").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();
         documents.add(
@@ -88,9 +88,9 @@ public class KatakanaSpellCheckValidatorTest {
 
     @Test
     public void testDefaultSetting() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck"))
-                .setLanguage("ja").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();
         documents.add(
@@ -107,10 +107,9 @@ public class KatakanaSpellCheckValidatorTest {
 
     @Test
     public void testSetMinimumRatio() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck")
-                        .addAttribute("min_ratio", "0.001"))
-                .setLanguage("ja").build();
+        Configuration config = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck").addAttribute("min_ratio", "0.001"))
+                .build();
 
         List<Document> documents = new ArrayList<>();
         documents.add(
@@ -127,10 +126,9 @@ public class KatakanaSpellCheckValidatorTest {
 
     @Test
     public void testSetMinimumFrequency() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck")
-                        .addAttribute("min_freq", "0"))
-                .setLanguage("ja").build();
+        Configuration config = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck").addAttribute("min_freq", "0"))
+                .build();
 
         List<Document> documents = new ArrayList<>();
         documents.add(
@@ -147,9 +145,9 @@ public class KatakanaSpellCheckValidatorTest {
 
     @Test
     public void testLoadUserDictionary() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck").addAttribute("list", "ミニマムサポート,ミニマムサポータ"))
-                .setLanguage("ja").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();
         documents.add(
@@ -166,9 +164,9 @@ public class KatakanaSpellCheckValidatorTest {
 
     @Test
     public void testDisableDefaultDictionary() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck").addAttribute("disable-default", "true"))
-                .setLanguage("ja").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
                 new Document.DocumentBuilder()

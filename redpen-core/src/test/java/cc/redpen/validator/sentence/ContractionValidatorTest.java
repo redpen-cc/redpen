@@ -34,9 +34,9 @@ import java.util.Map;
 public class ContractionValidatorTest {
     @Test
     public void testContraction() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Contraction"))
-                .setLanguage("en").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();
         documents.add(
@@ -55,9 +55,9 @@ public class ContractionValidatorTest {
 
     @Test
     public void testNoContraction() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Contraction"))
-                .setLanguage("en").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();
         documents.add(
@@ -76,9 +76,9 @@ public class ContractionValidatorTest {
 
     @Test
     public void testUpperCaseContraction() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Contraction"))
-                .setLanguage("en").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();
         documents.add(
@@ -100,9 +100,9 @@ public class ContractionValidatorTest {
      */
     @Test
     public void testManyContractions() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Contraction"))
-                .setLanguage("en").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();
         documents.add(

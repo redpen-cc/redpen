@@ -41,7 +41,7 @@ public class SentenceExtractorTest {
     @Test
     public void testSimple() {
         SentenceExtractor extractor = new SentenceExtractor(
-                new Configuration.ConfigurationBuilder().build().getSymbolTable());
+                Configuration.builder().build().getSymbolTable());
         List<Pair<Integer, Integer>> outputPositions = new ArrayList<>();
         final String input = "this is a pen.";
         int lastPosition = extractor.extract(input, outputPositions);
@@ -54,7 +54,7 @@ public class SentenceExtractorTest {
     @Test
     public void testMultipleSentences() {
         SentenceExtractor extractor = new SentenceExtractor(
-                new Configuration.ConfigurationBuilder().build().getSymbolTable());
+                Configuration.builder().build().getSymbolTable());
         final String input = "this is a pen. that is a paper.";
         List<Pair<Integer, Integer>> outputPositions = new ArrayList<>();
         int lastPosition = extractor.extract(input, outputPositions);
@@ -68,7 +68,7 @@ public class SentenceExtractorTest {
     @Test
     public void testTwoSentencesWithDifferentStopCharacters() {
         SentenceExtractor extractor = new SentenceExtractor(
-                new Configuration.ConfigurationBuilder().build().getSymbolTable());
+                Configuration.builder().build().getSymbolTable());
         final String input = "is this a pen? that is a paper.";
         List<Pair<Integer, Integer>> outputPositions = new ArrayList<>();
         int lastPosition = extractor.extract(input, outputPositions);
@@ -81,7 +81,7 @@ public class SentenceExtractorTest {
 
     @Test
     public void testMultipleSentencesWithoutPeriodInTheEnd() {
-        SentenceExtractor extractor = new SentenceExtractor(new Configuration.ConfigurationBuilder().build().getSymbolTable());
+        SentenceExtractor extractor = new SentenceExtractor(Configuration.builder().build().getSymbolTable());
         final String input = "this is a pen. that is a paper";
         List<Pair<Integer, Integer>> outputPositions = new ArrayList<>();
         int lastPosition = extractor.extract(input, outputPositions);
@@ -94,7 +94,7 @@ public class SentenceExtractorTest {
     @Test
     public void testEndWithDoubleQuotation() {
         SentenceExtractor extractor = new SentenceExtractor(
-                new Configuration.ConfigurationBuilder().build().getSymbolTable());
+                Configuration.builder().build().getSymbolTable());
         List<Pair<Integer, Integer>> outputPositions = new ArrayList<>();
         final String input = "this is a \"pen.\"";
         int lastPosition = extractor.extract(input, outputPositions);
@@ -107,7 +107,7 @@ public class SentenceExtractorTest {
     @Test
     public void testEndWithSingleQuotation() {
         SentenceExtractor extractor = new SentenceExtractor(
-                new Configuration.ConfigurationBuilder().build().getSymbolTable());
+                Configuration.builder().build().getSymbolTable());
         final String input = "this is a \'pen.\'";
         List<Pair<Integer, Integer>> outputPositions = new ArrayList<>();
         int lastPosition = extractor.extract(input, outputPositions);
@@ -120,7 +120,7 @@ public class SentenceExtractorTest {
     @Test
     public void testEndWithDoubleQuotationEnglishVersion() {
         SentenceExtractor extractor = new SentenceExtractor(
-                new Configuration.ConfigurationBuilder().build().getSymbolTable());
+                Configuration.builder().build().getSymbolTable());
         final String input = "this is a \"pen\".";
         List<Pair<Integer, Integer>> outputPositions = new ArrayList<>();
         int lastPosition = extractor.extract(input, outputPositions);
@@ -133,7 +133,7 @@ public class SentenceExtractorTest {
     @Test
     public void testEndWithSingleQuotationEnglishVersion() {
         SentenceExtractor extractor = new SentenceExtractor(
-                new Configuration.ConfigurationBuilder().build().getSymbolTable());
+                Configuration.builder().build().getSymbolTable());
         final String input = "this is a \'pen\'.";
         List<Pair<Integer, Integer>> outputPositions = new ArrayList<>();
         int lastPosition = extractor.extract(input, outputPositions);
@@ -146,7 +146,7 @@ public class SentenceExtractorTest {
     @Test
     public void testMultipleSentencesOneOfThemIsEndWithDoubleQuotation() {
         SentenceExtractor extractor = new SentenceExtractor(
-                new Configuration.ConfigurationBuilder().build().getSymbolTable());
+                Configuration.builder().build().getSymbolTable());
         final String input = "this is a \"pen.\" Another one is not a pen.";
         List<Pair<Integer, Integer>> outputPositions = new ArrayList<>();
         int lastPosition = extractor.extract(input, outputPositions);
@@ -160,7 +160,7 @@ public class SentenceExtractorTest {
     @Test
     public void testMultipleSentencesWithPartialSplit() {
         SentenceExtractor extractor = new SentenceExtractor(
-                new Configuration.ConfigurationBuilder().build().getSymbolTable());
+                Configuration.builder().build().getSymbolTable());
         final String input = "this is a pen. Another\n" + "one is not a pen.";
         List<Pair<Integer, Integer>> outputPositions = new ArrayList<>();
         int lastPosition = extractor.extract(input, outputPositions);
@@ -174,7 +174,7 @@ public class SentenceExtractorTest {
     @Test
     public void testMultipleSentencesWithSplitInEndOfSentence() {
         SentenceExtractor extractor = new SentenceExtractor(
-                new Configuration.ConfigurationBuilder().build().getSymbolTable());
+                Configuration.builder().build().getSymbolTable());
         final String input = "this is a pen.\nAnother one is not a pen.";
         List<Pair<Integer, Integer>> outputPositions = new ArrayList<>();
         int lastPosition = extractor.extract(input, outputPositions);
@@ -188,7 +188,7 @@ public class SentenceExtractorTest {
     @Test
     public void testMultipleSentencesWithPartialSentence() {
         SentenceExtractor extractor = new SentenceExtractor(
-                new Configuration.ConfigurationBuilder().build().getSymbolTable());
+                Configuration.builder().build().getSymbolTable());
         final String input = "this is a pen. Another\n";
         List<Pair<Integer, Integer>> outputPositions = new ArrayList<>();
         int lastPosition = extractor.extract(input, outputPositions);
@@ -288,7 +288,7 @@ public class SentenceExtractorTest {
     @Test
     public void testSentenceWithWhiteWordPosition() {
         SentenceExtractor extractor = new SentenceExtractor(
-                new Configuration.ConfigurationBuilder().build().getSymbolTable());
+                Configuration.builder().build().getSymbolTable());
         final String input = "He is a Dr. candidate.";
         List<Pair<Integer, Integer>> outputPositions = new ArrayList<>();
         int lastPosition = extractor.extract(input, outputPositions);
@@ -301,7 +301,7 @@ public class SentenceExtractorTest {
     @Test
     public void testMultipleSentencesWithWhiteWordPosition() {
         SentenceExtractor extractor = new SentenceExtractor
-                (new Configuration.ConfigurationBuilder().build().getSymbolTable());
+                (Configuration.builder().build().getSymbolTable());
         final String input = "Is he a Dr. candidate? Yes, he is.";  // NOTE: white word list contains "Dr."
         List<Pair<Integer, Integer>> outputPositions = new ArrayList<>();
         int lastPosition = extractor.extract(input, outputPositions);
@@ -315,7 +315,7 @@ public class SentenceExtractorTest {
     @Test
     public void testVoidLine() {
         SentenceExtractor extractor = new SentenceExtractor(
-                new Configuration.ConfigurationBuilder().build().getSymbolTable());
+                Configuration.builder().build().getSymbolTable());
         final String input = "";
         List<Pair<Integer, Integer>> outputPositions = new ArrayList<>();
         int lastPosition = extractor.extract(input, outputPositions);
@@ -327,7 +327,7 @@ public class SentenceExtractorTest {
     @Test
     public void testJustPeriodLine() {
         SentenceExtractor extractor = new SentenceExtractor(
-                new Configuration.ConfigurationBuilder().build().getSymbolTable());
+                Configuration.builder().build().getSymbolTable());
         final String input = ".";
         List<Pair<Integer, Integer>> outputPositions = new ArrayList<>();
         int lastPosition = extractor.extract(input, outputPositions);
@@ -370,7 +370,7 @@ public class SentenceExtractorTest {
 
     @Test
     public void testThrowExceptionGivenNull() {
-        SentenceExtractor extractor = new SentenceExtractor(new Configuration.ConfigurationBuilder().build().getSymbolTable());
+        SentenceExtractor extractor = new SentenceExtractor(Configuration.builder().build().getSymbolTable());
         extractor.constructEndSentencePattern(); // not a throw exception
     }
 }

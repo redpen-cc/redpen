@@ -43,9 +43,9 @@ public class InvalidExpressionValidatorTest {
 
     @Test
     public void testSimpleRun() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression").addAttribute("list", "may"))
-                .setLanguage("en").build();
+                .build();
         Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
@@ -55,9 +55,9 @@ public class InvalidExpressionValidatorTest {
 
     @Test
     public void testVoid() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression").addAttribute("list", "may"))
-                .setLanguage("en").build();
+                .build();
         Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
@@ -67,9 +67,9 @@ public class InvalidExpressionValidatorTest {
 
     @Test
     public void testLoadDefaultDictionary() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
-                .setLanguage("en").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
                 new Document.DocumentBuilder()
@@ -85,9 +85,9 @@ public class InvalidExpressionValidatorTest {
 
     @Test
     public void testLoadJapaneseDefaultDictionary() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
-                .setLanguage("ja").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
                 new Document.DocumentBuilder(new JapaneseTokenizer())
@@ -104,9 +104,9 @@ public class InvalidExpressionValidatorTest {
 
     @Test
     public void testLoadJapaneseInvalidList() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression").addAttribute("list", "うふぉ,ガチ"))
-                .setLanguage("ja").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
                 new Document.DocumentBuilder(new JapaneseTokenizer())
@@ -123,9 +123,8 @@ public class InvalidExpressionValidatorTest {
     @Test
     public void testErrorPosition() throws RedPenException {
         String sampleText = "Hello You know."; // invalid expression "You know"
-        Configuration configuration = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(
-                        new ValidatorConfiguration("InvalidExpression"))
+        Configuration configuration = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .build();
         DocumentParser parser = DocumentParser.MARKDOWN;
         List<Document> documents = new ArrayList<>();

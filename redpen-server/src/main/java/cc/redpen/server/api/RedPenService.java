@@ -108,8 +108,7 @@ public class RedPenService {
      * @return a configured redpen instance
      */
     public RedPen getRedPen(String lang, Map<String, Map<String, String>> validatorProperties) {
-
-        Configuration.ConfigurationBuilder configBuilder = new Configuration.ConfigurationBuilder();
+        Configuration.ConfigurationBuilder configBuilder = Configuration.builder();
         configBuilder.setLanguage(lang);
 
         // add the validators and their properties

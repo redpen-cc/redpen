@@ -45,9 +45,9 @@ public class StartWithCapitalLetterValidatorTest {
                 .addParagraph()
                 .addSentence(new Sentence("this is it.", 1))
                 .build());
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter"))
-                .setLanguage("en").build();
+                .build();
         Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
@@ -63,9 +63,9 @@ public class StartWithCapitalLetterValidatorTest {
                 .addParagraph()
                 .addSentence(new Sentence("This is it.", 1))
                 .build());
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter"))
-                .setLanguage("en").build();
+                .build();
         Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
@@ -81,9 +81,9 @@ public class StartWithCapitalLetterValidatorTest {
                 .addParagraph()
                 .addSentence(new Sentence("iPhone is a mobile computer.", 1))
                 .build());
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter").addAttribute("list", "iPhone"))
-                .setLanguage("en").build();
+                .build();
         Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
@@ -99,9 +99,9 @@ public class StartWithCapitalLetterValidatorTest {
                 .addParagraph()
                 .addSentence(new Sentence("iPhone はカッコイイ．", 1))
                 .build());
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter").addAttribute("list", "iPhone"))
-                .setLanguage("en").build();
+                .build();
         Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
@@ -117,9 +117,9 @@ public class StartWithCapitalLetterValidatorTest {
                 .addParagraph()
                 .addSentence(new Sentence(" iPhone is a mobile computer.", 1))
                 .build());
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter").addAttribute("list", "iPhone"))
-                .setLanguage("en").build();
+                .build();
         Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
@@ -135,9 +135,9 @@ public class StartWithCapitalLetterValidatorTest {
                 .addParagraph()
                 .addSentence(new Sentence("", 1))
                 .build());
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter").addAttribute("list", "iPhone"))
-                .setLanguage("en").build();
+                .build();
         Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
@@ -147,9 +147,9 @@ public class StartWithCapitalLetterValidatorTest {
 
     @Test
     public void testLoadDefaultDictionary() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter"))
-                .setLanguage("en").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();
         documents.add(new Document.DocumentBuilder()
@@ -166,9 +166,9 @@ public class StartWithCapitalLetterValidatorTest {
 
     @Test
     public void testDetectStartWithSmallCharacterInSecondSentence() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter"))
-                .setLanguage("en").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();
         documents.add(new Document.DocumentBuilder()

@@ -20,13 +20,11 @@ package cc.redpen;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
-import cc.redpen.model.ListBlock;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
-import cc.redpen.parser.latex.LaTeXProcessor;
 import cc.redpen.validator.ValidationError;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,11 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static cc.redpen.config.SymbolType.COMMA;
-import static cc.redpen.config.SymbolType.FULL_STOP;
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
-import static cc.redpen.parser.latex.Tools.*;
+import static org.junit.Assert.assertNotNull;
 
 public class LaTeXParserTest {
 
@@ -539,7 +534,7 @@ public class LaTeXParserTest {
             + "大きなベッドタウンであり、多くの人が住んでいる。"
             + "\\end{document}\n";
         Configuration config =
-                new Configuration.ConfigurationBuilder().setLanguage("ja").build();
+                Configuration.builder("ja").build();
         Document doc = createFileContent(sampleText, config);
 
         Section firstSections = doc.getSection(0);
@@ -557,15 +552,12 @@ public class LaTeXParserTest {
             + "\\begin{document}\n"
             + "This is a good day。\n" // invalid end of sentence symbol
             + "\\end{document}\n";
-        Configuration conf = new Configuration.ConfigurationBuilder()
-                .setLanguage("en")
-                .build();
+        Configuration conf = Configuration.builder().build();
         List<Document> documents = new ArrayList<>();
         documents.add(createFileContent(sampleText, conf));
 
-        Configuration configuration = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(
-                        new ValidatorConfiguration("InvalidSymbol"))
+        Configuration configuration = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
                 .build();
 
         RedPen redPen = new RedPen(configuration);
@@ -588,7 +580,7 @@ public class LaTeXParserTest {
     }
 
     private Document createFileContent(String inputDocumentString) {
-        Configuration conf = new Configuration.ConfigurationBuilder().build();
+        Configuration conf = Configuration.builder().build();
         DocumentParser parser = DocumentParser.LATEX;
         Document doc = null;
         try {

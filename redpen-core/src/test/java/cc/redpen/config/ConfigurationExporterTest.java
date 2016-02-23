@@ -20,21 +20,21 @@ public class ConfigurationExporterTest {
 
   @Test
   public void emptyConfig() throws Exception {
-    Configuration config = new Configuration.ConfigurationBuilder().build();
+    Configuration config = Configuration.builder().build();
     exporter.export(config, out);
     assertEquals("<redpen-conf lang=\"en\">\n</redpen-conf>", out.toString());
   }
 
   @Test
   public void emptyConfigForJapaneseLanguage() throws Exception {
-    Configuration config = new Configuration.ConfigurationBuilder().setLanguage("ja").build();
+    Configuration config = Configuration.builder("ja").build();
     exporter.export(config, out);
     assertEquals("<redpen-conf lang=\"ja\" variant=\"zenkaku\">\n</redpen-conf>", out.toString());
   }
 
   @Test
   public void validators() throws Exception {
-    Configuration config = new Configuration.ConfigurationBuilder()
+    Configuration config = Configuration.builder()
       .addValidatorConfig(new ValidatorConfiguration("Mega"))
       .addValidatorConfig(new ValidatorConfiguration("Super").addAttribute("hello", "world")).build();
     exporter.export(config, out);
@@ -51,7 +51,7 @@ public class ConfigurationExporterTest {
 
   @Test
   public void symbols() throws Exception {
-    Configuration config = new Configuration.ConfigurationBuilder()
+    Configuration config = Configuration.builder()
       .addSymbol(new Symbol(ASTERISK, 'X'))
       .addSymbol(new Symbol(COLON, ';', ":", false, true))
       .addSymbol(new Symbol(SEMICOLON, ':', ";&", true, false)).build();

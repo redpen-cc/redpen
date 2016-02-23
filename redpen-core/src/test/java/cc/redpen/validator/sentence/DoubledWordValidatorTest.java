@@ -69,10 +69,10 @@ public class DoubledWordValidatorTest extends BaseValidatorTest {
 
     @Test
     public void testDoubledUserDefinedSkipWord() throws RedPenException {
-        config = new Configuration.ConfigurationBuilder()
+        config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration(validatorName)
                         .addAttribute("list", "redpen,tool"))
-                .setLanguage("en").build();
+                .build();
 
         Document document = prepareSimpleDocument("RedPen is RedPen right?");
 
@@ -83,10 +83,9 @@ public class DoubledWordValidatorTest extends BaseValidatorTest {
 
     @Test
     public void testDoubledUserDefinedSkipWordWithoutNormalization() throws RedPenException {
-        config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(new ValidatorConfiguration(validatorName)
-                        .addAttribute("list", "RedPen,Tool"))
-                .setLanguage("en").build();
+        config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration(validatorName).addAttribute("list", "RedPen,Tool"))
+                .build();
 
         Document document = prepareSimpleDocument("redPen is redPen right?");
 
@@ -97,9 +96,9 @@ public class DoubledWordValidatorTest extends BaseValidatorTest {
 
     @Test
     public void testDoubledWordInJapaneseSentence() throws RedPenException {
-        config = new Configuration.ConfigurationBuilder()
+        config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration(validatorName))
-                .setLanguage("ja").build();
+                .build();
 
         Document document = prepareSimpleDocument("それは真実であり，それが正しい");
 

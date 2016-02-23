@@ -54,12 +54,9 @@ public class JSONBySentenceFormatterTest extends Validator {
     @Test
     public void testFormatErrorsFromMarkdownParser() throws RedPenException, JSONException {
         String sampleText = "This is a good day。"; // invalid end of sentence symbol
-        Configuration conf = new Configuration.ConfigurationBuilder()
-                .setLanguage("en")
-                .build();
-        Configuration configuration = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(
-                        new ValidatorConfiguration("InvalidSymbol"))
+        Configuration conf = Configuration.builder().build();
+        Configuration configuration = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
                 .build();
 
         List<Document> documents = new ArrayList<>();

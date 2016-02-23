@@ -33,8 +33,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import javax.script.ScriptEngine;
-import javax.script.ScriptException;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -69,7 +67,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         Files.write(Paths.get(validatorJS.getAbsolutePath()), content2.getBytes(Charset.forName("UTF-8")));
         validatorJS.deleteOnExit();
 
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("JavaScript").addAttribute("script-path", javaScriptValidatorsDir.getAbsolutePath()))
                 .build();
 

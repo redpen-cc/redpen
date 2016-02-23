@@ -28,7 +28,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
@@ -37,10 +36,8 @@ public class DoubleNegativeValidatorTest {
     @Test
     public void testDetectDoubleNegative() throws Exception {
         String sampleText = "そういう話なら、理解できないこともない。";
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(
-                        new ValidatorConfiguration("DoubleNegative"))
-                .setLanguage("ja")
+        Configuration config = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("DoubleNegative"))
                 .build();
 
         DocumentParser parser = DocumentParser.MARKDOWN;
@@ -62,10 +59,8 @@ public class DoubleNegativeValidatorTest {
     public void testNotDetectSingleNegative() throws Exception {
         String sampleText =
                 "そういう話は理解できない。";
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(
-                        new ValidatorConfiguration("DoubleNegative"))
-                .setLanguage("ja")
+        Configuration config = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("DoubleNegative"))
                 .build();
         DocumentParser parser = DocumentParser.MARKDOWN;
         List<Document> documents = new ArrayList<>();
@@ -84,10 +79,8 @@ public class DoubleNegativeValidatorTest {
     public void testNotDetectPositiveType() throws Exception {
         String sampleText =
                 "そういう話は理解できる。";
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(
-                        new ValidatorConfiguration("DoubleNegative"))
-                .setLanguage("ja")
+        Configuration config = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("DoubleNegative"))
                 .build();
         DocumentParser parser = DocumentParser.MARKDOWN;
         List<Document> documents = new ArrayList<>();
@@ -105,10 +98,8 @@ public class DoubleNegativeValidatorTest {
     public void testDetectFuzzyDoubleNegative() throws Exception {
         String sampleText =
                 "そういう話なら、ないことないでしょう。";
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(
-                        new ValidatorConfiguration("DoubleNegative"))
-                .setLanguage("ja")
+        Configuration config = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("DoubleNegative"))
                 .build();
         DocumentParser parser = DocumentParser.MARKDOWN;
         List<Document> documents = new ArrayList<>();
@@ -127,10 +118,10 @@ public class DoubleNegativeValidatorTest {
     @Test
     public void testDetectEnDoubleNegative() throws Exception {
         String sampleText = "We believe it, unless it is not true";
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(
                         new ValidatorConfiguration("DoubleNegative"))
-                .setLanguage("en")
+
                 .build();
 
         DocumentParser parser = DocumentParser.MARKDOWN;
@@ -152,10 +143,8 @@ public class DoubleNegativeValidatorTest {
     @Test
     public void testDetectEnDoubleNegativeWithDistance() throws Exception {
         String sampleText = "unless that is not true, I will go there.";
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(
-                        new ValidatorConfiguration("DoubleNegative"))
-                .setLanguage("en")
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("DoubleNegative"))
                 .build();
 
         DocumentParser parser = DocumentParser.MARKDOWN;

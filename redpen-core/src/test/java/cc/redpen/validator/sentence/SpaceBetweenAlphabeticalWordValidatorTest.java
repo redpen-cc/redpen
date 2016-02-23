@@ -85,9 +85,9 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
 
     @Test
     public void testWithParenthesis() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
-                .setLanguage("ja").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
                 new Document.DocumentBuilder(new JapaneseTokenizer())
@@ -103,9 +103,9 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
 
     @Test
     public void testWithComma() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
-                .setLanguage("ja").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
                 new Document.DocumentBuilder(new JapaneseTokenizer())
@@ -122,9 +122,8 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
     @Test
     public void testErrorBeforePosition() throws RedPenException {
         String sampleText = "きょうはCoke を飲みたい。";
-        Configuration configuration = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(
-                        new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
+        Configuration configuration = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
                 .build();
         DocumentParser parser = DocumentParser.MARKDOWN;
         List<Document> documents = new ArrayList<>();
@@ -143,9 +142,8 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
     @Test
     public void testErrorAfterPosition() throws RedPenException {
         String sampleText = "きょうは Cokeを飲みたい。";
-        Configuration configuration = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(
-                        new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
+        Configuration configuration = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
                 .build();
         DocumentParser parser = DocumentParser.MARKDOWN;
         List<Document> documents = new ArrayList<>();

@@ -36,10 +36,8 @@ public class OkuriganaValidatorTest {
     @Test
     public void testInvalidOkurigana() throws Exception {
         String sampleText = "このタスクに長い年月を費してきた。";
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(
-                        new ValidatorConfiguration("Okurigana"))
-                .setLanguage("ja")
+        Configuration config = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("Okurigana"))
                 .build();
 
         DocumentParser parser = DocumentParser.MARKDOWN;
@@ -60,10 +58,8 @@ public class OkuriganaValidatorTest {
     @Test
     public void testNoInvalidOkurigana() throws Exception {
         String sampleText = "このタスクに長い年月を費やしてきた。";
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(
-                        new ValidatorConfiguration("Okurigana"))
-                .setLanguage("ja")
+        Configuration config = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("Okurigana"))
                 .build();
 
         DocumentParser parser = DocumentParser.MARKDOWN;
@@ -83,10 +79,8 @@ public class OkuriganaValidatorTest {
     @Test
     public void testInvalidOkuriganaWithRule() throws Exception {
         String sampleText = "彼に合せた。";
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(
-                        new ValidatorConfiguration("Okurigana"))
-                .setLanguage("ja")
+        Configuration config = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("Okurigana"))
                 .build();
 
         DocumentParser parser = DocumentParser.MARKDOWN;
@@ -109,10 +103,8 @@ public class OkuriganaValidatorTest {
     @Test
     public void testValidOkuriganaWithRule() throws Exception {
         String sampleText = "それとは競合している。";
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(
-                        new ValidatorConfiguration("Okurigana"))
-                .setLanguage("ja")
+        Configuration config = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("Okurigana"))
                 .build();
 
         DocumentParser parser = DocumentParser.MARKDOWN;

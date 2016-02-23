@@ -42,9 +42,9 @@ public class DoubledJoshiValidatorTest {
                 .addSentence(new Sentence("私は彼は好き。", 1))
                 .build());
 
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("DoubledJoshi"))
-                .setLanguage("ja").build();
+                .build();
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
@@ -60,9 +60,9 @@ public class DoubledJoshiValidatorTest {
                 .addSentence(new Sentence("私は彼が好き。", 1))
                 .build());
 
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("DoubledJoshi"))
-                .setLanguage("ja").build();
+                .build();
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
@@ -78,9 +78,9 @@ public class DoubledJoshiValidatorTest {
                 .addSentence(new Sentence("私は彼は好き。", 1))
                 .build());
 
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("DoubledJoshi").addAttribute("list", "は"))
-                .setLanguage("ja").build();
+                .build();
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
