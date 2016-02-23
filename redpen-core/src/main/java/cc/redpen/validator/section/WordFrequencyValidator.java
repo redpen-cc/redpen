@@ -63,17 +63,12 @@ public class WordFrequencyValidator extends Validator {
 
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH + "/word-frequency-" + getSymbolTable().getLang() + ".dat";
         referenceWordDeviations = new HashMap<>();
-        try {
-            referenceWordFrequencies =
-                    new DictionaryLoader<Map<String, Double>>(HashMap::new, (set, line) -> {
-                        String[] fields = line.split(" ");
-                        set.put(fields[1], Double.valueOf(fields[0]));
-                    }).loadCachedFromResource(defaultDictionaryFile, "word frequencies");
-            referenceStdDeviation = getDeviations(referenceWordFrequencies, referenceWordDeviations);
-
-        } catch (Exception ignored) {
-            referenceWordFrequencies = new HashMap<>();
-        }
+        referenceWordFrequencies =
+                new DictionaryLoader<Map<String, Double>>(HashMap::new, (set, line) -> {
+                    String[] fields = line.split(" ");
+                    set.put(fields[1], Double.valueOf(fields[0]));
+                }).loadCachedFromResource(defaultDictionaryFile, "word frequencies");
+        referenceStdDeviation = getDeviations(referenceWordFrequencies, referenceWordDeviations);
     }
 
     /**

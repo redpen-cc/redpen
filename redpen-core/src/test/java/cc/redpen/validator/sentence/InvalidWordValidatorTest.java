@@ -113,14 +113,14 @@ public class InvalidWordValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(1, errors.get(documents.get(0)).size());
+        assertEquals(1, errors.get(documents.get(0)).size());
     }
 
     /**
      * Assert not throw a exception even when there is no default dictionary.
      */
-    @Test(expected = RedPenException.class)
-    public void testLoadNotExistDefaultDictionary() throws RedPenException {
+    @Test
+    public void testLoadNotExistingDefaultDictionary() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("InvalidWord"))
                 .build(); // NOTE: no dictionary for japanese or other languages whose words are not split by white space.
@@ -134,6 +134,6 @@ public class InvalidWordValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.get(0)).size());
+        assertEquals(0, errors.get(documents.get(0)).size());
     }
 }

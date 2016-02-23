@@ -89,23 +89,19 @@ public class DictionaryLoader<E> {
      *
      * @param path           resource path
      * @param dictionaryName name of the resource
-     * @return word list
-     * @throws RedPenException when failed to load the dictionary
+     * @return word collection or empty if resource is missing
      */
-    public E loadCachedFromResource(String path, String dictionaryName) throws RedPenException {
-        E strings = resourceCache.computeIfAbsent(path, e -> {
+    public E loadCachedFromResource(String path, String dictionaryName) {
+        return resourceCache.computeIfAbsent(path, e -> {
             try {
-                return loadFromResource(path);
+                E result = loadFromResource(path);
+                LOG.info("Succeeded to load " + dictionaryName + ".");
+                return result;
             } catch (IOException ioe) {
-                LOG.error(ioe.getMessage());
-                return null;
+                LOG.error("Failed to load " + dictionaryName + ":" + path + ": " + ioe.getMessage());
+                return supplier.get();
             }
         });
-        if (strings == null) {
-            throw new RedPenException("Failed to load " + dictionaryName + ":" + path);
-        }
-        LOG.info("Succeeded to load " + dictionaryName + ".");
-        return strings;
     }
 
 

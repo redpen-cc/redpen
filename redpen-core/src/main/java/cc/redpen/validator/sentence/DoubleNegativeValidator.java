@@ -25,10 +25,11 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+
+import static java.util.Arrays.asList;
 
 /**
  * Detect double negative expressions in Japanese texts.
@@ -82,6 +83,6 @@ public class DoubleNegativeValidator extends Validator {
 
     @Override
     public List<String> getSupportedLanguages() {
-        return Arrays.asList(Locale.JAPANESE.getLanguage(), Locale.ENGLISH.getLanguage());
+        return asList(Locale.JAPANESE.getLanguage(), Locale.ENGLISH.getLanguage());
     }
 }

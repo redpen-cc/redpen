@@ -165,8 +165,7 @@ final public class KatakanaSpellCheckValidator extends Validator {
     protected void init() throws RedPenException {
         boolean disableDefault = getConfigAttributeAsBoolean("disable-default", false);
         if (!disableDefault) {
-            String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
-                    + "/katakana-spellcheck.dat";
+            String defaultDictionaryFile = DEFAULT_RESOURCE_PATH + "/katakana-spellcheck.dat";
             exceptions = WORD_LIST.loadCachedFromResource(defaultDictionaryFile, "katakana word dictionary");
         }
 

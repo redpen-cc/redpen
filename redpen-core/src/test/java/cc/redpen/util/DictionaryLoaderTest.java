@@ -25,13 +25,15 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class DictionaryLoaderTest extends Validator {
     @Test
@@ -106,18 +108,20 @@ public class DictionaryLoaderTest extends Validator {
         assertTrue(strings.contains("bar"));
     }
 
-    @Test
+    @Test(expected = RedPenException.class)
     public void testEnsureFileIsInsideRedPenHomeOrWorkingDirectory() throws RedPenException, IOException {
         File tempFile = File.createTempFile("redpenTest", "redpenTest");
         String path = tempFile.getAbsolutePath();
         System.setProperty("REDPEN_HOME", path);
         DictionaryLoader.ensureFileIsInsideRedPenHomeOrWorkingDirectory(path + File.separator + "test");
         DictionaryLoader.ensureFileIsInsideRedPenHomeOrWorkingDirectory(new File("fileInCurrentDirectory.txt").getCanonicalPath());
-        try {
-            File file = new File(path + File.separator + ".." + File.separator + "test");
-            DictionaryLoader.ensureFileIsInsideRedPenHomeOrWorkingDirectory(file.getCanonicalPath());
-            fail("expecting RedPenException");
-        } catch (RedPenException expected) {
-        }
+        File file = new File(path + File.separator + ".." + File.separator + "test");
+        DictionaryLoader.ensureFileIsInsideRedPenHomeOrWorkingDirectory(file.getCanonicalPath());
+    }
+
+    @Test
+    public void testLoadingInexistingResourceReturnsAnEmptyCollection() throws Exception {
+        Set<String> result = new DictionaryLoader<Set<String>>(HashSet::new, null).loadCachedFromResource("hello.xml", "hello");
+        assertTrue(result.isEmpty());
     }
 }
