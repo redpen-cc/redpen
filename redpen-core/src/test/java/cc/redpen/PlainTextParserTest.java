@@ -77,9 +77,6 @@ public class PlainTextParserTest {
 
     @Before
     public void setup() {
-        Configuration configuration = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration("SentenceLength").addAttribute("max_length", "10"))
-                .build();
         parser = DocumentParser.PLAIN;
     }
 
