@@ -104,7 +104,8 @@ public class ValidatorConfiguration implements Serializable, Cloneable {
         if (this == o) return true;
         if (!(o instanceof ValidatorConfiguration)) return false;
         ValidatorConfiguration that = (ValidatorConfiguration)o;
-        return Objects.equals(configurationName, that.configurationName);
+        return Objects.equals(configurationName, that.configurationName) &&
+               Objects.equals(attributes, that.attributes);
     }
 
     @Override public int hashCode() {
