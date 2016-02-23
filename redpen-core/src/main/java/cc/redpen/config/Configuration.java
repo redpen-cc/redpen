@@ -143,6 +143,15 @@ public class Configuration implements Serializable, Cloneable {
         return getKey().hashCode();
     }
 
+    @Override public String toString() {
+        return "Configuration{" +
+          "lang='" + lang + '\'' +
+          ", tokenizer=" + tokenizer +
+          ", validatorConfigs=" + validatorConfigs +
+          ", symbolTable=" + symbolTable +
+          '}';
+    }
+
     /**
      * Builder class of Configuration.
      */
