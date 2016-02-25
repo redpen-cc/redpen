@@ -39,8 +39,7 @@ import static cc.redpen.config.Configuration.ConfigurationBuilder;
  * Load the central configuration of {@link cc.redpen.RedPen}.
  */
 public class ConfigurationLoader {
-    private static final Logger LOG =
-            LoggerFactory.getLogger(ConfigurationLoader.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationLoader.class);
     private ConfigurationBuilder configBuilder = new ConfigurationBuilder();
 
     private static Symbol createSymbol(Element element) throws RedPenException {
@@ -89,7 +88,7 @@ public class ConfigurationLoader {
     public Configuration load(File configFile) throws RedPenException {
         LOG.info("Loading config from specified config file: \"{}\"", configFile.getAbsolutePath());
         try (InputStream fis = new FileInputStream(configFile)) {
-            return this.load(fis);
+            return this.load(fis, configFile.getParentFile());
         } catch (IOException e) {
             throw new RedPenException(e);
         }
@@ -127,9 +126,22 @@ public class ConfigurationLoader {
      * @throws cc.redpen.RedPenException when failed to load configuration from specified stream
      */
     public Configuration load(InputStream stream) throws RedPenException {
+        return load(stream, null);
+    }
+
+    /**
+     * load {@link cc.redpen.RedPen} configuration.
+     * Provided stream will be closed.
+     *
+     * @param stream input configuration settings
+     * @param base base dir for resolving of relative resources
+     * @return Configuration loaded from input stream
+     * @throws cc.redpen.RedPenException when failed to load configuration from specified stream
+     */
+    public Configuration load(InputStream stream, File base) throws RedPenException {
         Document doc = toDocument(stream);
 
-        configBuilder = new ConfigurationBuilder();
+        configBuilder = new ConfigurationBuilder().setBaseDir(base);
         Element rootElement = getRootNode(doc, "redpen-conf");
 
         String language = rootElement.getAttribute("lang");

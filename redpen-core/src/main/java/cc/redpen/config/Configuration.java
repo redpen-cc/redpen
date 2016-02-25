@@ -115,10 +115,17 @@ public class Configuration implements Serializable, Cloneable {
     }
 
     /**
-     * @return RedPen home directory, relative to which many custom resources are evaluated
+     * @return RedPen home directory, relative to which custom resources are evaluated
      */
     public File getHome() {
         return home;
+    }
+
+    /**
+     * @return RedPen configuration base directory, relative to which custom resources are evaluated
+     */
+    public File getBase() {
+        return base;
     }
 
     /**
@@ -131,8 +138,10 @@ public class Configuration implements Serializable, Cloneable {
         File file = new File(relativePath);
         if (file.exists()) return file;
 
-        file = new File(base, relativePath);
-        if (file.exists()) return file;
+        if (base != null) {
+            file = new File(base, relativePath);
+            if (file.exists()) return file;
+        }
 
         file = new File(home, relativePath);
         if (file.exists()) return file;
