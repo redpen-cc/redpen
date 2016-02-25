@@ -28,25 +28,34 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class JavaScriptValidatorTest extends JavaScriptValidator {
+    @Test
+    public void doNotCrashIfJsDirectoryDoesNotExist() throws Exception {
+        JavaScriptValidator validator = new JavaScriptValidator();
+        validator.preInit(new ValidatorConfiguration("JavaScript"), Configuration.builder().build());
+        validator.init();
+        assertTrue(validator.scripts.isEmpty());
+    }
+
     @Test
     public void testLoadFile() throws Exception {
         File file = File.createTempFile("test", "txt");
         String content = "hello\nred\npen.";
-        Files.write(Paths.get(file.getAbsolutePath()), content.getBytes(Charset.forName("UTF-8")));
+        Files.write(Paths.get(file.getAbsolutePath()), content.getBytes(UTF_8));
         String loadCached = JavaScriptValidator.loadCached(file);
         assertEquals(content, loadCached);
 
         String content2 = "hello\nred\npen.\nmodified\n";
-        Files.write(Paths.get(file.getAbsolutePath()), content2.getBytes(Charset.forName("UTF-8")));
+        Files.write(Paths.get(file.getAbsolutePath()), content2.getBytes(UTF_8));
         // ensure the modified date differs
         file.setLastModified(System.currentTimeMillis() + 2000);
 
@@ -60,11 +69,11 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         // delete the temporary file, make a directory, and store JavaScript validator in it
         javaScriptValidatorsDir.delete();
         javaScriptValidatorsDir.mkdirs();
-        System.setProperty("REDPEN_HOME",javaScriptValidatorsDir.getAbsolutePath());
+        System.setProperty("REDPEN_HOME", javaScriptValidatorsDir.getAbsolutePath());
         File validatorJS = new File(javaScriptValidatorsDir.getAbsolutePath() + File.separator + "MyValidator.js");
         String content2 = "function validateSentence(sentence) {\n" +
                 "addLocalizedError(sentence, 'validation error in JavaScript Validator');}";
-        Files.write(Paths.get(validatorJS.getAbsolutePath()), content2.getBytes(Charset.forName("UTF-8")));
+        Files.write(Paths.get(validatorJS.getAbsolutePath()), content2.getBytes(UTF_8));
         validatorJS.deleteOnExit();
 
         Configuration config = Configuration.builder()

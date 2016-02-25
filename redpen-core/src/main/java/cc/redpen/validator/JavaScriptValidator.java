@@ -63,10 +63,8 @@ public class JavaScriptValidator extends Validator {
     @Override
     protected void init() throws RedPenException {
         Optional<String> jsValidatorsPath = getConfigAttribute("script-path");
-        File jsDirectory = findFile(jsValidatorsPath.orElse(DEFAULT_JS_VALIDATORS_PATH));
-        if (!jsDirectory.exists()) {
-            LOG.info("JavaScript validators directory is missing: {}", jsValidatorsPath);
-        } else {
+        try {
+            File jsDirectory = findFile(jsValidatorsPath.orElse(DEFAULT_JS_VALIDATORS_PATH));
             LOG.info("JavaScript validators directory: {}", jsValidatorsPath);
             File[] jsValidatorFiles = jsDirectory.listFiles();
             if (jsValidatorFiles != null) {
@@ -80,6 +78,9 @@ public class JavaScriptValidator extends Validator {
                     }
                 }
             }
+        }
+        catch (RedPenException e) {
+            LOG.warn("JavaScript validators directory is missing: {}", e.toString());
         }
     }
 
