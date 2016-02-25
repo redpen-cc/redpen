@@ -102,8 +102,20 @@ public class ConfigurationLoader {
      * @throws cc.redpen.RedPenException when failed to load configuration from specified resource
      */
     public Configuration loadFromResource(String resourcePath) throws RedPenException {
+        return loadFromResource(resourcePath, null);
+    }
+
+    /**
+     * load {@link cc.redpen.RedPen} settings.
+     *
+     * @param resourcePath input configuration path
+     * @param base base dir for resolving of relative resources
+     * @return Validator configuration resources
+     * @throws cc.redpen.RedPenException when failed to load configuration from specified resource
+     */
+    public Configuration loadFromResource(String resourcePath, File base) throws RedPenException {
         InputStream inputConfigStream = Configuration.class.getResourceAsStream(resourcePath);
-        return load(inputConfigStream);
+        return load(inputConfigStream, base);
     }
 
     /**
@@ -114,7 +126,19 @@ public class ConfigurationLoader {
      * @throws cc.redpen.RedPenException when failed to load Configuration from specified string
      */
     public Configuration loadFromString(String configString) throws RedPenException {
-        return load(new ByteArrayInputStream(configString.getBytes(StandardCharsets.UTF_8)));
+        return loadFromString(configString, null);
+    }
+
+    /**
+     * load {@link cc.redpen.RedPen} settings.
+     *
+     * @param configString configuration as String
+     * @param base base dir for resolving of relative resources
+     * @return Validator configuration resources
+     * @throws cc.redpen.RedPenException when failed to load Configuration from specified string
+     */
+    public Configuration loadFromString(String configString, File base) throws RedPenException {
+        return load(new ByteArrayInputStream(configString.getBytes(StandardCharsets.UTF_8)), base);
     }
 
     /**
