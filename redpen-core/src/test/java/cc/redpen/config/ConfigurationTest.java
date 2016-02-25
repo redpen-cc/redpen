@@ -19,10 +19,7 @@ package cc.redpen.config;
 
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.Optional;
 
 import static cc.redpen.config.SymbolType.AMPERSAND;
@@ -94,6 +91,28 @@ public class ConfigurationTest {
     public void keyIsLangOnlyForZenkaku() throws Exception {
         SymbolTable symbolTable = new SymbolTable("ja", Optional.of("zenkaku"), emptyList());
         assertEquals("ja", new Configuration(symbolTable, emptyList(), "ja").getKey());
+    }
+
+    @Test
+    public void homeIsWorkingDirectoryByDefault() throws Exception {
+        assertEquals(new File(""), Configuration.builder().build().getHome());
+    }
+
+    @Test
+    public void homeIsResolvedFromSystemPropertyOrEnvironment() throws Exception {
+        System.setProperty("REDPEN_HOME", "/foo");
+        assertEquals(new File("/foo"), Configuration.builder().build().getHome());
+    }
+
+    @Test
+    public void findFileLooksInWorkingDirectoryFirst() throws Exception {
+        assertEquals(new File("src"), Configuration.builder().build().findFile("src"));
+    }
+
+    @Test
+    public void findFileLooksInHomeDirectoryIfNotInWorkingOne() throws Exception {
+        System.setProperty("REDPEN_HOME", "src");
+        assertEquals(new File("src/main"), Configuration.builder().build().findFile("main"));
     }
 
     @Test

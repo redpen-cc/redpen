@@ -17,10 +17,12 @@
  */
 package cc.redpen.config;
 
+import cc.redpen.RedPenException;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.tokenizer.RedPenTokenizer;
 import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -40,6 +42,7 @@ public class Configuration implements Serializable, Cloneable {
     private List<ValidatorConfiguration> validatorConfigs = new ArrayList<>();
     private final String lang;
     private transient RedPenTokenizer tokenizer;
+    private File home = new File(Optional.ofNullable(System.getProperty("REDPEN_HOME", System.getenv("REDPEN_HOME"))).orElse(""));
 
     /**
      * Constructor.
@@ -110,6 +113,28 @@ public class Configuration implements Serializable, Cloneable {
     }
 
     /**
+     * @return RedPen home directory, relative to which many custom resources are evaluated
+     */
+    public File getHome() {
+        return home;
+    }
+
+    /**
+     * Finds file relative to either working directory or $REDPEN_HOME
+     * @param relativePath of file to find
+     * @return resolved file if it exists
+     * @throws RedPenException if file doesn't exist in either place
+     */
+    public File findFile(String relativePath) throws RedPenException {
+        File file = new File(relativePath);
+        if (file.exists()) return file;
+        file = new File(home, relativePath);
+        if (file.exists()) return file;
+        throw new RedPenException(String.format("%s is not under $REDPEN_HOME(%s) or current directory(%s).",
+          relativePath, home.getAbsolutePath(), new File("").getAbsoluteFile()));
+    }
+
+    /**
      * @return a deep copy of this configuration
      */
     @Override public Configuration clone() {
@@ -176,6 +201,7 @@ public class Configuration implements Serializable, Cloneable {
                 throw new IllegalStateException("Configuration already built.");
             }
         }
+
         public ConfigurationBuilder setLanguage(String lang) {
             checkBuilt();
             this.lang = lang;
