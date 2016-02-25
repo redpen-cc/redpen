@@ -23,7 +23,6 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -63,7 +62,7 @@ final public class SuggestExpressionValidator extends Validator {
             LOG.error("Dictionary file is not specified");
             throw new RedPenException("dictionary file is not specified");
         } else {
-            synonyms = KEY_VALUE.loadCachedFromFile(new File(confFile.get()), "SuggestExpressionValidator dictionary");
+            synonyms = KEY_VALUE.loadCachedFromFile(findFile(confFile.get()), "SuggestExpressionValidator dictionary");
         }
     }
 

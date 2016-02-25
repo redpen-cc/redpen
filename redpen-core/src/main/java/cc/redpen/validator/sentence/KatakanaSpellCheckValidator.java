@@ -25,7 +25,6 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.util.*;
 
 /**
@@ -172,7 +171,7 @@ final public class KatakanaSpellCheckValidator extends Validator {
         Optional<String> confFile = getConfigAttribute("dict");
         if (confFile.isPresent()) {
             LOG.info("User defined Katakana word dictionary found.");
-            customExceptions.addAll(WORD_LIST.loadCachedFromFile(new File(confFile.get()),
+            customExceptions.addAll(WORD_LIST.loadCachedFromFile(findFile(confFile.get()),
                     "KatakanaSpellCheckValidator user dictionary"));
             LOG.info("Succeeded to add elements of user defined dictionary.");
         }

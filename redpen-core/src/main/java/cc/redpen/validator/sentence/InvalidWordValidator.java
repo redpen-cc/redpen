@@ -24,13 +24,7 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Detect invalid word occurrences.
@@ -74,7 +68,7 @@ final public class InvalidWordValidator extends Validator {
 
         Optional<String> confFile = getConfigAttribute("dict");
         if (confFile.isPresent()) {
-            customInvalidWords.addAll(WORD_LIST.loadCachedFromFile(new File(confFile.get()), "InvalidWordValidator user dictionary"));
+            customInvalidWords.addAll(WORD_LIST.loadCachedFromFile(findFile(confFile.get()), "InvalidWordValidator user dictionary"));
         }
     }
 

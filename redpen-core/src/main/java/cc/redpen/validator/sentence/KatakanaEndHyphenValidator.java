@@ -24,13 +24,7 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Validate the end hyphens of Katakana words in Japanese documents.
@@ -121,7 +115,7 @@ final public class KatakanaEndHyphenValidator extends Validator {
 
         Optional<String> confFile = getConfigAttribute("dict");
         if (confFile.isPresent()) {
-            customSkipList.addAll(WORD_LIST.loadCachedFromFile(new File(confFile.get()), "KatakanaEndHyphenValidator user dictionary"));
+            customSkipList.addAll(WORD_LIST.loadCachedFromFile(findFile(confFile.get()), "KatakanaEndHyphenValidator user dictionary"));
         }
     }
 
@@ -137,8 +131,7 @@ final public class KatakanaEndHyphenValidator extends Validator {
 
     @Override
     public int hashCode() {
-        int result = customSkipList != null ? customSkipList.hashCode() : 0;
-        return result;
+        return customSkipList != null ? customSkipList.hashCode() : 0;
     }
 
     @Override

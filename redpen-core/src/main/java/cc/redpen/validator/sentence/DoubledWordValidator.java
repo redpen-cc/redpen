@@ -24,7 +24,6 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -70,7 +69,7 @@ final public class DoubledWordValidator extends Validator {
 
         Optional<String> confFile = getConfigAttribute("dict");
         if (confFile.isPresent()) {
-            customSkipList.addAll(WORD_LIST.loadCachedFromFile(new File(confFile.get()), "DoubledWordValidator user dictionary"));
+            customSkipList.addAll(WORD_LIST.loadCachedFromFile(findFile(confFile.get()), "DoubledWordValidator user dictionary"));
         }
     }
 

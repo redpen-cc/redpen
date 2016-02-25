@@ -108,17 +108,6 @@ public class DictionaryLoaderTest extends Validator {
         assertTrue(strings.contains("bar"));
     }
 
-    @Test(expected = RedPenException.class)
-    public void testEnsureFileIsInsideRedPenHomeOrWorkingDirectory() throws RedPenException, IOException {
-        File tempFile = File.createTempFile("redpenTest", "redpenTest");
-        String path = tempFile.getAbsolutePath();
-        System.setProperty("REDPEN_HOME", path);
-        DictionaryLoader.ensureFileIsInsideRedPenHomeOrWorkingDirectory(path + File.separator + "test");
-        DictionaryLoader.ensureFileIsInsideRedPenHomeOrWorkingDirectory(new File("fileInCurrentDirectory.txt").getCanonicalPath());
-        File file = new File(path + File.separator + ".." + File.separator + "test");
-        DictionaryLoader.ensureFileIsInsideRedPenHomeOrWorkingDirectory(file.getCanonicalPath());
-    }
-
     @Test
     public void testLoadingInexistingResourceReturnsAnEmptyCollection() throws Exception {
         Set<String> result = new DictionaryLoader<Set<String>>(HashSet::new, null).loadCachedFromResource("hello.xml", "hello");
