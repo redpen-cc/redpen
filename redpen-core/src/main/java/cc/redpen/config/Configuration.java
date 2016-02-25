@@ -43,11 +43,13 @@ public class Configuration implements Serializable, Cloneable {
     private final String lang;
     private transient RedPenTokenizer tokenizer;
     private File home = new File(Optional.ofNullable(System.getProperty("REDPEN_HOME", System.getenv("REDPEN_HOME"))).orElse(""));
+    private File base;
 
     /**
      * Constructor.
      */
-    Configuration(SymbolTable symbolTable, List<ValidatorConfiguration> validatorConfigs, String lang) {
+    Configuration(File base, SymbolTable symbolTable, List<ValidatorConfiguration> validatorConfigs, String lang) {
+        this.base = base;
         this.symbolTable = symbolTable;
 
         this.validatorConfigs.addAll(validatorConfigs);
@@ -128,8 +130,13 @@ public class Configuration implements Serializable, Cloneable {
     public File findFile(String relativePath) throws RedPenException {
         File file = new File(relativePath);
         if (file.exists()) return file;
+
+        file = new File(base, relativePath);
+        if (file.exists()) return file;
+
         file = new File(home, relativePath);
         if (file.exists()) return file;
+
         throw new RedPenException(String.format("%s is not under $REDPEN_HOME(%s) or current directory(%s).",
           relativePath, home.getAbsolutePath(), new File("").getAbsoluteFile()));
     }
@@ -195,16 +202,21 @@ public class Configuration implements Serializable, Cloneable {
 
         private String lang = "en";
         private Optional<String> variant = Optional.empty();
+        private File base;
 
         private void checkBuilt() {
-            if(built){
-                throw new IllegalStateException("Configuration already built.");
-            }
+            if (built) throw new IllegalStateException("Configuration already built.");
         }
 
         public ConfigurationBuilder setLanguage(String lang) {
             checkBuilt();
             this.lang = lang;
+            return this;
+        }
+
+        public ConfigurationBuilder setBaseDir(File base) {
+            checkBuilt();
+            this.base = base;
             return this;
         }
 
@@ -229,7 +241,7 @@ public class Configuration implements Serializable, Cloneable {
         public Configuration build() {
             checkBuilt();
             built = true;
-            return new Configuration(new SymbolTable(lang, variant, customSymbols), this.validatorConfigs, this.lang);
+            return new Configuration(base, new SymbolTable(lang, variant, customSymbols), this.validatorConfigs, this.lang);
         }
     }
 }

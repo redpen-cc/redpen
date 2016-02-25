@@ -78,19 +78,19 @@ public class ConfigurationTest {
     @Test
     public void keyIsLangAndType() throws Exception {
         SymbolTable symbolTable = new SymbolTable("ja", Optional.of("hankaku"), emptyList());
-        assertEquals("ja.hankaku", new Configuration(symbolTable, emptyList(), "ja").getKey());
+        assertEquals("ja.hankaku", new Configuration(new File(""), symbolTable, emptyList(), "ja").getKey());
     }
 
     @Test
     public void keyIsLangOnlyIfTypeIsMissing() throws Exception {
         SymbolTable symbolTable = new SymbolTable("en", Optional.empty(), emptyList());
-        assertEquals("en", new Configuration(symbolTable, emptyList(), "en").getKey());
+        assertEquals("en", new Configuration(new File(""), symbolTable, emptyList(), "en").getKey());
     }
 
     @Test
     public void keyIsLangOnlyForZenkaku() throws Exception {
         SymbolTable symbolTable = new SymbolTable("ja", Optional.of("zenkaku"), emptyList());
-        assertEquals("ja", new Configuration(symbolTable, emptyList(), "ja").getKey());
+        assertEquals("ja", new Configuration(new File(""), symbolTable, emptyList(), "ja").getKey());
     }
 
     @Test
@@ -110,7 +110,12 @@ public class ConfigurationTest {
     }
 
     @Test
-    public void findFileLooksInHomeDirectoryIfNotInWorkingOne() throws Exception {
+    public void findFileLooksInConfigBaseDirectorySecond() throws Exception {
+        assertEquals(new File("src/main"), Configuration.builder().setBaseDir(new File("src")).build().findFile("main"));
+    }
+
+    @Test
+    public void findFileLooksInRedPenHomeDirectoryThird() throws Exception {
         System.setProperty("REDPEN_HOME", "src");
         assertEquals(new File("src/main"), Configuration.builder().build().findFile("main"));
     }
