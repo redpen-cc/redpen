@@ -95,6 +95,7 @@ public class ConfigurationTest {
 
     @Test
     public void homeIsWorkingDirectoryByDefault() throws Exception {
+        System.clearProperty("REDPEN_HOME");
         assertEquals(new File(""), Configuration.builder().build().getHome());
     }
 
@@ -106,7 +107,8 @@ public class ConfigurationTest {
 
     @Test
     public void findFileLooksInWorkingDirectoryFirst() throws Exception {
-        assertEquals(new File("src"), Configuration.builder().build().findFile("src"));
+        String localFile = new File(".").list()[0];
+        assertEquals(new File(localFile), Configuration.builder().build().findFile(localFile));
     }
 
     @Test
