@@ -51,7 +51,7 @@ public class InvalidWordValidatorTest {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidWord").addAttribute("list", "foolish"))
                 .build();
-        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
 
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
@@ -71,7 +71,7 @@ public class InvalidWordValidatorTest {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidWord").addAttribute("list", "foolish"))
                 .build();
-        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(documents.get(0).getLastSection().getParagraph(0).getSentence(0));

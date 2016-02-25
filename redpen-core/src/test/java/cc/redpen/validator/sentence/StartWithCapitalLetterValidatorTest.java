@@ -48,7 +48,7 @@ public class StartWithCapitalLetterValidatorTest {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter"))
                 .build();
-        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(documents.get(0).getLastSection().getParagraph(0).getSentence(0));
@@ -66,7 +66,7 @@ public class StartWithCapitalLetterValidatorTest {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter"))
                 .build();
-        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(documents.get(0).getLastSection().getParagraph(0).getSentence(0));
@@ -84,7 +84,7 @@ public class StartWithCapitalLetterValidatorTest {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter").addAttribute("list", "iPhone"))
                 .build();
-        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(documents.get(0).getLastSection().getParagraph(0).getSentence(0));
@@ -102,7 +102,7 @@ public class StartWithCapitalLetterValidatorTest {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter").addAttribute("list", "iPhone"))
                 .build();
-        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(documents.get(0).getLastSection().getParagraph(0).getSentence(0));
@@ -120,7 +120,7 @@ public class StartWithCapitalLetterValidatorTest {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter").addAttribute("list", "iPhone"))
                 .build();
-        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(documents.get(0).getLastSection().getParagraph(0).getSentence(0));
@@ -138,7 +138,7 @@ public class StartWithCapitalLetterValidatorTest {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter").addAttribute("list", "iPhone"))
                 .build();
-        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(documents.get(0).getLastSection().getParagraph(0).getSentence(0));

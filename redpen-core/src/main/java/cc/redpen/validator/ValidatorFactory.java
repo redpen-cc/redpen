@@ -19,7 +19,6 @@ package cc.redpen.validator;
 
 import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
-import cc.redpen.config.SymbolTable;
 import cc.redpen.config.ValidatorConfiguration;
 
 import java.lang.reflect.Constructor;
@@ -50,14 +49,13 @@ public class ValidatorFactory {
         Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration(validatorName))
                 .build();
-        return getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
+        return getInstance(conf.getValidatorConfigs().get(0), conf);
     }
 
     // store validator constructors to save reflection API call costs
     private static final Map<String, Constructor> validatorConstructorMap = new ConcurrentHashMap<>();
 
-    public static Validator getInstance(ValidatorConfiguration config, SymbolTable symbolTable)
-            throws RedPenException {
+    public static Validator getInstance(ValidatorConfiguration config, Configuration globalConfig) throws RedPenException {
         Constructor<?> constructor = validatorConstructorMap.computeIfAbsent(config.getValidatorClassName(), validatorClassName -> {
             try {
                 for (String validatorPackage : VALIDATOR_PACKAGES) {
@@ -85,7 +83,7 @@ public class ValidatorFactory {
         }
         try {
             Validator validator = (Validator) constructor.newInstance();
-            validator.preInit(config, symbolTable);
+            validator.preInit(config, globalConfig);
             return validator;
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);

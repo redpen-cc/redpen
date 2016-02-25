@@ -46,7 +46,7 @@ public class InvalidExpressionValidatorTest {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression").addAttribute("list", "may"))
                 .build();
-        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(new Sentence("The experiments may be true.", 0));
@@ -58,7 +58,7 @@ public class InvalidExpressionValidatorTest {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression").addAttribute("list", "may"))
                 .build();
-        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(new Sentence("", 0));

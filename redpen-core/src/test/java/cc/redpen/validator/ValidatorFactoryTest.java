@@ -41,7 +41,7 @@ public class ValidatorFactoryTest {
                 .build();
         try {
             ValidatorFactory.getInstance(
-                    conf.getValidatorConfigs().get(0), conf.getSymbolTable());
+                    conf.getValidatorConfigs().get(0), conf);
         } catch (RedPenException e) {
             fail();
         }
@@ -53,7 +53,7 @@ public class ValidatorFactoryTest {
                 .addValidatorConfig(new ValidatorConfiguration("Foobar"))
                 .build();
         ValidatorFactory.getInstance(
-                conf.getValidatorConfigs().get(0), conf.getSymbolTable());
+                conf.getValidatorConfigs().get(0), conf);
     }
 
     @Test(expected = RuntimeException.class)
@@ -62,7 +62,7 @@ public class ValidatorFactoryTest {
                 .addValidatorConfig(new ValidatorConfiguration("NotImplementInterface"))
                 .build();
         ValidatorFactory.getInstance(
-                conf.getValidatorConfigs().get(0), conf.getSymbolTable());
+                conf.getValidatorConfigs().get(0), conf);
     }
 
     @Test(expected = RuntimeException.class)
@@ -71,7 +71,7 @@ public class ValidatorFactoryTest {
                 .addValidatorConfig(new ValidatorConfiguration("NoConstructorWithConfigs"))
                 .build();
         ValidatorFactory.getInstance(
-                conf.getValidatorConfigs().get(0), conf.getSymbolTable());
+                conf.getValidatorConfigs().get(0), conf);
     }
 
 }

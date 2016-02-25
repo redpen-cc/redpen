@@ -19,6 +19,7 @@ package cc.redpen.validator;
 
 
 import cc.redpen.RedPenException;
+import cc.redpen.config.Configuration;
 import cc.redpen.config.SymbolTable;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
@@ -31,6 +32,7 @@ import cc.redpen.util.RuleExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.text.MessageFormat;
 import java.util.*;
 
@@ -44,7 +46,7 @@ public abstract class Validator {
 
     private ResourceBundle errorMessages = null;
     private ValidatorConfiguration config;
-    private SymbolTable symbolTable;
+    private Configuration globalConfig;
 
     public Validator() {
         setLocale(Locale.getDefault());
@@ -111,9 +113,9 @@ public abstract class Validator {
         return Collections.emptyList();
     }
 
-    final void preInit(ValidatorConfiguration config, SymbolTable symbolTable) throws RedPenException {
+    final void preInit(ValidatorConfiguration config, Configuration globalConfig) throws RedPenException {
         this.config = config;
-        this.symbolTable = symbolTable;
+        this.globalConfig = globalConfig;
         init();
     }
 
@@ -197,7 +199,11 @@ public abstract class Validator {
     }
 
     protected SymbolTable getSymbolTable() {
-        return symbolTable;
+        return globalConfig.getSymbolTable();
+    }
+
+    protected File findFile(String relativePath) throws RedPenException {
+        return globalConfig.findFile(relativePath);
     }
 
     /**
