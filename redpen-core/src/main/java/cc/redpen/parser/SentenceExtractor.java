@@ -55,7 +55,7 @@ public class SentenceExtractor {
      *
      * @param fullStopList set of end of sentence characters
      */
-    SentenceExtractor(char[] fullStopList) {
+    SentenceExtractor(char...fullStopList) {
         this(fullStopList, extractRightQuotations(Configuration.builder().build().getSymbolTable()));
     }
 
@@ -77,7 +77,7 @@ public class SentenceExtractor {
         this.rightQuotationList = rightQuotationList;
         this.fullStopPattern = this.constructEndSentencePattern();
         this.endOfSentenceDetector = new EndOfSentenceDetector(
-                this.fullStopPattern, this.WHITE_WORDS);
+                this.fullStopPattern, WHITE_WORDS);
     }
 
     private static char[] extractPeriods(SymbolTable symbolTable) {
@@ -133,8 +133,7 @@ public class SentenceExtractor {
     }
 
     private static <E> List<E> generateUmList(E... args) {
-        List<E> list = new ArrayList<>(Arrays.asList(args));
-        return list;
+        return new ArrayList<>(Arrays.asList(args));
     }
 
     /**
