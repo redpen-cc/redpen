@@ -40,10 +40,8 @@ public class SampleDocumentGenerator {
      * @param parser    document syntax: wiki, markdown or plain
      * @return DocumentCollection object
      */
-    public static List<Document> generateOneFileDocument(String docString,
-                                                             DocumentParser parser) throws RedPenException {
-        Configuration configuration = new Configuration.ConfigurationBuilder()
-                .setLanguage("en").build();
+    public static List<Document> generateOneFileDocument(String docString, DocumentParser parser) throws RedPenException {
+        Configuration configuration = Configuration.builder().build();
         List<Document> docs = new ArrayList<>();
         docs.add(parser.parse(docString, new SentenceExtractor(configuration.getSymbolTable()), configuration.getTokenizer()));
         return docs;

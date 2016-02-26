@@ -46,7 +46,7 @@ public class AsciiDocParserTest {
 
     @Test(expected = NullPointerException.class)
     public void testNullDocument() throws Exception {
-        Configuration configuration = new Configuration.ConfigurationBuilder().build();
+        Configuration configuration = Configuration.builder().build();
         DocumentParser parser = DocumentParser.ASCIIDOC;
         InputStream is = null;
         parser.parse(is, new SentenceExtractor(configuration.getSymbolTable()), configuration.getTokenizer());
@@ -130,7 +130,7 @@ public class AsciiDocParserTest {
         assertEquals(2, firstSection.getNumberOfParagraphs());
         assertEquals(0, firstSection.getNumberOfSubsections());
 
-        Configuration configuration = new Configuration.ConfigurationBuilder()
+        Configuration configuration = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Spelling"))
                 .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol")).build();
 
@@ -435,7 +435,7 @@ public class AsciiDocParserTest {
         Document doc = null;
         try {
             InputStream in = new FileInputStream(this.getClass().getClassLoader().getResource("asciidoc/" + filename).getFile());
-            Configuration configuration = new Configuration.ConfigurationBuilder().setLanguage(lang).build();
+            Configuration configuration = Configuration.builder().setLanguage(lang).build();
             doc = parser.parse(
                     in,
                     new SentenceExtractor(configuration.getSymbolTable()),
@@ -464,7 +464,7 @@ public class AsciiDocParserTest {
         DocumentParser parser = DocumentParser.ASCIIDOC;
         Document doc = null;
         try {
-            Configuration configuration = new Configuration.ConfigurationBuilder().build();
+            Configuration configuration = Configuration.builder().build();
             doc = parser.parse(
                     inputDocumentString,
                     new SentenceExtractor(configuration.getSymbolTable()),

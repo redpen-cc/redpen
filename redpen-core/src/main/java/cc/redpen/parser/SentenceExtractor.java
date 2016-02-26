@@ -56,7 +56,7 @@ public class SentenceExtractor {
      * @param fullStopList set of end of sentence characters
      */
     SentenceExtractor(char[] fullStopList) {
-        this(fullStopList, extractRightQuotations(new Configuration.ConfigurationBuilder().build().getSymbolTable()));
+        this(fullStopList, extractRightQuotations(Configuration.builder().build().getSymbolTable()));
     }
 
     /**

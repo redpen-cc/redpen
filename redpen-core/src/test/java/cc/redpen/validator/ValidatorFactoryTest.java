@@ -23,8 +23,6 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import org.junit.Test;
 
-import java.util.List;
-
 import static junit.framework.Assert.fail;
 
 class NotImplementInterfaceValidator {}
@@ -38,8 +36,7 @@ class NoConstructorWithConfigsValidator extends Validator {
 public class ValidatorFactoryTest {
     @Test
     public void testCreateValidator() {
-        Configuration conf = new Configuration.ConfigurationBuilder()
-                .setLanguage("en")
+        Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SentenceLength"))
                 .build();
         try {
@@ -52,8 +49,7 @@ public class ValidatorFactoryTest {
 
     @Test(expected = RedPenException.class)
     public void testThrowExceptionWhenCreateNonExistValidator() throws RedPenException {
-        Configuration conf = new Configuration.ConfigurationBuilder()
-                .setLanguage("en")
+        Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Foobar"))
                 .build();
         ValidatorFactory.getInstance(
@@ -62,8 +58,7 @@ public class ValidatorFactoryTest {
 
     @Test(expected = RuntimeException.class)
     public void testThrowExceptionWhenCreateValidatorNotImplementsInterface() throws RedPenException {
-        Configuration conf = new Configuration.ConfigurationBuilder()
-                .setLanguage("en")
+        Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("NotImplementInterface"))
                 .build();
         ValidatorFactory.getInstance(
@@ -72,8 +67,7 @@ public class ValidatorFactoryTest {
 
     @Test(expected = RuntimeException.class)
     public void testThrowExceptionWhenCreateValidatorWithoutConstructorWithConfigs() throws RedPenException {
-        Configuration conf = new Configuration.ConfigurationBuilder()
-                .setLanguage("en")
+        Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("NoConstructorWithConfigs"))
                 .build();
         ValidatorFactory.getInstance(

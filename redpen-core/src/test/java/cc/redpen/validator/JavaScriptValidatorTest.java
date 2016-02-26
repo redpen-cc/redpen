@@ -33,8 +33,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import javax.script.ScriptEngine;
-import javax.script.ScriptException;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -69,11 +67,11 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         Files.write(Paths.get(validatorJS.getAbsolutePath()), content2.getBytes(Charset.forName("UTF-8")));
         validatorJS.deleteOnExit();
 
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("JavaScript").addAttribute("script-path", javaScriptValidatorsDir.getAbsolutePath()))
                 .build();
 
-        Document document = new Document.DocumentBuilder()
+        Document document = Document.builder()
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("the good item is a good example.", 1))
@@ -112,7 +110,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
                         "_JavaScriptValidatorTest.calledFunctions.add('validateSection');" +
                         // add ValidationError
                         "addLocalizedError(section.getHeaderContent(0), 'section');}"));
-        Document document = new Document.DocumentBuilder()
+        Document document = Document.builder()
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("the good item is a good example.", 1))
@@ -149,7 +147,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
                         "function validateSentence(sentence) {" +
                         // add ValidationError
                         "addLocalizedError(sentence, '[placeholder]');}"));
-        Document document = new Document.DocumentBuilder()
+        Document document = Document.builder()
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("the good item is a good example.", 1))
@@ -175,7 +173,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
                                          + "addLocalizedError(sentence, 'runtime environment is confined');"
                                          + "}"
                                          + "}"));
-        Document document = new Document.DocumentBuilder()
+        Document document = Document.builder()
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("the good item is a good example.", 1))

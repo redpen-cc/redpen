@@ -169,8 +169,7 @@ public class QuotationValidatorTest {
 
     @Test
     public void testAsciiExceptionCase() throws RedPenException {
-        Configuration conf = new Configuration.ConfigurationBuilder()
-                .setLanguage("en")
+        Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", false))
                 .build();
         Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
@@ -184,8 +183,7 @@ public class QuotationValidatorTest {
 
     @Test
     public void testAsciiDoubleQuotationMakrk() throws RedPenException {
-        Configuration conf = new Configuration.ConfigurationBuilder()
-                .setLanguage("en")
+        Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", false))
                 .build();
         Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
@@ -199,8 +197,7 @@ public class QuotationValidatorTest {
 
     @Test
     public void testNoQuotationMakrk() throws RedPenException {
-        Configuration conf = new Configuration.ConfigurationBuilder()
-                .setLanguage("en")
+        Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", true))
                 .build();
         Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
@@ -214,8 +211,7 @@ public class QuotationValidatorTest {
 
     @Test
     public void testNoInput() throws RedPenException {
-        Configuration conf = new Configuration.ConfigurationBuilder()
-                .setLanguage("en")
+        Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", true))
                 .build();
         Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
@@ -262,8 +258,7 @@ public class QuotationValidatorTest {
 
     @Test
     public void testLeftAsciiDoubleQuotationsWihtoutSpace() throws RedPenException {
-        Configuration conf = new Configuration.ConfigurationBuilder()
-                .setLanguage("en")
+        Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", true))
                 .build();
         Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
@@ -288,8 +283,7 @@ public class QuotationValidatorTest {
 
     @Test
     public void testRightAsciiDoubleQuotationsWihtoutSpace() throws RedPenException {
-        Configuration conf = new Configuration.ConfigurationBuilder()
-                .setLanguage("en")
+        Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", true))
                 .build();
         Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
@@ -303,8 +297,7 @@ public class QuotationValidatorTest {
 
     @Test
     public void testDoubleQuotationsWithNonAsciiPeriod() throws RedPenException {
-        Configuration conf = new Configuration.ConfigurationBuilder()
-                .setLanguage("en")
+        Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", true))
                 .addSymbol(new Symbol(SymbolType.FULL_STOP, '。'))
                 .build();

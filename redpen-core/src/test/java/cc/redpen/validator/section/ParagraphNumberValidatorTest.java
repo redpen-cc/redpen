@@ -60,7 +60,7 @@ public class ParagraphNumberValidatorTest {
         Section section = new Section(0);
         section.appendParagraph(new Paragraph());
 
-        Document document = new Document.DocumentBuilder().appendSection(section).build();
+        Document document = Document.builder().appendSection(section).build();
 
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);

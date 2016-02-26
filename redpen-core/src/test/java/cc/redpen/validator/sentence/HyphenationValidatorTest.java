@@ -37,7 +37,7 @@ public class HyphenationValidatorTest {
 
         List<Document> documents = new ArrayList<>();
         documents.add(
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                Document.builder(new WhiteSpaceTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("Hyphenation is very useful to stop a sentence such as bad tempered " +

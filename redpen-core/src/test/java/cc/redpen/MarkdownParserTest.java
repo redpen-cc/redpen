@@ -39,7 +39,6 @@ import java.util.List;
 import static cc.redpen.config.SymbolType.COMMA;
 import static cc.redpen.config.SymbolType.FULL_STOP;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 public class MarkdownParserTest {
 
@@ -49,7 +48,7 @@ public class MarkdownParserTest {
 
     @Test(expected = NullPointerException.class)
     public void testNullDocument() throws Exception {
-        Configuration configuration = new Configuration.ConfigurationBuilder().build();
+        Configuration configuration = Configuration.builder().build();
         DocumentParser parser = DocumentParser.MARKDOWN;
         InputStream is = null;
         parser.parse(is, new SentenceExtractor(configuration.getSymbolTable()), configuration.getTokenizer());
@@ -815,7 +814,7 @@ public class MarkdownParserTest {
         sampleText += "わたしもお寿司が大好きです。\n";
         sampleText += "\n";
 
-        Document doc = createFileContent(sampleText, new Configuration.ConfigurationBuilder().setLanguage("ja").build());
+        Document doc = createFileContent(sampleText, Configuration.builder("ja").build());
 
         assertNotNull("doc is null", doc);
         assertEquals(2, doc.size());
@@ -844,8 +843,7 @@ public class MarkdownParserTest {
     public void testGenerateJapaneseDocument() {
         String sampleText = "埼玉は東京の北に存在する。";
         sampleText += "大きなベッドタウンであり、多くの人が住んでいる。";
-        Configuration conf = new Configuration.ConfigurationBuilder()
-                .setLanguage("ja").build();
+        Configuration conf = Configuration.builder("ja").build();
 
         Document doc = createFileContent(sampleText, conf);
         Section firstSections = doc.getSection(0);
@@ -857,8 +855,7 @@ public class MarkdownParserTest {
     public void testGenerateJapaneseWithMultipleSentencesInOneLine() {
         String sampleText = "それは異なる．たとえば，\\n" +
                 "以下のとおりである．";
-        Configuration conf = new Configuration.ConfigurationBuilder()
-                .setLanguage("ja")
+        Configuration conf = Configuration.builder("ja")
                 .addSymbol(new Symbol(FULL_STOP, '．', "."))
                 .addSymbol(new Symbol(COMMA, '，', "、"))
                 .build();
@@ -877,15 +874,12 @@ public class MarkdownParserTest {
     @Test
     public void testErrorPositionOfMarkdownParser() throws RedPenException {
         String sampleText = "This is a good day。\n"; // invalid end of sentence symbol
-        Configuration conf = new Configuration.ConfigurationBuilder()
-                .setLanguage("en")
-                .build();
+        Configuration conf = Configuration.builder().build();
         List<Document> documents = new ArrayList<>();
         documents.add(createFileContent(sampleText, conf));
 
-        Configuration configuration = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(
-                        new ValidatorConfiguration("InvalidSymbol"))
+        Configuration configuration = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
                 .build();
 
         RedPen redPen = new RedPen(configuration);
@@ -900,15 +894,12 @@ public class MarkdownParserTest {
     @Test
     public void testInvalidSentenceInBlockquote() throws UnsupportedEncodingException, RedPenException {
         String sampleText = "> This is a good day。\n"; // invalid end of sentence symbol
-        Configuration conf = new Configuration.ConfigurationBuilder()
-                .setLanguage("en")
-                .build();
+        Configuration conf = Configuration.builder().build();
         List<Document> documents = new ArrayList<>();
         documents.add(createFileContent(sampleText, conf));
 
-        Configuration configuration = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(
-                        new ValidatorConfiguration("InvalidSymbol"))
+        Configuration configuration = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
                 .build();
         RedPen redPen = new RedPen(configuration);
         List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
@@ -931,7 +922,7 @@ public class MarkdownParserTest {
         DocumentParser parser = DocumentParser.MARKDOWN;
         Document doc = null;
         try {
-            Configuration configuration = new Configuration.ConfigurationBuilder().build();
+            Configuration configuration = Configuration.builder().build();
             doc = parser.parse(inputDocumentString, new SentenceExtractor(configuration.getSymbolTable()),
                     configuration.getTokenizer());
         } catch (RedPenException e) {

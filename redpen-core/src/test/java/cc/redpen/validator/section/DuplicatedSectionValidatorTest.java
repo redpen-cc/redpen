@@ -35,13 +35,13 @@ public class DuplicatedSectionValidatorTest {
 
     @Test
     public void testDetectDuplicatedSection() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("DuplicatedSection"))
-                .setLanguage("en").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();
         documents.add(
-                new Document.DocumentBuilder()
+                Document.builder()
                         .addSection(1)
                         .addSectionHeader("this is header")
                         .addParagraph()
@@ -57,16 +57,15 @@ public class DuplicatedSectionValidatorTest {
         Assert.assertEquals(2, errors.get(documents.get(0)).size());
     }
 
-
     @Test
     public void testDetectNonDuplicatedSection() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("DuplicatedSection"))
-                .setLanguage("en").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();
         documents.add(
-                new Document.DocumentBuilder()
+                Document.builder()
                         .addSection(1)
                         .addSectionHeader("foobar")
                         .addParagraph()
@@ -84,13 +83,13 @@ public class DuplicatedSectionValidatorTest {
 
     @Test
     public void testDetectDuplicatedSectionWithSameHeader() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("DuplicatedSection"))
-                .setLanguage("en").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();
         documents.add(
-                new Document.DocumentBuilder()
+                Document.builder()
                         .addSection(1)
                         .addSectionHeader("this is header.")
                         .addParagraph()
@@ -108,14 +107,14 @@ public class DuplicatedSectionValidatorTest {
 
     @Test
     public void testDetectNonDuplicatedSectionWithLowThreshold() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("DuplicatedSection").addAttribute("threshold", "0.0"))
-                .setLanguage("en").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();
         // create two section which contains only one same word, "baz"
         documents.add(
-        new Document.DocumentBuilder()
+        Document.builder()
                 .addSection(1)
                 .addSectionHeader("foobar")
                 .addParagraph()

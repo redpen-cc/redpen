@@ -17,21 +17,19 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.model.Sentence;
-import cc.redpen.validator.ValidationError;
-import org.junit.Test;
-
 import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
+import cc.redpen.model.Sentence;
+import cc.redpen.validator.ValidationError;
+import org.junit.Test;
 
 import java.io.File;
-import java.util.Map;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -181,13 +179,12 @@ public class KatakanaEndHyphenValidatorTest {
 
     @Test
     public void testHonorsSkipWordList() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(new ValidatorConfiguration("KatakanaEndHyphen")
-                        .addAttribute("list", "コーヒー"))
-                .setLanguage("ja").build();
+        Configuration config = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("KatakanaEndHyphen").addAttribute("list", "コーヒー"))
+                .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                new Document.DocumentBuilder()
+                Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("濃いコーヒーは胃にわるい。", 1))
@@ -200,13 +197,13 @@ public class KatakanaEndHyphenValidatorTest {
 
     @Test
     public void testHonorsSkipWordDict() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("KatakanaEndHyphen")
                         .addAttribute("dict", "src/test/resources/cc/redpen/validator/KatakanaEndHyphenValidatorTest-skipworddict.txt")) // XXX
-                .setLanguage("ja").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                new Document.DocumentBuilder()
+                Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("コーヒーと紅茶と、どちらがお好きですか。", 1))

@@ -65,7 +65,7 @@ public class PlainTextParserTest {
 
     private Document generateDocument(String sampleText, String lang) {
         Document doc = null;
-        Configuration configuration = new Configuration.ConfigurationBuilder().setLanguage(lang).build();
+        Configuration configuration = Configuration.builder().setLanguage(lang).build();
 
         try {
             doc = parser.parse(sampleText, new SentenceExtractor(configuration.getSymbolTable()), configuration.getTokenizer());
@@ -77,10 +77,6 @@ public class PlainTextParserTest {
 
     @Before
     public void setup() {
-        Configuration configuration = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(
-                        new ValidatorConfiguration("SentenceLength").addAttribute("max_length", "10"))
-                .build();
         parser = DocumentParser.PLAIN;
     }
 
@@ -325,18 +321,15 @@ public class PlainTextParserTest {
     @Test
     public void testErrorPositionOfPlainTextParser() throws RedPenException {
         String sampleText = "This is a good day。\n"; // invalid end of sentence symbol
-        Configuration conf = new Configuration.ConfigurationBuilder()
-                .setLanguage("en")
-                .build();
+        Configuration conf = Configuration.builder().build();
         List<Document> documents = new ArrayList<>();
 
         DocumentParser parser = DocumentParser.PLAIN;
         Document doc = parser.parse(sampleText, new SentenceExtractor(conf.getSymbolTable()), conf.getTokenizer());
         documents.add(doc);
 
-        Configuration configuration = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(
-                        new ValidatorConfiguration("InvalidSymbol"))
+        Configuration configuration = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
                 .build();
 
         RedPen redPen = new RedPen(configuration);

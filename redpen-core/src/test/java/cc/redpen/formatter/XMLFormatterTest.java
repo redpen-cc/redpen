@@ -103,12 +103,9 @@ public class XMLFormatterTest extends Validator {
     public void testConvertedValidationErrorWithErrorPosition() throws RedPenException {
         // TODO: shorten the procedure before getting formatter result.
         String sampleText = "This is a good day。\n"; // invalid end of sentence symbol
-        Configuration conf = new Configuration.ConfigurationBuilder()
-                .setLanguage("en")
-                .build();
-        Configuration configuration = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(
-                        new ValidatorConfiguration("InvalidSymbol"))
+        Configuration conf = Configuration.builder().build();
+        Configuration configuration = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
                 .build();
 
         List<cc.redpen.model.Document> documents = new ArrayList<>();

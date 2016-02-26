@@ -76,12 +76,12 @@ public class EndOfSentenceValidatorTest {
 
     @Test
     public void testJapaneseInvalidEndOfSentence() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("EndOfSentence"))
-                .setLanguage("ja").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                new Document.DocumentBuilder(new JapaneseTokenizer())
+                Document.builder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("彼は言った，“今日は誕生日”。", 1))
@@ -95,9 +95,8 @@ public class EndOfSentenceValidatorTest {
     @Test
     public void testErrorPosition() throws RedPenException {
         String sampleText = "He said \"that is right\".";
-        Configuration configuration = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(
-                        new ValidatorConfiguration("EndOfSentence"))
+        Configuration configuration = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("EndOfSentence"))
                 .build();
         DocumentParser parser = DocumentParser.MARKDOWN;
         List<Document> documents = new ArrayList<>();

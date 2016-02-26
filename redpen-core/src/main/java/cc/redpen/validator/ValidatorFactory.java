@@ -47,8 +47,7 @@ public class ValidatorFactory {
     }
 
     public static Validator getInstance(String validatorName) throws RedPenException {
-        Configuration conf = new Configuration.ConfigurationBuilder()
-                .setLanguage("en")
+        Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration(validatorName))
                 .build();
         return getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());

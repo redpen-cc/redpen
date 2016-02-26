@@ -15,13 +15,13 @@ public abstract class BaseValidatorTest {
   }
 
   protected Configuration getConfiguration(String language) {
-    return new Configuration.ConfigurationBuilder()
+    return Configuration.builder()
       .addValidatorConfig(new ValidatorConfiguration(validatorName))
       .setLanguage(language).build();
   }
 
   protected Document prepareSimpleDocument(String sentrence) {
-    return new Document.DocumentBuilder(config.getTokenizer())
+    return Document.builder(config.getTokenizer())
       .addSection(1)
       .addParagraph()
       .addSentence(new Sentence(sentrence, 1))

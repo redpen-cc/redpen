@@ -29,7 +29,7 @@ public class DocumentCollectionTest {
     @Test
     public void testCreateDocumentCollection() {
         List<Document> docs = new ArrayList<>();
-        docs.add(new Document.DocumentBuilder()
+        docs.add(Document.builder()
                 .setFileName("Foobar")
                 .addSection(0)
                 .addSectionHeader("baz")
@@ -56,14 +56,14 @@ public class DocumentCollectionTest {
     @Test
     public void testDocumentCollectionWithMultipleDocument() {
         List<Document> docs = new ArrayList<>();
-        docs.add(new Document.DocumentBuilder()
+        docs.add(Document.builder()
                 .setFileName("doc1")
                 .addSection(0)
                 .addSectionHeader("sec1")
                 .addParagraph()
                 .addSentence(new Sentence("sentence00", 1))
                 .addSentence(new Sentence("sentence01", 2)).build());
-        docs.add(new Document.DocumentBuilder()
+        docs.add(Document.builder()
                 .setFileName("doc2")
                 .addSection(0)
                 .addSectionHeader("sec2")

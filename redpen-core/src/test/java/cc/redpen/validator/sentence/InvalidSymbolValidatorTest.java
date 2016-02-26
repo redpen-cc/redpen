@@ -44,15 +44,14 @@ public class InvalidSymbolValidatorTest {
     public void testWithInvalidSymbol() throws RedPenException {
         List<Document> documents = new ArrayList<>();
         documents.add(
-                new Document.DocumentBuilder(new JapaneseTokenizer())
+                Document.builder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("わたしはカラオケが大好き！", 1))
                         .build());
 
-        Configuration conf = new Configuration.ConfigurationBuilder()
+        Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
-                .setLanguage("en")
                 .addSymbol(new Symbol(EXCLAMATION_MARK, '!', "！"))
                 .build();
 
@@ -67,15 +66,14 @@ public class InvalidSymbolValidatorTest {
     public void testWithoutInvalidSymbol() throws RedPenException {
         List<Document> documents = new ArrayList<>();
         documents.add(
-                new Document.DocumentBuilder()
+                Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("I like Karaoke", 1))
                         .build());
 
-        Configuration conf = new Configuration.ConfigurationBuilder()
+        Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
-                .setLanguage("en")
                 .addSymbol(new Symbol(EXCLAMATION_MARK, '!', "！"))
                 .build();
 
@@ -89,15 +87,14 @@ public class InvalidSymbolValidatorTest {
 
         List<Document> documents = new ArrayList<>();
         documents.add(
-                new Document.DocumentBuilder()
+                Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("わたしは、カラオケが大好き！", 1)) // NOTE: two invalid symbols
                         .build());
 
-        Configuration conf = new Configuration.ConfigurationBuilder()
+        Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
-                .setLanguage("en")
                 .addSymbol(new Symbol(EXCLAMATION_MARK, '!', "！"))
                 .addSymbol(new Symbol(COMMA, ',', "、"))
                 .build();

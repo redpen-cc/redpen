@@ -591,8 +591,7 @@ public class WikiParserTest {
         String sampleText = "埼玉は東京の北に存在する。";
         sampleText += "大きなベッドタウンであり、多くの人が住んでいる。";
 
-        Configuration config =
-                new Configuration.ConfigurationBuilder().setLanguage("ja").build();
+        Configuration config = Configuration.builder("ja").build();
         Document doc = createFileContent(sampleText, config);
 
         Section firstSections = doc.getSection(0);
@@ -603,15 +602,12 @@ public class WikiParserTest {
     @Test
     public void testErrorPositionOfMarkdownParser() throws RedPenException {
         String sampleText = "This is a good day。\n"; // invalid end of sentence symbol
-        Configuration conf = new Configuration.ConfigurationBuilder()
-                .setLanguage("en")
-                .build();
+        Configuration conf = Configuration.builder().build();
         List<Document> documents = new ArrayList<>();
         documents.add(createFileContent(sampleText, conf));
 
-        Configuration configuration = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(
-                        new ValidatorConfiguration("InvalidSymbol"))
+        Configuration configuration = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
                 .build();
 
         RedPen redPen = new RedPen(configuration);
@@ -634,7 +630,7 @@ public class WikiParserTest {
     }
 
     private Document createFileContent(String inputDocumentString) {
-        Configuration conf = new Configuration.ConfigurationBuilder().build();
+        Configuration conf = Configuration.builder().build();
         DocumentParser parser = DocumentParser.WIKI;
         Document doc = null;
         try {

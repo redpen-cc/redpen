@@ -29,7 +29,7 @@ public class JSONBySentenceFormatterTest extends Validator {
         List<ValidationError> errors = new ArrayList<>();
         setErrorList(errors);
         addLocalizedError(new Sentence("testing JSONFormatter", 1));
-        Document document = new Document.DocumentBuilder().setFileName("docName").build();
+        Document document = Document.builder().setFileName("docName").build();
         String result = formatter.format(document, errors);
 
         JSONObject jsonObject = new JSONObject(result);
@@ -54,12 +54,9 @@ public class JSONBySentenceFormatterTest extends Validator {
     @Test
     public void testFormatErrorsFromMarkdownParser() throws RedPenException, JSONException {
         String sampleText = "This is a good day。"; // invalid end of sentence symbol
-        Configuration conf = new Configuration.ConfigurationBuilder()
-                .setLanguage("en")
-                .build();
-        Configuration configuration = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(
-                        new ValidatorConfiguration("InvalidSymbol"))
+        Configuration conf = Configuration.builder().build();
+        Configuration configuration = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
                 .build();
 
         List<Document> documents = new ArrayList<>();

@@ -55,7 +55,7 @@ class MarkdownParser extends BaseDocumentParser {
     @Override
     public Document parse(InputStream inputStream, Optional<String> fileName, SentenceExtractor sentenceExtractor, RedPenTokenizer tokenizer)
             throws RedPenException {
-        Document.DocumentBuilder documentBuilder = new Document.DocumentBuilder(tokenizer);
+        Document.DocumentBuilder documentBuilder = Document.builder(tokenizer);
         fileName.ifPresent(documentBuilder::setFileName);
 
         StringBuilder sb = new StringBuilder();

@@ -50,7 +50,7 @@ public class FormatterTest extends Validator {
         setErrorList(errors);
         addLocalizedError(new Sentence("sentence", 1));
         Map<Document, List<ValidationError>> docErrorsMap = new HashMap<>();
-        Document document = new Document.DocumentBuilder().build();
+        Document document = Document.builder().build();
         docErrorsMap.put(document, errors);
         String result = formatter.format(docErrorsMap);
         Pattern p = Pattern.compile("foobar");

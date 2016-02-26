@@ -42,15 +42,15 @@ public class InvalidWordValidatorTest {
     @Test
     public void testSimpleRun() throws RedPenException {
         List<Document> documents = new ArrayList<>();documents.add(
-                new Document.DocumentBuilder()
+                Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("He is a foolish guy.", 1))
                         .build());
 
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidWord").addAttribute("list", "foolish"))
-                .setLanguage("en").build();
+                .build();
         Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
 
         List<ValidationError> errors = new ArrayList<>();
@@ -62,15 +62,15 @@ public class InvalidWordValidatorTest {
     @Test
     public void testVoid() throws RedPenException {
         List<Document> documents = new ArrayList<>();documents.add(
-                new Document.DocumentBuilder()
+                Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("", 1))
                         .build());
 
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidWord").addAttribute("list", "foolish"))
-                .setLanguage("en").build();
+                .build();
         Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
@@ -80,12 +80,12 @@ public class InvalidWordValidatorTest {
 
     @Test
     public void testLoadDefaultDictionary() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidWord"))
-                .setLanguage("en").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                new Document.DocumentBuilder()
+                Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("he is a foolish man.", 1))
@@ -100,12 +100,12 @@ public class InvalidWordValidatorTest {
 
     @Test
     public void testLoadUserDictionary() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidWord").addAttribute("list", "boom,domo"))
-                .setLanguage("en").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                new Document.DocumentBuilder()
+                Document.builder()
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("Domo is a greeting word in Japan.", 1))
@@ -113,20 +113,20 @@ public class InvalidWordValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(1, errors.get(documents.get(0)).size());
+        assertEquals(1, errors.get(documents.get(0)).size());
     }
 
     /**
      * Assert not throw a exception even when there is no default dictionary.
      */
-    @Test(expected = RedPenException.class)
-    public void testLoadNotExistDefaultDictionary() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+    @Test
+    public void testLoadNotExistingDefaultDictionary() throws RedPenException {
+        Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("InvalidWord"))
-                .setLanguage("ja").build(); // NOTE: no dictionary for japanese or other languages whose words are not split by white space.
+                .build(); // NOTE: no dictionary for japanese or other languages whose words are not split by white space.
 
         List<Document> documents = new ArrayList<>();documents.add(
-                new Document.DocumentBuilder(new JapaneseTokenizer())
+                Document.builder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("こんにちは、群馬にきました。", 1))
@@ -134,6 +134,6 @@ public class InvalidWordValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.get(0)).size());
+        assertEquals(0, errors.get(documents.get(0)).size());
     }
 }

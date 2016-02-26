@@ -35,7 +35,7 @@ public class ParenthesizedSentenceValidatorTest {
 
         List<Document> documents = new ArrayList<>();
         documents.add(
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                Document.builder(new WhiteSpaceTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("When it comes to the subject of cake (the sweet and delicious baked delicacy), one should" +

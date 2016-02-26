@@ -37,14 +37,8 @@ public class SpellingUtils {
     protected static void loadDictionary(String lang) {
         if (dictionaries.get(lang) == null) {
             String defaultDictionaryFile = DEFAULT_RESOURCE_PATH + "/spellchecker-" + lang + ".dat";
-            Set<String> dictionary;
-            try {
-                dictionary = new DictionaryLoader<HashSet<String>>(
-                        HashSet::new, (set, line) -> set.add(line.toLowerCase())
-                ).loadCachedFromResource(defaultDictionaryFile, "spell dictionary");
-            } catch (Exception e) {
-                dictionary = new HashSet<>();
-            }
+            Set<String> dictionary = new DictionaryLoader<Set<String>>(HashSet::new, (set, line) -> set.add(line.toLowerCase()))
+              .loadCachedFromResource(defaultDictionaryFile, "spell dictionary");
             dictionaries.put(lang, Collections.unmodifiableSet(dictionary));
         }
     }

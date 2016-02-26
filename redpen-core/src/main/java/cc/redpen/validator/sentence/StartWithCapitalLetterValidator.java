@@ -25,12 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Check if the input sentence start with a capital letter.
@@ -82,9 +77,7 @@ final public class StartWithCapitalLetterValidator extends Validator {
 
     @Override
     protected void init() throws RedPenException {
-
-        String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
-                + "/default-capital-case-exception-list.dat";
+        String defaultDictionaryFile = DEFAULT_RESOURCE_PATH + "/default-capital-case-exception-list.dat";
         whiteList = WORD_LIST.loadCachedFromResource(defaultDictionaryFile, "capital letter exception dictionary");
 
         Optional<String> confFile = getConfigAttribute("dict");

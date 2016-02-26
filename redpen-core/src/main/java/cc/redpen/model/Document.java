@@ -121,6 +121,14 @@ public class Document implements Iterable<Section>, Serializable {
                 '}';
     }
 
+    public static DocumentBuilder builder() {
+        return new DocumentBuilder();
+    }
+
+    public static DocumentBuilder builder(RedPenTokenizer tokenizer) {
+        return new DocumentBuilder(tokenizer);
+    }
+
     public static class DocumentBuilder {
         private final RedPenTokenizer tokenizer;
         boolean built = false;

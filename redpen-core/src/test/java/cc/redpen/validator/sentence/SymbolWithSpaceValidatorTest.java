@@ -50,9 +50,8 @@ public class SymbolWithSpaceValidatorTest extends BaseValidatorTest {
     public void testNotNeedSpace() throws RedPenException {
         Document document = prepareSimpleDocument("I like apple/orange");
 
-        config = new Configuration.ConfigurationBuilder()
+        config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
-                .setLanguage("en")
                 .addSymbol(new Symbol(SLASH, '/'))
                 .build();
 
@@ -65,9 +64,8 @@ public class SymbolWithSpaceValidatorTest extends BaseValidatorTest {
     public void testNeedAfterSpace() throws RedPenException {
         Document document = prepareSimpleDocument("I like her:yes it is");
 
-        config = new Configuration.ConfigurationBuilder()
+        config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
-                .setLanguage("en")
                 .addSymbol(new Symbol(COLON, ':', "", false, true))
                 .build();
 
@@ -82,9 +80,8 @@ public class SymbolWithSpaceValidatorTest extends BaseValidatorTest {
     public void testNeedBeforeSpace() throws RedPenException {
         Document document = prepareSimpleDocument("I like her(Nancy) very much.");
 
-        config = new Configuration.ConfigurationBuilder()
+        config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
-                .setLanguage("en")
                 .addSymbol(new Symbol(LEFT_PARENTHESIS, '(', "", true, false))
                 .build();
 
@@ -99,9 +96,8 @@ public class SymbolWithSpaceValidatorTest extends BaseValidatorTest {
     public void testNeedSpaceInMultiplePosition() throws RedPenException {
         Document document = prepareSimpleDocument("I like her(Nancy)very much.");
 
-        config = new Configuration.ConfigurationBuilder()
+        config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
-                .setLanguage("en")
                 .addSymbol(new Symbol(LEFT_PARENTHESIS, '(', "", true, false))
                 .addSymbol(new Symbol(RIGHT_PARENTHESIS, ')', "", false, true))
                 .build();
@@ -117,9 +113,8 @@ public class SymbolWithSpaceValidatorTest extends BaseValidatorTest {
     public void testReturnOnlyOneForHitBothBeforeAndAfter() throws RedPenException {
         Document document = prepareSimpleDocument("I like 1*10.");
 
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
-                .setLanguage("en")
                 .addSymbol(new Symbol(ASTERISK, '*', "", true, true))
                 .build();
 
@@ -132,9 +127,8 @@ public class SymbolWithSpaceValidatorTest extends BaseValidatorTest {
     @Test
     public void testErrorBeforePosition() throws RedPenException {
         String sampleText = "I like her(Nancy) very much.";
-        Configuration configuration = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(
-                        new ValidatorConfiguration("SymbolWithSpace"))
+        Configuration configuration = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
                 .build();
         DocumentParser parser = DocumentParser.MARKDOWN;
         List<Document> documents = new ArrayList<>();
@@ -154,9 +148,8 @@ public class SymbolWithSpaceValidatorTest extends BaseValidatorTest {
     @Test
     public void testErrorAfterPosition() throws RedPenException {
         String sampleText = "I like her (Nancy)very much.";
-        Configuration configuration = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(
-                        new ValidatorConfiguration("SymbolWithSpace"))
+        Configuration configuration = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
                 .build();
         DocumentParser parser = DocumentParser.MARKDOWN;
         List<Document> documents = new ArrayList<>();

@@ -41,10 +41,8 @@ public class JapaneseStyleValidatorTest {
                 "今日はいい天気ですね。\n" +
                 "昨日は雨だったのだが、持ち直した。\n" +
                 "明日もいい天気だといいですね。";
-        Configuration config = new Configuration.ConfigurationBuilder()
-                .addValidatorConfig(
-                        new ValidatorConfiguration("JapaneseStyle"))
-                .setLanguage("ja")
+        Configuration config = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("JapaneseStyle"))
                 .build();
         DocumentParser parser = DocumentParser.MARKDOWN;
         List<Document> documents = new ArrayList<>();
@@ -64,13 +62,13 @@ public class JapaneseStyleValidatorTest {
 
     @Test
     public void desuMasuStyle() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("JapaneseStyle"))
-                .setLanguage("ja").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();
         documents.add(
-                new Document.DocumentBuilder(new JapaneseTokenizer())
+                Document.builder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("今日はいい天気ですね。", 1))
@@ -85,13 +83,13 @@ public class JapaneseStyleValidatorTest {
 
     @Test
     public void dearuStyle() throws RedPenException {
-        Configuration config = new Configuration.ConfigurationBuilder()
+        Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("JapaneseStyle"))
-                .setLanguage("ja").build();
+                .build();
 
         List<Document> documents = new ArrayList<>();
         documents.add(
-                new Document.DocumentBuilder(new JapaneseTokenizer())
+                Document.builder(new JapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("今日はいい天気である。", 1))

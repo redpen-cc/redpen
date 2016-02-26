@@ -43,15 +43,8 @@ public class WeakExpressionValidator extends Validator {
         super.init();
 
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH + "/weak-expressions-" + getSymbolTable().getLang() + ".dat";
-        try {
-            weakExpressions =
-                    new DictionaryLoader<List<String>>(ArrayList::new, (list, line) -> {
-                        list.add(line.trim().toLowerCase());
-                    }).loadCachedFromResource(defaultDictionaryFile, "weak expressions");
-
-        } catch (Exception ignored) {
-            weakExpressions = new ArrayList<>();
-        }
+        weakExpressions = new DictionaryLoader<List<String>>(ArrayList::new, (list, line) -> list.add(line.trim().toLowerCase()))
+          .loadCachedFromResource(defaultDictionaryFile, "weak expressions");
     }
 
     /**

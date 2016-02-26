@@ -171,9 +171,8 @@ public class SymbolTable implements Serializable, Cloneable {
     public String toString() {
         return "SymbolTable{" +
                 "symbolDictionary=" + symbolDictionary +
-                ", valueDictionary=" + valueDictionary +
-                ", type='" + variant + '\'' +
                 ", lang='" + lang + '\'' +
+                ", variant='" + variant + '\'' +
                 '}';
     }
 

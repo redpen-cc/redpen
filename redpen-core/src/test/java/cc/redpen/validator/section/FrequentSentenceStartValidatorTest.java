@@ -37,7 +37,7 @@ public class FrequentSentenceStartValidatorTest {
         FrequentSentenceStartValidator validator = (FrequentSentenceStartValidator) ValidatorFactory.getInstance("FrequentSentenceStart");
 
         Document document =
-                new Document.DocumentBuilder(new WhiteSpaceTokenizer())
+                Document.builder(new WhiteSpaceTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("When it comes to the Subject Of Cake (the sweet and delicious baked delicacy), one should" +

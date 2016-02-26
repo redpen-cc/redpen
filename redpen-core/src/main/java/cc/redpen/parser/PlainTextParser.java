@@ -49,7 +49,7 @@ final public class PlainTextParser extends BaseDocumentParser implements Seriali
     @Override
     public Document parse(InputStream is, Optional<String> fileName, SentenceExtractor sentenceExtractor, RedPenTokenizer tokenizer)
             throws RedPenException {
-        Document.DocumentBuilder documentBuilder = new Document.DocumentBuilder(tokenizer);
+        Document.DocumentBuilder documentBuilder = Document.builder(tokenizer);
         fileName.ifPresent(documentBuilder::setFileName);
 
         List<Sentence> headers = new ArrayList<>();
