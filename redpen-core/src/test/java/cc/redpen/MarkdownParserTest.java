@@ -24,6 +24,7 @@ import cc.redpen.model.Document;
 import cc.redpen.model.ListBlock;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
+import cc.redpen.parser.BaseParserTest;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
@@ -40,7 +41,7 @@ import static cc.redpen.config.SymbolType.COMMA;
 import static cc.redpen.config.SymbolType.FULL_STOP;
 import static org.junit.Assert.*;
 
-public class MarkdownParserTest {
+public class MarkdownParserTest extends BaseParserTest {
 
     @Before
     public void setup() {
@@ -396,10 +397,7 @@ public class MarkdownParserTest {
                 new LineOffset(1, 16),
                 new LineOffset(1, 37));
 
-        assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMapSize());
-        for (int i = 0; i < expectedOffsets.size(); i++) {
-            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i).get());
-        }
+        assertEquals(expectedOffsets, firstParagraph.getSentence(0).getOffsetMap());
     }
 
     @Test
@@ -930,13 +928,5 @@ public class MarkdownParserTest {
             fail();
         }
         return doc;
-    }
-
-    private static List<LineOffset> initializeMappingTable(LineOffset... offsets) {
-        List<LineOffset> offsetTable = new ArrayList<>();
-        for (LineOffset offset : offsets) {
-            offsetTable.add(offset);
-        }
-        return offsetTable;
     }
 }
