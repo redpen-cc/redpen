@@ -36,8 +36,6 @@ import java.util.Optional;
  */
 class LaTeXParser extends BaseDocumentParser {
 
-    private LaTeXProcessor latexProcessor = new LaTeXProcessor();
-
     LaTeXParser() {
         super();
     }
