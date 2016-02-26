@@ -76,13 +76,13 @@ public class Sentence implements Serializable {
      * Constructor.
      *
      * @param sentenceContent  content of sentence
-     * @param sentencePosition sentence position
+     * @param lineNum          line number of sentence
      * @param startOffset      offset of the start position in the line
      */
-    public Sentence(String sentenceContent, int sentencePosition, int startOffset) {
+    public Sentence(String sentenceContent, int lineNum, int startOffset) {
         super();
         this.content = sentenceContent;
-        this.lineNumber = sentencePosition;
+        this.lineNumber = lineNum;
         this.isFirstSentence = false;
         this.links = new ArrayList<>();
         this.tokens = new ArrayList<>();
@@ -290,5 +290,9 @@ public class Sentence implements Serializable {
         result = 31 * result + (isFirstSentence ? 1 : 0);
         result = 31 * result + (tokens != null ? tokens.hashCode() : 0);
         return result;
+    }
+
+    public List<LineOffset> getOffsetMap() {
+        return offsetMap;
     }
 }
