@@ -129,7 +129,7 @@ public class Configuration implements Serializable, Cloneable {
     }
 
     /**
-     * Finds file relative to either working directory or $REDPEN_HOME
+     * Finds file relative to either working directory, base directory or $REDPEN_HOME
      * @param relativePath of file to find
      * @return resolved file if it exists
      * @throws RedPenException if file doesn't exist in either place
@@ -146,8 +146,8 @@ public class Configuration implements Serializable, Cloneable {
         file = new File(home, relativePath);
         if (file.exists()) return file;
 
-        throw new RedPenException(String.format("%s is not under $REDPEN_HOME(%s) or current directory(%s).",
-          relativePath, home.getAbsolutePath(), new File("").getAbsoluteFile()));
+        throw new RedPenException(String.format("%s is not under working directory (%s)" + (base != null ? ", base (" + base + ")" : "")  + " or $REDPEN_HOME (%s).",
+          relativePath, new File("").getAbsoluteFile(), home.getAbsolutePath()));
     }
 
     /**

@@ -17,6 +17,7 @@
  */
 package cc.redpen.config;
 
+import cc.redpen.RedPenException;
 import org.junit.Test;
 
 import java.io.*;
@@ -120,6 +121,30 @@ public class ConfigurationTest {
     public void findFileLooksInRedPenHomeDirectoryThird() throws Exception {
         System.setProperty("REDPEN_HOME", "src");
         assertEquals(new File("src/main"), Configuration.builder().build().findFile("main"));
+    }
+
+    @Test
+    public void findFileFailsIfFileNotFound() throws Exception {
+        try {
+            System.setProperty("REDPEN_HOME", "src");
+            Configuration.builder().build().findFile("hello.xml");
+            fail("Expecting RedPenException");
+        }
+        catch (RedPenException e) {
+            assertEquals("hello.xml is not under working directory (" + new File("").getAbsoluteFile() + ") or $REDPEN_HOME (" + new File("src").getAbsoluteFile() + ").", e.getMessage());
+        }
+    }
+
+    @Test
+    public void findFileFailsIfFileNotFound_basePathPresent() throws Exception {
+        try {
+            System.setProperty("REDPEN_HOME", "src");
+            Configuration.builder().setBaseDir(new File("some/base/dir")).build().findFile("hello.xml");
+            fail("Expecting RedPenException");
+        }
+        catch (RedPenException e) {
+            assertEquals("hello.xml is not under working directory (" + new File("").getAbsoluteFile() + "), base (some/base/dir) or $REDPEN_HOME (" + new File("src").getAbsoluteFile() + ").", e.getMessage());
+        }
     }
 
     @Test
