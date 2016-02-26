@@ -48,7 +48,7 @@ public class SpellingValidatorTest extends BaseValidatorTest {
 
         Document document = prepareSimpleDocument("this iz a pen");
 
-        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config.getSymbolTable());
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
 
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);

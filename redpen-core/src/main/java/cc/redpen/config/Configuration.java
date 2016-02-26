@@ -17,10 +17,12 @@
  */
 package cc.redpen.config;
 
+import cc.redpen.RedPenException;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.tokenizer.RedPenTokenizer;
 import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -40,11 +42,14 @@ public class Configuration implements Serializable, Cloneable {
     private List<ValidatorConfiguration> validatorConfigs = new ArrayList<>();
     private final String lang;
     private transient RedPenTokenizer tokenizer;
+    private File home = new File(Optional.ofNullable(System.getProperty("REDPEN_HOME", System.getenv("REDPEN_HOME"))).orElse(""));
+    private File base;
 
     /**
      * Constructor.
      */
-    Configuration(SymbolTable symbolTable, List<ValidatorConfiguration> validatorConfigs, String lang) {
+    Configuration(File base, SymbolTable symbolTable, List<ValidatorConfiguration> validatorConfigs, String lang) {
+        this.base = base;
         this.symbolTable = symbolTable;
 
         this.validatorConfigs.addAll(validatorConfigs);
@@ -110,6 +115,42 @@ public class Configuration implements Serializable, Cloneable {
     }
 
     /**
+     * @return RedPen home directory, relative to which custom resources are evaluated
+     */
+    public File getHome() {
+        return home;
+    }
+
+    /**
+     * @return RedPen configuration base directory, relative to which custom resources are evaluated
+     */
+    public File getBase() {
+        return base;
+    }
+
+    /**
+     * Finds file relative to either working directory, base directory or $REDPEN_HOME
+     * @param relativePath of file to find
+     * @return resolved file if it exists
+     * @throws RedPenException if file doesn't exist in either place
+     */
+    public File findFile(String relativePath) throws RedPenException {
+        File file = new File(relativePath);
+        if (file.exists()) return file;
+
+        if (base != null) {
+            file = new File(base, relativePath);
+            if (file.exists()) return file;
+        }
+
+        file = new File(home, relativePath);
+        if (file.exists()) return file;
+
+        throw new RedPenException(String.format("%s is not under working directory (%s)" + (base != null ? ", base (" + base + ")" : "")  + " or $REDPEN_HOME (%s).",
+          relativePath, new File("").getAbsoluteFile(), home.getAbsolutePath()));
+    }
+
+    /**
      * @return a deep copy of this configuration
      */
     @Override public Configuration clone() {
@@ -170,15 +211,21 @@ public class Configuration implements Serializable, Cloneable {
 
         private String lang = "en";
         private Optional<String> variant = Optional.empty();
+        private File base;
 
         private void checkBuilt() {
-            if(built){
-                throw new IllegalStateException("Configuration already built.");
-            }
+            if (built) throw new IllegalStateException("Configuration already built.");
         }
+
         public ConfigurationBuilder setLanguage(String lang) {
             checkBuilt();
             this.lang = lang;
+            return this;
+        }
+
+        public ConfigurationBuilder setBaseDir(File base) {
+            checkBuilt();
+            this.base = base;
             return this;
         }
 
@@ -203,7 +250,7 @@ public class Configuration implements Serializable, Cloneable {
         public Configuration build() {
             checkBuilt();
             built = true;
-            return new Configuration(new SymbolTable(lang, variant, customSymbols), this.validatorConfigs, this.lang);
+            return new Configuration(base, new SymbolTable(lang, variant, customSymbols), this.validatorConfigs, this.lang);
         }
     }
 }

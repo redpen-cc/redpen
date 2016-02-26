@@ -17,12 +17,10 @@
  */
 package cc.redpen.config;
 
+import cc.redpen.RedPenException;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.Optional;
 
 import static cc.redpen.config.SymbolType.AMPERSAND;
@@ -81,19 +79,72 @@ public class ConfigurationTest {
     @Test
     public void keyIsLangAndType() throws Exception {
         SymbolTable symbolTable = new SymbolTable("ja", Optional.of("hankaku"), emptyList());
-        assertEquals("ja.hankaku", new Configuration(symbolTable, emptyList(), "ja").getKey());
+        assertEquals("ja.hankaku", new Configuration(new File(""), symbolTable, emptyList(), "ja").getKey());
     }
 
     @Test
     public void keyIsLangOnlyIfTypeIsMissing() throws Exception {
         SymbolTable symbolTable = new SymbolTable("en", Optional.empty(), emptyList());
-        assertEquals("en", new Configuration(symbolTable, emptyList(), "en").getKey());
+        assertEquals("en", new Configuration(new File(""), symbolTable, emptyList(), "en").getKey());
     }
 
     @Test
     public void keyIsLangOnlyForZenkaku() throws Exception {
         SymbolTable symbolTable = new SymbolTable("ja", Optional.of("zenkaku"), emptyList());
-        assertEquals("ja", new Configuration(symbolTable, emptyList(), "ja").getKey());
+        assertEquals("ja", new Configuration(new File(""), symbolTable, emptyList(), "ja").getKey());
+    }
+
+    @Test
+    public void homeIsWorkingDirectoryByDefault() throws Exception {
+        System.clearProperty("REDPEN_HOME");
+        assertEquals(new File(""), Configuration.builder().build().getHome());
+    }
+
+    @Test
+    public void homeIsResolvedFromSystemPropertyOrEnvironment() throws Exception {
+        System.setProperty("REDPEN_HOME", "/foo");
+        assertEquals(new File("/foo"), Configuration.builder().build().getHome());
+    }
+
+    @Test
+    public void findFileLooksInWorkingDirectoryFirst() throws Exception {
+        String localFile = new File(".").list()[0];
+        assertEquals(new File(localFile), Configuration.builder().build().findFile(localFile));
+    }
+
+    @Test
+    public void findFileLooksInConfigBaseDirectorySecond() throws Exception {
+        assertEquals(new File("src/main"), Configuration.builder().setBaseDir(new File("src")).build().findFile("main"));
+    }
+
+    @Test
+    public void findFileLooksInRedPenHomeDirectoryThird() throws Exception {
+        System.setProperty("REDPEN_HOME", "src");
+        assertEquals(new File("src/main"), Configuration.builder().build().findFile("main"));
+    }
+
+    @Test
+    public void findFileFailsIfFileNotFound() throws Exception {
+        try {
+            System.setProperty("REDPEN_HOME", "src");
+            Configuration.builder().build().findFile("hello.xml");
+            fail("Expecting RedPenException");
+        }
+        catch (RedPenException e) {
+            assertEquals("hello.xml is not under working directory (" + new File("").getAbsoluteFile() + ") or $REDPEN_HOME (" + new File("src").getAbsoluteFile() + ").", e.getMessage());
+        }
+    }
+
+    @Test
+    public void findFileFailsIfFileNotFound_basePathPresent() throws Exception {
+        try {
+            System.setProperty("REDPEN_HOME", "src");
+            Configuration.builder().setBaseDir(new File("some/base/dir")).build().findFile("hello.xml");
+            fail("Expecting RedPenException");
+        }
+        catch (RedPenException e) {
+            assertEquals("hello.xml is not under working directory (" + new File("").getAbsoluteFile() + "), base (some/base/dir) or $REDPEN_HOME (" + new File("src").getAbsoluteFile() + ").", e.getMessage());
+        }
     }
 
     @Test

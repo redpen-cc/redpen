@@ -25,7 +25,6 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
@@ -57,7 +56,7 @@ public class SpellingValidator extends Validator {
         Optional<String> userDictionaryFile = getConfigAttribute("dict");
         if (userDictionaryFile.isPresent()) {
             String f = userDictionaryFile.get();
-            customDictionary.addAll(WORD_LIST_LOWERCASED.loadCachedFromFile(new File(f), "SpellingValidator user dictionary"));
+            customDictionary.addAll(WORD_LIST_LOWERCASED.loadCachedFromFile(findFile(f), "SpellingValidator user dictionary"));
         }
     }
 

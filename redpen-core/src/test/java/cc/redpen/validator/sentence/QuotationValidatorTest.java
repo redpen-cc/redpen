@@ -172,7 +172,7 @@ public class QuotationValidatorTest {
         Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", false))
                 .build();
-        Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
+        Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf);
         Sentence str = new Sentence("I'm a jedi knight.", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
@@ -186,7 +186,7 @@ public class QuotationValidatorTest {
         Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", false))
                 .build();
-        Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
+        Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf);
         Sentence str = new Sentence("I said \"that is true\".", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
@@ -200,7 +200,7 @@ public class QuotationValidatorTest {
         Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", true))
                 .build();
-        Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
+        Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf);
         Sentence str = new Sentence("I said that is true.", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
@@ -214,7 +214,7 @@ public class QuotationValidatorTest {
         Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", true))
                 .build();
-        Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
+        Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf);
         Sentence str = new Sentence("", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
@@ -261,7 +261,7 @@ public class QuotationValidatorTest {
         Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", true))
                 .build();
-        Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
+        Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf);
         Sentence str = new Sentence("I said\"that is true\".", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
@@ -286,7 +286,7 @@ public class QuotationValidatorTest {
         Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", true))
                 .build();
-        Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
+        Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf);
         Sentence str = new Sentence("I said \"that is true\"is true.", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
@@ -301,7 +301,7 @@ public class QuotationValidatorTest {
                 .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", true))
                 .addSymbol(new Symbol(SymbolType.FULL_STOP, '。'))
                 .build();
-        Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf.getSymbolTable());
+        Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf);
 
 //        QuotationValidator validator =
 //                new QuotationValidator(true, '。');

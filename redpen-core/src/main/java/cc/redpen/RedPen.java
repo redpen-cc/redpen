@@ -73,10 +73,10 @@ public class RedPen {
      */
     public RedPen(Configuration configuration) throws RedPenException {
         this.configuration = configuration;
-        this.sentenceExtractor = new SentenceExtractor(this.configuration.getSymbolTable());
+        this.sentenceExtractor = new SentenceExtractor(configuration.getSymbolTable());
         this.validators = new ArrayList<>();
         for (ValidatorConfiguration config : configuration.getValidatorConfigs()) {
-            validators.add(ValidatorFactory.getInstance(config, configuration.getSymbolTable()));
+            validators.add(ValidatorFactory.getInstance(config, configuration));
         }
 
     }
@@ -240,17 +240,12 @@ public class RedPen {
             return false;
 
         RedPen redPen = (RedPen) o;
-
-        if (configuration != null ? !configuration.equals(redPen.configuration) : redPen.configuration != null)
-            return false;
-
-        return true;
+        return Objects.equals(configuration, redPen.configuration);
     }
 
     @Override
     public int hashCode() {
-        int result = configuration != null ? configuration.hashCode() : 0;
-        return result;
+        return configuration != null ? configuration.hashCode() : 0;
     }
 
     @Override

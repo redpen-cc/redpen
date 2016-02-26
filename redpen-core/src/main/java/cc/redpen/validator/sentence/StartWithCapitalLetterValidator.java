@@ -24,7 +24,6 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.util.*;
 
 /**
@@ -82,7 +81,7 @@ final public class StartWithCapitalLetterValidator extends Validator {
 
         Optional<String> confFile = getConfigAttribute("dict");
         if (confFile.isPresent()) {
-            customWhiteList = WORD_LIST.loadCachedFromFile(new File(confFile.get()), "StartWithCapitalLetterValidator user dictionary");
+            customWhiteList = WORD_LIST.loadCachedFromFile(findFile(confFile.get()), "StartWithCapitalLetterValidator user dictionary");
         }
     }
 

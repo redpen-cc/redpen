@@ -22,7 +22,6 @@ import cc.redpen.model.Document;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.util.DictionaryLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,16 +62,10 @@ public class JavaScriptValidator extends Validator {
 
     @Override
     protected void init() throws RedPenException {
-        String home = System.getProperty("REDPEN_HOME", System.getenv("REDPEN_HOME"));
-        home = home != null ? home : ".";
-
-        String jsValidatorsPath = getConfigAttribute("script-path").orElse(home + File.separator + DEFAULT_JS_VALIDATORS_PATH);
-        File jsDirectory = new File(jsValidatorsPath);
-        if(!jsDirectory.exists()){
-            LOG.info("JavaScript validators directory is missing: {}", jsValidatorsPath);
-        }else {
+        Optional<String> jsValidatorsPath = getConfigAttribute("script-path");
+        try {
+            File jsDirectory = findFile(jsValidatorsPath.orElse(DEFAULT_JS_VALIDATORS_PATH));
             LOG.info("JavaScript validators directory: {}", jsValidatorsPath);
-            DictionaryLoader.ensureFileIsInsideRedPenHomeOrWorkingDirectory(jsValidatorsPath);
             File[] jsValidatorFiles = jsDirectory.listFiles();
             if (jsValidatorFiles != null) {
                 for (File file : jsValidatorFiles) {
@@ -85,6 +78,9 @@ public class JavaScriptValidator extends Validator {
                     }
                 }
             }
+        }
+        catch (RedPenException e) {
+            LOG.warn("JavaScript validators directory is missing: {}", e.toString());
         }
     }
 

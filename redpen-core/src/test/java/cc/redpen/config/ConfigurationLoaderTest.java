@@ -20,6 +20,10 @@ package cc.redpen.config;
 import cc.redpen.RedPenException;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+
 import static cc.redpen.config.SymbolType.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -394,4 +398,14 @@ public class ConfigurationLoaderTest {
         new ConfigurationLoader().loadFromString(sampleConfigString);
     }
 
+    @Test
+    public void loadFromFileSetsBaseDir() throws Exception {
+        File file = File.createTempFile("redpen-conf", ".xml");
+        file.deleteOnExit();
+        try (OutputStream out = new FileOutputStream(file)) {
+            out.write("<redpen-conf/>".getBytes());
+        }
+        Configuration config = new ConfigurationLoader().load(file);
+        assertEquals(file.getParentFile(), config.getBase());
+    }
 }
