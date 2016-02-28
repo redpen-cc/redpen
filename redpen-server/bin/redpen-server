@@ -20,7 +20,7 @@ done
 REDPEN_HOME=`dirname "$SCRIPT"`/..
 
 # Make REDPEN_HOME absolute
-REDPEN_HOME=`cd "$REDPEN_HOME"; pwd`
+export REDPEN_HOME=`cd "$REDPEN_HOME"; pwd`
 
 #####################################################
 #
