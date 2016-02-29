@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static java.lang.Character.isWhitespace;
 import static java.lang.Integer.parseInt;
 import static java.util.Collections.emptyList;
 
@@ -97,7 +98,7 @@ class PropertiesParser extends BaseDocumentParser {
 
     private int skipWhitespace(String line, int start) {
         for (int i = start; i < line.length(); i++)
-            if (line.charAt(i) != ' ') return i;
+            if (!isWhitespace(line.charAt(i))) return i;
         return line.length();
     }
 
@@ -106,7 +107,7 @@ class PropertiesParser extends BaseDocumentParser {
         for (int i = start; i < line.length(); i++) {
             char c = line.charAt(i);
             if (c == '\\') i++;
-            else if (c == ' ') result = i;
+            else if (isWhitespace(c)) result = i;
             else if (c == ':' || c == '=' || c == '#' || c == '!') {result = i; break;}
             else if (result >= 0) break;
         }

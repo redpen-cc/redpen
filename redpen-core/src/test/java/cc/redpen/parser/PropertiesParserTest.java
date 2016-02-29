@@ -48,6 +48,14 @@ public class PropertiesParserTest extends BaseParserTest {
   }
 
   @Test
+  public void extraWhitespace() throws Exception {
+    Document doc = parse("\t hello\f=\tworld ");
+    Sentence sentence = doc.getSection(0).getParagraph(0).getSentences().get(0);
+    assertEquals("world ", sentence.getContent());
+    assertEquals(offsets(1, range(10, 16)), sentence.getOffsetMap());
+  }
+
+  @Test
   public void threeLines() throws Exception {
     Document doc = parse("hello = world\r\nworld:earth\n  key=val");
 
