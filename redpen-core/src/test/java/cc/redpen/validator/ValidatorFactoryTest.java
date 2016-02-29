@@ -32,6 +32,7 @@ class CustomValidator extends Validator {
 }
 
 class NoDefaultConstructorValidator extends Validator {
+    @SuppressWarnings("UnusedParameters")
     public NoDefaultConstructorValidator(String blah) {
     }
 }
@@ -71,7 +72,7 @@ public class ValidatorFactoryTest {
         checkValidators(validatorsPackage, validators);
     }
 
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings({"ConstantConditions", "SuspiciousMethodCalls"})
     private void checkValidators(String validatorsPackage, File validators) throws ClassNotFoundException {
         for (File file : validators.listFiles()) {
             String name = file.getName();
