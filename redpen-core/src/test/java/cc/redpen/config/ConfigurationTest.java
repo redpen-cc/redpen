@@ -225,4 +225,15 @@ public class ConfigurationTest {
         assertEquals(conf, conf2);
         assertEquals(conf.getTokenizer().getClass(), conf2.getTokenizer().getClass());
     }
+
+    @Test
+    public void addAvailbaleValidatorsForLanguage() throws Exception {
+        Configuration ja = Configuration.builder("ja").addAvailableValidatorConfigs().build();
+        assertTrue(ja.getValidatorConfigs().contains(new ValidatorConfiguration("SentenceLength")));
+        assertTrue(ja.getValidatorConfigs().contains(new ValidatorConfiguration("HankakuKana")));
+
+        Configuration en = Configuration.builder("en").addAvailableValidatorConfigs().build();
+        assertTrue(en.getValidatorConfigs().contains(new ValidatorConfiguration("SentenceLength")));
+        assertFalse(en.getValidatorConfigs().contains(new ValidatorConfiguration("HankakuKana")));
+    }
 }

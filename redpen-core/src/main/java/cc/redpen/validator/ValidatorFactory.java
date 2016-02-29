@@ -24,7 +24,10 @@ import cc.redpen.validator.section.*;
 import cc.redpen.validator.sentence.*;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Factory class of validators.
@@ -78,6 +81,18 @@ public class ValidatorFactory {
 
         // other
         registerValidator(JavaScriptValidator.class);
+    }
+
+    public static List<ValidatorConfiguration> getConfigurations(String lang) {
+        return validators.entrySet().stream().filter(e -> {
+            try {
+                List<String> supportedLanguages = e.getValue().newInstance().getSupportedLanguages();
+                return supportedLanguages.isEmpty() || supportedLanguages.contains(lang);
+            }
+            catch (IllegalAccessException | InstantiationException ex) {
+                throw new RuntimeException(ex);
+            }
+        }).map(e -> new ValidatorConfiguration(e.getKey())).collect(toList());
     }
 
     public static Validator getInstance(String validatorName) throws RedPenException {
