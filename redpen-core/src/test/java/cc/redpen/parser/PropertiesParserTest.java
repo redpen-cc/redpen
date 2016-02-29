@@ -101,7 +101,7 @@ public class PropertiesParserTest extends BaseParserTest {
 
   @Test
   public void comments() throws Exception {
-    Document doc = parse(" #Hello World\n!Another comment");
+    Document doc = parse(" #Hello World\n!Another comment\n#");
     Sentence sentence = doc.getSection(0).getParagraph(0).getSentence(0);
     assertEquals("Hello World", sentence.getContent());
     sentence = doc.getSection(1).getParagraph(0).getSentence(0);

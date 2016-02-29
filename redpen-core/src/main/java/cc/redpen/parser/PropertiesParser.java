@@ -45,6 +45,7 @@ class PropertiesParser extends BaseDocumentParser {
     }
 
     private void addSentences(Document.DocumentBuilder builder, SentenceExtractor sentenceExtractor, ValueWithOffsets value) {
+        if (value == null) return;
         String text = value.getContent();
         List<LineOffset> offsets = value.getOffsetMap();
         builder.addSection(0).addParagraph();
@@ -69,6 +70,7 @@ class PropertiesParser extends BaseDocumentParser {
                     lineNum.incrementAndGet();
                     offsets.add(new LineOffset(lineNum.get(), 0));
                     Sentence nextLine = section(reader.readLine(), lineNum, 0, reader);
+                    if (nextLine == null) continue;
                     value.append('\n').append(nextLine.getContent());
                     offsets.addAll(nextLine.getOffsetMap());
                     continue;
@@ -88,7 +90,7 @@ class PropertiesParser extends BaseDocumentParser {
             value.append(c);
             offsets.add(new LineOffset(lineNum.get(), offset));
         }
-        return new ValueWithOffsets(value.toString(), offsets);
+        return value.length() == 0 ? null : new ValueWithOffsets(value.toString(), offsets);
     }
 
     private int skipWhitespace(String line, int start) {
