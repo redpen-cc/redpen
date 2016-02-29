@@ -36,20 +36,27 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.util.*;
 
+import static java.util.Collections.emptyMap;
+
 /**
  * Validate input document.
  */
 public abstract class Validator {
-
     private static final Logger LOG = LoggerFactory.getLogger(Validator.class);
     private final static ResourceBundle.Control fallbackControl = ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_DEFAULT);
 
     private ResourceBundle errorMessages = null;
     private ValidatorConfiguration config;
     private Configuration globalConfig;
+    private Map<String, Object> defaultAttributes;
 
     public Validator() {
+        this(emptyMap());
+    }
+
+    public Validator(Map<String, Object> defaultAttributes) {
         setLocale(Locale.getDefault());
+        this.defaultAttributes = defaultAttributes;
     }
 
     private List<ValidationError> errors;
@@ -116,6 +123,7 @@ public abstract class Validator {
     final void preInit(ValidatorConfiguration config, Configuration globalConfig) throws RedPenException {
         this.config = config;
         this.globalConfig = globalConfig;
+        defaultAttributes.forEach(config::addAttributeIfMissing);
         init();
     }
 
@@ -149,51 +157,54 @@ public abstract class Validator {
     protected void init() throws RedPenException {
     }
 
-    protected Optional<String> getConfigAttribute(String attributeName) {
-        return Optional.ofNullable(config.getAttribute(attributeName));
+    protected Optional<String> getConfigAttribute(String name) {
+        return Optional.ofNullable(config.getAttribute(name));
     }
 
-    protected String getConfigAttribute(String attributeName, String defaultValue) {
-        String value = config.getAttribute(attributeName);
+    protected String getConfigAttribute(String name, String defaultValue) {
+        String value = config.getAttribute(name);
         if (value != null) {
-            LOG.info("{} is set to {}", attributeName, value);
+            LOG.info("{} is set to {}", name, value);
             return value;
         } else {
-            LOG.info("{} is not set. Use default value of {}", attributeName, defaultValue);
+            LOG.info("{} is not set. Use default value of {}", name, defaultValue);
             return defaultValue;
         }
     }
 
-
-    protected int getConfigAttributeAsInt(String attributeName, int defaultValue) {
-        String value = config.getAttribute(attributeName);
+    protected int getConfigAttributeAsInt(String name, int defaultValue) {
+        String value = config.getAttribute(name);
         if (value != null) {
-            LOG.info("{} is set to {}", attributeName, value);
+            LOG.info("{} is set to {}", name, value);
             return Integer.valueOf(value);
         } else {
-            LOG.info("{} is not set. Use default value of {}", attributeName, defaultValue);
+            LOG.info("{} is not set. Use default value of {}", name, defaultValue);
             return defaultValue;
         }
     }
 
-    protected boolean getConfigAttributeAsBoolean(String attributeName, boolean defaultValue) {
-        String value = config.getAttribute(attributeName);
+    protected int getConfigAttributeAsInt(String name) {
+        return getConfigAttributeAsInt(name, 0);
+    }
+
+    protected boolean getConfigAttributeAsBoolean(String name, boolean defaultValue) {
+        String value = config.getAttribute(name);
         if (value != null) {
-            LOG.info("{} is set to {}", attributeName, value);
+            LOG.info("{} is set to {}", name, value);
             return Boolean.valueOf(value);
         } else {
-            LOG.info("{} is not set. Use default value of {}", attributeName, defaultValue);
+            LOG.info("{} is not set. Use default value of {}", name, defaultValue);
             return defaultValue;
         }
     }
 
-    protected double getConfigAttributeAsDouble(String attributeName, double defaultValue) {
-        String value = config.getAttribute(attributeName);
+    protected double getConfigAttributeAsDouble(String name, double defaultValue) {
+        String value = config.getAttribute(name);
         if (value != null) {
-            LOG.info("{} is set to {}", attributeName, value);
+            LOG.info("{} is set to {}", name, value);
             return Double.valueOf(value);
         } else {
-            LOG.info("{} is not set. Use default value of {}", attributeName, defaultValue);
+            LOG.info("{} is not set. Use default value of {}", name, defaultValue);
             return defaultValue;
         }
     }
@@ -374,6 +385,22 @@ public abstract class Validator {
                                                   Optional<LineOffset> start, Optional<LineOffset> end, Object... args) {
         errors.add(new ValidationError(this.getClass(), getLocalizedErrorMessage(messageKey, args), sentenceWithError, start.get(), end.get()));
     }
+
+    @Override public String toString() {
+        return getClass().getSimpleName() + defaultAttributes;
+    }
+
+    @Override public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Validator)) return false;
+        Validator validator = (Validator)o;
+        return Objects.equals(getClass(), validator.getClass()) && Objects.equals(config, validator.config);
+    }
+
+    @Override public int hashCode() {
+        return Objects.hash(getClass(), config);
+    }
+
     /**
      * Resource Extractor loads key-value dictionary
      */

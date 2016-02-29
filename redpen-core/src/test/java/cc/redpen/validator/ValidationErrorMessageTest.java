@@ -19,7 +19,16 @@ package cc.redpen.validator;
 
 import cc.redpen.model.Sentence;
 
+import java.util.Map;
+
 class ValidationErrorMessageTest extends Validator {
+
+    public ValidationErrorMessageTest() {
+    }
+
+    public ValidationErrorMessageTest(Map<String, Object> defaultAttributes) {
+        super(defaultAttributes);
+    }
 
     @Override
     public void validate(Sentence sentence) {
