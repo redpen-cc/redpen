@@ -32,37 +32,30 @@ import java.util.Optional;
  * returns the errors with corrected expressions.
  */
 final public class SuggestExpressionValidator extends Validator {
-
-    private static final Logger LOG =
-            LoggerFactory.getLogger(SuggestExpressionValidator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SuggestExpressionValidator.class);
     private Map<String, String> synonyms = new HashMap<>();
 
     @Override
     public void validate(Sentence sentence) {
         synonyms.keySet().stream().forEach(value -> {
-                    int startPosition = sentence.getContent().indexOf(value);
-                    if (startPosition != -1) {
-                        final String word = value;
-                        final String suggested = synonyms.get(value);
-                        addLocalizedErrorWithPosition(sentence,
-                                startPosition,
-                                startPosition + value.length(),
-                                word, suggested);
-                    }
-                }
-        );
+            int startPosition = sentence.getContent().indexOf(value);
+            if (startPosition != -1) {
+                String suggested = synonyms.get(value);
+                addLocalizedErrorWithPosition(sentence, startPosition, startPosition + value.length(), value, suggested);
+            }
+        });
     }
 
     @Override
     protected void init() throws RedPenException {
         //TODO: support default dictionary.
         Optional<String> confFile = getConfigAttribute("dict");
-        LOG.info("Dictionary file is " + confFile);
-        if (!confFile.isPresent()) {
-            LOG.error("Dictionary file is not specified");
-            throw new RedPenException("dictionary file is not specified");
-        } else {
+        if (confFile.isPresent()) {
+            LOG.info("Dictionary file is " + confFile);
             synonyms = KEY_VALUE.loadCachedFromFile(findFile(confFile.get()), "SuggestExpressionValidator dictionary");
+        }
+        else {
+            LOG.warn("Dictionary file is not specified");
         }
     }
 
