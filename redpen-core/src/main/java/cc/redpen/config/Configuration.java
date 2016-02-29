@@ -21,6 +21,7 @@ import cc.redpen.RedPenException;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.tokenizer.RedPenTokenizer;
 import cc.redpen.tokenizer.WhiteSpaceTokenizer;
+import cc.redpen.validator.ValidatorFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -238,6 +239,12 @@ public class Configuration implements Serializable, Cloneable {
         public ConfigurationBuilder addValidatorConfig(ValidatorConfiguration config) {
             checkBuilt();
             validatorConfigs.add(config);
+            return this;
+        }
+
+        public ConfigurationBuilder addAvailableValidatorConfigs() {
+            checkBuilt();
+            validatorConfigs.addAll(ValidatorFactory.getConfigurations(lang));
             return this;
         }
 
