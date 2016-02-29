@@ -58,7 +58,7 @@ class PropertiesParser extends BaseDocumentParser {
             char c = line.charAt(i);
             if (c == '\\') i++;
             else if (c == ' ') result = i;
-            else if (c == ':' || c == '=') {result = i; break;}
+            else if (c == ':' || c == '=' || c == '#') {result = i; break;}
             else if (result >= 0) break;
         }
         return skipWhitespace(line, result + 1);

@@ -98,6 +98,13 @@ public class PropertiesParserTest extends BaseParserTest {
     assertEquals("value", sentence.getContent());
   }
 
+  @Test
+  public void comments() throws Exception {
+    Document doc = parse(" #Hello World\n");
+    Sentence sentence = doc.getSection(0).getParagraph(0).getSentence(0);
+    assertEquals("Hello World", sentence.getContent());
+  }
+
   private Document parse(String content) throws RedPenException {
     return parser.parse(content, new SentenceExtractor('.'), new WhiteSpaceTokenizer());
   }
