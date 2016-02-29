@@ -17,27 +17,27 @@
  */
 package cc.redpen.validator.sentence;
 
-
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.Validator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 import static cc.redpen.config.SymbolType.COMMA;
+import static java.util.Collections.singletonMap;
 
 /**
  * Validate the number of commas in one sentence.
  */
-final public class CommaNumberValidator extends Validator {
-    private static final Logger LOG = LoggerFactory.getLogger(CommaNumberValidator.class);
-    /**
-     * Default maximum number of comma.
-     */
-    private static final int DEFAULT_MAX_COMMA_NUMBER = 3;
-    private int maxCommaNum = DEFAULT_MAX_COMMA_NUMBER;
+public final class CommaNumberValidator extends Validator {
+
+    public CommaNumberValidator() {
+        super(singletonMap("max_num", 3));
+    }
+
     private char comma;
+
+    private int getMaxNum() {
+        return getIntAttribute("max_num");
+    }
 
     @Override
     public void validate(Sentence sentence) {
@@ -49,42 +49,13 @@ final public class CommaNumberValidator extends Validator {
             commaCount++;
             content = content.substring(position + 1, content.length());
         }
-        if (maxCommaNum < commaCount) {
-            addLocalizedError(sentence, commaCount, maxCommaNum);
+        if (getMaxNum() < commaCount) {
+            addLocalizedError(sentence, commaCount, getMaxNum());
         }
     }
 
     @Override
     protected void init() throws RedPenException {
-        this.maxCommaNum = getConfigAttributeAsInt("max_num", DEFAULT_MAX_COMMA_NUMBER);
         this.comma = getSymbolTable().getValueOrFallbackToDefault(COMMA);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        CommaNumberValidator that = (CommaNumberValidator) o;
-
-        if (comma != that.comma) return false;
-        if (maxCommaNum != that.maxCommaNum) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = maxCommaNum;
-        result = 31 * result + (int) comma;
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "CommaNumberValidator{" +
-                "maxCommaNum=" + maxCommaNum +
-                ", comma=" + comma +
-                '}';
     }
 }

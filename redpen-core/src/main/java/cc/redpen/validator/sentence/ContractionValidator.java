@@ -21,7 +21,12 @@ import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.validator.Validator;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
+import static java.util.Collections.singletonList;
 
 /**
  * Validate English contraction in the input document.
@@ -123,7 +128,7 @@ final public class ContractionValidator extends Validator {
 
     @Override
     public List<String> getSupportedLanguages() {
-        return Arrays.asList(Locale.ENGLISH.getLanguage());
+        return singletonList(Locale.ENGLISH.getLanguage());
     }
 
     @Override

@@ -35,8 +35,11 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.util.*;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
+import static java.util.Collections.emptySet;
 import static java.util.ResourceBundle.Control.FORMAT_DEFAULT;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
  * Validate input document.
@@ -131,7 +134,12 @@ public abstract class Validator {
         attributes.forEach((name, defaultValue) -> {
             String value = config.getAttribute(name);
             if (value == null) return;
-            attributes.put(name, defaultValue instanceof Integer ? Integer.valueOf(value) : value);
+            if (defaultValue instanceof Integer)
+                attributes.put(name, Integer.valueOf(value));
+            else if (defaultValue instanceof Set)
+                attributes.put(name, isEmpty(value) ? emptySet() : new HashSet<>(asList((value).split(","))));
+            else
+                attributes.put(name, value);
         });
     }
 
@@ -165,12 +173,18 @@ public abstract class Validator {
     protected void init() throws RedPenException {
     }
 
+    @Deprecated
     protected Optional<String> getConfigAttribute(String name) {
         return Optional.ofNullable(config.getAttribute(name));
     }
 
     protected int getIntAttribute(String name) {
         return (int)attributes.get(name);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected Set<String> getSetAttribute(String name) {
+        return (Set) attributes.get(name);
     }
 
     @Deprecated
