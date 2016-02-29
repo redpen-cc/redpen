@@ -68,8 +68,10 @@ class PropertiesParser extends BaseDocumentParser {
             if (c == '\\') {
                 if (++i == length) {
                     lineNum.incrementAndGet();
-                    offsets.add(new LineOffset(lineNum.get(), 0));
-                    Sentence nextLine = section(reader.readLine(), lineNum, 0, reader);
+                    line = reader.readLine();
+                    valueStart = skipWhitespace(line, 0);
+                    offsets.add(new LineOffset(lineNum.get(), valueStart));
+                    Sentence nextLine = section(line, lineNum, valueStart, reader);
                     if (nextLine == null) continue;
                     value.append('\n').append(nextLine.getContent());
                     offsets.addAll(nextLine.getOffsetMap());

@@ -118,13 +118,13 @@ public class PropertiesParserTest extends BaseParserTest {
 
   @Test
   public void multilineValue() throws Exception {
-    Document doc = parse("hello=Hello\\\nWorld\\\n\\\nfoo");
+    Document doc = parse("hello=Hello\\\n World\\\n\\\n   foo");
     Sentence sentence = doc.getSection(0).getParagraph(0).getSentence(0);
     assertEquals("Hello\nWorld\n\nfoo", sentence.getContent());
     List<LineOffset> offsets = offsets(1, range(6, 11));
-    offsets.addAll(offsets(2, of(0), range(0, 5)));
+    offsets.addAll(offsets(2, of(1), range(1, 6)));
     offsets.addAll(offsets(3, of(0)));
-    offsets.addAll(offsets(4, of(0), range(0, 3)));
+    offsets.addAll(offsets(4, of(3), range(3, 6)));
     assertEquals(offsets, sentence.getOffsetMap());
   }
 
