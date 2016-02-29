@@ -58,11 +58,12 @@ public class ValidatorTest {
     }
 
     @Test
-    public void defaultAttributesCopiedToConfig() throws Exception {
+    public void configOverridesDefaultAttributes() throws Exception {
         Validator validator = new Validator(singletonMap("hello", 123)) {};
-        ValidatorConfiguration config = new ValidatorConfiguration("blah");
-        validator.preInit(config, globalConfig);
-        assertEquals("123", config.getAttribute("hello"));
+        assertEquals(123, validator.getIntAttribute("hello"));
+
+        validator.preInit(new ValidatorConfiguration("blah").addAttribute("hello", "234"), globalConfig);
+        assertEquals(234, validator.getIntAttribute("hello"));
     }
 
     @Test

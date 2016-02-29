@@ -100,18 +100,6 @@ public class ValidatorConfiguration implements Serializable, Cloneable {
         return this;
     }
 
-    /**
-     * Add an attribute if it is not added yet.
-     *
-     * @param name  attribute name
-     * @param value attribute value
-     * @return this object
-     */
-    public ValidatorConfiguration addAttributeIfMissing(String name, Object value) {
-        attributes.putIfAbsent(name, value.toString());
-        return this;
-    }
-
     @Override public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ValidatorConfiguration)) return false;

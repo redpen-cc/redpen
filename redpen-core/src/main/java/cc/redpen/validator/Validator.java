@@ -17,7 +17,6 @@
  */
 package cc.redpen.validator;
 
-
 import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.SymbolTable;
@@ -37,26 +36,27 @@ import java.text.MessageFormat;
 import java.util.*;
 
 import static java.util.Collections.emptyMap;
+import static java.util.ResourceBundle.Control.FORMAT_DEFAULT;
 
 /**
  * Validate input document.
  */
 public abstract class Validator {
     private static final Logger LOG = LoggerFactory.getLogger(Validator.class);
-    private final static ResourceBundle.Control fallbackControl = ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_DEFAULT);
+    private final static ResourceBundle.Control fallbackControl = ResourceBundle.Control.getNoFallbackControl(FORMAT_DEFAULT);
 
+    private Map<String, Object> attributes;
     private ResourceBundle errorMessages = null;
     private ValidatorConfiguration config;
     private Configuration globalConfig;
-    private Map<String, Object> defaultAttributes;
 
     public Validator() {
         this(emptyMap());
     }
 
-    public Validator(Map<String, Object> defaultAttributes) {
+    public Validator(Map<String, Object> attributes) {
         setLocale(Locale.getDefault());
-        this.defaultAttributes = defaultAttributes;
+        this.attributes = new HashMap<>(attributes);
     }
 
     private List<ValidationError> errors;
@@ -123,8 +123,16 @@ public abstract class Validator {
     final void preInit(ValidatorConfiguration config, Configuration globalConfig) throws RedPenException {
         this.config = config;
         this.globalConfig = globalConfig;
-        defaultAttributes.forEach(config::addAttributeIfMissing);
+        initAttributes(config);
         init();
+    }
+
+    private void initAttributes(ValidatorConfiguration config) {
+        attributes.forEach((name, defaultValue) -> {
+            String value = config.getAttribute(name);
+            if (value == null) return;
+            attributes.put(name, defaultValue instanceof Integer ? Integer.valueOf(value) : value);
+        });
     }
 
     void setLocale(Locale locale) {
@@ -161,6 +169,11 @@ public abstract class Validator {
         return Optional.ofNullable(config.getAttribute(name));
     }
 
+    protected int getIntAttribute(String name) {
+        return (int)attributes.get(name);
+    }
+
+    @Deprecated
     protected String getConfigAttribute(String name, String defaultValue) {
         String value = config.getAttribute(name);
         if (value != null) {
@@ -172,6 +185,7 @@ public abstract class Validator {
         }
     }
 
+    @Deprecated
     protected int getConfigAttributeAsInt(String name, int defaultValue) {
         String value = config.getAttribute(name);
         if (value != null) {
@@ -183,10 +197,7 @@ public abstract class Validator {
         }
     }
 
-    protected int getConfigAttributeAsInt(String name) {
-        return getConfigAttributeAsInt(name, 0);
-    }
-
+    @Deprecated
     protected boolean getConfigAttributeAsBoolean(String name, boolean defaultValue) {
         String value = config.getAttribute(name);
         if (value != null) {
@@ -198,6 +209,7 @@ public abstract class Validator {
         }
     }
 
+    @Deprecated
     protected double getConfigAttributeAsDouble(String name, double defaultValue) {
         String value = config.getAttribute(name);
         if (value != null) {
@@ -387,7 +399,7 @@ public abstract class Validator {
     }
 
     @Override public String toString() {
-        return getClass().getSimpleName() + defaultAttributes;
+        return getClass().getSimpleName() + attributes;
     }
 
     @Override public boolean equals(Object o) {

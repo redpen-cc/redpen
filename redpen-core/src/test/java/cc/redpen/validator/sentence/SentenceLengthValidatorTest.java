@@ -24,13 +24,13 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Collections.singletonMap;
 import static org.junit.Assert.assertEquals;
 
 public class SentenceLengthValidatorTest {
     @Test
     public void testWithLongSentence() {
-        SentenceLengthValidator validator = new SentenceLengthValidator();
-        validator.setLengthLimit(30);
+        SentenceLengthValidator validator = new SentenceLengthValidator(singletonMap("max_len", 30));
         Sentence str = new Sentence("this is a very long long long long long long"
                 + "long long long long long long sentence.", 0);
         List<ValidationError> errors = new ArrayList<>();
@@ -41,8 +41,7 @@ public class SentenceLengthValidatorTest {
 
     @Test
     public void testWithShortSentence() {
-        SentenceLengthValidator validator = new SentenceLengthValidator();
-        validator.setLengthLimit(30);
+        SentenceLengthValidator validator = new SentenceLengthValidator(singletonMap("max_len", 30));
         Sentence str = new Sentence("this is a sentence.", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
@@ -52,8 +51,7 @@ public class SentenceLengthValidatorTest {
 
     @Test
     public void testWithZeroLengthSentence() {
-        SentenceLengthValidator validator = new SentenceLengthValidator();
-        validator.setLengthLimit(30);
+        SentenceLengthValidator validator = new SentenceLengthValidator(singletonMap("max_len", 30));
         Sentence str = new Sentence("", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
