@@ -30,10 +30,12 @@ class PropertiesParser extends BaseDocumentParser {
             int lineNum = 0;
             while ((line = reader.readLine()) != null) {
                 lineNum++;
+                int length = line.length();
                 int keyStart = skipWhitespace(line, 0);
+                if (keyStart == length) continue;
                 int valueStart = valueOffset(line, keyStart);
-                List<LineOffset> offsets = offsets(lineNum, valueStart, line.length());
-                Sentence sentence = new Sentence(line.substring(valueStart, line.length()), offsets, emptyList());
+                List<LineOffset> offsets = offsets(lineNum, valueStart, length);
+                Sentence sentence = new Sentence(line.substring(valueStart, length), offsets, emptyList());
                 builder.addSection(0).addParagraph().addSentence(sentence);
             }
         }

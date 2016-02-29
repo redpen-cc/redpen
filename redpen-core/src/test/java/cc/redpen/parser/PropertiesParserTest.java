@@ -90,6 +90,14 @@ public class PropertiesParserTest extends BaseParserTest {
     assertEquals(offsets(1, 4, 10), sentence.getOffsetMap());
   }
 
+  @Test
+  public void emptyLines() throws Exception {
+    Document doc = parse("\nkey=value\n\n\n   \n\n");
+    assertEquals(doc.getSection(0), doc.getLastSection());
+    Sentence sentence = doc.getSection(0).getParagraph(0).getSentence(0);
+    assertEquals("value", sentence.getContent());
+  }
+
   private Document parse(String content) throws RedPenException {
     return parser.parse(content, new SentenceExtractor('.'), new WhiteSpaceTokenizer());
   }
