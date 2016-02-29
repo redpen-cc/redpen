@@ -82,6 +82,14 @@ public class PropertiesParserTest extends BaseParserTest {
     assertEquals(offsets(1, 11, 16), sentence.getOffsetMap());
   }
 
+  @Test
+  public void multipleDelimiters() throws Exception {
+    Document doc = parse("key=:value");
+    Sentence sentence = doc.getSection(0).getParagraph(0).getSentence(0);
+    assertEquals(":value", sentence.getContent());
+    assertEquals(offsets(1, 4, 10), sentence.getOffsetMap());
+  }
+
   private Document parse(String content) throws RedPenException {
     return parser.parse(content, new SentenceExtractor('.'), new WhiteSpaceTokenizer());
   }

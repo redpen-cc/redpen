@@ -56,10 +56,10 @@ class PropertiesParser extends BaseDocumentParser {
             char c = line.charAt(i);
             if (c == '\\') i++;
             else if (c == ' ') result = i;
-            else if (c == ':' || c == '=') result = i;
+            else if (c == ':' || c == '=') {result = i; break;}
             else if (result >= 0) break;
         }
-        return result + 1;
+        return skipWhitespace(line, result + 1);
     }
 
     static List<LineOffset> offsets(int lineNum, int startInclusive, int endExclusive) {
