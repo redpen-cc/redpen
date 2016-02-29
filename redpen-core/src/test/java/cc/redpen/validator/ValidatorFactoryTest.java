@@ -20,61 +20,47 @@ package cc.redpen.validator;
 import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
-import cc.redpen.model.Sentence;
+import cc.redpen.validator.sentence.SentenceLengthValidator;
 import org.junit.Test;
 
 import java.io.File;
 
-import static junit.framework.Assert.fail;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-class NotImplementInterfaceValidator {}
+class CustomValidator extends Validator {
+}
 
-class NoConstructorWithConfigsValidator extends Validator {
-    @Override
-    public void validate(Sentence sentence) {
+class NoDefaultConstructorValidator extends Validator {
+    public NoDefaultConstructorValidator(String blah) {
     }
 }
 
 public class ValidatorFactoryTest {
     @Test
-    public void testCreateValidator() {
-        Configuration conf = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration("SentenceLength"))
-                .build();
-        try {
-            ValidatorFactory.getInstance(
-                    conf.getValidatorConfigs().get(0), conf);
-        } catch (RedPenException e) {
-            fail();
-        }
+    public void createValidator() throws RedPenException {
+        Configuration conf = Configuration.builder().addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
+        assertEquals(SentenceLengthValidator.class, ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf).getClass());
+    }
+
+    @Test
+    public void customValidator() throws RedPenException {
+        ValidatorFactory.registerValidator(CustomValidator.class);
+        Configuration conf = Configuration.builder().addValidatorConfig(new ValidatorConfiguration("Custom")).build();
+        assertEquals(CustomValidator.class, ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf).getClass());
     }
 
     @Test(expected = RedPenException.class)
-    public void testThrowExceptionWhenCreateNonExistValidator() throws RedPenException {
-        Configuration conf = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration("Foobar"))
-                .build();
-        ValidatorFactory.getInstance(
-                conf.getValidatorConfigs().get(0), conf);
+    public void validatorDoesNotExist() throws RedPenException {
+        Configuration conf = Configuration.builder().addValidatorConfig(new ValidatorConfiguration("Foobar")).build();
+        ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf);
     }
 
-    @Test(expected = RuntimeException.class)
-    public void testThrowExceptionWhenCreateValidatorNotImplementsInterface() throws RedPenException {
-        Configuration conf = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration("NotImplementInterface"))
-                .build();
-        ValidatorFactory.getInstance(
-                conf.getValidatorConfigs().get(0), conf);
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void testThrowExceptionWhenCreateValidatorWithoutConstructorWithConfigs() throws RedPenException {
-        Configuration conf = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration("NoConstructorWithConfigs"))
-                .build();
-        ValidatorFactory.getInstance(
-                conf.getValidatorConfigs().get(0), conf);
+    @Test(expected = RedPenException.class)
+    public void noDefaultConstructor() throws RedPenException {
+        ValidatorFactory.registerValidator(NoDefaultConstructorValidator.class);
+        Configuration conf = Configuration.builder().addValidatorConfig(new ValidatorConfiguration("NoDefaultConstructor")).build();
+        ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf);
     }
 
     @Test
@@ -96,7 +82,7 @@ public class ValidatorFactoryTest {
                 Class<?> validator = Class.forName(validatorsPackage + "." + name.substring(0, name.length() - 6));
                 if (validator == Validator.class) continue;
                 assertTrue(validator + " must extend " + Validator.class, Validator.class.isAssignableFrom(validator));
-                assertTrue(validator + " must be registered in " + ValidatorFactory.class, ValidatorFactory.defaultValidators.contains(validator));
+                assertTrue(validator + " must be registered in " + ValidatorFactory.class, ValidatorFactory.validators.containsValue(validator));
             }
         }
     }

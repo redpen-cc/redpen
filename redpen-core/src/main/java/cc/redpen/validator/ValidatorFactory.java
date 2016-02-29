@@ -23,27 +23,17 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.validator.section.*;
 import cc.redpen.validator.sentence.*;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashSet;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
-import static java.util.Arrays.asList;
 
 /**
  * Factory class of validators.
  */
 public class ValidatorFactory {
-    private static final String validatorsPackage = Validator.class.getPackage().getName();
-    private static final List<String> VALIDATOR_PACKAGES = asList(validatorsPackage, validatorsPackage + ".sentence", validatorsPackage + ".section");
-
-    static final Set<Class<? extends Validator>> defaultValidators = new HashSet<>();
+    static final Map<String, Class<? extends Validator>> validators = new LinkedHashMap<>();
 
     public static void registerValidator(Class<? extends Validator> clazz) {
-        defaultValidators.add(clazz);
+        validators.put(clazz.getSimpleName().replace("Validator", ""), clazz);
     }
 
     static {
@@ -97,41 +87,16 @@ public class ValidatorFactory {
         return getInstance(conf.getValidatorConfigs().get(0), conf);
     }
 
-    // store validator constructors to save reflection API call costs
-    private static final Map<String, Constructor> validatorConstructorMap = new ConcurrentHashMap<>();
-
     public static Validator getInstance(ValidatorConfiguration config, Configuration globalConfig) throws RedPenException {
-        Constructor<?> constructor = validatorConstructorMap.computeIfAbsent(config.getValidatorClassName(), validatorClassName -> {
-            try {
-                for (String validatorPackage : VALIDATOR_PACKAGES) {
-                    String fqValidatorClassName = validatorPackage + "." + validatorClassName;
-                    try {
-                        Class<?> clazz = Class.forName(fqValidatorClassName);
-                        // ensure the class extends Validator
-                        Class<?> superclass = clazz.getSuperclass();
-                        if (!superclass.equals(cc.redpen.validator.Validator.class)) {
-                            throw new RuntimeException(fqValidatorClassName + " doesn't extend cc.redpen.validator.Validator");
-                        }
-                        return clazz.getConstructor();
-                    } catch (ClassNotFoundException ignore) {
-                    }
-                }
-            } catch (NoSuchMethodException e) {
-                throw new RuntimeException(e);
-            }
-            // unable to find Validator
-            return null;
-        });
-
-        if (constructor == null) {
-            throw new RedPenException("There is no such Validator: " + config.getConfigurationName());
-        }
+        Class<? extends Validator> validatorClass = null;
         try {
-            Validator validator = (Validator) constructor.newInstance();
+            validatorClass = validators.get(config.getConfigurationName());
+            if (validatorClass == null) throw new RedPenException("There is no such validator: " + config.getConfigurationName());
+            Validator validator = validatorClass.newInstance();
             validator.preInit(config, globalConfig);
             return validator;
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(e);
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new RedPenException("Cannot create instance of " + validatorClass + " using default constructor");
         }
     }
 }
