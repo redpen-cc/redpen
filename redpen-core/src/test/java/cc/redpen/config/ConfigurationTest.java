@@ -174,8 +174,7 @@ public class ConfigurationTest {
 
     @Test
     public void canBeCloned() throws Exception {
-        Configuration conf = Configuration.builder("ja")
-          .setVariant("hankaku")
+        Configuration conf = Configuration.builder("ja.hankaku")
           .addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
 
         Configuration clone = conf.clone();
@@ -193,8 +192,7 @@ public class ConfigurationTest {
 
     @Test
     public void equals() throws Exception {
-        Configuration conf = Configuration.builder("ja")
-          .setVariant("hankaku")
+        Configuration conf = Configuration.builder("ja.hankaku")
           .addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
 
         Configuration clone = conf.clone();
@@ -211,8 +209,7 @@ public class ConfigurationTest {
 
     @Test
     public void serializable() throws Exception {
-        Configuration conf = Configuration.builder("ja")
-          .setVariant("hankaku")
+        Configuration conf = Configuration.builder("ja.hankaku")
           .addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
 
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
