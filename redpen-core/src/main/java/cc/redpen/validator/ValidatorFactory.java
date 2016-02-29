@@ -33,10 +33,10 @@ import static java.util.stream.Collectors.toList;
  * Factory class of validators.
  */
 public class ValidatorFactory {
-    static final Map<String, Class<? extends Validator>> validators = new LinkedHashMap<>();
+    static final Map<String, Validator> validators = new LinkedHashMap<>();
 
     public static void registerValidator(Class<? extends Validator> clazz) {
-        validators.put(clazz.getSimpleName().replace("Validator", ""), clazz);
+        validators.put(clazz.getSimpleName().replace("Validator", ""), createValidator(clazz));
     }
 
     static {
@@ -85,33 +85,30 @@ public class ValidatorFactory {
 
     public static List<ValidatorConfiguration> getConfigurations(String lang) {
         return validators.entrySet().stream().filter(e -> {
-            try {
-                List<String> supportedLanguages = e.getValue().newInstance().getSupportedLanguages();
-                return supportedLanguages.isEmpty() || supportedLanguages.contains(lang);
-            }
-            catch (IllegalAccessException | InstantiationException ex) {
-                throw new RuntimeException(ex);
-            }
+            List<String> supportedLanguages = e.getValue().getSupportedLanguages();
+            return supportedLanguages.isEmpty() || supportedLanguages.contains(lang);
         }).map(e -> new ValidatorConfiguration(e.getKey())).collect(toList());
     }
 
     public static Validator getInstance(String validatorName) throws RedPenException {
-        Configuration conf = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration(validatorName))
-                .build();
+        Configuration conf = Configuration.builder().addValidatorConfig(new ValidatorConfiguration(validatorName)).build();
         return getInstance(conf.getValidatorConfigs().get(0), conf);
     }
 
     public static Validator getInstance(ValidatorConfiguration config, Configuration globalConfig) throws RedPenException {
-        Class<? extends Validator> validatorClass = null;
+        Validator prototype = validators.get(config.getConfigurationName());
+        if (prototype == null) throw new RedPenException("There is no such validator: " + config.getConfigurationName());
+        Validator validator = createValidator(prototype.getClass());
+        validator.preInit(config, globalConfig);
+        return validator;
+    }
+
+    private static Validator createValidator(Class<? extends Validator> clazz) {
         try {
-            validatorClass = validators.get(config.getConfigurationName());
-            if (validatorClass == null) throw new RedPenException("There is no such validator: " + config.getConfigurationName());
-            Validator validator = validatorClass.newInstance();
-            validator.preInit(config, globalConfig);
-            return validator;
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new RedPenException("Cannot create instance of " + validatorClass + " using default constructor");
+            return clazz.newInstance();
+        }
+        catch (InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException("Cannot create instance of " + clazz + " using default constructor");
         }
     }
 }

@@ -24,9 +24,9 @@ import cc.redpen.validator.sentence.SentenceLengthValidator;
 import org.junit.Test;
 
 import java.io.File;
+import java.lang.reflect.Modifier;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 class CustomValidator extends Validator {
 }
@@ -57,11 +57,9 @@ public class ValidatorFactoryTest {
         ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf);
     }
 
-    @Test(expected = RedPenException.class)
-    public void noDefaultConstructor() throws RedPenException {
+    @Test(expected = RuntimeException.class)
+    public void noDefaultConstructor() {
         ValidatorFactory.registerValidator(NoDefaultConstructorValidator.class);
-        Configuration conf = Configuration.builder().addValidatorConfig(new ValidatorConfiguration("NoDefaultConstructor")).build();
-        ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf);
     }
 
     @Test
@@ -72,7 +70,7 @@ public class ValidatorFactoryTest {
         checkValidators(validatorsPackage, validators);
     }
 
-    @SuppressWarnings({"ConstantConditions", "SuspiciousMethodCalls"})
+    @SuppressWarnings("ConstantConditions")
     private void checkValidators(String validatorsPackage, File validators) throws ClassNotFoundException {
         for (File file : validators.listFiles()) {
             String name = file.getName();
@@ -80,10 +78,13 @@ public class ValidatorFactoryTest {
                 checkValidators(validatorsPackage + '.' + name, file);
             }
             else if (name.endsWith("Validator.class")) {
-                Class<?> validator = Class.forName(validatorsPackage + "." + name.substring(0, name.length() - 6));
-                if (validator == Validator.class) continue;
-                assertTrue(validator + " must extend " + Validator.class, Validator.class.isAssignableFrom(validator));
-                assertTrue(validator + " must be registered in " + ValidatorFactory.class, ValidatorFactory.validators.containsValue(validator));
+                Class<?> validatorClass = Class.forName(validatorsPackage + "." + name.substring(0, name.length() - 6));
+                if (Modifier.isAbstract(validatorClass.getModifiers())) continue;
+                String validatorName = name.substring(0, name.length() - "Validator.class".length());
+                Validator validator = ValidatorFactory.validators.get(validatorName);
+                assertNotNull(validatorName + " must be registered in " + ValidatorFactory.class, validator);
+                assertTrue(validatorClass + " must extend " + Validator.class, validator instanceof Validator);
+                assertTrue("Registered validator " + name + " must be of " + validatorClass, validatorClass.isAssignableFrom(validator.getClass()));
             }
         }
     }

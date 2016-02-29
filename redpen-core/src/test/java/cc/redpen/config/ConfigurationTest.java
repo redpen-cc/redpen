@@ -227,7 +227,7 @@ public class ConfigurationTest {
     }
 
     @Test
-    public void addAvailbaleValidatorsForLanguage() throws Exception {
+    public void addAvailableValidatorsForLanguage() throws Exception {
         Configuration ja = Configuration.builder("ja").addAvailableValidatorConfigs().build();
         assertTrue(ja.getValidatorConfigs().contains(new ValidatorConfiguration("SentenceLength")));
         assertTrue(ja.getValidatorConfigs().contains(new ValidatorConfiguration("HankakuKana")));
