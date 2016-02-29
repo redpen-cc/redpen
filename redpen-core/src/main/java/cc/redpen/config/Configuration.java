@@ -198,8 +198,11 @@ public class Configuration implements Serializable, Cloneable {
         return new ConfigurationBuilder();
     }
 
-    public static ConfigurationBuilder builder(String lang) {
-        return new ConfigurationBuilder().setLanguage(lang);
+    public static ConfigurationBuilder builder(String key) {
+        int dotPos = key.indexOf('.');
+        ConfigurationBuilder builder = new ConfigurationBuilder().setLanguage(dotPos > 0 ? key.substring(0, dotPos) : key);
+        if (dotPos > 0) builder.setVariant(key.substring(dotPos+1));
+        return builder;
     }
 
     /**
