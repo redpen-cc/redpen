@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static java.util.stream.IntStream.of;
 import static java.util.stream.IntStream.range;
 import static org.junit.Assert.assertEquals;
 
@@ -107,8 +108,6 @@ public class PropertiesParserTest extends BaseParserTest {
     assertEquals("Another comment", sentence.getContent());
   }
 
-  // todo multiple sentences
-
   @Test
   public void valuesAreUnescaped() throws Exception {
     Document doc = parse("hello=Hello\\ W\\u00F6rld\\t");
@@ -122,14 +121,32 @@ public class PropertiesParserTest extends BaseParserTest {
     Document doc = parse("hello=Hello\\\nWorld\\\n\\\nfoo");
     Sentence sentence = doc.getSection(0).getParagraph(0).getSentence(0);
     assertEquals("Hello\nWorld\n\nfoo", sentence.getContent());
-    List<LineOffset> offsets = offsets(1, range(6, 11));
-    offsets.addAll(offsets(2, range(0, 5)));
+    List<LineOffset> offsets = offsets(1, range(6, 12));
+    offsets.addAll(offsets(2, range(0, 6)));
+    offsets.addAll(offsets(3, of(0)));
     offsets.addAll(offsets(4, range(0, 3)));
     assertEquals(offsets, sentence.getOffsetMap());
   }
 
+  @Test
+  public void multipleSentences() throws Exception {
+    Document doc = parse("hello=One sentence. Second one! Third one");
+
+    Sentence sentence = doc.getSection(0).getParagraph(0).getSentence(0);
+    assertEquals("One sentence.", sentence.getContent());
+    assertEquals(offsets(1, range(6, 19)), sentence.getOffsetMap());
+
+    sentence = doc.getSection(0).getParagraph(0).getSentence(1);
+    assertEquals(" Second one!", sentence.getContent());
+    assertEquals(offsets(1, range(19, 31)), sentence.getOffsetMap());
+
+    sentence = doc.getSection(0).getParagraph(0).getSentence(2);
+    assertEquals(" Third one", sentence.getContent());
+    assertEquals(offsets(1, range(31, 41)), sentence.getOffsetMap());
+  }
+
   private Document parse(String content) throws RedPenException {
-    return parser.parse(content, new SentenceExtractor('.'), new WhiteSpaceTokenizer());
+    return parser.parse(content, new SentenceExtractor('.', '!'), new WhiteSpaceTokenizer());
   }
 
   // todo detect UTF-8 vs ISO-8859-1 files

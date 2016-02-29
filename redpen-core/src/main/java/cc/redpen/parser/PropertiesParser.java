@@ -34,8 +34,7 @@ class PropertiesParser extends BaseDocumentParser {
                 int keyStart = skipWhitespace(line, 0);
                 if (keyStart == line.length()) continue;
                 int valueStart = valueOffset(line, keyStart);
-                Sentence sentence = sentence(line, lineNum, valueStart, reader);
-                builder.addSection(0).addParagraph().addSentence(sentence);
+                addSentences(builder, sentenceExtractor, section(line, lineNum, valueStart, reader));
             }
         }
         catch (IOException e) {
@@ -45,17 +44,30 @@ class PropertiesParser extends BaseDocumentParser {
         return builder.build();
     }
 
-    private Sentence sentence(String line, AtomicInteger lineNum, int valueStart, BufferedReader reader) throws IOException {
+    private void addSentences(Document.DocumentBuilder builder, SentenceExtractor sentenceExtractor, ValueWithOffsets value) {
+        String text = value.getContent();
+        List<LineOffset> offsets = value.getOffsetMap();
+        builder.addSection(0).addParagraph();
+        while (text.length() > 0) {
+            int end = sentenceExtractor.getSentenceEndPosition(text) + 1;
+            if (end == 0) end = text.length();
+            builder.addSentence(new Sentence(text.substring(0, end), offsets.subList(0, end), emptyList()));
+            text = text.substring(end, text.length());
+            offsets = offsets.subList(end, offsets.size());
+        }
+    }
+
+    private ValueWithOffsets section(String line, AtomicInteger lineNum, int valueStart, BufferedReader reader) throws IOException {
         int length = line.length();
         StringBuilder value = new StringBuilder(length);
         List<LineOffset> offsets = new ArrayList<>(length);
         for (int i = valueStart; i < length; i++) {
             char c = line.charAt(i);
-            int offset = i;
+            offsets.add(new LineOffset(lineNum.get(), i));
             if (c == '\\') {
                 if (++i == length) {
                     lineNum.incrementAndGet();
-                    Sentence nextLine = sentence(reader.readLine(), lineNum, 0, reader);
+                    Sentence nextLine = section(reader.readLine(), lineNum, 0, reader);
                     value.append('\n').append(nextLine.getContent());
                     offsets.addAll(nextLine.getOffsetMap());
                     continue;
@@ -73,9 +85,8 @@ class PropertiesParser extends BaseDocumentParser {
                 }
             }
             value.append(c);
-            offsets.add(new LineOffset(lineNum.get(), offset));
         }
-        return new Sentence(value.toString(), offsets, emptyList());
+        return new ValueWithOffsets(value.toString(), offsets);
     }
 
     private int skipWhitespace(String line, int start) {
@@ -94,5 +105,11 @@ class PropertiesParser extends BaseDocumentParser {
             else if (result >= 0) break;
         }
         return skipWhitespace(line, result + 1);
+    }
+
+    private static class ValueWithOffsets extends Sentence {
+        public ValueWithOffsets(String content, List<LineOffset> offsetMap) {
+            super(content, offsetMap, emptyList());
+        }
     }
 }
