@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static cc.redpen.parser.PropertiesParser.offsets;
+import static java.util.stream.IntStream.range;
 import static org.junit.Assert.assertEquals;
 
 public class PropertiesParserTest extends BaseParserTest {
@@ -43,7 +43,7 @@ public class PropertiesParserTest extends BaseParserTest {
     Sentence sentence = sentences.get(0);
     assertEquals("world ", sentence.getContent());
     assertEquals(1, sentence.getLineNumber());
-    assertEquals(offsets(1, 8, 14), sentence.getOffsetMap());
+    assertEquals(offsets(1, range(8, 14)), sentence.getOffsetMap());
   }
 
   @Test
@@ -53,17 +53,17 @@ public class PropertiesParserTest extends BaseParserTest {
     Sentence sentence = doc.getSection(0).getParagraph(0).getSentence(0);
     assertEquals("world", sentence.getContent());
     assertEquals(1, sentence.getLineNumber());
-    assertEquals(offsets(1, 8, 13), sentence.getOffsetMap());
+    assertEquals(offsets(1, range(8, 13)), sentence.getOffsetMap());
 
     sentence = doc.getSection(1).getParagraph(0).getSentence(0);
     assertEquals("earth", sentence.getContent());
     assertEquals(2, sentence.getLineNumber());
-    assertEquals(offsets(2, 6, 11), sentence.getOffsetMap());
+    assertEquals(offsets(2, range(6, 11)), sentence.getOffsetMap());
 
     sentence = doc.getSection(2).getParagraph(0).getSentence(0);
     assertEquals("val", sentence.getContent());
     assertEquals(3, sentence.getLineNumber());
-    assertEquals(offsets(3, 6, 9), sentence.getOffsetMap());
+    assertEquals(offsets(3, range(6, 9)), sentence.getOffsetMap());
   }
 
   @Test
@@ -71,7 +71,7 @@ public class PropertiesParserTest extends BaseParserTest {
     Document doc = parse("hi there the first hi is a key");
     Sentence sentence = doc.getSection(0).getParagraph(0).getSentence(0);
     assertEquals("there the first hi is a key", sentence.getContent());
-    assertEquals(offsets(1, 3, 30), sentence.getOffsetMap());
+    assertEquals(offsets(1, range(3, 30)), sentence.getOffsetMap());
   }
 
   @Test
@@ -79,7 +79,7 @@ public class PropertiesParserTest extends BaseParserTest {
     Document doc = parse("two\\ words=value");
     Sentence sentence = doc.getSection(0).getParagraph(0).getSentence(0);
     assertEquals("value", sentence.getContent());
-    assertEquals(offsets(1, 11, 16), sentence.getOffsetMap());
+    assertEquals(offsets(1, range(11, 16)), sentence.getOffsetMap());
   }
 
   @Test
@@ -87,7 +87,7 @@ public class PropertiesParserTest extends BaseParserTest {
     Document doc = parse("key=:value");
     Sentence sentence = doc.getSection(0).getParagraph(0).getSentence(0);
     assertEquals(":value", sentence.getContent());
-    assertEquals(offsets(1, 4, 10), sentence.getOffsetMap());
+    assertEquals(offsets(1, range(4, 10)), sentence.getOffsetMap());
   }
 
   @Test
@@ -100,9 +100,22 @@ public class PropertiesParserTest extends BaseParserTest {
 
   @Test
   public void comments() throws Exception {
-    Document doc = parse(" #Hello World\n");
+    Document doc = parse(" #Hello World\n!Another comment");
     Sentence sentence = doc.getSection(0).getParagraph(0).getSentence(0);
     assertEquals("Hello World", sentence.getContent());
+    sentence = doc.getSection(1).getParagraph(0).getSentence(0);
+    assertEquals("Another comment", sentence.getContent());
+  }
+
+  // todo multiple sentences
+  // todo multiline values
+
+  @Test
+  public void valuesAreUnescaped() throws Exception {
+    Document doc = parse("hello=Hello\\ W\\u00F6rld\\t");
+    Sentence sentence = doc.getSection(0).getParagraph(0).getSentence(0);
+    assertEquals("Hello Wörld\t", sentence.getContent());
+    assertEquals(offsets(1, range(6, 12), range(13, 15), range(20, 24)), sentence.getOffsetMap());
   }
 
   private Document parse(String content) throws RedPenException {
