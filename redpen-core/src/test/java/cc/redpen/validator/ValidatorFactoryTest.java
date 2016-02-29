@@ -23,7 +23,10 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import org.junit.Test;
 
+import java.io.File;
+
 import static junit.framework.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 class NotImplementInterfaceValidator {}
 
@@ -74,4 +77,27 @@ public class ValidatorFactoryTest {
                 conf.getValidatorConfigs().get(0), conf);
     }
 
+    @Test
+    public void allDefaultValidatorsAreRegistered() throws Exception {
+        String validatorsPackage = Validator.class.getPackage().getName();
+        File classes = new File(Validator.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+        File validators = new File(classes, validatorsPackage.replace(".", "/"));
+        checkValidators(validatorsPackage, validators);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void checkValidators(String validatorsPackage, File validators) throws ClassNotFoundException {
+        for (File file : validators.listFiles()) {
+            String name = file.getName();
+            if (file.isDirectory()) {
+                checkValidators(validatorsPackage + '.' + name, file);
+            }
+            else if (name.endsWith("Validator.class")) {
+                Class<?> validator = Class.forName(validatorsPackage + "." + name.substring(0, name.length() - 6));
+                if (validator == Validator.class) continue;
+                assertTrue(validator + " must extend " + Validator.class, Validator.class.isAssignableFrom(validator));
+                assertTrue(validator + " must be registered in " + ValidatorFactory.class, ValidatorFactory.defaultValidators.contains(validator));
+            }
+        }
+    }
 }

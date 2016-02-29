@@ -20,11 +20,15 @@ package cc.redpen.validator;
 import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
+import cc.redpen.validator.section.*;
+import cc.redpen.validator.sentence.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Arrays.asList;
@@ -33,7 +37,58 @@ import static java.util.Arrays.asList;
  * Factory class of validators.
  */
 public class ValidatorFactory {
-    private static final List<String> VALIDATOR_PACKAGES = asList("cc.redpen.validator", "cc.redpen.validator.sentence", "cc.redpen.validator.section");
+    private static final String validatorsPackage = Validator.class.getPackage().getName();
+    private static final List<String> VALIDATOR_PACKAGES = asList(validatorsPackage, validatorsPackage + ".sentence", validatorsPackage + ".section");
+
+    static final Set<Class<? extends Validator>> defaultValidators = new HashSet<>();
+
+    public static void registerValidator(Class<? extends Validator> clazz) {
+        defaultValidators.add(clazz);
+    }
+
+    static {
+        // section
+        registerValidator(DuplicatedSectionValidator.class);
+        registerValidator(FrequentSentenceStartValidator.class);
+        registerValidator(ParagraphNumberValidator.class);
+        registerValidator(ParagraphStartWithValidator.class);
+        registerValidator(SectionLengthValidator.class);
+        registerValidator(UnexpandedAcronymValidator.class);
+        registerValidator(WordFrequencyValidator.class);
+
+        // sentence
+        registerValidator(CommaNumberValidator.class);
+        registerValidator(ContractionValidator.class);
+        registerValidator(DoubledJoshiValidator.class);
+        registerValidator(DoubledWordValidator.class);
+        registerValidator(DoubleNegativeValidator.class);
+        registerValidator(EndOfSentenceValidator.class);
+        registerValidator(HankakuKanaValidator.class);
+        registerValidator(HyphenationValidator.class);
+        registerValidator(InvalidExpressionValidator.class);
+        registerValidator(InvalidSymbolValidator.class);
+        registerValidator(InvalidWordValidator.class);
+        registerValidator(JapaneseStyleValidator.class);
+        registerValidator(KatakanaEndHyphenValidator.class);
+        registerValidator(KatakanaSpellCheckValidator.class);
+        registerValidator(NumberFormatValidator.class);
+        registerValidator(OkuriganaValidator.class);
+        registerValidator(ParenthesizedSentenceValidator.class);
+        registerValidator(QuotationValidator.class);
+        registerValidator(SentenceLengthValidator.class);
+        registerValidator(SpaceBeginningOfSentenceValidator.class);
+        registerValidator(SpaceBetweenAlphabeticalWordValidator.class);
+        registerValidator(SpellingValidator.class);
+        registerValidator(StartWithCapitalLetterValidator.class);
+        registerValidator(SuccessiveWordValidator.class);
+        registerValidator(SuggestExpressionValidator.class);
+        registerValidator(SymbolWithSpaceValidator.class);
+        registerValidator(WeakExpressionValidator.class);
+        registerValidator(WordNumberValidator.class);
+
+        // other
+        registerValidator(JavaScriptValidator.class);
+    }
 
     public static Validator getInstance(String validatorName) throws RedPenException {
         Configuration conf = Configuration.builder()
