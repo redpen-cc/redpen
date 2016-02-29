@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.lang.Integer.parseInt;
 import static java.util.Collections.emptyList;
@@ -27,13 +28,13 @@ class PropertiesParser extends BaseDocumentParser {
 
         try (BufferedReader reader = createReader(inputStream)) {
             String line;
-            int lineNum = 0;
+            AtomicInteger lineNum = new AtomicInteger(0);
             while ((line = reader.readLine()) != null) {
-                lineNum++;
+                lineNum.incrementAndGet();
                 int keyStart = skipWhitespace(line, 0);
                 if (keyStart == line.length()) continue;
                 int valueStart = valueOffset(line, keyStart);
-                Sentence sentence = sentence(line, lineNum, valueStart);
+                Sentence sentence = sentence(line, lineNum, valueStart, reader);
                 builder.addSection(0).addParagraph().addSentence(sentence);
             }
         }
@@ -44,15 +45,23 @@ class PropertiesParser extends BaseDocumentParser {
         return builder.build();
     }
 
-    private Sentence sentence(String line, int lineNum, int valueStart) {
+    private Sentence sentence(String line, AtomicInteger lineNum, int valueStart, BufferedReader reader) throws IOException {
         int length = line.length();
         StringBuilder value = new StringBuilder(length);
         List<LineOffset> offsets = new ArrayList<>(length);
         for (int i = valueStart; i < length; i++) {
             char c = line.charAt(i);
-            offsets.add(new LineOffset(lineNum, i));
+            int offset = i;
             if (c == '\\') {
-                c = line.charAt(++i);
+                if (++i == length) {
+                    lineNum.incrementAndGet();
+                    Sentence nextLine = sentence(reader.readLine(), lineNum, 0, reader);
+                    value.append('\n').append(nextLine.getContent());
+                    offsets.addAll(nextLine.getOffsetMap());
+                    continue;
+                }
+
+                c = line.charAt(i);
                 if (c == 'n') c = '\n';
                 else if (c == 't') c = '\t';
                 else if (c == 'f') c = '\f';
@@ -64,6 +73,7 @@ class PropertiesParser extends BaseDocumentParser {
                 }
             }
             value.append(c);
+            offsets.add(new LineOffset(lineNum.get(), offset));
         }
         return new Sentence(value.toString(), offsets, emptyList());
     }

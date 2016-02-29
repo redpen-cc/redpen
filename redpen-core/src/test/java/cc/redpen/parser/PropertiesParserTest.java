@@ -108,7 +108,6 @@ public class PropertiesParserTest extends BaseParserTest {
   }
 
   // todo multiple sentences
-  // todo multiline values
 
   @Test
   public void valuesAreUnescaped() throws Exception {
@@ -116,6 +115,17 @@ public class PropertiesParserTest extends BaseParserTest {
     Sentence sentence = doc.getSection(0).getParagraph(0).getSentence(0);
     assertEquals("Hello Wörld\t", sentence.getContent());
     assertEquals(offsets(1, range(6, 12), range(13, 15), range(20, 24)), sentence.getOffsetMap());
+  }
+
+  @Test
+  public void multilineValue() throws Exception {
+    Document doc = parse("hello=Hello\\\nWorld\\\n\\\nfoo");
+    Sentence sentence = doc.getSection(0).getParagraph(0).getSentence(0);
+    assertEquals("Hello\nWorld\n\nfoo", sentence.getContent());
+    List<LineOffset> offsets = offsets(1, range(6, 11));
+    offsets.addAll(offsets(2, range(0, 5)));
+    offsets.addAll(offsets(4, range(0, 3)));
+    assertEquals(offsets, sentence.getOffsetMap());
   }
 
   private Document parse(String content) throws RedPenException {
