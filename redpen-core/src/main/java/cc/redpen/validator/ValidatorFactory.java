@@ -23,27 +23,17 @@ import cc.redpen.config.ValidatorConfiguration;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static java.util.Arrays.asList;
 
 /**
  * Factory class of validators.
  */
 public class ValidatorFactory {
-    private static final List<String> VALIDATOR_PACKAGES = new ArrayList<>();
-
-    static {
-        addValidatorPackage("cc.redpen.validator");
-        addValidatorPackage("cc.redpen.validator.sentence");
-        addValidatorPackage("cc.redpen.validator.section");
-    }
-
-    // can be made public if package needs to be added outside RedPen.
-    private static void addValidatorPackage(String packageToAdd) {
-        VALIDATOR_PACKAGES.add(packageToAdd);
-    }
+    private static final List<String> VALIDATOR_PACKAGES = asList("cc.redpen.validator", "cc.redpen.validator.sentence", "cc.redpen.validator.section");
 
     public static Validator getInstance(String validatorName) throws RedPenException {
         Configuration conf = Configuration.builder()
