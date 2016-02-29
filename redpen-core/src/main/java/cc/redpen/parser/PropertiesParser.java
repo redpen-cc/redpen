@@ -63,10 +63,11 @@ class PropertiesParser extends BaseDocumentParser {
         List<LineOffset> offsets = new ArrayList<>(length);
         for (int i = valueStart; i < length; i++) {
             char c = line.charAt(i);
-            offsets.add(new LineOffset(lineNum.get(), i));
+            int offset = i;
             if (c == '\\') {
                 if (++i == length) {
                     lineNum.incrementAndGet();
+                    offsets.add(new LineOffset(lineNum.get(), 0));
                     Sentence nextLine = section(reader.readLine(), lineNum, 0, reader);
                     value.append('\n').append(nextLine.getContent());
                     offsets.addAll(nextLine.getOffsetMap());
@@ -85,6 +86,7 @@ class PropertiesParser extends BaseDocumentParser {
                 }
             }
             value.append(c);
+            offsets.add(new LineOffset(lineNum.get(), offset));
         }
         return new ValueWithOffsets(value.toString(), offsets);
     }
