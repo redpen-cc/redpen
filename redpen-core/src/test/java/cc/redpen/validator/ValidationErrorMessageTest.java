@@ -21,6 +21,13 @@ import cc.redpen.model.Sentence;
 
 class ValidationErrorMessageTest extends Validator {
 
+    public ValidationErrorMessageTest() {
+    }
+
+    public ValidationErrorMessageTest(Object...defaultAttributes) {
+        super(defaultAttributes);
+    }
+
     @Override
     public void validate(Sentence sentence) {
         addLocalizedError(sentence, 1, 2, 3, "sentence");
