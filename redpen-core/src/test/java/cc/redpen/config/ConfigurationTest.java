@@ -235,5 +235,9 @@ public class ConfigurationTest {
 
         ValidatorConfiguration sentenceLength = en.getValidatorConfigs().stream().filter(v -> v.getConfigurationName().equals("SentenceLength")).findAny().get();
         assertEquals("120", sentenceLength.getAttribute("max_len"));
+
+        ValidatorConfiguration spelling = en.getValidatorConfigs().stream().filter(v -> v.getConfigurationName().equals("Spelling")).findAny().get();
+        assertEquals("", spelling.getAttribute("list"));
+        assertEquals("", spelling.getAttribute("dict"));
     }
 }

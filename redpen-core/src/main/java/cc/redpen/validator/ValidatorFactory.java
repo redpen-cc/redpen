@@ -23,12 +23,14 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.validator.section.*;
 import cc.redpen.validator.sentence.*;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.*;
+import static org.apache.commons.lang3.StringUtils.join;
 
 /**
  * Factory class of validators.
@@ -93,8 +95,16 @@ public class ValidatorFactory {
         }).map(e -> new ValidatorConfiguration(e.getKey(), toStrings(e.getValue().getAttributes()))).collect(toList());
     }
 
-    private static Map<String, String> toStrings(Map<String, Object> attributes) {
-        return attributes.entrySet().stream().collect(toMap(Map.Entry::getKey, e -> e.getValue().toString()));
+    @SuppressWarnings("unchecked")
+    static Map<String, String> toStrings(Map<String, Object> attributes) {
+        Map<String, String> result = new LinkedHashMap<>();
+        for (Map.Entry<String, Object> e : attributes.entrySet()) {
+            if (e.getValue() instanceof Iterable)
+                result.put(e.getKey(), join((Iterable)e.getValue(), ','));
+            else
+                result.put(e.getKey(), e.getValue().toString());
+        }
+        return result;
     }
 
     public static Validator getInstance(String validatorName) throws RedPenException {
