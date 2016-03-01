@@ -113,7 +113,7 @@ public abstract class Validator {
         return Collections.emptyList();
     }
 
-    final void preInit(ValidatorConfiguration config, Configuration globalConfig) throws RedPenException {
+    public final void preInit(ValidatorConfiguration config, Configuration globalConfig) throws RedPenException {
         this.config = config;
         this.globalConfig = globalConfig;
         init();

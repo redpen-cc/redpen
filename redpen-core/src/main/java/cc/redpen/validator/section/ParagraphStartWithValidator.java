@@ -26,12 +26,12 @@ import cc.redpen.validator.Validator;
 /**
  * Validate whether paragraph start as specified.
  */
-final public class ParagraphStartWithValidator extends Validator {
+public final class ParagraphStartWithValidator extends Validator {
     /**
      * Default matter paragraph start with.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final String DEFAULT_PARAGRAPH_START_WITH = " ";
+    public static final String DEFAULT_PARAGRAPH_START_WITH = "";
     private String beginningOfParagraph = DEFAULT_PARAGRAPH_START_WITH;
 
     @Override
