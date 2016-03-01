@@ -17,12 +17,13 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.StringUtils;
-import cc.redpen.validator.Validator;
+import cc.redpen.validator.DictionaryValidator;
 
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 import static java.util.Collections.singletonList;
 
@@ -45,7 +46,7 @@ import static java.util.Collections.singletonList;
  * <p>
  * Note that KatakanaEndHyphenValidator only checks the rules a) and b).
  */
-public final class KatakanaEndHyphenValidator extends Validator {
+public final class KatakanaEndHyphenValidator extends DictionaryValidator {
     /**
      * Default Katakana limit length without hypen.
      */
@@ -58,10 +59,6 @@ public final class KatakanaEndHyphenValidator extends Validator {
      * Katakana middle dot character.
      */
     private static final char KATAKANA_MIDDLE_DOT = '・';
-
-    public KatakanaEndHyphenValidator() {
-        super("list", new HashSet<>());
-    }
 
     public static boolean isKatakanaEndHyphen(String katakana) {
         return (DEFAULT_KATAKANA_LIMIT_LENGTH < katakana.length()
@@ -94,14 +91,6 @@ public final class KatakanaEndHyphenValidator extends Validator {
             if (isKatakanaEndHyphen(katakana)) {
                 addLocalizedErrorWithPosition(sentence, position, position + 1, katakana);
             }
-        }
-    }
-
-    @Override
-    protected void init() throws RedPenException {
-        Optional<String> confFile = getConfigAttribute("dict");
-        if (confFile.isPresent()) {
-            getSetAttribute("list").addAll(WORD_LIST.loadCachedFromFile(findFile(confFile.get()), "KatakanaEndHyphenValidator user dictionary"));
         }
     }
 }

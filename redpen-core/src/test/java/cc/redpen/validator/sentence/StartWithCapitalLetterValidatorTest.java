@@ -27,7 +27,6 @@ import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import cc.redpen.validator.ValidatorFactory;
-import junit.framework.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -160,9 +159,8 @@ public class StartWithCapitalLetterValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.get(0)).size());
+        assertEquals(0, errors.get(documents.get(0)).size());
     }
-
 
     @Test
     public void testDetectStartWithSmallCharacterInSecondSentence() throws RedPenException {
@@ -180,6 +178,6 @@ public class StartWithCapitalLetterValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(1, errors.get(documents.get(0)).size());
+        assertEquals(1, errors.get(documents.get(0)).size());
     }
 }
