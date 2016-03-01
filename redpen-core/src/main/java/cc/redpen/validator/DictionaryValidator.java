@@ -23,17 +23,17 @@ public abstract class DictionaryValidator extends Validator {
 
   public DictionaryValidator(Object...attributes) {
     this();
-    addAttributes(attributes);
-  }
-
-  public DictionaryValidator(DictionaryLoader<Set<String>> loader) {
-    this();
-    this.loader = loader;
+    addDefaultAttributes(attributes);
   }
 
   public DictionaryValidator(String defaultDictionaryPrefix) {
     this();
     this.defaultDictionaryPrefix = defaultDictionaryPrefix;
+  }
+
+  public DictionaryValidator(DictionaryLoader<Set<String>> loader, String defaultDictionaryPrefix) {
+    this(defaultDictionaryPrefix);
+    this.loader = loader;
   }
 
   @Override protected void init() throws RedPenException {
