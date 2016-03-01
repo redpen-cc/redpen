@@ -24,11 +24,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockServletContext;
 
 import javax.ws.rs.core.MediaType;
 import java.io.FileNotFoundException;
 import java.util.Set;
+
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static javax.ws.rs.core.MediaType.WILDCARD;
 
 public class RedPenResourceTest extends MockServletInvocationTest {
 
@@ -44,11 +46,8 @@ public class RedPenResourceTest extends MockServletInvocationTest {
     }
 
     public void testRun() throws Exception {
-        MockHttpServletRequest request =
-                constructMockRequest("POST", "/document/validate", MediaType.WILDCARD);
-        request.setContent(("document=Foobar").getBytes());
-        MockServletContext context = new MockServletContext();
-        context.addInitParameter("redpen.conf.path", "conf/redpen-conf.xml");
+        MockHttpServletRequest request = constructMockRequest("POST", "/document/validate", WILDCARD);
+        request.setContent("document=Foobar".getBytes());
         MockHttpServletResponse response = invoke(request);
 
         assertEquals("HTTP status", HttpStatus.OK.getCode(), response.getStatus());
@@ -57,11 +56,8 @@ public class RedPenResourceTest extends MockServletInvocationTest {
     }
 
     public void testRunWithErrors() throws Exception {
-        MockHttpServletRequest request =
-                constructMockRequest("POST", "/document/validate", MediaType.WILDCARD);
+        MockHttpServletRequest request = constructMockRequest("POST", "/document/validate", WILDCARD);
         request.setContent(("document=foobar.foobar").getBytes()); //NOTE: need space between periods.
-        MockServletContext context = new MockServletContext();
-        context.addInitParameter("redpen.conf.path", "conf/redpen-conf.xml");
         MockHttpServletResponse response = invoke(request);
 
         assertEquals("HTTP status", HttpStatus.OK.getCode(), response.getStatus());
@@ -74,31 +70,23 @@ public class RedPenResourceTest extends MockServletInvocationTest {
     }
 
     public void testRunWithoutContent() throws Exception {
-        MockHttpServletRequest request =
-                constructMockRequest("POST", "/document/validate", MediaType.WILDCARD);
+        MockHttpServletRequest request = constructMockRequest("POST", "/document/validate", WILDCARD);
         request.setContent(("").getBytes()); //NOTE: need space between periods.
-        MockServletContext context = new MockServletContext();
-        context.addInitParameter("redpen.conf.path", "conf/redpen-conf.xml");
         MockHttpServletResponse response = invoke(request);
         assertEquals("HTTP status", HttpStatus.OK.getCode(), response.getStatus());
     }
 
     public void testRunWithOnlyFormName() throws Exception {
-        MockHttpServletRequest request =
-                constructMockRequest("POST", "/document/validate", MediaType.WILDCARD);
+        MockHttpServletRequest request = constructMockRequest("POST", "/document/validate", WILDCARD);
         request.setContent(("document=").getBytes()); //NOTE: need space between periods.
-        MockServletContext context = new MockServletContext();
-        context.addInitParameter("redpen.conf.path", "conf/redpen-conf.xml");
         MockHttpServletResponse response = invoke(request);
 
         assertEquals("HTTP status", HttpStatus.OK.getCode(), response.getStatus());
     }
 
     public void testJSValidatorRuns() throws Exception {
-        MockHttpServletRequest request =
-            constructMockRequest("POST", "/document/validate/json", MediaType.WILDCARD, MediaType.APPLICATION_JSON);
+        MockHttpServletRequest request = constructMockRequest("POST", "/document/validate/json", WILDCARD, APPLICATION_JSON);
         request.setContent(String.format("{\"document\":\"Test, this is a test.\",\"format\":\"json2\",\"documentParser\":\"PLAIN\",\"config\":{\"lang\":\"en\",\"validators\":{\"JavaScript\":{\"properties\":{\"script-path\":\"%s\"}}}}}", "./src/test/resources/js").getBytes());
-        MockServletContext context = new MockServletContext();
         MockHttpServletResponse response = invoke(request);
 
         assertEquals("HTTP status", HttpStatus.OK.getCode(), response.getStatus());
@@ -116,16 +104,11 @@ public class RedPenResourceTest extends MockServletInvocationTest {
     }
 
     // test helper
-    private MockHttpServletRequest constructMockRequest(String method,
-                                                        String requestURI,
-                                                        String acceptHeader) {
+    private MockHttpServletRequest constructMockRequest(String method, String requestURI, String acceptHeader) {
         return constructMockRequest(method, requestURI, acceptHeader, MediaType.APPLICATION_FORM_URLENCODED);
     }
 
-    private MockHttpServletRequest constructMockRequest(String method,
-                                                        String requestURI,
-                                                        String acceptHeader,
-                                                        String contentType) {
+    private MockHttpServletRequest constructMockRequest(String method, String requestURI, String acceptHeader, String contentType) {
         MockHttpServletRequest mockRequest = new MockHttpServletRequest() {
             public String getPathTranslated() {
                 return null; // prevent Spring to resolve the file on the filesystem which fails
@@ -140,5 +123,4 @@ public class RedPenResourceTest extends MockServletInvocationTest {
         mockRequest.setContentType(contentType);
         return mockRequest;
     }
-
 }
