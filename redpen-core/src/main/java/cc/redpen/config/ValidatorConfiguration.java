@@ -30,13 +30,19 @@ public class ValidatorConfiguration implements Serializable, Cloneable {
     private Map<String, String> attributes;
 
     /**
-     * Constructor.
-     *
      * @param name name configuration settings
      */
     public ValidatorConfiguration(String name) {
+        this(name, new HashMap<>());
+    }
+
+    /**
+     * @param name name configuration settings
+     * @param attributes validator attributes
+     */
+    public ValidatorConfiguration(String name, Map<String, String> attributes) {
         this.configurationName = name;
-        this.attributes = new HashMap<>();
+        this.attributes = attributes;
     }
 
     /**

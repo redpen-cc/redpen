@@ -201,11 +201,14 @@ public class ConfigurationTest {
     @Test
     public void addAvailableValidatorsForLanguage() throws Exception {
         Configuration ja = Configuration.builder("ja").addAvailableValidatorConfigs().build();
-        assertTrue(ja.getValidatorConfigs().contains(new ValidatorConfiguration("SentenceLength")));
-        assertTrue(ja.getValidatorConfigs().contains(new ValidatorConfiguration("HankakuKana")));
+        assertTrue(ja.getValidatorConfigs().stream().anyMatch(v -> v.getConfigurationName().equals("SentenceLength")));
+        assertTrue(ja.getValidatorConfigs().stream().anyMatch(v -> v.getConfigurationName().equals("HankakuKana")));
 
         Configuration en = Configuration.builder("en").addAvailableValidatorConfigs().build();
-        assertTrue(en.getValidatorConfigs().contains(new ValidatorConfiguration("SentenceLength")));
-        assertFalse(en.getValidatorConfigs().contains(new ValidatorConfiguration("HankakuKana")));
+        assertTrue(en.getValidatorConfigs().stream().anyMatch(v -> v.getConfigurationName().equals("SentenceLength")));
+        assertFalse(en.getValidatorConfigs().stream().anyMatch(v -> v.getConfigurationName().equals("HankakuKana")));
+
+        ValidatorConfiguration sentenceLength = en.getValidatorConfigs().stream().filter(v -> v.getConfigurationName().equals("SentenceLength")).findAny().get();
+        assertEquals("120", sentenceLength.getAttribute("max_len"));
     }
 }

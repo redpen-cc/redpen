@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * Factory class of validators.
@@ -87,7 +88,11 @@ public class ValidatorFactory {
         return validators.entrySet().stream().filter(e -> {
             List<String> supportedLanguages = e.getValue().getSupportedLanguages();
             return supportedLanguages.isEmpty() || supportedLanguages.contains(lang);
-        }).map(e -> new ValidatorConfiguration(e.getKey())).collect(toList());
+        }).map(e -> new ValidatorConfiguration(e.getKey(), toStrings(e.getValue().getAttributes()))).collect(toList());
+    }
+
+    private static Map<String, String> toStrings(Map<String, Object> attributes) {
+        return attributes.entrySet().stream().collect(toMap(Map.Entry::getKey, e -> e.getValue().toString()));
     }
 
     public static Validator getInstance(String validatorName) throws RedPenException {
