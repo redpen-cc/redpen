@@ -423,6 +423,9 @@ input[type="radio"], input[type="checkbox"] {
 
 .redpen-validator-properties {
     float: right;
+    text-align: right;
+    max-width: 50%;
+    margin-bottom: 5px;
 }
 
 .redpen-symboltable {
