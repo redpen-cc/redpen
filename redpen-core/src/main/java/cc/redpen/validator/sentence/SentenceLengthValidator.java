@@ -20,18 +20,12 @@ package cc.redpen.validator.sentence;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.Validator;
 
-import java.util.Map;
-
 /**
  * Validate input sentences contain more characters more than specified.
  */
 public final class SentenceLengthValidator extends Validator {
     public SentenceLengthValidator() {
         super("max_len", 120);
-    }
-
-    public SentenceLengthValidator(Map<String, Object> attributes) {
-        super(attributes);
     }
 
     @Override

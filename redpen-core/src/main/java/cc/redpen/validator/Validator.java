@@ -146,7 +146,7 @@ public abstract class Validator {
             else if (defaultValue instanceof Boolean)
                 attributes.put(name, Boolean.valueOf(value));
             else if (defaultValue instanceof Set)
-                attributes.put(name, isEmpty(value) ? new HashSet<>() : new HashSet<>(asList((value).split(","))));
+                attributes.put(name, isEmpty(value) ? defaultValue : new HashSet<>(asList((value).split(","))));
             else
                 attributes.put(name, value);
         });

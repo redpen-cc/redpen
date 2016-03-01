@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-import static java.util.Collections.emptySet;
 import static java.util.Collections.singletonList;
 
 /**
@@ -72,7 +71,7 @@ import static java.util.Collections.singletonList;
     private Map<String, Integer> katakanaWordFrequencies = new HashMap<>();
 
     public KatakanaSpellCheckValidator() {
-        super("list", emptySet(),
+        super("list", new HashSet<>(),
               "min_ratio", 0.3f, // The default threshold of similarity ratio between the length and the distance. The similarities are computed by edit distance.
               "min_freq", 5, // The default threshold of word frequencies of Katakana Words.
               "max_ignore_len", 3, // The default threshold value for the length of Katakana word to ignore

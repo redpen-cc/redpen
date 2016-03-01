@@ -22,12 +22,8 @@ import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.validator.Validator;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
-import static java.util.Collections.emptySet;
 import static java.util.Collections.singletonList;
 
 /**
@@ -38,7 +34,7 @@ final public class InvalidWordValidator extends Validator {
     private Set<String> invalidWords;
 
     public InvalidWordValidator() {
-        super("list", emptySet());
+        super("list", new HashSet<>());
     }
 
     @Override

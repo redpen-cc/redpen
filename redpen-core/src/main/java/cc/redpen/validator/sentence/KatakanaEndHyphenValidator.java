@@ -22,11 +22,8 @@ import cc.redpen.model.Sentence;
 import cc.redpen.util.StringUtils;
 import cc.redpen.validator.Validator;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 
-import static java.util.Collections.emptySet;
 import static java.util.Collections.singletonList;
 
 /**
@@ -63,7 +60,7 @@ public final class KatakanaEndHyphenValidator extends Validator {
     private static final char KATAKANA_MIDDLE_DOT = '・';
 
     public KatakanaEndHyphenValidator() {
-        super("list", emptySet());
+        super("list", new HashSet<>());
     }
 
     public static boolean isKatakanaEndHyphen(String katakana) {
@@ -78,7 +75,7 @@ public final class KatakanaEndHyphenValidator extends Validator {
 
     @Override
     public void validate(Sentence sentence) {
-        StringBuilder katakana = new StringBuilder("");
+        StringBuilder katakana = new StringBuilder();
         for (int i = 0; i < sentence.getContent().length(); i++) {
             char c = sentence.getContent().charAt(i);
             if (StringUtils.isKatakana(c) && c != KATAKANA_MIDDLE_DOT) {
@@ -92,7 +89,8 @@ public final class KatakanaEndHyphenValidator extends Validator {
     }
 
     private void checkKatakanaEndHyphen(Sentence sentence, String katakana, int position) {
-        if (getSetAttribute("list").contains(katakana)) {
+        Set<String> customSkipList = getSetAttribute("list");
+        if (customSkipList.isEmpty() || !customSkipList.contains(katakana)) {
             if (isKatakanaEndHyphen(katakana)) {
                 addLocalizedErrorWithPosition(sentence, position, position + 1, katakana);
             }

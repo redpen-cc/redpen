@@ -21,10 +21,10 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.Validator;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import static java.util.Collections.emptySet;
 import static java.util.stream.Stream.concat;
 
 /**
@@ -35,7 +35,7 @@ public final class InvalidExpressionValidator extends Validator {
     private Set<String> invalidExpressions;
 
     public InvalidExpressionValidator() {
-        super("list", emptySet());
+        super("list", new HashSet<>());
     }
 
     @Override
