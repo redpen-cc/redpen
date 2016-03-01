@@ -17,46 +17,26 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
-import cc.redpen.validator.Validator;
-
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import cc.redpen.validator.DictionaryValidator;
 
 import static java.util.stream.Stream.concat;
 
 /**
  * Validate input sentences contain invalid expression.
  */
-public final class InvalidExpressionValidator extends Validator {
-    private static final String DEFAULT_RESOURCE_PATH = "default-resources/invalid-expression";
-    private Set<String> invalidExpressions;
-
+public final class InvalidExpressionValidator extends DictionaryValidator {
     public InvalidExpressionValidator() {
-        super("list", new HashSet<>());
+        super("invalid-expression/invalid-expression");
     }
 
     @Override
     public void validate(Sentence sentence) {
-        concat(invalidExpressions.stream(), getSetAttribute("list").stream()).forEach(value -> {
+        concat(defaultList.stream(), getSetAttribute("list").stream()).forEach(value -> {
             int startPosition = sentence.getContent().indexOf(value);
             if (startPosition != -1) {
                 addLocalizedErrorWithPosition(sentence, startPosition, startPosition + value.length(), value);
             }
         });
-    }
-
-    @Override
-    protected void init() throws RedPenException {
-        String lang = getSymbolTable().getLang();
-        String defaultDictionaryFile = DEFAULT_RESOURCE_PATH + "/invalid-expression-" + lang + ".dat";
-        invalidExpressions = WORD_LIST.loadCachedFromResource(defaultDictionaryFile, "invalid expression");
-
-        Optional<String> confFile = getConfigAttribute("dict");
-        if (confFile.isPresent()) {
-            getSetAttribute("list").addAll(WORD_LIST.loadCachedFromFile(findFile(confFile.get()), "InvalidExpressionValidator user dictionary"));
-        }
     }
 }

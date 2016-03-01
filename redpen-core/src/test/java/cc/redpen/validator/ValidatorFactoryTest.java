@@ -24,6 +24,7 @@ import cc.redpen.validator.sentence.SentenceLengthValidator;
 import org.junit.Test;
 
 import java.io.File;
+import java.lang.reflect.Modifier;
 
 import static org.junit.Assert.*;
 
@@ -78,10 +79,10 @@ public class ValidatorFactoryTest {
             }
             else if (name.endsWith("Validator.class")) {
                 Class<?> validatorClass = Class.forName(validatorsPackage + "." + name.substring(0, name.length() - 6));
-                if (validatorClass == Validator.class) continue;
+                if (Modifier.isAbstract(validatorClass.getModifiers())) continue;
                 String validatorName = name.substring(0, name.length() - "Validator.class".length());
                 Validator validator = ValidatorFactory.validators.get(validatorName);
-                assertNotNull(validator + " must be registered in " + ValidatorFactory.class, validator);
+                assertNotNull(validatorName + " must be registered in " + ValidatorFactory.class, validator);
                 assertTrue(validatorClass + " must extend " + Validator.class, validator instanceof Validator);
                 assertTrue("Registered validator " + name + " must be of " + validatorClass, validatorClass.isAssignableFrom(validator.getClass()));
             }

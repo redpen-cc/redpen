@@ -25,15 +25,20 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
+
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
  * If input sentences contain invalid expressions, this validator
  * returns the errors with corrected expressions.
  */
-final public class SuggestExpressionValidator extends Validator {
+public final class SuggestExpressionValidator extends Validator {
     private static final Logger LOG = LoggerFactory.getLogger(SuggestExpressionValidator.class);
     private Map<String, String> synonyms = new HashMap<>();
+
+    public SuggestExpressionValidator() {
+        super("dict", "");
+    }
 
     @Override
     public void validate(Sentence sentence) {
@@ -49,10 +54,10 @@ final public class SuggestExpressionValidator extends Validator {
     @Override
     protected void init() throws RedPenException {
         //TODO: support default dictionary.
-        Optional<String> confFile = getConfigAttribute("dict");
-        if (confFile.isPresent()) {
+        String confFile = getStringAttribute("dict");
+        if (isNotEmpty(confFile)) {
             LOG.info("Dictionary file is " + confFile);
-            synonyms = KEY_VALUE.loadCachedFromFile(findFile(confFile.get()), "SuggestExpressionValidator dictionary");
+            synonyms = KEY_VALUE.loadCachedFromFile(findFile(confFile), "SuggestExpressionValidator dictionary");
         }
         else {
             LOG.warn("Dictionary file is not specified");

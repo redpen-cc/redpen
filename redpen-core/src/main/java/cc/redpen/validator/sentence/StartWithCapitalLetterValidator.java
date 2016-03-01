@@ -17,26 +17,22 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.validator.Validator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import cc.redpen.validator.DictionaryValidator;
 
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
 
 import static java.util.Collections.singletonList;
 
 /**
  * Check if the input sentence start with a capital letter.
  */
-final public class StartWithCapitalLetterValidator extends Validator {
-    private static final String DEFAULT_RESOURCE_PATH = "default-resources/capital-letter-exception-list";
-    private static final Logger LOG =
-            LoggerFactory.getLogger(SpellingValidator.class);
-    private Set<String> whiteList;
-    private Set<String> customWhiteList = new HashSet<>();
+final public class StartWithCapitalLetterValidator extends DictionaryValidator {
+    public StartWithCapitalLetterValidator() {
+        super("capital-letter-exception-list/capital-case-exception-list");
+    }
 
     @Override
     public List<String> getSupportedLanguages() {
@@ -55,7 +51,7 @@ final public class StartWithCapitalLetterValidator extends Validator {
             }
         }
 
-        if (tokens.size() == 0 || this.whiteList.contains(headWord) || this.customWhiteList.contains(headWord)) {
+        if (tokens.size() == 0 || defaultList.contains(headWord) || getSetAttribute("list").contains(headWord)) {
             return;
         }
 
@@ -73,17 +69,6 @@ final public class StartWithCapitalLetterValidator extends Validator {
 
         if (Character.isLowerCase(headChar)) {
             addLocalizedError(sentence, headChar);
-        }
-    }
-
-    @Override
-    protected void init() throws RedPenException {
-        String defaultDictionaryFile = DEFAULT_RESOURCE_PATH + "/default-capital-case-exception-list.dat";
-        whiteList = WORD_LIST.loadCachedFromResource(defaultDictionaryFile, "capital letter exception dictionary");
-
-        Optional<String> confFile = getConfigAttribute("dict");
-        if (confFile.isPresent()) {
-            customWhiteList = WORD_LIST.loadCachedFromFile(findFile(confFile.get()), "StartWithCapitalLetterValidator user dictionary");
         }
     }
 }

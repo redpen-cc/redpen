@@ -17,9 +17,6 @@
  */
 package cc.redpen.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.*;
 
 /**
@@ -28,7 +25,6 @@ import java.util.*;
 public class SpellingUtils {
 
     private static final String DEFAULT_LANGUAGE = "en";
-    private static final Logger LOG = LoggerFactory.getLogger(SpellingUtils.class);
 
     // a map of dictionaries per language
     private static Map<String, Set<String>> dictionaries = new HashMap<>();

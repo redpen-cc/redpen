@@ -21,9 +21,7 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.LevenshteinDistance;
 import cc.redpen.util.StringUtils;
-import cc.redpen.validator.Validator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import cc.redpen.validator.DictionaryValidator;
 
 import java.util.*;
 
@@ -49,15 +47,11 @@ import static java.util.Collections.singletonList;
  * word is smaller than the threshold, we do not detect
  * the similarity.
  */
- public final class KatakanaSpellCheckValidator extends Validator {
+ public final class KatakanaSpellCheckValidator extends DictionaryValidator {
     /**
      * Default dictionary for Katakana spell checking.
      */
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/katakana";
-    /**
-     * Logger
-     */
-    private static final Logger LOG = LoggerFactory.getLogger(KatakanaSpellCheckValidator.class);
 
     /**
      * Katakana word dic with line number.
@@ -71,8 +65,7 @@ import static java.util.Collections.singletonList;
     private Map<String, Integer> katakanaWordFrequencies = new HashMap<>();
 
     public KatakanaSpellCheckValidator() {
-        super("list", new HashSet<>(),
-              "min_ratio", 0.3f, // The default threshold of similarity ratio between the length and the distance. The similarities are computed by edit distance.
+        super("min_ratio", 0.3f, // The default threshold of similarity ratio between the length and the distance. The similarities are computed by edit distance.
               "min_freq", 5, // The default threshold of word frequencies of Katakana Words.
               "max_ignore_len", 3, // The default threshold value for the length of Katakana word to ignore
               "disable-default", false);
@@ -150,16 +143,10 @@ import static java.util.Collections.singletonList;
 
     @Override
     protected void init() throws RedPenException {
+        super.init();
         if (!getBooleanAttribute("disable-default")) {
             String defaultDictionaryFile = DEFAULT_RESOURCE_PATH + "/katakana-spellcheck.dat";
             exceptions = WORD_LIST.loadCachedFromResource(defaultDictionaryFile, "katakana word dictionary");
-        }
-
-        Optional<String> confFile = getConfigAttribute("dict");
-        if (confFile.isPresent()) {
-            LOG.info("User defined Katakana word dictionary found.");
-            getSetAttribute("list").addAll(WORD_LIST.loadCachedFromFile(findFile(confFile.get()), "KatakanaSpellCheckValidator user dictionary"));
-            LOG.info("Succeeded to add elements of user defined dictionary.");
         }
     }
 }

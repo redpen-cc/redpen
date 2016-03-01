@@ -17,22 +17,17 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.validator.Validator;
+import cc.redpen.validator.DictionaryValidator;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
-final public class DoubledWordValidator extends Validator {
-    private static final String DEFAULT_RESOURCE_PATH = "default-resources/doubled-word";
-
-    private Set<String> skipList;
+final public class DoubledWordValidator extends DictionaryValidator {
 
     public DoubledWordValidator() {
-        super("list", new HashSet<>());
+        super("doubled-word/doubled-word-skiplist");
     }
 
     @Override
@@ -40,22 +35,11 @@ final public class DoubledWordValidator extends Validator {
         Set<String> surfaces = new HashSet<>();
         for (TokenElement token : sentence.getTokens()) {
             String currentSurface = token.getSurface().toLowerCase();
-            if (surfaces.contains(currentSurface) && !skipList.contains(currentSurface)
+            if (surfaces.contains(currentSurface) && !defaultList.contains(currentSurface)
               && !getSetAttribute("list").contains(currentSurface)) {
                 addLocalizedErrorFromToken(sentence, token);
             }
             surfaces.add(currentSurface);
-        }
-    }
-
-    @Override
-    protected void init() throws RedPenException {
-        String defaultDictionaryFile = DEFAULT_RESOURCE_PATH + "/doubled-word-skiplist-" + getSymbolTable().getLang() + ".dat";
-        skipList = WORD_LIST.loadCachedFromResource(defaultDictionaryFile, "doubled word skip list");
-
-        Optional<String> confFile = getConfigAttribute("dict");
-        if (confFile.isPresent()) {
-            getSetAttribute("list").addAll(WORD_LIST.loadCachedFromFile(findFile(confFile.get()), "DoubledWordValidator user dictionary"));
         }
     }
 }
