@@ -35,8 +35,7 @@ final public class DoubledWordValidator extends DictionaryValidator {
         Set<String> surfaces = new HashSet<>();
         for (TokenElement token : sentence.getTokens()) {
             String currentSurface = token.getSurface().toLowerCase();
-            if (surfaces.contains(currentSurface) && !dictionary.contains(currentSurface)
-              && !getSetAttribute("list").contains(currentSurface)) {
+            if (surfaces.contains(currentSurface) && !inDictionary(currentSurface)) {
                 addLocalizedErrorFromToken(sentence, token);
             }
             surfaces.add(currentSurface);

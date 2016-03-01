@@ -51,7 +51,7 @@ final public class StartWithCapitalLetterValidator extends DictionaryValidator {
             }
         }
 
-        if (tokens.size() == 0 || dictionary.contains(headWord) || getSetAttribute("list").contains(headWord)) {
+        if (tokens.size() == 0 || inDictionary(headWord)) {
             return;
         }
 
