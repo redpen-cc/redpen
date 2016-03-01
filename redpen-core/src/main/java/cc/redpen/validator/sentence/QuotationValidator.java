@@ -70,7 +70,7 @@ public class QuotationValidator extends Validator {
     @Override
     protected void init() throws RedPenException {
         this.period = getSymbolTable().getValueOrFallbackToDefault(FULL_STOP);
-        setUseAscii(getBooleanAttribute("use_ascii"));
+        setUseAscii(getBoolean("use_ascii"));
     }
 
     private void setUseAscii(boolean useAscii) {

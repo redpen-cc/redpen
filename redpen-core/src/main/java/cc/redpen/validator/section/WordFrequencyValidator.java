@@ -48,7 +48,7 @@ public class WordFrequencyValidator extends SpellingDictionaryValidator {
     private Sentence lastSentence;
 
     public WordFrequencyValidator() {
-        setDefaultAttributes("deviation_factor", 3f, // the maximum deviation from the reference frequency permitted before a validation error is created
+        setDefaultProperties("deviation_factor", 3f, // the maximum deviation from the reference frequency permitted before a validation error is created
                              "min_word_count", 200); // the minimum number of words in the document before this validator activates
     }
 
@@ -127,7 +127,7 @@ public class WordFrequencyValidator extends SpellingDictionaryValidator {
         }
 
         // don't validate if the document is too short
-        if (wordCount >= getIntAttribute("min_word_count")) {
+        if (wordCount >= getInt("min_word_count")) {
             Map<String, Double> documentWordFrequencies = new HashMap<>();
 
             documentWordOccurances.forEach((word, count) -> {
@@ -147,7 +147,7 @@ public class WordFrequencyValidator extends SpellingDictionaryValidator {
 
                     // if the word deviates significantly from the norm and also from the reference percentage,
                     // then raise an error
-                    if ((devRatio > 1) && (docPercentage > referencePercentage * getFloatAttribute("deviation_factor"))) {
+                    if ((devRatio > 1) && (docPercentage > referencePercentage * getFloat("deviation_factor"))) {
                         addLocalizedError(
                                 "WordUsedTooFrequently",
                                 lastSentence,

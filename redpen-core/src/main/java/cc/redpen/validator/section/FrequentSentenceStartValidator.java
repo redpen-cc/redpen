@@ -41,9 +41,9 @@ public class FrequentSentenceStartValidator extends Validator {
      * Add sequences of tokens, up to leadingWordLimit, in the histogram
      */
     private void processSentence(Sentence sentence) {
-        if (sentence.getTokens().size() > getIntAttribute("leading_word_limit")) {
+        if (sentence.getTokens().size() > getInt("leading_word_limit")) {
             String leadingPhrase = "";
-            for (int i = 0; i < getIntAttribute("leading_word_limit"); i++) {
+            for (int i = 0; i < getInt("leading_word_limit"); i++) {
                 leadingPhrase += (leadingPhrase.isEmpty() ? "" : " ") + sentence.getTokens().get(i).getSurface();
                 Integer count = sentenceStartHistogram.get(leadingPhrase);
                 if (sentenceStartHistogram.get(leadingPhrase) == null) {
@@ -70,11 +70,11 @@ public class FrequentSentenceStartValidator extends Validator {
         }
 
         // make sure we have enough sentences to make this validation worthwhile
-        if (sentenceCount >= getIntAttribute("min_sentence_count")) {
+        if (sentenceCount >= getInt("min_sentence_count")) {
             for (String start : sentenceStartHistogram.keySet()) {
                 int count = sentenceStartHistogram.get(start);
                 int percentage = (int) ((100.0 * (float) count / (float) sentenceStartHistogram.size()));
-                if (percentage > getIntAttribute("percentage_threshold")) {
+                if (percentage > getInt("percentage_threshold")) {
                     addLocalizedError("SentenceStartTooFrequent", lastSentence, percentage, start);
                 }
             }

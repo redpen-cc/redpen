@@ -88,12 +88,12 @@ public class ValidatorFactory {
         return validators.entrySet().stream().filter(e -> {
             List<String> supportedLanguages = e.getValue().getSupportedLanguages();
             return supportedLanguages.isEmpty() || supportedLanguages.contains(lang);
-        }).map(e -> new ValidatorConfiguration(e.getKey(), toStrings(e.getValue().getAttributes()))).collect(toList());
+        }).map(e -> new ValidatorConfiguration(e.getKey(), toStrings(e.getValue().getProperties()))).collect(toList());
     }
 
     @SuppressWarnings("unchecked")
-    static Map<String, String> toStrings(Map<String, Object> attributes) {
-        return attributes.entrySet().stream().collect(toMap(Map.Entry::getKey, e ->
+    static Map<String, String> toStrings(Map<String, Object> properties) {
+        return properties.entrySet().stream().collect(toMap(Map.Entry::getKey, e ->
             e.getValue() instanceof Collection ? ((Collection<String>)e.getValue()).stream().collect(joining(",")) :
             e.getValue().toString()
         ));

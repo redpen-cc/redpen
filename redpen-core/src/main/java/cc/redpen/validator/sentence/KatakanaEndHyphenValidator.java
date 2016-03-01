@@ -86,7 +86,7 @@ public final class KatakanaEndHyphenValidator extends DictionaryValidator {
     }
 
     private void checkKatakanaEndHyphen(Sentence sentence, String katakana, int position) {
-        Set<String> customSkipList = getSetAttribute("list");
+        Set<String> customSkipList = getSet("list");
         if (customSkipList.isEmpty() || !customSkipList.contains(katakana)) {
             if (isKatakanaEndHyphen(katakana)) {
                 addLocalizedErrorWithPosition(sentence, position, position + 1, katakana);

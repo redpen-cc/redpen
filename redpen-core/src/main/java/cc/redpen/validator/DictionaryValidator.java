@@ -23,9 +23,9 @@ public abstract class DictionaryValidator extends Validator {
     super("list", new HashSet<>(), "dict", "");
   }
 
-  public DictionaryValidator(Object...attributes) {
+  public DictionaryValidator(Object...keyValues) {
     this();
-    addDefaultAttributes(attributes);
+    addDefaultProperties(keyValues);
   }
 
   public DictionaryValidator(String dictionaryPrefix) {
@@ -44,18 +44,18 @@ public abstract class DictionaryValidator extends Validator {
       dictionary = loader.loadCachedFromResource(defaultDictionaryFile, getClass().getSimpleName() + " default dictionary");
     }
 
-    String confFile = getStringAttribute("dict");
+    String confFile = getString("dict");
     if (isNotEmpty(confFile)) {
-      getSetAttribute("list").addAll(loader.loadCachedFromFile(findFile(confFile), getClass().getSimpleName() + " user dictionary"));
+      getSet("list").addAll(loader.loadCachedFromFile(findFile(confFile), getClass().getSimpleName() + " user dictionary"));
     }
   }
 
   protected boolean inDictionary(String word) {
-    Set<String> customDictionary = getSetAttribute("list");
+    Set<String> customDictionary = getSet("list");
     return dictionary.contains(word) || customDictionary != null && customDictionary.contains(word);
   }
 
   protected Stream<String> streamDictionary() {
-    return concat(dictionary.stream(), getSetAttribute("list").stream());
+    return concat(dictionary.stream(), getSet("list").stream());
   }
 }
