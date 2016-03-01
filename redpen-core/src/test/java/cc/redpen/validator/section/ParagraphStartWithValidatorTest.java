@@ -17,50 +17,49 @@
  */
 package cc.redpen.validator.section;
 
+import cc.redpen.config.Configuration;
+import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.validator.ValidationError;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Collections.singletonMap;
 import static org.junit.Assert.assertEquals;
 
 public class ParagraphStartWithValidatorTest {
+    ParagraphStartWithValidator validator = new ParagraphStartWithValidator();
 
-    @Test
-    public void testStartWithoutSpace() {
-        ParagraphStartWithValidator validator = new ParagraphStartWithValidator();
-        Section section = new Section(0, "header");
-        Paragraph paragraph = new Paragraph();
-        paragraph.appendSentence("it like a piece of a cake.", 0);
-        section.appendParagraph(paragraph);
-        List<ValidationError> errors = new ArrayList<>();
-       validator.setErrorList(errors);         validator.validate(section);
-        assertEquals(1, errors.size());
+    @Before
+    public void setUp() throws Exception {
+        validator.preInit(new ValidatorConfiguration("ParagraphStartWith", singletonMap("start_from", " ")), Configuration.builder().build());
     }
 
     @Test
-    public void testStartWithSpace() {
-        ParagraphStartWithValidator validator = new ParagraphStartWithValidator();
-        Section section = new Section(0);
-        Paragraph paragraph = new Paragraph();
-        paragraph.appendSentence(" it like a piece of a cake.", 0);
-        section.appendParagraph(paragraph);
-        List<ValidationError> errors = new ArrayList<>();
-       validator.setErrorList(errors);         validator.validate(section);
-        assertEquals(0, errors.size());
+    public void startWithoutSpace() {
+        assertEquals(1, validateParagraph(new Paragraph().appendSentence("it like a piece of a cake.", 1)).size());
     }
 
     @Test
-    public void testVoidParagraph() {
-        ParagraphStartWithValidator validator = new ParagraphStartWithValidator();
+    public void startWithSpace() {
+        assertEquals(0, validateParagraph(new Paragraph().appendSentence(" it like a piece of a cake.", 1)).size());
+    }
+
+    @Test
+    public void voidParagraph() {
+        assertEquals(0, validateParagraph(new Paragraph()).size());
+    }
+
+    private List<ValidationError> validateParagraph(Paragraph paragraph) {
         Section section = new Section(0);
-        Paragraph paragraph = new Paragraph();
         section.appendParagraph(paragraph);
         List<ValidationError> errors = new ArrayList<>();
-       validator.setErrorList(errors);         validator.validate(section);
-        assertEquals(0, errors.size());
+        validator.setErrorList(errors);
+        validator.validate(section);
+        return errors;
     }
 }

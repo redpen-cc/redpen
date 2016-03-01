@@ -25,9 +25,9 @@ import cc.redpen.validator.Validator;
 /**
  * Validate whether paragraph start as specified.
  */
-final public class ParagraphStartWithValidator extends Validator {
+public final class ParagraphStartWithValidator extends Validator {
     public ParagraphStartWithValidator() {
-        super("start_from", " "); // Default matter paragraph start with.
+        super("start_from", ""); // Symbols that every paragraph must start with
     }
 
     @Override
