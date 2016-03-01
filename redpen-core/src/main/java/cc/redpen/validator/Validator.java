@@ -207,22 +207,16 @@ public abstract class Validator {
         return (Set) attributes.get(name);
     }
 
-    @Deprecated
-    protected String getConfigAttribute(String name, String defaultValue) {
-        String value = config.getAttribute(name);
-        if (value != null) {
-            LOG.info("{} is set to {}", name, value);
-            return value;
-        } else {
-            LOG.info("{} is not set. Use default value of {}", name, defaultValue);
-            return defaultValue;
-        }
-    }
-
     /** @deprecated Please use constructor with default attributes instead, and then getXXXAtrribute() methods */
     @Deprecated
     protected Optional<String> getConfigAttribute(String name) {
         return Optional.ofNullable(config.getAttribute(name));
+    }
+
+    /** @deprecated Please use constructor with default attributes instead, and then getXXXAtrribute() methods */
+    @Deprecated
+    protected String getConfigAttribute(String name, String defaultValue) {
+        return getConfigAttribute(name).orElse(defaultValue);
     }
 
     @Deprecated
