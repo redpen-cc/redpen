@@ -5,8 +5,10 @@ import cc.redpen.util.DictionaryLoader;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static java.util.Collections.emptySet;
+import static java.util.stream.Stream.concat;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
@@ -14,8 +16,8 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
  */
 public abstract class DictionaryValidator extends Validator {
   protected DictionaryLoader<Set<String>> loader = WORD_LIST;
-  protected Set<String> dictionary = emptySet();
   private String dictionaryPrefix;
+  private Set<String> dictionary = emptySet();
 
   public DictionaryValidator() {
     super("list", new HashSet<>(), "dict", "");
@@ -46,5 +48,14 @@ public abstract class DictionaryValidator extends Validator {
     if (isNotEmpty(confFile)) {
       getSetAttribute("list").addAll(loader.loadCachedFromFile(findFile(confFile), getClass().getSimpleName() + " user dictionary"));
     }
+  }
+
+  protected boolean inDictionary(String word) {
+    Set<String> customDictionary = getSetAttribute("list");
+    return dictionary.contains(word) || customDictionary != null && customDictionary.contains(word);
+  }
+
+  protected Stream<String> streamDictionary() {
+    return concat(dictionary.stream(), getSetAttribute("list").stream());
   }
 }

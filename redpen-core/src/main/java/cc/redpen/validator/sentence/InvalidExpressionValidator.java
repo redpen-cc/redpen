@@ -20,8 +20,6 @@ package cc.redpen.validator.sentence;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.DictionaryValidator;
 
-import static java.util.stream.Stream.concat;
-
 /**
  * Validate input sentences contain invalid expression.
  */
@@ -32,7 +30,7 @@ public final class InvalidExpressionValidator extends DictionaryValidator {
 
     @Override
     public void validate(Sentence sentence) {
-        concat(dictionary.stream(), getSetAttribute("list").stream()).forEach(value -> {
+        streamDictionary().forEach(value -> {
             int startPosition = sentence.getContent().indexOf(value);
             if (startPosition != -1) {
                 addLocalizedErrorWithPosition(sentence, startPosition, startPosition + value.length(), value);
