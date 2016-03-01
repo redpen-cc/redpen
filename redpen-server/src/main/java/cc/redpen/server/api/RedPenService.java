@@ -115,7 +115,7 @@ public class RedPenService {
         validatorProperties.forEach((validatorName, props) -> {
             ValidatorConfiguration validatorConfig = new ValidatorConfiguration(validatorName);
             props.forEach((name, value) -> {
-                validatorConfig.addAttribute(name, value);
+                validatorConfig.addProperty(name, value);
             });
             configBuilder.addValidatorConfig(validatorConfig);
         });

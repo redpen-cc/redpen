@@ -71,7 +71,7 @@ public class DoubledWordValidatorTest extends BaseValidatorTest {
     public void testDoubledUserDefinedSkipWord() throws RedPenException {
         config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration(validatorName)
-                        .addAttribute("list", "redpen,tool"))
+                        .addProperty("list", "redpen,tool"))
                 .build();
 
         Document document = prepareSimpleDocument("RedPen is RedPen right?");
@@ -84,7 +84,7 @@ public class DoubledWordValidatorTest extends BaseValidatorTest {
     @Test
     public void testDoubledUserDefinedSkipWordWithoutNormalization() throws RedPenException {
         config = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration(validatorName).addAttribute("list", "RedPen,Tool"))
+                .addValidatorConfig(new ValidatorConfiguration(validatorName).addProperty("list", "RedPen,Tool"))
                 .build();
 
         Document document = prepareSimpleDocument("redPen is redPen right?");

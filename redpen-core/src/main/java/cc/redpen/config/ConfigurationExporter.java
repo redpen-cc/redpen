@@ -44,14 +44,14 @@ public class ConfigurationExporter {
     sax.writeStartElement("validators");
 
     for (ValidatorConfiguration v : validators) {
-      if (v.getAttributes().isEmpty()) sax.writeEmptyElement("validator"); else sax.writeStartElement("validator");
+      if (v.getProperties().isEmpty()) sax.writeEmptyElement("validator"); else sax.writeStartElement("validator");
       sax.writeAttribute("name", v.getConfigurationName());
-      for (Map.Entry<String, String> attr : v.getAttributes().entrySet()) {
+      for (Map.Entry<String, String> prop : v.getProperties().entrySet()) {
         sax.writeEmptyElement("property");
-        sax.writeAttribute("name", attr.getKey());
-        sax.writeAttribute("value", attr.getValue());
+        sax.writeAttribute("name", prop.getKey());
+        sax.writeAttribute("value", prop.getValue());
       }
-      if (!v.getAttributes().isEmpty()) sax.writeEndElement();
+      if (!v.getProperties().isEmpty()) sax.writeEndElement();
     }
 
     sax.writeEndElement();

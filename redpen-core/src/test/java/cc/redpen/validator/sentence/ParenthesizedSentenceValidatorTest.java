@@ -35,7 +35,7 @@ public class ParenthesizedSentenceValidatorTest {
     @Test
     public void testSingleSentence() throws RedPenException {
         ParenthesizedSentenceValidator validator = new ParenthesizedSentenceValidator();
-        validator.preInit(new ValidatorConfiguration("ParenthesizedSentence").addAttribute("max_nesting_level", "2"), Configuration.builder().build());
+        validator.preInit(new ValidatorConfiguration("ParenthesizedSentence").addProperty("max_nesting_level", "2"), Configuration.builder().build());
 
         List<Document> documents = new ArrayList<>();
         documents.add(

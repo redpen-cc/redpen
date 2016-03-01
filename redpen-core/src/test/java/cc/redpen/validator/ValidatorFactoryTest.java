@@ -75,13 +75,13 @@ public class ValidatorFactoryTest {
 
     @Test
     public void mapToStrings() throws Exception {
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put("string", "bar");
-        attributes.put("integer", 100);
-        attributes.put("boolean", false);
-        attributes.put("collection", asList("foo", "bar"));
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("string", "bar");
+        properties.put("integer", 100);
+        properties.put("boolean", false);
+        properties.put("collection", asList("foo", "bar"));
 
-        Map<String, String> result = ValidatorFactory.toStrings(attributes);
+        Map<String, String> result = ValidatorFactory.toStrings(properties);
 
         assertEquals("bar", result.get("string"));
         assertEquals("100", result.get("integer"));

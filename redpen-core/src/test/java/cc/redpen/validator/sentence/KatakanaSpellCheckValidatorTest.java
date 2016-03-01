@@ -108,7 +108,7 @@ public class KatakanaSpellCheckValidatorTest {
     @Test
     public void testSetMinimumRatio() throws RedPenException {
         Configuration config = Configuration.builder("ja")
-                .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck").addAttribute("min_ratio", "0.001"))
+                .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck").addProperty("min_ratio", "0.001"))
                 .build();
 
         List<Document> documents = new ArrayList<>();
@@ -127,7 +127,7 @@ public class KatakanaSpellCheckValidatorTest {
     @Test
     public void testSetMinimumFrequency() throws RedPenException {
         Configuration config = Configuration.builder("ja")
-                .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck").addAttribute("min_freq", "0"))
+                .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck").addProperty("min_freq", "0"))
                 .build();
 
         List<Document> documents = new ArrayList<>();
@@ -146,7 +146,7 @@ public class KatakanaSpellCheckValidatorTest {
     @Test
     public void testLoadUserDictionary() throws RedPenException {
         Configuration config = Configuration.builder("ja")
-                .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck").addAttribute("list", "ミニマムサポート,ミニマムサポータ"))
+                .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck").addProperty("list", "ミニマムサポート,ミニマムサポータ"))
                 .build();
 
         List<Document> documents = new ArrayList<>();
@@ -165,7 +165,7 @@ public class KatakanaSpellCheckValidatorTest {
     @Test
     public void testDisableDefaultDictionary() throws RedPenException {
         Configuration config = Configuration.builder("ja")
-                .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck").addAttribute("disable-default", "true"))
+                .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck").addProperty("disable-default", "true"))
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(

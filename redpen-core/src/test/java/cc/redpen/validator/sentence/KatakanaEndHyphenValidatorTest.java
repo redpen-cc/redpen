@@ -156,7 +156,7 @@ public class KatakanaEndHyphenValidatorTest {
     @Test
     public void testHonorsSkipWordList() throws RedPenException {
         Configuration config = Configuration.builder("ja")
-                .addValidatorConfig(new ValidatorConfiguration("KatakanaEndHyphen").addAttribute("list", "コーヒー"))
+                .addValidatorConfig(new ValidatorConfiguration("KatakanaEndHyphen").addProperty("list", "コーヒー"))
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
@@ -175,7 +175,7 @@ public class KatakanaEndHyphenValidatorTest {
     public void testHonorsSkipWordDict() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("KatakanaEndHyphen")
-                        .addAttribute("dict", "src/test/resources/cc/redpen/validator/KatakanaEndHyphenValidatorTest-skipworddict.txt")) // XXX
+                        .addProperty("dict", "src/test/resources/cc/redpen/validator/KatakanaEndHyphenValidatorTest-skipworddict.txt")) // XXX
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(

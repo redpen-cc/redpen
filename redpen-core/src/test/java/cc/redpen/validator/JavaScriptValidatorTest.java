@@ -77,7 +77,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         validatorJS.deleteOnExit();
 
         Configuration config = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration("JavaScript").addAttribute("script-path", javaScriptValidatorsDir.getAbsolutePath()))
+                .addValidatorConfig(new ValidatorConfiguration("JavaScript").addProperty("script-path", javaScriptValidatorsDir.getAbsolutePath()))
                 .build();
 
         Document document = Document.builder()

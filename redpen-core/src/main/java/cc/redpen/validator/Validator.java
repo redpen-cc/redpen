@@ -149,7 +149,7 @@ public abstract class Validator {
 
     private void loadProperties(ValidatorConfiguration config) {
         properties.forEach((name, defaultValue) -> {
-            String value = config.getAttribute(name);
+            String value = config.getProperty(name);
             if (value == null) return;
             if (defaultValue instanceof Integer)
                 properties.put(name, Integer.valueOf(value));
@@ -184,7 +184,7 @@ public abstract class Validator {
      */
     @Deprecated
     public Map<String, String> getConfigAttributes() {
-        return config.getAttributes();
+        return config.getProperties();
     }
 
     /**
@@ -223,7 +223,7 @@ public abstract class Validator {
     /** @deprecated Please use constructor with default properties instead, and then getXXX() methods */
     @Deprecated
     protected Optional<String> getConfigAttribute(String name) {
-        return Optional.ofNullable(config.getAttribute(name));
+        return Optional.ofNullable(config.getProperty(name));
     }
 
     /** @deprecated Please use constructor with default properties instead, and then getXXX() methods */

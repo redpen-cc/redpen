@@ -81,7 +81,7 @@ public class StartWithCapitalLetterValidatorTest {
                 .addSentence(new Sentence("iPhone is a mobile computer.", 1))
                 .build());
         Configuration config = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter").addAttribute("list", "iPhone"))
+                .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter").addProperty("list", "iPhone"))
                 .build();
         Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
         List<ValidationError> errors = new ArrayList<>();
@@ -99,7 +99,7 @@ public class StartWithCapitalLetterValidatorTest {
                 .addSentence(new Sentence("iPhone はカッコイイ．", 1))
                 .build());
         Configuration config = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter").addAttribute("list", "iPhone"))
+                .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter").addProperty("list", "iPhone"))
                 .build();
         Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
         List<ValidationError> errors = new ArrayList<>();
@@ -117,7 +117,7 @@ public class StartWithCapitalLetterValidatorTest {
                 .addSentence(new Sentence(" iPhone is a mobile computer.", 1))
                 .build());
         Configuration config = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter").addAttribute("list", "iPhone"))
+                .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter").addProperty("list", "iPhone"))
                 .build();
         Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
         List<ValidationError> errors = new ArrayList<>();
@@ -135,7 +135,7 @@ public class StartWithCapitalLetterValidatorTest {
                 .addSentence(new Sentence("", 1))
                 .build());
         Configuration config = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter").addAttribute("list", "iPhone"))
+                .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter").addProperty("list", "iPhone"))
                 .build();
         Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
         List<ValidationError> errors = new ArrayList<>();

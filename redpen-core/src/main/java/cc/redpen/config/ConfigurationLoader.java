@@ -243,7 +243,7 @@ public class ConfigurationLoader {
             Element propertyElement = (Element) pNode;
             if (propertyElement.getNodeName().equals("property")
                     && currentConfiguration != null) {
-                currentConfiguration.addAttribute(
+                currentConfiguration.addProperty(
                         propertyElement.getAttribute("name"),
                         propertyElement.getAttribute("value"));
             }
