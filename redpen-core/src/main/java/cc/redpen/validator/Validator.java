@@ -35,6 +35,9 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.util.*;
 
+import static java.lang.Boolean.parseBoolean;
+import static java.lang.Double.parseDouble;
+import static java.lang.Integer.parseInt;
 import static java.util.Arrays.asList;
 import static java.util.ResourceBundle.Control.FORMAT_DEFAULT;
 import static java.util.stream.Collectors.toSet;
@@ -204,57 +207,31 @@ public abstract class Validator {
         return (Set) attributes.get(name);
     }
 
+    /** @deprecated Please use constructor with default attributes instead, and then getXXXAttribute() methods */
     @Deprecated
-    protected Optional<String> getConfigAttribute(String attributeName) {
-        return Optional.ofNullable(config.getAttribute(attributeName));
+    protected Optional<String> getConfigAttribute(String name) {
+        return Optional.ofNullable(config.getAttribute(name));
+    }
+
+    /** @deprecated Please use constructor with default attributes instead, and then getXXXAttribute() methods */
+    @Deprecated
+    protected String getConfigAttribute(String name, String defaultValue) {
+        return getConfigAttribute(name).orElse(defaultValue);
     }
 
     @Deprecated
-    protected String getConfigAttribute(String attributeName, String defaultValue) {
-        String value = config.getAttribute(attributeName);
-        if (value != null) {
-            LOG.info("{} is set to {}", attributeName, value);
-            return value;
-        } else {
-            LOG.info("{} is not set. Use default value of {}", attributeName, defaultValue);
-            return defaultValue;
-        }
+    protected int getConfigAttributeAsInt(String name, int defaultValue) {
+        return parseInt(getConfigAttribute(name, Integer.toString(defaultValue)));
     }
 
     @Deprecated
-    protected int getConfigAttributeAsInt(String attributeName, int defaultValue) {
-        String value = config.getAttribute(attributeName);
-        if (value != null) {
-            LOG.info("{} is set to {}", attributeName, value);
-            return Integer.valueOf(value);
-        } else {
-            LOG.info("{} is not set. Use default value of {}", attributeName, defaultValue);
-            return defaultValue;
-        }
+    protected boolean getConfigAttributeAsBoolean(String name, boolean defaultValue) {
+        return parseBoolean(getConfigAttribute(name, Boolean.toString(defaultValue)));
     }
 
     @Deprecated
-    protected boolean getConfigAttributeAsBoolean(String attributeName, boolean defaultValue) {
-        String value = config.getAttribute(attributeName);
-        if (value != null) {
-            LOG.info("{} is set to {}", attributeName, value);
-            return Boolean.valueOf(value);
-        } else {
-            LOG.info("{} is not set. Use default value of {}", attributeName, defaultValue);
-            return defaultValue;
-        }
-    }
-
-    @Deprecated
-    protected double getConfigAttributeAsDouble(String attributeName, double defaultValue) {
-        String value = config.getAttribute(attributeName);
-        if (value != null) {
-            LOG.info("{} is set to {}", attributeName, value);
-            return Double.valueOf(value);
-        } else {
-            LOG.info("{} is not set. Use default value of {}", attributeName, defaultValue);
-            return defaultValue;
-        }
+    protected double getConfigAttributeAsDouble(String name, double defaultValue) {
+        return parseDouble(getConfigAttribute(name, Double.toString(defaultValue)));
     }
 
     protected SymbolTable getSymbolTable() {
