@@ -56,7 +56,7 @@ public abstract class DictionaryValidator extends Validator {
   }
 
   protected boolean dictionaryExists() {
-    Set<String> customDictionary = getSetAttribute("list");
+    Set<String> customDictionary = getSet("list");
     return !dictionary.isEmpty() || customDictionary != null && !customDictionary.isEmpty();
   }
 

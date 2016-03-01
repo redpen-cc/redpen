@@ -14,11 +14,11 @@ import static org.junit.Assert.assertTrue;
 public class RedPenServiceTest {
   @Before
   public void setUp() {
-    RedPenService.langRedPenMap.clear();
+    RedPenService.redPens.clear();
   }
 
   @Test
-  public void twoConfigurationsByDefault() throws Exception {
+  public void defaultConfigurations() throws Exception {
     RedPenService service = new RedPenService(null);
     Map<String, RedPen> redPens = service.getRedPens();
     assertEquals(5, redPens.size());
@@ -40,9 +40,9 @@ public class RedPenServiceTest {
   @Test
   public void canSpecifyDifferentDefaultConfiguration() throws Exception {
     MockServletContext context = new MockServletContext();
-    context.addInitParameter("redpen.conf.path", "/conf/redpen-conf-ja.xml");
+    context.addInitParameter("redpen.conf.path", "/conf/redpen-conf-ru.xml");
     RedPen defaultRedPen = new RedPenService(context).getRedPen("default");
-    assertEquals("ja", defaultRedPen.getConfiguration().getKey());
+    assertEquals("ru", defaultRedPen.getConfiguration().getKey());
     assertTrue(defaultRedPen.getConfiguration().isSecure());
   }
 
