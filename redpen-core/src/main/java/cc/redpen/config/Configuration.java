@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -46,6 +47,13 @@ public class Configuration implements Serializable, Cloneable {
     private final File home = new File(Optional.ofNullable(System.getProperty("REDPEN_HOME", System.getenv("REDPEN_HOME"))).orElse(""));
     private final File base;
     private final boolean secure;
+
+    /**
+     * @return default supported languages and variants that can be used with {@link #builder(String)}
+     */
+    public static List<String> getDefaultConfigKeys() {
+        return asList("en", "ja", "ja.hankaku", "ja.zenkaku2");
+    }
 
     Configuration(File base, SymbolTable symbolTable, List<ValidatorConfiguration> validatorConfigs, String lang, boolean secure) {
         this.base = base;
