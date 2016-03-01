@@ -37,6 +37,7 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.ResourceBundle.Control.FORMAT_DEFAULT;
+import static java.util.stream.Collectors.toSet;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
@@ -146,7 +147,7 @@ public abstract class Validator {
             else if (defaultValue instanceof Boolean)
                 attributes.put(name, Boolean.valueOf(value));
             else if (defaultValue instanceof Set)
-                attributes.put(name, isEmpty(value) ? defaultValue : new HashSet<>(asList((value).split(","))));
+                attributes.put(name, isEmpty(value) ? defaultValue : asList((value).split(",")).stream().map(String::toLowerCase).collect(toSet()));
             else
                 attributes.put(name, value);
         });

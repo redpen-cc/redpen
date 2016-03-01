@@ -47,5 +47,4 @@ public class NumberFormatValidatorTest {
 
         assertEquals(st1.toString(), 6, errors.size());
     }
-
 }

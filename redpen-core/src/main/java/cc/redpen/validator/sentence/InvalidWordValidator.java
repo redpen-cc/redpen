@@ -45,8 +45,8 @@ final public class InvalidWordValidator extends Validator {
     @Override
     public void validate(Sentence sentence) {
         for (TokenElement token : sentence.getTokens()) {
-            if (invalidWords.contains(token.getSurface().toLowerCase())
-                    || getSetAttribute("list").contains(token.getSurface().toLowerCase())) {
+            String surface = token.getSurface().toLowerCase();
+            if (invalidWords.contains(surface) || getSetAttribute("list").contains(surface)) {
                 addLocalizedErrorFromToken(sentence, token);
             }
         }

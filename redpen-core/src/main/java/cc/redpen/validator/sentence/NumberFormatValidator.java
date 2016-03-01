@@ -31,17 +31,16 @@ public class NumberFormatValidator extends Validator {
     // specifies which characters delimite the decimal part of a number
     private String decimalDelimiters = DOT_DELIMITERS;
 
-    // should we ignore years (basically four digit integers)
-    boolean ignoreYears = false;
+    public NumberFormatValidator() {
+        super("decimal_delimiter_is_comma", false, "ignore_years", false);
+    }
 
     @Override
     protected void init() throws RedPenException {
         super.init();
 
         // set the following to true to support EU formats such as 1.000,00
-        boolean decimalDelimiterComma = getConfigAttributeAsBoolean("decimal_delimiter_is_comma", false);
-        ignoreYears = getConfigAttributeAsBoolean("ignore_years", false);
-        if (decimalDelimiterComma) {
+        if (getBooleanAttribute("decimal_delimiter_is_comma")) {
             decimalDelimiters = COMMA_DELIMITERS;
         } else {
             decimalDelimiters = DOT_DELIMITERS;
@@ -86,10 +85,6 @@ public class NumberFormatValidator extends Validator {
 
     /**
      * Inspect how a number is formatted and generate an error where appropriate
-     *
-     * @param sentence
-     * @param position
-     * @param number
      */
     private void validateNumber(Sentence sentence, int position, String number) {
         if (!number.isEmpty()) {
@@ -115,7 +110,7 @@ public class NumberFormatValidator extends Validator {
             }
 
             // if it's a four digit integer and we are ignoring years, ignore this
-            if (ignoreYears && isInteger && (integerPortion.length() == 4)) {
+            if (getBooleanAttribute("ignore_years") && isInteger && (integerPortion.length() == 4)) {
                 return;
             }
 

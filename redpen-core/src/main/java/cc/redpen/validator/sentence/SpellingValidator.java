@@ -22,41 +22,28 @@ import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.util.SpellingUtils;
 import cc.redpen.validator.Validator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
 public class SpellingValidator extends Validator {
-
-    private static final Logger LOG = LoggerFactory.getLogger(SpellingValidator.class);
-
     private static String skipCharacters = "[\\!-/:-@\\[-`{-~]";
     // TODO: replace more memory efficient data structure
     private Set<String> defaultDictionary;
-    private Set<String> customDictionary;
 
+    public SpellingValidator() {
+        super("list", new HashSet<>());
+    }
 
     @Override
     protected void init() throws RedPenException {
         defaultDictionary = SpellingUtils.getDictionary(getSymbolTable().getLang());
 
-        customDictionary = new HashSet<>();
-
-        Optional<String> listStr = getConfigAttribute("list");
-        listStr.ifPresent(f -> {
-            LOG.info("User defined valid word list found.");
-            customDictionary.addAll(Arrays.asList(f.split(",")));
-            LOG.info("Succeeded to add elements of user defined list.");
-        });
-
         Optional<String> userDictionaryFile = getConfigAttribute("dict");
         if (userDictionaryFile.isPresent()) {
             String f = userDictionaryFile.get();
-            customDictionary.addAll(WORD_LIST_LOWERCASED.loadCachedFromFile(findFile(f), "SpellingValidator user dictionary"));
+            getSetAttribute("list").addAll(WORD_LIST_LOWERCASED.loadCachedFromFile(findFile(f), "SpellingValidator user dictionary"));
         }
     }
 
@@ -68,7 +55,7 @@ public class SpellingValidator extends Validator {
                 continue;
             }
 
-            if (!this.defaultDictionary.contains(surface) && !this.customDictionary.contains(surface)) {
+            if (!defaultDictionary.contains(surface) && !getSetAttribute("list").contains(surface)) {
                 addLocalizedErrorFromToken(sentence, token);
             }
         }
@@ -76,33 +63,5 @@ public class SpellingValidator extends Validator {
 
     private String normalize(String token) {
         return token.toLowerCase().replaceAll(skipCharacters, "");
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        SpellingValidator that = (SpellingValidator) o;
-
-        if (defaultDictionary != null ? !defaultDictionary.equals(that.defaultDictionary) : that.defaultDictionary != null)
-            return false;
-        return !(customDictionary != null ? !customDictionary.equals(that.customDictionary) : that.customDictionary != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = defaultDictionary != null ? defaultDictionary.hashCode() : 0;
-        result = 31 * result + (customDictionary != null ? customDictionary.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "SpellingValidator{" +
-                "defaultDictionary=" + defaultDictionary +
-                ", customDictionary=" + customDictionary +
-                '}';
     }
 }
