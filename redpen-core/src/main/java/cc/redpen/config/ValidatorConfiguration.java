@@ -27,7 +27,7 @@ import java.util.Objects;
  */
 public class ValidatorConfiguration implements Serializable, Cloneable {
     private final String configurationName;
-    private Map<String, String> attributes;
+    private Map<String, String> properties;
 
     /**
      * @param name name configuration settings
@@ -38,30 +38,30 @@ public class ValidatorConfiguration implements Serializable, Cloneable {
 
     /**
      * @param name name configuration settings
-     * @param attributes validator attributes
+     * @param properties validator properties
      */
-    public ValidatorConfiguration(String name, Map<String, String> attributes) {
+    public ValidatorConfiguration(String name, Map<String, String> properties) {
         this.configurationName = name;
-        this.attributes = attributes;
+        this.properties = properties;
     }
 
     /**
-     * Return the attributes map
+     * Return the properties map
      *
-     * @return a map of the configuration attributes to their values
+     * @return a map of the configuration properties to their values
      */
-    public Map<String, String> getAttributes() {
-        return attributes;
+    public Map<String, String> getProperties() {
+        return properties;
     }
 
     /**
-     * Get attribute value.
+     * Get property value.
      *
-     * @param name attribute name
-     * @return value of the specified attribute
+     * @param name property name
+     * @return value of the specified property
      */
-    public String getAttribute(String name) {
-        return this.attributes.get(name);
+    public String getProperty(String name) {
+        return this.properties.get(name);
     }
 
     /**
@@ -83,27 +83,20 @@ public class ValidatorConfiguration implements Serializable, Cloneable {
     }
 
     /**
-     * Add an attribute.
+     * Add an property.
      *
-     * @param name  attribute name
-     * @param value attribute value
+     * @param name  property name
+     * @param value property value
      * @return this object
      */
-    public ValidatorConfiguration addAttribute(String name, String value) {
-        attributes.put(name, value);
+    public ValidatorConfiguration addProperty(String name, Object value) {
+        properties.put(name, String.valueOf(value));
         return this;
     }
 
-    /**
-     * Add an attribute.
-     *
-     * @param name  attribute name
-     * @param value attribute value
-     * @return this object
-     */
-    public ValidatorConfiguration addAttribute(String name, boolean value) {
-        attributes.put(name, String.valueOf(value));
-        return this;
+    @Deprecated
+    public ValidatorConfiguration addAttribute(String name, Object value) {
+        return addProperty(name, value);
     }
 
     @Override public boolean equals(Object o) {
@@ -111,7 +104,7 @@ public class ValidatorConfiguration implements Serializable, Cloneable {
         if (!(o instanceof ValidatorConfiguration)) return false;
         ValidatorConfiguration that = (ValidatorConfiguration)o;
         return Objects.equals(configurationName, that.configurationName) &&
-               Objects.equals(attributes, that.attributes);
+               Objects.equals(properties, that.properties);
     }
 
     @Override public int hashCode() {
@@ -128,7 +121,7 @@ public class ValidatorConfiguration implements Serializable, Cloneable {
     @Override public ValidatorConfiguration clone() {
         try {
             ValidatorConfiguration clone = (ValidatorConfiguration)super.clone();
-            clone.attributes = new HashMap<>(attributes);
+            clone.properties = new HashMap<>(properties);
             return clone;
         }
         catch (CloneNotSupportedException e) {

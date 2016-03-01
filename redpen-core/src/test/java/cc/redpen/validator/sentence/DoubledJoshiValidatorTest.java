@@ -79,7 +79,7 @@ public class DoubledJoshiValidatorTest {
                 .build());
 
         Configuration config = Configuration.builder("ja")
-                .addValidatorConfig(new ValidatorConfiguration("DoubledJoshi").addAttribute("list", "は"))
+                .addValidatorConfig(new ValidatorConfiguration("DoubledJoshi").addProperty("list", "は"))
                 .build();
 
         RedPen redPen = new RedPen(config);

@@ -61,7 +61,7 @@ public class ValidatorTest {
         Validator validator = new Validator("hello", 123) {};
         assertEquals(123, validator.getInt("hello"));
 
-        validator.preInit(new ValidatorConfiguration("blah").addAttribute("hello", "234"), globalConfig);
+        validator.preInit(new ValidatorConfiguration("blah").addProperty("hello", "234"), globalConfig);
         assertEquals(234, validator.getInt("hello"));
     }
 

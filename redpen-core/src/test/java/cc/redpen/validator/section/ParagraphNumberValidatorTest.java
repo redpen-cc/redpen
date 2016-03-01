@@ -36,7 +36,7 @@ public class ParagraphNumberValidatorTest {
 
     @Before
     public void setUp() throws RedPenException {
-        validator.preInit(new ValidatorConfiguration("ParagraphNumber").addAttribute("max_num", "3"), Configuration.builder().build());
+        validator.preInit(new ValidatorConfiguration("ParagraphNumber").addProperty("max_num", "3"), Configuration.builder().build());
     }
 
     @Test

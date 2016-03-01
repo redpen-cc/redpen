@@ -209,10 +209,10 @@ public class ConfigurationTest {
         assertFalse(en.getValidatorConfigs().stream().anyMatch(v -> v.getConfigurationName().equals("HankakuKana")));
 
         ValidatorConfiguration sentenceLength = en.getValidatorConfigs().stream().filter(v -> v.getConfigurationName().equals("SentenceLength")).findAny().get();
-        assertEquals("120", sentenceLength.getAttribute("max_len"));
+        assertEquals("120", sentenceLength.getProperty("max_len"));
 
         ValidatorConfiguration spelling = en.getValidatorConfigs().stream().filter(v -> v.getConfigurationName().equals("Spelling")).findAny().get();
-        assertEquals("", spelling.getAttribute("list"));
-        assertEquals("", spelling.getAttribute("dict"));
+        assertEquals("", spelling.getProperty("list"));
+        assertEquals("", spelling.getProperty("dict"));
     }
 }
