@@ -19,15 +19,9 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.validator.DictionaryValidator;
 
-public class SpellingValidator extends DictionaryValidator {
+public final class SpellingValidator extends SpellingDictionaryValidator {
     private static String skipCharacters = "[\\!-/:-@\\[-`{-~]";
-    // TODO: replace more memory efficient data structure
-
-    public SpellingValidator() {
-        super(WORD_LIST_LOWERCASED, "spellchecker/spellchecker");
-    }
 
     @Override
     public void validate(Sentence sentence) {

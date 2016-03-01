@@ -24,7 +24,7 @@ import cc.redpen.tokenizer.TokenElement;
 /**
  * Ensure groups of words that are hyphenated in the dictionary are hyphenated in the sentence
  */
-public class HyphenationValidator extends SpellingValidator {
+public class HyphenationValidator extends SpellingDictionaryValidator {
 
     @Override
     public void validate(Sentence sentence) {
