@@ -22,7 +22,7 @@ import cc.redpen.model.Document;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.validator.sentence.SpellingValidator;
+import cc.redpen.validator.sentence.SpellingDictionaryValidator;
 
 import java.util.*;
 
@@ -32,7 +32,7 @@ import static java.util.Collections.singletonList;
  * Ensure that there are candidates for expanded versions of acronyms. That is, if there exists an
  * acronym ABC then there must exist a sequence of capitalized words such as Axxx Bxx Cxxx.
  */
-public class UnexpandedAcronymValidator extends SpellingValidator {
+public class UnexpandedAcronymValidator extends SpellingDictionaryValidator {
 
     // a set of small words used to join acronyms, such as 'of', 'the' and 'for'
     private Set<String> acronymJoiningWords = new HashSet<>();

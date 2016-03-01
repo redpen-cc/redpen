@@ -23,7 +23,7 @@ import cc.redpen.model.Paragraph;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.util.DictionaryLoader;
-import cc.redpen.validator.sentence.SpellingValidator;
+import cc.redpen.validator.sentence.SpellingDictionaryValidator;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -32,7 +32,7 @@ import java.util.Map;
 /**
  * Ensure that known (dictionary) words are not used too frequently within the document
  */
-public class WordFrequencyValidator extends SpellingValidator {
+public class WordFrequencyValidator extends SpellingDictionaryValidator {
 
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/word-frequency";
 
