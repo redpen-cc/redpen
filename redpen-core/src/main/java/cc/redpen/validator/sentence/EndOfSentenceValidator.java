@@ -21,27 +21,26 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.Validator;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
 import static cc.redpen.config.SymbolType.*;
+import static java.util.Collections.singletonList;
 
 /**
  * This validator check if the style end of sentence is American style.
  * @see <a href="http://grammar.ccc.commnet.edu/grammar/marks/quotation.htm">Description of quotation marks</a>
  */
-final public class EndOfSentenceValidator extends Validator {
-
-    private char rightSingleQuotation = '\'';
-    private char rightDoubleQuotation = '"';
-    private char period = '.';
-    private char questionMark = '?';
-    private char exclamationMark = '!';
+public final class EndOfSentenceValidator extends Validator {
+    private char rightSingleQuotation;
+    private char rightDoubleQuotation;
+    private char period;
+    private char questionMark;
+    private char exclamationMark;
 
     @Override
     public List<String> getSupportedLanguages() {
-        return Arrays.asList(Locale.ENGLISH.getLanguage());
+        return singletonList(Locale.ENGLISH.getLanguage());
     }
 
     @Override
@@ -73,42 +72,5 @@ final public class EndOfSentenceValidator extends Validator {
         rightDoubleQuotation = getSymbolTable().getSymbol(RIGHT_DOUBLE_QUOTATION_MARK).getValue();
         questionMark = getSymbolTable().getSymbol(QUESTION_MARK).getValue();
         exclamationMark = getSymbolTable().getSymbol(EXCLAMATION_MARK).getValue();
-    }
-
-    @Override
-    public String toString() {
-        return "EndOfSentenceValidator{" +
-                "rightSingleQuotation=" + rightSingleQuotation +
-                ", rightDoubleQuotation=" + rightDoubleQuotation +
-                ", period=" + period +
-                ", questionMark=" + questionMark +
-                ", exclamationMark=" + exclamationMark +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        EndOfSentenceValidator that = (EndOfSentenceValidator) o;
-
-        if (exclamationMark != that.exclamationMark) return false;
-        if (period != that.period) return false;
-        if (questionMark != that.questionMark) return false;
-        if (rightDoubleQuotation != that.rightDoubleQuotation) return false;
-        if (rightSingleQuotation != that.rightSingleQuotation) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (int) rightSingleQuotation;
-        result = 31 * result + (int) rightDoubleQuotation;
-        result = 31 * result + (int) period;
-        result = 31 * result + (int) questionMark;
-        result = 31 * result + (int) exclamationMark;
-        return result;
     }
 }

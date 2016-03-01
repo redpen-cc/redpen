@@ -123,8 +123,8 @@ final public class ContractionValidator extends Validator {
         nonContractions.add("they");
     }
 
-    private int foundContractionNum = 0;
-    private int foundNonContractionNum = 0;
+    private int foundContractionNum;
+    private int foundNonContractionNum;
 
     @Override
     public List<String> getSupportedLanguages() {
@@ -152,31 +152,5 @@ final public class ContractionValidator extends Validator {
                 foundNonContractionNum += 1;
             }
         }
-    }
-
-    @Override
-    public String toString() {
-        return "ContractionValidator{" +
-                "foundContractionNum=" + foundContractionNum +
-                ", foundNonContractionNum=" + foundNonContractionNum +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ContractionValidator that = (ContractionValidator) o;
-
-        return foundContractionNum == that.foundContractionNum && foundNonContractionNum == that.foundNonContractionNum;
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = foundContractionNum;
-        result = 31 * result + foundNonContractionNum;
-        return result;
     }
 }

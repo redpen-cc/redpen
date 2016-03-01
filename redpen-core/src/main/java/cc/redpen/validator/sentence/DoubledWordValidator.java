@@ -32,8 +32,7 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 final public class DoubledWordValidator extends Validator {
-    private static final Logger LOG =
-            LoggerFactory.getLogger(DoubledWordValidator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DoubledWordValidator.class);
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/doubled-word";
 
     private Set<String> skipList;

@@ -37,7 +37,6 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
-import static java.util.Collections.emptySet;
 import static java.util.ResourceBundle.Control.FORMAT_DEFAULT;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -123,7 +122,7 @@ public abstract class Validator {
         return Collections.emptyList();
     }
 
-    final void preInit(ValidatorConfiguration config, Configuration globalConfig) throws RedPenException {
+    public final void preInit(ValidatorConfiguration config, Configuration globalConfig) throws RedPenException {
         this.config = config;
         this.globalConfig = globalConfig;
         initAttributes(config);
@@ -137,7 +136,7 @@ public abstract class Validator {
             if (defaultValue instanceof Integer)
                 attributes.put(name, Integer.valueOf(value));
             else if (defaultValue instanceof Set)
-                attributes.put(name, isEmpty(value) ? emptySet() : new HashSet<>(asList((value).split(","))));
+                attributes.put(name, isEmpty(value) ? new HashSet<>() : new HashSet<>(asList((value).split(","))));
             else
                 attributes.put(name, value);
         });
