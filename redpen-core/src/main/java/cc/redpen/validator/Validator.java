@@ -194,6 +194,10 @@ public abstract class Validator {
     protected void init() throws RedPenException {
     }
 
+    public Map<String, Object> getAttributes() {
+        return attributes;
+    }
+
     protected int getIntAttribute(String name) {
         return (int)attributes.get(name);
     }
