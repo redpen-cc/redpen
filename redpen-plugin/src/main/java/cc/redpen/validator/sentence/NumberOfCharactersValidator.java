@@ -2,10 +2,15 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.Validator;
+import cc.redpen.validator.ValidatorFactory;
 
 public class NumberOfCharactersValidator extends Validator {
     private final int MIN_LENGTH = 100;
     private final int MAX_LENGTH = 1000;
+
+    static {
+        ValidatorFactory.registerValidator(NumberOfCharactersValidator.class);
+    }
 
     @Override
     public void validate(Sentence sentence) {

@@ -28,12 +28,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.*;
 
 /**
  * Factory class of validators.
  */
 public class ValidatorFactory {
+    private static final String validatorPackage = Validator.class.getPackage().getName();
+    private static final List<String> VALIDATOR_PACKAGES = asList(validatorPackage, validatorPackage + ".sentence", validatorPackage + ".section");
     static final Map<String, Validator> validators = new LinkedHashMap<>();
 
     public static void registerValidator(Class<? extends Validator> clazz) {
@@ -106,10 +109,24 @@ public class ValidatorFactory {
 
     public static Validator getInstance(ValidatorConfiguration config, Configuration globalConfig) throws RedPenException {
         Validator prototype = validators.get(config.getConfigurationName());
-        if (prototype == null) throw new RedPenException("There is no such validator: " + config.getConfigurationName());
-        Validator validator = createValidator(prototype.getClass());
+        Class<? extends Validator> validatorClass = prototype != null ? prototype.getClass() : loadPlugin(config.getConfigurationName());
+        Validator validator = createValidator(validatorClass);
         validator.preInit(config, globalConfig);
         return validator;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Class<? extends Validator> loadPlugin(String name) throws RedPenException {
+        for (String p : VALIDATOR_PACKAGES) {
+            try {
+                Class<? extends Validator> validatorClass = (Class)Class.forName(p + "." + name + "Validator");
+                registerValidator(validatorClass);
+                return validatorClass;
+            }
+            catch (ClassNotFoundException ignore) {
+            }
+        }
+        throw new RedPenException("There is no such validator: " + name);
     }
 
     private static Validator createValidator(Class<? extends Validator> clazz) {
