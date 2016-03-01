@@ -37,7 +37,7 @@ public final class ParagraphStartWithValidator extends Validator {
                 continue;
             }
             Sentence firstSentence = currentParagraph.getSentence(0);
-            if (firstSentence.getContent().indexOf(getStringAttribute("start_from")) != 0) {
+            if (firstSentence.getContent().indexOf(getString("start_from")) != 0) {
                 addLocalizedError(section.getJoinedHeaderContents(),
                         firstSentence.getContent().charAt(0));
             }

@@ -40,7 +40,7 @@ public class NumberFormatValidator extends Validator {
         super.init();
 
         // set the following to true to support EU formats such as 1.000,00
-        if (getBooleanAttribute("decimal_delimiter_is_comma")) {
+        if (getBoolean("decimal_delimiter_is_comma")) {
             decimalDelimiters = COMMA_DELIMITERS;
         } else {
             decimalDelimiters = DOT_DELIMITERS;
@@ -110,7 +110,7 @@ public class NumberFormatValidator extends Validator {
             }
 
             // if it's a four digit integer and we are ignoring years, ignore this
-            if (getBooleanAttribute("ignore_years") && isInteger && (integerPortion.length() == 4)) {
+            if (getBoolean("ignore_years") && isInteger && (integerPortion.length() == 4)) {
                 return;
             }
 

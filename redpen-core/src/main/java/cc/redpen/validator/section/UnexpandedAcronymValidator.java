@@ -42,7 +42,7 @@ public class UnexpandedAcronymValidator extends SpellingDictionaryValidator {
     private Set<String> contractedAcronyms = new HashSet<>();
 
     public UnexpandedAcronymValidator() {
-        setDefaultAttributes("min_acronym_length", 3); // ignore uppercase words smaller than this length
+        setDefaultProperties("min_acronym_length", 3); // ignore uppercase words smaller than this length
     }
 
     @Override public List<String> getSupportedLanguages() {
@@ -65,7 +65,7 @@ public class UnexpandedAcronymValidator extends SpellingDictionaryValidator {
         for (TokenElement token : sentence.getTokens()) {
             String word = token.getSurface();
             if (!word.trim().isEmpty()) {
-                int minAcronymLength = getIntAttribute("min_acronym_length");
+                int minAcronymLength = getInt("min_acronym_length");
                 if (isAllCapitals(word)) {
                     if ((word.length() >= minAcronymLength) && !inDictionary(word.toLowerCase())) {
                         contractedAcronyms.add(word);

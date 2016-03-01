@@ -30,7 +30,7 @@ public final class SentenceLengthValidator extends Validator {
 
     @Override
     public void validate(Sentence sentence) {
-        int maxLength = getIntAttribute("max_len");
+        int maxLength = getInt("max_len");
         if (sentence.getContent().length() > maxLength) {
             addLocalizedError(sentence, sentence.getContent().length(), maxLength);
         }

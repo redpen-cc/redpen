@@ -119,16 +119,16 @@ import static java.util.Collections.singletonList;
     }
 
     private void checkKatakanaSpell(Sentence sentence, String katakana) {
-        if (katakana.length() <= getIntAttribute("max_ignore_len")) {
+        if (katakana.length() <= getInt("max_ignore_len")) {
             return;
         }
         if (dic.containsKey(katakana) || exceptions.contains(katakana)
-                || getSetAttribute("list").contains(katakana) ||
+                || getSet("list").contains(katakana) ||
                 (katakanaWordFrequencies.get(katakana) != null
-                        && katakanaWordFrequencies.get(katakana) > getIntAttribute("min_freq"))) {
+                        && katakanaWordFrequencies.get(katakana) > getInt("min_freq"))) {
             return;
         }
-        int minLsDistance = Math.round(katakana.length() * getFloatAttribute("min_ratio"));
+        int minLsDistance = Math.round(katakana.length() * getFloat("min_ratio"));
         boolean found = false;
         for (String key : dic.keySet()) {
             if (LevenshteinDistance.getDistance(key, katakana) <= minLsDistance) {
@@ -144,7 +144,7 @@ import static java.util.Collections.singletonList;
     @Override
     protected void init() throws RedPenException {
         super.init();
-        if (!getBooleanAttribute("disable-default")) {
+        if (!getBoolean("disable-default")) {
             String defaultDictionaryFile = DEFAULT_RESOURCE_PATH + "/katakana-spellcheck.dat";
             exceptions = WORD_LIST.loadCachedFromResource(defaultDictionaryFile, "katakana word dictionary");
         }

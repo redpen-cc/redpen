@@ -50,7 +50,7 @@ public abstract class Validator {
     private static final Logger LOG = LoggerFactory.getLogger(Validator.class);
     private final static ResourceBundle.Control fallbackControl = ResourceBundle.Control.getNoFallbackControl(FORMAT_DEFAULT);
 
-    private Map<String, Object> attributes;
+    private Map<String, Object> properties;
     private ResourceBundle errorMessages = null;
     private ValidatorConfiguration config;
     private Configuration globalConfig;
@@ -60,22 +60,22 @@ public abstract class Validator {
     }
 
     /**
-     * @param keyValues String key and Object value pairs for supported config attributes.
+     * @param keyValues String key and Object value pairs for supported config properties.
      */
     public Validator(Object...keyValues) {
         setLocale(Locale.getDefault());
-        setDefaultAttributes(keyValues);
+        setDefaultProperties(keyValues);
     }
 
-    protected void setDefaultAttributes(Object...keyValues) {
-        attributes = new LinkedHashMap<>();
-        addDefaultAttributes(keyValues);
+    protected void setDefaultProperties(Object...keyValues) {
+        properties = new LinkedHashMap<>();
+        addDefaultProperties(keyValues);
     }
 
-    protected void addDefaultAttributes(Object[] keyValues) {
+    protected void addDefaultProperties(Object[] keyValues) {
         if (keyValues.length % 2 != 0) throw new IllegalArgumentException("Not enough values specified");
         for (int i = 0; i < keyValues.length; i+=2) {
-            attributes.put(keyValues[i].toString(), keyValues[i+1]);
+            properties.put(keyValues[i].toString(), keyValues[i+1]);
         }
     }
 
@@ -143,24 +143,24 @@ public abstract class Validator {
     public final void preInit(ValidatorConfiguration config, Configuration globalConfig) throws RedPenException {
         this.config = config;
         this.globalConfig = globalConfig;
-        initAttributes(config);
+        loadProperties(config);
         init();
     }
 
-    private void initAttributes(ValidatorConfiguration config) {
-        attributes.forEach((name, defaultValue) -> {
+    private void loadProperties(ValidatorConfiguration config) {
+        properties.forEach((name, defaultValue) -> {
             String value = config.getAttribute(name);
             if (value == null) return;
             if (defaultValue instanceof Integer)
-                attributes.put(name, Integer.valueOf(value));
+                properties.put(name, Integer.valueOf(value));
             else if (defaultValue instanceof Float)
-                attributes.put(name, Float.valueOf(value));
+                properties.put(name, Float.valueOf(value));
             else if (defaultValue instanceof Boolean)
-                attributes.put(name, Boolean.valueOf(value));
+                properties.put(name, Boolean.valueOf(value));
             else if (defaultValue instanceof Set)
-                attributes.put(name, isEmpty(value) ? defaultValue : asList((value).split(",")).stream().map(String::toLowerCase).collect(toSet()));
+                properties.put(name, isEmpty(value) ? defaultValue : asList((value).split(",")).stream().map(String::toLowerCase).collect(toSet()));
             else
-                attributes.put(name, value);
+                properties.put(name, value);
         });
     }
 
@@ -178,10 +178,11 @@ public abstract class Validator {
     }
 
     /**
-     * Return the configuration attributes
+     * Return the configuration properties
      *
-     * @return a map of configuration attributes to their values
+     * @return a map of configuration properties to their values
      */
+    @Deprecated
     public Map<String, String> getConfigAttributes() {
         return config.getAttributes();
     }
@@ -194,38 +195,38 @@ public abstract class Validator {
     protected void init() throws RedPenException {
     }
 
-    public Map<String, Object> getAttributes() {
-        return attributes;
+    public Map<String, Object> getProperties() {
+        return properties;
     }
 
-    protected int getIntAttribute(String name) {
-        return (int)attributes.get(name);
+    protected int getInt(String name) {
+        return (int)properties.get(name);
     }
 
-    protected float getFloatAttribute(String name) {
-        return (float)attributes.get(name);
+    protected float getFloat(String name) {
+        return (float)properties.get(name);
     }
 
-    protected String getStringAttribute(String name) {
-        return (String)attributes.get(name);
+    protected String getString(String name) {
+        return (String)properties.get(name);
     }
 
-    protected boolean getBooleanAttribute(String name) {
-        return (boolean)attributes.get(name);
+    protected boolean getBoolean(String name) {
+        return (boolean)properties.get(name);
     }
 
     @SuppressWarnings("unchecked")
-    protected Set<String> getSetAttribute(String name) {
-        return (Set) attributes.get(name);
+    protected Set<String> getSet(String name) {
+        return (Set) properties.get(name);
     }
 
-    /** @deprecated Please use constructor with default attributes instead, and then getXXXAttribute() methods */
+    /** @deprecated Please use constructor with default properties instead, and then getXXX() methods */
     @Deprecated
     protected Optional<String> getConfigAttribute(String name) {
         return Optional.ofNullable(config.getAttribute(name));
     }
 
-    /** @deprecated Please use constructor with default attributes instead, and then getXXXAttribute() methods */
+    /** @deprecated Please use constructor with default properties instead, and then getXXX() methods */
     @Deprecated
     protected String getConfigAttribute(String name, String defaultValue) {
         return getConfigAttribute(name).orElse(defaultValue);
@@ -424,7 +425,7 @@ public abstract class Validator {
     }
 
     @Override public String toString() {
-        return getClass().getSimpleName() + attributes;
+        return getClass().getSimpleName() + properties;
     }
 
     @Override public boolean equals(Object o) {

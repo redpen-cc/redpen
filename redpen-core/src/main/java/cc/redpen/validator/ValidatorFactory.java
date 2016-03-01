@@ -92,13 +92,13 @@ public class ValidatorFactory {
         return validators.entrySet().stream().filter(e -> {
             List<String> supportedLanguages = e.getValue().getSupportedLanguages();
             return supportedLanguages.isEmpty() || supportedLanguages.contains(lang);
-        }).map(e -> new ValidatorConfiguration(e.getKey(), toStrings(e.getValue().getAttributes()))).collect(toList());
+        }).map(e -> new ValidatorConfiguration(e.getKey(), toStrings(e.getValue().getProperties()))).collect(toList());
     }
 
     @SuppressWarnings("unchecked")
-    static Map<String, String> toStrings(Map<String, Object> attributes) {
+    static Map<String, String> toStrings(Map<String, Object> properties) {
         Map<String, String> result = new LinkedHashMap<>();
-        for (Map.Entry<String, Object> e : attributes.entrySet()) {
+        for (Map.Entry<String, Object> e : properties.entrySet()) {
             if (e.getValue() instanceof Iterable)
                 result.put(e.getKey(), join((Iterable)e.getValue(), ','));
             else

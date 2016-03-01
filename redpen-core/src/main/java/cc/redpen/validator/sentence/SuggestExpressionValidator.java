@@ -54,7 +54,7 @@ public final class SuggestExpressionValidator extends Validator {
     @Override
     protected void init() throws RedPenException {
         //TODO: support default dictionary.
-        String confFile = getStringAttribute("dict");
+        String confFile = getString("dict");
         if (isNotEmpty(confFile)) {
             LOG.info("Dictionary file is " + confFile);
             synonyms = KEY_VALUE.loadCachedFromFile(findFile(confFile), "SuggestExpressionValidator dictionary");
