@@ -409,6 +409,7 @@ input[type="radio"], input[type="checkbox"] {
 
 .redpen-validators .checkbox {
     margin-bottom: 0;
+    clear: both;
 }
 
 .redpen-validators label {
