@@ -68,7 +68,7 @@ public abstract class Validator {
     }
 
     protected void setDefaultAttributes(Object...keyValues) {
-        attributes = new HashMap<>();
+        attributes = new LinkedHashMap<>();
         addDefaultAttributes(keyValues);
     }
 
