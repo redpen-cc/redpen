@@ -45,10 +45,10 @@ public class ValidatorFactoryTest {
     }
 
     @Test
-    public void customValidator() throws RedPenException {
-        ValidatorFactory.registerValidator(CustomValidator.class);
+    public void validatorPluginsAreCreatedAndRegistered() throws RedPenException {
         Configuration conf = Configuration.builder().addValidatorConfig(new ValidatorConfiguration("Custom")).build();
         assertEquals(CustomValidator.class, ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf).getClass());
+        assertTrue(ValidatorFactory.getConfigurations("en").contains(new ValidatorConfiguration("Custom")));
     }
 
     @Test(expected = RedPenException.class)
