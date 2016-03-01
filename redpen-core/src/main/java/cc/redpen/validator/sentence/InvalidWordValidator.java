@@ -43,7 +43,7 @@ public final class InvalidWordValidator extends DictionaryValidator {
     public void validate(Sentence sentence) {
         for (TokenElement token : sentence.getTokens()) {
             String surface = token.getSurface().toLowerCase();
-            if (defaultList.contains(surface) || getSetAttribute("list").contains(surface)) {
+            if (dictionary.contains(surface) || getSetAttribute("list").contains(surface)) {
                 addLocalizedErrorFromToken(sentence, token);
             }
         }

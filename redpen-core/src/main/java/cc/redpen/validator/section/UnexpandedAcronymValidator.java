@@ -22,8 +22,7 @@ import cc.redpen.model.Document;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.util.SpellingUtils;
-import cc.redpen.validator.Validator;
+import cc.redpen.validator.sentence.SpellingValidator;
 
 import java.util.*;
 
@@ -33,7 +32,7 @@ import static java.util.Collections.singletonList;
  * Ensure that there are candidates for expanded versions of acronyms. That is, if there exists an
  * acronym ABC then there must exist a sequence of capitalized words such as Axxx Bxx Cxxx.
  */
-public class UnexpandedAcronymValidator extends Validator {
+public class UnexpandedAcronymValidator extends SpellingValidator {
 
     // a set of small words used to join acronyms, such as 'of', 'the' and 'for'
     private Set<String> acronymJoiningWords = new HashSet<>();
@@ -42,11 +41,8 @@ public class UnexpandedAcronymValidator extends Validator {
     // the set of acronyms we found literally within the document
     private Set<String> contractedAcronyms = new HashSet<>();
 
-    // a dictionary to filter out acronyms that are just uppercase words
-    private Set<String> dictionary;
-
     public UnexpandedAcronymValidator() {
-        super("min_acronym_length", 3); // ignore uppercase words smaller than this length
+        setDefaultAttributes("min_acronym_length", 3); // ignore uppercase words smaller than this length
     }
 
     @Override public List<String> getSupportedLanguages() {
@@ -56,7 +52,6 @@ public class UnexpandedAcronymValidator extends Validator {
     @Override
     protected void init() throws RedPenException {
         super.init();
-        dictionary = SpellingUtils.getDictionary(getSymbolTable().getLang());
         acronymJoiningWords.add("of");
         acronymJoiningWords.add("the");
         acronymJoiningWords.add("for");

@@ -17,26 +17,16 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.util.SpellingUtils;
 import cc.redpen.validator.DictionaryValidator;
-
-import java.util.Set;
 
 public class SpellingValidator extends DictionaryValidator {
     private static String skipCharacters = "[\\!-/:-@\\[-`{-~]";
     // TODO: replace more memory efficient data structure
-    private Set<String> defaultDictionary;
 
     public SpellingValidator() {
-        super(WORD_LIST_LOWERCASED);
-    }
-
-    @Override
-    protected void init() throws RedPenException {
-        defaultDictionary = SpellingUtils.getDictionary(getSymbolTable().getLang());
+        super(WORD_LIST_LOWERCASED, "spellchecker/spellchecker");
     }
 
     @Override
@@ -47,7 +37,7 @@ public class SpellingValidator extends DictionaryValidator {
                 continue;
             }
 
-            if (!defaultDictionary.contains(surface) && !getSetAttribute("list").contains(surface)) {
+            if (!dictionary.contains(surface) && !getSetAttribute("list").contains(surface)) {
                 addLocalizedErrorFromToken(sentence, token);
             }
         }

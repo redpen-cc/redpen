@@ -32,7 +32,7 @@ public final class InvalidExpressionValidator extends DictionaryValidator {
 
     @Override
     public void validate(Sentence sentence) {
-        concat(defaultList.stream(), getSetAttribute("list").stream()).forEach(value -> {
+        concat(dictionary.stream(), getSetAttribute("list").stream()).forEach(value -> {
             int startPosition = sentence.getContent().indexOf(value);
             if (startPosition != -1) {
                 addLocalizedErrorWithPosition(sentence, startPosition, startPosition + value.length(), value);

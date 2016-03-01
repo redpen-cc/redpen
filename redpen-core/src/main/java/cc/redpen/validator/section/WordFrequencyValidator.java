@@ -23,8 +23,7 @@ import cc.redpen.model.Paragraph;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.util.DictionaryLoader;
-import cc.redpen.util.SpellingUtils;
-import cc.redpen.validator.Validator;
+import cc.redpen.validator.sentence.SpellingValidator;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -33,7 +32,7 @@ import java.util.Map;
 /**
  * Ensure that known (dictionary) words are not used too frequently within the document
  */
-public class WordFrequencyValidator extends Validator {
+public class WordFrequencyValidator extends SpellingValidator {
 
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/word-frequency";
 
@@ -49,12 +48,13 @@ public class WordFrequencyValidator extends Validator {
     private Sentence lastSentence;
 
     public WordFrequencyValidator() {
-        super("deviation_factor", 3f, // the maximum deviation from the reference frequency permitted before a validation error is created
-              "min_word_count", 200); // the minimum number of words in the document before this validator activates
+        setDefaultAttributes("deviation_factor", 3f, // the maximum deviation from the reference frequency permitted before a validation error is created
+                             "min_word_count", 200); // the minimum number of words in the document before this validator activates
     }
 
     @Override
     protected void init() throws RedPenException {
+        super.init();
         String defaultDictionaryFile = DEFAULT_RESOURCE_PATH + "/word-frequency-" + getSymbolTable().getLang() + ".dat";
         referenceWordDeviations = new HashMap<>();
         referenceWordFrequencies =
@@ -79,7 +79,7 @@ public class WordFrequencyValidator extends Validator {
                     documentWordOccurances.put(word, occurances + 1);
                 }
                 wordCount++;
-            } else if (SpellingUtils.getDictionary(getSymbolTable().getLang()).contains(word)) {
+            } else if (dictionary.contains(word)) {
                 wordCount++;
             }
         }
@@ -115,7 +115,6 @@ public class WordFrequencyValidator extends Validator {
 
     @Override
     public void validate(Document document) {
-
         // process each sentence in the document
         lastSentence = null;
         for (int i = 0; i < document.size(); i++) {
