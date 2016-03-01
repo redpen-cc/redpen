@@ -17,10 +17,13 @@
  */
 package cc.redpen.validator.section;
 
+import cc.redpen.RedPenException;
+import cc.redpen.config.Configuration;
+import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.validator.ValidationError;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -29,13 +32,12 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public class SectionLengthValidatorTest {
+    private SectionLengthValidator validator;
 
-    private static SectionLengthValidator validator;
-
-    @BeforeClass
-    public static void setUp() {
+    @Before
+    public void setUp() throws RedPenException {
         validator = new SectionLengthValidator();
-        validator.setMaxSectionLength(10);
+        validator.preInit(new ValidatorConfiguration("SectionLength").addAttribute("max_num", "10"), Configuration.builder().build());
     }
 
     @Test

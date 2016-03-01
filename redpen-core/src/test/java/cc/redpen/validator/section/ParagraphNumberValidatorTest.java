@@ -17,11 +17,13 @@
  */
 package cc.redpen.validator.section;
 
-import cc.redpen.model.Document;
+import cc.redpen.RedPenException;
+import cc.redpen.config.Configuration;
+import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.validator.ValidationError;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -30,13 +32,11 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public class ParagraphNumberValidatorTest {
+    private ParagraphNumberValidator validator = new ParagraphNumberValidator();
 
-    private static ParagraphNumberValidator validator;
-
-    @BeforeClass
-    public static void setUp() {
-        validator = new ParagraphNumberValidator();
-        validator.setMaxParagraphNumber(3);
+    @Before
+    public void setUp() throws RedPenException {
+        validator.preInit(new ValidatorConfiguration("ParagraphNumber").addAttribute("max_num", "3"), Configuration.builder().build());
     }
 
     @Test
@@ -56,16 +56,12 @@ public class ParagraphNumberValidatorTest {
 
     @Test
     public void testSectionWithOnlyOneSection() {
-
         Section section = new Section(0);
         section.appendParagraph(new Paragraph());
-
-        Document document = Document.builder().appendSection(section).build();
 
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(section);
         assertEquals(0, errors.size());
     }
-
 }
