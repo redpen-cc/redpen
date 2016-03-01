@@ -79,7 +79,7 @@ public class WordFrequencyValidator extends SpellingValidator {
                     documentWordOccurances.put(word, occurances + 1);
                 }
                 wordCount++;
-            } else if (defaultList.contains(word)) {
+            } else if (dictionary.contains(word)) {
                 wordCount++;
             }
         }

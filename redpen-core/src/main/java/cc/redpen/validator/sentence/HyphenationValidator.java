@@ -43,7 +43,7 @@ public class HyphenationValidator extends SpellingValidator {
                 String hyphenatedForm = tokens[0].getSurface();
                 for (int j = 1; (j < tokens.length) && (tokens[j] != null); j++) {
                     hyphenatedForm += "-" + tokens[j].getSurface();
-                    if (defaultList.contains(hyphenatedForm.toLowerCase())) {
+                    if (dictionary.contains(hyphenatedForm.toLowerCase())) {
                         addLocalizedErrorWithPosition(
                                 "HyphenatedInDictionary",
                                 sentence,

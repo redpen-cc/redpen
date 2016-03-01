@@ -67,7 +67,7 @@ public class UnexpandedAcronymValidator extends SpellingValidator {
             if (!word.trim().isEmpty()) {
                 int minAcronymLength = getIntAttribute("min_acronym_length");
                 if (isAllCapitals(word)) {
-                    if ((word.length() >= minAcronymLength) && !defaultList.contains(word.toLowerCase())) {
+                    if ((word.length() >= minAcronymLength) && !dictionary.contains(word.toLowerCase())) {
                         contractedAcronyms.add(word);
                     }
                 } else if (isCapitalized(word)) {

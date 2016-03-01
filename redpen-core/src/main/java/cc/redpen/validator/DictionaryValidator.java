@@ -14,8 +14,8 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
  */
 public abstract class DictionaryValidator extends Validator {
   protected DictionaryLoader<Set<String>> loader = WORD_LIST;
-  protected Set<String> defaultList = emptySet();
-  private String defaultDictionaryPrefix;
+  protected Set<String> dictionary = emptySet();
+  private String dictionaryPrefix;
 
   public DictionaryValidator() {
     super("list", new HashSet<>(), "dict", "");
@@ -26,20 +26,20 @@ public abstract class DictionaryValidator extends Validator {
     addDefaultAttributes(attributes);
   }
 
-  public DictionaryValidator(String defaultDictionaryPrefix) {
+  public DictionaryValidator(String dictionaryPrefix) {
     this();
-    this.defaultDictionaryPrefix = defaultDictionaryPrefix;
+    this.dictionaryPrefix = dictionaryPrefix;
   }
 
-  public DictionaryValidator(DictionaryLoader<Set<String>> loader, String defaultDictionaryPrefix) {
-    this(defaultDictionaryPrefix);
+  public DictionaryValidator(DictionaryLoader<Set<String>> loader, String dictionaryPrefix) {
+    this(dictionaryPrefix);
     this.loader = loader;
   }
 
   @Override protected void init() throws RedPenException {
-    if (defaultDictionaryPrefix != null) {
-      String defaultDictionaryFile = "default-resources/" + defaultDictionaryPrefix + "-" + getSymbolTable().getLang() + ".dat";
-      defaultList = loader.loadCachedFromResource(defaultDictionaryFile, getClass().getSimpleName() + " default dictionary");
+    if (dictionaryPrefix != null) {
+      String defaultDictionaryFile = "default-resources/" + dictionaryPrefix + "-" + getSymbolTable().getLang() + ".dat";
+      dictionary = loader.loadCachedFromResource(defaultDictionaryFile, getClass().getSimpleName() + " default dictionary");
     }
 
     String confFile = getStringAttribute("dict");

@@ -37,7 +37,7 @@ public class SpellingValidator extends DictionaryValidator {
                 continue;
             }
 
-            if (!defaultList.contains(surface) && !getSetAttribute("list").contains(surface)) {
+            if (!dictionary.contains(surface) && !getSetAttribute("list").contains(surface)) {
                 addLocalizedErrorFromToken(sentence, token);
             }
         }
