@@ -36,7 +36,6 @@ import java.text.MessageFormat;
 import java.util.*;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyMap;
 import static java.util.ResourceBundle.Control.FORMAT_DEFAULT;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -53,12 +52,19 @@ public abstract class Validator {
     private Configuration globalConfig;
 
     public Validator() {
-        this(emptyMap());
+        this(new Object[0]);
     }
 
-    public Validator(Map<String, Object> attributes) {
+    /**
+     * @param keyValues String key and Object value pairs for supported config attributes.
+     */
+    public Validator(Object...keyValues) {
         setLocale(Locale.getDefault());
-        this.attributes = new HashMap<>(attributes);
+        attributes = new HashMap<>();
+        if (keyValues.length % 2 != 0) throw new IllegalArgumentException("Not enough values specified");
+        for (int i = 0; i < keyValues.length; i+=2) {
+            attributes.put(keyValues[i].toString(), keyValues[i+1]);
+        }
     }
 
     private List<ValidationError> errors;
@@ -135,6 +141,10 @@ public abstract class Validator {
             if (value == null) return;
             if (defaultValue instanceof Integer)
                 attributes.put(name, Integer.valueOf(value));
+            else if (defaultValue instanceof Float)
+                attributes.put(name, Float.valueOf(value));
+            else if (defaultValue instanceof Boolean)
+                attributes.put(name, Boolean.valueOf(value));
             else if (defaultValue instanceof Set)
                 attributes.put(name, isEmpty(value) ? new HashSet<>() : new HashSet<>(asList((value).split(","))));
             else
@@ -179,6 +189,14 @@ public abstract class Validator {
 
     protected int getIntAttribute(String name) {
         return (int)attributes.get(name);
+    }
+
+    protected float getFloatAttribute(String name) {
+        return (float)attributes.get(name);
+    }
+
+    protected boolean getBooleanAttribute(String name) {
+        return (boolean)attributes.get(name);
     }
 
     @SuppressWarnings("unchecked")

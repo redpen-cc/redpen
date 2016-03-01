@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Locale;
 
 import static java.util.Collections.singletonList;
-import static java.util.Collections.singletonMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -59,7 +58,7 @@ public class ValidatorTest {
 
     @Test
     public void configOverridesDefaultAttributes() throws Exception {
-        Validator validator = new Validator(singletonMap("hello", 123)) {};
+        Validator validator = new Validator("hello", 123) {};
         assertEquals(123, validator.getIntAttribute("hello"));
 
         validator.preInit(new ValidatorConfiguration("blah").addAttribute("hello", "234"), globalConfig);
@@ -85,7 +84,7 @@ public class ValidatorTest {
     @Test
     public void testToString() throws Exception {
         assertEquals("ValidationErrorMessageTest{}", new ValidationErrorMessageTest().toString());
-        assertEquals("ValidationErrorMessageTest{hello=123}", new ValidationErrorMessageTest(singletonMap("hello", 123)).toString());
+        assertEquals("ValidationErrorMessageTest{hello=123}", new ValidationErrorMessageTest("hello", 123).toString());
     }
 }
 

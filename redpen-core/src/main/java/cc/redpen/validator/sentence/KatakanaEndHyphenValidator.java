@@ -21,14 +21,13 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.StringUtils;
 import cc.redpen.validator.Validator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
-import static java.util.Collections.*;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.singletonList;
 
 /**
  * Validate the end hyphens of Katakana words in Japanese documents.
@@ -50,8 +49,6 @@ import static java.util.Collections.*;
  * Note that KatakanaEndHyphenValidator only checks the rules a) and b).
  */
 public final class KatakanaEndHyphenValidator extends Validator {
-    private static final Logger LOG = LoggerFactory.getLogger(KatakanaEndHyphenValidator.class);
-
     /**
      * Default Katakana limit length without hypen.
      */
@@ -66,7 +63,7 @@ public final class KatakanaEndHyphenValidator extends Validator {
     private static final char KATAKANA_MIDDLE_DOT = '・';
 
     public KatakanaEndHyphenValidator() {
-        super(singletonMap("list", emptySet()));
+        super("list", emptySet());
     }
 
     public static boolean isKatakanaEndHyphen(String katakana) {

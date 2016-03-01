@@ -23,7 +23,8 @@ import cc.redpen.validator.Validator;
 
 import java.util.*;
 
-import static java.util.Collections.*;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.singletonList;
 
 /**
  * DoubledJoshiValidator checks if the input texts has duplicated Kakujoshi words in one setnences.
@@ -32,7 +33,7 @@ import static java.util.Collections.*;
  */
 public class DoubledJoshiValidator extends Validator {
     public DoubledJoshiValidator() {
-        super(singletonMap("list", emptySet()));
+        super("list", emptySet());
     }
 
     @Override

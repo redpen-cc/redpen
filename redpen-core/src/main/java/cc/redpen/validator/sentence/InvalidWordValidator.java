@@ -27,7 +27,8 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 
-import static java.util.Collections.*;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.singletonList;
 
 /**
  * Detect invalid word occurrences.
@@ -37,7 +38,7 @@ final public class InvalidWordValidator extends Validator {
     private Set<String> invalidWords;
 
     public InvalidWordValidator() {
-        super(singletonMap("list", emptySet()));
+        super("list", emptySet());
     }
 
     @Override

@@ -56,11 +56,9 @@ public final class EndOfSentenceValidator extends Validator {
                 || lastCharacter == exclamationMark) {
             if (secondCharacter == rightSingleQuotation
                     || secondCharacter == rightDoubleQuotation) {
-                StringBuilder builder = new StringBuilder();
-                builder.append(secondCharacter).append(lastCharacter);
                 addLocalizedErrorWithPosition(sentence,
                         content.length() - 2,
-                        content.length() - 1, builder.toString());
+                        content.length() - 1, String.valueOf(secondCharacter) + lastCharacter);
             }
         }
     }

@@ -22,7 +22,6 @@ import cc.redpen.model.Sentence;
 import cc.redpen.validator.Validator;
 
 import static cc.redpen.config.SymbolType.COMMA;
-import static java.util.Collections.singletonMap;
 
 /**
  * Validate the number of commas in one sentence.
@@ -30,7 +29,7 @@ import static java.util.Collections.singletonMap;
 public final class CommaNumberValidator extends Validator {
 
     public CommaNumberValidator() {
-        super(singletonMap("max_num", 3));
+        super("max_num", 3);
     }
 
     private char comma;

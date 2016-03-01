@@ -22,14 +22,12 @@ import cc.redpen.validator.Validator;
 
 import java.util.Map;
 
-import static java.util.Collections.singletonMap;
-
 /**
  * Validate input sentences contain more characters more than specified.
  */
 public final class SentenceLengthValidator extends Validator {
     public SentenceLengthValidator() {
-        super(singletonMap("max_len", 120));
+        super("max_len", 120);
     }
 
     public SentenceLengthValidator(Map<String, Object> attributes) {
