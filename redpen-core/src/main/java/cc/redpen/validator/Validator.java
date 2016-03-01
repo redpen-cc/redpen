@@ -196,6 +196,10 @@ public abstract class Validator {
         return (float)attributes.get(name);
     }
 
+    protected String getStringAttribute(String name) {
+        return (String)attributes.get(name);
+    }
+
     protected boolean getBooleanAttribute(String name) {
         return (boolean)attributes.get(name);
     }
