@@ -140,4 +140,16 @@ public class SpellingValidatorTest extends BaseValidatorTest {
         Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
         assertEquals(0, errors.get(document).size());
     }
+
+    @Test
+    public void doNotShowErrorsInCaseOfMissingDictionary() throws Exception {
+        Document document = prepareSimpleDocument("test");
+        config = Configuration.builder("foo")
+          .addValidatorConfig(new ValidatorConfiguration(validatorName))
+          .build();
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        assertEquals(0, errors.get(document).size());
+    }
 }

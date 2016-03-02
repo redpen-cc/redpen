@@ -31,7 +31,7 @@ public final class SpellingValidator extends SpellingDictionaryValidator {
                 continue;
             }
 
-            if (!inDictionary(surface)) {
+            if (dictionaryExists() && !inDictionary(surface)) {
                 addLocalizedErrorFromToken(sentence, token);
             }
         }
