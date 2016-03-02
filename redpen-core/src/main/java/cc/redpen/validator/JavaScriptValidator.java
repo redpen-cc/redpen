@@ -57,14 +57,17 @@ import java.util.*;
  */
 public class JavaScriptValidator extends Validator {
     private static final Logger LOG = LoggerFactory.getLogger(JavaScriptValidator.class);
-    public final String DEFAULT_JS_VALIDATORS_PATH = "js";
     final List<Script> scripts = new ArrayList<>();
+
+    public JavaScriptValidator() {
+        super("script-path", "js");
+    }
 
     @Override
     protected void init() throws RedPenException {
-        Optional<String> jsValidatorsPath = getConfigAttribute("script-path");
         try {
-            File jsDirectory = findFile(jsValidatorsPath.orElse(DEFAULT_JS_VALIDATORS_PATH));
+            String jsValidatorsPath = getString("script-path");
+            File jsDirectory = findFile(jsValidatorsPath);
             LOG.info("JavaScript validators directory: {}", jsValidatorsPath);
             File[] jsValidatorFiles = jsDirectory.listFiles();
             if (jsValidatorFiles != null) {
