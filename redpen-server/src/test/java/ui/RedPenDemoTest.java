@@ -81,7 +81,7 @@ public class RedPenDemoTest {
     validatorProperties.click();
 
     $(".popover-title").should(appear).shouldHave(text("SentenceLength properties"));
-    $(".popover-content input[type=text]").shouldHave(value("max_len=200")).val("max_len=10");
+    $(".popover-content input[type=text]").shouldHave(value("max_len=120")).val("max_len=10");
     $(".popover-content button[type=submit]").click();
 
     validatorProperties.shouldHave(text("max_len=10"));
