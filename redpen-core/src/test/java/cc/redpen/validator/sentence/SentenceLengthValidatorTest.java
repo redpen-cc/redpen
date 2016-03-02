@@ -17,8 +17,11 @@
  */
 package cc.redpen.validator.sentence;
 
+import cc.redpen.config.Configuration;
+import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -27,10 +30,15 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public class SentenceLengthValidatorTest {
+    private SentenceLengthValidator validator = new SentenceLengthValidator();
+
+    @Before
+    public void setUp() throws Exception {
+        validator.preInit(new ValidatorConfiguration("SentenceLength").addProperty("max_len", "30"), Configuration.builder().build());
+    }
+
     @Test
     public void testWithLongSentence() {
-        SentenceLengthValidator validator = new SentenceLengthValidator();
-        validator.setLengthLimit(30);
         Sentence str = new Sentence("this is a very long long long long long long"
                 + "long long long long long long sentence.", 0);
         List<ValidationError> errors = new ArrayList<>();
@@ -41,8 +49,6 @@ public class SentenceLengthValidatorTest {
 
     @Test
     public void testWithShortSentence() {
-        SentenceLengthValidator validator = new SentenceLengthValidator();
-        validator.setLengthLimit(30);
         Sentence str = new Sentence("this is a sentence.", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
@@ -52,8 +58,6 @@ public class SentenceLengthValidatorTest {
 
     @Test
     public void testWithZeroLengthSentence() {
-        SentenceLengthValidator validator = new SentenceLengthValidator();
-        validator.setLengthLimit(30);
         Sentence str = new Sentence("", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);

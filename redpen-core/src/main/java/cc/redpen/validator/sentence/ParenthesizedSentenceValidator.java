@@ -18,7 +18,6 @@
 package cc.redpen.validator.sentence;
 
 
-import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.validator.Validator;
@@ -27,20 +26,13 @@ import cc.redpen.validator.Validator;
  * Warn if too many (or overly long (or nested parenthesized sentences (where you do this))) are used in a sentence
  */
 public class ParenthesizedSentenceValidator extends Validator {
-
     private static final String OPEN_PARENS = "(（";
     private static final String CLOSE_PARENS = ")）";
 
-    private int nestingLevelMax = 2; // the limit on how many parenthesized expressions are permitted
-    private int subsentenceCountMax = 1; // the number of parenthesized expressions allowed
-    private int subsentenceLengthMax = 4; // the maximum number of words in a parenthesized expression
-
-    @Override
-    protected void init() throws RedPenException {
-        super.init();
-        nestingLevelMax = getConfigAttributeAsInt("max_nesting_level", 1);
-        subsentenceCountMax = getConfigAttributeAsInt("max_count", 1);
-        subsentenceLengthMax = getConfigAttributeAsInt("max_length", 3);
+    public ParenthesizedSentenceValidator() {
+        super("max_nesting_level", 1, // the limit on how many parenthesized expressions are permitted
+              "max_count", 1,  // the number of parenthesized expressions allowed
+              "max_length", 3); // the maximum number of words in a parenthesized expression
     }
 
     /**
@@ -57,7 +49,7 @@ public class ParenthesizedSentenceValidator extends Validator {
             if (token.getSurface().length() == 1) {
                 if (OPEN_PARENS.indexOf(token.getSurface().charAt(0)) != -1) {
                     nestingLevel++;
-                    if (nestingLevel > nestingLevelMax) {
+                    if (nestingLevel > getInt("max_nesting_level")) {
                         addLocalizedErrorWithPosition(
                                 "NestingLevelTooDeep",
                                 sentence,
@@ -68,7 +60,7 @@ public class ParenthesizedSentenceValidator extends Validator {
                     nestingLevel = Math.max(0, nestingLevel - 1);
                     if (nestingLevel == 0) {
                         subsentenceCount++;
-                        if (subsentenceLength > subsentenceLengthMax) {
+                        if (subsentenceLength > getInt("max_length")) {
                             addLocalizedErrorWithPosition(
                                     "SubsentenceTooLong",
                                     sentence,
@@ -85,9 +77,8 @@ public class ParenthesizedSentenceValidator extends Validator {
             }
         }
 
-        if (subsentenceCount > subsentenceCountMax) {
+        if (subsentenceCount > getInt("max_count")) {
             addLocalizedError("SubsentenceTooFrequent", sentence);
         }
-
     }
 }

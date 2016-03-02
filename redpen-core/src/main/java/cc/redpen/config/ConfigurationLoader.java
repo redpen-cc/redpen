@@ -40,7 +40,7 @@ import static cc.redpen.config.Configuration.ConfigurationBuilder;
  */
 public class ConfigurationLoader {
     private static final Logger LOG = LoggerFactory.getLogger(ConfigurationLoader.class);
-    private ConfigurationBuilder configBuilder = new ConfigurationBuilder();
+    private boolean secure;
 
     private static Symbol createSymbol(Element element) throws RedPenException {
         if (!element.hasAttribute("name") || !element.hasAttribute("value")) {
@@ -165,7 +165,8 @@ public class ConfigurationLoader {
     public Configuration load(InputStream stream, File base) throws RedPenException {
         Document doc = toDocument(stream);
 
-        configBuilder = new ConfigurationBuilder().setBaseDir(base);
+        ConfigurationBuilder configBuilder = new ConfigurationBuilder().setBaseDir(base);
+        if (secure) configBuilder.secure();
         Element rootElement = getRootNode(doc, "redpen-conf");
 
         String language = rootElement.getAttribute("lang");
@@ -196,7 +197,7 @@ public class ConfigurationLoader {
             LOG.warn("There is no validators block");
         } else {
             NodeList validatorElementList = validatorConfigElementList.item(0).getChildNodes();
-            extractValidatorConfigurations(validatorElementList);
+            extractValidatorConfigurations(configBuilder, validatorElementList);
         }
 
         // extract symbol configurations
@@ -206,12 +207,12 @@ public class ConfigurationLoader {
         if (!variant.isEmpty()) configBuilder.setVariant(variant);
 
         if (symbolTableConfigElementList != null) {
-            extractSymbolConfig(symbolTableConfigElementList, language);
+            extractSymbolConfig(configBuilder, symbolTableConfigElementList, language);
         }
         return configBuilder.build();
     }
 
-    private void extractValidatorConfigurations(NodeList validatorElementList) {
+    private void extractValidatorConfigurations(ConfigurationBuilder configBuilder, NodeList validatorElementList) {
         ValidatorConfiguration currentConfiguration;
         for (int i = 0; i < validatorElementList.getLength(); i++) {
             Node nNode = validatorElementList.item(i);
@@ -242,14 +243,14 @@ public class ConfigurationLoader {
             Element propertyElement = (Element) pNode;
             if (propertyElement.getNodeName().equals("property")
                     && currentConfiguration != null) {
-                currentConfiguration.addAttribute(
+                currentConfiguration.addProperty(
                         propertyElement.getAttribute("name"),
                         propertyElement.getAttribute("value"));
             }
         }
     }
 
-    private void extractSymbolConfig(NodeList symbolTableConfigElementList, String language) throws RedPenException {
+    private void extractSymbolConfig(ConfigurationBuilder configBuilder, NodeList symbolTableConfigElementList, String language) throws RedPenException {
         configBuilder.setLanguage(language);
 
         NodeList symbolTableElementList =
@@ -297,5 +298,10 @@ public class ConfigurationLoader {
         Element rootElement = (Element) root;
         LOG.info("Succeeded to load configuration file");
         return rootElement;
+    }
+
+    public ConfigurationLoader secure() {
+        secure = true;
+        return this;
     }
 }

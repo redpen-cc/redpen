@@ -29,7 +29,7 @@ import java.util.Map;
  * Validate input sentences except for first sentence of a paragraph start with
  * a space.
  */
-final public class SpaceBeginningOfSentenceValidator extends Validator {
+public final class SpaceBeginningOfSentenceValidator extends Validator {
     private Map<Integer, List<Sentence>> sentencePositions = new HashMap<>();
 
     private boolean isFirstInLine(Sentence sentence) {
@@ -51,28 +51,5 @@ final public class SpaceBeginningOfSentenceValidator extends Validator {
         }
         List<Sentence> list = sentencePositions.get(sentence.getLineNumber());
         list.add(sentence);
-    }
-
-    @Override
-    public String toString() {
-        return "SpaceBeginningOfSentenceValidator{" +
-                "sentencePositions=" + sentencePositions +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        SpaceBeginningOfSentenceValidator that = (SpaceBeginningOfSentenceValidator) o;
-
-        return !(sentencePositions != null ? !sentencePositions.equals(that.sentencePositions) : that.sentencePositions != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return sentencePositions != null ? sentencePositions.hashCode() : 0;
     }
 }

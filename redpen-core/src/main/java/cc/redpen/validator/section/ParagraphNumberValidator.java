@@ -17,7 +17,6 @@
  */
 package cc.redpen.validator.section;
 
-import cc.redpen.RedPenException;
 import cc.redpen.model.Section;
 import cc.redpen.validator.Validator;
 
@@ -26,49 +25,15 @@ import cc.redpen.validator.Validator;
  * This validator reports it.
  */
 final public class ParagraphNumberValidator extends Validator {
-    /**
-     * Default maximum number of paragraphs in a section.
-     */
-    @SuppressWarnings("WeakerAccess")
-    public static final int DEFAULT_MAX_PARAGRAPHS_IN_A_SECTION = 5;
-    private int maxParagraphs;
+    public ParagraphNumberValidator() {
+        super("max_num", 5); // Default maximum number of paragraphs in a section.
+    }
 
     @Override
     public void validate(Section section) {
         int paragraphNumber = section.getNumberOfParagraphs();
-        if (maxParagraphs < paragraphNumber) {
+        if (getInt("max_num") < paragraphNumber) {
             addLocalizedError(section.getJoinedHeaderContents(), paragraphNumber);
         }
-    }
-
-    @Override
-    protected void init() throws RedPenException {
-        this.maxParagraphs = getConfigAttributeAsInt("max_num", DEFAULT_MAX_PARAGRAPHS_IN_A_SECTION);
-    }
-
-    @Override
-    public String toString() {
-        return "ParagraphNumberValidator{" +
-                "maxParagraphs=" + maxParagraphs +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ParagraphNumberValidator that = (ParagraphNumberValidator) o;
-
-        return maxParagraphs == that.maxParagraphs;
-    }
-
-    @Override
-    public int hashCode() {
-        return maxParagraphs;
-    }
-
-    protected void setMaxParagraphNumber(int max) {
-        this.maxParagraphs = max;
     }
 }

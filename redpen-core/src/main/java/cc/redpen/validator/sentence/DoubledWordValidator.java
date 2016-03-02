@@ -17,86 +17,28 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.validator.Validator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import cc.redpen.validator.DictionaryValidator;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
+final public class DoubledWordValidator extends DictionaryValidator {
 
-final public class DoubledWordValidator extends Validator {
-    private static final Logger LOG =
-            LoggerFactory.getLogger(DoubledWordValidator.class);
-    private static final String DEFAULT_RESOURCE_PATH = "default-resources/doubled-word";
-
-    private Set<String> skipList;
-    private Set<String> customSkipList;
+    public DoubledWordValidator() {
+        super("doubled-word/doubled-word-skiplist");
+    }
 
     @Override
     public void validate(Sentence sentence) {
         Set<String> surfaces = new HashSet<>();
         for (TokenElement token : sentence.getTokens()) {
             String currentSurface = token.getSurface().toLowerCase();
-            if (surfaces.contains(currentSurface) && !skipList.contains(currentSurface)
-                    && !customSkipList.contains(currentSurface)) {
+            if (surfaces.contains(currentSurface) && !inDictionary(currentSurface)) {
                 addLocalizedErrorFromToken(sentence, token);
             }
             surfaces.add(currentSurface);
         }
-    }
-
-    @Override
-    protected void init() throws RedPenException {
-        String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
-                + "/doubled-word-skiplist-" + getSymbolTable().getLang() + ".dat";
-        skipList = WORD_LIST.loadCachedFromResource(defaultDictionaryFile, "doubled word skip list");
-
-        customSkipList = new HashSet<>();
-        Optional<String> skipListStr = getConfigAttribute("list");
-        skipListStr.ifPresent(f -> {
-            String normalized = f.toLowerCase();
-            LOG.info("Found user defined skip list.");
-            customSkipList.addAll(asList(normalized.split(",")).stream().map(String::toLowerCase).collect(toList()));
-            LOG.info("Succeeded to add elements of user defined skip list.");
-        });
-
-        Optional<String> confFile = getConfigAttribute("dict");
-        if (confFile.isPresent()) {
-            customSkipList.addAll(WORD_LIST.loadCachedFromFile(findFile(confFile.get()), "DoubledWordValidator user dictionary"));
-        }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        DoubledWordValidator that = (DoubledWordValidator) o;
-
-        if (skipList != null ? !skipList.equals(that.skipList) : that.skipList != null) return false;
-        return !(customSkipList != null ? !customSkipList.equals(that.customSkipList) : that.customSkipList != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = skipList != null ? skipList.hashCode() : 0;
-        result = 31 * result + (customSkipList != null ? customSkipList.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "DoubledWordValidator{" +
-                "skipList=" + skipList +
-                ", customSkipList=" + customSkipList +
-                '}';
     }
 }

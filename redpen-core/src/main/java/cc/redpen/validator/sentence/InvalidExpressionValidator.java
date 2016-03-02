@@ -17,88 +17,24 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
-import cc.redpen.validator.Validator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Consumer;
+import cc.redpen.validator.DictionaryValidator;
 
 /**
  * Validate input sentences contain invalid expression.
  */
-final public class InvalidExpressionValidator extends Validator {
-    private static final String DEFAULT_RESOURCE_PATH = "default-resources/invalid-expression";
-    private static final Logger LOG =
-            LoggerFactory.getLogger(InvalidExpressionValidator.class);
-    private Set<String> invalidExpressions;
-    private Set<String> customInvalidExpressions;
+public final class InvalidExpressionValidator extends DictionaryValidator {
+    public InvalidExpressionValidator() {
+        super("invalid-expression/invalid-expression");
+    }
 
     @Override
     public void validate(Sentence sentence) {
-        Consumer<String> tConsumer = value -> {
+        streamDictionary().forEach(value -> {
             int startPosition = sentence.getContent().indexOf(value);
             if (startPosition != -1) {
                 addLocalizedErrorWithPosition(sentence, startPosition, startPosition + value.length(), value);
             }
-        };
-
-        invalidExpressions.stream().forEach(tConsumer);
-        customInvalidExpressions.stream().forEach(tConsumer);
-    }
-
-    @Override
-    protected void init() throws RedPenException {
-
-        String lang = getSymbolTable().getLang();
-        String defaultDictionaryFile = DEFAULT_RESOURCE_PATH
-                + "/invalid-expression-" + lang + ".dat";
-        invalidExpressions = WORD_LIST.loadCachedFromResource(defaultDictionaryFile, "invalid expression");
-
-        customInvalidExpressions = new HashSet<>();
-        Optional<String> listStr = getConfigAttribute("list");
-        listStr.ifPresent(f -> {
-            LOG.info("User defined invalid expression list found.");
-            customInvalidExpressions.addAll(Arrays.asList(f.split(",")));
-            LOG.info("Succeeded to add elements of user defined list.");
         });
-
-        Optional<String> confFile = getConfigAttribute("dict");
-        if (confFile.isPresent()) {
-            customInvalidExpressions.addAll(WORD_LIST.loadCachedFromFile(findFile(confFile.get()), "InvalidExpressionValidator user dictionary"));
-        }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        InvalidExpressionValidator that = (InvalidExpressionValidator) o;
-
-        if (invalidExpressions != null ? !invalidExpressions.equals(that.invalidExpressions) : that.invalidExpressions != null)
-            return false;
-        return !(customInvalidExpressions != null ? !customInvalidExpressions.equals(that.customInvalidExpressions) : that.customInvalidExpressions != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = invalidExpressions != null ? invalidExpressions.hashCode() : 0;
-        result = 31 * result + (customInvalidExpressions != null ? customInvalidExpressions.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "InvalidExpressionValidator{" +
-                "invalidExpressions=" + invalidExpressions +
-                ", customInvalidExpressions=" + customInvalidExpressions +
-                '}';
     }
 }

@@ -23,11 +23,11 @@ import cc.redpen.model.Sentence;
 import cc.redpen.validator.Validator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
 import static cc.redpen.config.SymbolType.*;
+import static java.util.Collections.singletonList;
 
 /**
  * Validator to validate quotation characters.
@@ -49,25 +49,28 @@ public class QuotationValidator extends Validator {
     private Symbol rightDoubleQuotationMark;
     private char period;
 
+    public QuotationValidator() {
+        super("use_ascii", false);
+    }
+
     @Override
     public List<String> getSupportedLanguages() {
-        return Arrays.asList(Locale.ENGLISH.getLanguage());
+        return singletonList(Locale.ENGLISH.getLanguage());
     }
 
     @Override
     public void validate(Sentence sentence) {
         // validate single quotation
-        this.checkQuotation(sentence, leftSingleQuotationMark, rightSingleQuotationMark);
+        checkQuotation(sentence, leftSingleQuotationMark, rightSingleQuotationMark);
 
         // validate double quotation
-        this.checkQuotation(sentence, leftDoubleQuotationMark, rightDoubleQuotationMark);
+        checkQuotation(sentence, leftDoubleQuotationMark, rightDoubleQuotationMark);
     }
 
     @Override
     protected void init() throws RedPenException {
         this.period = getSymbolTable().getValueOrFallbackToDefault(FULL_STOP);
-
-        setUseAscii(getConfigAttributeAsBoolean("use_ascii", false));
+        setUseAscii(getBoolean("use_ascii"));
     }
 
     private void setUseAscii(boolean useAscii) {

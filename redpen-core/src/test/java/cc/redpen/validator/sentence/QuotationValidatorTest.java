@@ -170,7 +170,7 @@ public class QuotationValidatorTest {
     @Test
     public void testAsciiExceptionCase() throws RedPenException {
         Configuration conf = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", false))
+                .addValidatorConfig(new ValidatorConfiguration("Quotation").addProperty("use_ascii", false))
                 .build();
         Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf);
         Sentence str = new Sentence("I'm a jedi knight.", 0);
@@ -184,7 +184,7 @@ public class QuotationValidatorTest {
     @Test
     public void testAsciiDoubleQuotationMakrk() throws RedPenException {
         Configuration conf = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", false))
+                .addValidatorConfig(new ValidatorConfiguration("Quotation").addProperty("use_ascii", false))
                 .build();
         Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf);
         Sentence str = new Sentence("I said \"that is true\".", 0);
@@ -198,7 +198,7 @@ public class QuotationValidatorTest {
     @Test
     public void testNoQuotationMakrk() throws RedPenException {
         Configuration conf = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", true))
+                .addValidatorConfig(new ValidatorConfiguration("Quotation").addProperty("use_ascii", true))
                 .build();
         Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf);
         Sentence str = new Sentence("I said that is true.", 0);
@@ -212,7 +212,7 @@ public class QuotationValidatorTest {
     @Test
     public void testNoInput() throws RedPenException {
         Configuration conf = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", true))
+                .addValidatorConfig(new ValidatorConfiguration("Quotation").addProperty("use_ascii", true))
                 .build();
         Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf);
         Sentence str = new Sentence("", 0);
@@ -259,7 +259,7 @@ public class QuotationValidatorTest {
     @Test
     public void testLeftAsciiDoubleQuotationsWihtoutSpace() throws RedPenException {
         Configuration conf = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", true))
+                .addValidatorConfig(new ValidatorConfiguration("Quotation").addProperty("use_ascii", true))
                 .build();
         Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf);
         Sentence str = new Sentence("I said\"that is true\".", 0);
@@ -284,7 +284,7 @@ public class QuotationValidatorTest {
     @Test
     public void testRightAsciiDoubleQuotationsWihtoutSpace() throws RedPenException {
         Configuration conf = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", true))
+                .addValidatorConfig(new ValidatorConfiguration("Quotation").addProperty("use_ascii", true))
                 .build();
         Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf);
         Sentence str = new Sentence("I said \"that is true\"is true.", 0);
@@ -298,7 +298,7 @@ public class QuotationValidatorTest {
     @Test
     public void testDoubleQuotationsWithNonAsciiPeriod() throws RedPenException {
         Configuration conf = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration("Quotation").addAttribute("use_ascii", true))
+                .addValidatorConfig(new ValidatorConfiguration("Quotation").addProperty("use_ascii", true))
                 .addSymbol(new Symbol(SymbolType.FULL_STOP, '。'))
                 .build();
         Validator validator = ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf);

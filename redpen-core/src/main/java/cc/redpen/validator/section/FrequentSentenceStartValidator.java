@@ -17,7 +17,6 @@
  */
 package cc.redpen.validator.section;
 
-import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Sentence;
@@ -30,29 +29,21 @@ import java.util.Map;
  * Check that too many sentences don't start with the same words
  */
 public class FrequentSentenceStartValidator extends Validator {
-
     private Map<String, Integer> sentenceStartHistogram = new HashMap<>(); // histogram of sentence starts
-    private int leadingWordLimit = 3; // number of words starting each sentence to consider
-    private int percentageThreshold = 25; // maximum percentage of sentences that can start with the same words
-    private int minimumSentenceCount = 5; // must have at least this number of sentences
 
-    @Override
-    protected void init() throws RedPenException {
-        super.init();
-        leadingWordLimit = getConfigAttributeAsInt("leading_word_limit", leadingWordLimit);
-        percentageThreshold = getConfigAttributeAsInt("percentage_threshold", percentageThreshold);
-        minimumSentenceCount = getConfigAttributeAsInt("min_sentence_count", minimumSentenceCount);
+    public FrequentSentenceStartValidator() {
+        super("leading_word_limit", 3, // number of words starting each sentence to consider
+              "percentage_threshold", 25, // maximum percentage of sentences that can start with the same words
+              "min_sentence_count", 5); // must have at least this number of sentences
     }
 
     /**
      * Add sequences of tokens, up to leadingWordLimit, in the histogram
-     *
-     * @param sentence
      */
     private void processSentence(Sentence sentence) {
-        if (sentence.getTokens().size() > leadingWordLimit) {
+        if (sentence.getTokens().size() > getInt("leading_word_limit")) {
             String leadingPhrase = "";
-            for (int i = 0; i < leadingWordLimit; i++) {
+            for (int i = 0; i < getInt("leading_word_limit"); i++) {
                 leadingPhrase += (leadingPhrase.isEmpty() ? "" : " ") + sentence.getTokens().get(i).getSurface();
                 Integer count = sentenceStartHistogram.get(leadingPhrase);
                 if (sentenceStartHistogram.get(leadingPhrase) == null) {
@@ -65,7 +56,6 @@ public class FrequentSentenceStartValidator extends Validator {
 
     @Override
     public void validate(Document document) {
-
         // remember the last sentence since we can't add an error without a sentence
         Sentence lastSentence = null;
         int sentenceCount = 0;
@@ -80,11 +70,11 @@ public class FrequentSentenceStartValidator extends Validator {
         }
 
         // make sure we have enough sentences to make this validation worthwhile
-        if (sentenceCount >= minimumSentenceCount) {
+        if (sentenceCount >= getInt("min_sentence_count")) {
             for (String start : sentenceStartHistogram.keySet()) {
                 int count = sentenceStartHistogram.get(start);
                 int percentage = (int) ((100.0 * (float) count / (float) sentenceStartHistogram.size()));
-                if (percentage > percentageThreshold) {
+                if (percentage > getInt("percentage_threshold")) {
                     addLocalizedError("SentenceStartTooFrequent", lastSentence, percentage, start);
                 }
             }

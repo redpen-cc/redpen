@@ -43,7 +43,7 @@ public class SpellingValidatorTest extends BaseValidatorTest {
     @Test
     public void testValidate() throws Exception {
         config = Configuration.builder()
-          .addValidatorConfig(new ValidatorConfiguration(validatorName).addAttribute("list", "this,a,pen"))
+          .addValidatorConfig(new ValidatorConfiguration(validatorName).addProperty("list", "this,a,pen"))
           .build();
 
         Document document = prepareSimpleDocument("this iz a pen");
@@ -87,7 +87,7 @@ public class SpellingValidatorTest extends BaseValidatorTest {
     @Test
     public void testUserSkipList() throws RedPenException {
         config = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration(validatorName).addAttribute("list", "abeshi,baz"))
+                .addValidatorConfig(new ValidatorConfiguration(validatorName).addProperty("list", "abeshi,baz"))
                 .build();
 
         Document document = prepareSimpleDocument("Abeshi is a word used in a comic.");
@@ -135,6 +135,18 @@ public class SpellingValidatorTest extends BaseValidatorTest {
     @Test
     public void testVoid() throws RedPenException {
         Document document = prepareSimpleDocument("");
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        assertEquals(0, errors.get(document).size());
+    }
+
+    @Test
+    public void doNotShowErrorsInCaseOfMissingDictionary() throws Exception {
+        Document document = prepareSimpleDocument("test");
+        config = Configuration.builder("foo")
+          .addValidatorConfig(new ValidatorConfiguration(validatorName))
+          .build();
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));

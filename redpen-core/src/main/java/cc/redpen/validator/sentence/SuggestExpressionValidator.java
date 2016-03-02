@@ -25,71 +25,46 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
+
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
  * If input sentences contain invalid expressions, this validator
  * returns the errors with corrected expressions.
  */
-final public class SuggestExpressionValidator extends Validator {
-
-    private static final Logger LOG =
-            LoggerFactory.getLogger(SuggestExpressionValidator.class);
+public final class SuggestExpressionValidator extends Validator {
+    private static final Logger LOG = LoggerFactory.getLogger(SuggestExpressionValidator.class);
     private Map<String, String> synonyms = new HashMap<>();
+
+    public SuggestExpressionValidator() {
+        super("dict", "");
+    }
 
     @Override
     public void validate(Sentence sentence) {
         synonyms.keySet().stream().forEach(value -> {
-                    int startPosition = sentence.getContent().indexOf(value);
-                    if (startPosition != -1) {
-                        final String word = value;
-                        final String suggested = synonyms.get(value);
-                        addLocalizedErrorWithPosition(sentence,
-                                startPosition,
-                                startPosition + value.length(),
-                                word, suggested);
-                    }
-                }
-        );
+            int startPosition = sentence.getContent().indexOf(value);
+            if (startPosition != -1) {
+                String suggested = synonyms.get(value);
+                addLocalizedErrorWithPosition(sentence, startPosition, startPosition + value.length(), value, suggested);
+            }
+        });
     }
 
     @Override
     protected void init() throws RedPenException {
         //TODO: support default dictionary.
-        Optional<String> confFile = getConfigAttribute("dict");
-        LOG.info("Dictionary file is " + confFile);
-        if (!confFile.isPresent()) {
-            LOG.error("Dictionary file is not specified");
-            throw new RedPenException("dictionary file is not specified");
-        } else {
-            synonyms = KEY_VALUE.loadCachedFromFile(findFile(confFile.get()), "SuggestExpressionValidator dictionary");
+        String confFile = getString("dict");
+        if (isNotEmpty(confFile)) {
+            LOG.info("Dictionary file is " + confFile);
+            synonyms = KEY_VALUE.loadCachedFromFile(findFile(confFile), "SuggestExpressionValidator dictionary");
+        }
+        else {
+            LOG.warn("Dictionary file is not specified");
         }
     }
 
     protected void setSynonyms(Map<String, String> synonymMap) {
         this.synonyms = synonymMap;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        SuggestExpressionValidator that = (SuggestExpressionValidator) o;
-
-        return !(synonyms != null ? !synonyms.equals(that.synonyms) : that.synonyms != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return synonyms != null ? synonyms.hashCode() : 0;
-    }
-
-    @Override
-    public String toString() {
-        return "SuggestExpressionValidator{" +
-                "synonyms=" + synonyms +
-                '}';
     }
 }

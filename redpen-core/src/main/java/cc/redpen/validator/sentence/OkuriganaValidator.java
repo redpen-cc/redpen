@@ -23,7 +23,13 @@ import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.validator.ExpressionRule;
 import cc.redpen.validator.Validator;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 // Checks if the Japanese input sentences contain the invalid Okurigana style.
 public class OkuriganaValidator extends Validator {
@@ -32,10 +38,10 @@ public class OkuriganaValidator extends Validator {
 
     static {
         invalidOkuriganaTokens = new HashSet<>();
-        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("合さ", Arrays.asList("動詞", "自立"), 0)));
-        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("合し", Arrays.asList("動詞", "自立"), 0)));
-        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("合す", Arrays.asList("動詞", "自立"), 0)));
-        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("合せ", Arrays.asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("合さ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("合し", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("合す", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("合せ", asList("動詞", "自立"), 0)));
     }
 
     static {
@@ -149,16 +155,11 @@ public class OkuriganaValidator extends Validator {
 
     @Override
     public List<String> getSupportedLanguages() {
-        return Arrays.asList(Locale.JAPANESE.getLanguage());
+        return singletonList(Locale.JAPANESE.getLanguage());
     }
 
     @Override
     protected void init() throws RedPenException {
         // TODO: user dictionary
-    }
-
-    @Override
-    public String toString() {
-        return "OkuriganaValidator{}";
     }
 }

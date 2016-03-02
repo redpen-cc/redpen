@@ -36,7 +36,7 @@ public class ConfigurationExporterTest {
   public void validators() throws Exception {
     Configuration config = Configuration.builder()
       .addValidatorConfig(new ValidatorConfiguration("Mega"))
-      .addValidatorConfig(new ValidatorConfiguration("Super").addAttribute("hello", "world")).build();
+      .addValidatorConfig(new ValidatorConfiguration("Super").addProperty("hello", "world")).build();
     exporter.export(config, out);
     assertEquals(
       "<redpen-conf lang=\"en\">\n" +

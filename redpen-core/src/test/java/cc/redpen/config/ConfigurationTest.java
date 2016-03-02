@@ -79,19 +79,19 @@ public class ConfigurationTest {
     @Test
     public void keyIsLangAndType() throws Exception {
         SymbolTable symbolTable = new SymbolTable("ja", Optional.of("hankaku"), emptyList());
-        assertEquals("ja.hankaku", new Configuration(new File(""), symbolTable, emptyList(), "ja").getKey());
+        assertEquals("ja.hankaku", new Configuration(new File(""), symbolTable, emptyList(), "ja", false).getKey());
     }
 
     @Test
     public void keyIsLangOnlyIfTypeIsMissing() throws Exception {
         SymbolTable symbolTable = new SymbolTable("en", Optional.empty(), emptyList());
-        assertEquals("en", new Configuration(new File(""), symbolTable, emptyList(), "en").getKey());
+        assertEquals("en", new Configuration(new File(""), symbolTable, emptyList(), "en", false).getKey());
     }
 
     @Test
     public void keyIsLangOnlyForZenkaku() throws Exception {
         SymbolTable symbolTable = new SymbolTable("ja", Optional.of("zenkaku"), emptyList());
-        assertEquals("ja", new Configuration(new File(""), symbolTable, emptyList(), "ja").getKey());
+        assertEquals("ja", new Configuration(new File(""), symbolTable, emptyList(), "ja", false).getKey());
     }
 
     @Test
@@ -131,7 +131,7 @@ public class ConfigurationTest {
             fail("Expecting RedPenException");
         }
         catch (RedPenException e) {
-            assertEquals("hello.xml is not under working directory (" + new File("").getAbsoluteFile() + ") or $REDPEN_HOME (" + new File("src").getAbsoluteFile() + ").", e.getMessage());
+            assertEquals("hello.xml is not under working directory (" + new File("").getAbsoluteFile() + "), $REDPEN_HOME (" + new File("src").getAbsoluteFile() + ").", e.getMessage());
         }
     }
 
@@ -143,14 +143,38 @@ public class ConfigurationTest {
             fail("Expecting RedPenException");
         }
         catch (RedPenException e) {
-            assertEquals("hello.xml is not under working directory (" + new File("").getAbsoluteFile() + "), base (some/base/dir) or $REDPEN_HOME (" + new File("src").getAbsoluteFile() + ").", e.getMessage());
+            assertEquals("hello.xml is not under working directory (" + new File("").getAbsoluteFile() + "), base (some/base/dir), $REDPEN_HOME (" + new File("src").getAbsoluteFile() + ").", e.getMessage());
+        }
+    }
+
+    @Test
+    public void findFile_workingDirectorySecureMode() throws Exception {
+        String localFile = new File(".").list()[0];
+        try {
+            System.setProperty("REDPEN_HOME", "");
+            Configuration.builder().secure().build().findFile(localFile);
+            fail("Secure mode should not allow files from working directory");
+        }
+        catch (RedPenException e) {
+            assertEquals(localFile + " is not under $REDPEN_HOME (" + new File("").getAbsoluteFile() + ").", e.getMessage());
+        }
+    }
+
+    @Test
+    public void findFile_secureMode() throws Exception {
+        try {
+            System.setProperty("REDPEN_HOME", "");
+            Configuration.builder().secure().build().findFile("/etc/passwd");
+            fail("Secure mode should not allow file locations outside config paths");
+        }
+        catch (RedPenException e) {
+            assertEquals("/etc/passwd is not under $REDPEN_HOME (" + new File("").getAbsoluteFile() + ").", e.getMessage());
         }
     }
 
     @Test
     public void canBeCloned() throws Exception {
-        Configuration conf = Configuration.builder("ja")
-          .setVariant("hankaku")
+        Configuration conf = Configuration.builder("ja.hankaku")
           .addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
 
         Configuration clone = conf.clone();
@@ -168,8 +192,7 @@ public class ConfigurationTest {
 
     @Test
     public void equals() throws Exception {
-        Configuration conf = Configuration.builder("ja")
-          .setVariant("hankaku")
+        Configuration conf = Configuration.builder("ja.hankaku")
           .addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
 
         Configuration clone = conf.clone();
@@ -186,8 +209,7 @@ public class ConfigurationTest {
 
     @Test
     public void serializable() throws Exception {
-        Configuration conf = Configuration.builder("ja")
-          .setVariant("hankaku")
+        Configuration conf = Configuration.builder("ja.hankaku")
           .addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
 
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -199,5 +221,23 @@ public class ConfigurationTest {
 
         assertEquals(conf, conf2);
         assertEquals(conf.getTokenizer().getClass(), conf2.getTokenizer().getClass());
+    }
+
+    @Test
+    public void addAvailableValidatorsForLanguage() throws Exception {
+        Configuration ja = Configuration.builder("ja").addAvailableValidatorConfigs().build();
+        assertTrue(ja.getValidatorConfigs().stream().anyMatch(v -> v.getConfigurationName().equals("SentenceLength")));
+        assertTrue(ja.getValidatorConfigs().stream().anyMatch(v -> v.getConfigurationName().equals("HankakuKana")));
+
+        Configuration en = Configuration.builder("en").addAvailableValidatorConfigs().build();
+        assertTrue(en.getValidatorConfigs().stream().anyMatch(v -> v.getConfigurationName().equals("SentenceLength")));
+        assertFalse(en.getValidatorConfigs().stream().anyMatch(v -> v.getConfigurationName().equals("HankakuKana")));
+
+        ValidatorConfiguration sentenceLength = en.getValidatorConfigs().stream().filter(v -> v.getConfigurationName().equals("SentenceLength")).findAny().get();
+        assertEquals("120", sentenceLength.getProperty("max_len"));
+
+        ValidatorConfiguration spelling = en.getValidatorConfigs().stream().filter(v -> v.getConfigurationName().equals("Spelling")).findAny().get();
+        assertEquals("", spelling.getProperty("list"));
+        assertEquals("", spelling.getProperty("dict"));
     }
 }

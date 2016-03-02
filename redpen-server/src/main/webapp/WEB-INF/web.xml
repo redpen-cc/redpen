@@ -5,11 +5,6 @@
     <display-name>RedPen Server</display-name>
     <description>RedPen Server</description>
 
-    <context-param>
-        <param-name>redpen.conf.path</param-name>
-        <param-value>/conf/redpen-conf.xml</param-value>
-    </context-param>
-
     <!-- Wink SDK servlet configuration. This servlet handles HTTP requests of
     SDK web service on application server. -->
     <servlet>

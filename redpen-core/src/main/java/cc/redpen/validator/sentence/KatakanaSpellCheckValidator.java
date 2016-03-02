@@ -21,11 +21,11 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.LevenshteinDistance;
 import cc.redpen.util.StringUtils;
-import cc.redpen.validator.Validator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import cc.redpen.validator.DictionaryValidator;
 
 import java.util.*;
+
+import static java.util.Collections.singletonList;
 
 /**
  * Validate the correctness of Katakana word spelling.
@@ -47,31 +47,11 @@ import java.util.*;
  * word is smaller than the threshold, we do not detect
  * the similarity.
  */
-final public class KatakanaSpellCheckValidator extends Validator {
-    /**
-     * The default threshold of similarity ratio between the length and the distance. <br>
-     * <p>
-     * The similarities are computed by edit distance.
-     */
-    private static final float DEFAULT_SIMILARITY_RATIO = 0.3f;
-    /**
-     * The default threshold of word frequencies of Katakana Words.
-     */
-    private static final int DEFAULT_MINIMUM_FREQUENCIES = 5;
-    /**
-     * The default threshold value for the length of Katakana word
-     * to ignore.
-     */
-    private static final int MAX_IGNORE_KATAKANA_LENGTH = 3;
+ public final class KatakanaSpellCheckValidator extends DictionaryValidator {
     /**
      * Default dictionary for Katakana spell checking.
      */
     private static final String DEFAULT_RESOURCE_PATH = "default-resources/katakana";
-    /**
-     * Logger
-     */
-    private static final Logger LOG =
-            LoggerFactory.getLogger(KatakanaSpellCheckValidator.class);
 
     /**
      * Katakana word dic with line number.
@@ -82,17 +62,18 @@ final public class KatakanaSpellCheckValidator extends Validator {
      */
     private Set<String> exceptions = new HashSet<>();
 
-    private Set<String> customExceptions = new HashSet<>();
-
     private Map<String, Integer> katakanaWordFrequencies = new HashMap<>();
 
-    private float minimumRatio = DEFAULT_SIMILARITY_RATIO;
-
-    private int minimumFrequencies = DEFAULT_MINIMUM_FREQUENCIES;
+    public KatakanaSpellCheckValidator() {
+        super("min_ratio", 0.3f, // The default threshold of similarity ratio between the length and the distance. The similarities are computed by edit distance.
+              "min_freq", 5, // The default threshold of word frequencies of Katakana Words.
+              "max_ignore_len", 3, // The default threshold value for the length of Katakana word to ignore
+              "disable-default", false);
+    }
 
     @Override
     public List<String> getSupportedLanguages() {
-        return Arrays.asList(Locale.JAPANESE.getLanguage());
+        return singletonList(Locale.JAPANESE.getLanguage());
     }
 
     @Override
@@ -138,16 +119,16 @@ final public class KatakanaSpellCheckValidator extends Validator {
     }
 
     private void checkKatakanaSpell(Sentence sentence, String katakana) {
-        if (katakana.length() <= MAX_IGNORE_KATAKANA_LENGTH) {
+        if (katakana.length() <= getInt("max_ignore_len")) {
             return;
         }
         if (dic.containsKey(katakana) || exceptions.contains(katakana)
-                || customExceptions.contains(katakana) ||
+                || getSet("list").contains(katakana) ||
                 (katakanaWordFrequencies.get(katakana) != null
-                        && katakanaWordFrequencies.get(katakana) > minimumFrequencies)) {
+                        && katakanaWordFrequencies.get(katakana) > getInt("min_freq"))) {
             return;
         }
-        final int minLsDistance = Math.round(katakana.length() * minimumRatio);
+        int minLsDistance = Math.round(katakana.length() * getFloat("min_ratio"));
         boolean found = false;
         for (String key : dic.keySet()) {
             if (LevenshteinDistance.getDistance(key, katakana) <= minLsDistance) {
@@ -162,59 +143,10 @@ final public class KatakanaSpellCheckValidator extends Validator {
 
     @Override
     protected void init() throws RedPenException {
-        boolean disableDefault = getConfigAttributeAsBoolean("disable-default", false);
-        if (!disableDefault) {
+        super.init();
+        if (!getBoolean("disable-default")) {
             String defaultDictionaryFile = DEFAULT_RESOURCE_PATH + "/katakana-spellcheck.dat";
             exceptions = WORD_LIST.loadCachedFromResource(defaultDictionaryFile, "katakana word dictionary");
         }
-
-        Optional<String> confFile = getConfigAttribute("dict");
-        if (confFile.isPresent()) {
-            LOG.info("User defined Katakana word dictionary found.");
-            customExceptions.addAll(WORD_LIST.loadCachedFromFile(findFile(confFile.get()),
-                    "KatakanaSpellCheckValidator user dictionary"));
-            LOG.info("Succeeded to add elements of user defined dictionary.");
-        }
-
-        getConfigAttribute("list").ifPresent((f -> {
-            LOG.info("User defined Katakana words list found.");
-            customExceptions.addAll(Arrays.asList(f.split(",")));
-            LOG.info("Succeeded to add elements of user defined list.");
-        }));
-
-        minimumRatio = (float) getConfigAttributeAsDouble("min_ratio", DEFAULT_SIMILARITY_RATIO);
-        minimumFrequencies = getConfigAttributeAsInt("min_freq", DEFAULT_MINIMUM_FREQUENCIES);
-
-        //TODO : configurable MAX_IGNORE_KATAKANA_LENGTH.
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        KatakanaSpellCheckValidator that = (KatakanaSpellCheckValidator) o;
-
-        if (dic != null ? !dic.equals(that.dic) : that.dic != null) return false;
-        if (exceptions != null ? !exceptions.equals(that.exceptions) : that.exceptions != null) return false;
-        return !(customExceptions != null ? !customExceptions.equals(that.customExceptions) : that.customExceptions != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = dic != null ? dic.hashCode() : 0;
-        result = 31 * result + (exceptions != null ? exceptions.hashCode() : 0);
-        result = 31 * result + (customExceptions != null ? customExceptions.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "KatakanaSpellCheckValidator{" +
-                "dic=" + dic +
-                ", exceptions=" + exceptions +
-                ", customExceptions=" + customExceptions +
-                '}';
     }
 }

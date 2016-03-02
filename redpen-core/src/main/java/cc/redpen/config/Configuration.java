@@ -21,6 +21,7 @@ import cc.redpen.RedPenException;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.tokenizer.RedPenTokenizer;
 import cc.redpen.tokenizer.WhiteSpaceTokenizer;
+import cc.redpen.validator.ValidatorFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -42,18 +44,22 @@ public class Configuration implements Serializable, Cloneable {
     private List<ValidatorConfiguration> validatorConfigs = new ArrayList<>();
     private final String lang;
     private transient RedPenTokenizer tokenizer;
-    private File home = new File(Optional.ofNullable(System.getProperty("REDPEN_HOME", System.getenv("REDPEN_HOME"))).orElse(""));
-    private File base;
+    private final File home = new File(Optional.ofNullable(System.getProperty("REDPEN_HOME", System.getenv("REDPEN_HOME"))).orElse(""));
+    private final File base;
+    private final boolean secure;
 
-    /**
-     * Constructor.
-     */
-    Configuration(File base, SymbolTable symbolTable, List<ValidatorConfiguration> validatorConfigs, String lang) {
+    /** @return default supported languages and variants that can be used with {@link #builder(String)}*/
+    public static List<String> getDefaultConfigKeys() {
+        return asList("en", "ja", "ja.hankaku", "ja.zenkaku2");
+    }
+
+    Configuration(File base, SymbolTable symbolTable, List<ValidatorConfiguration> validatorConfigs, String lang, boolean secure) {
         this.base = base;
         this.symbolTable = symbolTable;
 
         this.validatorConfigs.addAll(validatorConfigs);
         this.lang = lang;
+        this.secure = secure;
         initTokenizer();
     }
 
@@ -98,7 +104,7 @@ public class Configuration implements Serializable, Cloneable {
     }
 
     /**
-     * returns Tokenizer aasociated with this configuration
+     * returns Tokenizer associated with this configuration
      *
      * @return tokenizer
      */
@@ -135,19 +141,37 @@ public class Configuration implements Serializable, Cloneable {
      * @throws RedPenException if file doesn't exist in either place
      */
     public File findFile(String relativePath) throws RedPenException {
-        File file = new File(relativePath);
-        if (file.exists()) return file;
-
-        if (base != null) {
-            file = new File(base, relativePath);
+        File file;
+        if (!secure) {
+            file = new File(relativePath);
             if (file.exists()) return file;
         }
 
-        file = new File(home, relativePath);
-        if (file.exists()) return file;
+        if (base != null) {
+            file = new File(base, relativePath);
+            if (secureExists(file, base)) return file;
+        }
 
-        throw new RedPenException(String.format("%s is not under working directory (%s)" + (base != null ? ", base (" + base + ")" : "")  + " or $REDPEN_HOME (%s).",
-          relativePath, new File("").getAbsoluteFile(), home.getAbsolutePath()));
+        file = new File(home, relativePath);
+        if (secureExists(file, home)) return file;
+
+        throw new RedPenException(relativePath + " is not under " +
+          (!secure ? "working directory (" + new File("").getAbsoluteFile() + "), " : "") +
+          (base != null ? "base (" + base + "), " : "") +
+          "$REDPEN_HOME (" + home.getAbsolutePath() + ").");
+    }
+
+    private boolean secureExists(File file, File base) {
+        try {
+            return file.exists() && (!secure || file.getCanonicalPath().startsWith(base.getCanonicalPath()));
+        }
+        catch (IOException e) {
+            return false;
+        }
+    }
+
+    public boolean isSecure() {
+        return secure;
     }
 
     /**
@@ -197,8 +221,11 @@ public class Configuration implements Serializable, Cloneable {
         return new ConfigurationBuilder();
     }
 
-    public static ConfigurationBuilder builder(String lang) {
-        return new ConfigurationBuilder().setLanguage(lang);
+    public static ConfigurationBuilder builder(String key) {
+        int dotPos = key.indexOf('.');
+        ConfigurationBuilder builder = new ConfigurationBuilder().setLanguage(dotPos > 0 ? key.substring(0, dotPos) : key);
+        if (dotPos > 0) builder.setVariant(key.substring(dotPos+1));
+        return builder;
     }
 
     /**
@@ -212,6 +239,7 @@ public class Configuration implements Serializable, Cloneable {
         private String lang = "en";
         private Optional<String> variant = Optional.empty();
         private File base;
+        private boolean secure;
 
         private void checkBuilt() {
             if (built) throw new IllegalStateException("Configuration already built.");
@@ -241,16 +269,31 @@ public class Configuration implements Serializable, Cloneable {
             return this;
         }
 
+        public ConfigurationBuilder addAvailableValidatorConfigs() {
+            checkBuilt();
+            validatorConfigs.addAll(ValidatorFactory.getConfigurations(lang));
+            return this;
+        }
+
         public ConfigurationBuilder setVariant(String variant) {
             checkBuilt();
             this.variant = Optional.of(variant);
             return this;
         }
 
+      /**
+       * Enables secure mode suitable for servers, where validator properties can come from end-users.
+       */
+        public ConfigurationBuilder secure() {
+            checkBuilt();
+            secure = true;
+            return this;
+        }
+
         public Configuration build() {
             checkBuilt();
             built = true;
-            return new Configuration(base, new SymbolTable(lang, variant, customSymbols), this.validatorConfigs, this.lang);
+            return new Configuration(base, new SymbolTable(lang, variant, customSymbols), this.validatorConfigs, this.lang, this.secure);
         }
     }
 }

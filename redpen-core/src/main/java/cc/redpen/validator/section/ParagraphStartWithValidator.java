@@ -17,7 +17,6 @@
  */
 package cc.redpen.validator.section;
 
-import cc.redpen.RedPenException;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
@@ -26,13 +25,10 @@ import cc.redpen.validator.Validator;
 /**
  * Validate whether paragraph start as specified.
  */
-final public class ParagraphStartWithValidator extends Validator {
-    /**
-     * Default matter paragraph start with.
-     */
-    @SuppressWarnings("WeakerAccess")
-    public static final String DEFAULT_PARAGRAPH_START_WITH = " ";
-    private String beginningOfParagraph = DEFAULT_PARAGRAPH_START_WITH;
+public final class ParagraphStartWithValidator extends Validator {
+    public ParagraphStartWithValidator() {
+        super("start_from", ""); // Symbols that every paragraph must start with
+    }
 
     @Override
     public void validate(Section section) {
@@ -41,31 +37,10 @@ final public class ParagraphStartWithValidator extends Validator {
                 continue;
             }
             Sentence firstSentence = currentParagraph.getSentence(0);
-            if (firstSentence.getContent().indexOf(this.beginningOfParagraph) != 0) {
+            if (firstSentence.getContent().indexOf(getString("start_from")) != 0) {
                 addLocalizedError(section.getJoinedHeaderContents(),
                         firstSentence.getContent().charAt(0));
             }
         }
-    }
-
-    @Override
-    protected void init() throws RedPenException {
-        this.beginningOfParagraph = getConfigAttribute("start_from", DEFAULT_PARAGRAPH_START_WITH);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ParagraphStartWithValidator that = (ParagraphStartWithValidator) o;
-
-        return !(beginningOfParagraph != null ? !beginningOfParagraph.equals(that.beginningOfParagraph) : that.beginningOfParagraph != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return beginningOfParagraph != null ? beginningOfParagraph.hashCode() : 0;
     }
 }

@@ -17,22 +17,18 @@
  */
 package cc.redpen.validator.section;
 
-import cc.redpen.RedPenException;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.Validator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Validate the length of one section.
  */
 final public class SectionLengthValidator extends Validator {
-    private static final int DEFAULT_MAXIMUM_CHAR_NUMBER_IN_A_SECTION = 1000;
-    private static final Logger LOG =
-            LoggerFactory.getLogger(SectionLengthValidator.class);
-    private int maxSectionCharNumber;
+    public SectionLengthValidator() {
+        super("max_num", 1000);
+    }
 
     @Override
     public void validate(Section section) {
@@ -44,41 +40,8 @@ final public class SectionLengthValidator extends Validator {
             }
         }
 
-        if (sectionCharNumber > maxSectionCharNumber) {
+        if (sectionCharNumber > getInt("max_num")) {
             addLocalizedError(section.getJoinedHeaderContents(), sectionCharNumber);
         }
-    }
-
-    @Override
-    protected void init() throws RedPenException {
-        this.maxSectionCharNumber = getConfigAttributeAsInt("max_num", DEFAULT_MAXIMUM_CHAR_NUMBER_IN_A_SECTION);
-    }
-
-    protected void setMaxSectionLength(int max) {
-        this.maxSectionCharNumber = max;
-    }
-
-    @Override
-    public String toString() {
-        return "SectionLengthValidator{" +
-                "maxSectionCharNumber=" + maxSectionCharNumber +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        SectionLengthValidator that = (SectionLengthValidator) o;
-
-        if (maxSectionCharNumber != that.maxSectionCharNumber) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return maxSectionCharNumber;
     }
 }

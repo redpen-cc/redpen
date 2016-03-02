@@ -22,8 +22,6 @@ import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.validator.ExpressionRule;
 import cc.redpen.validator.Validator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Locale;
@@ -39,8 +37,6 @@ public class DoubleNegativeValidator extends Validator {
             "default-resources/double-negative/double-negative-expression-";
     private static final String DEFAULT_RESOURCE_WORD_PATH =
             "default-resources/double-negative/double-negative-word-";
-    private static final Logger LOG =
-            LoggerFactory.getLogger(DoubleNegativeValidator.class);
     private Set<ExpressionRule> invalidExpressions;
     private Set<String> negativeWords;
 

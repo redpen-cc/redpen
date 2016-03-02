@@ -3,11 +3,12 @@ package cc.redpen.validator.sentence;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.Validator;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.util.Collections.singletonList;
 
 public class HankakuKanaValidator extends Validator {
     static Pattern pattern = Pattern.compile("[\\uFF65-\\uFF9F\\s-]");
@@ -16,7 +17,7 @@ public class HankakuKanaValidator extends Validator {
 
     @Override
     public List<String> getSupportedLanguages() {
-        return Arrays.asList(Locale.JAPANESE.getLanguage());
+        return singletonList(Locale.JAPANESE.getLanguage());
     }
 
     @Override
