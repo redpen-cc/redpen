@@ -55,6 +55,11 @@ public abstract class DictionaryValidator extends Validator {
     return dictionary.contains(word) || customDictionary != null && customDictionary.contains(word);
   }
 
+  protected boolean dictionaryExists() {
+    Set<String> customDictionary = getSetAttribute("list");
+    return !dictionary.isEmpty() || customDictionary != null && !customDictionary.isEmpty();
+  }
+
   protected Stream<String> streamDictionary() {
     return concat(dictionary.stream(), getSetAttribute("list").stream());
   }

@@ -72,14 +72,14 @@ public class WordFrequencyValidator extends SpellingDictionaryValidator {
         for (TokenElement token : sentence.getTokens()) {
             String word = token.getSurface().toLowerCase();
             if (referenceWordDeviations.get(word) != null) {
-                Integer occurances = documentWordOccurances.get(word);
-                if (occurances == null) {
+                Integer occurrences = documentWordOccurances.get(word);
+                if (occurrences == null) {
                     documentWordOccurances.put(word, 1);
                 } else {
-                    documentWordOccurances.put(word, occurances + 1);
+                    documentWordOccurances.put(word, occurrences + 1);
                 }
                 wordCount++;
-            } else if (inDictionary(word)) {
+            } else if (!dictionaryExists() || inDictionary(word)) {
                 wordCount++;
             }
         }
