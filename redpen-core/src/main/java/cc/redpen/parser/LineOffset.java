@@ -34,10 +34,7 @@ public class LineOffset implements Comparable {
 
     @Override
     public String toString() {
-        return "LineOffset{" +
-                "lineNum=" + lineNum +
-                ", offset=" + offset +
-                '}';
+        return "LineOffset(" + lineNum + ", " + offset + ")";
     }
 
     @Override

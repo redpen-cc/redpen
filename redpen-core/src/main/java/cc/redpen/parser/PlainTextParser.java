@@ -21,8 +21,6 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.RedPenTokenizer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,7 +34,6 @@ import java.util.Optional;
  * Parser for plain text file.
  */
 final public class PlainTextParser extends BaseDocumentParser implements Serializable {
-    private static final Logger LOG = LoggerFactory.getLogger(PlainTextParser.class);
     private static final long serialVersionUID = -4343255148183552844L;
 
     /**

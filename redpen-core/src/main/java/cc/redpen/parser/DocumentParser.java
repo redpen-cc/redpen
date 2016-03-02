@@ -84,13 +84,14 @@ public interface DocumentParser {
     Document parse(File file, SentenceExtractor sentenceExtractor, RedPenTokenizer tokenizer)
             throws RedPenException;
 
-    public static final DocumentParser PLAIN = new PlainTextParser();
-    public static final DocumentParser WIKI = new WikiParser();
-    public static final DocumentParser MARKDOWN = new MarkdownParser();
-    public static final DocumentParser LATEX = new LaTeXParser();
-    public static final DocumentParser ASCIIDOC = new AsciiDocParser();
+    DocumentParser PLAIN = new PlainTextParser();
+    DocumentParser WIKI = new WikiParser();
+    DocumentParser MARKDOWN = new MarkdownParser();
+    DocumentParser LATEX = new LaTeXParser();
+    DocumentParser ASCIIDOC = new AsciiDocParser();
+    DocumentParser PROPERTIES = new PropertiesParser();
 
-    public static final Map<String, DocumentParser> PARSER_MAP = Collections.unmodifiableMap(
+    Map<String, DocumentParser> PARSER_MAP = Collections.unmodifiableMap(
             new HashMap<String, DocumentParser>() {
                 {
                     put("PLAIN", PLAIN);
@@ -98,6 +99,7 @@ public interface DocumentParser {
                     put("MARKDOWN", MARKDOWN);
                     put("LATEX", LATEX);
                     put("ASCIIDOC", ASCIIDOC);
+                    put("PROPERTIES", PROPERTIES);
                 }
             });
 

@@ -24,6 +24,7 @@ import cc.redpen.model.Document;
 import cc.redpen.model.ListBlock;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
+import cc.redpen.parser.BaseParserTest;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
@@ -38,9 +39,11 @@ import java.util.List;
 
 import static cc.redpen.config.SymbolType.COMMA;
 import static cc.redpen.config.SymbolType.FULL_STOP;
+import static java.util.stream.IntStream.of;
+import static java.util.stream.IntStream.range;
 import static org.junit.Assert.*;
 
-public class MarkdownParserTest {
+public class MarkdownParserTest extends BaseParserTest {
 
     @Before
     public void setup() {
@@ -161,15 +164,14 @@ public class MarkdownParserTest {
         assertEquals(0, secondSection.getParagraph(0).getSentence(1).getStartPositionOffset());
 
         // NOTE: both linebreak and first character of the offsets are 0
-        List<LineOffset> expectedOffsets = initializeMappingTable(
-                new LineOffset(3, 0), // LineBreak NOTE: lineBreak is exist but the offset is "0"
-                new LineOffset(3, 0), // F NOTE: even when there is a Linebreak, sentence start from offset "0".
-                new LineOffset(3, 1)  // u
-        );
+        List<LineOffset> expectedOffsets = offsets(3, of(
+                0, // LineBreak NOTE: lineBreak is exist but the offset is "0"
+                0, // F NOTE: even when there is a Linebreak, sentence start from offset "0".
+                1  // u
+        ));
         for (int i = 0; i < expectedOffsets.size(); i++) {
             assertEquals(expectedOffsets.get(i), secondSection.getParagraph(0).getSentence(1).getOffset(i).get());
         }
-
     }
 
     @Test
@@ -377,29 +379,8 @@ public class MarkdownParserTest {
         assertEquals(firstParagraph.getSentence(0).getContent().length(),
                 firstParagraph.getSentence(0).getOffsetMapSize());
 
-        List<LineOffset> expectedOffsets = initializeMappingTable(
-                new LineOffset(1, 0),
-                new LineOffset(1, 1),
-                new LineOffset(1, 2),
-                new LineOffset(1, 3),
-                new LineOffset(1, 4),
-                new LineOffset(1, 5),
-                new LineOffset(1, 6),
-                new LineOffset(1, 7),
-                new LineOffset(1, 8),
-                new LineOffset(1, 9),
-                new LineOffset(1, 11),
-                new LineOffset(1, 12),
-                new LineOffset(1, 13),
-                new LineOffset(1, 14),
-                new LineOffset(1, 15),
-                new LineOffset(1, 16),
-                new LineOffset(1, 37));
-
-        assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMapSize());
-        for (int i = 0; i < expectedOffsets.size(); i++) {
-            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i).get());
-        }
+        List<LineOffset> expectedOffsets = offsets(1, range(0, 10), range(11, 17), of(37));
+        assertEquals(expectedOffsets, firstParagraph.getSentence(0).getOffsetMap());
     }
 
     @Test
@@ -471,25 +452,7 @@ public class MarkdownParserTest {
         assertEquals("It is a good day.", firstParagraph.getSentence(0).getContent());
         assertEquals(17, firstParagraph.getSentence(0).getContent().length());
         assertEquals(1, firstParagraph.getSentence(0).getLineNumber());
-        List<LineOffset> expectedOffsets = initializeMappingTable(
-                new LineOffset(1, 0),
-                new LineOffset(1, 1),
-                new LineOffset(1, 2),
-                new LineOffset(1, 3),
-                new LineOffset(1, 4),
-                new LineOffset(1, 5),
-                new LineOffset(1, 6),
-                new LineOffset(1, 7),
-                new LineOffset(1, 8),
-                new LineOffset(1, 9),
-                new LineOffset(1, 10),
-                new LineOffset(1, 11),
-                new LineOffset(1, 12),
-                new LineOffset(1, 13),
-                new LineOffset(1, 14),
-                new LineOffset(1, 15),
-                new LineOffset(1, 16));
-
+        List<LineOffset> expectedOffsets = offsets(1, range(0, 17));
         assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMapSize());
         for (int i = 0; i < expectedOffsets.size(); i++) {
             assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i).get());
@@ -503,25 +466,7 @@ public class MarkdownParserTest {
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
         assertEquals("It is a good day.", firstParagraph.getSentence(0).getContent());
-        List<LineOffset> expectedOffsets = initializeMappingTable(
-                new LineOffset(1, 0),
-                new LineOffset(1, 1),
-                new LineOffset(1, 2),
-                new LineOffset(1, 3),
-                new LineOffset(1, 4),
-                new LineOffset(1, 5),
-                new LineOffset(1, 6),
-                new LineOffset(1, 7),
-                new LineOffset(1, 9),
-                new LineOffset(1, 10),
-                new LineOffset(1, 11),
-                new LineOffset(1, 12),
-                new LineOffset(1, 14),
-                new LineOffset(1, 15),
-                new LineOffset(1, 16),
-                new LineOffset(1, 17),
-                new LineOffset(1, 18));
-
+        List<LineOffset> expectedOffsets = offsets(1, range(0, 8), range(9, 13), range(14, 19));
         assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMapSize());
         for (int i = 0; i < expectedOffsets.size(); i++) {
             assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i).get());
@@ -535,25 +480,7 @@ public class MarkdownParserTest {
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
         assertEquals("It is a good day.", firstParagraph.getSentence(0).getContent());
-        List<LineOffset> expectedOffsets = initializeMappingTable(
-                new LineOffset(1, 1),
-                new LineOffset(1, 2),
-                new LineOffset(1, 4),
-                new LineOffset(1, 5),
-                new LineOffset(1, 6),
-                new LineOffset(1, 7),
-                new LineOffset(1, 8),
-                new LineOffset(1, 9),
-                new LineOffset(1, 11),
-                new LineOffset(1, 12),
-                new LineOffset(1, 13),
-                new LineOffset(1, 14),
-                new LineOffset(1, 16),
-                new LineOffset(1, 17),
-                new LineOffset(1, 18),
-                new LineOffset(1, 19),
-                new LineOffset(1, 20));
-
+        List<LineOffset> expectedOffsets = offsets(1, range(1, 3), range(4, 10), range(11, 15), range(16, 21));
         assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMapSize());
         for (int i = 0; i < expectedOffsets.size(); i++) {
             assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i).get());
@@ -567,24 +494,7 @@ public class MarkdownParserTest {
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
         assertEquals("It is a good day.", firstParagraph.getSentence(0).getContent());
-        List<LineOffset> expectedOffsets = initializeMappingTable(
-                new LineOffset(1, 0),
-                new LineOffset(1, 1),
-                new LineOffset(1, 2),
-                new LineOffset(1, 3),
-                new LineOffset(1, 4),
-                new LineOffset(1, 5),
-                new LineOffset(1, 8),
-                new LineOffset(1, 11),
-                new LineOffset(1, 14),
-                new LineOffset(1, 15),
-                new LineOffset(1, 16),
-                new LineOffset(1, 17),
-                new LineOffset(1, 20),
-                new LineOffset(1, 21),
-                new LineOffset(1, 22),
-                new LineOffset(1, 23),
-                new LineOffset(1, 24));
+        List<LineOffset> expectedOffsets = offsets(1, range(0, 6), of(8), of(11), range(14, 18), range(20, 25));
         assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMapSize());
         for (int i = 0; i < expectedOffsets.size(); i++) {
             assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i).get());
@@ -607,19 +517,7 @@ public class MarkdownParserTest {
         assertEquals(1, lastSection.getHeaderContent(0).getLineNumber());
         assertEquals(2, lastSection.getHeaderContent(0).getStartPositionOffset());
 
-        List<LineOffset> expectedOffsets1 = initializeMappingTable(
-                new LineOffset(1, 2),
-                new LineOffset(1, 3),
-                new LineOffset(1, 4),
-                new LineOffset(1, 5),
-                new LineOffset(1, 6),
-                new LineOffset(1, 7),
-                new LineOffset(1, 8),
-                new LineOffset(1, 9),
-                new LineOffset(1, 10),
-                new LineOffset(1, 11),
-                new LineOffset(1, 12),
-                new LineOffset(1, 13));
+        List<LineOffset> expectedOffsets1 = offsets(1, range(2, 14));
 
         assertEquals(expectedOffsets1.size(), lastSection.getHeaderContent(0).getOffsetMapSize());
         for (int i = 0; i < expectedOffsets1.size(); i++) {
@@ -627,22 +525,7 @@ public class MarkdownParserTest {
                     lastSection.getHeaderContent(0).getOffset(i).get());
         }
 
-        List<LineOffset> expectedOffsets2 = initializeMappingTable(
-                new LineOffset(1, 14),
-                new LineOffset(1, 15),
-                new LineOffset(1, 16),
-                new LineOffset(1, 17),
-                new LineOffset(1, 18),
-                new LineOffset(1, 19),
-                new LineOffset(1, 20),
-                new LineOffset(1, 21),
-                new LineOffset(1, 22),
-                new LineOffset(1, 23),
-                new LineOffset(1, 24),
-                new LineOffset(1, 25),
-                new LineOffset(1, 26),
-                new LineOffset(1, 27),
-                new LineOffset(1, 28));
+        List<LineOffset> expectedOffsets2 = offsets(1, range(14, 29));
 
         assertEquals(" About Saitama.", lastSection.getHeaderContent(1).getContent());
         assertEquals(1, lastSection.getHeaderContent(1).getLineNumber());
@@ -669,18 +552,7 @@ public class MarkdownParserTest {
         assertEquals("About Gunma", lastSection.getHeaderContent(0).getContent());
         assertEquals(2, lastSection.getHeaderContent(0).getStartPositionOffset());
 
-        List<LineOffset> expectedOffsets = initializeMappingTable(
-                new LineOffset(1, 2),
-                new LineOffset(1, 3),
-                new LineOffset(1, 4),
-                new LineOffset(1, 5),
-                new LineOffset(1, 6),
-                new LineOffset(1, 7),
-                new LineOffset(1, 8),
-                new LineOffset(1, 9),
-                new LineOffset(1, 10),
-                new LineOffset(1, 11),
-                new LineOffset(1, 12));
+        List<LineOffset> expectedOffsets = offsets(1, range(2, 13));
         assertEquals(expectedOffsets.size(), lastSection.getHeaderContent(0).getOffsetMapSize());
         for (int i = 0; i < expectedOffsets.size(); i++) {
             assertEquals(expectedOffsets.get(i),
@@ -930,13 +802,5 @@ public class MarkdownParserTest {
             fail();
         }
         return doc;
-    }
-
-    private static List<LineOffset> initializeMappingTable(LineOffset... offsets) {
-        List<LineOffset> offsetTable = new ArrayList<>();
-        for (LineOffset offset : offsets) {
-            offsetTable.add(offset);
-        }
-        return offsetTable;
     }
 }

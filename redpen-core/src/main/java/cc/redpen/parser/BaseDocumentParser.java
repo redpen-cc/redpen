@@ -20,8 +20,6 @@ package cc.redpen.parser;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
 import cc.redpen.tokenizer.RedPenTokenizer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -32,9 +30,6 @@ import java.util.Optional;
  * implements the concrete Parser classes.
  */
 public abstract class BaseDocumentParser implements DocumentParser {
-    private static final Logger LOG = LoggerFactory.getLogger(
-            BaseDocumentParser.class);
-
 
     @Override
     public Document parse(String content, SentenceExtractor sentenceExtractor, RedPenTokenizer tokenizer) throws RedPenException {
