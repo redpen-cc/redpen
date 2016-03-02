@@ -603,9 +603,13 @@ $(document).ready(function () {
                         var validator = $(this).attr("name");
                         var properties = newValue.split(";");
                         for (var i = 0; i < properties.length; i++) {
-                            var nameValue = properties[i].split("=");
+                            if (properties[i].trim().length == 0) continue;
+                            var nameValue = properties[i].split("=", 2);
                             if (nameValue.length == 2) {
                                 configuration.redpens[redpen].validators[validator].properties[nameValue[0].trim()] = nameValue[1].trim();
+                            } else {
+                                alert("Property must be in key=value format: " + nameValue);
+                                return false;
                             }
                         }
                         validateDocument();
