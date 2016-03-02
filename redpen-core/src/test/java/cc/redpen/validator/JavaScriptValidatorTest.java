@@ -198,8 +198,4 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
     }
 
     ArrayList<ValidationError> errors = new ArrayList<>();
-
-    public void markCalled(String msg) {
-        calledFunctions.add(msg);
-    }
 }
