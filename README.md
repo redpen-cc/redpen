@@ -55,7 +55,8 @@ Links
   * [Atom Editor package by griffin-stewie](https://atom.io/packages/redpen)
   * [SublimeLinter module for RedPen](https://github.com/taky/sublimelinter-redpen)
   * [Emacs redpen-paragraph by karronoli](https://libraries.io/emacs/redpen-paragraph/v0.2)
-  * [WordPress plugin](https://github.com/redpen-cc/redpen-wordpress-plugin)
+  * [Intellij IDEA and other JetBrains IDEs](https://plugins.jetbrains.com/plugin/8210)
+  * [WordPress plugin](https://wordpress.org/plugins/redpen/)
 * Extensions
   * [unsuggested-kanji](https://github.com/so-c/redpen-validator) by so-c
   * [ra-removed-word](http://www.clear-code.com/blog/2015/8/29.html) by ClearCode
