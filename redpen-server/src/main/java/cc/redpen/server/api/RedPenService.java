@@ -21,6 +21,7 @@ package cc.redpen.server.api;
 import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
+import cc.redpen.config.ConfigurationLoader;
 import cc.redpen.config.ValidatorConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,13 +50,13 @@ public class RedPenService {
                 LOG.info("Creating RedPen instances");
                 try {
                     for (String key : Configuration.getDefaultConfigKeys()) {
-                        redPens.put(key, new RedPen(Configuration.builder(key).addAvailableValidatorConfigs().build()));
+                        redPens.put(key, new RedPen(Configuration.builder(key).secure().addAvailableValidatorConfigs().build()));
                     }
 
                     String configPath = context != null ? context.getInitParameter("redpen.conf.path") : null;
                     if (configPath != null) {
                         LOG.info("Config Path is set to \"{}\"", configPath);
-                        RedPen defaultRedPen = new RedPen(configPath);
+                        RedPen defaultRedPen = new RedPen(new ConfigurationLoader().secure().loadFromResource(configPath));
                         redPens.put(DEFAULT_LANGUAGE, defaultRedPen);
                     } else {
                         // if config path is not set, fallback to default config path
@@ -84,8 +85,7 @@ public class RedPenService {
      * @return a configured redpen instance
      */
     public RedPen getRedPen(String lang, Map<String, Map<String, String>> validatorProperties) {
-        Configuration.ConfigurationBuilder configBuilder = Configuration.builder();
-        configBuilder.setLanguage(lang);
+        Configuration.ConfigurationBuilder configBuilder = Configuration.builder(lang).secure();
 
         // add the validators and their properties
         validatorProperties.forEach((validatorName, props) -> {

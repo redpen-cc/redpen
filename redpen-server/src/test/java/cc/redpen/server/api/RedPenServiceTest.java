@@ -7,7 +7,9 @@ import org.springframework.mock.web.MockServletContext;
 
 import java.util.Map;
 
+import static java.util.Collections.emptyMap;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class RedPenServiceTest {
   @Before
@@ -31,6 +33,8 @@ public class RedPenServiceTest {
 
     assertEquals("ja", redPens.get("ja.hankaku").getConfiguration().getLang());
     assertEquals("hankaku", redPens.get("ja.hankaku").getConfiguration().getVariant());
+
+    assertTrue(redPens.values().stream().allMatch(r -> r.getConfiguration().isSecure()));
   }
 
   @Test
@@ -39,5 +43,12 @@ public class RedPenServiceTest {
     context.addInitParameter("redpen.conf.path", "/conf/redpen-conf-ru.xml");
     RedPen defaultRedPen = new RedPenService(context).getRedPen("default");
     assertEquals("ru", defaultRedPen.getConfiguration().getKey());
+    assertTrue(defaultRedPen.getConfiguration().isSecure());
+  }
+
+  @Test
+  public void redPensWithCustomPropertiesAreAlsoSecure() throws Exception {
+    RedPen en = new RedPenService(null).getRedPen("en", emptyMap());
+    assertTrue(en.getConfiguration().isSecure());
   }
 }

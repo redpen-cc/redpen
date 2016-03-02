@@ -85,17 +85,29 @@ public class RedPenResourceTest extends MockServletInvocationTest {
     }
 
     public void testJSValidatorRuns() throws Exception {
+        System.setProperty("REDPEN_HOME", "src/test");
         MockHttpServletRequest request = constructMockRequest("POST", "/document/validate/json", WILDCARD, APPLICATION_JSON);
-        request.setContent(String.format("{\"document\":\"Test, this is a test.\",\"format\":\"json2\",\"documentParser\":\"PLAIN\",\"config\":{\"lang\":\"en\",\"validators\":{\"JavaScript\":{\"properties\":{\"script-path\":\"%s\"}}}}}", "./src/test/resources/js").getBytes());
+        request.setContent(String.format("{\"document\":\"Test, this is a test.\",\"format\":\"json2\",\"documentParser\":\"PLAIN\",\"config\":{\"lang\":\"en\",\"validators\":{\"JavaScript\":{\"properties\":{\"script-path\":\"%s\"}}}}}", "resources/js").getBytes());
         MockHttpServletResponse response = invoke(request);
 
         assertEquals("HTTP status", HttpStatus.OK.getCode(), response.getStatus());
-        final JSONArray errors = new JSONObject(response.getContentAsString()).getJSONArray("errors");
+        JSONArray errors = new JSONObject(response.getContentAsString()).getJSONArray("errors");
         assertTrue(errors.length() > 0);
         for (int i=0; i<errors.length(); ++i) {
-            final JSONObject o = errors.getJSONObject(i).getJSONArray("errors").getJSONObject(0);
+            JSONObject o = errors.getJSONObject(i).getJSONArray("errors").getJSONObject(0);
             assertEquals("[pass.js] called", o.getString("message"));
         }
+    }
+
+    public void testJSValidatorDoesntRunFromNonHomeDir() throws Exception {
+        System.setProperty("REDPEN_HOME", ".");
+        MockHttpServletRequest request = constructMockRequest("POST", "/document/validate/json", WILDCARD, APPLICATION_JSON);
+        request.setContent(String.format("{\"document\":\"Test, this is a test.\",\"format\":\"json2\",\"documentParser\":\"PLAIN\",\"config\":{\"lang\":\"en\",\"validators\":{\"JavaScript\":{\"properties\":{\"script-path\":\"%s\"}}}}}", "resources/js").getBytes());
+        MockHttpServletResponse response = invoke(request);
+
+        assertEquals("HTTP status", HttpStatus.OK.getCode(), response.getStatus());
+        JSONArray errors = new JSONObject(response.getContentAsString()).getJSONArray("errors");
+        assertEquals(0, errors.length());
     }
 
     public void testDetectLanguage() throws Exception {

@@ -79,19 +79,19 @@ public class ConfigurationTest {
     @Test
     public void keyIsLangAndType() throws Exception {
         SymbolTable symbolTable = new SymbolTable("ja", Optional.of("hankaku"), emptyList());
-        assertEquals("ja.hankaku", new Configuration(new File(""), symbolTable, emptyList(), "ja").getKey());
+        assertEquals("ja.hankaku", new Configuration(new File(""), symbolTable, emptyList(), "ja", false).getKey());
     }
 
     @Test
     public void keyIsLangOnlyIfTypeIsMissing() throws Exception {
         SymbolTable symbolTable = new SymbolTable("en", Optional.empty(), emptyList());
-        assertEquals("en", new Configuration(new File(""), symbolTable, emptyList(), "en").getKey());
+        assertEquals("en", new Configuration(new File(""), symbolTable, emptyList(), "en", false).getKey());
     }
 
     @Test
     public void keyIsLangOnlyForZenkaku() throws Exception {
         SymbolTable symbolTable = new SymbolTable("ja", Optional.of("zenkaku"), emptyList());
-        assertEquals("ja", new Configuration(new File(""), symbolTable, emptyList(), "ja").getKey());
+        assertEquals("ja", new Configuration(new File(""), symbolTable, emptyList(), "ja", false).getKey());
     }
 
     @Test
@@ -131,7 +131,7 @@ public class ConfigurationTest {
             fail("Expecting RedPenException");
         }
         catch (RedPenException e) {
-            assertEquals("hello.xml is not under working directory (" + new File("").getAbsoluteFile() + ") or $REDPEN_HOME (" + new File("src").getAbsoluteFile() + ").", e.getMessage());
+            assertEquals("hello.xml is not under working directory (" + new File("").getAbsoluteFile() + "), $REDPEN_HOME (" + new File("src").getAbsoluteFile() + ").", e.getMessage());
         }
     }
 
@@ -143,7 +143,32 @@ public class ConfigurationTest {
             fail("Expecting RedPenException");
         }
         catch (RedPenException e) {
-            assertEquals("hello.xml is not under working directory (" + new File("").getAbsoluteFile() + "), base (some/base/dir) or $REDPEN_HOME (" + new File("src").getAbsoluteFile() + ").", e.getMessage());
+            assertEquals("hello.xml is not under working directory (" + new File("").getAbsoluteFile() + "), base (some/base/dir), $REDPEN_HOME (" + new File("src").getAbsoluteFile() + ").", e.getMessage());
+        }
+    }
+
+    @Test
+    public void findFile_workingDirectorySecureMode() throws Exception {
+        String localFile = new File(".").list()[0];
+        try {
+            System.setProperty("REDPEN_HOME", "");
+            Configuration.builder().secure().build().findFile(localFile);
+            fail("Secure mode should not allow files from working directory");
+        }
+        catch (RedPenException e) {
+            assertEquals(localFile + " is not under $REDPEN_HOME (" + new File("").getAbsoluteFile() + ").", e.getMessage());
+        }
+    }
+
+    @Test
+    public void findFile_secureMode() throws Exception {
+        try {
+            System.setProperty("REDPEN_HOME", "");
+            Configuration.builder().secure().build().findFile("/etc/passwd");
+            fail("Secure mode should not allow file locations outside config paths");
+        }
+        catch (RedPenException e) {
+            assertEquals("/etc/passwd is not under $REDPEN_HOME (" + new File("").getAbsoluteFile() + ").", e.getMessage());
         }
     }
 
