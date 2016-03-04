@@ -30,6 +30,9 @@ import javax.ws.rs.core.MediaType;
 import java.io.FileNotFoundException;
 import java.util.Set;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static javax.ws.rs.core.MediaType.WILDCARD;
+
 public class RedPenResourceTest extends MockServletInvocationTest {
 
     @Override
@@ -45,7 +48,7 @@ public class RedPenResourceTest extends MockServletInvocationTest {
 
     public void testRun() throws Exception {
         MockHttpServletRequest request =
-                constructMockRequest("POST", "/document/validate", MediaType.WILDCARD);
+                constructMockRequest("POST", "/document/validate", WILDCARD);
         request.setContent(("document=Foobar").getBytes());
         MockServletContext context = new MockServletContext();
         context.addInitParameter("redpen.conf.path", "conf/redpen-conf.xml");
@@ -57,8 +60,7 @@ public class RedPenResourceTest extends MockServletInvocationTest {
     }
 
     public void testRunWithErrors() throws Exception {
-        MockHttpServletRequest request =
-                constructMockRequest("POST", "/document/validate", MediaType.WILDCARD);
+        MockHttpServletRequest request = constructMockRequest("POST", "/document/validate", WILDCARD);
         request.setContent(("document=foobar.foobar").getBytes()); //NOTE: need space between periods.
         MockServletContext context = new MockServletContext();
         context.addInitParameter("redpen.conf.path", "conf/redpen-conf.xml");
@@ -74,8 +76,7 @@ public class RedPenResourceTest extends MockServletInvocationTest {
     }
 
     public void testRunWithoutContent() throws Exception {
-        MockHttpServletRequest request =
-                constructMockRequest("POST", "/document/validate", MediaType.WILDCARD);
+        MockHttpServletRequest request = constructMockRequest("POST", "/document/validate", WILDCARD);
         request.setContent(("").getBytes()); //NOTE: need space between periods.
         MockServletContext context = new MockServletContext();
         context.addInitParameter("redpen.conf.path", "conf/redpen-conf.xml");
@@ -84,8 +85,7 @@ public class RedPenResourceTest extends MockServletInvocationTest {
     }
 
     public void testRunWithOnlyFormName() throws Exception {
-        MockHttpServletRequest request =
-                constructMockRequest("POST", "/document/validate", MediaType.WILDCARD);
+        MockHttpServletRequest request = constructMockRequest("POST", "/document/validate", WILDCARD);
         request.setContent(("document=").getBytes()); //NOTE: need space between periods.
         MockServletContext context = new MockServletContext();
         context.addInitParameter("redpen.conf.path", "conf/redpen-conf.xml");
@@ -95,19 +95,29 @@ public class RedPenResourceTest extends MockServletInvocationTest {
     }
 
     public void testJSValidatorRuns() throws Exception {
-        MockHttpServletRequest request =
-            constructMockRequest("POST", "/document/validate/json", MediaType.WILDCARD, MediaType.APPLICATION_JSON);
-        request.setContent(String.format("{\"document\":\"Test, this is a test.\",\"format\":\"json2\",\"documentParser\":\"PLAIN\",\"config\":{\"lang\":\"en\",\"validators\":{\"JavaScript\":{\"properties\":{\"script-path\":\"%s\"}}}}}", "./src/test/resources/js").getBytes());
-        MockServletContext context = new MockServletContext();
+        System.setProperty("REDPEN_HOME", "src/test");
+        MockHttpServletRequest request = constructMockRequest("POST", "/document/validate/json", WILDCARD, APPLICATION_JSON);
+        request.setContent(String.format("{\"document\":\"Test, this is a test.\",\"format\":\"json2\",\"documentParser\":\"PLAIN\",\"config\":{\"lang\":\"en\",\"validators\":{\"JavaScript\":{\"properties\":{\"script-path\":\"%s\"}}}}}", "resources/js").getBytes());
         MockHttpServletResponse response = invoke(request);
 
         assertEquals("HTTP status", HttpStatus.OK.getCode(), response.getStatus());
-        final JSONArray errors = new JSONObject(response.getContentAsString()).getJSONArray("errors");
+        JSONArray errors = new JSONObject(response.getContentAsString()).getJSONArray("errors");
         assertTrue(errors.length() > 0);
         for (int i=0; i<errors.length(); ++i) {
-            final JSONObject o = errors.getJSONObject(i).getJSONArray("errors").getJSONObject(0);
+            JSONObject o = errors.getJSONObject(i).getJSONArray("errors").getJSONObject(0);
             assertEquals("[pass.js] called", o.getString("message"));
         }
+    }
+
+    public void testJSValidatorDoesntRunFromNonHomeDir() throws Exception {
+        System.setProperty("REDPEN_HOME", ".");
+        MockHttpServletRequest request = constructMockRequest("POST", "/document/validate/json", WILDCARD, APPLICATION_JSON);
+        request.setContent(String.format("{\"document\":\"Test, this is a test.\",\"format\":\"json2\",\"documentParser\":\"PLAIN\",\"config\":{\"lang\":\"en\",\"validators\":{\"JavaScript\":{\"properties\":{\"script-path\":\"%s\"}}}}}", "resources/js").getBytes());
+        MockHttpServletResponse response = invoke(request);
+
+        assertEquals("HTTP status", HttpStatus.OK.getCode(), response.getStatus());
+        JSONArray errors = new JSONObject(response.getContentAsString()).getJSONArray("errors");
+        assertEquals(0, errors.length());
     }
 
     public void testDetectLanguage() throws Exception {

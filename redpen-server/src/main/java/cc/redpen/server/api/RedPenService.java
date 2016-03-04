@@ -21,6 +21,7 @@ package cc.redpen.server.api;
 import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
+import cc.redpen.config.ConfigurationLoader;
 import cc.redpen.config.ValidatorConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +48,7 @@ public class RedPenService {
     private final static String DEFAULT_INTERNAL_CONFIG_PATH = "/conf/redpen-conf.xml";
     private final static String DEFAULT_LANGUAGE = "default";
 
-    private static Map<String, RedPen> langRedPenMap = new HashMap<>();
+    static Map<String, RedPen> langRedPenMap = new HashMap<>();
 
     /**
      * Create redpens for the given context
@@ -60,15 +61,15 @@ public class RedPenService {
                 LOG.info("Creating RedPen instances");
                 try {
                     for (String fileName : findConfFiles()) {
-                        RedPen redPen = new RedPen(fileName);
-                        Configuration config = redPen.getConfiguration();
+                        Configuration config = new ConfigurationLoader().secure().loadFromResource(fileName);
+                        RedPen redPen = new RedPen(config);
                         langRedPenMap.put(config.getKey(), redPen);
                     }
 
                     String configPath = context != null ? context.getInitParameter("redpen.conf.path") : null;
                     if (configPath != null) {
                         LOG.info("Config Path is set to \"{}\"", configPath);
-                        RedPen defaultRedPen = new RedPen(configPath);
+                        RedPen defaultRedPen = new RedPen(new ConfigurationLoader().secure().loadFromResource(configPath));
                         langRedPenMap.put(DEFAULT_LANGUAGE, defaultRedPen);
                     } else {
                         // if config path is not set, fallback to default config path
@@ -108,8 +109,7 @@ public class RedPenService {
      * @return a configured redpen instance
      */
     public RedPen getRedPen(String lang, Map<String, Map<String, String>> validatorProperties) {
-        Configuration.ConfigurationBuilder configBuilder = Configuration.builder();
-        configBuilder.setLanguage(lang);
+        Configuration.ConfigurationBuilder configBuilder = Configuration.builder(lang).secure();
 
         // add the validators and their properties
         validatorProperties.forEach((validatorName, props) -> {

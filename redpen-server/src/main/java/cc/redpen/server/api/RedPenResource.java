@@ -101,7 +101,7 @@ public class RedPenResource {
         if (config == null) {
             redPen = new RedPenService(context).getRedPen(lang);
         } else {
-            redPen = new RedPen(new ConfigurationLoader().loadFromString(config));
+            redPen = new RedPen(new ConfigurationLoader().secure().loadFromString(config));
         }
         Document parsedDocument = redPen.parse(DocumentParser.of(documentParser), document);
         List<ValidationError> errors = redPen.validate(parsedDocument);

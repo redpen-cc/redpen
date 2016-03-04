@@ -42,18 +42,17 @@ public class Configuration implements Serializable, Cloneable {
     private List<ValidatorConfiguration> validatorConfigs = new ArrayList<>();
     private final String lang;
     private transient RedPenTokenizer tokenizer;
-    private File home = new File(Optional.ofNullable(System.getProperty("REDPEN_HOME", System.getenv("REDPEN_HOME"))).orElse(""));
-    private File base;
+    private final File home = new File(Optional.ofNullable(System.getProperty("REDPEN_HOME", System.getenv("REDPEN_HOME"))).orElse(""));
+    private final File base;
+    private final boolean secure;
 
-    /**
-     * Constructor.
-     */
-    Configuration(File base, SymbolTable symbolTable, List<ValidatorConfiguration> validatorConfigs, String lang) {
+    Configuration(File base, SymbolTable symbolTable, List<ValidatorConfiguration> validatorConfigs, String lang, boolean secure) {
         this.base = base;
         this.symbolTable = symbolTable;
 
         this.validatorConfigs.addAll(validatorConfigs);
         this.lang = lang;
+        this.secure = secure;
         initTokenizer();
     }
 
@@ -135,19 +134,37 @@ public class Configuration implements Serializable, Cloneable {
      * @throws RedPenException if file doesn't exist in either place
      */
     public File findFile(String relativePath) throws RedPenException {
-        File file = new File(relativePath);
-        if (file.exists()) return file;
-
-        if (base != null) {
-            file = new File(base, relativePath);
+        File file;
+        if (!secure) {
+            file = new File(relativePath);
             if (file.exists()) return file;
         }
 
-        file = new File(home, relativePath);
-        if (file.exists()) return file;
+        if (base != null) {
+            file = new File(base, relativePath);
+            if (secureExists(file, base)) return file;
+        }
 
-        throw new RedPenException(String.format("%s is not under working directory (%s)" + (base != null ? ", base (" + base + ")" : "")  + " or $REDPEN_HOME (%s).",
-          relativePath, new File("").getAbsoluteFile(), home.getAbsolutePath()));
+        file = new File(home, relativePath);
+        if (secureExists(file, home)) return file;
+
+        throw new RedPenException(relativePath + " is not under " +
+          (!secure ? "working directory (" + new File("").getAbsoluteFile() + "), " : "") +
+          (base != null ? "base (" + base + "), " : "") +
+          "$REDPEN_HOME (" + home.getAbsolutePath() + ").");
+    }
+
+    private boolean secureExists(File file, File base) {
+        try {
+            return file.exists() && (!secure || file.getCanonicalPath().startsWith(base.getCanonicalPath()));
+        }
+        catch (IOException e) {
+            return false;
+        }
+    }
+
+    public boolean isSecure() {
+        return secure;
     }
 
     /**
@@ -212,6 +229,7 @@ public class Configuration implements Serializable, Cloneable {
         private String lang = "en";
         private Optional<String> variant = Optional.empty();
         private File base;
+        private boolean secure;
 
         private void checkBuilt() {
             if (built) throw new IllegalStateException("Configuration already built.");
@@ -247,10 +265,19 @@ public class Configuration implements Serializable, Cloneable {
             return this;
         }
 
+      /**
+       * Enables secure mode suitable for servers, where validator properties can come from end-users.
+       */
+        public ConfigurationBuilder secure() {
+            checkBuilt();
+            secure = true;
+            return this;
+        }
+
         public Configuration build() {
             checkBuilt();
             built = true;
-            return new Configuration(base, new SymbolTable(lang, variant, customSymbols), this.validatorConfigs, this.lang);
+            return new Configuration(base, new SymbolTable(lang, variant, customSymbols), this.validatorConfigs, this.lang, this.secure);
         }
     }
 }
