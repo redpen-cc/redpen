@@ -236,7 +236,7 @@ $(document).ready(function () {
 
                 if (validator.properties) {
                     for (var property in validator.properties) {
-                        propertiesText += (propertiesText == "") ? "" : ", ";
+                        propertiesText += (propertiesText == "") ? "" : "; ";
                         propertiesText += property + "=" + validator.properties[property];
                     }
                 }
@@ -594,17 +594,22 @@ $(document).ready(function () {
                 }
                 $(this).editable({
                     mode: 'popup',
+                    container: 'body',
                     emptytext: 'add properties',
                     placement: "left",
                     type: 'text',
                     success: function (response, newValue) {
                         var redpen = $(this).data("pk");
                         var validator = $(this).attr("name");
-                        var properties = newValue.split(",");
+                        var properties = newValue.split(";");
                         for (var i = 0; i < properties.length; i++) {
-                            var nameValue = properties[i].split("=");
+                            if (properties[i].trim().length == 0) continue;
+                            var nameValue = properties[i].split("=", 2);
                             if (nameValue.length == 2) {
                                 configuration.redpens[redpen].validators[validator].properties[nameValue[0].trim()] = nameValue[1].trim();
+                            } else {
+                                alert("Property must be in key=value format: " + nameValue);
+                                return false;
                             }
                         }
                         validateDocument();
