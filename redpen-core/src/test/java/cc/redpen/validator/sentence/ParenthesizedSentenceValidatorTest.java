@@ -17,6 +17,9 @@
  */
 package cc.redpen.validator.sentence;
 
+import cc.redpen.RedPenException;
+import cc.redpen.config.Configuration;
+import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.WhiteSpaceTokenizer;
@@ -30,8 +33,9 @@ import static org.junit.Assert.assertEquals;
 
 public class ParenthesizedSentenceValidatorTest {
     @Test
-    public void testSingleSentence() {
+    public void testSingleSentence() throws RedPenException {
         ParenthesizedSentenceValidator validator = new ParenthesizedSentenceValidator();
+        validator.preInit(new ValidatorConfiguration("ParenthesizedSentence").addAttribute("max_nesting_level", "2"), Configuration.builder().build());
 
         List<Document> documents = new ArrayList<>();
         documents.add(

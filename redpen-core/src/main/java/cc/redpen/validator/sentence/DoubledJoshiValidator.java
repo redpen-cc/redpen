@@ -17,12 +17,14 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.validator.Validator;
 
 import java.util.*;
+
+import static java.util.Collections.emptySet;
+import static java.util.Collections.singletonList;
 
 /**
  * DoubledJoshiValidator checks if the input texts has duplicated Kakujoshi words in one setnences.
@@ -30,7 +32,9 @@ import java.util.*;
  * Note: this validator works only for Japanese texts.
  */
 public class DoubledJoshiValidator extends Validator {
-    private Set<String> skipList = new HashSet<>();
+    public DoubledJoshiValidator() {
+        super("list", emptySet());
+    }
 
     @Override
     public void validate(Sentence sentence) {
@@ -44,21 +48,14 @@ public class DoubledJoshiValidator extends Validator {
                         counts.get(tokenElement.getSurface())+1);
             }
         }
+        Set<String> skipList = getSetAttribute("list");
         counts.entrySet().stream()
                 .filter(e -> e.getValue() >= 2 && !skipList.contains(e.getKey()))
                 .forEach(e -> addLocalizedError(sentence, e.getKey()));
     }
 
     @Override
-    protected void init() throws RedPenException {
-        //TODO: filter with the kind of Joshi such as Kakujoshi, KakariJoshi etc...
-        getConfigAttribute("list").ifPresent((f -> {
-            skipList.addAll(Arrays.asList(f.split(",")));
-        }));
-    }
-
-    @Override
     public List<String> getSupportedLanguages() {
-        return Arrays.asList(Locale.JAPANESE.getLanguage());
+        return singletonList(Locale.JAPANESE.getLanguage());
     }
 }

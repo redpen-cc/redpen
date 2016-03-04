@@ -29,6 +29,7 @@ import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -38,9 +39,15 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 
 public class EndOfSentenceValidatorTest {
+    private EndOfSentenceValidator validator = new EndOfSentenceValidator();
+
+    @Before
+    public void setUp() throws Exception {
+        validator.preInit(new ValidatorConfiguration("EndOfSentence"), Configuration.builder().build());
+    }
+
     @Test
     public void testInvalidEndOfSentence() {
-        EndOfSentenceValidator validator = new EndOfSentenceValidator();
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(new Sentence("He said \"that is right\".", 0));
@@ -49,7 +56,6 @@ public class EndOfSentenceValidatorTest {
 
     @Test
     public void testValidEndOfSentence() {
-        EndOfSentenceValidator validator = new EndOfSentenceValidator();
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(new Sentence("He said \"that is right.\"", 0));
@@ -58,16 +64,14 @@ public class EndOfSentenceValidatorTest {
 
     @Test
     public void testInValidEndOfSentenceWithQuestionMark() {
-        EndOfSentenceValidator validator = new EndOfSentenceValidator();
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
-        validator.validate( new Sentence("He said \"Is it right\"?", 0));
+        validator.validate(new Sentence("He said \"Is it right\"?", 0));
         assertEquals(1, errors.size());
     }
 
     @Test
     public void testVoid() {
-        EndOfSentenceValidator validator = new EndOfSentenceValidator();
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(new Sentence("", 0));

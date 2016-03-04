@@ -20,15 +20,15 @@ package cc.redpen.validator.sentence;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.Validator;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.util.Collections.singletonList;
+
 /**
  * Validate Japanese document if it contains both Desumasu and Dearu styles.
- * 
  */
 public class JapaneseStyleValidator extends Validator {
     private static final Pattern DEARU_PATTERN = Pattern.compile("のだが|したが|したので|ないかと|してきた|であるから");
@@ -55,8 +55,8 @@ public class JapaneseStyleValidator extends Validator {
         String content = sentence.getContent();
         Matcher mat = pattern.matcher(content);
         int count = 0;
-        while(mat.find()){
-            count +=1;
+        while(mat.find()) {
+            count += 1;
         }
         return count;
     }
@@ -98,34 +98,6 @@ public class JapaneseStyleValidator extends Validator {
 
     @Override
     public List<String> getSupportedLanguages() {
-        return Arrays.asList(Locale.JAPANESE.getLanguage());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        JapaneseStyleValidator that = (JapaneseStyleValidator) o;
-
-        if (dearuCount != that.dearuCount) return false;
-        if (desumasuCount != that.desumasuCount) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = dearuCount;
-        result = 31 * result + desumasuCount;
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "JapaneseStyleValidator{" +
-                "dearuCount=" + dearuCount +
-                ", desumasuCount=" + desumasuCount +
-                '}';
+        return singletonList(Locale.JAPANESE.getLanguage());
     }
 }
