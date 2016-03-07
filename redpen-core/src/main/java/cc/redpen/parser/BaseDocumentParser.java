@@ -24,10 +24,9 @@ import cc.redpen.tokenizer.RedPenTokenizer;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static java.util.Collections.emptyList;
 
 /**
  * Abstract Parser class containing common procedures to
@@ -65,11 +64,22 @@ public abstract class BaseDocumentParser implements DocumentParser {
         }
 
         public ValueWithOffsets(String content, List<LineOffset> offsetMap) {
-            super(content, offsetMap, emptyList());
+            super(content, offsetMap, new ArrayList<>());
         }
 
         public boolean isEmpty() {
             return "".equals(getContent());
+        }
+
+        public ValueWithOffsets append(String line, List<LineOffset> offsets) {
+            setContent(getContent() + line);
+            getOffsetMap().addAll(offsets);
+            return this;
+        }
+
+        public ValueWithOffsets extract(int start, int end) {
+            if (start == end) return new ValueWithOffsets();
+            return new ValueWithOffsets(getContent().substring(start, end), getOffsetMap().subList(start, end));
         }
     }
 }

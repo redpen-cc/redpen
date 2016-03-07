@@ -444,6 +444,7 @@ public class WikiParserTest extends BaseParserTest {
         Section lastSection = doc.getSection(doc.size() - 1);
         assertEquals(1, lastSection.getHeaderContentsListSize());
         assertEquals("About Gunma", lastSection.getHeaderContent(0).getContent());
+        assertEquals(offsets(1, range(4, 15)), lastSection.getHeaderContent(0).getOffsetMap());
     }
 
     @Test
@@ -457,12 +458,9 @@ public class WikiParserTest extends BaseParserTest {
         ListBlock listBlock = lastSection.getListBlock(0);
         assertEquals(2, listBlock.getNumberOfListElements());
         assertEquals(1, listBlock.getListElement(0).getNumberOfSentences());
-        assertEquals("Gunma is located at west of Saitama.",
-                listBlock.getListElement(0).getSentence(0).getContent());
-        assertEquals("The word also have posive meaning.",
-                listBlock.getListElement(1).getSentence(0).getContent());
-        assertEquals(" Hower it is a bit wired.",
-                listBlock.getListElement(1).getSentence(1).getContent());
+        assertEquals("Gunma is located at west of Saitama.", listBlock.getListElement(0).getSentence(0).getContent());
+        assertEquals("The word also have posive meaning.", listBlock.getListElement(1).getSentence(0).getContent());
+        assertEquals(" Hower it is a bit wired.", listBlock.getListElement(1).getSentence(1).getContent());
     }
 
     @Test
@@ -506,14 +504,14 @@ public class WikiParserTest extends BaseParserTest {
         assertEquals(1, rootSection.getHeaderContent(0).getLineNumber());
         assertEquals(0, rootSection.getNumberOfParagraphs());
 
-        assertEquals(1, h1Section.getHeaderContent(0).getLineNumber());
+        assertEquals(offsets(1, range(4, 25)), h1Section.getHeaderContent(0).getOffsetMap());
         assertEquals(2, h1Section.getNumberOfParagraphs());
         assertEquals(1, h1Section.getParagraph(0).getNumberOfSentences());
         assertEquals(2, h1Section.getParagraph(0).getSentence(0).getLineNumber());
         assertEquals(1, h1Section.getParagraph(1).getNumberOfSentences());
         assertEquals(4, h1Section.getParagraph(1).getSentence(0).getLineNumber());
 
-        assertEquals(5, h2Section.getHeaderContent(0).getLineNumber());
+        assertEquals(offsets(5, range(4, 10)), h2Section.getHeaderContent(0).getOffsetMap());
         assertEquals(1, h2Section.getNumberOfParagraphs());
         assertEquals(1, h2Section.getParagraph(0).getNumberOfSentences());
         assertEquals(6, h2Section.getParagraph(0).getSentence(0).getLineNumber());
