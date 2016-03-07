@@ -17,70 +17,22 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.Validator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Validate input sentences contain more characters more than specified.
  */
-final public class SentenceLengthValidator extends Validator {
-    /**
-     * Default maximum length of sentences.
-     */
-    @SuppressWarnings("WeakerAccess")
-    public static final int DEFAULT_MAX_LENGTH = 120;
-    private static final Logger LOG =
-            LoggerFactory.getLogger(SentenceLengthValidator.class);
-    private int maxLength = DEFAULT_MAX_LENGTH;
+public final class SentenceLengthValidator extends Validator {
+    public SentenceLengthValidator() {
+        super("max_len", 120);
+    }
 
     @Override
     public void validate(Sentence sentence) {
+        int maxLength = getIntAttribute("max_len");
         if (sentence.getContent().length() > maxLength) {
             addLocalizedError(sentence, sentence.getContent().length(), maxLength);
         }
-    }
-
-    @Override
-    protected void init() throws RedPenException {
-        this.maxLength = getConfigAttributeAsInt("max_len", DEFAULT_MAX_LENGTH);
-    }
-
-    /**
-     * Set maximum length of sentence.
-     *
-     * @param maxLength max limit of sentence length
-     */
-    protected void setLengthLimit(int maxLength) {
-        this.setMaxLength(maxLength);
-    }
-
-    protected void setMaxLength(int max) {
-        this.maxLength = max;
-    }
-
-    @Override
-    public String toString() {
-        return "SentenceLengthValidator{" +
-                "maxLength=" + maxLength +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        SentenceLengthValidator that = (SentenceLengthValidator) o;
-
-        return maxLength == that.maxLength;
-
-    }
-
-    @Override
-    public int hashCode() {
-        return maxLength;
     }
 }

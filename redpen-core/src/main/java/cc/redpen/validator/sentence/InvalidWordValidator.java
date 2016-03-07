@@ -21,33 +21,32 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.validator.Validator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
+
+import static java.util.Collections.singletonList;
 
 /**
  * Detect invalid word occurrences.
  */
 final public class InvalidWordValidator extends Validator {
-    private static final String DEFAULT_RESOURCE_PATH =
-            "default-resources/invalid-word";
-    private static final Logger LOG =
-            LoggerFactory.getLogger(InvalidWordValidator.class);
+    private static final String DEFAULT_RESOURCE_PATH = "default-resources/invalid-word";
     private Set<String> invalidWords;
-    private Set<String> customInvalidWords = new HashSet<>();
+
+    public InvalidWordValidator() {
+        super("list", new HashSet<>());
+    }
 
     @Override
     public List<String> getSupportedLanguages() {
-        return Arrays.asList(Locale.ENGLISH.getLanguage());
+        return singletonList(Locale.ENGLISH.getLanguage());
     }
 
     @Override
     public void validate(Sentence sentence) {
-        //NOTE: only Ascii white space since this validator works for european languages.
         for (TokenElement token : sentence.getTokens()) {
-            if (invalidWords.contains(token.getSurface().toLowerCase())
-                    || customInvalidWords.contains(token.getSurface().toLowerCase())) {
+            String surface = token.getSurface().toLowerCase();
+            if (invalidWords.contains(surface) || getSetAttribute("list").contains(surface)) {
                 addLocalizedErrorFromToken(sentence, token);
             }
         }
@@ -56,46 +55,12 @@ final public class InvalidWordValidator extends Validator {
     @Override
     protected void init() throws RedPenException {
         String lang = getSymbolTable().getLang();
-        String defaultDictionaryResource = DEFAULT_RESOURCE_PATH
-                + "/invalid-word-" + lang + ".dat";
+        String defaultDictionaryResource = DEFAULT_RESOURCE_PATH + "/invalid-word-" + lang + ".dat";
         invalidWords = WORD_LIST.loadCachedFromResource(defaultDictionaryResource, "invalid word");
-
-        getConfigAttribute("list").ifPresent((f -> {
-            LOG.info("User defined invalid expression list found.");
-            customInvalidWords.addAll(Arrays.asList(f.split(",")));
-            LOG.info("Succeeded to add elements of user defined list.");
-        }));
 
         Optional<String> confFile = getConfigAttribute("dict");
         if (confFile.isPresent()) {
-            customInvalidWords.addAll(WORD_LIST.loadCachedFromFile(findFile(confFile.get()), "InvalidWordValidator user dictionary"));
+            getSetAttribute("list").addAll(WORD_LIST.loadCachedFromFile(findFile(confFile.get()), "InvalidWordValidator user dictionary"));
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        InvalidWordValidator that = (InvalidWordValidator) o;
-
-        if (invalidWords != null ? !invalidWords.equals(that.invalidWords) : that.invalidWords != null) return false;
-        return !(customInvalidWords != null ? !customInvalidWords.equals(that.customInvalidWords) : that.customInvalidWords != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = invalidWords != null ? invalidWords.hashCode() : 0;
-        result = 31 * result + (customInvalidWords != null ? customInvalidWords.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "InvalidWordValidator{" +
-                "invalidWords=" + invalidWords +
-                ", customInvalidWords=" + customInvalidWords +
-                '}';
     }
 }

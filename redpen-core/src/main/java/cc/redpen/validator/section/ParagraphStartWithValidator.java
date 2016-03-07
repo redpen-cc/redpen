@@ -17,7 +17,6 @@
  */
 package cc.redpen.validator.section;
 
-import cc.redpen.RedPenException;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
@@ -27,12 +26,9 @@ import cc.redpen.validator.Validator;
  * Validate whether paragraph start as specified.
  */
 public final class ParagraphStartWithValidator extends Validator {
-    /**
-     * Default matter paragraph start with.
-     */
-    @SuppressWarnings("WeakerAccess")
-    public static final String DEFAULT_PARAGRAPH_START_WITH = "";
-    private String beginningOfParagraph = DEFAULT_PARAGRAPH_START_WITH;
+    public ParagraphStartWithValidator() {
+        super("start_from", ""); // Default matter paragraph start with.
+    }
 
     @Override
     public void validate(Section section) {
@@ -41,31 +37,10 @@ public final class ParagraphStartWithValidator extends Validator {
                 continue;
             }
             Sentence firstSentence = currentParagraph.getSentence(0);
-            if (firstSentence.getContent().indexOf(this.beginningOfParagraph) != 0) {
+            if (firstSentence.getContent().indexOf(getStringAttribute("start_from")) != 0) {
                 addLocalizedError(section.getJoinedHeaderContents(),
                         firstSentence.getContent().charAt(0));
             }
         }
-    }
-
-    @Override
-    protected void init() throws RedPenException {
-        this.beginningOfParagraph = getConfigAttribute("start_from", DEFAULT_PARAGRAPH_START_WITH);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ParagraphStartWithValidator that = (ParagraphStartWithValidator) o;
-
-        return !(beginningOfParagraph != null ? !beginningOfParagraph.equals(that.beginningOfParagraph) : that.beginningOfParagraph != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return beginningOfParagraph != null ? beginningOfParagraph.hashCode() : 0;
     }
 }

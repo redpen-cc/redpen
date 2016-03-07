@@ -25,10 +25,9 @@ import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.util.SpellingUtils;
 import cc.redpen.validator.Validator;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
+import static java.util.Collections.singletonList;
 
 /**
  * Ensure that there are candidates for expanded versions of acronyms. That is, if there exists an
@@ -36,10 +35,6 @@ import java.util.Set;
  */
 public class UnexpandedAcronymValidator extends Validator {
 
-    private static final int MIN_ACRONYM_LENGTH_DEFAULT = 3; // TLA
-
-    // ignore uppercase words smaller than this length
-    private int minAcronymLength = MIN_ACRONYM_LENGTH_DEFAULT;
     // a set of small words used to join acronyms, such as 'of', 'the' and 'for'
     private Set<String> acronymJoiningWords = new HashSet<>();
     // the set of acronyms we've deduced from sequences of capitalized words
@@ -50,11 +45,18 @@ public class UnexpandedAcronymValidator extends Validator {
     // a dictionary to filter out acronyms that are just uppercase words
     private Set<String> dictionary;
 
+    public UnexpandedAcronymValidator() {
+        super("min_acronym_length", 3); // ignore uppercase words smaller than this length
+    }
+
+    @Override public List<String> getSupportedLanguages() {
+        return singletonList(Locale.ENGLISH.getLanguage());
+    }
+
     @Override
     protected void init() throws RedPenException {
         super.init();
         dictionary = SpellingUtils.getDictionary(getSymbolTable().getLang());
-        minAcronymLength = getConfigAttributeAsInt("min_acronym_length", MIN_ACRONYM_LENGTH_DEFAULT);
         acronymJoiningWords.add("of");
         acronymJoiningWords.add("the");
         acronymJoiningWords.add("for");
@@ -68,6 +70,7 @@ public class UnexpandedAcronymValidator extends Validator {
         for (TokenElement token : sentence.getTokens()) {
             String word = token.getSurface();
             if (!word.trim().isEmpty()) {
+                int minAcronymLength = getIntAttribute("min_acronym_length");
                 if (isAllCapitals(word)) {
                     if ((word.length() >= minAcronymLength) && !dictionary.contains(word.toLowerCase())) {
                         contractedAcronyms.add(word);
@@ -93,9 +96,6 @@ public class UnexpandedAcronymValidator extends Validator {
 
     /**
      * Return true of the supplied word is all in capitals
-     *
-     * @param word
-     * @return
      */
     private boolean isAllCapitals(String word) {
         if (word.length() > 1) {
@@ -111,9 +111,6 @@ public class UnexpandedAcronymValidator extends Validator {
 
     /**
      * Return true if the word only starts with a capital letter
-     *
-     * @param word
-     * @return
      */
     private boolean isCapitalized(String word) {
         if (!word.isEmpty()) {

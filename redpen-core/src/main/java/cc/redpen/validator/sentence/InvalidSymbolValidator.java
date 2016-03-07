@@ -27,7 +27,7 @@ import java.util.Set;
 /**
  * Validate if there is invalid characters in sentences.
  */
-final public class InvalidSymbolValidator extends Validator {
+public final class InvalidSymbolValidator extends Validator {
 
     @Override
     public void validate(Sentence sentence) {

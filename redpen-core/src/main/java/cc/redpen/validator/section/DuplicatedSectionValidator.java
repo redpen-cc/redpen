@@ -17,7 +17,6 @@
  */
 package cc.redpen.validator.section;
 
-import cc.redpen.RedPenException;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
@@ -30,12 +29,6 @@ import java.util.*;
  * DuplicatedSectionValidator check if there are highly similar section pairs.
  */
 final public class DuplicatedSectionValidator extends Validator {
-    /**
-     * Default threshold (Cosine similarity).
-     */
-    static final public double DEFAULT_SIMILARITY_THRESHOLD = 0.9d;
-
-    private double threhold;
     private List<SectionVector> sectionVectors = new ArrayList<>();
 
     class SectionVector {
@@ -46,6 +39,10 @@ final public class DuplicatedSectionValidator extends Validator {
             this.header = header;
             this.sectionVector = vector;
         }
+    }
+
+    public DuplicatedSectionValidator() {
+        super("threshold", 0.9f); // Default threshold (Cosine similarity).
     }
 
     @Override
@@ -75,7 +72,7 @@ final public class DuplicatedSectionValidator extends Validator {
             Map<String, Integer> candidateVector = sectionVector.sectionVector;
             // NOTE: not header.equals() since the we need check if the references are identical
             if (sectionVector.header != section.getHeaderContent(0) &&
-                    calcCosine(targetVector, candidateVector) > threhold) {
+                    calcCosine(targetVector, candidateVector) > getFloatAttribute("threshold")) {
                 Optional<Sentence> header = Optional.ofNullable(section.getHeaderContent(0));
                 addLocalizedError(header.orElse(section.getParagraph(0).getSentence(0)),
                         sectionVector.header.getLineNumber());
@@ -113,35 +110,5 @@ final public class DuplicatedSectionValidator extends Validator {
             Integer currentNum = sectionVector.get(surface);
             sectionVector.put(surface, ++currentNum);
         }
-    }
-
-    @Override
-    protected void init() throws RedPenException {
-        this.threhold = getConfigAttributeAsDouble("threshold", DEFAULT_SIMILARITY_THRESHOLD);
-    }
-
-    @Override
-    public String toString() {
-        return "DuplicatedSectionValidator{" +
-                "sectionVectors=" + sectionVectors +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        DuplicatedSectionValidator that = (DuplicatedSectionValidator) o;
-
-        if (sectionVectors != null ? !sectionVectors.equals(that.sectionVectors) : that.sectionVectors != null)
-            return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return sectionVectors != null ? sectionVectors.hashCode() : 0;
     }
 }

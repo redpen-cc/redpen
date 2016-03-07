@@ -17,7 +17,6 @@
  */
 package cc.redpen.validator;
 
-
 import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.SymbolTable;
@@ -36,20 +35,40 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.util.*;
 
+import static java.lang.Boolean.parseBoolean;
+import static java.lang.Double.parseDouble;
+import static java.lang.Integer.parseInt;
+import static java.util.Arrays.asList;
+import static java.util.ResourceBundle.Control.FORMAT_DEFAULT;
+import static java.util.stream.Collectors.toSet;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 /**
  * Validate input document.
  */
 public abstract class Validator {
-
     private static final Logger LOG = LoggerFactory.getLogger(Validator.class);
-    private final static ResourceBundle.Control fallbackControl = ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_DEFAULT);
+    private final static ResourceBundle.Control fallbackControl = ResourceBundle.Control.getNoFallbackControl(FORMAT_DEFAULT);
 
+    private Map<String, Object> attributes;
     private ResourceBundle errorMessages = null;
     private ValidatorConfiguration config;
     private Configuration globalConfig;
 
     public Validator() {
+        this(new Object[0]);
+    }
+
+    /**
+     * @param keyValues String key and Object value pairs for supported config attributes.
+     */
+    public Validator(Object...keyValues) {
         setLocale(Locale.getDefault());
+        attributes = new HashMap<>();
+        if (keyValues.length % 2 != 0) throw new IllegalArgumentException("Not enough values specified");
+        for (int i = 0; i < keyValues.length; i+=2) {
+            attributes.put(keyValues[i].toString(), keyValues[i+1]);
+        }
     }
 
     private List<ValidationError> errors;
@@ -116,7 +135,25 @@ public abstract class Validator {
     public final void preInit(ValidatorConfiguration config, Configuration globalConfig) throws RedPenException {
         this.config = config;
         this.globalConfig = globalConfig;
+        initAttributes(config);
         init();
+    }
+
+    private void initAttributes(ValidatorConfiguration config) {
+        attributes.forEach((name, defaultValue) -> {
+            String value = config.getAttribute(name);
+            if (value == null) return;
+            if (defaultValue instanceof Integer)
+                attributes.put(name, Integer.valueOf(value));
+            else if (defaultValue instanceof Float)
+                attributes.put(name, Float.valueOf(value));
+            else if (defaultValue instanceof Boolean)
+                attributes.put(name, Boolean.valueOf(value));
+            else if (defaultValue instanceof Set)
+                attributes.put(name, isEmpty(value) ? defaultValue : asList((value).split(",")).stream().map(String::toLowerCase).collect(toSet()));
+            else
+                attributes.put(name, value);
+        });
     }
 
     void setLocale(Locale locale) {
@@ -149,53 +186,52 @@ public abstract class Validator {
     protected void init() throws RedPenException {
     }
 
-    protected Optional<String> getConfigAttribute(String attributeName) {
-        return Optional.ofNullable(config.getAttribute(attributeName));
+    protected int getIntAttribute(String name) {
+        return (int)attributes.get(name);
     }
 
-    protected String getConfigAttribute(String attributeName, String defaultValue) {
-        String value = config.getAttribute(attributeName);
-        if (value != null) {
-            LOG.info("{} is set to {}", attributeName, value);
-            return value;
-        } else {
-            LOG.info("{} is not set. Use default value of {}", attributeName, defaultValue);
-            return defaultValue;
-        }
+    protected float getFloatAttribute(String name) {
+        return (float)attributes.get(name);
     }
 
-
-    protected int getConfigAttributeAsInt(String attributeName, int defaultValue) {
-        String value = config.getAttribute(attributeName);
-        if (value != null) {
-            LOG.info("{} is set to {}", attributeName, value);
-            return Integer.valueOf(value);
-        } else {
-            LOG.info("{} is not set. Use default value of {}", attributeName, defaultValue);
-            return defaultValue;
-        }
+    protected String getStringAttribute(String name) {
+        return (String)attributes.get(name);
     }
 
-    protected boolean getConfigAttributeAsBoolean(String attributeName, boolean defaultValue) {
-        String value = config.getAttribute(attributeName);
-        if (value != null) {
-            LOG.info("{} is set to {}", attributeName, value);
-            return Boolean.valueOf(value);
-        } else {
-            LOG.info("{} is not set. Use default value of {}", attributeName, defaultValue);
-            return defaultValue;
-        }
+    protected boolean getBooleanAttribute(String name) {
+        return (boolean)attributes.get(name);
     }
 
-    protected double getConfigAttributeAsDouble(String attributeName, double defaultValue) {
-        String value = config.getAttribute(attributeName);
-        if (value != null) {
-            LOG.info("{} is set to {}", attributeName, value);
-            return Double.valueOf(value);
-        } else {
-            LOG.info("{} is not set. Use default value of {}", attributeName, defaultValue);
-            return defaultValue;
-        }
+    @SuppressWarnings("unchecked")
+    protected Set<String> getSetAttribute(String name) {
+        return (Set) attributes.get(name);
+    }
+
+    /** @deprecated Please use constructor with default attributes instead, and then getXXXAttribute() methods */
+    @Deprecated
+    protected Optional<String> getConfigAttribute(String name) {
+        return Optional.ofNullable(config.getAttribute(name));
+    }
+
+    /** @deprecated Please use constructor with default attributes instead, and then getXXXAttribute() methods */
+    @Deprecated
+    protected String getConfigAttribute(String name, String defaultValue) {
+        return getConfigAttribute(name).orElse(defaultValue);
+    }
+
+    @Deprecated
+    protected int getConfigAttributeAsInt(String name, int defaultValue) {
+        return parseInt(getConfigAttribute(name, Integer.toString(defaultValue)));
+    }
+
+    @Deprecated
+    protected boolean getConfigAttributeAsBoolean(String name, boolean defaultValue) {
+        return parseBoolean(getConfigAttribute(name, Boolean.toString(defaultValue)));
+    }
+
+    @Deprecated
+    protected double getConfigAttributeAsDouble(String name, double defaultValue) {
+        return parseDouble(getConfigAttribute(name, Double.toString(defaultValue)));
     }
 
     protected SymbolTable getSymbolTable() {
@@ -374,6 +410,22 @@ public abstract class Validator {
                                                   Optional<LineOffset> start, Optional<LineOffset> end, Object... args) {
         errors.add(new ValidationError(this.getClass(), getLocalizedErrorMessage(messageKey, args), sentenceWithError, start.get(), end.get()));
     }
+
+    @Override public String toString() {
+        return getClass().getSimpleName() + attributes;
+    }
+
+    @Override public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Validator)) return false;
+        Validator validator = (Validator)o;
+        return Objects.equals(getClass(), validator.getClass()) && Objects.equals(config, validator.config);
+    }
+
+    @Override public int hashCode() {
+        return Objects.hash(getClass(), config);
+    }
+
     /**
      * Resource Extractor loads key-value dictionary
      */

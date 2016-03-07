@@ -26,6 +26,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+import static java.util.Collections.singletonList;
+
 /**
  * Check if the input sentence start with a capital letter.
  */
@@ -38,7 +40,7 @@ final public class StartWithCapitalLetterValidator extends Validator {
 
     @Override
     public List<String> getSupportedLanguages() {
-        return Arrays.asList(Locale.ENGLISH.getLanguage());
+        return singletonList(Locale.ENGLISH.getLanguage());
     }
 
     @Override
@@ -83,32 +85,5 @@ final public class StartWithCapitalLetterValidator extends Validator {
         if (confFile.isPresent()) {
             customWhiteList = WORD_LIST.loadCachedFromFile(findFile(confFile.get()), "StartWithCapitalLetterValidator user dictionary");
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        StartWithCapitalLetterValidator that = (StartWithCapitalLetterValidator) o;
-
-        if (whiteList != null ? !whiteList.equals(that.whiteList) : that.whiteList != null) return false;
-        return !(customWhiteList != null ? !customWhiteList.equals(that.customWhiteList) : that.customWhiteList != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = whiteList != null ? whiteList.hashCode() : 0;
-        result = 31 * result + (customWhiteList != null ? customWhiteList.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "StartWithCapitalLetterValidator{" +
-                "whiteList=" + whiteList +
-                ", customWhiteList=" + customWhiteList +
-                '}';
     }
 }

@@ -21,10 +21,10 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.StringUtils;
 import cc.redpen.validator.Validator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
+
+import static java.util.Collections.singletonList;
 
 /**
  * Validate the end hyphens of Katakana words in Japanese documents.
@@ -45,10 +45,7 @@ import java.util.*;
  * <p>
  * Note that KatakanaEndHyphenValidator only checks the rules a) and b).
  */
-final public class KatakanaEndHyphenValidator extends Validator {
-    private static final Logger LOG =
-            LoggerFactory.getLogger(KatakanaEndHyphenValidator.class);
-
+public final class KatakanaEndHyphenValidator extends Validator {
     /**
      * Default Katakana limit length without hypen.
      */
@@ -62,10 +59,8 @@ final public class KatakanaEndHyphenValidator extends Validator {
      */
     private static final char KATAKANA_MIDDLE_DOT = '・';
 
-    private Set<String> customSkipList;
-
     public KatakanaEndHyphenValidator() {
-        super();
+        super("list", new HashSet<>());
     }
 
     public static boolean isKatakanaEndHyphen(String katakana) {
@@ -75,12 +70,12 @@ final public class KatakanaEndHyphenValidator extends Validator {
 
     @Override
     public List<String> getSupportedLanguages() {
-        return Arrays.asList(Locale.JAPANESE.getLanguage());
+        return singletonList(Locale.JAPANESE.getLanguage());
     }
 
     @Override
     public void validate(Sentence sentence) {
-        StringBuilder katakana = new StringBuilder("");
+        StringBuilder katakana = new StringBuilder();
         for (int i = 0; i < sentence.getContent().length(); i++) {
             char c = sentence.getContent().charAt(i);
             if (StringUtils.isKatakana(c) && c != KATAKANA_MIDDLE_DOT) {
@@ -93,10 +88,9 @@ final public class KatakanaEndHyphenValidator extends Validator {
         this.checkKatakanaEndHyphen(sentence, katakana.toString(), sentence.getContent().length() - 1);
     }
 
-    private void checkKatakanaEndHyphen(Sentence sentence,
-                                                         String katakana,
-                                                         int position) {
-        if ( !(customSkipList != null && customSkipList.contains(katakana)) ) {
+    private void checkKatakanaEndHyphen(Sentence sentence, String katakana, int position) {
+        Set<String> customSkipList = getSetAttribute("list");
+        if (customSkipList.isEmpty() || !customSkipList.contains(katakana)) {
             if (isKatakanaEndHyphen(katakana)) {
                 addLocalizedErrorWithPosition(sentence, position, position + 1, katakana);
             }
@@ -105,39 +99,9 @@ final public class KatakanaEndHyphenValidator extends Validator {
 
     @Override
     protected void init() throws RedPenException {
-        customSkipList = new HashSet<>();
-        Optional<String> skipListStr = getConfigAttribute("list");
-        skipListStr.ifPresent(f -> {
-            LOG.info("Found user defined skip list.");
-            customSkipList.addAll(Arrays.asList(f.split(",")));
-            LOG.info("Succeeded to add elements of user defined skip list.");
-        });
-
         Optional<String> confFile = getConfigAttribute("dict");
         if (confFile.isPresent()) {
-            customSkipList.addAll(WORD_LIST.loadCachedFromFile(findFile(confFile.get()), "KatakanaEndHyphenValidator user dictionary"));
+            getSetAttribute("list").addAll(WORD_LIST.loadCachedFromFile(findFile(confFile.get()), "KatakanaEndHyphenValidator user dictionary"));
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        KatakanaEndHyphenValidator that = (KatakanaEndHyphenValidator) o;
-
-        return !(customSkipList != null ? !customSkipList.equals(that.customSkipList) : that.customSkipList != null);
-    }
-
-    @Override
-    public int hashCode() {
-        return customSkipList != null ? customSkipList.hashCode() : 0;
-    }
-
-    @Override
-    public String toString() {
-        return "KatakanaEndHyphenValidator{" +
-                "customSkipList=" + customSkipList +
-                '}';
     }
 }
