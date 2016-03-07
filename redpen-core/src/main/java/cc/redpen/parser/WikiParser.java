@@ -40,7 +40,8 @@ import java.util.regex.Pattern;
  */
 class WikiParser extends BaseDocumentParser {
     private static final Logger LOG = LoggerFactory.getLogger(WikiParser.class);
-    /**
+
+    /*
      * *************************************************************************
      * patterns to handle wiki syntax.
      * *************************************************************************
@@ -71,13 +72,6 @@ class WikiParser extends BaseDocumentParser {
             UNDERLINE_PATTERN,
             STRIKETHROUGH_PATTERN
     };
-
-    /**
-     * Constructor.
-     */
-    WikiParser() {
-        super();
-    }
 
     private static boolean check(Pattern p, String target, List<String> head) {
         Matcher m = p.matcher(target);
