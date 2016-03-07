@@ -402,12 +402,14 @@ public class WikiParserTest extends BaseParserTest {
     public void testDocumentWithItalicWord() {
         Document doc = createFileContent("This is a //good// day.\n");
         assertEquals("This is a good day.", doc.getSection(0).getParagraph(0).getSentence(0).getContent());
+        assertEquals(offsets(1, range(0, 10), range(12, 16), range(18, 23)), doc.getSection(0).getParagraph(0).getSentence(0).getOffsetMap());
     }
 
     @Test
     public void testDocumentWithMultipleItalicWords() {
         Document doc = createFileContent("//This// is a //good// day.\n");
         assertEquals("This is a good day.", doc.getSection(0).getParagraph(0).getSentence(0).getContent());
+        assertEquals(offsets(1, range(2, 6), range(8, 14), range(16, 20), range(22, 27)), doc.getSection(0).getParagraph(0).getSentence(0).getOffsetMap());
     }
 
     @Test

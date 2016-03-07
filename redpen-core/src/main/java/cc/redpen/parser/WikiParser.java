@@ -193,11 +193,25 @@ class WikiParser extends BaseDocumentParser {
 
     private void removeTags(Sentence sentence) {
         String content = sentence.getContent();
+        List<LineOffset> offsets = new ArrayList<>(sentence.getOffsetMap());
         for (Pattern inlinePattern : INLINE_PATTERNS) {
             Matcher m = inlinePattern.matcher(content);
-            content = m.replaceAll("$1");
+            StringBuffer sb = new StringBuffer();
+            List<LineOffset> o = new ArrayList<>(sentence.getOffsetMap().size());
+            int lastPos = 0;
+            while (m.find()) {
+                m.appendReplacement(sb, "$1");
+                o.addAll(offsets.subList(lastPos, m.start()));
+                o.addAll(offsets.subList(m.start(1), m.end(1)));
+                lastPos = m.end();
+            }
+            m.appendTail(sb);
+            o.addAll(offsets.subList(lastPos, offsets.size()));
+            content = sb.toString();
+            offsets = o;
         }
         sentence.setContent(content);
+        sentence.setOffsetMap(offsets);
     }
 
     private void extractLinks(Sentence sentence) {
