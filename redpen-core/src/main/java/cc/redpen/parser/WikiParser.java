@@ -155,7 +155,7 @@ class WikiParser extends BaseDocumentParser {
         builder.addListElement(extractListLevel(head.get(0)),
                 outputSentences);
         // NOTE: for list content without period
-        if (remainSentence != null && remainSentence.length() > 0) {
+        if (remainSentence.length() > 0) {
             outputSentences.add(new Sentence(remainSentence, lineNum));
         }
     }
@@ -163,10 +163,9 @@ class WikiParser extends BaseDocumentParser {
     private Section appendSection(List<String> head, int lineNum, SentenceExtractor sentenceExtractor, Document.DocumentBuilder builder) {
         Integer level = Integer.valueOf(head.get(0));
         List<Sentence> outputSentences = new ArrayList<>();
-        String remainHeader =
-                obtainSentences(lineNum, head.get(1), outputSentences, sentenceExtractor);
+        String remainHeader = obtainSentences(lineNum, head.get(1), outputSentences, sentenceExtractor);
         // NOTE: for header without period
-        if (remainHeader != null && remainHeader.length() > 0) {
+        if (remainHeader.length() > 0) {
             outputSentences.add(new Sentence(remainHeader, lineNum));
         }
 
@@ -211,7 +210,7 @@ class WikiParser extends BaseDocumentParser {
         Matcher m = LINK_PATTERN.matcher(sentence.getContent());
         while (m.find()) {
             String[] tagInternal = m.group(1).split("\\|");
-            String tagURL = null;
+            String tagURL;
             if (tagInternal.length == 1) {
                 tagURL = tagInternal[0].trim();
                 modContent.append(sentence.getContent().substring(
