@@ -19,11 +19,15 @@ package cc.redpen.parser;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
+import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.RedPenTokenizer;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Optional;
+
+import static java.util.Collections.emptyList;
 
 /**
  * Abstract Parser class containing common procedures to
@@ -55,4 +59,17 @@ public abstract class BaseDocumentParser implements DocumentParser {
         return new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
     }
 
+    protected static class ValueWithOffsets extends Sentence {
+        public ValueWithOffsets() {
+            super("", 0);
+        }
+
+        public ValueWithOffsets(String content, List<LineOffset> offsetMap) {
+            super(content, offsetMap, emptyList());
+        }
+
+        public boolean isEmpty() {
+            return "".equals(getContent());
+        }
+    }
 }

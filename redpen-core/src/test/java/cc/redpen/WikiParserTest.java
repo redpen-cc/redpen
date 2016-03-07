@@ -23,6 +23,7 @@ import cc.redpen.model.Document;
 import cc.redpen.model.ListBlock;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
+import cc.redpen.parser.BaseParserTest;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.validator.ValidationError;
@@ -34,9 +35,10 @@ import java.util.Optional;
 
 import static cc.redpen.parser.DocumentParser.WIKI;
 import static java.util.Collections.singletonList;
+import static java.util.stream.IntStream.range;
 import static org.junit.Assert.assertEquals;
 
-public class WikiParserTest {
+public class WikiParserTest extends BaseParserTest {
     @Test
     public void testBasicDocument() throws UnsupportedEncodingException {
         String sampleText = ""
@@ -281,8 +283,11 @@ public class WikiParserTest {
         Paragraph paragraph = firstSections.getParagraph(0);
         assertEquals(3, paragraph.getNumberOfSentences());
         assertEquals("Is Tokyu a good railway company?", paragraph.getSentence(0).getContent());
+        assertEquals(offsets(1, range(0, 32)), paragraph.getSentence(0).getOffsetMap());
         assertEquals(" The company is reliable.", paragraph.getSentence(1).getContent());
+        assertEquals(offsets(1, range(32, 57)), paragraph.getSentence(1).getOffsetMap());
         assertEquals(" In addition it is rich!", paragraph.getSentence(2).getContent());
+        assertEquals(offsets(1, range(57, 81)), paragraph.getSentence(2).getOffsetMap());
     }
 
     @Test
@@ -298,9 +303,23 @@ public class WikiParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWitoutPeriodInLastSentence() {
+    public void testGenerateDocumentWithoutPeriodInLastSentence() {
         Document doc = createFileContent("Hongo is located at the west of Tokyo. Saitama is located at the north");
-        assertEquals(2, doc.getSection(0).getParagraph(0).getNumberOfSentences());
+        Paragraph paragraph = doc.getSection(0).getParagraph(0);
+        assertEquals(2, paragraph.getNumberOfSentences());
+        assertEquals(offsets(1, range(0, 38)), paragraph.getSentence(0).getOffsetMap());
+        assertEquals(offsets(1, range(38, 70)), paragraph.getSentence(1).getOffsetMap());
+    }
+
+    @Test
+    public void testGenerateOffsetesForMultiLineSentence() {
+        Document doc = createFileContent("OK! Saitama\n is located at the nor\nth. OK!");
+        Paragraph paragraph = doc.getSection(0).getParagraph(0);
+        assertEquals(3, paragraph.getNumberOfSentences());
+        List<LineOffset> offsets = offsets(1, range(3, 11));
+        offsets.addAll(offsets(2, range(0, 22)));
+        offsets.addAll(offsets(3, range(0, 3)));
+        assertEquals(offsets, paragraph.getSentence(1).getOffsetMap());
     }
 
     @Test

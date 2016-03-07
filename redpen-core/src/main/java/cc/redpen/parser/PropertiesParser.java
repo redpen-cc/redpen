@@ -113,10 +113,4 @@ class PropertiesParser extends BaseDocumentParser {
         }
         return skipWhitespace(line, result + 1);
     }
-
-    private static class ValueWithOffsets extends Sentence {
-        public ValueWithOffsets(String content, List<LineOffset> offsetMap) {
-            super(content, offsetMap, emptyList());
-        }
-    }
 }

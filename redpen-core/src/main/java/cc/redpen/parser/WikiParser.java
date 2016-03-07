@@ -34,8 +34,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
 import static cc.redpen.parser.WikiParser.LinePattern.*;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.IntStream.range;
 
 /**
  * Parser for wiki formatted file.
@@ -103,7 +106,7 @@ class WikiParser extends BaseDocumentParser {
         LinePattern prevPattern, currentPattern = VOID;
         String line;
         int lineNum = 1;
-        StringBuilder remain = new StringBuilder();
+        ValueWithOffsets remain = new ValueWithOffsets();
         br = createReader(is);
         try {
             while ((line = br.readLine()) != null) {
@@ -126,17 +129,15 @@ class WikiParser extends BaseDocumentParser {
                     documentBuilder.addParagraph();
                 } else { // usual sentence.
                     currentPattern = SENTENCE;
-                    String remainStr = appendSentencesIntoSection(lineNum, remain.append(line).toString(), sentenceExtractor, documentBuilder);
-                    remain.delete(0, remain.length());
-                    remain.append(remainStr);
+                    remain = appendSentencesIntoSection(lineNum, remain, line, sentenceExtractor, documentBuilder);
                 }
                 lineNum++;
             }
         } catch (IOException e) {
             throw new RedPenException(e);
         }
-        if (remain.length() > 0) {
-            appendLastSentence(lineNum-1, remain.toString(), documentBuilder); // lineNum-1 since the lineNum is incremented.
+        if (!remain.isEmpty()) {
+            appendLastSentence(remain, documentBuilder);
         }
         return documentBuilder.build();
 
@@ -148,22 +149,21 @@ class WikiParser extends BaseDocumentParser {
             builder.addListBlock();
         }
         List<Sentence> outputSentences = new ArrayList<>();
-        String remainSentence = obtainSentences(0, head.get(1), outputSentences, sentenceExtractor);
-        builder.addListElement(extractListLevel(head.get(0)),
-                outputSentences);
+        ValueWithOffsets remainSentence = obtainSentences(0, new ValueWithOffsets(), head.get(1), outputSentences, sentenceExtractor);
+        builder.addListElement(extractListLevel(head.get(0)), outputSentences);
         // NOTE: for list content without period
-        if (remainSentence.length() > 0) {
-            outputSentences.add(new Sentence(remainSentence, lineNum));
+        if (!remainSentence.isEmpty()) {
+            outputSentences.add(new Sentence(remainSentence.getContent(), remainSentence.getOffsetMap(), new ArrayList<>()));
         }
     }
 
     private Section appendSection(List<String> head, int lineNum, SentenceExtractor sentenceExtractor, Document.DocumentBuilder builder) {
         Integer level = Integer.valueOf(head.get(0));
         List<Sentence> outputSentences = new ArrayList<>();
-        String remainHeader = obtainSentences(lineNum, head.get(1), outputSentences, sentenceExtractor);
+        ValueWithOffsets remainHeader = obtainSentences(lineNum, new ValueWithOffsets(), head.get(1), outputSentences, sentenceExtractor);
         // NOTE: for header without period
-        if (remainHeader.length() > 0) {
-            outputSentences.add(new Sentence(remainHeader, lineNum));
+        if (!remainHeader.isEmpty()) {
+            outputSentences.add(new Sentence(remainHeader.getContent(), remainHeader.getOffsetMap(), new ArrayList<>()));
         }
 
         // To deal with header content as a paragraph
@@ -181,8 +181,8 @@ class WikiParser extends BaseDocumentParser {
         return currentSection;
     }
 
-    private void appendLastSentence(int lineNum, String remain, Document.DocumentBuilder builder) {
-        Sentence sentence = new Sentence(remain, lineNum);
+    private void appendLastSentence(ValueWithOffsets remain, Document.DocumentBuilder builder) {
+        Sentence sentence = new Sentence(remain.getContent(), remain.getOffsetMap(), new ArrayList<>());
         parseSentence(sentence); // extract inline elements
         builder.addSentence(sentence);
     }
@@ -232,8 +232,7 @@ class WikiParser extends BaseDocumentParser {
         }
 
         if (start > 0) {
-            modContent.append(sentence.getContent().substring(
-                    start, sentence.getContent().length()));
+            modContent.append(sentence.getContent().substring(start, sentence.getContent().length()));
             sentence.setContent(modContent.toString());
         }
     }
@@ -260,30 +259,36 @@ class WikiParser extends BaseDocumentParser {
         return true;
     }
 
-    private String obtainSentences(int lineNum, String line,
-                                   List<Sentence> outputSentences, SentenceExtractor sentenceExtractor) {
+    private ValueWithOffsets obtainSentences(int lineNum, ValueWithOffsets remain, String newLine, List<Sentence> outputSentences, SentenceExtractor sentenceExtractor) {
         List<Pair<Integer,Integer>> positions = new ArrayList<>();
-        int lastPosition = sentenceExtractor.extract(line, positions);
+        int lastPosition = sentenceExtractor.extract(newLine, positions);
 
         for (Pair<Integer, Integer> position : positions) {
-            outputSentences.add(new Sentence(line.substring(
-                    position.first, position.second), lineNum));
+            List<LineOffset> offsets = remain.getOffsetMap();
+            offsets.addAll(offsets(lineNum, range(position.first, position.second)));
+            outputSentences.add(new Sentence(newLine.substring(position.first, position.second), offsets, new ArrayList<>()));
+            remain = new ValueWithOffsets();
         }
 
-        for (Sentence sentence : outputSentences) {
-            parseSentence(sentence); // extract inline elements
+        outputSentences.forEach(this::parseSentence); // extract inline elements
+        if (lastPosition == newLine.length())
+            return new ValueWithOffsets();
+        else {
+            List<LineOffset> offsets = remain.getOffsetMap();
+            offsets.addAll(offsets(lineNum, range(lastPosition, newLine.length())));
+            return new ValueWithOffsets(remain.getContent() + newLine.substring(lastPosition, newLine.length()), offsets);
         }
-        return line.substring(lastPosition, line.length());
     }
 
-    private String appendSentencesIntoSection(int lineNum, String line, SentenceExtractor sentenceExtractor, Document.DocumentBuilder builder) {
+    private ValueWithOffsets appendSentencesIntoSection(int lineNum, ValueWithOffsets remain, String newLine, SentenceExtractor sentenceExtractor, Document.DocumentBuilder builder) {
         List<Sentence> outputSentences = new ArrayList<>();
-        String remain = obtainSentences(lineNum, line, outputSentences, sentenceExtractor);
+        ValueWithOffsets newRemain = obtainSentences(lineNum, remain, newLine, outputSentences, sentenceExtractor);
+        outputSentences.forEach(builder::addSentence);
+        return newRemain;
+    }
 
-        for (Sentence sentence : outputSentences) {
-            builder.addSentence(sentence);
-        }
-        return remain;
+    private List<LineOffset> offsets(int lineNum, IntStream stream) {
+        return stream.mapToObj(p -> new LineOffset(lineNum, p)).collect(toList());
     }
 
     private int extractListLevel(String listPrefix) {
