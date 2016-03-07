@@ -17,6 +17,8 @@
  */
 package cc.redpen.validator.sentence;
 
+import cc.redpen.config.Configuration;
+import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import org.junit.Before;
@@ -89,5 +91,8 @@ public class SuggestExpressionValidatorTest {
         assertEquals("Found invalid word \"info\". Use the synonym \"information\" instead.", errors.get(0).getMessage());
     }
 
-
+    @Test
+    public void initDoesNotFailIfDictionaryIsNotSpecified() throws Exception {
+        suggestExpressionValidator.preInit(new ValidatorConfiguration("SuggestExpression"), Configuration.builder().build());
+    }
 }

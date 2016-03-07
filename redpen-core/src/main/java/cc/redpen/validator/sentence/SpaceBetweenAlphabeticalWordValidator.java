@@ -22,12 +22,20 @@ import cc.redpen.model.Sentence;
 import cc.redpen.util.StringUtils;
 import cc.redpen.validator.Validator;
 
+import java.util.List;
+import java.util.Locale;
+
 import static cc.redpen.config.SymbolType.*;
+import static java.util.Collections.singletonList;
 
 public class SpaceBetweenAlphabeticalWordValidator extends Validator {
     private char leftParenthesis = '(';
     private char rightParenthesis = ')';
     private char comma = ',';
+
+    @Override public List<String> getSupportedLanguages() {
+        return singletonList(Locale.JAPANESE.getLanguage());
+    }
 
     @Override
     public void validate(Sentence sentence) {

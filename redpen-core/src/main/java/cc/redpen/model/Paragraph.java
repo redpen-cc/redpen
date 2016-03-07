@@ -59,8 +59,9 @@ public class Paragraph {
      * @param content sentence
      * @param lineNum line number of sentence
      */
-    public void appendSentence(String content, int lineNum) {
+    public Paragraph appendSentence(String content, int lineNum) {
         sentences.add(new Sentence(content, lineNum));
+        return this;
     }
 
     /**
@@ -68,8 +69,9 @@ public class Paragraph {
      *
      * @param sentence a sentence to be added to paragraph
      */
-    public void appendSentence(Sentence sentence) {
+    public Paragraph appendSentence(Sentence sentence) {
         sentences.add(sentence);
+        return this;
     }
 
     /**
