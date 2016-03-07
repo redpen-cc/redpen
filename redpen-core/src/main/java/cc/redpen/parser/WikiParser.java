@@ -35,6 +35,8 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static cc.redpen.parser.WikiParser.LinePattern.*;
+
 /**
  * Parser for wiki formatted file.
  */
@@ -98,7 +100,7 @@ class WikiParser extends BaseDocumentParser {
         documentBuilder.addSection(0, headers);
 
         // begin parsing
-        LinePattern prevPattern, currentPattern = LinePattern.VOID;
+        LinePattern prevPattern, currentPattern = VOID;
         String line;
         int lineNum = 1;
         StringBuilder remain = new StringBuilder();
@@ -107,29 +109,24 @@ class WikiParser extends BaseDocumentParser {
             while ((line = br.readLine()) != null) {
                 prevPattern = currentPattern;
                 List<String> head = new ArrayList<>();
-                if (currentPattern == LinePattern.COMMENT) {
-                    if (check(END_COMMENT_PATTERN, line, head)) {
-                        currentPattern = LinePattern.VOID;
-                    }
+                if (currentPattern == COMMENT && check(END_COMMENT_PATTERN, line, head)) {
+                    currentPattern = VOID;
                 } else if (check(HEADER_PATTERN, line, head)) {
-                    currentPattern = LinePattern.HEADER;
+                    currentPattern = HEADER;
                     appendSection(head, lineNum, sentenceExtractor, documentBuilder);
                 } else if (check(LIST_PATTERN, line, head)) {
-                    currentPattern = LinePattern.LIST;
+                    currentPattern = LIST;
                     appendListElement(prevPattern, head, lineNum, sentenceExtractor,documentBuilder);
                 } else if (check(NUMBERED_LIST_PATTERN, line, head)) {
-                    currentPattern = LinePattern.LIST;
+                    currentPattern = LIST;
                     appendListElement(prevPattern, head, lineNum, sentenceExtractor,documentBuilder);
-                } else if (check(BEGIN_COMMENT_PATTERN, line, head)) {
-                    if (!check(END_COMMENT_PATTERN, line, head)) { // skip comment
-                        currentPattern = LinePattern.COMMENT;
-                    }
+                } else if (check(BEGIN_COMMENT_PATTERN, line, head) && !check(END_COMMENT_PATTERN, line, head)) { // skip comment
+                    currentPattern = COMMENT;
                 } else if (line.equals("")) { // new paragraph content
                     documentBuilder.addParagraph();
                 } else { // usual sentence.
-                    currentPattern = LinePattern.SENTENCE;
-                    String remainStr = appendSentencesIntoSection(lineNum,
-                            remain.append(line).toString(), sentenceExtractor, documentBuilder);
+                    currentPattern = SENTENCE;
+                    String remainStr = appendSentencesIntoSection(lineNum, remain.append(line).toString(), sentenceExtractor, documentBuilder);
                     remain.delete(0, remain.length());
                     remain.append(remainStr);
                 }
@@ -147,7 +144,7 @@ class WikiParser extends BaseDocumentParser {
 
     private void appendListElement(LinePattern prevPattern,
                                    List<String> head, int lineNum, SentenceExtractor sentenceExtractor, Document.DocumentBuilder builder) {
-        if (prevPattern != LinePattern.LIST) {
+        if (prevPattern != LIST) {
             builder.addListBlock();
         }
         List<Sentence> outputSentences = new ArrayList<>();
@@ -296,7 +293,7 @@ class WikiParser extends BaseDocumentParser {
     /**
      * List of elements used in wiki format.
      */
-    private enum LinePattern {
+    enum LinePattern {
         SENTENCE, LIST, NUM_LIST, VOID, HEADER, COMMENT
     }
 }
