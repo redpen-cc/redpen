@@ -23,7 +23,6 @@ import cc.redpen.model.Document;
 import cc.redpen.model.ListBlock;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
-import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.validator.ValidationError;
@@ -31,10 +30,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static cc.redpen.parser.DocumentParser.WIKI;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 
 public class WikiParserTest {
@@ -600,18 +600,17 @@ public class WikiParserTest {
     }
 
     @Test
-    public void testErrorPositionOfMarkdownParser() throws RedPenException {
+    public void testErrorPositionOfWikiParser() throws RedPenException {
         String sampleText = "This is a good day。\n"; // invalid end of sentence symbol
         Configuration conf = Configuration.builder().build();
-        List<Document> documents = new ArrayList<>();
-        documents.add(createFileContent(sampleText, conf));
+        Document doc = createFileContent(sampleText, conf);
 
         Configuration configuration = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
                 .build();
 
         RedPen redPen = new RedPen(configuration);
-        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
+        List<ValidationError> errors = redPen.validate(singletonList(doc)).get(doc);
         assertEquals(1, errors.size());
         assertEquals("InvalidSymbol", errors.get(0).getValidatorName());
         assertEquals(19, errors.get(0).getSentence().getContent().length());
@@ -620,25 +619,14 @@ public class WikiParserTest {
     }
 
     private Document createFileContent(String inputDocumentString, Configuration conf) {
-        DocumentParser parser = DocumentParser.WIKI;
         try {
-            return parser.parse(inputDocumentString, new SentenceExtractor(conf.getSymbolTable()), conf.getTokenizer());
+            return WIKI.parse(inputDocumentString, new SentenceExtractor(conf.getSymbolTable()), conf.getTokenizer());
         } catch (RedPenException e) {
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException(e);
         }
     }
 
     private Document createFileContent(String inputDocumentString) {
-        Configuration conf = Configuration.builder().build();
-        DocumentParser parser = DocumentParser.WIKI;
-        Document doc = null;
-        try {
-            doc = parser.parse(inputDocumentString, new SentenceExtractor(conf.getSymbolTable()), conf.getTokenizer());
-        } catch (RedPenException e) {
-            e.printStackTrace();
-        }
-        return doc;
+        return createFileContent(inputDocumentString, Configuration.builder().build());
     }
-
 }
