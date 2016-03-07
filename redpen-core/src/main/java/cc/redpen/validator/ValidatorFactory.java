@@ -20,73 +20,112 @@ package cc.redpen.validator;
 import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
+import cc.redpen.validator.section.*;
+import cc.redpen.validator.sentence.*;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.*;
 
 /**
  * Factory class of validators.
  */
 public class ValidatorFactory {
-    private static final List<String> VALIDATOR_PACKAGES = new ArrayList<>();
+    private static final String validatorPackage = Validator.class.getPackage().getName();
+    private static final List<String> VALIDATOR_PACKAGES = asList(validatorPackage, validatorPackage + ".sentence", validatorPackage + ".section");
+    static final Map<String, Validator> validators = new LinkedHashMap<>();
 
-    static {
-        addValidatorPackage("cc.redpen.validator");
-        addValidatorPackage("cc.redpen.validator.sentence");
-        addValidatorPackage("cc.redpen.validator.section");
+    public static void registerValidator(Class<? extends Validator> clazz) {
+        validators.put(clazz.getSimpleName().replace("Validator", ""), createValidator(clazz));
     }
 
-    // can be made public if package needs to be added outside RedPen.
-    private static void addValidatorPackage(String packageToAdd) {
-        VALIDATOR_PACKAGES.add(packageToAdd);
+    static {
+        // section
+        registerValidator(DuplicatedSectionValidator.class);
+        registerValidator(FrequentSentenceStartValidator.class);
+        registerValidator(ParagraphNumberValidator.class);
+        registerValidator(ParagraphStartWithValidator.class);
+        registerValidator(SectionLengthValidator.class);
+        registerValidator(UnexpandedAcronymValidator.class);
+        registerValidator(WordFrequencyValidator.class);
+
+        // sentence
+        registerValidator(CommaNumberValidator.class);
+        registerValidator(ContractionValidator.class);
+        registerValidator(DoubledJoshiValidator.class);
+        registerValidator(DoubledWordValidator.class);
+        registerValidator(DoubleNegativeValidator.class);
+        registerValidator(EndOfSentenceValidator.class);
+        registerValidator(HankakuKanaValidator.class);
+        registerValidator(HyphenationValidator.class);
+        registerValidator(InvalidExpressionValidator.class);
+        registerValidator(InvalidSymbolValidator.class);
+        registerValidator(InvalidWordValidator.class);
+        registerValidator(JapaneseStyleValidator.class);
+        registerValidator(KatakanaEndHyphenValidator.class);
+        registerValidator(KatakanaSpellCheckValidator.class);
+        registerValidator(NumberFormatValidator.class);
+        registerValidator(OkuriganaValidator.class);
+        registerValidator(ParenthesizedSentenceValidator.class);
+        registerValidator(QuotationValidator.class);
+        registerValidator(SentenceLengthValidator.class);
+        registerValidator(SpaceBeginningOfSentenceValidator.class);
+        registerValidator(SpaceBetweenAlphabeticalWordValidator.class);
+        registerValidator(SpellingValidator.class);
+        registerValidator(StartWithCapitalLetterValidator.class);
+        registerValidator(SuccessiveWordValidator.class);
+        registerValidator(SuggestExpressionValidator.class);
+        registerValidator(SymbolWithSpaceValidator.class);
+        registerValidator(WeakExpressionValidator.class);
+        registerValidator(WordNumberValidator.class);
+
+        // other
+        registerValidator(JavaScriptValidator.class);
+    }
+
+    public static List<ValidatorConfiguration> getConfigurations(String lang) {
+        return validators.entrySet().stream().filter(e -> {
+            List<String> supportedLanguages = e.getValue().getSupportedLanguages();
+            return supportedLanguages.isEmpty() || supportedLanguages.contains(lang);
+        }).map(e -> new ValidatorConfiguration(e.getKey())).collect(toList());
     }
 
     public static Validator getInstance(String validatorName) throws RedPenException {
-        Configuration conf = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration(validatorName))
-                .build();
+        Configuration conf = Configuration.builder().addValidatorConfig(new ValidatorConfiguration(validatorName)).build();
         return getInstance(conf.getValidatorConfigs().get(0), conf);
     }
 
-    // store validator constructors to save reflection API call costs
-    private static final Map<String, Constructor> validatorConstructorMap = new ConcurrentHashMap<>();
-
     public static Validator getInstance(ValidatorConfiguration config, Configuration globalConfig) throws RedPenException {
-        Constructor<?> constructor = validatorConstructorMap.computeIfAbsent(config.getValidatorClassName(), validatorClassName -> {
-            try {
-                for (String validatorPackage : VALIDATOR_PACKAGES) {
-                    String fqValidatorClassName = validatorPackage + "." + validatorClassName;
-                    try {
-                        Class<?> clazz = Class.forName(fqValidatorClassName);
-                        // ensure the class extends Validator
-                        Class<?> superclass = clazz.getSuperclass();
-                        if (!superclass.equals(cc.redpen.validator.Validator.class)) {
-                            throw new RuntimeException(fqValidatorClassName + " doesn't extend cc.redpen.validator.Validator");
-                        }
-                        return clazz.getConstructor();
-                    } catch (ClassNotFoundException ignore) {
-                    }
-                }
-            } catch (NoSuchMethodException e) {
-                throw new RuntimeException(e);
-            }
-            // unable to find Validator
-            return null;
-        });
+        Validator prototype = validators.get(config.getConfigurationName());
+        Class<? extends Validator> validatorClass = prototype != null ? prototype.getClass() : loadPlugin(config.getConfigurationName());
+        Validator validator = createValidator(validatorClass);
+        validator.preInit(config, globalConfig);
+        return validator;
+    }
 
-        if (constructor == null) {
-            throw new RedPenException("There is no such Validator: " + config.getConfigurationName());
+    @SuppressWarnings("unchecked")
+    private static Class<? extends Validator> loadPlugin(String name) throws RedPenException {
+        for (String p : VALIDATOR_PACKAGES) {
+            try {
+                Class<? extends Validator> validatorClass = (Class)Class.forName(p + "." + name + "Validator");
+                registerValidator(validatorClass);
+                return validatorClass;
+            }
+            catch (ClassNotFoundException ignore) {
+            }
         }
+        throw new RedPenException("There is no such validator: " + name);
+    }
+
+    private static Validator createValidator(Class<? extends Validator> clazz) {
         try {
-            Validator validator = (Validator) constructor.newInstance();
-            validator.preInit(config, globalConfig);
-            return validator;
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(e);
+            return clazz.newInstance();
+        }
+        catch (InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException("Cannot create instance of " + clazz + " using default constructor");
         }
     }
 }

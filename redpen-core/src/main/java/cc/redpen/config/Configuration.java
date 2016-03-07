@@ -21,6 +21,7 @@ import cc.redpen.RedPenException;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.tokenizer.RedPenTokenizer;
 import cc.redpen.tokenizer.WhiteSpaceTokenizer;
+import cc.redpen.validator.ValidatorFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -45,6 +47,13 @@ public class Configuration implements Serializable, Cloneable {
     private final File home = new File(Optional.ofNullable(System.getProperty("REDPEN_HOME", System.getenv("REDPEN_HOME"))).orElse(""));
     private final File base;
     private final boolean secure;
+
+    /**
+     * @return default supported languages and variants that can be used with {@link #builder(String)}
+     */
+    public static List<String> getDefaultConfigKeys() {
+        return asList("en", "ja", "ja.hankaku", "ja.zenkaku2");
+    }
 
     Configuration(File base, SymbolTable symbolTable, List<ValidatorConfiguration> validatorConfigs, String lang, boolean secure) {
         this.base = base;
@@ -214,8 +223,11 @@ public class Configuration implements Serializable, Cloneable {
         return new ConfigurationBuilder();
     }
 
-    public static ConfigurationBuilder builder(String lang) {
-        return new ConfigurationBuilder().setLanguage(lang);
+    public static ConfigurationBuilder builder(String key) {
+        int dotPos = key.indexOf('.');
+        ConfigurationBuilder builder = new ConfigurationBuilder().setLanguage(dotPos > 0 ? key.substring(0, dotPos) : key);
+        if (dotPos > 0) builder.setVariant(key.substring(dotPos+1));
+        return builder;
     }
 
     /**
@@ -256,6 +268,12 @@ public class Configuration implements Serializable, Cloneable {
         public ConfigurationBuilder addValidatorConfig(ValidatorConfiguration config) {
             checkBuilt();
             validatorConfigs.add(config);
+            return this;
+        }
+
+        public ConfigurationBuilder addAvailableValidatorConfigs() {
+            checkBuilt();
+            validatorConfigs.addAll(ValidatorFactory.getConfigurations(lang));
             return this;
         }
 

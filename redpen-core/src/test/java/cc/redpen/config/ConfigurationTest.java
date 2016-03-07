@@ -174,8 +174,7 @@ public class ConfigurationTest {
 
     @Test
     public void canBeCloned() throws Exception {
-        Configuration conf = Configuration.builder("ja")
-          .setVariant("hankaku")
+        Configuration conf = Configuration.builder("ja.hankaku")
           .addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
 
         Configuration clone = conf.clone();
@@ -193,8 +192,7 @@ public class ConfigurationTest {
 
     @Test
     public void equals() throws Exception {
-        Configuration conf = Configuration.builder("ja")
-          .setVariant("hankaku")
+        Configuration conf = Configuration.builder("ja.hankaku")
           .addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
 
         Configuration clone = conf.clone();
@@ -211,8 +209,7 @@ public class ConfigurationTest {
 
     @Test
     public void serializable() throws Exception {
-        Configuration conf = Configuration.builder("ja")
-          .setVariant("hankaku")
+        Configuration conf = Configuration.builder("ja.hankaku")
           .addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
 
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -224,5 +221,16 @@ public class ConfigurationTest {
 
         assertEquals(conf, conf2);
         assertEquals(conf.getTokenizer().getClass(), conf2.getTokenizer().getClass());
+    }
+
+    @Test
+    public void addAvailableValidatorsForLanguage() throws Exception {
+        Configuration ja = Configuration.builder("ja").addAvailableValidatorConfigs().build();
+        assertTrue(ja.getValidatorConfigs().contains(new ValidatorConfiguration("SentenceLength")));
+        assertTrue(ja.getValidatorConfigs().contains(new ValidatorConfiguration("HankakuKana")));
+
+        Configuration en = Configuration.builder("en").addAvailableValidatorConfigs().build();
+        assertTrue(en.getValidatorConfigs().contains(new ValidatorConfiguration("SentenceLength")));
+        assertFalse(en.getValidatorConfigs().contains(new ValidatorConfiguration("HankakuKana")));
     }
 }
