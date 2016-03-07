@@ -64,7 +64,15 @@ public abstract class Validator {
      */
     public Validator(Object...keyValues) {
         setLocale(Locale.getDefault());
+        setDefaultAttributes(keyValues);
+    }
+
+    protected void setDefaultAttributes(Object...keyValues) {
         attributes = new HashMap<>();
+        addDefaultAttributes(keyValues);
+    }
+
+    protected void addDefaultAttributes(Object[] keyValues) {
         if (keyValues.length % 2 != 0) throw new IllegalArgumentException("Not enough values specified");
         for (int i = 0; i < keyValues.length; i+=2) {
             attributes.put(keyValues[i].toString(), keyValues[i+1]);

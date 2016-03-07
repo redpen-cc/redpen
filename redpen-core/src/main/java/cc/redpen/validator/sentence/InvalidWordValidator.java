@@ -17,24 +17,21 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.validator.Validator;
+import cc.redpen.validator.DictionaryValidator;
 
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
 
 import static java.util.Collections.singletonList;
 
 /**
  * Detect invalid word occurrences.
  */
-final public class InvalidWordValidator extends Validator {
-    private static final String DEFAULT_RESOURCE_PATH = "default-resources/invalid-word";
-    private Set<String> invalidWords;
-
+public final class InvalidWordValidator extends DictionaryValidator {
     public InvalidWordValidator() {
-        super("list", new HashSet<>());
+        super("invalid-word/invalid-word");
     }
 
     @Override
@@ -45,22 +42,10 @@ final public class InvalidWordValidator extends Validator {
     @Override
     public void validate(Sentence sentence) {
         for (TokenElement token : sentence.getTokens()) {
-            String surface = token.getSurface().toLowerCase();
-            if (invalidWords.contains(surface) || getSetAttribute("list").contains(surface)) {
+            String word = token.getSurface().toLowerCase();
+            if (inDictionary(word)) {
                 addLocalizedErrorFromToken(sentence, token);
             }
-        }
-    }
-
-    @Override
-    protected void init() throws RedPenException {
-        String lang = getSymbolTable().getLang();
-        String defaultDictionaryResource = DEFAULT_RESOURCE_PATH + "/invalid-word-" + lang + ".dat";
-        invalidWords = WORD_LIST.loadCachedFromResource(defaultDictionaryResource, "invalid word");
-
-        Optional<String> confFile = getConfigAttribute("dict");
-        if (confFile.isPresent()) {
-            getSetAttribute("list").addAll(WORD_LIST.loadCachedFromFile(findFile(confFile.get()), "InvalidWordValidator user dictionary"));
         }
     }
 }

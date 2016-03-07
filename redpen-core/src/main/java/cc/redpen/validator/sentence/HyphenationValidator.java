@@ -20,18 +20,14 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.util.SpellingUtils;
-import cc.redpen.validator.Validator;
 
 /**
  * Ensure groups of words that are hyphenated in the dictionary are hyphenated in the sentence
  */
-public class HyphenationValidator extends Validator {
+public class HyphenationValidator extends SpellingDictionaryValidator {
 
     @Override
     public void validate(Sentence sentence) {
-        String lang = getSymbolTable().getLang();
-
         // consider hyphenated words of this array's length
         TokenElement tokens[] = new TokenElement[]{null, null, null, null};
 
@@ -47,7 +43,7 @@ public class HyphenationValidator extends Validator {
                 String hyphenatedForm = tokens[0].getSurface();
                 for (int j = 1; (j < tokens.length) && (tokens[j] != null); j++) {
                     hyphenatedForm += "-" + tokens[j].getSurface();
-                    if (SpellingUtils.getDictionary(lang).contains(hyphenatedForm.toLowerCase())) {
+                    if (inDictionary(hyphenatedForm.toLowerCase())) {
                         addLocalizedErrorWithPosition(
                                 "HyphenatedInDictionary",
                                 sentence,

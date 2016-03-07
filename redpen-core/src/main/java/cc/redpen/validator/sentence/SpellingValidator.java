@@ -17,35 +17,11 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.util.SpellingUtils;
-import cc.redpen.validator.Validator;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-
-public class SpellingValidator extends Validator {
+public final class SpellingValidator extends SpellingDictionaryValidator {
     private static String skipCharacters = "[\\!-/:-@\\[-`{-~]";
-    // TODO: replace more memory efficient data structure
-    private Set<String> defaultDictionary;
-
-    public SpellingValidator() {
-        super("list", new HashSet<>());
-    }
-
-    @Override
-    protected void init() throws RedPenException {
-        defaultDictionary = SpellingUtils.getDictionary(getSymbolTable().getLang());
-
-        Optional<String> userDictionaryFile = getConfigAttribute("dict");
-        if (userDictionaryFile.isPresent()) {
-            String f = userDictionaryFile.get();
-            getSetAttribute("list").addAll(WORD_LIST_LOWERCASED.loadCachedFromFile(findFile(f), "SpellingValidator user dictionary"));
-        }
-    }
 
     @Override
     public void validate(Sentence sentence) {
@@ -55,7 +31,7 @@ public class SpellingValidator extends Validator {
                 continue;
             }
 
-            if (!defaultDictionary.contains(surface) && !getSetAttribute("list").contains(surface)) {
+            if (dictionaryExists() && !inDictionary(surface)) {
                 addLocalizedErrorFromToken(sentence, token);
             }
         }
