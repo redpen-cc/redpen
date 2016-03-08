@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.Character.isWhitespace;
+
 /**
  * Abstract Parser class containing common procedures to
  * implements the concrete Parser classes.
@@ -81,5 +83,11 @@ public abstract class BaseDocumentParser implements DocumentParser {
             if (start == end) return new ValueWithOffsets();
             return new ValueWithOffsets(getContent().substring(start, end), getOffsetMap().subList(start, end));
         }
+    }
+
+    protected int skipWhitespace(String line, int start) {
+        for (int i = start; i < line.length(); i++)
+            if (!isWhitespace(line.charAt(i))) return i;
+        return line.length();
     }
 }

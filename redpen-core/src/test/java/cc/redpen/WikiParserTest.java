@@ -35,6 +35,7 @@ import java.util.Optional;
 
 import static cc.redpen.parser.DocumentParser.WIKI;
 import static java.util.Collections.singletonList;
+import static java.util.stream.IntStream.of;
 import static java.util.stream.IntStream.range;
 import static org.junit.Assert.assertEquals;
 
@@ -135,14 +136,19 @@ public class WikiParserTest extends BaseParserTest {
         ListBlock listBlock = doc.getSection(0).getListBlock(0);
         assertEquals(5, listBlock.getNumberOfListElements());
         assertEquals("Tokyu", listBlock.getListElement(0).getSentence(0).getContent());
+        assertEquals(offsets(2, range(2, 7)), listBlock.getListElement(0).getSentence(0).getOffsetMap());
         assertEquals(1, listBlock.getListElement(0).getLevel());
         assertEquals("Toyoko Line", listBlock.getListElement(1).getSentence(0).getContent());
+        assertEquals(offsets(3, range(3, 14)), listBlock.getListElement(1).getSentence(0).getOffsetMap());
         assertEquals(2, listBlock.getListElement(1).getLevel());
         assertEquals("Denentoshi Line", listBlock.getListElement(2).getSentence(0).getContent());
+        assertEquals(offsets(4, range(3, 18)), listBlock.getListElement(2).getSentence(0).getOffsetMap());
         assertEquals(2, listBlock.getListElement(2).getLevel());
         assertEquals("Keio", listBlock.getListElement(3).getSentence(0).getContent());
+        assertEquals(offsets(5, range(2, 6)), listBlock.getListElement(3).getSentence(0).getOffsetMap());
         assertEquals(1, listBlock.getListElement(3).getLevel());
         assertEquals("Odakyu", listBlock.getListElement(4).getSentence(0).getContent());
+        assertEquals(offsets(6, range(2, 8)), listBlock.getListElement(4).getSentence(0).getOffsetMap());
         assertEquals(1, listBlock.getListElement(4).getLevel());
     }
 
@@ -340,8 +346,8 @@ public class WikiParserTest extends BaseParserTest {
         assertEquals(2, paragraph.getSentence(0).getLinks().size());
         assertEquals("pen", paragraph.getSentence(0).getLinks().get(0));
         assertEquals("http://google.com", paragraph.getSentence(0).getLinks().get(1));
-        assertEquals("this is not a pen, but also this is not Google either.",
-                paragraph.getSentence(0).getContent());
+        assertEquals("this is not a pen, but also this is not Google either.", paragraph.getSentence(0).getContent());
+        assertEquals(offsets(1, range(0, 14), range(16, 19), range(21, 44), range(46, 52), range(72, 80)), paragraph.getSentence(0).getOffsetMap());
     }
 
     @Test
@@ -351,8 +357,8 @@ public class WikiParserTest extends BaseParserTest {
         assertEquals(1, paragraph.getNumberOfSentences());
         assertEquals(1, paragraph.getSentence(0).getLinks().size());
         assertEquals("http://google.com", paragraph.getSentence(0).getLinks().get(0));
-        assertEquals("the url is not Google.",
-                paragraph.getSentence(0).getContent());
+        assertEquals("the url is not Google.", paragraph.getSentence(0).getContent());
+        assertEquals(offsets(1, range(0, 15), range(17, 23), of(46)), paragraph.getSentence(0).getOffsetMap());
     }
 
     @Test
@@ -362,8 +368,8 @@ public class WikiParserTest extends BaseParserTest {
         assertEquals(1, paragraph.getNumberOfSentences());
         assertEquals(1, paragraph.getSentence(0).getLinks().size());
         assertEquals("http://google.com", paragraph.getSentence(0).getLinks().get(0));
-        assertEquals("url of google is http://google.com.",
-                paragraph.getSentence(0).getContent());
+        assertEquals("url of google is http://google.com.", paragraph.getSentence(0).getContent());
+        assertEquals(offsets(1, range(0, 17), range(19, 36), of(38)), paragraph.getSentence(0).getOffsetMap());
     }
 
     @Test
@@ -372,8 +378,8 @@ public class WikiParserTest extends BaseParserTest {
         Paragraph paragraph = doc.getSection(0).getParagraph(0);
         assertEquals(1, paragraph.getNumberOfSentences());
         assertEquals(0, paragraph.getSentence(0).getLinks().size());
-        assertEquals("url of google is [[http://google.com.",
-                paragraph.getSentence(0).getContent());
+        assertEquals("url of google is [[http://google.com.", paragraph.getSentence(0).getContent());
+        assertEquals(offsets(1, range(0, 37)), paragraph.getSentence(0).getOffsetMap());
     }
 
     @Test
@@ -383,8 +389,7 @@ public class WikiParserTest extends BaseParserTest {
         assertEquals(1, paragraph.getNumberOfSentences());
         assertEquals(1, paragraph.getSentence(0).getLinks().size());
         assertEquals("http://google.com", paragraph.getSentence(0).getLinks().get(0));
-        assertEquals("this is not a pen, but also this is not Google either.",
-                paragraph.getSentence(0).getContent());
+        assertEquals("this is not a pen, but also this is not Google either.", paragraph.getSentence(0).getContent());
     }
 
     @Test
@@ -394,8 +399,8 @@ public class WikiParserTest extends BaseParserTest {
         assertEquals(1, paragraph.getNumberOfSentences());
         assertEquals(1, paragraph.getSentence(0).getLinks().size());
         assertEquals("", paragraph.getSentence(0).getLinks().get(0));
-        assertEquals("this is not a pen, but also this is not  Google either.",
-                paragraph.getSentence(0).getContent());
+        assertEquals("this is not a pen, but also this is not  Google either.", paragraph.getSentence(0).getContent());
+        assertEquals(offsets(1, range(0, 40), range(44, 59)), paragraph.getSentence(0).getOffsetMap());
     }
 
     @Test
@@ -461,8 +466,11 @@ public class WikiParserTest extends BaseParserTest {
         assertEquals(2, listBlock.getNumberOfListElements());
         assertEquals(1, listBlock.getListElement(0).getNumberOfSentences());
         assertEquals("Gunma is located at west of Saitama.", listBlock.getListElement(0).getSentence(0).getContent());
+        assertEquals(offsets(2, range(2, 38)), listBlock.getListElement(0).getSentence(0).getOffsetMap());
         assertEquals("The word also have posive meaning.", listBlock.getListElement(1).getSentence(0).getContent());
+        assertEquals(offsets(3, range(2, 36)), listBlock.getListElement(1).getSentence(0).getOffsetMap());
         assertEquals(" Hower it is a bit wired.", listBlock.getListElement(1).getSentence(1).getContent());
+        assertEquals(offsets(3, range(36, 61)), listBlock.getListElement(1).getSentence(1).getOffsetMap());
     }
 
     @Test

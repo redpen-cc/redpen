@@ -58,7 +58,7 @@ class WikiParser extends BaseDocumentParser {
     private static final Pattern NUMBERED_LIST_PATTERN =
             Pattern.compile("^(#+) (.*)$");
     private static final Pattern LINK_PATTERN =
-            Pattern.compile("\\[\\[(.*?)\\]\\]");
+            Pattern.compile("\\[\\[\\s*(.*?)(?:\\s*\\|\\s*(.*?)(?:\\s*\\|.*?)?)?\\s*\\]\\]");
     private static final Pattern BEGIN_COMMENT_PATTERN =
             Pattern.compile("\\s*^\\[!--");
     private static final Pattern END_COMMENT_PATTERN =
@@ -216,37 +216,28 @@ class WikiParser extends BaseDocumentParser {
 
     private void extractLinks(Sentence sentence) {
         StringBuilder modContent = new StringBuilder();
+        List<LineOffset> modOffsets = new ArrayList<>();
         int start = 0;
         Matcher m = LINK_PATTERN.matcher(sentence.getContent());
         while (m.find()) {
-            String[] tagInternal = m.group(1).split("\\|");
-            String tagURL;
-            if (tagInternal.length == 1) {
-                tagURL = tagInternal[0].trim();
-                modContent.append(sentence.getContent().substring(
-                        start, m.start())).append(tagURL.trim());
-            } else if (tagInternal.length == 0) {
-                LOG.warn("Invalid link block: vacant block");
-                tagURL = "";
-            } else {
-                if (tagInternal.length > 2) {
-                    LOG.warn(
-                            "Invalid link block: there are more than two link blocks at line "
-                                    + sentence.getLineNumber());
-                }
-                tagURL = tagInternal[1].trim();
-                StringBuilder buffer = new StringBuilder();
-                buffer.append(sentence.getContent().substring(start, m.start()));
-                buffer.append(tagInternal[0].trim());
-                modContent.append(buffer);
-            }
-            sentence.addLink(tagURL);
+            modContent.append(sentence.getContent().substring(start, m.start()));
+            modOffsets.addAll(sentence.getOffsetMap().subList(start, m.start()));
+
+            modContent.append(sentence.getContent().substring(m.start(1), m.end(1)));
+            modOffsets.addAll(sentence.getOffsetMap().subList(m.start(1), m.end(1)));
+
+            if (m.start(2) < 0)
+                sentence.addLink(sentence.getContent().substring(m.start(1), m.end(1)));
+            else
+                sentence.addLink(sentence.getContent().substring(m.start(2), m.end(2)));
             start = m.end();
         }
 
         if (start > 0) {
             modContent.append(sentence.getContent().substring(start, sentence.getContent().length()));
+            modOffsets.addAll(sentence.getOffsetMap().subList(start, sentence.getContent().length()));
             sentence.setContent(modContent.toString());
+            sentence.setOffsetMap(modOffsets);
         }
     }
 
