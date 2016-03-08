@@ -155,7 +155,7 @@ public class WikiParserTest extends BaseParserTest {
     @Test
     public void testGenerateDocumentWithOneLineComment() {
         String sampleText = "There are various tests.\n"
-            + "[!-- The following should be exmples --]\n"
+            + " [!-- The following should be exmples --] \n"
             + "Most common one is unit test.\n"
             + "Integration test is also common.\n";
         Document doc = createFileContent(sampleText);

@@ -60,9 +60,9 @@ class WikiParser extends BaseDocumentParser {
     private static final Pattern LINK_PATTERN =
             Pattern.compile("\\[\\[\\s*(.*?)(?:\\s*\\|\\s*(.*?)(?:\\s*\\|.*?)?)?\\s*\\]\\]");
     private static final Pattern BEGIN_COMMENT_PATTERN =
-            Pattern.compile("\\s*^\\[!--");
+            Pattern.compile("^\\s*\\[!--");
     private static final Pattern END_COMMENT_PATTERN =
-            Pattern.compile("--\\]$\\s*");
+            Pattern.compile("--\\]\\s*$");
     private static final Pattern ITALIC_PATTERN =
             Pattern.compile("//(.+?)//");
     private static final Pattern UNDERLINE_PATTERN =
