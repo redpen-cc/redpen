@@ -48,7 +48,7 @@ public class DoubledJoshiValidator extends Validator {
                         counts.get(tokenElement.getSurface())+1);
             }
         }
-        Set<String> skipList = getSetAttribute("list");
+        Set<String> skipList = getSet("list");
         counts.entrySet().stream()
                 .filter(e -> e.getValue() >= 2 && !skipList.contains(e.getKey()))
                 .forEach(e -> addLocalizedError(sentence, e.getKey()));

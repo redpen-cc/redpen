@@ -49,7 +49,7 @@ public class ParenthesizedSentenceValidator extends Validator {
             if (token.getSurface().length() == 1) {
                 if (OPEN_PARENS.indexOf(token.getSurface().charAt(0)) != -1) {
                     nestingLevel++;
-                    if (nestingLevel > getIntAttribute("max_nesting_level")) {
+                    if (nestingLevel > getInt("max_nesting_level")) {
                         addLocalizedErrorWithPosition(
                                 "NestingLevelTooDeep",
                                 sentence,
@@ -60,7 +60,7 @@ public class ParenthesizedSentenceValidator extends Validator {
                     nestingLevel = Math.max(0, nestingLevel - 1);
                     if (nestingLevel == 0) {
                         subsentenceCount++;
-                        if (subsentenceLength > getIntAttribute("max_length")) {
+                        if (subsentenceLength > getInt("max_length")) {
                             addLocalizedErrorWithPosition(
                                     "SubsentenceTooLong",
                                     sentence,
@@ -77,7 +77,7 @@ public class ParenthesizedSentenceValidator extends Validator {
             }
         }
 
-        if (subsentenceCount > getIntAttribute("max_count")) {
+        if (subsentenceCount > getInt("max_count")) {
             addLocalizedError("SubsentenceTooFrequent", sentence);
         }
     }

@@ -59,20 +59,20 @@ public class ConfigurationRedPenBuilderTest {
     public void testBuildConfigurationAddingProperties() {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression")
-                        .addAttribute("dict", "./foobar.dict"))
+                        .addProperty("dict", "./foobar.dict"))
                 .addValidatorConfig(new ValidatorConfiguration("SentenceLength")
-                        .addAttribute("max_length", "10")).build();
+                        .addProperty("max_length", "10")).build();
 
         assertEquals(2, config.getValidatorConfigs().size());
         assertNotNull(config.getSymbolTable());
         assertEquals("InvalidExpression", config.getValidatorConfigs()
                 .get(0).getConfigurationName());
         assertEquals("./foobar.dict",
-                config.getValidatorConfigs().get(0).getAttribute("dict"));
+                config.getValidatorConfigs().get(0).getProperty("dict"));
         assertEquals("SentenceLength", config.getValidatorConfigs()
                 .get(1).getConfigurationName());
         assertEquals("10",
-                config.getValidatorConfigs().get(1).getAttribute("max_length"));
+                config.getValidatorConfigs().get(1).getProperty("max_length"));
     }
 
     @Test

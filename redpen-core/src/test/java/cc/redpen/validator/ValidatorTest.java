@@ -59,10 +59,10 @@ public class ValidatorTest {
     @Test
     public void configOverridesDefaultAttributes() throws Exception {
         Validator validator = new Validator("hello", 123) {};
-        assertEquals(123, validator.getIntAttribute("hello"));
+        assertEquals(123, validator.getInt("hello"));
 
-        validator.preInit(new ValidatorConfiguration("blah").addAttribute("hello", "234"), globalConfig);
-        assertEquals(234, validator.getIntAttribute("hello"));
+        validator.preInit(new ValidatorConfiguration("blah").addProperty("hello", "234"), globalConfig);
+        assertEquals(234, validator.getInt("hello"));
     }
 
     @Test

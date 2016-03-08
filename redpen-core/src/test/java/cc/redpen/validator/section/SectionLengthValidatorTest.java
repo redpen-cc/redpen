@@ -37,7 +37,7 @@ public class SectionLengthValidatorTest {
     @Before
     public void setUp() throws RedPenException {
         validator = new SectionLengthValidator();
-        validator.preInit(new ValidatorConfiguration("SectionLength").addAttribute("max_num", "10"), Configuration.builder().build());
+        validator.preInit(new ValidatorConfiguration("SectionLength").addProperty("max_num", "10"), Configuration.builder().build());
     }
 
     @Test

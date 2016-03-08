@@ -60,7 +60,7 @@ public class ConfigurationLoaderTest {
         assertEquals("SentenceLength",
                 configuration.getValidatorConfigs().get(0).getConfigurationName());
         assertEquals("200",
-                configuration.getValidatorConfigs().get(0).getAttribute("max_length"));
+                configuration.getValidatorConfigs().get(0).getProperty("max_length"));
         assertEquals("MaxParagraphNumber",
                 configuration.getValidatorConfigs().get(1).getConfigurationName());
         assertNotNull(configuration.getSymbolTable());
@@ -92,7 +92,7 @@ public class ConfigurationLoaderTest {
         assertEquals("SentenceLength",
                 configuration.getValidatorConfigs().get(0).getConfigurationName());
         assertEquals("200",
-                configuration.getValidatorConfigs().get(0).getAttribute("max_length"));
+                configuration.getValidatorConfigs().get(0).getProperty("max_length"));
         assertEquals("MaxParagraphNumber",
                 configuration.getValidatorConfigs().get(1).getConfigurationName());
         assertNotNull(configuration.getSymbolTable());
@@ -133,7 +133,7 @@ public class ConfigurationLoaderTest {
         assertEquals("SentenceLength",
                 configuration.getValidatorConfigs().get(0).getConfigurationName());
         assertEquals("200",
-                configuration.getValidatorConfigs().get(0).getAttribute("max_length"));
+                configuration.getValidatorConfigs().get(0).getProperty("max_length"));
         assertEquals("MaxParagraphNumber",
                 configuration.getValidatorConfigs().get(1).getConfigurationName());
         assertNotNull(configuration.getSymbolTable());

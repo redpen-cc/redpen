@@ -34,7 +34,7 @@ public class SentenceLengthValidatorTest {
 
     @Before
     public void setUp() throws Exception {
-        validator.preInit(new ValidatorConfiguration("SentenceLength").addAttribute("max_len", "30"), Configuration.builder().build());
+        validator.preInit(new ValidatorConfiguration("SentenceLength").addProperty("max_len", "30"), Configuration.builder().build());
     }
 
     @Test

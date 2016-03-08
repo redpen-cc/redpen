@@ -35,7 +35,7 @@ public final class CommaNumberValidator extends Validator {
     private char comma;
 
     private int getMaxNum() {
-        return getIntAttribute("max_num");
+        return getInt("max_num");
     }
 
     @Override

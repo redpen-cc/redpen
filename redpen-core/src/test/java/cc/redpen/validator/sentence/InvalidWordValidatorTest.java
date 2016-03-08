@@ -49,7 +49,7 @@ public class InvalidWordValidatorTest {
                         .build());
 
         Configuration config = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration("InvalidWord").addAttribute("list", "foolish"))
+                .addValidatorConfig(new ValidatorConfiguration("InvalidWord").addProperty("list", "foolish"))
                 .build();
         Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
 
@@ -69,7 +69,7 @@ public class InvalidWordValidatorTest {
                         .build());
 
         Configuration config = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration("InvalidWord").addAttribute("list", "foolish"))
+                .addValidatorConfig(new ValidatorConfiguration("InvalidWord").addProperty("list", "foolish"))
                 .build();
         Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
         List<ValidationError> errors = new ArrayList<>();
@@ -101,7 +101,7 @@ public class InvalidWordValidatorTest {
     @Test
     public void testLoadUserDictionary() throws RedPenException {
         Configuration config = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration("InvalidWord").addAttribute("list", "boom,domo"))
+                .addValidatorConfig(new ValidatorConfiguration("InvalidWord").addProperty("list", "boom,domo"))
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(

@@ -40,7 +40,7 @@ final public class SectionLengthValidator extends Validator {
             }
         }
 
-        if (sectionCharNumber > getIntAttribute("max_num")) {
+        if (sectionCharNumber > getInt("max_num")) {
             addLocalizedError(section.getJoinedHeaderContents(), sectionCharNumber);
         }
     }

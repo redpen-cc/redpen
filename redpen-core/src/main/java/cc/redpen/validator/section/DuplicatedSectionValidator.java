@@ -72,7 +72,7 @@ final public class DuplicatedSectionValidator extends Validator {
             Map<String, Integer> candidateVector = sectionVector.sectionVector;
             // NOTE: not header.equals() since the we need check if the references are identical
             if (sectionVector.header != section.getHeaderContent(0) &&
-                    calcCosine(targetVector, candidateVector) > getFloatAttribute("threshold")) {
+                    calcCosine(targetVector, candidateVector) > getFloat("threshold")) {
                 Optional<Sentence> header = Optional.ofNullable(section.getHeaderContent(0));
                 addLocalizedError(header.orElse(section.getParagraph(0).getSentence(0)),
                         sectionVector.header.getLineNumber());

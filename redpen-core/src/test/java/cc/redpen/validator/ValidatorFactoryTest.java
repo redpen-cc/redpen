@@ -25,7 +25,10 @@ import org.junit.Test;
 
 import java.io.File;
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
+import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 
 class CustomValidator extends Validator {
@@ -68,6 +71,22 @@ public class ValidatorFactoryTest {
         File classes = new File(Validator.class.getProtectionDomain().getCodeSource().getLocation().getPath());
         File validators = new File(classes, validatorsPackage.replace(".", "/"));
         checkValidators(validatorsPackage, validators);
+    }
+
+    @Test
+    public void mapToStrings() throws Exception {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("string", "bar");
+        properties.put("integer", 100);
+        properties.put("boolean", false);
+        properties.put("collection", asList("foo", "bar"));
+
+        Map<String, String> result = ValidatorFactory.toStrings(properties);
+
+        assertEquals("bar", result.get("string"));
+        assertEquals("100", result.get("integer"));
+        assertEquals("false", result.get("boolean"));
+        assertEquals("foo,bar", result.get("collection"));
     }
 
     @SuppressWarnings("ConstantConditions")

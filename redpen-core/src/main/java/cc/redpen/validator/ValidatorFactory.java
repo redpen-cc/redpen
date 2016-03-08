@@ -23,12 +23,14 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.validator.section.*;
 import cc.redpen.validator.sentence.*;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.*;
+import static org.apache.commons.lang3.StringUtils.join;
 
 /**
  * Factory class of validators.
@@ -90,7 +92,19 @@ public class ValidatorFactory {
         return validators.entrySet().stream().filter(e -> {
             List<String> supportedLanguages = e.getValue().getSupportedLanguages();
             return supportedLanguages.isEmpty() || supportedLanguages.contains(lang);
-        }).map(e -> new ValidatorConfiguration(e.getKey())).collect(toList());
+        }).map(e -> new ValidatorConfiguration(e.getKey(), toStrings(e.getValue().getProperties()))).collect(toList());
+    }
+
+    @SuppressWarnings("unchecked")
+    static Map<String, String> toStrings(Map<String, Object> properties) {
+        Map<String, String> result = new LinkedHashMap<>();
+        for (Map.Entry<String, Object> e : properties.entrySet()) {
+            if (e.getValue() instanceof Iterable)
+                result.put(e.getKey(), join((Iterable)e.getValue(), ','));
+            else
+                result.put(e.getKey(), e.getValue().toString());
+        }
+        return result;
     }
 
     public static Validator getInstance(String validatorName) throws RedPenException {

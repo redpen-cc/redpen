@@ -31,7 +31,7 @@ final public class WordNumberValidator extends Validator {
     @Override
     public void validate(Sentence sentence) {
         int wordNum = sentence.getTokens().size();
-        int maxNum = getIntAttribute("max_num");
+        int maxNum = getInt("max_num");
         if (wordNum > maxNum) {
             addLocalizedError(sentence, wordNum, maxNum);
         }

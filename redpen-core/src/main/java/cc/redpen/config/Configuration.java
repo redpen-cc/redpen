@@ -106,7 +106,7 @@ public class Configuration implements Serializable, Cloneable {
     }
 
     /**
-     * returns Tokenizer aasociated with this configuration
+     * returns Tokenizer associated with this configuration
      *
      * @return tokenizer
      */

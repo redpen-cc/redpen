@@ -108,7 +108,7 @@ public class DuplicatedSectionValidatorTest {
     @Test
     public void testDetectNonDuplicatedSectionWithLowThreshold() throws RedPenException {
         Configuration config = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration("DuplicatedSection").addAttribute("threshold", "0.0"))
+                .addValidatorConfig(new ValidatorConfiguration("DuplicatedSection").addProperty("threshold", "0.0"))
                 .build();
 
         List<Document> documents = new ArrayList<>();
