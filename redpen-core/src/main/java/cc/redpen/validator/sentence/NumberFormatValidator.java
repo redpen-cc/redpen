@@ -32,7 +32,7 @@ public class NumberFormatValidator extends Validator {
     private String decimalDelimiters = DOT_DELIMITERS;
 
     public NumberFormatValidator() {
-        super("decimal_delimiter_is_comma", false, "ignore_years", false);
+        super("decimal_delimiter_is_comma", false, "ignore_years", true);
     }
 
     @Override
