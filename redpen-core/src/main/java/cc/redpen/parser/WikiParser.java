@@ -36,6 +36,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
+import static cc.redpen.parser.ParserUtils.addChild;
 import static cc.redpen.parser.WikiParser.LinePattern.*;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.IntStream.range;
@@ -239,28 +240,6 @@ class WikiParser extends BaseDocumentParser {
             sentence.setContent(modContent.toString());
             sentence.setOffsetMap(modOffsets);
         }
-    }
-
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    private boolean addChild(Section candidate, Section child) {
-        if (candidate.getLevel() < child.getLevel()) {
-            candidate.appendSubSection(child);
-            child.setParentSection(candidate);
-        } else { // search parent
-            Section parent = candidate.getParentSection();
-            while (parent != null) {
-                if (parent.getLevel() < child.getLevel()) {
-                    parent.appendSubSection(child);
-                    child.setParentSection(parent);
-                    break;
-                }
-                parent = parent.getParentSection();
-            }
-            if (parent == null) {
-                return false;
-            }
-        }
-        return true;
     }
 
     private ValueWithOffsets obtainSentences(ValueWithOffsets value, List<Sentence> outputSentences, SentenceExtractor sentenceExtractor) {

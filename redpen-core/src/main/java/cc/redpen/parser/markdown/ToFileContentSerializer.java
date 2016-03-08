@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+import static cc.redpen.parser.ParserUtils.addChild;
 import static org.parboiled.common.Preconditions.checkArgNotNull;
 
 /**
@@ -177,28 +178,6 @@ public class ToFileContentSerializer implements Visitor {
         return outputSentences;
     }
 
-    //FIXME wikiparser have same method. pull up or expand to utils
-    private boolean addChild(Section candidate, Section child) {
-        if (candidate.getLevel() < child.getLevel()) {
-            candidate.appendSubSection(child);
-            child.setParentSection(candidate);
-        } else { // search parent
-            Section parent = candidate.getParentSection();
-            while (parent != null) {
-                if (parent.getLevel() < child.getLevel()) {
-                    parent.appendSubSection(child);
-                    child.setParentSection(parent);
-                    break;
-                }
-                parent = parent.getParentSection();
-            }
-            if (parent == null) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     private void appendSection(HeaderNode headerNode) {
         // 1. remain sentence flush to current section
         fixSentence();
@@ -224,7 +203,6 @@ public class ToFileContentSerializer implements Visitor {
 
     public void visit(AbbreviationNode abbreviationNode) {
         // current not implement
-
     }
 
     public void visit(AutoLinkNode autoLinkNode) {
