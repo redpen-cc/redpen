@@ -562,21 +562,24 @@ public class WikiParserTest extends BaseParserTest {
 
     @Test
     public void testErrorPositionOfWikiParser() throws RedPenException {
-        String sampleText = "This is a good day。\n"; // invalid end of sentence symbol
+        String sampleText = "This is a good //good// day。\n"; // invalid end of sentence symbol
         Configuration conf = Configuration.builder().build();
         Document doc = createFileContent(sampleText, conf);
 
         Configuration configuration = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
-                .build();
+          .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
+          .addValidatorConfig(new ValidatorConfiguration("DoubledWord"))
+          .build();
 
         RedPen redPen = new RedPen(configuration);
         List<ValidationError> errors = redPen.validate(singletonList(doc)).get(doc);
-        assertEquals(1, errors.size());
+        assertEquals(2, errors.size());
         assertEquals("InvalidSymbol", errors.get(0).getValidatorName());
-        assertEquals(19, errors.get(0).getSentence().getContent().length());
-        assertEquals(Optional.of(new LineOffset(1, 18)), errors.get(0).getStartPosition());
-        assertEquals(Optional.of(new LineOffset(1, 19)), errors.get(0).getEndPosition());
+        assertEquals(24, errors.get(0).getSentence().getContent().length());
+        assertEquals(Optional.of(new LineOffset(1, 27)), errors.get(0).getStartPosition());
+        assertEquals(Optional.of(new LineOffset(1, 28)), errors.get(0).getEndPosition());
+        assertEquals(Optional.of(new LineOffset(1, 17)), errors.get(1).getStartPosition());
+        assertEquals(Optional.of(new LineOffset(1, 23)), errors.get(1).getEndPosition());
     }
 
     private Document createFileContent(String inputDocumentString, Configuration conf) {
