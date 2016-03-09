@@ -19,11 +19,16 @@ package cc.redpen.parser;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
+import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.RedPenTokenizer;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+
+import static java.lang.Character.isWhitespace;
 
 /**
  * Abstract Parser class containing common procedures to
@@ -55,4 +60,34 @@ public abstract class BaseDocumentParser implements DocumentParser {
         return new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
     }
 
+    protected static class ValueWithOffsets extends Sentence {
+        public ValueWithOffsets() {
+            super("", 0);
+        }
+
+        public ValueWithOffsets(String content, List<LineOffset> offsetMap) {
+            super(content, offsetMap, new ArrayList<>());
+        }
+
+        public boolean isEmpty() {
+            return "".equals(getContent());
+        }
+
+        public ValueWithOffsets append(String line, List<LineOffset> offsets) {
+            setContent(getContent() + line);
+            getOffsetMap().addAll(offsets);
+            return this;
+        }
+
+        public ValueWithOffsets extract(int start, int end) {
+            if (start == end) return new ValueWithOffsets();
+            return new ValueWithOffsets(getContent().substring(start, end), getOffsetMap().subList(start, end));
+        }
+    }
+
+    protected int skipWhitespace(String line, int start) {
+        for (int i = start; i < line.length(); i++)
+            if (!isWhitespace(line.charAt(i))) return i;
+        return line.length();
+    }
 }

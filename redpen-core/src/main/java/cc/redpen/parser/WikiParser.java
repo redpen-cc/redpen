@@ -34,13 +34,20 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
+
+import static cc.redpen.parser.ParserUtils.addChild;
+import static cc.redpen.parser.WikiParser.LinePattern.*;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.IntStream.range;
 
 /**
  * Parser for wiki formatted file.
  */
 class WikiParser extends BaseDocumentParser {
     private static final Logger LOG = LoggerFactory.getLogger(WikiParser.class);
-    /**
+
+    /*
      * *************************************************************************
      * patterns to handle wiki syntax.
      * *************************************************************************
@@ -52,11 +59,11 @@ class WikiParser extends BaseDocumentParser {
     private static final Pattern NUMBERED_LIST_PATTERN =
             Pattern.compile("^(#+) (.*)$");
     private static final Pattern LINK_PATTERN =
-            Pattern.compile("\\[\\[(.*?)\\]\\]");
+            Pattern.compile("\\[\\[\\s*(.*?)(?:\\s*\\|\\s*(.*?)(?:\\s*\\|.*?)?)?\\s*\\]\\]");
     private static final Pattern BEGIN_COMMENT_PATTERN =
-            Pattern.compile("\\s*^\\[!--");
+            Pattern.compile("^\\s*\\[!--");
     private static final Pattern END_COMMENT_PATTERN =
-            Pattern.compile("--\\]$\\s*");
+            Pattern.compile("--\\]\\s*$");
     private static final Pattern ITALIC_PATTERN =
             Pattern.compile("//(.+?)//");
     private static final Pattern UNDERLINE_PATTERN =
@@ -72,18 +79,11 @@ class WikiParser extends BaseDocumentParser {
             STRIKETHROUGH_PATTERN
     };
 
-    /**
-     * Constructor.
-     */
-    WikiParser() {
-        super();
-    }
-
-    private static boolean check(Pattern p, String target, List<String> head) {
+    private static boolean check(Pattern p, String target, int lineNum, List<ValueWithOffsets> groups) {
         Matcher m = p.matcher(target);
         if (m.matches()) {
             for (int i = 1; i <= m.groupCount(); i++) {
-                head.add(m.group(i));
+                groups.add(new ValueWithOffsets(m.group(i), offsets(lineNum, range(m.start(i), m.end(i)))));
             }
             return true;
         } else {
@@ -104,76 +104,66 @@ class WikiParser extends BaseDocumentParser {
         documentBuilder.addSection(0, headers);
 
         // begin parsing
-        LinePattern prevPattern, currentPattern = LinePattern.VOID;
+        LinePattern prevPattern, currentPattern = VOID;
         String line;
         int lineNum = 1;
-        StringBuilder remain = new StringBuilder();
+        ValueWithOffsets remain = new ValueWithOffsets();
         br = createReader(is);
         try {
             while ((line = br.readLine()) != null) {
                 prevPattern = currentPattern;
-                List<String> head = new ArrayList<>();
-                if (currentPattern == LinePattern.COMMENT) {
-                    if (check(END_COMMENT_PATTERN, line, head)) {
-                        currentPattern = LinePattern.VOID;
-                    }
-                } else if (check(HEADER_PATTERN, line, head)) {
-                    currentPattern = LinePattern.HEADER;
-                    appendSection(head, lineNum, sentenceExtractor, documentBuilder);
-                } else if (check(LIST_PATTERN, line, head)) {
-                    currentPattern = LinePattern.LIST;
-                    appendListElement(prevPattern, head, lineNum, sentenceExtractor,documentBuilder);
-                } else if (check(NUMBERED_LIST_PATTERN, line, head)) {
-                    currentPattern = LinePattern.LIST;
-                    appendListElement(prevPattern, head, lineNum, sentenceExtractor,documentBuilder);
-                } else if (check(BEGIN_COMMENT_PATTERN, line, head)) {
-                    if (!check(END_COMMENT_PATTERN, line, head)) { // skip comment
-                        currentPattern = LinePattern.COMMENT;
-                    }
+                List<ValueWithOffsets> groups = new ArrayList<>();
+                if (currentPattern == COMMENT && check(END_COMMENT_PATTERN, line, lineNum, groups)) {
+                    currentPattern = VOID;
+                } else if (check(HEADER_PATTERN, line, lineNum, groups)) {
+                    currentPattern = HEADER;
+                    appendSection(groups, sentenceExtractor, documentBuilder);
+                } else if (check(LIST_PATTERN, line, lineNum, groups)) {
+                    currentPattern = LIST;
+                    appendListElement(prevPattern, groups, sentenceExtractor, documentBuilder);
+                } else if (check(NUMBERED_LIST_PATTERN, line, lineNum, groups)) {
+                    currentPattern = LIST;
+                    appendListElement(prevPattern, groups, sentenceExtractor, documentBuilder);
+                } else if (check(BEGIN_COMMENT_PATTERN, line, lineNum, groups) && !check(END_COMMENT_PATTERN, line, lineNum, groups)) { // skip comment
+                    currentPattern = COMMENT;
                 } else if (line.equals("")) { // new paragraph content
                     documentBuilder.addParagraph();
                 } else { // usual sentence.
-                    currentPattern = LinePattern.SENTENCE;
-                    String remainStr = appendSentencesIntoSection(lineNum,
-                            remain.append(line).toString(), sentenceExtractor, documentBuilder);
-                    remain.delete(0, remain.length());
-                    remain.append(remainStr);
+                    currentPattern = SENTENCE;
+                    remain = appendSentencesIntoSection(remain.append(line, offsets(lineNum, range(0, line.length()))), sentenceExtractor, documentBuilder);
                 }
                 lineNum++;
             }
         } catch (IOException e) {
             throw new RedPenException(e);
         }
-        if (remain.length() > 0) {
-            appendLastSentence(lineNum-1, remain.toString(), documentBuilder); // lineNum-1 since the lineNum is incremented.
+        if (!remain.isEmpty()) {
+            appendLastSentence(remain, documentBuilder);
         }
         return documentBuilder.build();
 
     }
 
-    private void appendListElement(LinePattern prevPattern,
-                                   List<String> head, int lineNum, SentenceExtractor sentenceExtractor, Document.DocumentBuilder builder) {
-        if (prevPattern != LinePattern.LIST) {
+    private void appendListElement(LinePattern prevPattern, List<ValueWithOffsets> head, SentenceExtractor sentenceExtractor, Document.DocumentBuilder builder) {
+        if (prevPattern != LIST) {
             builder.addListBlock();
         }
         List<Sentence> outputSentences = new ArrayList<>();
-        String remainSentence = obtainSentences(0, head.get(1), outputSentences, sentenceExtractor);
-        builder.addListElement(extractListLevel(head.get(0)),
-                outputSentences);
+        ValueWithOffsets remainSentence = obtainSentences(head.get(1), outputSentences, sentenceExtractor);
+        builder.addListElement(extractListLevel(head.get(0).getContent()), outputSentences);
         // NOTE: for list content without period
-        if (remainSentence != null && remainSentence.length() > 0) {
-            outputSentences.add(new Sentence(remainSentence, lineNum));
+        if (!remainSentence.isEmpty()) {
+            outputSentences.add(new Sentence(remainSentence.getContent(), remainSentence.getOffsetMap(), new ArrayList<>()));
         }
     }
 
-    private Section appendSection(List<String> head, int lineNum, SentenceExtractor sentenceExtractor, Document.DocumentBuilder builder) {
-        Integer level = Integer.valueOf(head.get(0));
+    private Section appendSection(List<ValueWithOffsets> head, SentenceExtractor sentenceExtractor, Document.DocumentBuilder builder) {
+        Integer level = Integer.valueOf(head.get(0).getContent());
         List<Sentence> outputSentences = new ArrayList<>();
-        String remainHeader =
-                obtainSentences(lineNum, head.get(1), outputSentences, sentenceExtractor);
+        ValueWithOffsets remainHeader = obtainSentences(head.get(1), outputSentences, sentenceExtractor);
         // NOTE: for header without period
-        if (remainHeader != null && remainHeader.length() > 0) {
-            outputSentences.add(new Sentence(remainHeader, lineNum));
+        if (!remainHeader.isEmpty()) {
+            outputSentences.add(new Sentence(remainHeader.getContent(), remainHeader.getOffsetMap(), new ArrayList<>()));
         }
 
         // To deal with header content as a paragraph
@@ -191,8 +181,8 @@ class WikiParser extends BaseDocumentParser {
         return currentSection;
     }
 
-    private void appendLastSentence(int lineNum, String remain, Document.DocumentBuilder builder) {
-        Sentence sentence = new Sentence(remain, lineNum);
+    private void appendLastSentence(ValueWithOffsets remain, Document.DocumentBuilder builder) {
+        Sentence sentence = new Sentence(remain.getContent(), remain.getOffsetMap(), new ArrayList<>());
         parseSentence(sentence); // extract inline elements
         builder.addSentence(sentence);
     }
@@ -204,96 +194,75 @@ class WikiParser extends BaseDocumentParser {
 
     private void removeTags(Sentence sentence) {
         String content = sentence.getContent();
+        List<LineOffset> offsets = new ArrayList<>(sentence.getOffsetMap());
         for (Pattern inlinePattern : INLINE_PATTERNS) {
             Matcher m = inlinePattern.matcher(content);
-            content = m.replaceAll("$1");
+            StringBuffer sb = new StringBuffer();
+            List<LineOffset> o = new ArrayList<>(sentence.getOffsetMap().size());
+            int lastPos = 0;
+            while (m.find()) {
+                m.appendReplacement(sb, "$1");
+                o.addAll(offsets.subList(lastPos, m.start()));
+                o.addAll(offsets.subList(m.start(1), m.end(1)));
+                lastPos = m.end();
+            }
+            m.appendTail(sb);
+            o.addAll(offsets.subList(lastPos, offsets.size()));
+            content = sb.toString();
+            offsets = o;
         }
         sentence.setContent(content);
+        sentence.setOffsetMap(offsets);
     }
 
     private void extractLinks(Sentence sentence) {
         StringBuilder modContent = new StringBuilder();
+        List<LineOffset> modOffsets = new ArrayList<>();
         int start = 0;
         Matcher m = LINK_PATTERN.matcher(sentence.getContent());
         while (m.find()) {
-            String[] tagInternal = m.group(1).split("\\|");
-            String tagURL = null;
-            if (tagInternal.length == 1) {
-                tagURL = tagInternal[0].trim();
-                modContent.append(sentence.getContent().substring(
-                        start, m.start())).append(tagURL.trim());
-            } else if (tagInternal.length == 0) {
-                LOG.warn("Invalid link block: vacant block");
-                tagURL = "";
-            } else {
-                if (tagInternal.length > 2) {
-                    LOG.warn(
-                            "Invalid link block: there are more than two link blocks at line "
-                                    + sentence.getLineNumber());
-                }
-                tagURL = tagInternal[1].trim();
-                StringBuilder buffer = new StringBuilder();
-                buffer.append(sentence.getContent().substring(start, m.start()));
-                buffer.append(tagInternal[0].trim());
-                modContent.append(buffer);
-            }
-            sentence.addLink(tagURL);
+            modContent.append(sentence.getContent().substring(start, m.start()));
+            modOffsets.addAll(sentence.getOffsetMap().subList(start, m.start()));
+
+            modContent.append(sentence.getContent().substring(m.start(1), m.end(1)));
+            modOffsets.addAll(sentence.getOffsetMap().subList(m.start(1), m.end(1)));
+
+            if (m.start(2) < 0)
+                sentence.addLink(sentence.getContent().substring(m.start(1), m.end(1)));
+            else
+                sentence.addLink(sentence.getContent().substring(m.start(2), m.end(2)));
             start = m.end();
         }
 
         if (start > 0) {
-            modContent.append(sentence.getContent().substring(
-                    start, sentence.getContent().length()));
+            modContent.append(sentence.getContent().substring(start, sentence.getContent().length()));
+            modOffsets.addAll(sentence.getOffsetMap().subList(start, sentence.getContent().length()));
             sentence.setContent(modContent.toString());
+            sentence.setOffsetMap(modOffsets);
         }
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    private boolean addChild(Section candidate, Section child) {
-        if (candidate.getLevel() < child.getLevel()) {
-            candidate.appendSubSection(child);
-            child.setParentSection(candidate);
-        } else { // search parent
-            Section parent = candidate.getParentSection();
-            while (parent != null) {
-                if (parent.getLevel() < child.getLevel()) {
-                    parent.appendSubSection(child);
-                    child.setParentSection(parent);
-                    break;
-                }
-                parent = parent.getParentSection();
-            }
-            if (parent == null) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private String obtainSentences(int lineNum, String line,
-                                   List<Sentence> outputSentences, SentenceExtractor sentenceExtractor) {
+    private ValueWithOffsets obtainSentences(ValueWithOffsets value, List<Sentence> outputSentences, SentenceExtractor sentenceExtractor) {
         List<Pair<Integer,Integer>> positions = new ArrayList<>();
-        int lastPosition = sentenceExtractor.extract(line, positions);
+        int lastPosition = sentenceExtractor.extract(value.getContent(), positions);
 
         for (Pair<Integer, Integer> position : positions) {
-            outputSentences.add(new Sentence(line.substring(
-                    position.first, position.second), lineNum));
+            outputSentences.add(value.extract(position.first, position.second));
         }
 
-        for (Sentence sentence : outputSentences) {
-            parseSentence(sentence); // extract inline elements
-        }
-        return line.substring(lastPosition, line.length());
+        outputSentences.forEach(this::parseSentence); // extract inline elements
+        return value.extract(lastPosition, value.getContent().length());
     }
 
-    private String appendSentencesIntoSection(int lineNum, String line, SentenceExtractor sentenceExtractor, Document.DocumentBuilder builder) {
+    private ValueWithOffsets appendSentencesIntoSection(ValueWithOffsets value, SentenceExtractor sentenceExtractor, Document.DocumentBuilder builder) {
         List<Sentence> outputSentences = new ArrayList<>();
-        String remain = obtainSentences(lineNum, line, outputSentences, sentenceExtractor);
+        ValueWithOffsets newRemain = obtainSentences(value, outputSentences, sentenceExtractor);
+        outputSentences.forEach(builder::addSentence);
+        return newRemain;
+    }
 
-        for (Sentence sentence : outputSentences) {
-            builder.addSentence(sentence);
-        }
-        return remain;
+    private static List<LineOffset> offsets(int lineNum, IntStream stream) {
+        return stream.mapToObj(p -> new LineOffset(lineNum, p)).collect(toList());
     }
 
     private int extractListLevel(String listPrefix) {
@@ -303,7 +272,7 @@ class WikiParser extends BaseDocumentParser {
     /**
      * List of elements used in wiki format.
      */
-    private enum LinePattern {
+    enum LinePattern {
         SENTENCE, LIST, NUM_LIST, VOID, HEADER, COMMENT
     }
 }

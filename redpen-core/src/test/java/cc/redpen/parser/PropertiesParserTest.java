@@ -158,6 +158,4 @@ public class PropertiesParserTest extends BaseParserTest {
   }
 
   // todo detect UTF-8 vs ISO-8859-1 files
-
-  // todo test global errors
 }

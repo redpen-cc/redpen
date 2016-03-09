@@ -96,12 +96,6 @@ class PropertiesParser extends BaseDocumentParser {
         return value.length() == 0 ? null : new ValueWithOffsets(value.toString(), offsets);
     }
 
-    private int skipWhitespace(String line, int start) {
-        for (int i = start; i < line.length(); i++)
-            if (!isWhitespace(line.charAt(i))) return i;
-        return line.length();
-    }
-
     private int valueOffset(String line, int start) {
         int result = -1;
         for (int i = start; i < line.length(); i++) {
@@ -112,11 +106,5 @@ class PropertiesParser extends BaseDocumentParser {
             else if (result >= 0) break;
         }
         return skipWhitespace(line, result + 1);
-    }
-
-    private static class ValueWithOffsets extends Sentence {
-        public ValueWithOffsets(String content, List<LineOffset> offsetMap) {
-            super(content, offsetMap, emptyList());
-        }
     }
 }
