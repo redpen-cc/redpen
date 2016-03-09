@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.lang.Character.isLetter;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
@@ -42,11 +43,14 @@ public final class SuggestExpressionValidator extends Validator {
 
     @Override
     public void validate(Sentence sentence) {
+        String text = sentence.getContent();
         synonyms.keySet().stream().forEach(value -> {
-            int startPosition = sentence.getContent().indexOf(value);
-            if (startPosition != -1) {
-                String suggested = synonyms.get(value);
-                addLocalizedErrorWithPosition(sentence, startPosition, startPosition + value.length(), value, suggested);
+            int start = text.indexOf(value);
+            if (start < 0) return;
+            int end = start + value.length();
+            boolean hasWordBoundaries = (start == 0 || !isLetter(text.charAt(start - 1))) && (end == text.length() || !isLetter(text.charAt(end)));
+            if (hasWordBoundaries) {
+                addLocalizedErrorWithPosition(sentence, start, end, value, synonyms.get(value));
             }
         });
     }
