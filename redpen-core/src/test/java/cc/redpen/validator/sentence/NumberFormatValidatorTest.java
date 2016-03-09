@@ -36,6 +36,8 @@ public class NumberFormatValidatorTest {
         Sentence st3 = new Sentence("10,0000,000 also has a comma in the wrong position.", 0);
         Sentence st4 = new Sentence("10000.0.0 has too many decimal places and requires a delimiter.", 0);
         Sentence st5 = new Sentence("100,00,000.0 has a sequence of digits that is too short.", 0);
+        Sentence st6 = new Sentence("Years are ignored by default, like 1995 or 2016", 0);
+
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(st0);
@@ -44,6 +46,7 @@ public class NumberFormatValidatorTest {
         validator.validate(st3); // 1 error
         validator.validate(st4); // 2 errors
         validator.validate(st5); // 1 error
+        validator.validate(st6); // 0 errors
 
         assertEquals(st1.toString(), 6, errors.size());
     }
