@@ -37,7 +37,7 @@ public class SuccessiveWordValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testDetectSuccessiveWord() throws RedPenException {
+    public void detectSuccessiveWord() throws RedPenException {
         Document document = prepareSimpleDocument("the item is is a good.");
 
         RedPen redPen = new RedPen(config);
@@ -47,7 +47,7 @@ public class SuccessiveWordValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testDetectSuccessiveWordWithDifferentCase() throws RedPenException {
+    public void detectSuccessiveWordWithDifferentCase() throws RedPenException {
         Document document = prepareSimpleDocument("Welcome welcome to Estonia.");
 
         RedPen redPen = new RedPen(config);
@@ -57,7 +57,7 @@ public class SuccessiveWordValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testDetectJapaneseSuccessiveWord() throws RedPenException {
+    public void detectJapaneseSuccessiveWord() throws RedPenException {
         config = getConfiguration("ja");
 
         Document document = prepareSimpleDocument("私はは嬉しい.");
@@ -69,8 +69,17 @@ public class SuccessiveWordValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testNonSuccessiveDoubledWord() throws RedPenException {
+    public void nonSuccessiveDoubledWord() throws RedPenException {
         Document document = prepareSimpleDocument("the item is a item good.");
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        assertEquals(0, errors.get(document).size());
+    }
+
+    @Test
+    public void ignoreNumbers() throws Exception {
+        Document document = prepareSimpleDocument("Amount is $123,456,789.45");
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));

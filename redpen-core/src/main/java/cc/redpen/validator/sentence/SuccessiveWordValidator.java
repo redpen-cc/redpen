@@ -21,6 +21,8 @@ import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.validator.Validator;
 
+import static org.parboiled.common.StringUtils.substring;
+
 public class SuccessiveWordValidator extends Validator {
 
     @Override
@@ -28,10 +30,14 @@ public class SuccessiveWordValidator extends Validator {
         String prevSurface = "";
         for (TokenElement token : sentence.getTokens()) {
             String currentSurface = token.getSurface();
-            if (prevSurface.equalsIgnoreCase(currentSurface) && currentSurface.length() > 0) {
+            if (prevSurface.equalsIgnoreCase(currentSurface) && currentSurface.length() > 0 && !isPartOfNumber(sentence, token)) {
                 addLocalizedErrorFromToken(sentence, token);
             }
             prevSurface = currentSurface;
         }
+    }
+
+    private boolean isPartOfNumber(Sentence sentence, TokenElement token) {
+        return substring(sentence.getContent(), token.getOffset() - 1, token.getOffset() + 2).matches("\\d.\\d");
     }
 }
