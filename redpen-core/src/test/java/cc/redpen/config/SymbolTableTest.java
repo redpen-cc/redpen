@@ -12,9 +12,16 @@ import static org.junit.Assert.assertNotSame;
 
 public class SymbolTableTest {
   @Test
-  public void englishDoesNotHaveAType() throws Exception {
+  public void englishDoesNotHaveAVariant() throws Exception {
     SymbolTable table = new SymbolTable("en", Optional.empty(), emptyList());
     assertEquals("", table.getVariant());
+  }
+
+  @Test
+  public void russianHasSomeDifferentSymbols() throws Exception {
+    SymbolTable table = new SymbolTable("ru", Optional.empty(), emptyList());
+    assertEquals("", table.getVariant());
+    assertEquals('№', table.getSymbol(NUMBER_SIGN).getValue());
   }
 
   @Test

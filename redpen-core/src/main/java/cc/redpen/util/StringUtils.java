@@ -40,4 +40,8 @@ public class StringUtils {
     public static boolean isBasicLatin(char c) {
         return Character.UnicodeBlock.of(c) == Character.UnicodeBlock.BASIC_LATIN;
     }
+
+    public static boolean isCyrillic(char c) {
+        return Character.UnicodeBlock.of(c) == Character.UnicodeBlock.CYRILLIC;
+    }
 }

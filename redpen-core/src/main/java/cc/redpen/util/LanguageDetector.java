@@ -1,11 +1,14 @@
 package cc.redpen.util;
 
-import static cc.redpen.util.StringUtils.isProbablyJapanese;
+import java.util.function.Predicate;
+
 import static java.lang.Math.min;
 
 public class LanguageDetector {
   public String detectLanguage(String text) {
-    if (!hasJapaneseCharacters(text)) return "en";
+    if (!has(text, StringUtils::isProbablyJapanese)) {
+      return has(text, StringUtils::isCyrillic) ? "ru" : "en";
+    }
 
     boolean zenkaku = text.indexOf('。') >= 0 || text.indexOf('、') >= 0 || text.indexOf('！') >= 0 || text.indexOf('？') >= 0;
     boolean zenkaku2 = text.indexOf('．') >= 0 || text.indexOf('，') >= 0;
@@ -17,11 +20,11 @@ public class LanguageDetector {
            "ja";
   }
 
-  private boolean hasJapaneseCharacters(String text) {
+  private boolean has(String text, Predicate<Character> func) {
     char[] chars = text.toCharArray();
     for (int i = 0; i < min(chars.length, 100); i++) {
       char c = chars[i];
-      if (isProbablyJapanese(c)) return true;
+      if (func.test(c)) return true;
     }
     return false;
   }
