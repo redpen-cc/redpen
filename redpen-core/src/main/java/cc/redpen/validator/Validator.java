@@ -72,7 +72,7 @@ public abstract class Validator {
         addDefaultProperties(keyValues);
     }
 
-    protected void addDefaultProperties(Object[] keyValues) {
+    protected void addDefaultProperties(Object...keyValues) {
         if (keyValues.length % 2 != 0) throw new IllegalArgumentException("Not enough values specified");
         for (int i = 0; i < keyValues.length; i+=2) {
             properties.put(keyValues[i].toString(), keyValues[i+1]);
@@ -220,8 +220,6 @@ public abstract class Validator {
         return (Set) properties.get(name);
     }
 
-    /** @deprecated Please use constructor with default properties instead, and then getXXX() methods */
-    @Deprecated
     protected Optional<String> getConfigAttribute(String name) {
         return Optional.ofNullable(config.getProperty(name));
     }
