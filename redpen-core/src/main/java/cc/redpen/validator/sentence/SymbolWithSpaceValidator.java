@@ -25,6 +25,9 @@ import cc.redpen.validator.Validator;
 
 import java.util.Set;
 
+import static java.lang.Character.isLetterOrDigit;
+import static java.lang.Character.isWhitespace;
+
 /**
  * Validate symbol has before and after symbols. Needed spaces is depend on
  * the symbol and defined in DVCharacterTable.
@@ -51,14 +54,12 @@ public class SymbolWithSpaceValidator extends Validator {
         if (position != -1) {
             String key = "";
 
-            if (position > 0 && symbol.isNeedBeforeSpace()
-                    && !Character.isWhitespace(sentenceStr.charAt(position - 1))) {
+            if (position > 0 && symbol.isNeedBeforeSpace() && !isWhitespace(sentenceStr.charAt(position - 1))) {
                 key = "Before";
             }
 
-            if (position < sentenceStr.length() - 1
-                    && symbol.isNeedAfterSpace()
-                    && !Character.isWhitespace(sentenceStr.charAt(position + 1))) {
+            if (position < sentenceStr.length() - 1 && symbol.isNeedAfterSpace()
+                && !isWhitespace(sentenceStr.charAt(position + 1)) && isLetterOrDigit(sentenceStr.charAt(position + 1))) {
                 key += "After";
             }
 
