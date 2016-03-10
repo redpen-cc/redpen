@@ -764,6 +764,17 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
+    public void testSpaceAtTheEndOfLine() throws Exception {
+        String sampleText= "Hello    \nworld \nand peace!";
+
+        Document doc = createFileContent(sampleText);
+        List<LineOffset> offsets = offsets(1, range(0, 9));
+        offsets.addAll(offsets(2, of(0), range(0, 6)));
+        offsets.addAll(offsets(3, of(0), range(0, 10)));
+        assertEquals(offsets, doc.getSection(0).getParagraph(0).getSentence(0).getOffsetMap());
+    }
+
+    @Test
     public void testInvalidSentenceInBlockquote() throws UnsupportedEncodingException, RedPenException {
         String sampleText = "> This is a good day。\n"; // invalid end of sentence symbol
         Configuration conf = Configuration.builder().build();
