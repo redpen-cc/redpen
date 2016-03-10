@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+import static cc.redpen.util.StringUtils.isProbablyJapanese;
 import static java.lang.Character.isLetter;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
@@ -49,7 +50,7 @@ public final class SuggestExpressionValidator extends Validator {
             if (start < 0) return;
             int end = start + value.length();
             boolean hasWordBoundaries = (start == 0 || !isLetter(text.charAt(start - 1))) && (end == text.length() || !isLetter(text.charAt(end)));
-            if (hasWordBoundaries) {
+            if (isProbablyJapanese(text.charAt(start)) || hasWordBoundaries) {
                 addLocalizedErrorWithPosition(sentence, start, end, value, synonyms.get(value));
             }
         });

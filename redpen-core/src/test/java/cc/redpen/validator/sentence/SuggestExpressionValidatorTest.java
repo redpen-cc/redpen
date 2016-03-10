@@ -45,6 +45,7 @@ public class SuggestExpressionValidatorTest extends BaseValidatorTest {
         Map<String, String> synonymSamples = new HashMap<>();
         synonymSamples.put("like", "such as");
         synonymSamples.put("info", "information");
+        synonymSamples.put("こんにちは", "良い一日");
         validator.setSynonyms(synonymSamples);
     }
 
@@ -78,6 +79,14 @@ public class SuggestExpressionValidatorTest extends BaseValidatorTest {
         validator.setErrorList(errors);
         validator.validate(sentence("the information."));
         assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void japanese() {
+        List<ValidationError> errors = new ArrayList<>();
+        validator.setErrorList(errors);
+        validator.validate(sentence("こんにちは世界"));
+        assertEquals(1, errors.size());
     }
 
     @Test
