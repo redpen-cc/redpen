@@ -17,6 +17,7 @@
  */
 package cc.redpen.validator.sentence;
 
+import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.validator.DictionaryValidator;
@@ -24,21 +25,26 @@ import cc.redpen.validator.DictionaryValidator;
 import java.util.HashSet;
 import java.util.Set;
 
-final public class DoubledWordValidator extends DictionaryValidator {
-
+public final class DoubledWordValidator extends DictionaryValidator {
     public DoubledWordValidator() {
         super("doubled-word/doubled-word-skiplist");
+        addDefaultProperties("min_len", 3); // do not report words shorter than this
+    }
+
+    @Override protected void init() throws RedPenException {
+        if (getSymbolTable().getLang().equals("ja") && !getConfigAttribute("min_len").isPresent())
+            getProperties().put("min_len", 1);
     }
 
     @Override
     public void validate(Sentence sentence) {
         Set<String> surfaces = new HashSet<>();
         for (TokenElement token : sentence.getTokens()) {
-            String currentSurface = token.getSurface().toLowerCase();
-            if (surfaces.contains(currentSurface) && !inDictionary(currentSurface)) {
+            String word = token.getSurface().toLowerCase();
+            if (word.length() >= getInt("min_len") && surfaces.contains(word) && !inDictionary(word)) {
                 addLocalizedErrorFromToken(sentence, token);
             }
-            surfaces.add(currentSurface);
+            surfaces.add(word);
         }
     }
 }

@@ -59,6 +59,38 @@ public class DoubledWordValidatorTest extends BaseValidatorTest {
     }
 
     @Test
+    public void noErrorsForShortWordsByDefault() throws RedPenException {
+        Document document = prepareSimpleDocument("A validator is a validator.");
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        assertEquals(1, errors.get(document).size());
+        assertEquals("Found repeated word \"validator\".", errors.get(document).get(0).getMessage());
+    }
+
+    @Test
+    public void minimumWordLengthIsConfigurable() throws RedPenException {
+        config.getValidatorConfigs().get(0).addProperty("min_len", "10");
+        Document document = prepareSimpleDocument("A validator is a validator.");
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        assertEquals(0, errors.get(document).size());
+    }
+
+    @Test
+    public void minimumWordLengthIsConfigurableForJapanese() throws RedPenException {
+        config = Configuration.builder("ja")
+          .addValidatorConfig(new ValidatorConfiguration(validatorName).addProperty("min_len", "5"))
+          .build();
+        Document document = prepareSimpleDocument("こんにちは！こんにちは！");
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        assertEquals(1, errors.get(document).size());
+    }
+
+    @Test
     public void testDoubledSkipListWord() throws RedPenException {
         Document document = prepareSimpleDocument("That is true, as far as I know.");
 
@@ -69,10 +101,8 @@ public class DoubledWordValidatorTest extends BaseValidatorTest {
 
     @Test
     public void testDoubledUserDefinedSkipWord() throws RedPenException {
-        config = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration(validatorName)
-                        .addProperty("list", "redpen,tool"))
-                .build();
+        config = Configuration.builder().addValidatorConfig(new ValidatorConfiguration(validatorName)
+          .addProperty("list", "redpen,tool")).build();
 
         Document document = prepareSimpleDocument("RedPen is RedPen right?");
 
