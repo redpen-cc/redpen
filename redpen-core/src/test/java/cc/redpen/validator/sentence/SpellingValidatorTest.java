@@ -98,6 +98,32 @@ public class SpellingValidatorTest extends BaseValidatorTest {
     }
 
     @Test
+    public void nonLatin() throws RedPenException {
+        config = Configuration.builder("ru")
+                .addValidatorConfig(new ValidatorConfiguration(validatorName).addProperty("list", "привет"))
+                .build();
+
+        Document document = prepareSimpleDocument("Привет, мир!");
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        assertEquals(1, errors.get(document).size());
+    }
+
+    @Test
+    public void punctuationInsideOfWord() throws RedPenException {
+        config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration(validatorName).addProperty("list", "can-do"))
+                .build();
+
+        Document document = prepareSimpleDocument("can-do");
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        assertEquals(0, errors.get(document).size());
+    }
+
+    @Test
     public void testPunctuation() throws RedPenException {
         RedPen redPen = new RedPen(config);
 
