@@ -34,6 +34,7 @@ import java.util.*;
 
 import static cc.redpen.parser.ParserUtils.addChild;
 import static org.parboiled.common.Preconditions.checkArgNotNull;
+import static org.parboiled.common.StringUtils.repeat;
 
 /**
  * Using Pegdown Parser.
@@ -307,11 +308,16 @@ public class ToFileContentSerializer implements Visitor {
     public void visit(SimpleNode simpleNode) {
         //TODO validate detail
         int lineNumber = getLineNumberFromStartIndex(simpleNode.getStartIndex());
+        int offsetInLine = simpleNode.getStartIndex() - getLineStartIndex(lineNumber);
 
         switch (simpleNode.getType()) {
             case Linebreak:
-                addCandidateSentence(
-                        getLineNumberFromStartIndex(simpleNode.getStartIndex() + 1),
+                if (simpleNode.getEndIndex() - simpleNode.getStartIndex() > 1) {
+                    // extra whitespace at the end of line
+                    addCandidateSentence(lineNumber,
+                            repeat(' ', simpleNode.getEndIndex() - simpleNode.getStartIndex() - 1), offsetInLine);
+                }
+                addCandidateSentence(getLineNumberFromStartIndex(simpleNode.getEndIndex()),
                         sentenceExtractor.getBrokenLineSeparator(), 0); //NOTE: column Offset of Linebreak should be always 0.
                 break;
             case Nbsp:
@@ -319,24 +325,16 @@ public class ToFileContentSerializer implements Visitor {
             case HRule:
                 break;
             case Apostrophe:
-                addCandidateSentence(
-                        getLineNumberFromStartIndex(simpleNode.getStartIndex()),
-                        "'", simpleNode.getStartIndex() - getLineStartIndex(lineNumber));
+                addCandidateSentence(lineNumber, "'", offsetInLine);
                 break;
             case Ellipsis:
-                addCandidateSentence(
-                        getLineNumberFromStartIndex(simpleNode.getStartIndex()),
-                        "...", simpleNode.getStartIndex() - getLineStartIndex(lineNumber));
+                addCandidateSentence(lineNumber, "...", offsetInLine);
                 break;
             case Emdash:
-                addCandidateSentence(
-                        getLineNumberFromStartIndex(simpleNode.getStartIndex()),
-                        "–", simpleNode.getStartIndex() - getLineStartIndex(lineNumber));
+                addCandidateSentence(lineNumber, "–", offsetInLine);
                 break;
             case Endash:
-                addCandidateSentence(
-                        getLineNumberFromStartIndex(simpleNode.getStartIndex()),
-                        "—", simpleNode.getStartIndex() - getLineStartIndex(lineNumber));
+                addCandidateSentence(lineNumber, "—", offsetInLine);
                 break;
             default:
                 LOG.warn("Illegal SimpleNode:[" + simpleNode.toString() + "]");

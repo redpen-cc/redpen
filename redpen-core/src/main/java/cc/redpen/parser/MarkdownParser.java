@@ -58,19 +58,17 @@ class MarkdownParser extends BaseDocumentParser {
         Document.DocumentBuilder documentBuilder = Document.builder(tokenizer);
         fileName.ifPresent(documentBuilder::setFileName);
 
-        StringBuilder sb = new StringBuilder();
-        String line;
-        int charCount = 0;
-        List<Integer> lineList = new ArrayList<>();
-        BufferedReader br = createReader(inputStream);
+        StringBuilder fullText = new StringBuilder();
+        List<Integer> lineLengths = new ArrayList<>();
 
-        try {
+        try (BufferedReader br = createReader(inputStream)) {
+            String line;
+            int charCount = 0;
             while ((line = br.readLine()) != null) {
-                sb.append(line);
-                sb.append("\n");
+                fullText.append(line).append("\n");
                 // TODO surrogate pair ?
                 charCount += line.length() + 1;
-                lineList.add(charCount);
+                lineLengths.add(charCount);
             }
         } catch (IOException e) {
             throw new RedPenException(e);
@@ -82,11 +80,8 @@ class MarkdownParser extends BaseDocumentParser {
             documentBuilder.appendSection(new Section(0, headers));
 
             // TODO create documentBuilder after parsing... overhead...
-            RootNode rootNode =
-                    pegDownProcessor.parseMarkdown(sb.toString().toCharArray());
-            ToFileContentSerializer serializer =
-                    new ToFileContentSerializer(documentBuilder,
-                            lineList, sentenceExtractor);
+            RootNode rootNode = pegDownProcessor.parseMarkdown(fullText.toString().toCharArray());
+            ToFileContentSerializer serializer = new ToFileContentSerializer(documentBuilder, lineLengths, sentenceExtractor);
             serializer.toFileContent(rootNode);
         } catch (ParsingTimeoutException e) {
             throw new RedPenException("Failed to parse timeout: ", e);
