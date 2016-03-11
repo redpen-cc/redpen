@@ -41,7 +41,7 @@ final public class SectionLengthValidator extends Validator {
         }
 
         if (sectionCharNumber > getInt("max_num")) {
-            addLocalizedError(section.getJoinedHeaderContents(), sectionCharNumber);
+            addLocalizedError(section.getJoinedHeaderContents(), sectionCharNumber, getInt("max_num"));
         }
     }
 }
