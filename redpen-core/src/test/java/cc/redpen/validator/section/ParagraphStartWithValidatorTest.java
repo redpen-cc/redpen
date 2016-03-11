@@ -27,8 +27,8 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
-import static java.util.Collections.singletonMap;
 import static org.junit.Assert.assertEquals;
 
 public class ParagraphStartWithValidatorTest {
@@ -36,27 +36,48 @@ public class ParagraphStartWithValidatorTest {
 
     @Before
     public void setUp() throws Exception {
-        validator.preInit(new ValidatorConfiguration("ParagraphStartWith").addAttribute("start_from", " "), Configuration.builder().build());
+        validator.preInit(new ValidatorConfiguration("ParagraphStartWith").addProperty("start_from", "  "), Configuration.builder().build());
     }
 
     @Test
     public void startWithoutSpace() {
-        assertEquals(1, validateParagraph(new Paragraph().appendSentence("it like a piece of a cake.", 1)).size());
+        assertEquals(1, validateParagraphs(new Paragraph().appendSentence("it like a piece of a cake.", 1)).size());
     }
 
     @Test
-    public void startWithSpace() {
-        assertEquals(0, validateParagraph(new Paragraph().appendSentence(" it like a piece of a cake.", 1)).size());
+    public void startWithIncorrectPrefix() {
+        assertEquals(1, validateParagraphs(new Paragraph().appendSentence(" it like a piece of a cake.", 1)).size());
+    }
+
+    @Test
+    public void startWithTooLongPrefix() {
+        assertEquals(1, validateParagraphs(new Paragraph().appendSentence("   it like a piece of a cake.", 1)).size());
+    }
+
+    @Test
+    public void startWithCorrectPrefix() {
+        assertEquals(0, validateParagraphs(new Paragraph().appendSentence("  it like a piece of a cake.", 1)).size());
+    }
+
+    @Test
+    public void twoParagraphs() {
+        List<ValidationError> errors = validateParagraphs(
+          new Paragraph().appendSentence("p1.", 1),
+          new Paragraph().appendSentence("p2.", 2)
+        );
+        assertEquals(2, errors.size());
+        assertEquals("p1.", errors.get(0).getSentence().getContent());
+        assertEquals("p2.", errors.get(1).getSentence().getContent());
     }
 
     @Test
     public void voidParagraph() {
-        assertEquals(0, validateParagraph(new Paragraph()).size());
+        assertEquals(0, validateParagraphs(new Paragraph()).size());
     }
 
-    private List<ValidationError> validateParagraph(Paragraph paragraph) {
+    private List<ValidationError> validateParagraphs(Paragraph...paragraphs) {
         Section section = new Section(0);
-        section.appendParagraph(paragraph);
+        Stream.of(paragraphs).forEach(section::appendParagraph);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(section);
