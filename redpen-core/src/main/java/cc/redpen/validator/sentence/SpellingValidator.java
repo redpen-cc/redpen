@@ -21,23 +21,15 @@ import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
 
 public final class SpellingValidator extends SpellingDictionaryValidator {
-    private static String skipCharacters = "[\\!-/:-@\\[-`{-~]";
-
     @Override
     public void validate(Sentence sentence) {
         for (TokenElement token : sentence.getTokens()) {
-            String surface = normalize(token.getSurface());
-            if (surface.length() == 0) {
-                continue;
-            }
+            String surface = token.getSurface().toLowerCase();
+            if (surface.length() == 0 || surface.matches("\\P{L}+")) continue;
 
             if (dictionaryExists() && !inDictionary(surface)) {
                 addLocalizedErrorFromToken(sentence, token);
             }
         }
-    }
-
-    private String normalize(String token) {
-        return token.toLowerCase().replaceAll(skipCharacters, "");
     }
 }
