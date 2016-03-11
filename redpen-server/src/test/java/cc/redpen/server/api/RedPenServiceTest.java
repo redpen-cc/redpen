@@ -21,7 +21,6 @@ public class RedPenServiceTest {
   public void defaultConfigurations() throws Exception {
     RedPenService service = new RedPenService(null);
     Map<String, RedPen> redPens = service.getRedPens();
-    assertEquals(5, redPens.size());
     assertEquals("en", redPens.get("default").getConfiguration().getLang());
     assertEquals("en", redPens.get("en").getConfiguration().getLang());
 

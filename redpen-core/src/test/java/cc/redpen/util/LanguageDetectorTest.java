@@ -13,6 +13,11 @@ public class LanguageDetectorTest {
   }
 
   @Test
+  public void russianUsesCyrillicLetters() throws Exception {
+    assertEquals("ru", detector.detectLanguage("Привет, Mary!"));
+  }
+
+  @Test
   public void japaneseIsDetectedForKatakana() throws Exception {
     assertEquals("ja", detector.detectLanguage("コンピューター"));
   }

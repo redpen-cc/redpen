@@ -48,23 +48,27 @@ public class SymbolTable implements Serializable, Cloneable {
     }
 
     public Map<SymbolType, Symbol> getDefaultSymbols() {
-        if (lang.equals("ja")) {
-            LOG.info("\"ja\" is specified.");
-            switch (this.variant) {
-                case "hankaku":
-                    LOG.info("\"hankaku\" variant is specified");
-                    return JAPANESE_HANKAKU_SYMBOLS;
-                case "zenkaku2":
-                    LOG.info("\"zenkaku2\" variant is specified");
-                    return JAPANESE_ZENKAKU2_SYMBOLS;
-                default:
-                    this.variant = "zenkaku";
-                    LOG.info("\"zenkaku\" variant is specified");
-                    return JAPANESE_SYMBOLS;
-            }
-        } else {
-            LOG.info("Default symbol settings are loaded");
-            return DEFAULT_SYMBOLS;
+        switch (lang) {
+            case "ja":
+                LOG.info("\"ja\" is specified.");
+                switch (this.variant) {
+                    case "hankaku":
+                        LOG.info("\"hankaku\" variant is specified");
+                        return JAPANESE_HANKAKU_SYMBOLS;
+                    case "zenkaku2":
+                        LOG.info("\"zenkaku2\" variant is specified");
+                        return JAPANESE_ZENKAKU2_SYMBOLS;
+                    default:
+                        this.variant = "zenkaku";
+                        LOG.info("\"zenkaku\" variant is specified");
+                        return JAPANESE_SYMBOLS;
+                }
+            case "ru":
+                LOG.info("\"ru\" is specified");
+                return RUSSIAN_SYMBOLS;
+            default:
+                LOG.info("Default symbol settings are loaded");
+                return DEFAULT_SYMBOLS;
         }
     }
 
@@ -177,6 +181,7 @@ public class SymbolTable implements Serializable, Cloneable {
     }
 
     private static final Map<SymbolType, Symbol> DEFAULT_SYMBOLS;
+    private static final Map<SymbolType, Symbol> RUSSIAN_SYMBOLS;
     private static final Map<SymbolType, Symbol> JAPANESE_SYMBOLS;
     private static final Map<SymbolType, Symbol> JAPANESE_ZENKAKU2_SYMBOLS;
     private static final Map<SymbolType, Symbol> JAPANESE_HANKAKU_SYMBOLS;
@@ -224,8 +229,8 @@ public class SymbolTable implements Serializable, Cloneable {
                 , new Symbol(TILDE, '~', "〜")
                 , new Symbol(LEFT_SINGLE_QUOTATION_MARK, '\'', "")
                 , new Symbol(RIGHT_SINGLE_QUOTATION_MARK, '\'', "")
-                , new Symbol(LEFT_DOUBLE_QUOTATION_MARK, '\"', "")
-                , new Symbol(RIGHT_DOUBLE_QUOTATION_MARK, '\"', "")
+                , new Symbol(LEFT_DOUBLE_QUOTATION_MARK, '\"', "«")
+                , new Symbol(RIGHT_DOUBLE_QUOTATION_MARK, '\"', "»")
 
                 // Digits
                 , new Symbol(DIGIT_ZERO, '0', "")
@@ -238,6 +243,11 @@ public class SymbolTable implements Serializable, Cloneable {
                 , new Symbol(DIGIT_SEVEN, '7', "")
                 , new Symbol(DIGIT_EIGHT, '8', "")
                 , new Symbol(DIGIT_NINE, '9', ""));
+
+        RUSSIAN_SYMBOLS = new LinkedHashMap<>(DEFAULT_SYMBOLS);
+        RUSSIAN_SYMBOLS.put(NUMBER_SIGN, new Symbol(NUMBER_SIGN, '№', "#＃", true, false));
+        RUSSIAN_SYMBOLS.put(LEFT_DOUBLE_QUOTATION_MARK, new Symbol(LEFT_DOUBLE_QUOTATION_MARK, '«', "\"", true, false));
+        RUSSIAN_SYMBOLS.put(RIGHT_DOUBLE_QUOTATION_MARK, new Symbol(RIGHT_DOUBLE_QUOTATION_MARK, '»', "\"", false, true));
 
         JAPANESE_SYMBOLS = initializeSymbols(
                 // Common symbols
