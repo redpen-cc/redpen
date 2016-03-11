@@ -36,7 +36,7 @@ public class ParagraphStartWithValidatorTest {
 
     @Before
     public void setUp() throws Exception {
-        validator.preInit(new ValidatorConfiguration("ParagraphStartWith").addProperty("start_from", " "), Configuration.builder().build());
+        validator.preInit(new ValidatorConfiguration("ParagraphStartWith").addProperty("start_from", "  "), Configuration.builder().build());
     }
 
     @Test
@@ -45,8 +45,18 @@ public class ParagraphStartWithValidatorTest {
     }
 
     @Test
-    public void startWithSpace() {
-        assertEquals(0, validateParagraphs(new Paragraph().appendSentence(" it like a piece of a cake.", 1)).size());
+    public void startWithIncorrectPrefix() {
+        assertEquals(1, validateParagraphs(new Paragraph().appendSentence(" it like a piece of a cake.", 1)).size());
+    }
+
+    @Test
+    public void startWithTooLongPrefix() {
+        assertEquals(1, validateParagraphs(new Paragraph().appendSentence("   it like a piece of a cake.", 1)).size());
+    }
+
+    @Test
+    public void startWithCorrectPrefix() {
+        assertEquals(0, validateParagraphs(new Paragraph().appendSentence("  it like a piece of a cake.", 1)).size());
     }
 
     @Test

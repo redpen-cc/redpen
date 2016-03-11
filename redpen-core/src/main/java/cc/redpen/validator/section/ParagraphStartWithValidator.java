@@ -22,6 +22,8 @@ import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.Validator;
 
+import static java.lang.Character.isWhitespace;
+
 /**
  * Validate whether paragraph start as specified.
  */
@@ -37,8 +39,10 @@ public final class ParagraphStartWithValidator extends Validator {
                 continue;
             }
             Sentence firstSentence = currentParagraph.getSentence(0);
-            if (firstSentence.getContent().indexOf(getString("start_from")) != 0) {
-                addLocalizedError(firstSentence, firstSentence.getContent().charAt(0));
+            String content = firstSentence.getContent();
+            String prefix = getString("start_from");
+            if (!content.startsWith(prefix) || prefix.length() <= content.length() && isWhitespace(content.charAt(prefix.length()))) {
+                addLocalizedError(firstSentence, content.charAt(0));
             }
         }
     }
