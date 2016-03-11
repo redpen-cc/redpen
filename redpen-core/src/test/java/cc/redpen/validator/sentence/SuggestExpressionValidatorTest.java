@@ -19,7 +19,7 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
-import cc.redpen.model.Sentence;
+import cc.redpen.validator.BaseValidatorTest;
 import cc.redpen.validator.ValidationError;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,67 +32,82 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 
 
-public class SuggestExpressionValidatorTest {
+public class SuggestExpressionValidatorTest extends BaseValidatorTest {
+    private SuggestExpressionValidator validator;
 
-    private SuggestExpressionValidator suggestExpressionValidator;
+    public SuggestExpressionValidatorTest() {
+        super("SuggestExpression");
+    }
 
     @Before
     public void init() {
-        suggestExpressionValidator = new SuggestExpressionValidator();
+        validator = new SuggestExpressionValidator();
         Map<String, String> synonymSamples = new HashMap<>();
         synonymSamples.put("like", "such as");
         synonymSamples.put("info", "information");
-        suggestExpressionValidator.setSynonyms(synonymSamples);
+        synonymSamples.put("こんにちは", "良い一日");
+        validator.setSynonyms(synonymSamples);
     }
 
     @Test
     public void testSynonym() {
-        Sentence str = new Sentence("it like a piece of a cake.", 0);
         List<ValidationError> errors = new ArrayList<>();
-        suggestExpressionValidator.setErrorList(errors);
-        suggestExpressionValidator.validate(str);
+        validator.setErrorList(errors);
+        validator.validate(sentence("it like a piece of a cake."));
         assertEquals(1, errors.size());
     }
 
     @Test
     public void testWithoutSynonym() {
-        Sentence str = new Sentence("it love a piece of a cake.", 0);
         List<ValidationError> errors = new ArrayList<>();
-        suggestExpressionValidator.setErrorList(errors);
-        suggestExpressionValidator.validate(str);
+        validator.setErrorList(errors);
+        validator.validate(sentence("it love a piece of a cake."));
         assertEquals(0, errors.size());
     }
 
     @Test
     public void testWithMultipleSynonyms() {
-        Sentence str = new Sentence("it like a the info.", 0);
         List<ValidationError> errors = new ArrayList<>();
-        suggestExpressionValidator.setErrorList(errors);
-        suggestExpressionValidator.validate(str);
+        validator.setErrorList(errors);
+        validator.validate(sentence("it like a the info."));
         assertEquals(2, errors.size());
     }
 
     @Test
-    public void testWitoutZeroLengthSentence() {
-        Sentence str = new Sentence("", 0);
+    public void matchWholeExpressionsOnly() {
         List<ValidationError> errors = new ArrayList<>();
-        suggestExpressionValidator.setErrorList(errors);
-        suggestExpressionValidator.validate(str);
+        validator.setErrorList(errors);
+        validator.validate(sentence("the information."));
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void japanese() {
+        List<ValidationError> errors = new ArrayList<>();
+        validator.setErrorList(errors);
+        validator.validate(sentence("こんにちは世界"));
+        assertEquals(1, errors.size());
+    }
+
+    @Test
+    public void testWitoutZeroLengthSentence() {
+        List<ValidationError> errors = new ArrayList<>();
+        validator.setErrorList(errors);
+        validator.validate(sentence(""));
         assertEquals(0, errors.size());
     }
 
     @Test
     public void testErrorMessageIsProperlyFormatted() {
-        Sentence str = new Sentence("Thank you for the info.", 0);
         List<ValidationError> errors = new ArrayList<>();
-        suggestExpressionValidator.setErrorList(errors);
-        suggestExpressionValidator.validate(str);
+        validator.setErrorList(errors);
+        validator.validate(sentence("Thank you for the info."));
         assertEquals(1, errors.size());
         assertEquals("Found invalid word \"info\". Use the synonym \"information\" instead.", errors.get(0).getMessage());
     }
 
     @Test
     public void initDoesNotFailIfDictionaryIsNotSpecified() throws Exception {
-        suggestExpressionValidator.preInit(new ValidatorConfiguration("SuggestExpression"), Configuration.builder().build());
+        validator.preInit(new ValidatorConfiguration("SuggestExpression"), Configuration.builder().build());
     }
 }

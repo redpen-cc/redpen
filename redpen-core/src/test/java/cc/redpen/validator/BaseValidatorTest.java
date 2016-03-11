@@ -27,5 +27,9 @@ public abstract class BaseValidatorTest {
       .addSentence(new Sentence(sentrence, 1))
       .build();
   }
+
+  protected Sentence sentence(String text) {
+    return prepareSimpleDocument(text).getLastSection().getParagraph(0).getSentence(0);
+  }
 }
 

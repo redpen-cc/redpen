@@ -58,8 +58,7 @@ public class SymbolWithSpaceValidator extends Validator {
                 key = "Before";
             }
 
-            if (position < sentenceStr.length() - 1 && symbol.isNeedAfterSpace()
-                && !isWhitespace(sentenceStr.charAt(position + 1)) && isLetterOrDigit(sentenceStr.charAt(position + 1))) {
+            if (position < sentenceStr.length() - 1 && symbol.isNeedAfterSpace() && isLetterOrDigit(sentenceStr.charAt(position + 1))) {
                 key += "After";
             }
 

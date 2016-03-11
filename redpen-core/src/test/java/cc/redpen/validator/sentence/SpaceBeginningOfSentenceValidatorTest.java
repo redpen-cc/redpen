@@ -32,7 +32,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-public class SpaceBeginningOfSpenceValidatorTest {
+public class SpaceBeginningOfSentenceValidatorTest {
     @Test
     public void testProcessSentenceWithoutEndSpace() throws RedPenException {
         Configuration config = Configuration.builder()
