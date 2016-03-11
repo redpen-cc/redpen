@@ -77,6 +77,20 @@ public class SymbolWithSpaceValidatorTest extends BaseValidatorTest {
     }
 
     @Test
+    public void testDoNotNeedAfterSpaceAtTheEndOfSentence() throws RedPenException {
+        Document document = prepareSimpleDocument("Hello (world).");
+
+        config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
+                .addSymbol(new Symbol(RIGHT_PARENTHESIS, ')', "", false, true))
+                .build();
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        assertEquals(0, errors.get(document).size());
+    }
+
+    @Test
     public void testNeedBeforeSpace() throws RedPenException {
         Document document = prepareSimpleDocument("I like her(Nancy) very much.");
 
