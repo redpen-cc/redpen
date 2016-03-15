@@ -91,7 +91,12 @@ public class RedPenRunner {
 
         WebAppContext webapp = new WebAppContext();
         webapp.setContextPath(contextPath);
-        webapp.setWar(location.toExternalForm());
+        if (location.toExternalForm().endsWith("redpen-server/target/classes/")) {
+            // use redpen-server/target/redpen-server instead, because target/classes doesn't contain web resources.
+            webapp.setWar(location.toExternalForm() + "../redpen-server/");
+        } else {
+            webapp.setWar(location.toExternalForm());
+        }
 
         handlerList.addHandler(webapp);
         server.setHandler(handlerList);
