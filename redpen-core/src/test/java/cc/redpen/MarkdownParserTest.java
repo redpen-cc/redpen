@@ -789,6 +789,14 @@ public class MarkdownParserTest extends BaseParserTest {
         assertEquals(0, errors.size());
     }
 
+    @Test
+    public void testImageNestedLink() throws Exception {
+        String sampleText= "[![label](https://example.com/path/to/img.png)](https://example.com/path/to/link)";
+        Document doc = createFileContent(sampleText);
+        assertEquals(0,  doc.getSection(0).getParagraph(0).getNumberOfSentences()); //NOTE: the above is not a sentence.
+    }
+
+
     private Document createFileContent(String inputDocumentString,
                                        Configuration config) {
         DocumentParser parser = DocumentParser.MARKDOWN;
