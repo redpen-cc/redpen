@@ -121,7 +121,6 @@
                         </goals>
                         <configuration>
                             <includeGroupIds>org.eclipse.jetty, commons-cli, javax.servlet</includeGroupIds>
-                            <includeScope>provided</includeScope>
                             <!-- remove some files in order to decrease size -->
                             <excludes>*, about_files/*, META-INF/*</excludes>
                             <outputDirectory>
