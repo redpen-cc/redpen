@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
+import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -56,7 +57,13 @@ public class RedPenService {
                     String configPath = context != null ? context.getInitParameter("redpen.conf.path") : null;
                     if (configPath != null) {
                         LOG.info("Config Path is set to \"{}\"", configPath);
-                        RedPen defaultRedPen = new RedPen(new ConfigurationLoader().secure().loadFromResource(configPath));
+                        Configuration configuration;
+                        try {
+                            configuration = new ConfigurationLoader().secure().loadFromResource(configPath);
+                        }catch(RedPenException rpe){
+                            configuration = new ConfigurationLoader().secure().load(new File(configPath));
+                        }
+                        RedPen defaultRedPen = new RedPen(configuration);
                         redPens.put(DEFAULT_LANGUAGE, defaultRedPen);
                     } else {
                         // if config path is not set, fallback to default config path
