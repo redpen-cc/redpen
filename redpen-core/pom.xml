@@ -159,7 +159,6 @@
             <artifactId>kuromoji-ipadic</artifactId>
             <version>0.9.0</version>
             <type>jar</type>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
