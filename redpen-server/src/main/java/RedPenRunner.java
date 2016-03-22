@@ -47,6 +47,8 @@ public class RedPenRunner {
 
         options.addOption(new Option(STOP_KEY, true, "stop key"));
 
+        options.addOption("c", "conf", true, "Configuration file (REQUIRED)");
+
         CommandLineParser parser = new BasicParser();
         CommandLine commandLine = null;
 
@@ -96,6 +98,9 @@ public class RedPenRunner {
             webapp.setWar(location.toExternalForm() + "../redpen-server/");
         } else {
             webapp.setWar(location.toExternalForm());
+        }
+        if(commandLine.hasOption("c")) {
+            webapp.setInitParameter("redpen.conf.path", commandLine.getOptionValue("c"));
         }
 
         handlerList.addHandler(webapp);
