@@ -17,20 +17,16 @@ See the detail usage in the RedPen [home page](http://redpen.cc/).
 Features
 =========
 
-- Language Independent
+- Language independent
 - Highly customizable
 - Multi platform (MacOS, Windows, and Linux)
-- Support various markup text formats
+- Support various markup text formats (Wiki, AsciiDoc, LaTeX)
 - [Plugin system: users can write their extensions with JavaScript](http://blog.redpen.cc/2015/09/08/writing-extension-with-javascript/)
 - [Practical REST API and UI](http://redpen.herokuapp.com/)
 <p align="center">
    <a href="http://redpen.herokuapp.com/"><img src="logo/redpen-ui.png"/></a>
 </p>
 
-Keywords
-========
-
-proofreading,  document inspection, spellchecker, markup texts (Wiki, Markdown, AsciiDoc and LaTeX)
 
 Ecosystem
 ==========
