@@ -39,3 +39,5 @@ target
 
 # Maven
 *.releaseBackup
+
+.DS_Store
