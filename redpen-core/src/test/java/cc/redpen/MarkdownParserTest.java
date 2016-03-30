@@ -796,6 +796,57 @@ public class MarkdownParserTest extends BaseParserTest {
         assertEquals(0,  doc.getSection(0).getParagraph(0).getNumberOfSentences()); //NOTE: the above is not a sentence.
     }
 
+    @Test
+    public void testSuccuessiveImageNestedLink() throws Exception {
+        String sampleText =
+                "[![label1](https://example.com/path/to/img1.png)](https://example.com/path/to/link)\n" +
+                        "[![label2](https://example.com/path/to/img2.png)](https://example.com/path/to/link)\n";
+        try {
+            createFileContent(sampleText);
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testSuccuessiveImageNestedLinkWithJaConf() throws Exception {
+        String sampleText =
+                "[![ラベル1](https://example.com/path/to/img1.png)](https://example.com/path/to/link)\n" +
+                        "[![ラベル2](https://example.com/path/to/img2.png)](https://example.com/path/to/link)\n";
+        Configuration conf = Configuration.builder("ja").build();
+        try {
+            createFileContent(sampleText, conf);
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testSuccuessiveImageNestedLinkWithJaConf2() throws Exception {
+        String sampleText =
+                "[![ラベル1](https://example.com/path/to/img1.png)](https://example.com/path/to/link)" +
+                        "[![ラベル2](https://example.com/path/to/img2.png)](https://example.com/path/to/link)";
+        Configuration conf = Configuration.builder("ja").build();
+        try {
+            createFileContent(sampleText, conf);
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testThreeSuccuessiveImageNestedLinkWithJaConf() throws Exception {
+        String sampleText =
+                "[![ラベル1](https://example.com/path/to/img1.png)](https://example.com/path/to/link)\n" +
+                        "[![ラベル2](https://example.com/path/to/img2.png)](https://example.com/path/to/link)\n" +
+                        "[![ラベル3](https://example.com/path/to/img3.png)](https://example.com/path/to/link)\n";
+        Configuration conf = Configuration.builder("ja").build();
+        try {
+            createFileContent(sampleText, conf);
+        } catch (Exception e) {
+            fail();
+        }
+    }
 
     private Document createFileContent(String inputDocumentString,
                                        Configuration config) {

@@ -55,7 +55,9 @@ public class MergedCandidateSentence {
         for (CandidateSentence sentence : candidateSentences) {
             contents.append(sentence.getContent());
             offsetMap.addAll(sentence.getOffsetMap());
-            if (sentence.getLink() != null) {
+            //TODO: add link info even when there is not sentence content (or add link
+            //      information to global storage). See https://github.com/redpen-cc/redpen/issues/578
+            if (sentence.getLink() != null && sentence.getOffsetMap().size() > 0)  {
                 links.put(sentence.getOffsetMap().get(0), sentence.getLink());
             }
         }
