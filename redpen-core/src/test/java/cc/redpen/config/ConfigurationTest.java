@@ -139,11 +139,11 @@ public class ConfigurationTest {
     public void findFileFailsIfFileNotFound_basePathPresent() throws Exception {
         try {
             System.setProperty("REDPEN_HOME", "src");
-            Configuration.builder().setBaseDir(new File("some/base/dir")).build().findFile("hello.xml");
+            Configuration.builder().setBaseDir(new File("base_dir")).build().findFile("hello.xml");
             fail("Expecting RedPenException");
         }
         catch (RedPenException e) {
-            assertEquals("hello.xml is not under working directory (" + new File("").getAbsoluteFile() + "), base (some/base/dir), $REDPEN_HOME (" + new File("src").getAbsoluteFile() + ").", e.getMessage());
+            assertEquals("hello.xml is not under working directory (" + new File("").getAbsoluteFile() + "), base (base_dir), $REDPEN_HOME (" + new File("src").getAbsoluteFile() + ").", e.getMessage());
         }
     }
 
