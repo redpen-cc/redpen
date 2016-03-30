@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/redpen-cc/redpen.svg?branch=master)](https://travis-ci.org/redpen-cc/redpen)
 [![Coverage Status](https://coveralls.io/repos/recruit-tech/redpen/badge.png)](https://coveralls.io/r/recruit-tech/redpen)
+[![Build status](https://ci.appveyor.com/api/projects/status/qtqmphigaip8lfwk?svg=true)](https://ci.appveyor.com/project/takahi-i/redpen)
 [![Gitter chat](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/recruit-tech/redpen)
 
 Overview
