@@ -158,4 +158,22 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
         assertEquals(new LineOffset(1, 9), errors.get(0).getStartPosition().get());
         assertEquals(new LineOffset(1, 10), errors.get(0).getEndPosition().get());
     }
+
+
+    @Test
+    public void testErrorAfterCommaJa() throws RedPenException {
+        String sampleText = "二種類の出力（json、json2）をサポートしてます。";
+        Configuration configuration = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
+                .build();
+        DocumentParser parser = DocumentParser.MARKDOWN;
+        List<Document> documents = new ArrayList<>();
+        Document document  = parser.parse(sampleText, new SentenceExtractor(configuration.getSymbolTable()),
+                configuration.getTokenizer());
+        documents.add(document);
+
+        RedPen redPen = new RedPen(configuration);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
+        assertEquals(0, errors.size());
+    }
 }
