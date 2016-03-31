@@ -1,28 +1,36 @@
 <redpen-conf lang="en">
     <validators>
+        <!--Rules on sentence length-->
         <validator name="SentenceLength">
-            <property name="max_len" value="100"/>
+            <property name="max_len" value="120"/>
         </validator>
-        <validator name="InvalidSymbol"/>
+        <validator name="CommaNumber" />
+
+        <!--Rules on expressions-->
         <validator name="SymbolWithSpace"/>
         <validator name="SectionLength">
             <property name="max_char_num" value="2000"/>
         </validator>
-        <validator name="ParagraphNumber"/>
-        <validator name="Spelling"/>
         <validator name="Contraction" />
-        <validator name="DoubledWord" />
         <validator name="SuccessiveWord" />
         <validator name="EndOfSentence" />
-        <validator name="SpaceBeginningOfSentence" />
-        <validator name="JavaScript" />
-
         <validator name="FrequentSentenceStart"/>
         <validator name="UnexpandedAcronym"/>
+        <validator name="WeakExpression"/>
+
+        <!--Rules on sections and paragraphs-->
+        <validator name="ParagraphNumber"/>
+        <validator name="SpaceBeginningOfSentence" />
+        <validator name="ParenthesizedSentence"/>
+
+        <!--Rules on symbols and terminologies-->
+        <validator name="InvalidSymbol"/>
+        <validator name="Spelling"/>
         <validator name="WordFrequency"/>
         <validator name="Hyphenation"/>
         <validator name="NumberFormat"/>
-        <validator name="ParenthesizedSentence"/>
-        <validator name="WeakExpression"/>
+
+        <!--Load JavaScript validators-->
+        <validator name="JavaScript" />
     </validators>
 </redpen-conf>
