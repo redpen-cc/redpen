@@ -24,6 +24,7 @@ import cc.redpen.validator.Validator;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -44,7 +45,7 @@ public class SpaceBetweenAlphabeticalWordValidator extends Validator {
     }
 
     @Override public List<String> getSupportedLanguages() {
-        return singletonList(Locale.JAPANESE.getLanguage());
+        return Arrays.asList(Locale.JAPANESE.getLanguage(), Locale.CHINESE.getLanguage());
     }
 
     @Override

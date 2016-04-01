@@ -34,6 +34,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
 
@@ -187,5 +188,12 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
         assertEquals(1, errors.size());
     }
 
-
+    @Test
+    public void testSupportedLanguages() {
+        SpaceBetweenAlphabeticalWordValidator validator = new SpaceBetweenAlphabeticalWordValidator();
+        final List<String> languages = validator.getSupportedLanguages();
+        assertEquals(2, languages.size());
+        assertEquals(Locale.JAPANESE.getLanguage(), languages.get(0));
+        assertEquals(Locale.CHINESE.getLanguage(), languages.get(1));
+    }
 }
