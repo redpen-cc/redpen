@@ -176,4 +176,16 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
         List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
         assertEquals(0, errors.size());
     }
+
+    @Test
+    public void testNeedNoBeforeAndAfterSpace() throws RedPenException {
+        SpaceBetweenAlphabeticalWordValidator validator = new SpaceBetweenAlphabeticalWordValidator();
+        validator.preInit(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord").addProperty("forbidden", "true"), Configuration.builder().build());
+        List<ValidationError> errors = new ArrayList<>();
+        validator.setErrorList(errors);
+        validator.validate(new Sentence("きょうは Coke を飲みたい。", 0));
+        assertEquals(1, errors.size());
+    }
+
+
 }
