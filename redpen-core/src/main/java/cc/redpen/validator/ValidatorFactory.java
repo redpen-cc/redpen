@@ -53,6 +53,7 @@ public class ValidatorFactory {
         registerValidator(SectionLengthValidator.class);
         registerValidator(UnexpandedAcronymValidator.class);
         registerValidator(WordFrequencyValidator.class);
+        registerValidator(SectionLevelValidator.class);
 
         // sentence
         registerValidator(CommaNumberValidator.class);
