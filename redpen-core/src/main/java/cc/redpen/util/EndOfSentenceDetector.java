@@ -17,6 +17,9 @@
  */
 package cc.redpen.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -30,6 +33,7 @@ import java.util.regex.Pattern;
 public class EndOfSentenceDetector {
     private List<String> whiteList;
     private Pattern pattern;
+    private static final Logger LOG = LoggerFactory.getLogger(EndOfSentenceDetector.class);
 
     /**
      * Constructor.
@@ -61,25 +65,19 @@ public class EndOfSentenceDetector {
      * Get sentence end position.
      *
      * @param str input string
-     * @return position of full stop when there is a full stop, -1 otherwise
-     */
-    public int getSentenceEndPosition(String str) {
-        Set<Integer> nonEndOfSentencePositions =
-                extractNonEndOfSentencePositions(str);
-        return getEndPosition(str, 0, nonEndOfSentencePositions);
-    }
-
-    /**
-     * Get sentence end position.
-     *
-     * @param str input string
      * @param startPosition start offset position
      * @return position of full stop when there is a full stop, -1 otherwise
      */
     public int getSentenceEndPosition(String str, int startPosition) {
         Set<Integer> nonEndOfSentencePositions =
                 extractNonEndOfSentencePositions(str);
-        return getEndPosition(str, startPosition, nonEndOfSentencePositions);
+        int result = str.length();
+        try {
+            result = getEndPosition(str, startPosition, nonEndOfSentencePositions);
+        } catch (StackOverflowError e){
+            LOG.error("Catch StackOverflowError parsing :" + str + " from position: " + startPosition);
+        }
+        return result;
     }
 
     private int getEndPosition(String str,
