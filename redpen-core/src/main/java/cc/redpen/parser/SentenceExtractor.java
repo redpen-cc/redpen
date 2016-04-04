@@ -132,7 +132,7 @@ public class SentenceExtractor {
      */
     public int extract(String line, List<Pair<Integer, Integer>> sentencePositions) {
         int startPosition = 0;
-        int periodPosition = endOfSentenceDetector.getSentenceEndPosition(line);
+        int periodPosition = endOfSentenceDetector.getSentenceEndPosition(line, 0);
         while (periodPosition >= 0) {
             sentencePositions.add(new Pair<>(startPosition, periodPosition + 1));
             startPosition = periodPosition + 1;
@@ -148,7 +148,7 @@ public class SentenceExtractor {
      * @return position of full stop when there is a full stop, -1 otherwise
      */
     public int getSentenceEndPosition(String str) {
-        return endOfSentenceDetector.getSentenceEndPosition(str);
+        return endOfSentenceDetector.getSentenceEndPosition(str, 0);
     }
 
     /**
