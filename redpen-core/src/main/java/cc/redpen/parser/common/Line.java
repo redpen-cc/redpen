@@ -36,6 +36,13 @@ public class Line {
     // Whole line is erased.
     protected boolean erased = false;
 
+    protected int lineNo = 0;
+    protected boolean allSameCharacter = false;
+    protected boolean inBlock = false;
+    protected int sectionLevel = 0;
+    protected int listLevel = 0;
+    protected boolean listStart = false;
+
     /**
      * Erase length characters in the line, starting at pos
      *
@@ -195,4 +202,84 @@ public class Line {
         return 0;
     }
 
+    /**
+     * Is this line a repeating set of the same character?
+     *
+     * @return true is all same character
+     */
+    public boolean isAllSameCharacter() {
+        return allSameCharacter;
+    }
+
+    /**
+     * Has this line been completely erased?
+     *
+     * @return true if erased
+     */
+    public boolean isErased() {
+        return erased;
+    }
+
+    /**
+     * Is this line in a block?
+     *
+     * @return true is it's in a block
+     */
+    public boolean isInBlock() {
+        return inBlock;
+    }
+
+
+    /**
+     * Is this line the start of a new list item?
+     *
+     * @return true if it's list start
+     */
+    public boolean isListStart() {
+        return listStart;
+    }
+
+    /**
+     * Return the list level for this line, or zero if it is not in a list.
+     *
+     * @return the list level, or zero if not in a list
+     */
+    public int getListLevel() {
+        return listLevel;
+    }
+
+    /**
+     * If the line is a section header, return the section level,
+     * or zero if the line is not a section header
+     *
+     * @return the section level or zero if not a section header
+     */
+    public int getSectionLevel() {
+        return sectionLevel;
+    }
+
+    public void setInBlock(boolean inBlock) {
+        this.inBlock = inBlock;
+    }
+
+    public void setSectionLevel(int newSectionLevel) {
+        this.sectionLevel = newSectionLevel;
+    }
+
+    public void setListLevel(int newListLevel) {
+        this.listLevel = newListLevel;
+    }
+
+    public void setListStart(boolean listStart) {
+        this.listStart = listStart;
+    }
+
+    /**
+     * Return the original line number for this line
+     *
+     * @return line number
+     */
+    public int getLineNo() {
+        return lineNo;
+    }
 }
