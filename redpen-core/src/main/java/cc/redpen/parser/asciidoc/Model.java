@@ -29,9 +29,9 @@ import java.util.List;
  * A model of the original document, represented as an array of lines
  */
 public class Model {
-    private static final Line EMPTY_LINE = new Line("", 0);
+    private static final AsciiDocLine EMPTY_LINE = new AsciiDocLine("", 0);
 
-    private List<Line> lines = new ArrayList<>();
+    private List<AsciiDocLine> lines = new ArrayList<>();
 
     private int lineIndex = 0;
     private SentenceExtractor sentenceExtractor;
@@ -52,7 +52,7 @@ public class Model {
      * @param lineNumber line number
      * @return the line
      */
-    public Line getLine(int lineNumber) {
+    public AsciiDocLine getLine(int lineNumber) {
         int index = lineNumber - 1;
         if ((index >= 0) && (index < lines.size())) {
             return lines.get(index);
@@ -65,7 +65,7 @@ public class Model {
      *
      * @param line line to be added
      */
-    public void add(Line line) {
+    public void add(AsciiDocLine line) {
         lines.add(line);
     }
 
@@ -90,9 +90,9 @@ public class Model {
      *
      * @return next line
      */
-    public Line getNextLine() {
+    public AsciiDocLine getNextLine() {
         if (lineIndex < lines.size()) {
-            Line line = lines.get(lineIndex);
+            AsciiDocLine line = lines.get(lineIndex);
             lineIndex++;
             return line;
         }
@@ -104,9 +104,9 @@ public class Model {
      *
      * @return line from the model
      */
-    public Line getCurrentLine() {
+    public AsciiDocLine getCurrentLine() {
         if (lineIndex < lines.size()) {
-            Line line = lines.get(lineIndex);
+            AsciiDocLine line = lines.get(lineIndex);
             return line;
         }
         return null;
@@ -127,8 +127,8 @@ public class Model {
      * @param line line to be converted to sentence
      * @return list of converted sentence
      */
-    public List<Sentence> convertToSentences(Line line) {
-        List<Line> lines = new ArrayList<>();
+    public List<Sentence> convertToSentences(AsciiDocLine line) {
+        List<AsciiDocLine> lines = new ArrayList<>();
         lines.add(line);
         return convertToSentences(lines);
     }
@@ -140,13 +140,13 @@ public class Model {
      * @param lines lines to be converted
      * @return list of converted sentence
      */
-    public List<Sentence> convertToSentences(List<Line> lines) {
+    public List<Sentence> convertToSentences(List<AsciiDocLine> lines) {
         List<Sentence> sentences = new ArrayList<>();
 
         String content = "";
         List<LineOffset> offsets = new ArrayList<>();
         for (int ln = 0; ln < lines.size(); ln++) {
-            Line line = lines.get(ln);
+            AsciiDocLine line = lines.get(ln);
 
             for (int i = 0; i < line.length(); i++) {
                 if (line.isValid(i)) {
@@ -178,7 +178,7 @@ public class Model {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (Line ostring : lines) {
+        for (AsciiDocLine ostring : lines) {
             sb.append(ostring.toString());
             sb.append("\n");
         }

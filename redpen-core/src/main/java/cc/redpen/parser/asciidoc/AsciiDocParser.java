@@ -134,7 +134,7 @@ public class AsciiDocParser extends BaseDocumentParser {
                     break;
                 }
                 lineno++;
-                model.add(new Line(line, lineno));
+                model.add(new AsciiDocLine(line, lineno));
             }
             reader.close();
 
@@ -186,7 +186,7 @@ public class AsciiDocParser extends BaseDocumentParser {
                 }
                 // check for a list item
                 else if (model.getCurrentLine().isListStart()) {
-                    List<Line> listElementLines = new ArrayList<>();
+                    List<AsciiDocLine> listElementLines = new ArrayList<>();
                     int listLevel = model.getCurrentLine().getListLevel();
 
                     // add the list start line
@@ -204,7 +204,7 @@ public class AsciiDocParser extends BaseDocumentParser {
                 }
                 // process a paragraph
                 else {
-                    List<Line> paragraphLines = new ArrayList<>();
+                    List<AsciiDocLine> paragraphLines = new ArrayList<>();
                     // current line can't be empty, so this loop will enter at least once
                     while (model.isMore() && !model.getCurrentLine().isEmpty()) {
                         paragraphLines.add(model.getCurrentLine());
@@ -224,7 +224,7 @@ public class AsciiDocParser extends BaseDocumentParser {
      * @param nextLine the subsequent line
      * @return
      */
-    private boolean isListElement(Line line, Line nextLine) {
+    private boolean isListElement(AsciiDocLine line, AsciiDocLine nextLine) {
 
         int pos = 0;
         while (Character.isWhitespace(line.charAt(pos))) {
@@ -313,12 +313,12 @@ public class AsciiDocParser extends BaseDocumentParser {
      * @param line
      * @param state the current state
      */
-    private void processLine(Line line, Model model, State state) {
+    private void processLine(AsciiDocLine line, Model model, State state) {
 
         if (!line.isErased()) {
 
-            Line previousLine = model.getLine(line.getLineNo() - 1);
-            Line nextLine = model.getLine(line.getLineNo() + 1);
+            AsciiDocLine previousLine = model.getLine(line.getLineNo() - 1);
+            AsciiDocLine nextLine = model.getLine(line.getLineNo() + 1);
 
             if (state.inList && (line.getListLevel() == 0)) {
                 line.setListLevel(previousLine.getListLevel());
@@ -445,11 +445,11 @@ public class AsciiDocParser extends BaseDocumentParser {
             }
 
             // attributes (at position == 0)
-            if (line.eraseEnclosure(":", ":", Line.EraseStyle.None) == 0) {
+            if (line.eraseEnclosure(":", ":", AsciiDocLine.EraseStyle.None) == 0) {
                 line.erase();
                 return;
             }
-            if (line.eraseEnclosure("[", "]", Line.EraseStyle.None) == 0) {
+            if (line.eraseEnclosure("[", "]", AsciiDocLine.EraseStyle.None) == 0) {
                 line.erase();
                 return;
             }
@@ -461,17 +461,17 @@ public class AsciiDocParser extends BaseDocumentParser {
 
             // erase urls and links
             for (String prefix : EXTERNAL_LINK_PREFIXES) {
-                line.eraseEnclosure(prefix, " ,[", Line.EraseStyle.CloseMarkerContainsDelimiters);
+                line.eraseEnclosure(prefix, " ,[", AsciiDocLine.EraseStyle.CloseMarkerContainsDelimiters);
             }
 
             // enclosed directives
-            line.eraseEnclosure("+++", "+++", Line.EraseStyle.All);
-            line.eraseEnclosure("[[", "]]", Line.EraseStyle.All);
+            line.eraseEnclosure("+++", "+++", AsciiDocLine.EraseStyle.All);
+            line.eraseEnclosure("[[", "]]", AsciiDocLine.EraseStyle.All);
 
-            line.eraseEnclosure("<<", ">>", Line.EraseStyle.PreserveLabel);
+            line.eraseEnclosure("<<", ">>", AsciiDocLine.EraseStyle.PreserveLabel);
 
-            line.eraseEnclosure("{", "}", Line.EraseStyle.Markers); // NOTE: should we make substitutions?
-            line.eraseEnclosure("[", "]", Line.EraseStyle.Markers);
+            line.eraseEnclosure("{", "}", AsciiDocLine.EraseStyle.Markers); // NOTE: should we make substitutions?
+            line.eraseEnclosure("[", "]", AsciiDocLine.EraseStyle.Markers);
 
             // headers
             int headerIndent = 0;
@@ -530,19 +530,19 @@ public class AsciiDocParser extends BaseDocumentParser {
      *
      * @param line
      */
-    private void eraseInlineMarkup(Line line) {
+    private void eraseInlineMarkup(AsciiDocLine line) {
         // inline markup (bold, italics etc)
-        line.eraseEnclosure("__", "__", Line.EraseStyle.Markers);
-        line.eraseEnclosure("**", "**", Line.EraseStyle.Markers);
-        line.eraseEnclosure("``", "``", Line.EraseStyle.Markers);
-        line.eraseEnclosure("##", "##", Line.EraseStyle.Markers);
-        line.eraseEnclosure("^", "^", Line.EraseStyle.Markers);
-        line.eraseEnclosure("~", "~", Line.EraseStyle.Markers);
+        line.eraseEnclosure("__", "__", AsciiDocLine.EraseStyle.Markers);
+        line.eraseEnclosure("**", "**", AsciiDocLine.EraseStyle.Markers);
+        line.eraseEnclosure("``", "``", AsciiDocLine.EraseStyle.Markers);
+        line.eraseEnclosure("##", "##", AsciiDocLine.EraseStyle.Markers);
+        line.eraseEnclosure("^", "^", AsciiDocLine.EraseStyle.Markers);
+        line.eraseEnclosure("~", "~", AsciiDocLine.EraseStyle.Markers);
 
-        line.eraseEnclosure("_", "_", Line.EraseStyle.InlineMarkup);
-        line.eraseEnclosure("*", "*", Line.EraseStyle.InlineMarkup);
-        line.eraseEnclosure("`", "`", Line.EraseStyle.InlineMarkup);
-        line.eraseEnclosure("#", "#", Line.EraseStyle.InlineMarkup);
+        line.eraseEnclosure("_", "_", AsciiDocLine.EraseStyle.InlineMarkup);
+        line.eraseEnclosure("*", "*", AsciiDocLine.EraseStyle.InlineMarkup);
+        line.eraseEnclosure("`", "`", AsciiDocLine.EraseStyle.InlineMarkup);
+        line.eraseEnclosure("#", "#", AsciiDocLine.EraseStyle.InlineMarkup);
 
         line.erase("'`");
         line.erase("`'");

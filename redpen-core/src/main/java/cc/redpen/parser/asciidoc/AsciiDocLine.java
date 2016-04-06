@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * An 'erasing' string utility class that stores the original offset for each preserved character
  */
-public class Line {
+public class AsciiDocLine {
     // value returned for comparison if a character is escaped
     static final char ESCAPED_CHARACTER_VALUE = 'ø';
     static final String INLINE_MARKUP_DELIMITERS = " _*`#^~.,";
@@ -66,7 +66,7 @@ public class Line {
      * @param str    the text of the line
      * @param lineno the original line number
      */
-    public Line(String str, int lineno) {
+    public AsciiDocLine(String str, int lineno) {
         this.lineNo = lineno;
         if (!str.isEmpty()) {
             allSameCharacter = true;
