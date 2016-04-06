@@ -235,85 +235,86 @@ public class Line {
         int lastCommaPosition = -1;
         int enclosureStart = 0;
         for (int i = 0; i < length(); i++) {
-            if (valid.get(i)) {
-                if (!inEnclosure) {
-                    // look for the open string
-                    boolean foundOpen = true;
-                    for (int j = 0; j < open.length(); j++) {
-                        if (charAt(i + j) != open.charAt(j)) {
-                            foundOpen = false;
+            if (!valid.get(i)) {
+                continue;
+            }
+            if (!inEnclosure) {
+                // look for the open string
+                boolean foundOpen = true;
+                for (int j = 0; j < open.length(); j++) {
+                    if (charAt(i + j) != open.charAt(j)) {
+                        foundOpen = false;
+                        break;
+                    }
+                }
+                // inline requires start of line or a space before the marker
+                if (foundOpen && (eraseStyle == EraseStyle.InlineMarkup)) {
+                    if ((i != 0) &&
+                            (INLINE_MARKUP_DELIMITERS.indexOf(charAt(i - 1)) == -1)) {
+                        foundOpen = false;
+                    }
+                }
+                if (foundOpen) {
+                    enclosureStart = i;
+                    inEnclosure = true;
+                    firstEnclosurePosition = i;
+                }
+            }
+            else {
+                // look for the close string
+                boolean foundClose = true;
+                if (eraseStyle == EraseStyle.CloseMarkerContainsDelimiters) {
+                    foundClose = (i == length() - 1) || (close.indexOf(charAt(i)) != -1);
+                }
+                else {
+                    for (int j = 0; j < close.length(); j++) {
+                        if (charAt(i + j) != close.charAt(j)) {
+                            foundClose = false;
                             break;
                         }
                     }
-                    // inline requires start of line or a space before the marker
-                    if (foundOpen && (eraseStyle == EraseStyle.InlineMarkup)) {
-                        if ((i != 0) &&
-                                (INLINE_MARKUP_DELIMITERS.indexOf(charAt(i - 1)) == -1)) {
-                            foundOpen = false;
-                        }
-                    }
-                    if (foundOpen) {
-                        enclosureStart = i;
-                        inEnclosure = true;
-                        firstEnclosurePosition = i;
+                }
+
+                if (foundClose && (eraseStyle == EraseStyle.InlineMarkup)) {
+                    if ((i != length() - 1) &&
+                            (INLINE_MARKUP_DELIMITERS.indexOf(charAt(i + close.length())) == -1)) {
+                        foundClose = false;
                     }
                 }
-                else {
-                    // look for the close string
-                    boolean foundClose = true;
-                    if (eraseStyle == EraseStyle.CloseMarkerContainsDelimiters) {
-                        foundClose = (i == length() - 1) || (close.indexOf(charAt(i)) != -1);
-                    }
-                    else {
-                        for (int j = 0; j < close.length(); j++) {
-                            if (charAt(i + j) != close.charAt(j)) {
-                                foundClose = false;
-                                break;
+
+                if (foundClose) {
+                    switch (eraseStyle) {
+                        case All:
+                            erase(enclosureStart, (i - enclosureStart) + close.length());
+                            break;
+                        case Markers:
+                        case InlineMarkup:
+                            erase(enclosureStart, open.length());
+                            erase(i, close.length());
+                            break;
+                        case PreserveLabel:
+                            if (lastCommaPosition != -1) {
+                                erase(enclosureStart, (lastCommaPosition + 1) - enclosureStart);
+                                erase(i, close.length());
                             }
-                        }
-                    }
-
-                    if (foundClose && (eraseStyle == EraseStyle.InlineMarkup)) {
-                        if ((i != length() - 1) &&
-                                (INLINE_MARKUP_DELIMITERS.indexOf(charAt(i + close.length())) == -1)) {
-                            foundClose = false;
-                        }
-                    }
-
-                    if (foundClose) {
-                        switch (eraseStyle) {
-                            case All:
-                                erase(enclosureStart, (i - enclosureStart) + close.length());
-                                break;
-                            case Markers:
-                            case InlineMarkup:
+                            else {
                                 erase(enclosureStart, open.length());
                                 erase(i, close.length());
-                                break;
-                            case PreserveLabel:
-                                if (lastCommaPosition != -1) {
-                                    erase(enclosureStart, (lastCommaPosition + 1) - enclosureStart);
-                                    erase(i, close.length());
-                                }
-                                else {
-                                    erase(enclosureStart, open.length());
-                                    erase(i, close.length());
-                                }
-                                break;
-                            case CloseMarkerContainsDelimiters:
-                                erase(enclosureStart, (i == length() - 1)
-                                        ? (length() - enclosureStart)
-                                        : (i - enclosureStart));
-                                break;
-                            case None:
-                                break;
-                        }
-                        inEnclosure = false;
-                        lastCommaPosition = -1;
+                            }
+                            break;
+                        case CloseMarkerContainsDelimiters:
+                            erase(enclosureStart, (i == length() - 1)
+                                    ? (length() - enclosureStart)
+                                    : (i - enclosureStart));
+                            break;
+                        case None:
+                            break;
                     }
-                    else if (charAt(i) == ',') {
-                        lastCommaPosition = i;
-                    }
+                    inEnclosure = false;
+                    lastCommaPosition = -1;
+                }
+                else if (charAt(i) == ',') {
+                    lastCommaPosition = i;
                 }
             }
         }
