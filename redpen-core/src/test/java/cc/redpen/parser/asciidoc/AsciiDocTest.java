@@ -19,6 +19,7 @@ package cc.redpen.parser.asciidoc;
 
 import cc.redpen.config.Configuration;
 import cc.redpen.parser.SentenceExtractor;
+import cc.redpen.parser.common.Model;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;

@@ -15,12 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cc.redpen.parser.asciidoc;
+package cc.redpen.parser.common;
 
 import cc.redpen.model.Sentence;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
-import cc.redpen.parser.common.Line;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,10 +29,8 @@ import java.util.List;
  * A model of the original document, represented as an array of lines
  */
 public class Model {
-    private static final AsciiDocLine EMPTY_LINE = new AsciiDocLine("", 0);
-
+    private static final Line EMPTY_LINE = new Line(0);
     private List<Line> lines = new ArrayList<>();
-
     private int lineIndex = 0;
     private SentenceExtractor sentenceExtractor;
 
@@ -66,7 +63,7 @@ public class Model {
      *
      * @param line line to be added
      */
-    public void add(AsciiDocLine line) {
+    public void add(Line line) {
         lines.add(line);
     }
 

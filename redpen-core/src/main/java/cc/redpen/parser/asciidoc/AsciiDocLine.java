@@ -39,7 +39,6 @@ public class AsciiDocLine extends Line {
         CloseMarkerContainsDelimiters
     }
 
-
     /**
      * Construct a line using the supplied string
      *
@@ -47,6 +46,7 @@ public class AsciiDocLine extends Line {
      * @param lineno the original line number
      */
     public AsciiDocLine(String str, int lineno) {
+        super(lineno);
         this.lineNo = lineno;
         if (!str.isEmpty()) {
             allSameCharacter = true;

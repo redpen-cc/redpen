@@ -23,6 +23,7 @@ import cc.redpen.model.Document;
 import cc.redpen.parser.BaseDocumentParser;
 import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.parser.common.Line;
+import cc.redpen.parser.common.Model;
 import cc.redpen.tokenizer.RedPenTokenizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,7 +103,8 @@ public class AsciiDocParser extends BaseDocumentParser {
 
 
     @Override
-    public Document parse(InputStream inputStream, Optional<String> fileName, SentenceExtractor sentenceExtractor, RedPenTokenizer tokenizer) throws RedPenException {
+    public Document parse(InputStream inputStream, Optional<String> fileName, SentenceExtractor sentenceExtractor,
+                          RedPenTokenizer tokenizer) throws RedPenException {
         Document.DocumentBuilder documentBuilder = Document.builder(tokenizer);
         fileName.ifPresent(documentBuilder::setFileName);
 

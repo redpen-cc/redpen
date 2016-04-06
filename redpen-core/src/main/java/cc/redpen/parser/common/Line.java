@@ -1,4 +1,4 @@
-/*
+/**
  * redpen: a text inspection tool
  * Copyright (c) 2014-2015 Recruit Technologies Co., Ltd. and contributors
  * (see CONTRIBUTORS.md)
@@ -42,6 +42,10 @@ public class Line {
     protected int sectionLevel = 0;
     protected int listLevel = 0;
     protected boolean listStart = false;
+
+    public Line(int lineNo) {
+        this.lineNo = lineNo;
+    }
 
     /**
      * Erase length characters in the line, starting at pos
