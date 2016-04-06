@@ -283,33 +283,7 @@ public class Line {
                 }
 
                 if (foundClose) {
-                    switch (eraseStyle) {
-                        case All:
-                            erase(enclosureStart, (i - enclosureStart) + close.length());
-                            break;
-                        case Markers:
-                        case InlineMarkup:
-                            erase(enclosureStart, open.length());
-                            erase(i, close.length());
-                            break;
-                        case PreserveLabel:
-                            if (lastCommaPosition != -1) {
-                                erase(enclosureStart, (lastCommaPosition + 1) - enclosureStart);
-                                erase(i, close.length());
-                            }
-                            else {
-                                erase(enclosureStart, open.length());
-                                erase(i, close.length());
-                            }
-                            break;
-                        case CloseMarkerContainsDelimiters:
-                            erase(enclosureStart, (i == length() - 1)
-                                    ? (length() - enclosureStart)
-                                    : (i - enclosureStart));
-                            break;
-                        case None:
-                            break;
-                    }
+                    eraseWithStyle(open, close, eraseStyle, lastCommaPosition, enclosureStart, i);
                     inEnclosure = false;
                     lastCommaPosition = -1;
                 }
@@ -319,6 +293,41 @@ public class Line {
             }
         }
         return firstEnclosurePosition;
+    }
+
+    private void eraseWithStyle(String open,
+                                String close,
+                                EraseStyle eraseStyle,
+                                int lastCommaPosition,
+                                int enclosureStart,
+                                int start) {
+        switch (eraseStyle) {
+            case All:
+                erase(enclosureStart, (start - enclosureStart) + close.length());
+                break;
+            case Markers:
+            case InlineMarkup:
+                erase(enclosureStart, open.length());
+                erase(start, close.length());
+                break;
+            case PreserveLabel:
+                if (lastCommaPosition != -1) {
+                    erase(enclosureStart, (lastCommaPosition + 1) - enclosureStart);
+                    erase(start, close.length());
+                }
+                else {
+                    erase(enclosureStart, open.length());
+                    erase(start, close.length());
+                }
+                break;
+            case CloseMarkerContainsDelimiters:
+                erase(enclosureStart, (start == length() - 1)
+                        ? (length() - enclosureStart)
+                        : (start - enclosureStart));
+                break;
+            case None:
+                break;
+        }
     }
 
     /**
