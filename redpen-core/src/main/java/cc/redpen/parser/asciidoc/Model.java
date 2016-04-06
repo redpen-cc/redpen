@@ -20,6 +20,7 @@ package cc.redpen.parser.asciidoc;
 import cc.redpen.model.Sentence;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
+import cc.redpen.parser.common.Line;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +32,7 @@ import java.util.List;
 public class Model {
     private static final AsciiDocLine EMPTY_LINE = new AsciiDocLine("", 0);
 
-    private List<AsciiDocLine> lines = new ArrayList<>();
+    private List<Line> lines = new ArrayList<>();
 
     private int lineIndex = 0;
     private SentenceExtractor sentenceExtractor;
@@ -52,7 +53,7 @@ public class Model {
      * @param lineNumber line number
      * @return the line
      */
-    public AsciiDocLine getLine(int lineNumber) {
+    public Line getLine(int lineNumber) {
         int index = lineNumber - 1;
         if ((index >= 0) && (index < lines.size())) {
             return lines.get(index);
@@ -90,9 +91,9 @@ public class Model {
      *
      * @return next line
      */
-    public AsciiDocLine getNextLine() {
+    public Line getNextLine() {
         if (lineIndex < lines.size()) {
-            AsciiDocLine line = lines.get(lineIndex);
+            Line line = lines.get(lineIndex);
             lineIndex++;
             return line;
         }
@@ -104,9 +105,9 @@ public class Model {
      *
      * @return line from the model
      */
-    public AsciiDocLine getCurrentLine() {
+    public Line getCurrentLine() {
         if (lineIndex < lines.size()) {
-            AsciiDocLine line = lines.get(lineIndex);
+            Line line = lines.get(lineIndex);
             return line;
         }
         return null;
@@ -127,8 +128,8 @@ public class Model {
      * @param line line to be converted to sentence
      * @return list of converted sentence
      */
-    public List<Sentence> convertToSentences(AsciiDocLine line) {
-        List<AsciiDocLine> lines = new ArrayList<>();
+    public List<Sentence> convertToSentences(Line line) {
+        List<Line> lines = new ArrayList<>();
         lines.add(line);
         return convertToSentences(lines);
     }
@@ -140,13 +141,13 @@ public class Model {
      * @param lines lines to be converted
      * @return list of converted sentence
      */
-    public List<Sentence> convertToSentences(List<AsciiDocLine> lines) {
+    public List<Sentence> convertToSentences(List<Line> lines) {
         List<Sentence> sentences = new ArrayList<>();
 
         String content = "";
         List<LineOffset> offsets = new ArrayList<>();
         for (int ln = 0; ln < lines.size(); ln++) {
-            AsciiDocLine line = lines.get(ln);
+            Line line = lines.get(ln);
 
             for (int i = 0; i < line.length(); i++) {
                 if (line.isValid(i)) {
@@ -178,7 +179,7 @@ public class Model {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (AsciiDocLine ostring : lines) {
+        for (Line ostring : lines) {
             sb.append(ostring.toString());
             sb.append("\n");
         }

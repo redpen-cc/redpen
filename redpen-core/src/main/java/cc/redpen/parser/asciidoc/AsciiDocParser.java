@@ -22,6 +22,7 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
 import cc.redpen.parser.BaseDocumentParser;
 import cc.redpen.parser.SentenceExtractor;
+import cc.redpen.parser.common.Line;
 import cc.redpen.tokenizer.RedPenTokenizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -186,7 +187,7 @@ public class AsciiDocParser extends BaseDocumentParser {
                 }
                 // check for a list item
                 else if (model.getCurrentLine().isListStart()) {
-                    List<AsciiDocLine> listElementLines = new ArrayList<>();
+                    List<Line> listElementLines = new ArrayList<>();
                     int listLevel = model.getCurrentLine().getListLevel();
 
                     // add the list start line
@@ -204,7 +205,7 @@ public class AsciiDocParser extends BaseDocumentParser {
                 }
                 // process a paragraph
                 else {
-                    List<AsciiDocLine> paragraphLines = new ArrayList<>();
+                    List<Line> paragraphLines = new ArrayList<>();
                     // current line can't be empty, so this loop will enter at least once
                     while (model.isMore() && !model.getCurrentLine().isEmpty()) {
                         paragraphLines.add(model.getCurrentLine());
@@ -224,7 +225,7 @@ public class AsciiDocParser extends BaseDocumentParser {
      * @param nextLine the subsequent line
      * @return
      */
-    private boolean isListElement(AsciiDocLine line, AsciiDocLine nextLine) {
+    private boolean isListElement(Line line, Line nextLine) {
 
         int pos = 0;
         while (Character.isWhitespace(line.charAt(pos))) {
@@ -310,15 +311,16 @@ public class AsciiDocParser extends BaseDocumentParser {
     /**
      * Process the current line, removing asciidoc tags and markup and setting the current state
      *
-     * @param line
+     * @param pline
      * @param state the current state
      */
-    private void processLine(AsciiDocLine line, Model model, State state) {
+    private void processLine(Line pline, Model model, State state) {
+        AsciiDocLine line = (AsciiDocLine) pline;
 
         if (!line.isErased()) {
 
-            AsciiDocLine previousLine = model.getLine(line.getLineNo() - 1);
-            AsciiDocLine nextLine = model.getLine(line.getLineNo() + 1);
+            Line previousLine = model.getLine(line.getLineNo() - 1);
+            Line nextLine = model.getLine(line.getLineNo() + 1);
 
             if (state.inList && (line.getListLevel() == 0)) {
                 line.setListLevel(previousLine.getListLevel());
@@ -458,6 +460,7 @@ public class AsciiDocParser extends BaseDocumentParser {
             if ((firstChar == '.') && (" .".indexOf(secondChar) == -1)) {
                 line.erase(0, 1);
             }
+
 
             // erase urls and links
             for (String prefix : EXTERNAL_LINK_PREFIXES) {
