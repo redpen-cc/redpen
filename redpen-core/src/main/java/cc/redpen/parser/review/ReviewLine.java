@@ -17,21 +17,9 @@
  */
 package cc.redpen.parser.review;
 
-import java.util.ArrayList;
-import java.util.List;
+import cc.redpen.parser.common.Line;
 
-public class ReviewLine {
-    private final int lineNo;
-
-    // a list of offsets for each character
-    List<Integer> offsets = new ArrayList<>();
-    // the text for the line
-    List<Character> text = new ArrayList<>();
-    // marks erased characters as invalid
-    List<Boolean> valid = new ArrayList<>();
-    // remembers which characters were escaped in the original string
-    List<Boolean> escaped = new ArrayList<>();
-
+public class ReviewLine extends Line {
     /**
      * Construct a line using the supplied string
      *
@@ -39,7 +27,7 @@ public class ReviewLine {
      * @param lineno the original line number
      */
     public ReviewLine(String str, int lineno) {
-        this.lineNo = lineno;
+        super(lineno);
         if (!str.isEmpty()) {
             for (int i = 0; i < str.length(); i++) {
                 char ch = str.charAt(i);
@@ -63,4 +51,6 @@ public class ReviewLine {
             text.remove(text.size() - 1);
         }
     }
+
+
 }
