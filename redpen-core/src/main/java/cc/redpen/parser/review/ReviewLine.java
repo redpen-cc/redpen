@@ -28,6 +28,7 @@ public class ReviewLine extends Line {
      */
     public ReviewLine(String str, int lineno) {
         super(lineno);
+        this.inlineMarkupDelimiters = "";
         if (!str.isEmpty()) {
             for (int i = 0; i < str.length(); i++) {
                 char ch = str.charAt(i);
@@ -51,6 +52,4 @@ public class ReviewLine extends Line {
             text.remove(text.size() - 1);
         }
     }
-
-
 }

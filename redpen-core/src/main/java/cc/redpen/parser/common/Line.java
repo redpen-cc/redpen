@@ -324,6 +324,7 @@ public class Line {
                 // inline requires start of line or a space before the marker
                 if (foundOpen && (eraseStyle == EraseStyle.InlineMarkup)) {
                     if ((i != 0) &&
+                            inlineMarkupDelimiters.length() > 0 &&
                             (inlineMarkupDelimiters.indexOf(charAt(i - 1)) == -1)) {
                         foundOpen = false;
                     }
@@ -350,7 +351,7 @@ public class Line {
                 }
 
                 if (foundClose && (eraseStyle == EraseStyle.InlineMarkup)) {
-                    if ((i != length() - 1) &&
+                    if ((i != length() - 1) && inlineMarkupDelimiters.length() > 0 &&
                             (inlineMarkupDelimiters.indexOf(charAt(i + close.length())) == -1)) {
                         foundClose = false;
                     }

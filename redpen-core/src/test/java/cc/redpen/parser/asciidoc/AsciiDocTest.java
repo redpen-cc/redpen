@@ -126,12 +126,8 @@ public class AsciiDocTest {
         assertEquals(modelText, model.toString());
     }
 
-
-    /**
-     * Test the line class
-     */
     @Test
-    public void testLine() {
+    public void testEraseEnclosure() {
         String testLine = "A line *with* an [enclosure] and one with a [enclosure,with a description] " +
                 "and then an URL like http://fred.fish/";
 
