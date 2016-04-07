@@ -22,8 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Line {
-    static final String INLINE_MARKUP_DELIMITERS = " _*`#^~.,";
-
     // value returned for comparison if a character is escaped
     static final char ESCAPED_CHARACTER_VALUE = 'ø';
 
@@ -44,7 +42,7 @@ public class Line {
     protected int sectionLevel = 0;
     protected int listLevel = 0;
     protected boolean listStart = false;
-
+    protected String inlineMarkupDelimiters = " ";
 
     /**
      * The different ways embedded inline markers can be erased
@@ -57,8 +55,6 @@ public class Line {
         PreserveLabel,
         CloseMarkerContainsDelimiters
     }
-
-
 
     public Line(int lineNo) {
         this.lineNo = lineNo;
@@ -328,7 +324,7 @@ public class Line {
                 // inline requires start of line or a space before the marker
                 if (foundOpen && (eraseStyle == EraseStyle.InlineMarkup)) {
                     if ((i != 0) &&
-                            (INLINE_MARKUP_DELIMITERS.indexOf(charAt(i - 1)) == -1)) {
+                            (inlineMarkupDelimiters.indexOf(charAt(i - 1)) == -1)) {
                         foundOpen = false;
                     }
                 }
@@ -355,7 +351,7 @@ public class Line {
 
                 if (foundClose && (eraseStyle == EraseStyle.InlineMarkup)) {
                     if ((i != length() - 1) &&
-                            (INLINE_MARKUP_DELIMITERS.indexOf(charAt(i + close.length())) == -1)) {
+                            (inlineMarkupDelimiters.indexOf(charAt(i + close.length())) == -1)) {
                         foundClose = false;
                     }
                 }

@@ -34,6 +34,7 @@ public class AsciiDocLine extends Line {
     public AsciiDocLine(String str, int lineno) {
         super(lineno);
         this.lineNo = lineno;
+        this.inlineMarkupDelimiters = " _*`#^~.,";
         if (!str.isEmpty()) {
             allSameCharacter = true;
             char lastCh = 0;
