@@ -51,8 +51,6 @@ public class RedPenDemoTest {
                 server.setHandler(context);
                 server.start();
             }
-            new URL(redpenServerUrl).openConnection().connect();
-            open(redpenServerUrl);
         } catch (IllegalStateException e) {
             assumeNoException("Please install " + System.getProperty("browser") + " for UI tests to run", e);
         }
@@ -65,6 +63,12 @@ public class RedPenDemoTest {
         }
         // ensure phantomjs to quit
         WebDriverRunner.getWebDriver().quit();
+    }
+    
+    @Before
+    public void loadRedPen() throws IOException {
+        new URL(redpenServerUrl).openConnection().connect();
+        open(redpenServerUrl);
     }
 
     @Test
