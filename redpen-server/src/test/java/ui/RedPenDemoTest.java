@@ -31,50 +31,54 @@ public class RedPenDemoTest {
         if (System.getProperty("browser") == null) {
             System.setProperty("browser", "phantomjs");
         }
+        Socket socket = new Socket();
         try {
-            Socket socket = new Socket();
-            try {
-                socket.connect(new InetSocketAddress(PORT), 200);
-                socket.close();
-                // something is listening on port 8080
-            } catch (IOException e) {
-                // nothing is listening on port 8080
-                WebAppContext context = new WebAppContext();
-                File webapp = new File("redpen-server/src/main/webapp/");
-                if(!webapp.exists()){
-                    // working directory is redpen-server
-                    webapp = new File("src/main/webapp/");
-                }
-                context.setWar(webapp.getAbsolutePath());
-                context.setContextPath("/");
-                server = new Server(PORT);
-                server.setHandler(context);
-                server.start();
+            socket.connect(new InetSocketAddress(PORT), 200);
+            socket.close();
+            // something is listening on port 8080
+        } catch (IOException e) {
+            // nothing is listening on port 8080
+            WebAppContext context = new WebAppContext();
+            File webapp = new File("redpen-server/src/main/webapp/");
+            if (!webapp.exists()) {
+                // working directory is redpen-server
+                webapp = new File("src/main/webapp/");
             }
-        } catch (IllegalStateException e) {
-            assumeNoException("Please install " + System.getProperty("browser") + " for UI tests to run", e);
+            context.setWar(webapp.getAbsolutePath());
+            context.setContextPath("/");
+            server = new Server(PORT);
+            server.setHandler(context);
+            server.start();
         }
     }
 
     @AfterClass
     public static void afterClass() throws Exception {
-        if(server != null) {
+        if (server != null) {
             server.stop();
         }
-        // ensure phantomjs to quit
-        WebDriverRunner.getWebDriver().quit();
+        try {
+            // ensure phantomjs to quit
+            WebDriverRunner.getWebDriver().quit();
+        }catch(IllegalStateException ignored){
+        }
+
     }
-    
+
     @Before
     public void loadRedPen() throws IOException {
-        new URL(redpenServerUrl).openConnection().connect();
-        open(redpenServerUrl);
+        try {
+            new URL(redpenServerUrl).openConnection().connect();
+            open(redpenServerUrl);
+        } catch (IllegalStateException e) {
+            assumeNoException("Please install " + System.getProperty("browser") + " for UI tests to run", e);
+        }
     }
 
     @Test
     public void redpenEditorIsPrepopulated() throws Exception {
         String value = $("#redpen-editor").getAttribute("class");
-        assertEquals("redpen-superimposed-editor-panel",value);
+        assertEquals("redpen-superimposed-editor-panel", value);
     }
 
     @Test
