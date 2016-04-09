@@ -2,40 +2,75 @@ package ui;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import org.junit.Before;
-import org.junit.Test;
+import com.codeborne.selenide.WebDriverRunner;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.webapp.WebAppContext;
+import org.junit.*;
 import org.openqa.selenium.By;
 
-import java.net.ConnectException;
+import java.io.File;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.URL;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeNoException;
 
 public class RedPenDemoTest {
-    private String redpenServerUrl = "http://localhost:8080/";
+    private final static String redpenServerUrl = "http://localhost:8080/";
+    private static Server server;
+    private final static int PORT = 8080;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+        // Run tests in PhantomJS by default if browser property is not set
+        if (System.getProperty("browser") == null) {
+            System.setProperty("browser", "phantomjs");
+        }
         try {
+            Socket socket = new Socket();
+            try {
+                socket.connect(new InetSocketAddress(PORT), 200);
+                socket.close();
+                // something is listening on port 8080
+            } catch (IOException e) {
+                // nothing is listening on port 8080
+                WebAppContext context = new WebAppContext();
+                File webapp = new File("redpen-server/src/main/webapp/");
+                if(!webapp.exists()){
+                    // working directory is redpen-server
+                    webapp = new File("src/main/webapp/");
+                }
+                context.setWar(webapp.getAbsolutePath());
+                context.setContextPath("/");
+                server = new Server(PORT);
+                server.setHandler(context);
+                server.start();
+            }
             new URL(redpenServerUrl).openConnection().connect();
-            // Run tests in PhantomJS by default if browser property is not set
-            if (System.getProperty("browser") == null)
-                System.setProperty("browser", "phantomjs");
             open(redpenServerUrl);
-        } catch (ConnectException e) {
-            assumeNoException("RedPen server is not running, skipping UI tests", e);
         } catch (IllegalStateException e) {
             assumeNoException("Please install " + System.getProperty("browser") + " for UI tests to run", e);
         }
     }
 
+    @AfterClass
+    public static void afterClass() throws Exception {
+        if(server != null) {
+            server.stop();
+        }
+        // ensure phantomjs to quit
+        WebDriverRunner.getWebDriver().quit();
+    }
+
     @Test
     public void redpenEditorIsPrepopulated() throws Exception {
-        String value = $("#redpen-editor").shouldBe(visible).val();
-        assertTrue(value.startsWith("Some software tools work"));
+        String value = $("#redpen-editor").getAttribute("class");
+        assertEquals("redpen-superimposed-editor-panel",value);
     }
 
     @Test

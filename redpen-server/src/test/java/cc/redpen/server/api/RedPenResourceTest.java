@@ -25,8 +25,11 @@ import org.json.JSONObject;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpUpgradeHandler;
 import javax.ws.rs.core.MediaType;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Set;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -123,6 +126,11 @@ public class RedPenResourceTest extends MockServletInvocationTest {
         MockHttpServletRequest mockRequest = new MockHttpServletRequest() {
             public String getPathTranslated() {
                 return null; // prevent Spring to resolve the file on the filesystem which fails
+            }
+
+            @Override
+            public <T extends HttpUpgradeHandler> T upgrade(Class<T> aClass) throws IOException, ServletException {
+                return null;
             }
         };
 
