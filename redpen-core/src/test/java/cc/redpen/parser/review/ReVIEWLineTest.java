@@ -22,14 +22,14 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class ReviewLineTest {
+public class ReVIEWLineTest {
     @Test
     public void testEraseInlineEnclosure() {
         String testLine = "A line with an @<b>{enclosure}.";
         String expectedResult =
                 "  0-0-001: A line with an ·@·<·b·>·{enclosure·}.";
-        ReviewLine line = new ReviewLine(testLine, 1);
-        line.eraseEnclosure("@<b>{", "}", ReviewLine.EraseStyle.InlineMarkup);
+        ReVIEWLine line = new ReVIEWLine(testLine, 1);
+        line.eraseEnclosure("@<b>{", "}", ReVIEWLine.EraseStyle.InlineMarkup);
         assertEquals(expectedResult, line.toString());
     }
 
@@ -38,8 +38,8 @@ public class ReviewLineTest {
         String testLine = "This is a comment: @<comment>{TODO}.";
         String expectedResult =
                 "  0-0-001: This is a comment: ·@·<·c·o·m·m·e·n·t·>·{·T·O·D·O·}.";
-        ReviewLine line = new ReviewLine(testLine, 1);
-        line.eraseEnclosure("@<comment>{", "}", ReviewLine.EraseStyle.All);
+        ReVIEWLine line = new ReVIEWLine(testLine, 1);
+        line.eraseEnclosure("@<comment>{", "}", ReVIEWLine.EraseStyle.All);
         assertEquals(expectedResult, line.toString());
     }
 }

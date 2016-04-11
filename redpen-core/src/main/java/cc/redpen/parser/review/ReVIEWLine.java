@@ -19,14 +19,14 @@ package cc.redpen.parser.review;
 
 import cc.redpen.parser.common.Line;
 
-public class ReviewLine extends Line {
+public class ReVIEWLine extends Line {
     /**
      * Construct a line using the supplied string
      *
      * @param str    the text of the line
      * @param lineno the original line number
      */
-    public ReviewLine(String str, int lineno) {
+    public ReVIEWLine(String str, int lineno) {
         super(lineno);
         this.inlineMarkupDelimiters = "";
         if (!str.isEmpty()) {
