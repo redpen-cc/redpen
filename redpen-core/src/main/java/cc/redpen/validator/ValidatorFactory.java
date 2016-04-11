@@ -83,6 +83,7 @@ public class ValidatorFactory {
         registerValidator(SymbolWithSpaceValidator.class);
         registerValidator(WeakExpressionValidator.class);
         registerValidator(WordNumberValidator.class);
+        registerValidator(JapaneseAmbiguousNounConjunctionValidator.class);
 
         // other
         registerValidator(JavaScriptValidator.class);
