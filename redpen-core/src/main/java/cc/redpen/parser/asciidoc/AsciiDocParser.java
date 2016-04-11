@@ -125,7 +125,6 @@ public class AsciiDocParser extends BaseDocumentParser {
      * @param io stream to read
      */
     protected void populateModel(Model model, InputStream io) {
-        State state = new State();
         BufferedReader reader = createReader(io);
 
         int lineno = 0;
@@ -142,6 +141,7 @@ public class AsciiDocParser extends BaseDocumentParser {
             reader.close();
 
             // preocess each line of the model
+            State state = new State();
             for (model.rewind(); model.isMore(); model.getNextLine()) {
                 processLine(model.getCurrentLine(), model, state);
             }
@@ -319,214 +319,207 @@ public class AsciiDocParser extends BaseDocumentParser {
     private void processLine(Line pline, Model model, State state) {
         AsciiDocLine line = (AsciiDocLine) pline;
 
-        if (!line.isErased()) {
+        if (line.isErased()) { return; }
 
-            Line previousLine = model.getLine(line.getLineNo() - 1);
-            Line nextLine = model.getLine(line.getLineNo() + 1);
+        Line previousLine = model.getLine(line.getLineNo() - 1);
+        Line nextLine = model.getLine(line.getLineNo() + 1);
 
-            if (state.inList && (line.getListLevel() == 0)) {
-                line.setListLevel(previousLine.getListLevel());
-            }
-
-            char firstChar = line.charAt(0);
-            char secondChar = line.charAt(1);
-
-            // check for block end
-            if (state.inBlock) {
-                if (line.isAllSameCharacter() &&
-                        (firstChar == state.blockMarker) &&
-                        (line.length() == state.blockMarkerLength)) {
-                    // end a regular block
-                    line.erase();
-                    line.setInBlock(true);
-                    state.inBlock = false;
-                    return;
-                }
-                else if ((line.length() >= 4) &&
-                        (firstChar == state.blockMarker) &&
-                        (firstChar == '|') &&
-                        (secondChar == '=')) {
-                    // end a table
-                    line.erase();
-                    line.setInBlock(true);
-                    state.inBlock = false;
-                    return;
-                }
-                // erase the block content
-                line.setInBlock(true);
-                if (state.eraseBlock) {
-                    line.erase();
-                    return;
-                }
-            }
-
-            // check for old style heading (line followed by single-char-line of same length)
-            if (line.isAllSameCharacter() &&
-                    (line.length() == previousLine.length()) &&
-                    ("=-~^+".indexOf(firstChar) != -1) &&
-                    (". [".indexOf(previousLine.charAt(0, true)) == -1)) {
-                previousLine.setSectionLevel(1);
-                line.erase();
-                return;
-            }
-
-            // horizontal rule
-            if (line.isAllSameCharacter() && (line.length() == 3) && (line.charAt(0) == '\'')) {
-                line.erase();
-                return;
-            }
-
-            // block markers in which we process the internal text
-            if (line.isAllSameCharacter() && (line.length() >= 4) &&
-                    ("_*".indexOf(firstChar) != -1)) {
-                line.erase();
-                return;
-            }
-
-            // test for various block starts
-            if (!state.inBlock) {
-
-                // fenced block
-                if (line.isAllSameCharacter() && (line.length() == 3) && (line.charAt(0) == '`')) {
-                    state.inBlock = true;
-                    state.eraseBlock = true;
-                    state.blockMarker = firstChar;
-                    state.blockMarkerLength = line.length();
-                    line.setInBlock(true);
-                    line.erase();
-                    return;
-                }
-
-                // see if we are starting other types of blocks
-                if (line.isAllSameCharacter() && (line.length() >= 4)) {
-                    switch (firstChar) {
-                        case '-':
-                        case '=':
-                        case '&':
-                        case '/':
-                        case '+':
-                        case '.':
-                            // blocks that have their innards erased
-                            state.inBlock = true;
-                            state.eraseBlock = true;
-                            state.blockMarker = firstChar;
-                            state.blockMarkerLength = line.length();
-                            line.setInBlock(true);
-                            line.erase();
-                            return;
-                    }
-                }
-
-                // see if this is a table marker
-                if ((line.length() >= 4) && (firstChar == '|') && (secondChar == '=')) {
-                    line.erase();
-                    state.inBlock = true;
-                    state.eraseBlock = true;
-                    state.blockMarker = '|';
-                    state.blockMarkerLength = 1;
-                    line.setInBlock(true);
-                    return;
-                }
-
-            }
-
-            // check for a single-line literal sentence
-            if (!state.inList && (firstChar == ' ')) {
-                line.erase();
-                return;
-            }
-
-            // maybe we have a comment?
-            if ((firstChar == '/') && (secondChar == '/')) {
-                line.erase();
-                return;
-            }
-
-            // 'open' block marker
-            if ((firstChar == '-') && (secondChar == '-')) {
-                line.erase();
-                return;
-            }
-
-            // attributes (at position == 0)
-            if (line.eraseEnclosure(":", ":", AsciiDocLine.EraseStyle.None) == 0) {
-                line.erase();
-                return;
-            }
-            if (line.eraseEnclosure("[", "]", AsciiDocLine.EraseStyle.None) == 0) {
-                line.erase();
-                return;
-            }
-
-            // check for a title
-            if ((firstChar == '.') && (" .".indexOf(secondChar) == -1)) {
-                line.erase(0, 1);
-            }
-
-
-            // erase urls and links
-            for (String prefix : EXTERNAL_LINK_PREFIXES) {
-                line.eraseEnclosure(prefix, " ,[", AsciiDocLine.EraseStyle.CloseMarkerContainsDelimiters);
-            }
-
-            // enclosed directives
-            line.eraseEnclosure("+++", "+++", AsciiDocLine.EraseStyle.All);
-            line.eraseEnclosure("[[", "]]", AsciiDocLine.EraseStyle.All);
-
-            line.eraseEnclosure("<<", ">>", AsciiDocLine.EraseStyle.PreserveLabel);
-
-            line.eraseEnclosure("{", "}", AsciiDocLine.EraseStyle.Markers); // NOTE: should we make substitutions?
-            line.eraseEnclosure("[", "]", AsciiDocLine.EraseStyle.Markers);
-
-            // headers
-            int headerIndent = 0;
-            while (line.charAt(headerIndent) == '=') {
-                headerIndent++;
-            }
-            if ((headerIndent > 0) && (line.charAt(headerIndent) == ' ')) {
-                line.erase(0, headerIndent + 1);
-                line.setSectionLevel(headerIndent);
-            }
-
-            // lists!
-            if (!state.inBlock && isListElement(line, nextLine)) {
-                state.inList = true;
-            }
-
-            // continuation markers
-            if (line.charAt(line.length() - 1) == '+') {
-                if (line.length() == 0) {
-                    line.erase();
-                }
-                else {
-                    line.erase(line.length() - 1, 1);
-                }
-            }
-
-            // a blank line will cancel any list element we are in
-            if (state.inList && (line.length() == 0)) {
-                state.inList = false;
-                line.setListLevel(0);
-            }
-
-            // macros
-            for (String macro : MACROS) {
-                if (line.startsWith(macro)) {
-                    line.erase();
-                    break;
-                }
-            }
-
-            // admonitions
-            for (String admonition : ADMONITIONS) {
-                if (line.startsWith(admonition)) {
-                    line.erase(0, admonition.length());
-                    break;
-                }
-            }
-
-            eraseInlineMarkup(line);
+        if (state.inList && (line.getListLevel() == 0)) {
+            line.setListLevel(previousLine.getListLevel());
         }
+
+        char firstChar = line.charAt(0);
+        char secondChar = line.charAt(1);
+
+        // check for block end
+        if (state.inBlock) {
+            if (line.isAllSameCharacter() &&
+                    (firstChar == state.blockMarker) &&
+                    (line.length() == state.blockMarkerLength)) {
+                // end a regular block
+                line.erase();
+                line.setInBlock(true);
+                state.inBlock = false;
+                return;
+            } else if ((line.length() >= 4) &&
+                    (firstChar == state.blockMarker) &&
+                    (firstChar == '|') &&
+                    (secondChar == '=')) {
+                // end a table
+                line.erase();
+                line.setInBlock(true);
+                state.inBlock = false;
+                return;
+            }
+            // erase the block content
+            line.setInBlock(true);
+            if (state.eraseBlock) {
+                line.erase();
+                return;
+            }
+        }
+
+        // check for old style heading (line followed by single-char-line of same length)
+        if (line.isAllSameCharacter() &&
+                (line.length() == previousLine.length()) &&
+                ("=-~^+".indexOf(firstChar) != -1) &&
+                (". [".indexOf(previousLine.charAt(0, true)) == -1)) {
+            previousLine.setSectionLevel(1);
+            line.erase();
+            return;
+        }
+
+        // horizontal rule
+        if (line.isAllSameCharacter() && (line.length() == 3) && (line.charAt(0) == '\'')) {
+            line.erase();
+            return;
+        }
+
+        // block markers in which we process the internal text
+        if (line.isAllSameCharacter() && (line.length() >= 4) &&
+                ("_*".indexOf(firstChar) != -1)) {
+            line.erase();
+            return;
+        }
+
+        // test for various block starts
+        if (!state.inBlock) {
+            // fenced block
+            if (line.isAllSameCharacter() && (line.length() == 3) && (line.charAt(0) == '`')) {
+                state.inBlock = true;
+                state.eraseBlock = true;
+                state.blockMarker = firstChar;
+                state.blockMarkerLength = line.length();
+                line.setInBlock(true);
+                line.erase();
+                return;
+            }
+
+            // see if we are starting other types of blocks
+            if (line.isAllSameCharacter() && (line.length() >= 4)) {
+                switch (firstChar) {
+                    case '-':
+                    case '=':
+                    case '&':
+                    case '/':
+                    case '+':
+                    case '.':
+                        // blocks that have their innards erased
+                        state.inBlock = true;
+                        state.eraseBlock = true;
+                        state.blockMarker = firstChar;
+                        state.blockMarkerLength = line.length();
+                        line.setInBlock(true);
+                        line.erase();
+                        return;
+                }
+            }
+
+            // see if this is a table marker
+            if ((line.length() >= 4) && (firstChar == '|') && (secondChar == '=')) {
+                line.erase();
+                state.inBlock = true;
+                state.eraseBlock = true;
+                state.blockMarker = '|';
+                state.blockMarkerLength = 1;
+                line.setInBlock(true);
+                return;
+            }
+
+        }
+
+        // check for a single-line literal sentence
+        if (!state.inList && (firstChar == ' ')) {
+            line.erase();
+            return;
+        }
+
+        // maybe we have a comment?
+        if ((firstChar == '/') && (secondChar == '/')) {
+            line.erase();
+            return;
+        }
+
+        // 'open' block marker
+        if ((firstChar == '-') && (secondChar == '-')) {
+            line.erase();
+            return;
+        }
+
+        // attributes (at position == 0)
+        if (line.eraseEnclosure(":", ":", AsciiDocLine.EraseStyle.None) == 0) {
+            line.erase();
+            return;
+        }
+        if (line.eraseEnclosure("[", "]", AsciiDocLine.EraseStyle.None) == 0) {
+            line.erase();
+            return;
+        }
+
+        // check for a title
+        if ((firstChar == '.') && (" .".indexOf(secondChar) == -1)) {
+            line.erase(0, 1);
+        }
+
+        // erase urls and links
+        for (String prefix : EXTERNAL_LINK_PREFIXES) {
+            line.eraseEnclosure(prefix, " ,[", AsciiDocLine.EraseStyle.CloseMarkerContainsDelimiters);
+        }
+
+        // enclosed directives
+        line.eraseEnclosure("+++", "+++", AsciiDocLine.EraseStyle.All);
+        line.eraseEnclosure("[[", "]]", AsciiDocLine.EraseStyle.All);
+        line.eraseEnclosure("<<", ">>", AsciiDocLine.EraseStyle.PreserveLabel);
+        line.eraseEnclosure("{", "}", AsciiDocLine.EraseStyle.Markers); // NOTE: should we make substitutions?
+        line.eraseEnclosure("[", "]", AsciiDocLine.EraseStyle.Markers);
+
+        // headers
+        int headerIndent = 0;
+        while (line.charAt(headerIndent) == '=') {
+            headerIndent++;
+        }
+        if ((headerIndent > 0) && (line.charAt(headerIndent) == ' ')) {
+            line.erase(0, headerIndent + 1);
+            line.setSectionLevel(headerIndent);
+        }
+
+        // lists!
+        if (!state.inBlock && isListElement(line, nextLine)) {
+            state.inList = true;
+        }
+
+        // continuation markers
+        if (line.charAt(line.length() - 1) == '+') {
+            if (line.length() == 0) {
+                line.erase();
+            } else {
+                line.erase(line.length() - 1, 1);
+            }
+        }
+
+        // a blank line will cancel any list element we are in
+        if (state.inList && (line.length() == 0)) {
+            state.inList = false;
+            line.setListLevel(0);
+        }
+
+        // macros
+        for (String macro : MACROS) {
+            if (line.startsWith(macro)) {
+                line.erase();
+                break;
+            }
+        }
+
+        // admonitions
+        for (String admonition : ADMONITIONS) {
+            if (line.startsWith(admonition)) {
+                line.erase(0, admonition.length());
+                break;
+            }
+        }
+
+        eraseInlineMarkup(line);
     }
 
 
