@@ -101,6 +101,30 @@ public class AsciiDocParser extends BaseDocumentParser {
         public int blockMarkerLength = 0;
     }
 
+    /**
+     * Target line of parser
+     */
+    private class TargetLine {
+        // target line
+        public Line line;
+        // previous line of target line
+        public Line previousLine;
+        // next line of target line
+        public Line nextLine;
+        // fist character of target line
+        public char firstChar;
+        // second character of target line
+        public char secondChar;
+
+        public TargetLine(Line line, Line previousLine,
+                          Line nextLine) {
+            this.line = line;
+            this.previousLine = previousLine;
+            this.nextLine = nextLine;
+            this.firstChar = line.charAt(0);
+            this.secondChar = line.charAt(1);
+        }
+    }
 
     @Override
     public Document parse(InputStream inputStream, Optional<String> fileName, SentenceExtractor sentenceExtractor,
@@ -140,7 +164,7 @@ public class AsciiDocParser extends BaseDocumentParser {
             }
             reader.close();
 
-            // preocess each line of the model
+            // process each line of the model
             State state = new State();
             for (model.rewind(); model.isMore(); model.getNextLine()) {
                 processLine(model.getCurrentLine(), model, state);
@@ -313,28 +337,24 @@ public class AsciiDocParser extends BaseDocumentParser {
     /**
      * Process the current line, removing asciidoc tags and markup and setting the current state
      *
-     * @param pline
+     * @param line
      * @param state the current state
      */
-    private void processLine(Line pline, Model model, State state) {
-        AsciiDocLine line = (AsciiDocLine) pline;
-
+    private void processLine(Line line, Model model, State state) {
         if (line.isErased()) { return; }
 
-        Line previousLine = model.getLine(line.getLineNo() - 1);
-        Line nextLine = model.getLine(line.getLineNo() + 1);
+        TargetLine target = new TargetLine(line,
+                model.getLine(line.getLineNo() - 1),
+                model.getLine(line.getLineNo() + 1));
 
         if (state.inList && (line.getListLevel() == 0)) {
-            line.setListLevel(previousLine.getListLevel());
+            line.setListLevel(target.previousLine.getListLevel());
         }
-
-        char firstChar = line.charAt(0);
-        char secondChar = line.charAt(1);
 
         // check for block end
         if (state.inBlock) {
             if (line.isAllSameCharacter() &&
-                    (firstChar == state.blockMarker) &&
+                    (target.firstChar == state.blockMarker) &&
                     (line.length() == state.blockMarkerLength)) {
                 // end a regular block
                 line.erase();
@@ -342,9 +362,9 @@ public class AsciiDocParser extends BaseDocumentParser {
                 state.inBlock = false;
                 return;
             } else if ((line.length() >= 4) &&
-                    (firstChar == state.blockMarker) &&
-                    (firstChar == '|') &&
-                    (secondChar == '=')) {
+                    (target.firstChar == state.blockMarker) &&
+                    (target.firstChar == '|') &&
+                    (target.secondChar == '=')) {
                 // end a table
                 line.erase();
                 line.setInBlock(true);
@@ -361,10 +381,10 @@ public class AsciiDocParser extends BaseDocumentParser {
 
         // check for old style heading (line followed by single-char-line of same length)
         if (line.isAllSameCharacter() &&
-                (line.length() == previousLine.length()) &&
-                ("=-~^+".indexOf(firstChar) != -1) &&
-                (". [".indexOf(previousLine.charAt(0, true)) == -1)) {
-            previousLine.setSectionLevel(1);
+                (line.length() == target.previousLine.length()) &&
+                ("=-~^+".indexOf(target.firstChar) != -1) &&
+                (". [".indexOf(target.previousLine.charAt(0, true)) == -1)) {
+            target.previousLine.setSectionLevel(1);
             line.erase();
             return;
         }
@@ -377,7 +397,7 @@ public class AsciiDocParser extends BaseDocumentParser {
 
         // block markers in which we process the internal text
         if (line.isAllSameCharacter() && (line.length() >= 4) &&
-                ("_*".indexOf(firstChar) != -1)) {
+                ("_*".indexOf(target.firstChar) != -1)) {
             line.erase();
             return;
         }
@@ -388,7 +408,7 @@ public class AsciiDocParser extends BaseDocumentParser {
             if (line.isAllSameCharacter() && (line.length() == 3) && (line.charAt(0) == '`')) {
                 state.inBlock = true;
                 state.eraseBlock = true;
-                state.blockMarker = firstChar;
+                state.blockMarker = target.firstChar;
                 state.blockMarkerLength = line.length();
                 line.setInBlock(true);
                 line.erase();
@@ -397,7 +417,7 @@ public class AsciiDocParser extends BaseDocumentParser {
 
             // see if we are starting other types of blocks
             if (line.isAllSameCharacter() && (line.length() >= 4)) {
-                switch (firstChar) {
+                switch (target.firstChar) {
                     case '-':
                     case '=':
                     case '&':
@@ -407,7 +427,7 @@ public class AsciiDocParser extends BaseDocumentParser {
                         // blocks that have their innards erased
                         state.inBlock = true;
                         state.eraseBlock = true;
-                        state.blockMarker = firstChar;
+                        state.blockMarker = target.firstChar;
                         state.blockMarkerLength = line.length();
                         line.setInBlock(true);
                         line.erase();
@@ -416,7 +436,7 @@ public class AsciiDocParser extends BaseDocumentParser {
             }
 
             // see if this is a table marker
-            if ((line.length() >= 4) && (firstChar == '|') && (secondChar == '=')) {
+            if ((line.length() >= 4) && (target.firstChar == '|') && (target.secondChar == '=')) {
                 line.erase();
                 state.inBlock = true;
                 state.eraseBlock = true;
@@ -429,19 +449,19 @@ public class AsciiDocParser extends BaseDocumentParser {
         }
 
         // check for a single-line literal sentence
-        if (!state.inList && (firstChar == ' ')) {
+        if (!state.inList && (target.firstChar == ' ')) {
             line.erase();
             return;
         }
 
         // maybe we have a comment?
-        if ((firstChar == '/') && (secondChar == '/')) {
+        if ((target.firstChar == '/') && (target.secondChar == '/')) {
             line.erase();
             return;
         }
 
         // 'open' block marker
-        if ((firstChar == '-') && (secondChar == '-')) {
+        if ((target.firstChar == '-') && (target.secondChar == '-')) {
             line.erase();
             return;
         }
@@ -457,7 +477,7 @@ public class AsciiDocParser extends BaseDocumentParser {
         }
 
         // check for a title
-        if ((firstChar == '.') && (" .".indexOf(secondChar) == -1)) {
+        if ((target.firstChar == '.') && (" .".indexOf(target.secondChar) == -1)) {
             line.erase(0, 1);
         }
 
@@ -484,7 +504,7 @@ public class AsciiDocParser extends BaseDocumentParser {
         }
 
         // lists!
-        if (!state.inBlock && isListElement(line, nextLine)) {
+        if (!state.inBlock && isListElement(line, target.nextLine)) {
             state.inList = true;
         }
 
@@ -528,7 +548,7 @@ public class AsciiDocParser extends BaseDocumentParser {
      *
      * @param line
      */
-    private void eraseInlineMarkup(AsciiDocLine line) {
+    private void eraseInlineMarkup(Line line) {
         // inline markup (bold, italics etc)
         line.eraseEnclosure("__", "__", AsciiDocLine.EraseStyle.Markers);
         line.eraseEnclosure("**", "**", AsciiDocLine.EraseStyle.Markers);
