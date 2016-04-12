@@ -75,6 +75,60 @@ public class JapaneseAnchorExpressionValidatorTest {
     }
 
     @Test
+    public void testValidNumeric() throws RedPenException {
+        Configuration config = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("JapaneseAnchorExpression").addProperty("mode", "numeric"))
+                .build();
+
+        List<Document> documents = new ArrayList<>();documents.add(
+                Document.builder(new JapaneseTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(new Sentence("1章を参照されたい。", 1))
+                        .build());
+
+        RedPen redPen = new RedPen(config);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
+        Assert.assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void testValidZenkakuNumeric() throws RedPenException {
+        Configuration config = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("JapaneseAnchorExpression").addProperty("mode", "numeric-zenkaku"))
+                .build();
+
+        List<Document> documents = new ArrayList<>();documents.add(
+                Document.builder(new JapaneseTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(new Sentence("１章を参照されたい。", 1))
+                        .build());
+
+        RedPen redPen = new RedPen(config);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
+        Assert.assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void testValidKansuji() throws RedPenException {
+        Configuration config = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("JapaneseAnchorExpression").addProperty("mode", "kansuji"))
+                .build();
+
+        List<Document> documents = new ArrayList<>();documents.add(
+                Document.builder(new JapaneseTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(new Sentence("一章を参照されたい。", 1))
+                        .build());
+
+        RedPen redPen = new RedPen(config);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
+        Assert.assertEquals(0, errors.size());
+    }
+
+    @Test
     public void testInvalid() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("JapaneseAnchorExpression"))
