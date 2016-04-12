@@ -57,6 +57,78 @@ public class JapaneseNumberExpressionValidatorTest {
     }
 
     @Test
+    public void testValidNumeric() throws RedPenException {
+        Configuration config = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("JapaneseNumberExpression").addProperty("mode", "numeric"))
+                .build();
+
+        List<Document> documents = new ArrayList<>();documents.add(
+                Document.builder(new JapaneseTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(new Sentence("これが1つの原因と考えられる。", 1))
+                        .build());
+
+        RedPen redPen = new RedPen(config);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
+        Assert.assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void testValidNumericZenkaku() throws RedPenException {
+        Configuration config = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("JapaneseNumberExpression").addProperty("mode", "numeric-zenkaku"))
+                .build();
+
+        List<Document> documents = new ArrayList<>();documents.add(
+                Document.builder(new JapaneseTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(new Sentence("これが１つの原因と考えられる。", 1))
+                        .build());
+
+        RedPen redPen = new RedPen(config);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
+        Assert.assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void testValidKansuji() throws RedPenException {
+        Configuration config = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("JapaneseNumberExpression").addProperty("mode", "kansuji"))
+                .build();
+
+        List<Document> documents = new ArrayList<>();documents.add(
+                Document.builder(new JapaneseTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(new Sentence("これが一つの原因と考えられる。", 1))
+                        .build());
+
+        RedPen redPen = new RedPen(config);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
+        Assert.assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void testValidCounting() throws RedPenException {
+        Configuration config = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("JapaneseNumberExpression").addProperty("mode", "counting"))
+                .build();
+
+        List<Document> documents = new ArrayList<>();documents.add(
+                Document.builder(new JapaneseTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(new Sentence("これがひとつの原因と考えられる。", 1))
+                        .build());
+
+        RedPen redPen = new RedPen(config);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
+        Assert.assertEquals(0, errors.size());
+    }
+
+    @Test
     public void testInvalid() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("JapaneseNumberExpression"))

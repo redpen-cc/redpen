@@ -32,10 +32,25 @@ import static cc.redpen.config.SymbolType.*;
 import static java.util.Collections.singletonList;
 
 public class JapaneseNumberExpressionValidator extends Validator {
-    private final List<Pattern> patterns = Arrays.asList(
+    private final List<Pattern> patternsNumeric = Arrays.asList(
         Pattern.compile("[一二三四五六七八九０-９][一二三四五六七八九０-９.．〜、]*[つの]"),
         Pattern.compile("(ひと|ふた|[みよむや]っ|いつ|ここの)つ")
     );
+    private final List<Pattern> patternsNumericZenkaku = Arrays.asList(
+        Pattern.compile("[一二三四五六七八九0-9][一二三四五六七八九0-9.．〜、]*[つの]"),
+        Pattern.compile("(ひと|ふた|[みよむや]っ|いつ|ここの)つ")
+    );
+    private final List<Pattern> patternsKansuji = Arrays.asList(
+        Pattern.compile("[0-9０-９][0-9０-９.．〜、]*[つの]"),
+        Pattern.compile("(ひと|ふた|[みよむや]っ|いつ|ここの)つ")
+    );
+    private final List<Pattern> patternsCounting = Arrays.asList(
+        Pattern.compile("[一二三四五六七八九0-9０-９][一二三四五六七八九0-9０-９.．〜、]*[つの]")
+    );
+
+    public JapaneseNumberExpressionValidator() {
+        super("mode", "numeric");
+    }
 
     @Override public List<String> getSupportedLanguages() {
         return singletonList(Locale.JAPANESE.getLanguage());
@@ -43,11 +58,26 @@ public class JapaneseNumberExpressionValidator extends Validator {
 
     @Override
     public void validate(Sentence sentence) {
-        for (Pattern pat : patterns) {
+        for (Pattern pat : patternsOfCurrentMode()) {
             final Matcher m = pat.matcher(sentence.getContent());
             while (m.find()) {
                 addLocalizedError(sentence, m.group(0));
             }
+        }
+    }
+
+    private List<Pattern> patternsOfCurrentMode() {
+        switch (getString("mode")) {
+        case "numeric":
+            return patternsNumeric;
+        case "numeric-zenkaku":
+            return patternsNumericZenkaku;
+        case "kansuji":
+            return patternsKansuji;
+        case "counting":
+            return patternsCounting;
+        default:
+            throw new RuntimeException(String.format("unknown mode: %s", getString("mode")));
         }
     }
 }
