@@ -30,6 +30,31 @@ import java.util.Optional;
 
 public abstract class LineParser extends BaseDocumentParser {
 
+    /**
+     * Target line of parser
+     */
+    public class TargetLine {
+        // target line
+        public Line line;
+        // previous line of target line
+        public Line previousLine;
+        // next line of target line
+        public Line nextLine;
+        // fist character of target line
+        public char firstChar;
+        // second character of target line
+        public char secondChar;
+
+        public TargetLine(Line line, Line previousLine,
+                          Line nextLine) {
+            this.line = line;
+            this.previousLine = previousLine;
+            this.nextLine = nextLine;
+            this.firstChar = line.charAt(0);
+            this.secondChar = line.charAt(1);
+        }
+    }
+
     @Override
     public Document parse(InputStream io, Optional<String> fileName,
                           SentenceExtractor sentenceExtractor, RedPenTokenizer tokenizer) throws RedPenException {

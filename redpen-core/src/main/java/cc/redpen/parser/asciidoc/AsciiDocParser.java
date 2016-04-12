@@ -94,30 +94,6 @@ public class AsciiDocParser extends LineParser {
         public int blockMarkerLength = 0;
     }
 
-    /**
-     * Target line of parser
-     */
-    class TargetLine {
-        // target line
-        public Line line;
-        // previous line of target line
-        public Line previousLine;
-        // next line of target line
-        public Line nextLine;
-        // fist character of target line
-        public char firstChar;
-        // second character of target line
-        public char secondChar;
-
-        public TargetLine(Line line, Line previousLine,
-                          Line nextLine) {
-            this.line = line;
-            this.previousLine = previousLine;
-            this.nextLine = nextLine;
-            this.firstChar = line.charAt(0);
-            this.secondChar = line.charAt(1);
-        }
-    }
 
     /**
      * populate the erasable model with the text from the inputstream
@@ -406,7 +382,6 @@ public class AsciiDocParser extends LineParser {
         line.eraseEnclosure("{", "}", AsciiDocLine.EraseStyle.Markers); // NOTE: should we make substitutions?
         line.eraseEnclosure("[", "]", AsciiDocLine.EraseStyle.Markers);
 
-        // headers
         int headerIndent = 0;
         while (line.charAt(headerIndent) == '=') {
             headerIndent++;

@@ -19,9 +19,9 @@ package cc.redpen.parser.review;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
-import cc.redpen.parser.BaseDocumentParser;
 import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.parser.common.Line;
+import cc.redpen.parser.common.LineParser;
 import cc.redpen.parser.common.Model;
 import cc.redpen.tokenizer.RedPenTokenizer;
 import org.slf4j.Logger;
@@ -32,7 +32,7 @@ import java.io.InputStream;
 import java.util.Optional;
 
 
-public class ReVIEWParser extends BaseDocumentParser {
+public class ReVIEWParser extends LineParser {
     private static final Logger LOG = LoggerFactory.getLogger(ReVIEWParser.class);
 
     /**
@@ -63,7 +63,7 @@ public class ReVIEWParser extends BaseDocumentParser {
         return documentBuilder.build();
     }
 
-    private void populateModel(Model model, InputStream io) {
+    protected void populateModel(Model model, InputStream io) {
         State state = new State();
         BufferedReader reader = createReader(io);
 
@@ -96,6 +96,19 @@ public class ReVIEWParser extends BaseDocumentParser {
         }
     }
 
-    private void processLine(Line currentLine, Model model, State state) {
+    private void processLine(Line line, Model model, State state) {
+        if (line.isErased()) { return; }
+
+        TargetLine target = new TargetLine(line,
+                model.getLine(line.getLineNo() - 1),
+                model.getLine(line.getLineNo() + 1));
+
+        // check for block
+        // test for various block starts
+        // handling comments
+        // enclosed directives
+        // headers
+        // list
+        // erase inline markups
     }
 }
