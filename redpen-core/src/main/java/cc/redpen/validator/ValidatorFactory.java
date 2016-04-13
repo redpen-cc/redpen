@@ -23,7 +23,6 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.validator.section.*;
 import cc.redpen.validator.sentence.*;
 
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +52,7 @@ public class ValidatorFactory {
         registerValidator(SectionLengthValidator.class);
         registerValidator(UnexpandedAcronymValidator.class);
         registerValidator(WordFrequencyValidator.class);
+        registerValidator(SectionLevelValidator.class);
 
         // sentence
         registerValidator(CommaNumberValidator.class);
@@ -83,6 +83,8 @@ public class ValidatorFactory {
         registerValidator(SymbolWithSpaceValidator.class);
         registerValidator(WeakExpressionValidator.class);
         registerValidator(WordNumberValidator.class);
+        registerValidator(LongKanjiChainValidator.class);
+        registerValidator(JapaneseAmbiguousNounConjunctionValidator.class);
 
         // other
         registerValidator(JavaScriptValidator.class);

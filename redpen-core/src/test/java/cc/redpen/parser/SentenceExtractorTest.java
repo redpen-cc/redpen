@@ -258,7 +258,7 @@ public class SentenceExtractorTest {
     @Test
     public void testJapaneseMultipleSentencesWithPartialSplit() {
         char[] stopChars = {'．', '？'};
-        char[] rightQuotations = {};
+        char[] rightQuotations = {'”', '’'};
         SentenceExtractor extractor = new SentenceExtractor(stopChars, rightQuotations);
         final String input = "それは異なる．たとえば，\n" +
                 "以下のとおりである．";
@@ -274,7 +274,7 @@ public class SentenceExtractorTest {
     @Test
     public void testJapanesSentenceWithEndWithNonFullStop() {
         char[] stopChars = {'．'};
-        char[] rightQuotations = {};
+        char[] rightQuotations = {'’', '”'};
         SentenceExtractor extractor = new SentenceExtractor(stopChars, rightQuotations);
         final String input = "それは異なる．たとえば，";
         List<Pair<Integer, Integer>> outputPositions = new ArrayList<>();
@@ -336,30 +336,12 @@ public class SentenceExtractorTest {
         assertEquals(input.length(), lastPosition);
     }
 
-    //    @Test
-//    public void testConstructPatternString() {
-//        List<Character> endCharacters = new ArrayList<>();
-//        endCharacters.add('\\.');
-//        endCharacters.add('?');
-//        endCharacters.add('!');
-//        SentenceExtractor extractor = new SentenceExtractor(endCharacters);
-//        assertEquals("\\.'|\\?'|\\!'|\\.\"|\\?\"|\\!\"|\\.|\\?|\\!", extractor.constructEndSentencePattern().pattern());
-//    }
-//
     @Test
     public void testConstructPatternStringWithoutEscape() {
         char[] endCharacters = {'.', '?', '!'};
         SentenceExtractor extractor = new SentenceExtractor(endCharacters);
-        assertEquals("\\.'|\\?'|\\!'|\\.\"|\\?\"|\\!\"|\\.|\\?|\\!", extractor.constructEndSentencePattern().pattern());
+        assertEquals("[\\.\\?\\!][\'\"]?", extractor.constructEndSentencePattern().pattern());
     }
-
-//    @Test
-//    public void testConstructPatternStringForSingleCharacter() {
-//        List<String> endCharacters = new ArrayList<>();
-//        endCharacters.add("\\.");
-//        SentenceExtractor extractor = new SentenceExtractor(endCharacters);
-//        assertEquals("\\.\'|\\.\"|\\.", extractor.constructEndSentencePattern().pattern());
-//    }
 
     @Test(expected = IllegalArgumentException.class)
     public void testThrowExceptionGivenVoidList() {
