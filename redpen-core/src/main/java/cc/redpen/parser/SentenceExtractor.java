@@ -99,25 +99,12 @@ public class SentenceExtractor {
         return rightQuotations;
     }
 
-    private void generateQuotationPattern(char[] endCharacters, StringBuilder patternString, char quotation) {
-        for (char endChar : endCharacters) {
-            String pattern = handleSpecialCharacter(endChar) + quotation;
-            appendPattern(patternString, pattern);
-        }
-    }
-
     private void generateSimplePattern(char[] endCharacters, StringBuilder patternString) {
+        patternString.append("[");
         for (char endChar : endCharacters) {
-            appendPattern(patternString, handleSpecialCharacter(endChar));
+            patternString.append(handleSpecialCharacter(endChar));
         }
-    }
-
-    private void appendPattern(StringBuilder patternString,
-                               String newPattern) {
-        if (patternString.length() > 0) {
-            patternString.append("|");
-        }
-        patternString.append(newPattern);
+        patternString.append("]");
     }
 
     private static String handleSpecialCharacter(char endChar) {
@@ -145,7 +132,7 @@ public class SentenceExtractor {
      */
     public int extract(String line, List<Pair<Integer, Integer>> sentencePositions) {
         int startPosition = 0;
-        int periodPosition = endOfSentenceDetector.getSentenceEndPosition(line);
+        int periodPosition = endOfSentenceDetector.getSentenceEndPosition(line, 0);
         while (periodPosition >= 0) {
             sentencePositions.add(new Pair<>(startPosition, periodPosition + 1));
             startPosition = periodPosition + 1;
@@ -161,7 +148,7 @@ public class SentenceExtractor {
      * @return position of full stop when there is a full stop, -1 otherwise
      */
     public int getSentenceEndPosition(String str) {
-        return endOfSentenceDetector.getSentenceEndPosition(str);
+        return endOfSentenceDetector.getSentenceEndPosition(str, 0);
     }
 
     /**
@@ -190,10 +177,12 @@ public class SentenceExtractor {
             throw new IllegalArgumentException("No end character is specified");
         }
         StringBuilder patternString = new StringBuilder();
-        for (char rightQuotation : rightQuotationList) {
-            generateQuotationPattern(this.fullStopList, patternString, rightQuotation);
-        }
         generateSimplePattern(this.fullStopList, patternString);
+        patternString.append("[");
+        for (char rightQuotation : rightQuotationList) {
+            patternString.append(rightQuotation);
+        }
+        patternString.append("]?");
         return Pattern.compile(patternString.toString());
     }
 
