@@ -17,18 +17,15 @@
  */
 package cc.redpen.validator.sentence;
 
-import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
-import cc.redpen.util.StringUtils;
 import cc.redpen.validator.Validator;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Arrays;
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import static cc.redpen.config.SymbolType.*;
 import static java.util.Collections.singletonList;
 
 public class JapaneseNumberExpressionValidator extends Validator {
@@ -44,7 +41,7 @@ public class JapaneseNumberExpressionValidator extends Validator {
         Pattern.compile("[0-9０-９][0-9０-９.．〜、]*[つの]"),
         Pattern.compile("(ひと|ふた|[みよむや]っ|いつ|ここの)つ")
     );
-    private final List<Pattern> patternsCounting = Arrays.asList(
+    private final List<Pattern> patternsHiragana = Arrays.asList(
         Pattern.compile("[一二三四五六七八九0-9０-９][一二三四五六七八九0-9０-９.．〜、]*[つの]")
     );
 
@@ -74,8 +71,8 @@ public class JapaneseNumberExpressionValidator extends Validator {
             return patternsNumericZenkaku;
         case "kansuji":
             return patternsKansuji;
-        case "counting":
-            return patternsCounting;
+        case "hiragana":
+            return patternsHiragana;
         default:
             throw new RuntimeException(String.format("unknown mode: %s", getString("mode")));
         }

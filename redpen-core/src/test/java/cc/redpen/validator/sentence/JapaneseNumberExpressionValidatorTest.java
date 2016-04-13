@@ -23,9 +23,6 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
-import cc.redpen.parser.DocumentParser;
-import cc.redpen.parser.LineOffset;
-import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 import junit.framework.Assert;
@@ -33,7 +30,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -111,9 +107,9 @@ public class JapaneseNumberExpressionValidatorTest {
     }
 
     @Test
-    public void testValidCounting() throws RedPenException {
+    public void testValidHiragana() throws RedPenException {
         Configuration config = Configuration.builder("ja")
-                .addValidatorConfig(new ValidatorConfiguration("JapaneseNumberExpression").addProperty("mode", "counting"))
+                .addValidatorConfig(new ValidatorConfiguration("JapaneseNumberExpression").addProperty("mode", "hiragana"))
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
