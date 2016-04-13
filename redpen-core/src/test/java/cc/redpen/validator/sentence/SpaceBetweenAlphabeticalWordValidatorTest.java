@@ -34,6 +34,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
 
@@ -175,5 +176,24 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
         RedPen redPen = new RedPen(configuration);
         List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
         assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void testNeedNoBeforeAndAfterSpace() throws RedPenException {
+        SpaceBetweenAlphabeticalWordValidator validator = new SpaceBetweenAlphabeticalWordValidator();
+        validator.preInit(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord").addProperty("forbidden", "true"), Configuration.builder().build());
+        List<ValidationError> errors = new ArrayList<>();
+        validator.setErrorList(errors);
+        validator.validate(new Sentence("きょうは Coke を飲みたい。", 0));
+        assertEquals(1, errors.size());
+    }
+
+    @Test
+    public void testSupportedLanguages() {
+        SpaceBetweenAlphabeticalWordValidator validator = new SpaceBetweenAlphabeticalWordValidator();
+        final List<String> languages = validator.getSupportedLanguages();
+        assertEquals(2, languages.size());
+        assertEquals(Locale.JAPANESE.getLanguage(), languages.get(0));
+        assertEquals(Locale.CHINESE.getLanguage(), languages.get(1));
     }
 }
