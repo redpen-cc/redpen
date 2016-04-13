@@ -43,7 +43,9 @@ Tools
 Editor support
 ---------------
 
-  * [Atom Editor package by griffin-stewie](https://atom.io/packages/redpen)
+  * Atom
+    * [redpen package by griffin-stewie](https://atom.io/packages/redpen)
+    * [linter-redpen by griffin-stewie](https://atom.io/packages/linter-redpen)
   * [Emacs redpen-paragraph by karronoli](https://libraries.io/emacs/redpen-paragraph/v0.2)
   * [WordPress plugin](https://github.com/redpen-cc/redpen-wordpress-plugin)
   * [IntelliJ IDEA plugin](https://plugins.jetbrains.com/plugin/8210)
