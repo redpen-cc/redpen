@@ -47,6 +47,7 @@ Editor support
     * [redpen package by griffin-stewie](https://atom.io/packages/redpen)
     * [linter-redpen by griffin-stewie](https://atom.io/packages/linter-redpen)
   * [Emacs redpen-paragraph by karronoli](https://libraries.io/emacs/redpen-paragraph/v0.2)
+  * [unite.vim integration of redpen by rhysd](https://github.com/rhysd/unite-redpen.vim)
   * [WordPress plugin](https://github.com/redpen-cc/redpen-wordpress-plugin)
   * [IntelliJ IDEA plugin](https://plugins.jetbrains.com/plugin/8210)
   * [SublimeLinter module for RedPen](https://github.com/taky/sublimelinter-redpen)
