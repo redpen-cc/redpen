@@ -43,6 +43,8 @@ Tools
 Editor support
 ---------------
 
+![Image of IntelliJ IDEA plugin](logo/intellij-redpen-image.png "Image of IntelliJ IDEA plugin")
+
   * Atom
     * [redpen package by griffin-stewie](https://atom.io/packages/redpen)
     * [linter-redpen by griffin-stewie](https://atom.io/packages/linter-redpen)
@@ -52,8 +54,10 @@ Editor support
   * [IntelliJ IDEA plugin](https://plugins.jetbrains.com/plugin/8210)
   * [SublimeLinter module for RedPen](https://github.com/taky/sublimelinter-redpen)
 
+
 Extensions
 ----------
+
   * [unsuggested-kanji](https://github.com/so-c/redpen-validator) by so-c
   * [ra-removed-word](http://www.clear-code.com/blog/2015/8/29.html) by ClearCode
 
