@@ -24,6 +24,9 @@ import cc.redpen.validator.Validator;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Arrays;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import static cc.redpen.config.SymbolType.*;
 import static java.util.Collections.singletonList;
@@ -33,31 +36,49 @@ public class SpaceBetweenAlphabeticalWordValidator extends Validator {
     private char rightParenthesis = ')';
     private char comma = ',';
 
+    private final String shard = "[^A-Za-z0-9 !@#$%^&*()_+=\\[\\]\\\\{}|=<>,.{};':\",./<>?（）［］｛｝-]";
+    private final String word = "[A-Za-z0-9 !@#$%^&*()_+=\\[\\]\\\\{}|=<>,.{};':\",./<>?（）｛｝［］-]+";
+    private final Pattern pat = Pattern.compile(shard + "\\s+(" + word + ")\\s+" + shard);
+
+    public SpaceBetweenAlphabeticalWordValidator() {
+        super("forbidden", false); // Spaces are enforced (false) or forbidden (true)
+    }
+
     @Override public List<String> getSupportedLanguages() {
-        return singletonList(Locale.JAPANESE.getLanguage());
+        return Arrays.asList(Locale.JAPANESE.getLanguage(), Locale.CHINESE.getLanguage());
     }
 
     @Override
     public void validate(Sentence sentence) {
-        char prevCharacter = ' ';
-        int idx = 0;
-        for (char character : sentence.getContent().toCharArray()) {
-            if (!StringUtils.isBasicLatin(prevCharacter)
-                    && prevCharacter != leftParenthesis
-                    && prevCharacter != comma
-                    && StringUtils.isBasicLatin(character)
-                    && Character.isLetter(character)) {
-                addLocalizedErrorWithPosition("Before", sentence, idx, idx + 1);
-            } else if (
-                    !StringUtils.isBasicLatin(character)
-                            && character != rightParenthesis
-                            && character != comma
-                            && StringUtils.isBasicLatin(prevCharacter)
-                            && Character.isLetter(prevCharacter)) {
-                addLocalizedErrorWithPosition("After", sentence, idx, idx + 1);
+        if (!getBoolean("forbidden")) {
+            char prevCharacter = ' ';
+            int idx = 0;
+            for (char character : sentence.getContent().toCharArray()) {
+                if (!StringUtils.isBasicLatin(prevCharacter)
+                        && prevCharacter != leftParenthesis
+                        && prevCharacter != comma
+                        && StringUtils.isBasicLatin(character)
+                        && Character.isLetter(character)) {
+                    addLocalizedErrorWithPosition("Before", sentence, idx, idx + 1);
+                } else if (
+                        !StringUtils.isBasicLatin(character)
+                                && character != rightParenthesis
+                                && character != comma
+                                && StringUtils.isBasicLatin(prevCharacter)
+                                && Character.isLetter(prevCharacter)) {
+                    addLocalizedErrorWithPosition("After", sentence, idx, idx + 1);
+                }
+                prevCharacter = character;
+                idx++;
             }
-            prevCharacter = character;
-            idx++;
+        } else {
+            final Matcher m = pat.matcher(sentence.getContent());
+            while (m.find()) {
+                final String word = m.group(1);
+                if (!word.contains(" ")) {
+                    addLocalizedError("Forbidden", sentence, word);
+                }
+            }
         }
     }
 
