@@ -7,6 +7,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.junit.*;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,9 +22,8 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeNoException;
 
 public class RedPenDemoTest {
-    private final static String redpenServerUrl = "http://localhost:8080/";
+    private static String redpenServerUrl;
     private static Server server;
-    private final static int PORT = 8080;
 
     @BeforeClass
     public static void beforeClass() throws Exception {
@@ -32,23 +32,33 @@ public class RedPenDemoTest {
             System.setProperty("browser", "phantomjs");
         }
         Socket socket = new Socket();
-        try {
-            socket.connect(new InetSocketAddress(PORT), 200);
-            socket.close();
-            // something is listening on port 8080
-        } catch (IOException e) {
-            // nothing is listening on port 8080
-            WebAppContext context = new WebAppContext();
-            File webapp = new File("redpen-server/src/main/webapp/");
-            if (!webapp.exists()) {
-                // working directory is redpen-server
-                webapp = new File("src/main/webapp/");
+        for (int port = 8080; port < 65535; port++) {
+            redpenServerUrl = String.format("http://localhost:%s/", port);
+            try {
+                socket.connect(new InetSocketAddress(port), 200);
+                socket.close();
+                // something is listening on the port
+                // ensure that is RedPen
+                open(redpenServerUrl);
+                try {
+                    $("#redpen-editor");
+                }catch(NoSuchElementException ignored){
+                }
+            } catch (IOException e) {
+                // nothing is listening on the port
+                WebAppContext context = new WebAppContext();
+                File webapp = new File("redpen-server/src/main/webapp/");
+                if (!webapp.exists()) {
+                    // working directory is redpen-server
+                    webapp = new File("src/main/webapp/");
+                }
+                context.setWar(webapp.getAbsolutePath());
+                context.setContextPath("/");
+                server = new Server(port);
+                server.setHandler(context);
+                server.start();
+                break;
             }
-            context.setWar(webapp.getAbsolutePath());
-            context.setContextPath("/");
-            server = new Server(PORT);
-            server.setHandler(context);
-            server.start();
         }
     }
 
@@ -60,13 +70,14 @@ public class RedPenDemoTest {
         try {
             // ensure phantomjs to quit
             WebDriverRunner.getWebDriver().quit();
-        }catch(IllegalStateException ignored){
+        } catch (IllegalStateException ignored) {
         }
 
     }
 
     @Before
     public void loadRedPen() throws IOException {
+        System.out.println(redpenServerUrl);
         try {
             new URL(redpenServerUrl).openConnection().connect();
             open(redpenServerUrl);
