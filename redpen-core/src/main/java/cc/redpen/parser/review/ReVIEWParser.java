@@ -32,6 +32,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class ReVIEWParser extends LineParser {
@@ -56,6 +58,8 @@ public class ReVIEWParser extends LineParser {
         public List<String> properties = new ArrayList<>();
         public boolean isOpen = false;
     }
+
+    static Pattern DIGIT_PATTERN = Pattern.compile("^[0-9]+\\.");
 
     @Override
     public Document parse(InputStream inputStream, Optional<String> fileName,
@@ -174,7 +178,75 @@ public class ReVIEWParser extends LineParser {
         }
 
         // list
+        if (!state.inBlock && isListElement(line, target.nextLine)) {
+            state.inList = true;
+        }
+
         // headers
+    }
+
+
+    /**
+     * Does the give line start a list?
+     *
+     * @param line
+     * @return
+     */
+    private boolean isListElement(Line line, Line nextLine) {
+        if (isNormalList(line)) return true;
+
+        // is numbered list?
+        if (isDigitList(line)) return true;
+
+        // is labeled list?
+        if (line.charAt(0) == ':' && line.charAt(1) == ' ') {
+            nextLine.setListLevel(1);
+            nextLine.setListStart(true);
+            line.erase();
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isDigitList(Line line) {
+        Matcher m = DIGIT_PATTERN.matcher(line.getText());
+        if (m.find()) {
+            int dotPos = line.getText().indexOf(".");
+            line.setListLevel(1);
+            line.setListStart(true);
+            line.erase(0, dotPos);
+            while (Character.isWhitespace(line.charAt(dotPos))) {
+                line.erase(dotPos, 1);
+                dotPos++;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isNormalList(Line line) {
+        int pos = 0;
+        // is the first non-space character a suitable list marker?
+        if ("*".indexOf(line.charAt(pos)) != -1) {
+            char listMarker = line.charAt(pos);
+            int level = 1; pos++;
+            while (line.charAt(pos) == listMarker) {
+                pos++;
+                level++;
+            }
+
+            if (Character.isWhitespace(line.charAt(pos))) {
+                line.setListLevel(level);
+                line.setListStart(true);
+                line.erase(0, pos);
+                while (Character.isWhitespace(line.charAt(pos))) {
+                    line.erase(pos, 1);
+                    pos++;
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     ReVIEWBlock parseBlock(Line line) {
