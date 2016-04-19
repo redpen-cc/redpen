@@ -27,7 +27,7 @@ public class ReVIEWLine extends Line {
      * @param lineno the original line number
      */
     public ReVIEWLine(String str, int lineno) {
-        super(lineno);
+        super(str, lineno);
         this.inlineMarkupDelimiters = "";
         if (!str.isEmpty()) {
             for (int i = 0; i < str.length(); i++) {
@@ -41,15 +41,15 @@ public class ReVIEWLine extends Line {
                     escaped.add(false);
                 }
                 offsets.add(i);
-                text.add(ch);
+                characters.add(ch);
                 valid.add(true);
             }
         }
 
         // trim the end
-        while (!text.isEmpty() &&
-                Character.isWhitespace(text.get(text.size() - 1))) {
-            text.remove(text.size() - 1);
+        while (!characters.isEmpty() &&
+                Character.isWhitespace(characters.get(characters.size() - 1))) {
+            characters.remove(characters.size() - 1);
         }
     }
 }

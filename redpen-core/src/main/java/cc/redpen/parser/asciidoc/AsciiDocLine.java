@@ -32,7 +32,7 @@ public class AsciiDocLine extends Line {
      * @param lineno the original line number
      */
     public AsciiDocLine(String str, int lineno) {
-        super(lineno);
+        super(str, lineno);
         this.lineNo = lineno;
         this.inlineMarkupDelimiters = " _*`#^~.,";
         if (!str.isEmpty()) {
@@ -51,7 +51,7 @@ public class AsciiDocLine extends Line {
                 }
 
                 offsets.add(i);
-                text.add(ch);
+                characters.add(ch);
                 valid.add(true);
 
                 if ((lastCh != 0) && (lastCh != ch)) {
@@ -62,9 +62,9 @@ public class AsciiDocLine extends Line {
         }
 
         // trim the end
-        while (!text.isEmpty() &&
-                Character.isWhitespace(text.get(text.size() - 1))) {
-            text.remove(text.size() - 1);
+        while (!characters.isEmpty() &&
+                Character.isWhitespace(characters.get(characters.size() - 1))) {
+            characters.remove(characters.size() - 1);
         }
     }
 

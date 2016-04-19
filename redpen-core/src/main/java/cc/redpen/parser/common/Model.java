@@ -29,7 +29,7 @@ import java.util.List;
  * A model of the original document, represented as an array of lines
  */
 public class Model {
-    private static final Line EMPTY_LINE = new Line(0);
+    private static final Line EMPTY_LINE = new Line("", 0);
     private List<Line> lines = new ArrayList<>();
     private int lineIndex = 0;
     private SentenceExtractor sentenceExtractor;

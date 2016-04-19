@@ -27,8 +27,10 @@ public class Line {
 
     // a list of offsets for each character
     protected List<Integer> offsets = new ArrayList<>();
-    // the text for the line
-    protected List<Character> text = new ArrayList<>();
+    // the character list for the line
+    protected List<Character> characters = new ArrayList<>();
+    // the text of the line
+    protected String text;
     // marks erased characters as invalid
     protected List<Boolean> valid = new ArrayList<>();
     // remembers which characters were escaped in the original string
@@ -56,8 +58,9 @@ public class Line {
         CloseMarkerContainsDelimiters
     }
 
-    public Line(int lineNo) {
+    public Line(String str, int lineNo) {
         this.lineNo = lineNo;
+        this.text = str;
     }
 
     /**
@@ -90,7 +93,7 @@ public class Line {
      * @param segment segment to be erased
      */
     public void erase(String segment) {
-        for (int i = 0; i < text.size(); i++) {
+        for (int i = 0; i < characters.size(); i++) {
             boolean found = true;
             for (int j = 0; j < segment.length(); j++) {
                 if (charAt(j + i) != segment.charAt(j)) {
@@ -111,7 +114,7 @@ public class Line {
      * @return length of the line
      */
     public int length() {
-        return text.size();
+        return characters.size();
     }
 
     /**
@@ -133,12 +136,12 @@ public class Line {
      * @return extracted character
      */
     public char charAt(int i, boolean includeInvalid) {
-        if ((i >= 0) && (i < text.size())) {
+        if ((i >= 0) && (i < characters.size())) {
             if (escaped.get(i)) {
                 return ESCAPED_CHARACTER_VALUE;
             }
             if (includeInvalid || valid.get(i)) {
-                return text.get(i);
+                return characters.get(i);
             }
         }
         return 0;
@@ -166,8 +169,8 @@ public class Line {
      * @return raw character at the specified position
      */
     public char rawCharAt(int i) {
-        if ((i >= 0) && (i < text.size())) {
-            return text.get(i);
+        if ((i >= 0) && (i < characters.size())) {
+            return characters.get(i);
         }
         return ' ';
     }
@@ -179,7 +182,7 @@ public class Line {
      * @return true if the character at the given position valid
      */
     public boolean isValid(int i) {
-        if ((i >= 0) && (i < text.size())) {
+        if ((i >= 0) && (i < characters.size())) {
             return valid.get(i);
         }
         return false;
@@ -191,8 +194,8 @@ public class Line {
      * @return true if it's empty
      */
     public boolean isEmpty() {
-        for (int i = 0; i < text.size(); i++) {
-            if (!Character.isWhitespace(text.get(i)))
+        for (int i = 0; i < characters.size(); i++) {
+            if (!Character.isWhitespace(characters.get(i)))
                 if (valid.get(i)) {
                     return false;
                 }
@@ -291,6 +294,9 @@ public class Line {
         this.listStart = listStart;
     }
 
+    public String getText() {
+        return text;
+    }
 
     /**
      * Erase the open and close markers, and optionally all the text inside them
@@ -429,12 +435,12 @@ public class Line {
     @Override
     public String toString() {
         String result = "";
-        for (int i = 0; i < text.size(); i++) {
+        for (int i = 0; i < characters.size(); i++) {
             if (valid.get(i)) {
-                result += text.get(i);
+                result += characters.get(i);
             }
             else {
-                result += "·" + text.get(i);
+                result += "·" + characters.get(i);
             }
         }
         return (erased ? "X" : " ") +

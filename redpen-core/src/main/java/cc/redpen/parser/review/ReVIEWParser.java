@@ -29,6 +29,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -46,11 +48,14 @@ public class ReVIEWParser extends LineParser {
         // should we erase lines within the current block?
         public boolean eraseBlock = true;
         // the sort of block we are in
-        public char blockMarker = 0;
-        // length of the lead block marker
-        public int blockMarkerLength = 0;
+        public String type;
     }
 
+    class ReVIEWBlock {
+        public String type = "";
+        public List<String> properties = new ArrayList<>();
+        public boolean isOpen = false;
+    }
 
     @Override
     public Document parse(InputStream inputStream, Optional<String> fileName,
@@ -103,12 +108,49 @@ public class ReVIEWParser extends LineParser {
                 model.getLine(line.getLineNo() - 1),
                 model.getLine(line.getLineNo() + 1));
 
-        // check for block
+        // check for block end
+        if (state.inBlock) {
+            if (target.line.startsWith("//}") && target.line.length() == 3) {
+                state.inBlock = false;
+                line.erase();
+            }
+        }
+
         // test for various block starts
+        if ((!state.inBlock) && target.line.startsWith("//")) {
+            ReVIEWBlock block = parseBlock(line);
+        }
+
         // handling comments
         // enclosed directives
         // headers
         // list
         // erase inline markups
+
+    }
+
+    ReVIEWBlock parseBlock(Line line) {
+        ReVIEWBlock block = new ReVIEWBlock();
+        String text = line.getText();
+        // detect type
+        int openIdx = text.indexOf("[");
+        if (openIdx > 0) {
+            block.type = text.substring(2, openIdx);
+            // detect properties
+            int closeIdx = text.indexOf("]");
+            while(closeIdx > 0) {
+                block.properties.add(text.substring(openIdx+1, closeIdx));
+                openIdx = text.indexOf("[", openIdx+1);
+                closeIdx = text.indexOf("]", closeIdx+1);
+            }
+        } else {
+            block.type = text.substring(2, text.indexOf("{"));
+        }
+
+        // detect open block
+        if (text.indexOf("{") > 0) {
+            block.isOpen = true;
+        }
+        return block;
     }
 }
