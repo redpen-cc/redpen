@@ -112,8 +112,8 @@ public class ReVIEWParser extends LineParser {
         if (state.inBlock) {
             if (target.line.startsWith("//}") && target.line.length() == 3) {
                 state.inBlock = false;
-                line.erase();
             }
+            line.erase();
         }
 
         // test for various block starts
@@ -161,10 +161,17 @@ public class ReVIEWParser extends LineParser {
         line.eraseEnclosure("@<raw>{idgxml|", "}", Line.EraseStyle.Markers);
         line.eraseEnclosure("@<raw>{top|", "}", Line.EraseStyle.Markers);
 
-
-        //annotation for preprocessor
+        //opening annotation for preprocessor
         line.eraseEnclosure("#@warn(", ")", Line.EraseStyle.All);
         line.eraseEnclosure("@comment(", ")", Line.EraseStyle.All);
+        line.eraseEnclosure("#@mapfile(", ")", Line.EraseStyle.All);
+        line.eraseEnclosure("#@maprange(", ")", Line.EraseStyle.All);
+        line.eraseEnclosure("#@mapoutput(", ")", Line.EraseStyle.All);
+
+        //closing annotation for preprocessor
+        if (target.line.startsWith("#@end")) {
+            line.erase();
+        }
 
         // list
         // headers
