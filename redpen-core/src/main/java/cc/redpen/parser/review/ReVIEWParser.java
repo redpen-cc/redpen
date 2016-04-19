@@ -119,14 +119,55 @@ public class ReVIEWParser extends LineParser {
         // test for various block starts
         if ((!state.inBlock) && target.line.startsWith("//")) {
             ReVIEWBlock block = parseBlock(line);
+            line.erase();
+            state.inBlock = block.isOpen;
         }
 
         // handling comments
-        // enclosed directives
-        // headers
-        // list
-        // erase inline markups
+        if (target.line.startsWith("#@#")) {
+            line.erase();
+        }
 
+        // enclosed inline markups
+        line.eraseEnclosure("@<list>{", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<code>{", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<img>{", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<table>{", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<fn>{", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<chap>{", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<title>{", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<chapref>{", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<bou>{", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<kw>{", "}", Line.EraseStyle.Markers); // TODO: extract keyword only
+        line.eraseEnclosure("@<chapter>{", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<ruby>{", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<ami>{", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<b>{", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<i>{", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<strong>{", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<em>{", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<tt>{", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<tti>{", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<ttb>{", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<u>{", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<br>{", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<m>{", "}", Line.EraseStyle.All);
+        line.eraseEnclosure("@<icon>{", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<uchar>{", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<href>{", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<column>{", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<raw>{html|", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<raw>{latex|", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<raw>{idgxml|", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<raw>{top|", "}", Line.EraseStyle.Markers);
+
+
+        //annotation for preprocessor
+        line.eraseEnclosure("#@warn(", ")", Line.EraseStyle.All);
+        line.eraseEnclosure("@comment(", ")", Line.EraseStyle.All);
+
+        // list
+        // headers
     }
 
     ReVIEWBlock parseBlock(Line line) {
