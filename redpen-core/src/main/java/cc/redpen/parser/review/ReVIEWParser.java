@@ -17,13 +17,9 @@
  */
 package cc.redpen.parser.review;
 
-import cc.redpen.RedPenException;
-import cc.redpen.model.Document;
-import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.parser.common.Line;
 import cc.redpen.parser.common.LineParser;
 import cc.redpen.parser.common.Model;
-import cc.redpen.tokenizer.RedPenTokenizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +27,6 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -61,17 +56,6 @@ public class ReVIEWParser extends LineParser {
 
     static Pattern DIGIT_PATTERN = Pattern.compile("^[0-9]+\\.");
 
-    @Override
-    public Document parse(InputStream inputStream, Optional<String> fileName,
-                          SentenceExtractor sentenceExtractor,
-                          RedPenTokenizer tokenizer) throws RedPenException {
-        Document.DocumentBuilder documentBuilder = Document.builder(tokenizer);
-        fileName.ifPresent(documentBuilder::setFileName);
-        Model model = new Model(sentenceExtractor);
-        populateModel(model, inputStream);
-        return documentBuilder.build();
-    }
-
     protected void populateModel(Model model, InputStream io) {
         State state = new State();
         BufferedReader reader = createReader(io);
@@ -92,10 +76,6 @@ public class ReVIEWParser extends LineParser {
             for (model.rewind(); model.isMore(); model.getNextLine()) {
                 processLine(model.getCurrentLine(), model, state);
             }
-
-            //TODO: implementation
-            //processHeader(model);
-
         } catch (Exception e) {
             e.printStackTrace();
             LOG.error("Exception when parsing Re:VIEW file", e);
