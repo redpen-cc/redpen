@@ -87,50 +87,48 @@ public abstract class LineParser extends BaseDocumentParser {
         }
 
         while (model.isMore()) {
-
             // skip blank lines
             while (model.isMore() && model.getCurrentLine().isEmpty()) {
                 model.getNextLine();
             }
+            if (!model.isMore()) { return; } // no contents
 
-            if (model.isMore()) {
-                // check for new sections
-                if (model.getCurrentLine().getSectionLevel() > 0) {
-                    builder.addSection(
-                            model.getCurrentLine().getSectionLevel(),
-                            model.convertToSentences(model.getCurrentLine())
-                    );
-                    model.getNextLine();
-                }
-                // check for a list item
-                else if (model.getCurrentLine().isListStart()) {
-                    List<Line> listElementLines = new ArrayList<>();
-                    int listLevel = model.getCurrentLine().getListLevel();
+            // check for new sections
+            if (model.getCurrentLine().getSectionLevel() > 0) {
+                builder.addSection(
+                        model.getCurrentLine().getSectionLevel(),
+                        model.convertToSentences(model.getCurrentLine())
+                );
+                model.getNextLine();
+            }
+            // check for a list item
+            else if (model.getCurrentLine().isListStart()) {
+                List<Line> listElementLines = new ArrayList<>();
+                int listLevel = model.getCurrentLine().getListLevel();
 
-                    // add the list start line
+                // add the list start line
+                listElementLines.add(model.getCurrentLine());
+
+                // test the following lines to see if they continue this list item
+                model.getNextLine();
+                while (model.isMore() &&
+                        !model.getCurrentLine().isListStart() &&
+                        (model.getCurrentLine().getListLevel() == listLevel)) {
                     listElementLines.add(model.getCurrentLine());
-
-                    // test the following lines to see if they continue this list item
                     model.getNextLine();
-                    while (model.isMore() &&
-                            !model.getCurrentLine().isListStart() &&
-                            (model.getCurrentLine().getListLevel() == listLevel)) {
-                        listElementLines.add(model.getCurrentLine());
-                        model.getNextLine();
-                    }
-                    builder.addListElement(listLevel, model.convertToSentences(listElementLines));
                 }
-                // process a paragraph
-                else {
-                    List<Line> paragraphLines = new ArrayList<>();
-                    // current line can't be empty, so this loop will enter at least once
-                    while (model.isMore() && !model.getCurrentLine().isEmpty()) {
-                        paragraphLines.add(model.getCurrentLine());
-                        model.getNextLine();
-                    }
-                    builder.addParagraph();
-                    model.convertToSentences(paragraphLines).forEach(builder::addSentence);
+                builder.addListElement(listLevel, model.convertToSentences(listElementLines));
+            }
+            // process a paragraph
+            else {
+                List<Line> paragraphLines = new ArrayList<>();
+                // current line can't be empty, so this loop will enter at least once
+                while (model.isMore() && !model.getCurrentLine().isEmpty()) {
+                    paragraphLines.add(model.getCurrentLine());
+                    model.getNextLine();
                 }
+                builder.addParagraph();
+                model.convertToSentences(paragraphLines).forEach(builder::addSentence);
             }
         }
     }

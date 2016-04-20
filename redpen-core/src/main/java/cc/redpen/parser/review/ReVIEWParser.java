@@ -112,6 +112,10 @@ public class ReVIEWParser extends LineParser {
                 model.getLine(line.getLineNo() - 1),
                 model.getLine(line.getLineNo() + 1));
 
+        if (state.inList && (line.getListLevel() == 0)) {
+            line.setListLevel(target.previousLine.getListLevel());
+        }
+
         // check for block end
         if (state.inBlock) {
             if (target.line.startsWith("//}") && target.line.length() == 3) {
@@ -177,14 +181,27 @@ public class ReVIEWParser extends LineParser {
             line.erase();
         }
 
+        // handling section
+        int headerIndent = 0;
+        while (line.charAt(headerIndent) == '=') {
+            headerIndent++;
+        }
+        if ((headerIndent > 0) && (line.charAt(headerIndent) == ' ')) {
+            line.erase(0, headerIndent + 1);
+            line.setSectionLevel(headerIndent);
+        }
+
         // list
         if (!state.inBlock && isListElement(line, target.nextLine)) {
             state.inList = true;
         }
 
-        // headers
+        // a blank line will cancel any list element we are in
+        if (state.inList && (line.length() == 0)) {
+            state.inList = false;
+            line.setListLevel(0);
+        }
     }
-
 
     /**
      * Does the give line start a list?
