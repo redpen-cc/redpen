@@ -23,10 +23,13 @@ import cc.redpen.model.Document;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.parser.DocumentParser;
+import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
 import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -192,6 +195,45 @@ public class ReVIEWParserTest {
         Document doc = createFileContent(sampleText);
         assertEquals(1, doc.size());
         assertEquals("About Gekioko.", doc.getSection(0).getHeaderContent(0).getContent());
+    }
+
+    @Test
+    public void testDocumentWithBoldWord() {
+        String sampleText = "It is a @<b>{good} day.";
+        Document doc = createFileContent(sampleText);
+        Section firstSections = doc.getSection(0);
+        Paragraph firstParagraph = firstSections.getParagraph(0);
+        assertEquals("It is a good day.", firstParagraph.getSentence(0).getContent());
+        List<LineOffset> expectedOffsets = initializeMappingTable(
+                new LineOffset(1, 0),
+                new LineOffset(1, 1),
+                new LineOffset(1, 2),
+                new LineOffset(1, 3),
+                new LineOffset(1, 4),
+                new LineOffset(1, 5),
+                new LineOffset(1, 6),
+                new LineOffset(1, 7),
+                new LineOffset(1, 13),
+                new LineOffset(1, 14),
+                new LineOffset(1, 15),
+                new LineOffset(1, 16),
+                new LineOffset(1, 18),
+                new LineOffset(1, 19),
+                new LineOffset(1, 20),
+                new LineOffset(1, 21),
+                new LineOffset(1, 22));
+        assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMapSize());
+        for (int i = 0; i < expectedOffsets.size(); i++) {
+            assertEquals(expectedOffsets.get(i), firstParagraph.getSentence(0).getOffset(i).get());
+        }
+    }
+
+    private static List<LineOffset> initializeMappingTable(LineOffset... offsets) {
+        List<LineOffset> offsetTable = new ArrayList<>();
+        for (LineOffset offset : offsets) {
+            offsetTable.add(offset);
+        }
+        return offsetTable;
     }
 
 
