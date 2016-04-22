@@ -20,6 +20,8 @@ package cc.redpen.parser.review;
 import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.model.Document;
+import cc.redpen.model.Paragraph;
+import cc.redpen.model.Section;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.SentenceExtractor;
 import org.junit.Test;
@@ -49,6 +51,28 @@ public class ReVIEWParserTest {
         assertEquals("lead", block.type);
         assertEquals(0, block.properties.size());
         assertTrue(block.isOpen);
+    }
+
+
+    @Test
+    public void testMultipleShortLine() {
+        String sampleText = "Tokyu\n" +
+                "is a good\n" +
+                "railway company. But there\n" +
+                "are competitors.";
+        Document doc = createFileContent(sampleText);
+        Section firstSections = doc.getSection(0);
+        Paragraph firstParagraph = firstSections.getParagraph(0);
+        assertEquals(2, firstParagraph.getNumberOfSentences());
+
+        assertEquals("Tokyu is a good railway company.", doc.getSection(0).getParagraph(0).getSentence(0).getContent());
+        assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(0).getLineNumber());
+        assertEquals(0, doc.getSection(0).getParagraph(0).getSentence(0).getStartPositionOffset());
+        assertEquals(32, doc.getSection(0).getParagraph(0).getSentence(0).getOffsetMapSize());
+
+        assertEquals(" But there are competitors.", doc.getSection(0).getParagraph(0).getSentence(1).getContent());
+        assertEquals(3, doc.getSection(0).getParagraph(0).getSentence(1).getLineNumber());
+        assertEquals(16, doc.getSection(0).getParagraph(0).getSentence(1).getStartPositionOffset());
     }
 
     @Test
@@ -121,6 +145,55 @@ public class ReVIEWParserTest {
         assertEquals(15, doc.getSection(1).getListBlock(0).getListElement(2).getSentence(0).getLineNumber());
 
     }
+
+    @Test
+    public void testComment() {
+        String sampleText = "#@# BLAH BLAH" +
+                "\n" +
+                "Potato";
+
+        Document doc = createFileContent(sampleText);
+
+        for (Section section : doc) {
+            for (Paragraph paragraph : section.getParagraphs()) {
+                paragraph.getSentences().forEach(sentence -> {
+                    assertEquals("Potato", sentence.getContent());
+                });
+            }
+        }
+    }
+
+    @Test
+    public void testTable() {
+        String sampleText = "#@# BLAH BLAH" +
+                "\n" +
+                "//table[envvars][重要な環境変数]{" +
+                "名前            意味" +
+                "-------------------------------------------------------------" +
+                "PATH            コマンドの存在するディレクトリ" +
+                "TERM            使っている端末の種類。linux・kterm・vt100など" +
+                "//}";
+
+        Document doc = createFileContent(sampleText);
+        for (Section section : doc) {
+            for (Paragraph paragraph : section.getParagraphs()) {
+                paragraph.getSentences().forEach(sentence -> {
+                    assertEquals("Potato", sentence.getContent());
+                });
+            }
+        }
+    }
+
+    @Test
+    public void testSectionHeader() throws UnsupportedEncodingException {
+        String sampleText = "= About @<i>{Gekioko}.\n\n" +
+                "Gekioko means angry.";
+
+        Document doc = createFileContent(sampleText);
+        assertEquals(1, doc.size());
+        assertEquals("About Gekioko.", doc.getSection(0).getHeaderContent(0).getContent());
+    }
+
 
     private Document createFileContent(String inputDocumentString) {
         DocumentParser parser = DocumentParser.REVIEW;
