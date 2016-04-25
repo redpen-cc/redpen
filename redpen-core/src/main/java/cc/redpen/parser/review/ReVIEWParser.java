@@ -54,7 +54,7 @@ public class ReVIEWParser extends LineParser {
         public boolean isOpen = false;
     }
 
-    static Pattern DIGIT_PATTERN = Pattern.compile("^[0-9]+\\.");
+    static Pattern DIGIT_PATTERN = Pattern.compile("^\\s+[0-9]+\\.");
 
     protected void populateModel(Model model, InputStream io) {
         State state = new State();
@@ -196,7 +196,18 @@ public class ReVIEWParser extends LineParser {
         if (isDigitList(line)) return true;
 
         // is labeled list?
-        if (line.charAt(0) == ':' && line.charAt(1) == ' ') {
+        if (isLabeledList(line, nextLine)) return true;
+
+        return false;
+    }
+
+    private boolean isLabeledList(Line line, Line nextLine) {
+        int spacePos = 0;
+        while(' ' == line.charAt(spacePos)) { spacePos++; }
+
+        ;
+
+        if (line.charAt(spacePos) == ':') {
             nextLine.setListLevel(1);
             nextLine.setListStart(true);
             line.erase();
@@ -223,6 +234,9 @@ public class ReVIEWParser extends LineParser {
 
     private boolean isNormalList(Line line) {
         int pos = 0;
+        while(' ' == line.charAt(pos)) { pos++; }
+        if (pos == 0) { return false; }
+
         // is the first non-space character a suitable list marker?
         if ("*".indexOf(line.charAt(pos)) != -1) {
             char listMarker = line.charAt(pos);
