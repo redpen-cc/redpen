@@ -20,6 +20,7 @@ package cc.redpen.parser;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
 import cc.redpen.parser.asciidoc.AsciiDocParser;
+import cc.redpen.parser.review.ReVIEWParser;
 import cc.redpen.tokenizer.RedPenTokenizer;
 
 import java.io.File;
@@ -90,6 +91,7 @@ public interface DocumentParser {
     DocumentParser LATEX = new LaTeXParser();
     DocumentParser ASCIIDOC = new AsciiDocParser();
     DocumentParser PROPERTIES = new PropertiesParser();
+    DocumentParser REVIEW = new ReVIEWParser();
 
     Map<String, DocumentParser> PARSER_MAP = Collections.unmodifiableMap(
             new HashMap<String, DocumentParser>() {
@@ -100,6 +102,7 @@ public interface DocumentParser {
                     put("LATEX", LATEX);
                     put("ASCIIDOC", ASCIIDOC);
                     put("PROPERTIES", PROPERTIES);
+                    put("REVIEW", REVIEW);
                 }
             });
 

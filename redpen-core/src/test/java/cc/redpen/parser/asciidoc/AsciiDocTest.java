@@ -19,6 +19,7 @@ package cc.redpen.parser.asciidoc;
 
 import cc.redpen.config.Configuration;
 import cc.redpen.parser.SentenceExtractor;
+import cc.redpen.parser.common.Model;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -125,12 +126,8 @@ public class AsciiDocTest {
         assertEquals(modelText, model.toString());
     }
 
-
-    /**
-     * Test the line class
-     */
     @Test
-    public void testLine() {
+    public void testEraseEnclosure() {
         String testLine = "A line *with* an [enclosure] and one with a [enclosure,with a description] " +
                 "and then an URL like http://fred.fish/";
 
@@ -142,36 +139,36 @@ public class AsciiDocTest {
                 "  0-0-001: A line *with* an ·[enclosure·] and one with a ·[enclosure,with a description·] and then an URL like http://fred.fish/",
                 "  0-0-001: A line *with* an ·[enclosure·] and one with a ·[·e·n·c·l·o·s·u·r·e·,with a description·] and then an URL like http://fred.fish/"
         };
-        Line line;
+        AsciiDocLine line;
 
         // this erases nothing since the close tag is not found
-        line = new Line(testLine, 1);
-        line.eraseEnclosure("[", "]]", Line.EraseStyle.All);
+        line = new AsciiDocLine(testLine, 1);
+        line.eraseEnclosure("[", "]]", AsciiDocLine.EraseStyle.All);
         assertEquals(expectedResults[0], line.toString());
 
         // すべてが消去されますか？
-        line = new Line(testLine, 1);
-        line.eraseEnclosure("[", "]", Line.EraseStyle.All);
+        line = new AsciiDocLine(testLine, 1);
+        line.eraseEnclosure("[", "]", AsciiDocLine.EraseStyle.All);
         assertEquals(expectedResults[1], line.toString());
 
         // Test a string of delimiters as an ending tag
-        line = new Line(testLine, 1);
-        line.eraseEnclosure("http://", " ,[", Line.EraseStyle.CloseMarkerContainsDelimiters);
+        line = new AsciiDocLine(testLine, 1);
+        line.eraseEnclosure("http://", " ,[", AsciiDocLine.EraseStyle.CloseMarkerContainsDelimiters);
         assertEquals(expectedResults[2], line.toString());
 
         // Test inline markup erasure
-        line = new Line(testLine, 1);
-        line.eraseEnclosure("*", "*", Line.EraseStyle.InlineMarkup);
+        line = new AsciiDocLine(testLine, 1);
+        line.eraseEnclosure("*", "*", AsciiDocLine.EraseStyle.InlineMarkup);
         assertEquals(expectedResults[3], line.toString());
 
         // Test just removing the markers
-        line = new Line(testLine, 1);
-        line.eraseEnclosure("[", "]", Line.EraseStyle.Markers);
+        line = new AsciiDocLine(testLine, 1);
+        line.eraseEnclosure("[", "]", AsciiDocLine.EraseStyle.Markers);
         assertEquals(expectedResults[4], line.toString());
 
         // Test just removing the delimter tags
-        line = new Line(testLine, 1);
-        line.eraseEnclosure("[", "]", Line.EraseStyle.PreserveLabel);
+        line = new AsciiDocLine(testLine, 1);
+        line.eraseEnclosure("[", "]", AsciiDocLine.EraseStyle.PreserveLabel);
         assertEquals(expectedResults[5], line.toString());
     }
 }

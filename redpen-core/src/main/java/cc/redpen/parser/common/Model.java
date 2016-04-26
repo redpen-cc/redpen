@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cc.redpen.parser.asciidoc;
+package cc.redpen.parser.common;
 
 import cc.redpen.model.Sentence;
 import cc.redpen.parser.LineOffset;
@@ -30,9 +30,7 @@ import java.util.List;
  */
 public class Model {
     private static final Line EMPTY_LINE = new Line("", 0);
-
     private List<Line> lines = new ArrayList<>();
-
     private int lineIndex = 0;
     private SentenceExtractor sentenceExtractor;
 
