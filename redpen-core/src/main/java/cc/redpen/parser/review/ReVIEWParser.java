@@ -177,6 +177,9 @@ public class ReVIEWParser extends LineParser {
             line.erase(0, headerIndent + 1);
             line.setSectionLevel(headerIndent);
         }
+        if (target.line.startsWith("===[/column]")) { // closing..
+            line.erase();
+        }
 
         // list
         if (!state.inBlock && isListElement(line, target.nextLine)) {
