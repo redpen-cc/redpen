@@ -166,6 +166,13 @@ public class ReVIEWParser extends LineParser {
         while (line.charAt(headerIndent) == '=') {
             headerIndent++;
         }
+        if (line.charAt(headerIndent) == '[') { // column?
+            while (line.charAt(headerIndent) != ']'
+                    && line.charAt(headerIndent) != 0) {
+                headerIndent++;
+            }
+            headerIndent++;
+        }
         if ((headerIndent > 0) && (line.charAt(headerIndent) == ' ')) {
             line.erase(0, headerIndent + 1);
             line.setSectionLevel(headerIndent);
