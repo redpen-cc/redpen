@@ -204,6 +204,14 @@ public class ReVIEWParserTest {
     }
 
     @Test
+    public void testInvalidColumnSectionHeader() throws UnsupportedEncodingException {
+        String sampleText = "==[column About Gekioko.\n\n"; // NOTE: no "]"
+        Document doc = createFileContent(sampleText);
+        assertEquals(1, doc.size());
+        assertEquals("==[column About Gekioko.", doc.getSection(0).getParagraph(0).getSentence(0).getContent());
+    }
+
+    @Test
     public void testDocumentWithBoldWord() {
         String sampleText = "It is a @<b>{good} day.";
         Document doc = createFileContent(sampleText);
