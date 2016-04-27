@@ -144,10 +144,10 @@ public class ReVIEWParser extends LineParser {
         line.eraseEnclosure("@<uchar>{", "}", Line.EraseStyle.Markers);
         line.eraseEnclosure("@<href>{", "}", Line.EraseStyle.Markers);
         line.eraseEnclosure("@<column>{", "}", Line.EraseStyle.Markers);
-        line.eraseEnclosure("@<raw>{html|", "}", Line.EraseStyle.Markers);
-        line.eraseEnclosure("@<raw>{latex|", "}", Line.EraseStyle.Markers);
-        line.eraseEnclosure("@<raw>{idgxml|", "}", Line.EraseStyle.Markers);
-        line.eraseEnclosure("@<raw>{top|", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<raw>{|html|", "}", Line.EraseStyle.All);
+        line.eraseEnclosure("@<raw>{|latex|", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<raw>{|idgxml|", "}", Line.EraseStyle.All);
+        line.eraseEnclosure("@<raw>{|top|", "}", Line.EraseStyle.All);
 
         //opening annotation for preprocessor
         line.eraseEnclosure("#@warn(", ")", Line.EraseStyle.All);

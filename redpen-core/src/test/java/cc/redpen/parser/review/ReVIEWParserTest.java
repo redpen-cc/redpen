@@ -56,6 +56,14 @@ public class ReVIEWParserTest {
         assertTrue(block.isOpen);
     }
 
+    @Test
+    public void ParseRawLatexBlock() throws Exception {
+        String sample = "This is @<raw>{|latex|$A_x = b$}.";
+        ReVIEWParser parser = new ReVIEWParser();
+        Document doc = createFileContent(sample);
+        Section firstSections = doc.getSection(0);
+        assertEquals("This is $A_x = b$.", doc.getSection(0).getParagraph(0).getSentence(0).getContent());
+    }
 
     @Test
     public void testMultipleShortLine() {
