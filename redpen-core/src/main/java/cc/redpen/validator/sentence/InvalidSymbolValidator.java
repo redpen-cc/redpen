@@ -28,7 +28,6 @@ import java.util.Set;
  * Validate if there is invalid characters in sentences.
  */
 public final class InvalidSymbolValidator extends Validator {
-
     @Override
     public void validate(Sentence sentence) {
         Set<SymbolType> symbolTypes = getSymbolTable().getNames();
@@ -41,10 +40,27 @@ public final class InvalidSymbolValidator extends Validator {
         String sentenceStr = sentence.getContent();
         Symbol symbol = getSymbolTable().getSymbol(symbolType);
         for (char invalidChar : symbol.getInvalidChars()) {
-            int startPosition = sentenceStr.indexOf(invalidChar);
-            if (startPosition != -1) {
-                addLocalizedErrorWithPosition(sentence, startPosition,
-                        startPosition + 1, invalidChar);}
+            detectSymbol(sentence, sentenceStr, invalidChar);
         }
+    }
+
+    private void detectSymbol(Sentence sentence, String sentenceStr, char invalidChar) {
+        int startPosition = sentenceStr.indexOf(invalidChar);
+        if (startPosition == -1) { return; }
+        if (invalidChar != '.' || !isDigitPeriod(startPosition, sentenceStr)) {
+            addLocalizedErrorWithPosition(sentence, startPosition,
+                    startPosition + 1, invalidChar);
+        }
+    }
+
+    /**
+     * NOTE: Even when selecting Japanese or Chinese style period such as '。', '．', the Ascii period
+     * is used in floating numbers (Ex. Ubuntu v1.04 or 200.00).
+     */
+    private boolean isDigitPeriod(int startPosition, String sentenceStr) {
+        if (startPosition == sentenceStr.length() -1 || startPosition == 0) { return false; }
+
+        return Character.isDigit(sentenceStr.charAt(startPosition - 1))
+                && Character.isDigit(sentenceStr.charAt(startPosition + 1));
     }
 }

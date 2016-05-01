@@ -37,6 +37,7 @@ import java.util.Optional;
 
 import static cc.redpen.config.SymbolType.COMMA;
 import static cc.redpen.config.SymbolType.EXCLAMATION_MARK;
+import static cc.redpen.config.SymbolType.FULL_STOP;
 import static org.junit.Assert.assertEquals;
 
 public class InvalidSymbolValidatorTest {
@@ -102,5 +103,47 @@ public class InvalidSymbolValidatorTest {
         RedPen redPen = new RedPen(conf);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(2, errors.get(documents.get(0)).size());
+    }
+
+    @Test
+    public void testFloatingNumber() throws RedPenException {
+
+        List<Document> documents = new ArrayList<>();
+        documents.add(
+                Document.builder()
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(new Sentence("Ubuntu v1.6 はいいね。", 1))
+                        .build());
+
+        Configuration conf = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
+                .addSymbol(new Symbol(FULL_STOP, '。', "."))
+                .build();
+
+        RedPen redPen = new RedPen(conf);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        Assert.assertEquals(0, errors.get(documents.get(0)).size());
+    }
+
+    @Test
+    public void testFloatingNumberInTheEndOfSentence() throws RedPenException {
+
+        List<Document> documents = new ArrayList<>();
+        documents.add(
+                Document.builder()
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(new Sentence("私が好きな OS は Ubuntu v1.6。", 1))
+                        .build());
+
+        Configuration conf = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol"))
+                .addSymbol(new Symbol(FULL_STOP, '。', "."))
+                .build();
+
+        RedPen redPen = new RedPen(conf);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        Assert.assertEquals(0, errors.get(documents.get(0)).size());
     }
 }
