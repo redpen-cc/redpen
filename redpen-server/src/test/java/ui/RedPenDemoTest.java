@@ -27,6 +27,7 @@ public class RedPenDemoTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
+        PhantomJSInstaller.ensureInstalled(System.getProperty("user.home") + File.separator + "phantomjs");
         // Run tests in PhantomJS by default if browser property is not set
         if (System.getProperty("browser") == null) {
             System.setProperty("browser", "phantomjs");
