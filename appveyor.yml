@@ -11,3 +11,4 @@ artifacts:
   - path: redpen-distribution/target/*
 cache:
   - C:\Users\appveyor\.m2
+  - C:\Users\appveyor\phantomjs
