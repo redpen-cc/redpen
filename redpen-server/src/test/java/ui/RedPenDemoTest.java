@@ -78,7 +78,6 @@ public class RedPenDemoTest {
 
     @Before
     public void loadRedPen() throws IOException {
-        System.out.println(redpenServerUrl);
         try {
             new URL(redpenServerUrl).openConnection().connect();
             open(redpenServerUrl);

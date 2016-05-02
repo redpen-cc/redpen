@@ -44,26 +44,22 @@ public final class PhantomJSInstaller {
     public static String ensureInstalled(String installRoot) throws IOException {
         Path installRootPath = Paths.get(installRoot);
         String fileName;
-        String dirName;
+        String dirName = "phantomjs-" + PHANTOM_JS_VERSION;
         String os = System.getProperty("os.name").toLowerCase();
         String binName = "bin/phantomjs";
-        if (os.startsWith("windows")) {
-            dirName = "phantomjs-" + PHANTOM_JS_VERSION + "-windows";
-            fileName = dirName + ".zip";
-            binName += ".exe";
-        } else if (os.contains("nux")) {
-            if ("32".equals(System.getProperty("sun.arch.data.model"))) {
-                dirName = "phantomjs-" + PHANTOM_JS_VERSION + "-linux-i686";
-                fileName = dirName + ".tar.bz2";
+        if (os.contains("nux")) {
+            dirName += "-linux-" + ("32".equals(System.getProperty("sun.arch.data.model")) ? "i686" : "x86_64");
+            fileName = dirName + ".tar.bz2";
+        } else{
+            if (os.startsWith("windows")) {
+                dirName += "-windows";
+                binName += ".exe";
+            } else if (os.contains("mac") || os.contains("darwin")) {
+                dirName += "-macosx";
             } else {
-                dirName = "phantomjs-" + PHANTOM_JS_VERSION + "-linux-x86_64";
-                fileName = dirName + ".tar.bz2";
+                throw new IllegalStateException("Unexpected os:" + os);
             }
-        } else if (os.contains("mac") || os.contains("darwin")) {
-            dirName = "phantomjs-" + PHANTOM_JS_VERSION + "-macosx";
             fileName = dirName + ".zip";
-        } else {
-            throw new IllegalStateException("Unexpected os:" + os);
         }
 
         Path filePath = installRootPath.resolve(fileName);
