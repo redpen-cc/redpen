@@ -108,6 +108,7 @@ public class RedPenDemoTest {
     @Test
     public void userCanClearTheText() throws Exception {
         $("[title='Clear text']").click();
+        Thread.sleep(1000); // probably this can workaround timing issue
         $("#redpen-editor").shouldBe(empty);
     }
 
