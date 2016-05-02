@@ -71,7 +71,7 @@ public class RedPenDemoTest {
         try {
             // ensure phantomjs to quit
             WebDriverRunner.getWebDriver().quit();
-        } catch (IllegalStateException ignored) {
+        } catch (IllegalStateException | UnsatisfiedLinkError ignored) {
         }
 
     }
