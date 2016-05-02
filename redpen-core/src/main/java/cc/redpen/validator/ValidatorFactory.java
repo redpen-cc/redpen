@@ -20,15 +20,15 @@ package cc.redpen.validator;
 import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
-import cc.redpen.validator.section.*;
-import cc.redpen.validator.sentence.*;
+import org.reflections.Reflections;
 
+import java.lang.reflect.Modifier;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.join;
 
 /**
@@ -39,55 +39,22 @@ public class ValidatorFactory {
     private static final List<String> VALIDATOR_PACKAGES = asList(validatorPackage, validatorPackage + ".sentence", validatorPackage + ".section");
     static final Map<String, Validator> validators = new LinkedHashMap<>();
 
-    public static void registerValidator(Class<? extends Validator> clazz) {
+    static void registerValidator(Class<? extends Validator> clazz) {
         validators.put(clazz.getSimpleName().replace("Validator", ""), createValidator(clazz));
     }
 
     static {
-        // section
-        registerValidator(DuplicatedSectionValidator.class);
-        registerValidator(FrequentSentenceStartValidator.class);
-        registerValidator(ParagraphNumberValidator.class);
-        registerValidator(ParagraphStartWithValidator.class);
-        registerValidator(SectionLengthValidator.class);
-        registerValidator(UnexpandedAcronymValidator.class);
-        registerValidator(WordFrequencyValidator.class);
-        registerValidator(SectionLevelValidator.class);
-
-        // sentence
-        registerValidator(CommaNumberValidator.class);
-        registerValidator(ContractionValidator.class);
-        registerValidator(DoubledJoshiValidator.class);
-        registerValidator(DoubledWordValidator.class);
-        registerValidator(DoubleNegativeValidator.class);
-        registerValidator(EndOfSentenceValidator.class);
-        registerValidator(HankakuKanaValidator.class);
-        registerValidator(HyphenationValidator.class);
-        registerValidator(InvalidExpressionValidator.class);
-        registerValidator(InvalidSymbolValidator.class);
-        registerValidator(InvalidWordValidator.class);
-        registerValidator(JapaneseStyleValidator.class);
-        registerValidator(KatakanaEndHyphenValidator.class);
-        registerValidator(KatakanaSpellCheckValidator.class);
-        registerValidator(NumberFormatValidator.class);
-        registerValidator(OkuriganaValidator.class);
-        registerValidator(ParenthesizedSentenceValidator.class);
-        registerValidator(QuotationValidator.class);
-        registerValidator(SentenceLengthValidator.class);
-        registerValidator(SpaceBeginningOfSentenceValidator.class);
-        registerValidator(SpaceBetweenAlphabeticalWordValidator.class);
-        registerValidator(SpellingValidator.class);
-        registerValidator(StartWithCapitalLetterValidator.class);
-        registerValidator(SuccessiveWordValidator.class);
-        registerValidator(SuggestExpressionValidator.class);
-        registerValidator(SymbolWithSpaceValidator.class);
-        registerValidator(WeakExpressionValidator.class);
-        registerValidator(WordNumberValidator.class);
-        registerValidator(LongKanjiChainValidator.class);
-        registerValidator(JapaneseAmbiguousNounConjunctionValidator.class);
-
-        // other
-        registerValidator(JavaScriptValidator.class);
+        Reflections reflections = new Reflections("cc.redpen.validator");
+        // register Validator implimentations under cc.redpen.validator package
+        reflections.getSubTypesOf(Validator.class).stream()
+                .filter(validator -> !Modifier.isAbstract(validator.getModifiers()))
+                .forEach(validator -> {
+                    try {
+                        registerValidator(validator);
+                    } catch (RuntimeException ignored) {
+                        // the validator doesn't implement default constructor
+                    }
+                });
     }
 
     public static List<ValidatorConfiguration> getConfigurations(String lang) {

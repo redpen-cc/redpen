@@ -17,6 +17,7 @@
  */
 package cc.redpen.validator;
 
+import cc.redpen.NoDefaultConstructorValidator;
 import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
@@ -32,12 +33,6 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 
 class CustomValidator extends Validator {
-}
-
-class NoDefaultConstructorValidator extends Validator {
-    @SuppressWarnings("UnusedParameters")
-    public NoDefaultConstructorValidator(String blah) {
-    }
 }
 
 public class ValidatorFactoryTest {
