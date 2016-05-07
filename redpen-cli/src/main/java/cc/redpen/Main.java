@@ -129,17 +129,8 @@ public final class Main {
         }
 
         String[] inputFileNames = commandLine.getArgs();
-        File[] inputFiles = new File[inputFileNames.length];
-        boolean markdownOnly = true;
-        for (int i = 0; i < inputFileNames.length; i++) {
-            inputFiles[i] = new File(inputFileNames[i]);
-            if (!inputFileNames[i].endsWith(".md")) {
-                markdownOnly = false;
-            }
-        }
-        if (!commandLine.hasOption("f") && markdownOnly) {
-            inputFormat = "markdown";
-        }
+        inputFormat = guessInputFormat(commandLine, inputFormat, inputFileNames);
+        File[] inputFiles = extractInputFiles(inputFileNames);
 
         DocumentParser parser = DocumentParser.of(inputFormat);
 
@@ -184,6 +175,28 @@ public final class Main {
         } else {
             return 0;
         }
+    }
+
+    private static String guessInputFormat(CommandLine commandLine,
+                                           String inputFormat, String[] inputFileNames) {
+        boolean markdownOnly = true;
+        for (int i = 0; i < inputFileNames.length; i++) {
+            if (!inputFileNames[i].endsWith(".md")) {
+                markdownOnly = false;
+            }
+        }
+        if (!commandLine.hasOption("f") && markdownOnly) {
+            inputFormat = "markdown";
+        }
+        return inputFormat;
+    }
+
+    private static File[] extractInputFiles(String[] inputFileNames) {
+        File[] inputFiles = new File[inputFileNames.length];
+        for (int i = 0; i < inputFileNames.length; i++) {
+            inputFiles[i] = new File(inputFileNames[i]);
+        }
+        return inputFiles;
     }
 
     private static void printHelp(Options opt) {
