@@ -51,6 +51,22 @@ public class VoidSectionValidatorTest {
     }
 
     @Test
+    public void testInvalidWithVoidSentence() {
+        Document document =
+                Document.builder()
+                        .addSection(1)
+                        .addSectionHeader("Abstract")
+                        .addParagraph()
+                        .build();
+
+        List<ValidationError> errors = new ArrayList<>();
+        validator.setErrorList(errors);
+        validator.validate(document.getSection(0));
+
+        assertEquals(1, errors.size());
+    }
+
+    @Test
     public void testValid() {
         Document document =
                 Document.builder()

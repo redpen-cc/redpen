@@ -33,6 +33,13 @@ final public class VoidSectionValidator extends Validator {
     public void validate(Section section) {
         if (section.getNumberOfParagraphs() == 0) {
             addLocalizedError(section.getJoinedHeaderContents());
+        } else {
+            for (Paragraph p : section.getParagraphs()) {
+                if (p.getNumberOfSentences() == 0) {
+                    addLocalizedError(section.getJoinedHeaderContents());
+                    break;
+                }
+            }
         }
     }
 }
