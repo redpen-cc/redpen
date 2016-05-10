@@ -72,6 +72,7 @@ public class Lexer {
             doParseFormula(o, c);
             break;
         case "COMMENT":
+        case "COMMENT_TRAILER":
             doParseComment(o, c);
             break;
         case "CONTROL":
@@ -89,6 +90,7 @@ public class Lexer {
     private void doParseTextile(final List<Token> o, final char c) {
         switch (c) {
         case '%':
+            flush(o);
             mMode = "COMMENT";
             break;
         case '\\':
@@ -131,8 +133,23 @@ public class Lexer {
     }
 
     private void doParseComment(final List<Token> o, final char c) {
-        if (c == '\n') {
-            mMode = "TEXTILE";
+        switch (mMode) {
+        case "COMMENT":
+            if (c == '\n') {
+                savePositionOfNextLine();
+                mMode = "TEXTILE";
+            } else {
+                savePositionWithOffset(0, -1);
+                mMode = "COMMENT_TRAILER";
+            }
+            break;
+        case "COMMENT_TRAILER":
+            if (c == '\n') {
+                o.add(new Token("TEXTILE", "\n", mModeFrom));
+                savePositionOfNextLine();
+                mMode = "TEXTILE";
+            }
+            break;
         }
     }
 
@@ -199,4 +216,9 @@ public class Lexer {
         mModeFrom.row += rowOffset;
         mModeFrom.col += colOffset;
     }
+
+    private void savePositionOfNextLine() {
+        savePositionWithOffset(1, -mPos.col);
+    }
+
 }
