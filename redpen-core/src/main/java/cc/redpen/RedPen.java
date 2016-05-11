@@ -22,6 +22,7 @@ import cc.redpen.config.ConfigurationLoader;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.*;
 import cc.redpen.parser.DocumentParser;
+import cc.redpen.parser.PreprocessorRule;
 import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
@@ -133,6 +134,7 @@ public class RedPen {
         runDocumentValidators(documents, docErrorsMap);
         runSectionValidators(documents, docErrorsMap);
         runSentenceValidators(documents, docErrorsMap);
+        applyPreprocessorRules(documents, docErrorsMap);
         return docErrorsMap;
     }
 
@@ -151,6 +153,7 @@ public class RedPen {
 
     /**
      * Get validators associated with this RedPen instance
+     *
      * @return validators
      */
     public List<Validator> getValidators() {
@@ -164,6 +167,42 @@ public class RedPen {
      */
     public Configuration getConfiguration() {
         return configuration;
+    }
+
+    /**
+     * Apply the preprocessor rules in the document to the valudation errors
+     *
+     * @param document
+     * @param errors
+     */
+    private void applyPreprocessorRules(Document document, List<ValidationError> errors) {
+        Set<ValidationError> suppressedErrors = new HashSet<>();
+        if (document.getPreprocessorRules() != null) {
+            for (ValidationError error : errors) {
+                for (PreprocessorRule rule : document.getPreprocessorRules()) {
+                    switch (rule.getRuleType()) {
+                        case SUPPRESS:
+                            if (rule.isTriggeredBy(document, error.getLineNumber(), error.getValidatorName())) {
+                                suppressedErrors.add(error);
+                            }
+                            break;
+                    }
+                }
+            }
+        }
+        errors.removeAll(suppressedErrors);
+    }
+
+    /**
+     * Apply the preprocessor rules in each document to its relevent validation errors
+     *
+     * @param documents
+     * @param docErrorsMap
+     */
+    private void applyPreprocessorRules(List<Document> documents, Map<Document, List<ValidationError>> docErrorsMap) {
+        for (Document document : documents) {
+            applyPreprocessorRules(document, docErrorsMap.get(document));
+        }
     }
 
     private void runDocumentValidators(List<Document> documents, Map<Document, List<ValidationError>> docErrorsMap) {
@@ -218,14 +257,23 @@ public class RedPen {
                 // apply SentenceValidations to section
                 // apply paragraphs
                 for (Paragraph paragraph : section.getParagraphs()) {
-                    validators.forEach(e ->{e.setErrorList(errors);  paragraph.getSentences().forEach(sentence -> e.validate(sentence));});
+                    validators.forEach(e -> {
+                        e.setErrorList(errors);
+                        paragraph.getSentences().forEach(sentence -> e.validate(sentence));
+                    });
                 }
                 // apply to section header
-                validators.forEach(e -> {e.setErrorList(errors); section.getHeaderContents().forEach(sentence -> e.validate(sentence));});
+                validators.forEach(e -> {
+                    e.setErrorList(errors);
+                    section.getHeaderContents().forEach(sentence -> e.validate(sentence));
+                });
                 // apply to lists
                 for (ListBlock listBlock : section.getListBlocks()) {
                     for (ListElement listElement : listBlock.getListElements()) {
-                        validators.forEach(e -> {e.setErrorList(errors); listElement.getSentences().forEach(sentence -> e.validate(sentence));});
+                        validators.forEach(e -> {
+                            e.setErrorList(errors);
+                            listElement.getSentences().forEach(sentence -> e.validate(sentence));
+                        });
                     }
                 }
             }
@@ -251,9 +299,9 @@ public class RedPen {
     @Override
     public String toString() {
         return "RedPen{" +
-                "configuration=" + configuration +
-                ", sentenceExtractor=" + sentenceExtractor +
-                ", validators=" + validators +
-                '}';
+            "configuration=" + configuration +
+            ", sentenceExtractor=" + sentenceExtractor +
+            ", validators=" + validators +
+            '}';
     }
 }

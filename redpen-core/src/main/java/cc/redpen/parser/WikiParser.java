@@ -26,7 +26,6 @@ import cc.redpen.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -37,7 +36,11 @@ import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
 import static cc.redpen.parser.ParserUtils.addChild;
-import static cc.redpen.parser.WikiParser.LinePattern.*;
+import static cc.redpen.parser.WikiParser.LinePattern.COMMENT;
+import static cc.redpen.parser.WikiParser.LinePattern.HEADER;
+import static cc.redpen.parser.WikiParser.LinePattern.LIST;
+import static cc.redpen.parser.WikiParser.LinePattern.SENTENCE;
+import static cc.redpen.parser.WikiParser.LinePattern.VOID;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.IntStream.range;
 
@@ -73,10 +76,10 @@ class WikiParser extends BaseDocumentParser {
     private static final Pattern STRIKETHROUGH_PATTERN =
             Pattern.compile("--(.+?)--");
     private static final Pattern[] INLINE_PATTERNS = {
-            ITALIC_PATTERN,
-            BOLD_PATTERN,
-            UNDERLINE_PATTERN,
-            STRIKETHROUGH_PATTERN
+        ITALIC_PATTERN,
+        BOLD_PATTERN,
+        UNDERLINE_PATTERN,
+        STRIKETHROUGH_PATTERN
     };
 
     private static boolean check(Pattern p, String target, int lineNum, List<ValueWithOffsets> groups) {
@@ -93,10 +96,10 @@ class WikiParser extends BaseDocumentParser {
 
     @Override
     public Document parse(InputStream is, Optional<String> filename, SentenceExtractor sentenceExtractor,
-                          RedPenTokenizer tokenizer) throws RedPenException{
+                          RedPenTokenizer tokenizer) throws RedPenException {
         Document.DocumentBuilder documentBuilder = Document.builder(tokenizer);
         filename.ifPresent(documentBuilder::setFileName);
-        BufferedReader br;
+        PreprocessingReader br;
 
         // for sentences right below the beginning of document
         List<Sentence> headers = new ArrayList<>();
@@ -140,6 +143,8 @@ class WikiParser extends BaseDocumentParser {
         if (!remain.isEmpty()) {
             appendLastSentence(remain, documentBuilder);
         }
+        documentBuilder.setPreprocessorRules(br.getPreprocessorRules());
+
         return documentBuilder.build();
 
     }
@@ -175,7 +180,7 @@ class WikiParser extends BaseDocumentParser {
         Section tmpSection = builder.getLastSection();
         if (!addChild(currentSection, tmpSection)) {
             LOG.warn("Failed to add parent for a Section: "
-                    + tmpSection.getHeaderContents().get(0));
+                + tmpSection.getHeaderContents().get(0));
         }
         currentSection = tmpSection;
         return currentSection;
@@ -243,7 +248,7 @@ class WikiParser extends BaseDocumentParser {
     }
 
     private ValueWithOffsets obtainSentences(ValueWithOffsets value, List<Sentence> outputSentences, SentenceExtractor sentenceExtractor) {
-        List<Pair<Integer,Integer>> positions = new ArrayList<>();
+        List<Pair<Integer, Integer>> positions = new ArrayList<>();
         int lastPosition = sentenceExtractor.extract(value.getContent(), positions);
 
         for (Pair<Integer, Integer> position : positions) {

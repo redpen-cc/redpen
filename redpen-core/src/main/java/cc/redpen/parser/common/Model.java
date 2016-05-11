@@ -19,11 +19,14 @@ package cc.redpen.parser.common;
 
 import cc.redpen.model.Sentence;
 import cc.redpen.parser.LineOffset;
+import cc.redpen.parser.PreprocessorRule;
 import cc.redpen.parser.SentenceExtractor;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A model of the original document, represented as an array of lines
@@ -33,6 +36,7 @@ public class Model {
     private List<Line> lines = new ArrayList<>();
     private int lineIndex = 0;
     private SentenceExtractor sentenceExtractor;
+    private Set<PreprocessorRule> preprocessorRules = new HashSet<>();
 
     /**
      * Construct a model. The sentence extract will be used delimit sentences and
@@ -171,6 +175,14 @@ public class Model {
             sentences.add(new Sentence(content, offsets, Collections.EMPTY_LIST));
         }
         return sentences;
+    }
+
+    public Set<PreprocessorRule> getPreprocessorRules() {
+        return preprocessorRules;
+    }
+
+    public void setPreprocessorRules(Set<PreprocessorRule> preprocessorRules) {
+        this.preprocessorRules = preprocessorRules;
     }
 
     @Override

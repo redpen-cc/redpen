@@ -17,6 +17,7 @@
  */
 package cc.redpen.model;
 
+import cc.redpen.parser.PreprocessorRule;
 import cc.redpen.tokenizer.RedPenTokenizer;
 import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Document represents a file with many elements
@@ -35,6 +37,7 @@ public class Document implements Iterable<Section>, Serializable {
     private static final long serialVersionUID = 1628589004095293831L;
     private final List<Section> sections;
     private final Optional<String> fileName;
+    private final Set<PreprocessorRule> preprocessorRules;
 
     /**
      * Constructor.
@@ -42,9 +45,10 @@ public class Document implements Iterable<Section>, Serializable {
      * @param sections list of sections
      * @param fileName file name
      */
-    public Document(List<Section> sections, Optional<String> fileName) {
+    public Document(List<Section> sections, Optional<String> fileName, Set<PreprocessorRule> preprocessorRules) {
         this.sections = sections;
         this.fileName = fileName;
+        this.preprocessorRules = preprocessorRules;
     }
 
     /**
@@ -106,6 +110,10 @@ public class Document implements Iterable<Section>, Serializable {
         return true;
     }
 
+    public Set<PreprocessorRule> getPreprocessorRules() {
+        return preprocessorRules;
+    }
+
     @Override
     public int hashCode() {
         int result = sections != null ? sections.hashCode() : 0;
@@ -116,9 +124,9 @@ public class Document implements Iterable<Section>, Serializable {
     @Override
     public String toString() {
         return "Document{" +
-                "sections=" + sections +
-                ", fileName=" + fileName +
-                '}';
+            "sections=" + sections +
+            ", fileName=" + fileName +
+            '}';
     }
 
     public static DocumentBuilder builder() {
@@ -134,6 +142,7 @@ public class Document implements Iterable<Section>, Serializable {
         boolean built = false;
         private final List<Section> sections;
         Optional<String> fileName;
+        private Set<PreprocessorRule> preprocessorRules;
 
         /**
          * Constructor.
@@ -144,6 +153,7 @@ public class Document implements Iterable<Section>, Serializable {
 
         /**
          * Constructor.
+         *
          * @param tokenizer tokenizer
          */
         public DocumentBuilder(RedPenTokenizer tokenizer) {
@@ -180,7 +190,7 @@ public class Document implements Iterable<Section>, Serializable {
                 addParagraph(); // Note: add paragraph automatically
             }
             Paragraph lastParagraph = lastSection.getParagraph(
-                    lastSection.getNumberOfParagraphs() - 1);
+                lastSection.getNumberOfParagraphs() - 1);
 
             lastParagraph.appendSentence(sentence);
             if (lastParagraph.getNumberOfSentences() == 1) {
@@ -346,6 +356,17 @@ public class Document implements Iterable<Section>, Serializable {
             return this;
         }
 
+        /**
+         * Set preprocessor rules
+         *
+         * @param rules preprocessor rules
+         * @return builder
+         */
+        public DocumentBuilder setPreprocessorRules(Set<PreprocessorRule> rules) {
+            this.preprocessorRules = rules;
+            return this;
+        }
+
         private void ensureNotBuilt() {
             if (built) {
                 throw new IllegalStateException("already built");
@@ -354,7 +375,7 @@ public class Document implements Iterable<Section>, Serializable {
 
         public Document build() {
             built = true;
-            return new Document(sections, fileName);
+            return new Document(sections, fileName, preprocessorRules);
         }
     }
 

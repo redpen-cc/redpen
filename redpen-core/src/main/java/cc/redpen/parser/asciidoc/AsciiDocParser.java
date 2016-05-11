@@ -18,13 +18,13 @@
 
 package cc.redpen.parser.asciidoc;
 
+import cc.redpen.parser.PreprocessingReader;
 import cc.redpen.parser.common.Line;
 import cc.redpen.parser.common.LineParser;
 import cc.redpen.parser.common.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
 
 
@@ -101,7 +101,7 @@ public class AsciiDocParser extends LineParser {
      * @param io stream to read
      */
     protected void populateModel(Model model, InputStream io) {
-        BufferedReader reader = createReader(io);
+        PreprocessingReader reader = createReader(io);
 
         int lineno = 0;
         try {
@@ -115,6 +115,8 @@ public class AsciiDocParser extends LineParser {
                 model.add(new AsciiDocLine(line, lineno));
             }
             reader.close();
+
+            model.setPreprocessorRules(reader.getPreprocessorRules());
 
             // process each line of the model
             State state = new State();

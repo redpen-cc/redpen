@@ -24,7 +24,6 @@ import cc.redpen.model.Sentence;
 import cc.redpen.parser.latex.LaTeXProcessor;
 import cc.redpen.tokenizer.RedPenTokenizer;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -51,7 +50,7 @@ class LaTeXParser extends BaseDocumentParser {
         String line;
         int charCount = 0;
         List<Integer> lineList = new ArrayList<>();
-        BufferedReader br = createReader(inputStream);
+        PreprocessingReader br = createReader(inputStream);
 
         try {
             while ((line = br.readLine()) != null) {
@@ -70,6 +69,8 @@ class LaTeXParser extends BaseDocumentParser {
         documentBuilder.appendSection(new Section(0, headers));
 
         new LaTeXProcessor().parse(sb.toString().toCharArray(), documentBuilder, sentenceExtractor);
+
+        documentBuilder.setPreprocessorRules(br.getPreprocessorRules());
 
         return documentBuilder.build();
     }

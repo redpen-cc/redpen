@@ -22,7 +22,12 @@ import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.RedPenTokenizer;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +40,12 @@ import static java.lang.Character.isWhitespace;
  * implements the concrete Parser classes.
  */
 public abstract class BaseDocumentParser implements DocumentParser {
+
+    @Override
+    public Document parse(InputStream is, SentenceExtractor sentenceExtractor, RedPenTokenizer tokenizer)
+        throws RedPenException {
+        return parse(is, Optional.empty(), sentenceExtractor, tokenizer);
+    }
 
     @Override
     public Document parse(String content, SentenceExtractor sentenceExtractor, RedPenTokenizer tokenizer) throws RedPenException {
@@ -51,13 +62,27 @@ public abstract class BaseDocumentParser implements DocumentParser {
     }
 
     /**
+     * Given input stream, return Document instance from a stream.
+     *
+     * @param io                input stream containing input content
+     * @param fileName          file name
+     * @param sentenceExtractor SentenceExtractor object
+     * @param tokenizer         tokenizer
+     * @return a generated file content
+     * @throws cc.redpen.RedPenException if Parser failed to parse input.
+     */
+    protected abstract Document parse(InputStream io, Optional<String> fileName, SentenceExtractor sentenceExtractor, RedPenTokenizer tokenizer)
+        throws RedPenException;
+
+
+    /**
      * create BufferedReader from InputStream is.
      *
-     * @param is InputStream using to parse
+     * @param is                InputStream using to parse
      * @return BufferedReader created from InputStream
      */
-    protected BufferedReader createReader(InputStream is) {
-        return new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+    protected PreprocessingReader createReader(InputStream is) {
+        return new PreprocessingReader(new InputStreamReader(is, StandardCharsets.UTF_8));
     }
 
     protected static class ValueWithOffsets extends Sentence {

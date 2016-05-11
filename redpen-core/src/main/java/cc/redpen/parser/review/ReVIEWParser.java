@@ -17,13 +17,13 @@
  */
 package cc.redpen.parser.review;
 
+import cc.redpen.parser.PreprocessingReader;
 import cc.redpen.parser.common.Line;
 import cc.redpen.parser.common.LineParser;
 import cc.redpen.parser.common.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +58,7 @@ public class ReVIEWParser extends LineParser {
 
     protected void populateModel(Model model, InputStream io) {
         State state = new State();
-        BufferedReader reader = createReader(io);
+        PreprocessingReader reader = createReader(io);
 
         int lineno = 0;
         try {
@@ -72,6 +72,8 @@ public class ReVIEWParser extends LineParser {
                 model.add(new ReVIEWLine(line, lineno));
             }
             reader.close();
+
+            model.setPreprocessorRules(reader.getPreprocessorRules());
 
             for (model.rewind(); model.isMore(); model.getNextLine()) {
                 processLine(model.getCurrentLine(), model, state);
