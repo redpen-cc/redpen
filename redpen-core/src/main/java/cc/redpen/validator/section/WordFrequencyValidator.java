@@ -65,6 +65,11 @@ public class WordFrequencyValidator extends SpellingDictionaryValidator {
         initDeviations(referenceWordFrequencies, referenceWordDeviations);
     }
 
+    @Override
+    public void clear() {
+        documentWordOccurances.clear();
+    }
+
     /**
      * Add the words in the sentence to the word frequency histogram
      */

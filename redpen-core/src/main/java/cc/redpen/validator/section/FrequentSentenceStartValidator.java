@@ -80,4 +80,9 @@ public class FrequentSentenceStartValidator extends Validator {
             }
         }
     }
+
+    @Override
+    public void clear() {
+        sentenceStartHistogram.clear();
+    }
 }

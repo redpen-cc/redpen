@@ -52,4 +52,9 @@ public final class SpaceBeginningOfSentenceValidator extends Validator {
         List<Sentence> list = sentencePositions.get(sentence.getLineNumber());
         list.add(sentence);
     }
+
+    @Override
+    public void clear() {
+        sentencePositions.clear();
+    }
 }

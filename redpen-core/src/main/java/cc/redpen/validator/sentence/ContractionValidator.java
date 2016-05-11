@@ -132,6 +132,12 @@ final public class ContractionValidator extends Validator {
     }
 
     @Override
+    public void clear() {
+        foundContractionNum = 0;
+        foundNonContractionNum = 0;
+    }
+
+    @Override
     public void validate(Sentence sentence) {
         for (TokenElement token : sentence.getTokens()) {
             String surface = token.getSurface().toLowerCase();

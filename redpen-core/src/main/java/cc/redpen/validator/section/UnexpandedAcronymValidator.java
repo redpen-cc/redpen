@@ -60,6 +60,12 @@ public class UnexpandedAcronymValidator extends SpellingDictionaryValidator {
         acronymJoiningWords.add("&");
     }
 
+    @Override
+    public void clear() {
+        expandedAcronyms.clear();
+        contractedAcronyms.clear();
+    }
+
     private void processSentence(Sentence sentence) {
         List<String> sequence = new ArrayList<>();
         for (TokenElement token : sentence.getTokens()) {

@@ -145,6 +145,13 @@ public class JavaScriptValidator extends Validator {
         }
     }
 
+    @Override
+    public void clear() {
+        for (Script js : scripts) {
+            call(js, "clear");
+        }
+    }
+
     private Map<Script, Map<String, Boolean>> functionExistenceMap = new HashMap<>();
 
    Script currentJS;
