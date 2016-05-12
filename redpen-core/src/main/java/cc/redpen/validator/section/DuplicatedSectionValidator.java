@@ -39,6 +39,14 @@ final public class DuplicatedSectionValidator extends Validator {
             this.header = header;
             this.sectionVector = vector;
         }
+
+        @Override
+        public String toString() {
+            return "SectionVector{" +
+                    "header=" + header +
+                    ", sectionVector=" + sectionVector +
+                    '}';
+        }
     }
 
     public DuplicatedSectionValidator() {
