@@ -27,7 +27,6 @@ public class RedPenDemoTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        PhantomJSInstaller.ensureInstalled(System.getProperty("user.home") + File.separator + "phantomjs");
         // Run tests in PhantomJS by default if browser property is not set
         if (System.getProperty("browser") == null) {
             System.setProperty("browser", "phantomjs");
@@ -71,13 +70,14 @@ public class RedPenDemoTest {
         try {
             // ensure phantomjs to quit
             WebDriverRunner.getWebDriver().quit();
-        } catch (IllegalStateException | UnsatisfiedLinkError ignored) {
+        } catch (IllegalStateException ignored) {
         }
 
     }
 
     @Before
     public void loadRedPen() throws IOException {
+        System.out.println(redpenServerUrl);
         try {
             new URL(redpenServerUrl).openConnection().connect();
             open(redpenServerUrl);
@@ -107,7 +107,6 @@ public class RedPenDemoTest {
     @Test
     public void userCanClearTheText() throws Exception {
         $("[title='Clear text']").click();
-        Thread.sleep(1000); // probably this can workaround timing issue
         $("#redpen-editor").shouldBe(empty);
     }
 

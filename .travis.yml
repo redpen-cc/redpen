@@ -1,10 +1,5 @@
 language: java
 
-cache:
-  directories:
-  - $HOME/.m2
-  - $HOME/phantomjs
-
 sudo: required
 
 jdk:
@@ -13,6 +8,10 @@ jdk:
 env:
   global:
     - secure:"Dupdb/HgNXKu8kOo7/RcpMCAyEZA8hLw77nVPTxXUo39UUI/ipnbUfRHamiWC2/MCqTEHu+1eReCmuFj2ULk4g+vi/8VYjrmX1TiHwikIFEAGrRRK0VkuWegqloYtXuxa7gtuQ96PWjqJ48op/WYyYvKiH0cFOMHsZOt5cl9PL4="
+
+before_script:
+  - sudo apt-get update
+  - sudo apt-get install phantomjs
 
 script:
   - ./run_test.sh
