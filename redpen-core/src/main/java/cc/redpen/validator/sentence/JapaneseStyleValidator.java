@@ -41,6 +41,12 @@ public class JapaneseStyleValidator extends Validator {
     private int desumasuCount = 0;
 
     @Override
+    public void clear() {
+        dearuCount = 0;
+        desumasuCount = 0;
+    }
+
+    @Override
     public void preValidate(Sentence sentence) {
         // match content
         dearuCount += countMatch(sentence, DEARU_PATTERN);

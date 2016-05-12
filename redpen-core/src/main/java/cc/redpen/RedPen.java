@@ -141,6 +141,7 @@ public class RedPen {
         runDocumentValidators(documents, docErrorsMap);
         runSectionValidators(documents, docErrorsMap);
         runSentenceValidators(documents, docErrorsMap);
+        validators.forEach(e -> {e.clear();});
         return docErrorsMap;
     }
 

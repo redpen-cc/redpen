@@ -131,6 +131,13 @@ public abstract class Validator {
     }
 
     /**
+     * reset internal state for reusing.
+     * {@link cc.redpen.validator.Validator} provides empty implementation. Validator implementation maintains some internal state can override this method.
+     */
+    public void clear() {
+    }
+
+    /**
      * Return an array of languages supported by this validator
      * {@link cc.redpen.validator.Validator} provides empty implementation. Validator implementation validates sections can override this method.
      *

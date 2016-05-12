@@ -72,6 +72,12 @@ import static java.util.Collections.singletonList;
     }
 
     @Override
+    public void clear() {
+        katakanaWordFrequencies.clear();
+        dic.clear();
+    }
+
+    @Override
     public List<String> getSupportedLanguages() {
         return singletonList(Locale.JAPANESE.getLanguage());
     }

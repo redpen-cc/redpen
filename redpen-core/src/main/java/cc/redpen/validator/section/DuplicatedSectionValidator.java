@@ -88,6 +88,11 @@ final public class DuplicatedSectionValidator extends Validator {
         }
     }
 
+    @Override
+    public void clear() {
+        sectionVectors.clear();
+    }
+
     private double calcCosine(Map<String, Integer> targetVector,
             Map<String, Integer> argumentVector) {
         int innerProduct = 0;
