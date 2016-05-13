@@ -61,7 +61,7 @@ public class AsciiDocParserTest {
             "NOTE: The abstract, preface, appendix, bibliography, glossary and index section titles are significant ('specialsections').\n" +
 
             "\n\n:numbered!:\n[abstract]\n" +
-            "//@Suppress@ Spelling\n" +
+            "[suppress=Spelling]\n" +
             "Instances\n" +
             "---------\n" +
             "In this article, we'll call a computer server that works as a member of a cluster an _instan3ce_. " +
@@ -91,7 +91,7 @@ public class AsciiDocParserTest {
             "----------------\n" +
             "Glossaries are optional. Glossaries enries are an example of a style\n" +
             "of AsciiDoc labeled lists.\n" +
-            "//@Suppress@ SuccessiveWord InvalidExpression Spelling\n" +
+            "[suppress='SuccessiveWord InvalidExpression Spelling']\n" +
             "The following is an example of a glosssary.\n\n" +
             "[glossary]\n" +
             "A glossary term::\n" +

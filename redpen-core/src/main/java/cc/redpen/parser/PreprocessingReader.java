@@ -32,6 +32,7 @@ public class PreprocessingReader implements AutoCloseable {
     private BufferedReader reader;
     private Set<PreprocessorRule> preprocessorRules = new HashSet<>();
     private int lineNumber = 0;
+    PreprocessorRule lastRule = null;
 
     public PreprocessingReader(Reader reader) {
         this.reader = new BufferedReader(reader);
@@ -45,13 +46,20 @@ public class PreprocessingReader implements AutoCloseable {
     public String readLine() throws IOException {
         String line = reader.readLine();
         lineNumber++;
-        if ((line != null) && line.startsWith("//@Suppress@")) {
+        if ((line != null) && line.toLowerCase().startsWith("[suppress")) {
             PreprocessorRule rule = new PreprocessorRule(PreprocessorRule.RuleType.SUPPRESS, lineNumber);
-            String[] parameters = line.split(" ");
-            for (int i = 1; i < parameters.length; i++) {
-                String value = parameters[i].trim();
-                if (!value.isEmpty()) {
-                    rule.addParameter(value);
+            if (lastRule != null) {
+                lastRule.setLineNumberLimit(lineNumber);
+            }
+            lastRule = rule ;
+            String[] parts = line.split("=");
+            if (parts.length > 1) {
+                String[] parameters = parts[1].replaceAll("[\"'\\]]", "").split(" ");
+                for (int i = 0; i < parameters.length; i++) {
+                    String value = parameters[i].trim();
+                    if (!value.isEmpty()) {
+                        rule.addParameter(value);
+                    }
                 }
             }
             preprocessorRules.add(rule);

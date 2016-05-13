@@ -40,6 +40,7 @@ public class PreprocessorRule {
     }
 
     private int lineNumber = 0;
+    private int lineNumberLimit = 0;
     private List<String> parameters = new ArrayList<>();
     private RuleType ruleType;
 
@@ -54,6 +55,14 @@ public class PreprocessorRule {
 
     public int getLineNumber() {
         return lineNumber;
+    }
+
+    public int getLineNumberLimit() {
+        return lineNumberLimit;
+    }
+
+    public void setLineNumberLimit(int lineNumberLimit) {
+        this.lineNumberLimit = lineNumberLimit;
     }
 
     public List<String> getParameters() {
@@ -74,30 +83,32 @@ public class PreprocessorRule {
      * @return
      */
     public boolean isTriggeredBy(Document document, int otherLineNumber, String name) {
-        if (parameters.isEmpty() || parameters.contains(name.toLowerCase())) {
-            // find out if the rule line number is in the same section as the other line number
-            for (Section section : document) {
-                List<Sentence> allBlockSentences = new ArrayList<>();
-                allBlockSentences.addAll(section.getHeaderContents());
-                if (isInsideSentences(section.getHeaderContents(), lineNumber, otherLineNumber)) {
-                    return true;
-                }
-                for (Paragraph paragraph : section.getParagraphs()) {
-                    allBlockSentences.addAll(paragraph.getSentences());
-                    if (isInsideSentences(paragraph.getSentences(), lineNumber, otherLineNumber)) {
+        if ((lineNumberLimit < lineNumber) || (otherLineNumber < lineNumberLimit)) {
+            if (parameters.isEmpty() || parameters.contains(name.toLowerCase())) {
+                // find out if the rule line number is in the same section as the other line number
+                for (Section section : document) {
+                    List<Sentence> allBlockSentences = new ArrayList<>();
+                    allBlockSentences.addAll(section.getHeaderContents());
+                    if (isInsideSentences(section.getHeaderContents(), lineNumber, otherLineNumber)) {
                         return true;
                     }
-                }
-                for (ListBlock listBlock : section.getListBlocks()) {
-                    for (ListElement element : listBlock.getListElements()) {
-                        allBlockSentences.addAll(element.getSentences());
-                        if (isInsideSentences(element.getSentences(), lineNumber, otherLineNumber)) {
+                    for (Paragraph paragraph : section.getParagraphs()) {
+                        allBlockSentences.addAll(paragraph.getSentences());
+                        if (isInsideSentences(paragraph.getSentences(), lineNumber, otherLineNumber)) {
                             return true;
                         }
                     }
-                }
-                if (isInsideSentences(allBlockSentences, lineNumber, otherLineNumber)) {
-                    return true;
+                    for (ListBlock listBlock : section.getListBlocks()) {
+                        for (ListElement element : listBlock.getListElements()) {
+                            allBlockSentences.addAll(element.getSentences());
+                            if (isInsideSentences(element.getSentences(), lineNumber, otherLineNumber)) {
+                                return true;
+                            }
+                        }
+                    }
+                    if (isInsideSentences(allBlockSentences, lineNumber, otherLineNumber)) {
+                        return true;
+                    }
                 }
             }
         }
