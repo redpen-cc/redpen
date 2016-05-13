@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.ServletContext;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.MediaType;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -88,9 +89,9 @@ public class RedPenResource {
      */
     @Path("/validate")
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.TEXT_PLAIN})
     @WinkAPIDescriber.Description("Validate a document and return any redpen errors")
-    public String validateDocument(@FormParam("document") @DefaultValue("") String document,
+    public Response validateDocument(@FormParam("document") @DefaultValue("") String document,
                                      @FormParam("documentParser") @DefaultValue(DEFAULT_DOCUMENT_PARSER) String documentParser,
                                      @FormParam("lang") @DefaultValue(DEFAULT_CONFIGURATION) String lang,
                                      @FormParam("format") @DefaultValue(DEFAULT_FORMAT) String format,
@@ -112,9 +113,20 @@ public class RedPenResource {
             throw new RedPenException("Unsupported format: " + format + " - please use xml, plain, plain2, json or json2");
         }
 
-        return formatter.format(parsedDocument, errors);
+        return responseTyped(formatter.format(parsedDocument, errors), format);
     }
 
+    /*package*/ static Response responseTyped(final String formatted, final String format) throws RedPenException {
+        if (format.startsWith("xml")) {
+            return Response.ok(formatted, MediaType.APPLICATION_XML).build();
+        } else if (format.startsWith("json")) {
+            return Response.ok(formatted, MediaType.APPLICATION_JSON).build();
+        } else if (format.startsWith("plain")) {
+            return Response.ok(formatted, MediaType.TEXT_PLAIN).build();
+        } else {
+            throw new RedPenException("MIME type unknown with format: " + format);
+        }
+    }
 
     /**
      * Validate a request encoded in JSON. Valid properties are:
@@ -132,9 +144,9 @@ public class RedPenResource {
     @Path("/validate/json")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.TEXT_PLAIN})
     @WinkAPIDescriber.Description("Process a redpen JSON validation request and returns any redpen errors")
-    public String validateDocumentJSON(JSONObject requestJSON) throws RedPenException {
+    public Response validateDocumentJSON(JSONObject requestJSON) throws RedPenException {
 
         LOG.info("Validating document using JSON request");
         String documentParser = getOrDefault(requestJSON, "documentParser", DEFAULT_DOCUMENT_PARSER);
@@ -213,7 +225,7 @@ public class RedPenResource {
             throw new RedPenException("Unsupported format: " + format + " - please use xml, plain, plain2, json or json2");
         }
 
-        return formatter.format(parsedDocument, errors);
+        return responseTyped(formatter.format(parsedDocument, errors), format);
     }
 
     private String getOrDefault(JSONObject json, String property, String defaultValue) {
