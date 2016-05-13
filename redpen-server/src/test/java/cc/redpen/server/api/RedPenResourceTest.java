@@ -123,10 +123,10 @@ public class RedPenResourceTest extends MockServletInvocationTest {
     }
 
     public void testResponseTyped() throws Exception {
-        assertEquals(MediaType.APPLICATION_XML, RedPenResource.responseTyped("test", "xml").getMetadata().getFirst(HttpHeaders.CONTENT_TYPE).toString());
-        assertEquals(MediaType.APPLICATION_JSON, RedPenResource.responseTyped("test", "json").getMetadata().getFirst(HttpHeaders.CONTENT_TYPE).toString());
-        assertEquals(MediaType.APPLICATION_JSON, RedPenResource.responseTyped("test", "json2").getMetadata().getFirst(HttpHeaders.CONTENT_TYPE).toString());
-        assertEquals(MediaType.TEXT_PLAIN, RedPenResource.responseTyped("test", "plain").getMetadata().getFirst(HttpHeaders.CONTENT_TYPE).toString());
+        assertEquals(RedPenResource.MIME_TYPE_XML, RedPenResource.responseTyped("test", "xml").getMetadata().getFirst(HttpHeaders.CONTENT_TYPE).toString());
+        assertEquals(RedPenResource.MIME_TYPE_JSON, RedPenResource.responseTyped("test", "json").getMetadata().getFirst(HttpHeaders.CONTENT_TYPE).toString());
+        assertEquals(RedPenResource.MIME_TYPE_JSON, RedPenResource.responseTyped("test", "json2").getMetadata().getFirst(HttpHeaders.CONTENT_TYPE).toString());
+        assertEquals(RedPenResource.MIME_TYPE_PLAINTEXT, RedPenResource.responseTyped("test", "plain").getMetadata().getFirst(HttpHeaders.CONTENT_TYPE).toString());
 
         try {
             RedPenResource.responseTyped("test", "foobarbaz");

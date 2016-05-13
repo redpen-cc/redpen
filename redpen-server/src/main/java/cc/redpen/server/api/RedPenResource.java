@@ -59,6 +59,10 @@ public class RedPenResource {
     private static final String DEFAULT_CONFIGURATION = "en";
     private static final String DEFAULT_FORMAT = "json";
 
+    /*package*/ static final String MIME_TYPE_XML = "application/xml; charset=utf-8";
+    /*package*/ static final String MIME_TYPE_JSON = "application/json; charset=utf-8";
+    /*package*/ static final String MIME_TYPE_PLAINTEXT = "text/plain; charset=utf-8";
+
     @Context
     private ServletContext context;
 
@@ -118,11 +122,11 @@ public class RedPenResource {
 
     /*package*/ static Response responseTyped(final String formatted, final String format) throws RedPenException {
         if (format.startsWith("xml")) {
-            return Response.ok(formatted, MediaType.APPLICATION_XML).build();
+            return Response.ok(formatted, RedPenResource.MIME_TYPE_XML).build();
         } else if (format.startsWith("json")) {
-            return Response.ok(formatted, MediaType.APPLICATION_JSON).build();
+            return Response.ok(formatted, RedPenResource.MIME_TYPE_JSON).build();
         } else if (format.startsWith("plain")) {
-            return Response.ok(formatted, MediaType.TEXT_PLAIN).build();
+            return Response.ok(formatted, RedPenResource.MIME_TYPE_PLAINTEXT).build();
         } else {
             throw new RedPenException("MIME type unknown with format: " + format);
         }
