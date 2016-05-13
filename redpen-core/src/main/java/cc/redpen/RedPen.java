@@ -76,10 +76,17 @@ public class RedPen {
         this.configuration = configuration;
         this.sentenceExtractor = new SentenceExtractor(configuration.getSymbolTable());
         this.validators = new ArrayList<>();
-        for (ValidatorConfiguration config : configuration.getValidatorConfigs()) {
-            validators.add(ValidatorFactory.getInstance(config, configuration));
-        }
+    }
 
+    private void initializeValidators() {
+        validators.clear();
+        for (ValidatorConfiguration config : configuration.getValidatorConfigs()) {
+            try {
+                validators.add(ValidatorFactory.getInstance(config, configuration));
+            } catch (RedPenException e) {
+                throw new IllegalStateException("Failed to initialize validators.", e);
+            }
+        }
     }
 
     /**
@@ -131,6 +138,7 @@ public class RedPen {
     public Map<Document, List<ValidationError>> validate(List<Document> documents) {
         Map<Document, List<ValidationError>> docErrorsMap = new HashMap<>();
         documents.forEach(e -> docErrorsMap.put(e, new ArrayList<>()));
+        initializeValidators();
         runDocumentValidators(documents, docErrorsMap);
         runSectionValidators(documents, docErrorsMap);
         runSentenceValidators(documents, docErrorsMap);
