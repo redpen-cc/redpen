@@ -46,26 +46,37 @@ public class PreprocessingReader implements AutoCloseable {
     public String readLine() throws IOException {
         String line = reader.readLine();
         lineNumber++;
-        if ((line != null) && line.toLowerCase().startsWith("[suppress")) {
-            PreprocessorRule rule = new PreprocessorRule(PreprocessorRule.RuleType.SUPPRESS, lineNumber);
-            if (lastRule != null) {
-                lastRule.setLineNumberLimit(lineNumber);
+        if (line != null) {
+            String ruleText = line
+                .replaceAll("^#@#", "")
+                .replaceAll("^%", "")
+                .replaceAll("^ *\\[!--","")
+                .replaceAll("^ *<!--","")
+                .trim();
+            if (ruleText.toLowerCase().startsWith("[suppress")) {
+                addSuppressRule(ruleText);
+                return "";
             }
-            lastRule = rule ;
-            String[] parts = line.split("=");
-            if (parts.length > 1) {
-                String[] parameters = parts[1].replaceAll("[\"'\\]]", "").split(" ");
-                for (int i = 0; i < parameters.length; i++) {
-                    String value = parameters[i].trim();
-                    if (!value.isEmpty()) {
-                        rule.addParameter(value);
-                    }
-                }
-            }
-            preprocessorRules.add(rule);
-            return "";
         }
         return line;
+    }
+
+    private void addSuppressRule(String ruleString) {
+        PreprocessorRule rule = new PreprocessorRule(PreprocessorRule.RuleType.SUPPRESS, lineNumber);
+        if (lastRule != null) {
+            lastRule.setLineNumberLimit(lineNumber);
+        }
+        lastRule = rule;
+        String[] parts = ruleString.split("=");
+        if (parts.length > 1) {
+            String[] parameters = parts[1].replaceAll("[\"'\\]]", "").split(" ");
+            for (String parameter : parameters) {
+                if (!parameter.isEmpty()) {
+                    rule.addParameter(parameter);
+                }
+            }
+        }
+        preprocessorRules.add(rule);
     }
 
     public Set<PreprocessorRule> getPreprocessorRules() {
