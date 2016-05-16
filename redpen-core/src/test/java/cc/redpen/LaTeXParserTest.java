@@ -178,7 +178,7 @@ public class LaTeXParserTest {
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
-        assertEquals(3, firstParagraph.getNumberOfSentences());
+        assertEquals(1, firstParagraph.getNumberOfSentences());
     }
 
     @Test
@@ -567,6 +567,42 @@ public class LaTeXParserTest {
         assertEquals(19, errors.get(0).getSentence().getContent().length());
         assertEquals(Optional.of(new LineOffset(5, 18)), errors.get(0).getStartPosition());
         assertEquals(Optional.of(new LineOffset(5, 19)), errors.get(0).getEndPosition());
+    }
+
+    @Test
+    public void testErrorPositionWithComments() throws RedPenException {
+        String sampleText = ""
+            + "\\documentclass[a4paper]{jsarticle}\n"
+            + "\\author{asdasd}\n"
+            + "\\title{LaTeX Parser Test}\n"
+            + "\\maketitle\n"
+            + "\\begin{document}\n"
+            + "\\section{first}\n"
+            + "I like sushi.\n"
+            + "% comment\n"
+            + "I like noodles.\n"
+            + "% comment\n"
+            + "I like bread.\n"
+            + "\n"
+            + "\\section{second}\n"
+            + "You like sushi too.\n"
+            + "\\end{document}\n";
+        Configuration conf = Configuration.builder().build();
+        List<Document> documents = new ArrayList<>();
+        documents.add(createFileContent(sampleText, conf));
+
+        Configuration configuration = Configuration.builder()
+            .addValidatorConfig(new ValidatorConfiguration("InvalidExpression").addProperty("list", "like"))
+            .build();
+
+        RedPen redPen = new RedPen(configuration);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
+        assertEquals(4, errors.size());
+        assertEquals("InvalidExpression", errors.get(0).getValidatorName());
+        assertEquals(Optional.of(new LineOffset(7, 2)), errors.get(0).getStartPosition());
+        assertEquals(Optional.of(new LineOffset(9, 2)), errors.get(1).getStartPosition());
+        assertEquals(Optional.of(new LineOffset(11, 2)), errors.get(2).getStartPosition());
+        assertEquals(Optional.of(new LineOffset(14, 4)), errors.get(3).getStartPosition());
     }
 
     private Document createFileContent(String inputDocumentString, Configuration conf) {

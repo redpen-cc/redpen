@@ -28,10 +28,29 @@ import static cc.redpen.parser.latex.Assert.*;
 
 public class LexerTest {
     @Test
-    public void testCommentShouldNotAppear() {
-        final String corpse = "% This is a comment\n";
-        final List<Token> tokens = Lexer.on(corpse).parse();
-        assertEquals(0, tokens.size());
+    public void testCommentShouldAppearAsWhitespace() {
+        final String corpse = "This is a sentence.\n% This is a comment\nAnd this is another sentence.\n";
+        assertTokensEqual(
+            Arrays.asList(
+                token("TEXTILE", "This is a sentence.\n", new Position(1,0)),
+                token("TEXTILE", "\n", new Position(2,0)),
+                token("TEXTILE", "And this is another sentence.\n", new Position(3,0))
+                ),
+            Lexer.on(corpse).parse()
+        );
+    }
+
+
+    @Test
+    public void testCommentWorksAgainstNewline() {
+        final String corpse = "This is a sentence.\n%\nThis is a line should be concatenated.\n";
+        assertTokensEqual(
+            Arrays.asList(
+                token("TEXTILE", "This is a sentence.\n", new Position(1,0)),
+                token("TEXTILE", "This is a line should be concatenated.\n", new Position(3,0))
+                ),
+            Lexer.on(corpse).parse()
+        );
     }
 
     @Test
