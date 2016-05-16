@@ -76,6 +76,7 @@ public class RedPen {
         this.configuration = configuration;
         this.sentenceExtractor = new SentenceExtractor(configuration.getSymbolTable());
         this.validators = new ArrayList<>();
+        initializeValidators();
     }
 
     private void initializeValidators() {
@@ -138,7 +139,6 @@ public class RedPen {
     public Map<Document, List<ValidationError>> validate(List<Document> documents) {
         Map<Document, List<ValidationError>> docErrorsMap = new HashMap<>();
         documents.forEach(e -> docErrorsMap.put(e, new ArrayList<>()));
-        initializeValidators();
         runDocumentValidators(documents, docErrorsMap);
         runSectionValidators(documents, docErrorsMap);
         runSentenceValidators(documents, docErrorsMap);
