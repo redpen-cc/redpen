@@ -23,12 +23,15 @@ import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ConfigurationLoader;
 import cc.redpen.config.ValidatorConfiguration;
+import cc.redpen.model.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -50,8 +53,12 @@ public class RedPenService {
             if (redPens.isEmpty()) {
                 LOG.info("Creating RedPen instances");
                 try {
+                    List<Document> emptyDocuments = new ArrayList<>();
+                    emptyDocuments.add(Document.builder().build());
                     for (String key : Configuration.getDefaultConfigKeys()) {
-                        redPens.put(key, new RedPen(Configuration.builder(key).secure().addAvailableValidatorConfigs().build()));
+                        RedPen redpen = new RedPen(Configuration.builder(key).secure().addAvailableValidatorConfigs().build());
+                        redpen.validate(emptyDocuments);
+                        redPens.put(key, redpen);
                     }
 
                     String configPath = context != null ? context.getInitParameter("redpen.conf.path") : null;
@@ -60,7 +67,7 @@ public class RedPenService {
                         Configuration configuration;
                         try {
                             configuration = new ConfigurationLoader().secure().loadFromResource(configPath);
-                        }catch(RedPenException rpe){
+                        } catch (RedPenException rpe) {
                             configuration = new ConfigurationLoader().secure().load(new File(configPath));
                         }
                         RedPen defaultRedPen = new RedPen(configuration);
