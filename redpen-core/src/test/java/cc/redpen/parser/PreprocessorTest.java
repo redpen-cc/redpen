@@ -1,20 +1,16 @@
 package cc.redpen.parser;
 
-import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
-import cc.redpen.validator.ValidationError;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 
 public class PreprocessorTest {
@@ -33,10 +29,6 @@ public class PreprocessorTest {
             "[suppress='SuppressRuleParameter']\n" +
             "Instances\n" +
             "---------\n" +
-            "  <!--   [suppress=\"SuppressUsingXMLCommentStyle\"]\n" +
-            "  [!--   [suppress=SuppressUsingWikiCommentStyle]\n" +
-            "#@#   [suppress=SuppressUsingRe:VIEWCommentStyle]\n" +
-            "%[suppress=SuppressUsingLatexCommentStyle]\n" +
             "In this article, we'll call a computer server that works as a member of a cluster an _instan3ce_. " +
             "for example, as shown in this http://redpen.ignored.url/[mishpelled link], each instance in distributed search engines stores the the fractions of data.\n" +
             "\nSuch distriubuted systems need a component to merge the preliminary results from member instnaces.\n\n\n" +
@@ -83,30 +75,24 @@ public class PreprocessorTest {
             "endif::backend-docbook[]";
 
 
-        Document doc = createFileContent(sampleText);
-        for (PreprocessorRule rule : doc.getPreprocessorRules()) {
-            LOG.info(rule.getRuleType() + ": " +
-                rule.getLineNumber() + "-" +
-                rule.getLineNumberLimit() + ", " +
-                Arrays.toString(rule.getParameters().toArray()));
-        }
+        Document doc = createFileContent(sampleText, DocumentParser.ASCIIDOC);
+        assertEquals(4, doc.getPreprocessorRules().size());
 
-        assertEquals(8, doc.getPreprocessorRules().size());
+        doc = createFileContent(sampleText, DocumentParser.PLAIN);
+        assertEquals(0, doc.getPreprocessorRules().size());
 
-        Configuration configuration = Configuration.builder()
-            .addValidatorConfig(new ValidatorConfiguration("Spelling"))
-            .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol")).build();
+        doc = createFileContent(sampleText, DocumentParser.LATEX);
+        assertEquals(0, doc.getPreprocessorRules().size());
 
-        RedPen redPen = new RedPen(configuration);
-        List<ValidationError> errors = redPen.validate(doc);
-        for (ValidationError error : errors) {
-            LOG.info(error.getLineNumber() + ": " + error.getValidatorName() + " " + error.getMessage());
-        }
+        doc = createFileContent(sampleText, DocumentParser.MARKDOWN);
+        assertEquals(0, doc.getPreprocessorRules().size());
+
+        doc = createFileContent(sampleText, DocumentParser.REVIEW);
+        assertEquals(0, doc.getPreprocessorRules().size());
     }
 
 
-    private Document createFileContent(String inputDocumentString) {
-        DocumentParser parser = DocumentParser.ASCIIDOC;
+    private Document createFileContent(String inputDocumentString, DocumentParser parser) {
         Document doc = null;
         try {
             Configuration configuration = Configuration.builder().build();

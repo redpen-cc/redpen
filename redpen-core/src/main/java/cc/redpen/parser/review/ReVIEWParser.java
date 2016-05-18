@@ -287,7 +287,8 @@ public class ReVIEWParser extends LineParser {
                 closeIdx = text.indexOf("]", closeIdx+1);
             }
         } else {
-            block.type = text.substring(2, text.indexOf("{"));
+            int leftBracePosition = text.indexOf("{");
+            block.type = text.substring(2, leftBracePosition > 0 ? leftBracePosition : text.length() - 1);
         }
 
         // detect open block

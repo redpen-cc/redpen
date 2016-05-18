@@ -82,7 +82,7 @@ public abstract class BaseDocumentParser implements DocumentParser {
      * @return BufferedReader created from InputStream
      */
     protected PreprocessingReader createReader(InputStream is) {
-        return new PreprocessingReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+        return new PreprocessingReader(new InputStreamReader(is, StandardCharsets.UTF_8), this);
     }
 
     protected static class ValueWithOffsets extends Sentence {

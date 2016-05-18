@@ -17,6 +17,8 @@
  */
 package cc.redpen.parser;
 
+import cc.redpen.parser.asciidoc.AsciiDocParser;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -32,10 +34,12 @@ public class PreprocessingReader implements AutoCloseable {
     private BufferedReader reader;
     private Set<PreprocessorRule> preprocessorRules = new HashSet<>();
     private int lineNumber = 0;
-    PreprocessorRule lastRule = null;
+    private PreprocessorRule lastRule = null;
+    private DocumentParser parser = null;
 
-    public PreprocessingReader(Reader reader) {
+    public PreprocessingReader(Reader reader, DocumentParser parser) {
         this.reader = new BufferedReader(reader);
+        this.parser = parser;
     }
 
     @Override
@@ -47,15 +51,12 @@ public class PreprocessingReader implements AutoCloseable {
         String line = reader.readLine();
         lineNumber++;
         if (line != null) {
-            String ruleText = line
-                .replaceAll("^#@#", "")
-                .replaceAll("^%", "")
-                .replaceAll("^ *\\[!--","")
-                .replaceAll("^ *<!--","")
-                .trim();
-            if (ruleText.toLowerCase().startsWith("[suppress")) {
-                addSuppressRule(ruleText);
-                return "";
+            String ruleText = line;
+            if (parser instanceof AsciiDocParser) {
+                if (ruleText.toLowerCase().startsWith("[suppress")) {
+                    addSuppressRule(ruleText);
+                    return "";
+                }
             }
         }
         return line;

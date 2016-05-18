@@ -16,19 +16,27 @@
  * limitations under the License.
  */
 
+@font-face {
+    font-family: "Oxygen";
+    src: url(../fonts/Oxygen-Regular.ttf);
+}
+
 body {
-    background-color: #dedbcf;
+    background-color: #fafafa;
     color: #333;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Oxygen', Helvetica, Arial, sans-serif;
 }
 
 h1, h2, h3, h4 {
     color: #414439;
 }
 
+h1 {
+    font-size: 32px;
+}
+
 h1, h2, h3 {
     margin-top: 10px;
-    margin-bottom: 5px;
 }
 
 a {
@@ -57,6 +65,7 @@ input[type="radio"], input[type="checkbox"] {
 
 .well {
     border: solid 1px rgba(0, 0, 0, 0.3);
+    background-color: #E0E0E0;
 }
 
 .editable-empty, .editable-empty:hover, .editable-empty:focus {
@@ -88,35 +97,38 @@ input[type="radio"], input[type="checkbox"] {
 }
 
 .navbar-default {
-    background-color: #a29e8b;
+    background-color: #474747;
     border: none;
     border-bottom: solid 1px rgba(0, 0, 0, 0.12);
 }
 
-.navbar-default .navbar-nav>li>a {
-    color: #eee;
+.navbar-default .navbar-nav > li > a {
+    color: #ccc;
     text-transform: uppercase;
-    font-size: 11px;
-    line-height: 22px;
+    font-size: 15px;
+    padding-top: 19px;
+    padding-left: 32px;
+    vertical-align: middle;
     font-weight: 500;
 }
 
-.dropdown-menu>li>a {
+.dropdown-menu > li > a {
     text-transform: uppercase;
-    font-size: 11px;
+    font-size: 14px;
 }
 
 .navbar-brand {
-    padding-top: 11px;
+    padding-top: 8px;
+    padding-right: 32px;
 }
 
 .navbar-brand img {
-    height: 28px;
+    height: 42px;
 }
 
 .alert-warning, .alert-info, .alert-success {
     padding-left: 4px;
-    border-radius: 2px;
+    border-radius: 0;;
 }
 
 .error strong {
@@ -127,7 +139,7 @@ input[type="radio"], input[type="checkbox"] {
     margin-top: 0 !important;
 }
 
-#main {
+.main {
     position: absolute;
     top: 64px;
     left: 0;
@@ -143,7 +155,7 @@ input[type="radio"], input[type="checkbox"] {
     left: 0;
     top: 0;
     right: 0;
-    border-radius: 6px;
+    border-radius: 0;;
     border: solid 1px rgba(0, 0, 0, 0.15);
     bottom: 46%;
 }
@@ -155,13 +167,13 @@ input[type="radio"], input[type="checkbox"] {
     right: 0;
     bottom: 0;
     overflow-y: auto;
-    border-radius: 6px;
+    border-radius: 0;;
     border: solid 1px rgba(0, 0, 0, 0.15);
     background-color: rgb(255, 227, 227);
 }
 
 #redpen-superimposed-editor {
-    border-radius: 6px;
+    border-radius: 0;;
     position: absolute;
     left: 0;
     top: 0;
@@ -172,7 +184,7 @@ input[type="radio"], input[type="checkbox"] {
 }
 
 .redpen-superimposed-editor-panel {
-    border-radius: 6px;
+    border-radius: 0;;
     position: absolute;
     top: 0;
     right: 0;
@@ -233,6 +245,7 @@ input[type="radio"], input[type="checkbox"] {
     white-space: pre;
     word-wrap: break-word;
     padding: 8px;
+    border-radius: 0;
 }
 
 #redpen-results-request {
@@ -247,6 +260,7 @@ input[type="radio"], input[type="checkbox"] {
     white-space: pre;
     word-wrap: break-word;
     padding: 8px;
+    border-radius: 0;
 }
 
 #redpen-results-report {
@@ -261,6 +275,7 @@ input[type="radio"], input[type="checkbox"] {
     font-size: 11px;
     white-space: pre-wrap;
     padding: 8px;
+    border-radius: 0;
 }
 
 #redpen-settings {
@@ -268,6 +283,7 @@ input[type="radio"], input[type="checkbox"] {
     height: 100%;
     width: 100%;
     overflow: auto;
+    border-radius: 0;
 }
 
 #redpen-version {
@@ -287,21 +303,22 @@ input[type="radio"], input[type="checkbox"] {
     bottom: 0;
     right: 0;
     text-transform: uppercase;
-    font-size: 11px;
+    font-size: 14px;
 }
 
 #redpen-option-results li {
     display: inline-block;
-    width: 64px;
+    width: 88px;
     padding: 4px;
+    padding-top: 6px;
     cursor: pointer;
-    color: #676F5C;
+    color: #9E9E9E;
 }
 
 .redpen-option-selected {
-    border-radius: 3px;
+    border-radius: 0;;
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.37);
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: #757575;
     color: white !important;
 }
 
@@ -317,16 +334,16 @@ input[type="radio"], input[type="checkbox"] {
     height: 85%;
 }
 
-.redpen-fixed-row>div {
+.redpen-fixed-row > div {
     height: 100%;
 }
 
 .redpen-header-row {
     height: 10%;
-    min-height: 90px;
+    min-height: 84px;
 }
 
-.redpen-header-row>div {
+.redpen-header-row > div {
     height: 100%;
 }
 
@@ -378,7 +395,7 @@ input[type="radio"], input[type="checkbox"] {
     padding: 12px;
     margin-right: 8px;
     margin-bottom: 8px;
-    border-radius: 4px;
+    border-radius: 0;;
     background-color: rgba(0, 0, 0, 0.6);
     color: white;
     font-size: 12px;
@@ -483,7 +500,7 @@ input[type="radio"], input[type="checkbox"] {
     display: inline-block;
     text-align: left;
     min-width: 20px;
-    border-radius: 3px;
+    border-radius: 0;;
 }
 
 .redpen-annotated-sentence {
@@ -519,17 +536,17 @@ input[type="radio"], input[type="checkbox"] {
 
 ::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-    border-radius: 3px;
+    border-radius: 0;;
     background-color: rgba(255, 255, 255, 0.5);
 }
 
 ::-webkit-scrollbar {
     width: 8px;
-    border-radius: 3px;
+    border-radius: 0;;
     background-color: rgba(255, 255, 255, 0.3);
 }
 
 ::-webkit-scrollbar-thumb {
-    border-radius: 3px;
+    border-radius: 0;;
     background-color: rgba(0, 0, 0, 0.6);
 }
