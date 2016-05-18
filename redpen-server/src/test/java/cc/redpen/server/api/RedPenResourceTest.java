@@ -17,6 +17,8 @@
  */
 package cc.redpen.server.api;
 
+import cc.redpen.RedPenException;
+
 import org.apache.wink.common.http.HttpStatus;
 import org.apache.wink.common.internal.application.ApplicationFileLoader;
 import org.apache.wink.server.internal.servlet.MockServletInvocationTest;
@@ -28,11 +30,14 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpUpgradeHandler;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.HttpHeaders;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Set;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static javax.ws.rs.core.MediaType.APPLICATION_XML;
+import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 import static javax.ws.rs.core.MediaType.WILDCARD;
 
 public class RedPenResourceTest extends MockServletInvocationTest {
@@ -116,6 +121,21 @@ public class RedPenResourceTest extends MockServletInvocationTest {
         assertEquals("en", new RedPenResource().detectLanguage("Hello World").getString("key"));
         assertEquals("ja", new RedPenResource().detectLanguage("こんにちは世界").getString("key"));
     }
+
+    public void testResponseTyped() throws Exception {
+        assertEquals(RedPenResource.MIME_TYPE_XML, RedPenResource.responseTyped("test", "xml").getMetadata().getFirst(HttpHeaders.CONTENT_TYPE).toString());
+        assertEquals(RedPenResource.MIME_TYPE_JSON, RedPenResource.responseTyped("test", "json").getMetadata().getFirst(HttpHeaders.CONTENT_TYPE).toString());
+        assertEquals(RedPenResource.MIME_TYPE_JSON, RedPenResource.responseTyped("test", "json2").getMetadata().getFirst(HttpHeaders.CONTENT_TYPE).toString());
+        assertEquals(RedPenResource.MIME_TYPE_PLAINTEXT, RedPenResource.responseTyped("test", "plain").getMetadata().getFirst(HttpHeaders.CONTENT_TYPE).toString());
+
+        try {
+            RedPenResource.responseTyped("test", "foobarbaz");
+            fail();
+        } catch (final RedPenException success) {
+            assertTrue(true);
+        }
+    }
+
 
     // test helper
     private MockHttpServletRequest constructMockRequest(String method, String requestURI, String acceptHeader) {
