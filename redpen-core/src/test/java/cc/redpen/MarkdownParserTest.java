@@ -582,6 +582,22 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
+    public void testAccessTokensInList()
+            throws UnsupportedEncodingException {
+        String sampleText = "";
+        sampleText += "# About Gunma\n";
+        sampleText += "* located at west of Saitama\n";
+        sampleText += "* near Tokyo";
+
+        Document doc = createFileContent(sampleText);
+        Section section = doc.getSection(doc.size() - 1);
+        ListBlock list = section.getListBlock(0);
+        assertEquals(2, list.getNumberOfListElements());
+        assertEquals(5, list.getListElement(0).getSentence(0).getTokens().size());
+        assertEquals(2, list.getListElement(1).getSentence(0).getTokens().size());
+    }
+
+    @Test
     public void testDocumentWithListWithoutPeriod()
             throws UnsupportedEncodingException {
         String sampleText = "";
