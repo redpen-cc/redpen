@@ -260,6 +260,9 @@ public class Document implements Iterable<Section>, Serializable {
                 throw new IllegalStateException("No section to add a sentence");
             }
             Section lastSection = getSection(sections.size() - 1);
+            for(Sentence sentence : contents) {
+                sentence.setTokens(tokenizer.tokenize(sentence.getContent()));
+            }
             lastSection.appendListElement(level, contents);
             return this;
         }
