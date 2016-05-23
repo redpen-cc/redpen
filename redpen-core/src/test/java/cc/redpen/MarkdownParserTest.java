@@ -539,6 +539,21 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
+    public void testAccessTokensInHeader() {
+        String sampleText = "# This is level one section\n";
+        sampleText += "## This is level two section\n";
+
+        Document doc = createFileContent(sampleText);
+        assertEquals(3, doc.size());
+        assertEquals(0, doc.getSection(0).getLevel());
+        assertEquals(1, doc.getSection(1).getLevel());
+        assertEquals(2, doc.getSection(2).getLevel());
+
+        assertEquals("This is level one section", doc.getSection(1).getHeaderContent(0).getContent());
+        assertEquals(5, doc.getSection(1).getHeaderContent(0).getTokens().size());
+    }
+
+    @Test
     public void testDocumentWithHeaderWithoutPeriods()
             throws UnsupportedEncodingException {
         String sampleText = "";
