@@ -160,6 +160,9 @@ public class Document implements Iterable<Section>, Serializable {
          */
         public DocumentBuilder appendSection(Section section) {
             ensureNotBuilt();
+            for (Sentence sentence : section.getHeaderContents()) {
+                sentence.setTokens(tokenizer.tokenize(sentence.getContent()));
+            }
             sections.add(section);
             return this;
         }
