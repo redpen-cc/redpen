@@ -22,6 +22,9 @@
         <validator name="ParagraphNumber"/>
         <validator name="SpaceBeginningOfSentence" />
         <validator name="ParenthesizedSentence"/>
+        <validator name="VoidSection" />
+        <validator name="GappedSection" />
+        <validator name="SectionLevel" />
 
         <!--Rules on symbols and terminologies-->
         <validator name="InvalidSymbol"/>
