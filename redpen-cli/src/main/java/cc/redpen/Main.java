@@ -180,11 +180,11 @@ public final class Main {
         }
     }
 
-    private static String guessInputFormat(String[] inputFileNames) {
+    static String guessInputFormat(String[] inputFileNames) {
         String inputFormat = "";
         for (String inputFileName : inputFileNames) {
             String format = detectFormat(inputFileName);
-            if (!inputFormat.equals("") || !format.equals(inputFormat)) {
+            if (!inputFormat.equals("") && !format.equals(inputFormat)) {
                 LOG.warn("There are more than one file type...: {} and {}", format, inputFormat);
                 LOG.warn("Guess file format as plain...");
                 return "plain"; //NOTE: return file type as "plain" when there are more than one file types...
@@ -196,22 +196,26 @@ public final class Main {
 
     private static String detectFormat(String inputFileName) {
         String ext = FilenameUtils.getExtension(inputFileName);
-        //TODO need refactoring...
-        if (ext.equals("txt")) {
-            return "plain";
-        } else if (ext.equals("asdoc") || ext.equals("asciidoc")) {
-            return "asciidoc";
-        } else if (ext.equals("markdown") || ext.equals("md")) {
-            return "markdown";
-        } else if (ext.equals("tex") || ext.equals("latex")) {
-            return "latex";
-        } else if (ext.equals("re") || ext.equals("review")) {
-            return "review";
-        } else if (ext.equals("properties")) {
-            return "propery";
-        } else {
-            LOG.info("No such file extension as {}", ext);
-            return "plain";
+        switch (ext) {
+            case "txt":
+                return "plain";
+            case "adoc":
+            case "asciidoc":
+                return "asciidoc";
+            case "markdown":
+            case "md":
+                return "markdown";
+            case "tex":
+            case "latex":
+                return "latex";
+            case "re":
+            case "review":
+                return "review";
+            case "properties":
+                return "propery";
+            default:
+                LOG.info("No such file extension as \"{}\"", ext);
+                return "plain";
         }
     }
 
