@@ -117,4 +117,40 @@ public class MainTest {
     public void testVersion() throws RedPenException {
         assertEquals(0, Main.run("-v"));
     }
+
+    @Test
+    public void testGuessFormat() throws Exception {
+        String[] inputs = new String[]{
+                "sample/conf/sampledoc1.adoc",
+                "sample/conf/sampledoc2.adoc",
+        };
+        assertEquals("asciidoc", Main.guessInputFormat(inputs));
+    }
+
+    @Test
+    public void testGuessTwoFormats() throws Exception {
+        String[] inputs = new String[]{
+                "sample/conf/sampledoc1.md",
+                "sample/conf/sampledoc2.adoc",
+        };
+        assertEquals("plain", Main.guessInputFormat(inputs));
+    }
+
+    @Test
+    public void testGuessFromAbbrebiatedFoamts() throws Exception {
+        String[] inputs = new String[]{
+                "sample/conf/sampledoc1.md",
+                "sample/conf/sampledoc2.markdown",
+        };
+        assertEquals("markdown", Main.guessInputFormat(inputs));
+    }
+
+    @Test
+    public void testGuessFromNoExtensions() throws Exception {
+        String[] inputs = new String[]{
+                "sample/conf/sampledoc",
+                "sample/conf/sampledoc",
+        };
+        assertEquals("plain", Main.guessInputFormat(inputs));
+    }
 }
