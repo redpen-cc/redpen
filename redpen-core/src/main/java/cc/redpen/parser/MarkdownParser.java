@@ -28,7 +28,6 @@ import org.pegdown.ParsingTimeoutException;
 import org.pegdown.PegDownProcessor;
 import org.pegdown.ast.RootNode;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -61,7 +60,7 @@ class MarkdownParser extends BaseDocumentParser {
         StringBuilder fullText = new StringBuilder();
         List<Integer> lineLengths = new ArrayList<>();
 
-        try (BufferedReader br = createReader(inputStream)) {
+        try (PreprocessingReader br = createReader(inputStream)) {
             String line;
             int charCount = 0;
             while ((line = br.readLine()) != null) {
@@ -70,6 +69,7 @@ class MarkdownParser extends BaseDocumentParser {
                 charCount += line.length() + 1;
                 lineLengths.add(charCount);
             }
+            documentBuilder.setPreprocessorRules(br.getPreprocessorRules());
         } catch (IOException e) {
             throw new RedPenException(e);
         }

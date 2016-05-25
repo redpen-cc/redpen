@@ -22,7 +22,6 @@ import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.RedPenTokenizer;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -54,7 +53,7 @@ final public class PlainTextParser extends BaseDocumentParser implements Seriali
         documentBuilder.addSection(0, headers);
         documentBuilder.addParagraph();
 
-        BufferedReader br = createReader(is);
+        PreprocessingReader br = createReader(is);
         String line;
         int linesRead = 0;
         int startLine = 1;
@@ -80,6 +79,9 @@ final public class PlainTextParser extends BaseDocumentParser implements Seriali
         if (!paragraph.isEmpty()) {
             this.extractSentences(startLine, paragraph, sentenceExtractor, documentBuilder);
         }
+
+        documentBuilder.setPreprocessorRules(br.getPreprocessorRules());
+
         return documentBuilder.build();
     }
 

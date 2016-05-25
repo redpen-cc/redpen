@@ -52,58 +52,59 @@ public class AsciiDocParserTest {
         parser.parse(is, new SentenceExtractor(configuration.getSymbolTable()), configuration.getTokenizer());
     }
 
+
     @Test
     public void testBasicDocument() throws UnsupportedEncodingException, RedPenException {
         String sampleText = "Instances Overview\n==================\n" + "Author's Name <person@email.address>\nv1.2, 2015-08\n" +
-                "\nThis is the optional preamble (an untitled section body). Useful for " +
-                "writing simple sectionless documents consisting only of a preamble.\n\n" +
+            "\nThis is the optional preamble (an untitled section body). Useful for " +
+            "writing simple sectionless documents consisting only of a preamble.\n\n" +
 
-                "NOTE: The abstract, preface, appendix, bibliography, glossary and index section titles are significant ('specialsections').\n" +
+            "NOTE: The abstract, preface, appendix, bibliography, glossary and index section titles are significant ('specialsections').\n" +
 
-                "\n\n:numbered!:\n[abstract]\n" +
-                "Instances\n" +
-                "---------\n" +
-                "In this article, we'll call a computer server that works as a member of a cluster an _instan3ce_. " +
-                "for example, as shown in this http://redpen.ignored.url/[mishpelled link], each instance in distributed search engines stores the the fractions of data.\n" +
-                "\nSuch distriubuted systems need a component to merge the preliminary results from member instnaces.\n\n\n" +
-                ".Instance image\n" +
-                "image::images/tiger.png[Instance image]\n\n" +
-                "A sample table:\n\n" +
-                ".A sample table\n" +
-                "[width=\"60%\",options=\"header\"]\n" +
-                "|==============================================\n" +
-                "| Option     | Description\n" +
-                "| GROUP      | The instance group.\n" +
-                "|==============================================\n\n" +
-                ".example list\n" +
-                "===============================================\n" +
-                "Lorum ipum...\n" +
-                "===============================================\n\n\n" +
-                "[bibliography]\n" +
-                "- [[[taoup]]] Eric Steven Raymond. 'The Art of Unix\n" +
-                "  Programming'. Addison-Wesley. ISBN 0-13-142901-9.\n" +
-                "- [[[walsh-muellner]]] Norman Walsh & Leonard Muellner.\n" +
-                "  'DocBook - The Definitive Guide'. O'Reilly & Associates. 1999.\n" +
-                "  ISBN 1-56592-580-7.\n\n\n" +
-                "[glossary]\n" +
-                "Example Glossary\n" +
-                "----------------\n" +
-                "Glossaries are optional. Glossaries entries are an example of a style\n" +
-                "of AsciiDoc labeled lists.\n\n" +
-                "[glossary]\n" +
-                "A glossary term::\n" +
-                "  The corresponding (indented) definition.\n\n" +
-                "A second glossary term::\n" +
-                "  The corresponding (indented) definition.\n\n\n" +
-                "ifdef::backend-docbook[]\n" +
-                "[index]\n" +
-                "Example Index\n" +
-                "-------------\n" +
-                "////////////////////////////////////////////////////////////////\n" +
-                "The index is normally left completely empty, it's contents being\n" +
-                "generated automatically by the DocBook toolchain.\n" +
-                "////////////////////////////////////////////////////////////////\n" +
-                "endif::backend-docbook[]";
+            "\n\n:numbered!:\n[abstract]\n" +
+            "Instances\n" +
+            "---------\n" +
+            "In this article, we'll call a computer server that works as a member of a cluster an _instan3ce_. " +
+            "for example, as shown in this http://redpen.ignored.url/[mishpelled link], each instance in distributed search engines stores the the fractions of data.\n" +
+            "\nSuch distriubuted systems need a component to merge the preliminary results from member instnaces.\n\n\n" +
+            ".Instance image\n" +
+            "image::images/tiger.png[Instance image]\n\n" +
+            "A sample table:\n\n" +
+            ".A sample table\n" +
+            "[width=\"60%\",options=\"header\"]\n" +
+            "|==============================================\n" +
+            "| Option     | Description\n" +
+            "| GROUP      | The instance group.\n" +
+            "|==============================================\n\n" +
+            ".example list\n" +
+            "===============================================\n" +
+            "Lorum ipum...\n" +
+            "===============================================\n\n\n" +
+            "[bibliography]\n" +
+            "- [[[taoup]]] Eric Steven Raymond. 'The Art of Unix\n" +
+            "  Programming'. Addison-Wesley. ISBN 0-13-142901-9.\n" +
+            "- [[[walsh-muellner]]] Norman Walsh & Leonard Muellner.\n" +
+            "  'DocBook - The Definitive Guide'. O'Reilly & Associates. 1999.\n" +
+            "  ISBN 1-56592-580-7.\n\n\n" +
+            "[glossary]\n" +
+            "Example Glossary\n" +
+            "----------------\n" +
+            "Glossaries are optional. Glossaries entries are an example of a style\n" +
+            "of AsciiDoc labeled lists.\n\n" +
+            "[glossary]\n" +
+            "A glossary term::\n" +
+            "  The corresponding (indented) definition.\n\n" +
+            "A second glossary term::\n" +
+            "  The corresponding (indented) definition.\n\n\n" +
+            "ifdef::backend-docbook[]\n" +
+            "[index]\n" +
+            "Example Index\n" +
+            "-------------\n" +
+            "////////////////////////////////////////////////////////////////\n" +
+            "The index is normally left completely empty, it's contents being\n" +
+            "generated automatically by the DocBook toolchain.\n" +
+            "////////////////////////////////////////////////////////////////\n" +
+            "endif::backend-docbook[]";
 
 
         Document doc = createFileContent(sampleText);
@@ -131,8 +132,8 @@ public class AsciiDocParserTest {
         assertEquals(0, firstSection.getNumberOfSubsections());
 
         Configuration configuration = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration("Spelling"))
-                .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol")).build();
+            .addValidatorConfig(new ValidatorConfiguration("Spelling"))
+            .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol")).build();
 
         RedPen redPen = new RedPen(configuration);
         List<ValidationError> errors = redPen.validate(doc);
@@ -141,17 +142,17 @@ public class AsciiDocParserTest {
     @Test
     public void testBlocks() throws UnsupportedEncodingException, RedPenException {
         String sampleText = "= Test Blocks\n" +
-                "\n" +
-                "The following block should be ignored.\n" +
-                "\n" +
-                "[source,fake]\n" +
-                "----\n" +
-                "Ingredient dashi = KitchenImplements.grate(Fish.KATSUO);\n" +
-                "----\n" +
-                "\n" +
-                "This text is after the block. It appears on line ten.\n" +
-                "\n" +
-                "This text is after the text after the block. It appears on line twelve.";
+            "\n" +
+            "The following block should be ignored.\n" +
+            "\n" +
+            "[source,fake]\n" +
+            "----\n" +
+            "Ingredient dashi = KitchenImplements.grate(Fish.KATSUO);\n" +
+            "----\n" +
+            "\n" +
+            "This text is after the block. It appears on line ten.\n" +
+            "\n" +
+            "This text is after the text after the block. It appears on line twelve.";
 
         Document doc = createFileContent(sampleText);
 
@@ -180,7 +181,7 @@ public class AsciiDocParserTest {
     @Test
     public void testSectionHeader() throws UnsupportedEncodingException {
         String sampleText = "= About _Gekioko_.\n\n" +
-                "Gekioko means angry.";
+            "Gekioko means angry.";
 
         Document doc = createFileContent(sampleText);
 
@@ -191,7 +192,7 @@ public class AsciiDocParserTest {
     @Test
     public void testSectionHeaderOffsetPosition() throws UnsupportedEncodingException {
         String sampleText = "= About _Gekioko_.\n\n" +
-                "Gekioko means angry.";
+            "Gekioko means angry.";
 
         Document doc = createFileContent(sampleText);
         assertEquals(1, doc.size());
@@ -231,9 +232,9 @@ public class AsciiDocParserTest {
     @Test
     public void testGenerateDocumentWithTwoSentencesWithMultipleShortLine() {
         String sampleText = "Tokyu\n" +
-                "is a good\n" +
-                "railway company. But there\n" +
-                "are competitors.";
+            "is a good\n" +
+            "railway company. But there\n" +
+            "are competitors.";
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
         Paragraph firstParagraph = firstSections.getParagraph(0);
@@ -261,7 +262,7 @@ public class AsciiDocParserTest {
         assertEquals(1, doc.getSection(0).getParagraph(0).getSentence(0).getLineNumber());
         assertEquals(0, doc.getSection(0).getParagraph(0).getSentence(0).getStartPositionOffset());
         assertEquals(doc.getSection(0).getParagraph(0).getSentence(0).getContent().length(),
-                doc.getSection(0).getParagraph(0).getSentence(0).getOffsetMapSize());
+            doc.getSection(0).getParagraph(0).getSentence(0).getOffsetMapSize());
 
     }
 
@@ -307,20 +308,20 @@ public class AsciiDocParserTest {
     @Test
     public void testLabelledList() {
         String sampleText = "= SampleDoc\n" +
-                "v0.0.2, 2015-11-17\n" +
-                ":last-update-label!:\n" +
-                "\n" +
-                "== 用語定義\n" +
-                "ユビキタス言語を定義します。\n" +
-                "\n" +
-                "Some word::\n" +
-                "なにかの意味をのせて用例をのせます。\n" +
-                "\n" +
-                "リリース::\n" +
-                "ソフトウェアを顧客に提供することです。\n" +
-                "\n" +
-                "redpen::\n" +
-                "RedPen はオープンソースの校正ツールです。RedPen は技術文書が文書規約に従って書かれているかを自動検査します。 現在の RedPen 日本語ドキュメントは十分検査されておりません。校正にはもう少々時間がかかる予定です。誤りなど見つかりましたら、https://github.com/redpen-cc/redpen-doc-ja に Issue 登録しておしらせ頂けると幸いです。";
+            "v0.0.2, 2015-11-17\n" +
+            ":last-update-label!:\n" +
+            "\n" +
+            "== 用語定義\n" +
+            "ユビキタス言語を定義します。\n" +
+            "\n" +
+            "Some word::\n" +
+            "なにかの意味をのせて用例をのせます。\n" +
+            "\n" +
+            "リリース::\n" +
+            "ソフトウェアを顧客に提供することです。\n" +
+            "\n" +
+            "redpen::\n" +
+            "RedPen はオープンソースの校正ツールです。RedPen は技術文書が文書規約に従って書かれているかを自動検査します。 現在の RedPen 日本語ドキュメントは十分検査されておりません。校正にはもう少々時間がかかる予定です。誤りなど見つかりましたら、https://github.com/redpen-cc/redpen-doc-ja に Issue 登録しておしらせ頂けると幸いです。";
 
         Document doc = createFileContent(sampleText);
         assertEquals(3, doc.getSection(1).getListBlock(0).getNumberOfListElements());
@@ -343,17 +344,17 @@ public class AsciiDocParserTest {
     @Test
     public void testCommentsAndTables() {
         String sampleText = "// BLAH BLAH" +
-                "\n" +
-                "Potato" +
-                "\n" +
-                "|===\n" +
-                "|Hex |RGB |CMYK nibble\n" +
-                "\n" +
-                "|ffffff または #ffffff asd asd\n" +
-                "|[255,255,255]\n" +
-                "|[0, 0, 0, 0] または [0, 0, 0, 0%]\n" +
-                "|===\n" +
-                "\n";
+            "\n" +
+            "Potato" +
+            "\n" +
+            "|===\n" +
+            "|Hex |RGB |CMYK nibble\n" +
+            "\n" +
+            "|ffffff または #ffffff asd asd\n" +
+            "|[255,255,255]\n" +
+            "|[0, 0, 0, 0] または [0, 0, 0, 0%]\n" +
+            "|===\n" +
+            "\n";
         Document doc = createFileContent(sampleText);
 
         for (Section section : doc) {
@@ -374,23 +375,23 @@ public class AsciiDocParserTest {
         Paragraph firstParagraph = firstSections.getParagraph(0);
         assertEquals("It is a good day.", firstParagraph.getSentence(0).getContent());
         List<LineOffset> expectedOffsets = initializeMappingTable(
-                new LineOffset(1, 0),
-                new LineOffset(1, 1),
-                new LineOffset(1, 2),
-                new LineOffset(1, 3),
-                new LineOffset(1, 4),
-                new LineOffset(1, 5),
-                new LineOffset(1, 6),
-                new LineOffset(1, 7),
-                new LineOffset(1, 9),
-                new LineOffset(1, 10),
-                new LineOffset(1, 11),
-                new LineOffset(1, 12),
-                new LineOffset(1, 14),
-                new LineOffset(1, 15),
-                new LineOffset(1, 16),
-                new LineOffset(1, 17),
-                new LineOffset(1, 18));
+            new LineOffset(1, 0),
+            new LineOffset(1, 1),
+            new LineOffset(1, 2),
+            new LineOffset(1, 3),
+            new LineOffset(1, 4),
+            new LineOffset(1, 5),
+            new LineOffset(1, 6),
+            new LineOffset(1, 7),
+            new LineOffset(1, 9),
+            new LineOffset(1, 10),
+            new LineOffset(1, 11),
+            new LineOffset(1, 12),
+            new LineOffset(1, 14),
+            new LineOffset(1, 15),
+            new LineOffset(1, 16),
+            new LineOffset(1, 17),
+            new LineOffset(1, 18));
 
         assertEquals(expectedOffsets.size(), firstParagraph.getSentence(0).getOffsetMapSize());
         for (int i = 0; i < expectedOffsets.size(); i++) {
@@ -437,9 +438,9 @@ public class AsciiDocParserTest {
             InputStream in = new FileInputStream(this.getClass().getClassLoader().getResource("asciidoc/" + filename).getFile());
             Configuration configuration = Configuration.builder().setLanguage(lang).build();
             doc = parser.parse(
-                    in,
-                    new SentenceExtractor(configuration.getSymbolTable()),
-                    configuration.getTokenizer());
+                in,
+                new SentenceExtractor(configuration.getSymbolTable()),
+                configuration.getTokenizer());
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -466,9 +467,9 @@ public class AsciiDocParserTest {
         try {
             Configuration configuration = Configuration.builder().build();
             doc = parser.parse(
-                    inputDocumentString,
-                    new SentenceExtractor(configuration.getSymbolTable()),
-                    configuration.getTokenizer());
+                inputDocumentString,
+                new SentenceExtractor(configuration.getSymbolTable()),
+                configuration.getTokenizer());
         } catch (RedPenException e) {
             e.printStackTrace();
             fail();

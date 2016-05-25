@@ -48,8 +48,8 @@
         <url>https://github.com/redpen-cc/redpen</url>
         <connection>scm:git:https://github.com/redpen-cc/redpen.git</connection>
         <developerConnection>scm:git:https://github.com/redpen-cc/redpen.git</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <build>
         <finalName>redpen-server</finalName>

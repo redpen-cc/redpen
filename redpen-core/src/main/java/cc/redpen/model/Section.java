@@ -227,10 +227,10 @@ public class Section {
     /**
      * Add a paragraph.
      *
-     * @param pragraph paragraph
+     * @param paragraph paragraph
      */
-    public void appendParagraph(Paragraph pragraph) {
-        paragraphs.add(pragraph);
+    public void appendParagraph(Paragraph paragraph) {
+        paragraphs.add(paragraph);
     }
 
 

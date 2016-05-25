@@ -66,6 +66,9 @@ public abstract class LineParser extends BaseDocumentParser {
         // add the lines from the input to the abstract model
         this.populateModel(model, io);
 
+        // register the preprocessor rules
+        documentBuilder.setPreprocessorRules(model.getPreprocessorRules());
+
         // convert the model to a redpen document
         this.convertModel(model, documentBuilder);
 
