@@ -76,6 +76,7 @@ public class RedPen {
         this.configuration = configuration;
         this.sentenceExtractor = new SentenceExtractor(configuration.getSymbolTable());
         this.validators = new ArrayList<>();
+        initializeValidators();
     }
 
     private void initializeValidators() {

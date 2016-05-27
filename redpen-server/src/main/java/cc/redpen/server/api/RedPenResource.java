@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.ServletContext;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.MediaType;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -61,13 +62,17 @@ public class RedPenResource {
     private static final String DEFAULT_CONFIGURATION = "en";
     private static final String DEFAULT_FORMAT = "json";
 
+    /*package*/ static final String MIME_TYPE_XML = "application/xml; charset=utf-8";
+    /*package*/ static final String MIME_TYPE_JSON = "application/json; charset=utf-8";
+    /*package*/ static final String MIME_TYPE_PLAINTEXT = "text/plain; charset=utf-8";
+
     @Context
     private ServletContext context;
 
     /**
      * Detect language of document
      *
-     * @param document the source text of the document
+     * @param document       the source text of the document
      */
     @Path("/language")
     @POST
@@ -91,13 +96,13 @@ public class RedPenResource {
      */
     @Path("/validate")
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.TEXT_PLAIN})
     @WinkAPIDescriber.Description("Validate a document and return any redpen errors")
-    public String validateDocument(@FormParam("document") @DefaultValue("") String document,
-                                   @FormParam("documentParser") @DefaultValue(DEFAULT_DOCUMENT_PARSER) String documentParser,
-                                   @FormParam("lang") @DefaultValue(DEFAULT_CONFIGURATION) String lang,
-                                   @FormParam("format") @DefaultValue(DEFAULT_FORMAT) String format,
-                                   @FormParam("config") String config) throws RedPenException {
+    public Response validateDocument(@FormParam("document") @DefaultValue("") String document,
+                                     @FormParam("documentParser") @DefaultValue(DEFAULT_DOCUMENT_PARSER) String documentParser,
+                                     @FormParam("lang") @DefaultValue(DEFAULT_CONFIGURATION) String lang,
+                                     @FormParam("format") @DefaultValue(DEFAULT_FORMAT) String format,
+                                     @FormParam("config") String config) throws RedPenException {
 
         LOG.info("Validating document");
         RedPen redPen;
@@ -115,9 +120,20 @@ public class RedPenResource {
             throw new RedPenException("Unsupported format: " + format + " - please use xml, plain, plain2, json or json2");
         }
 
-        return formatter.format(parsedDocument, errors);
+        return responseTyped(formatter.format(parsedDocument, errors), format);
     }
 
+    /*package*/ static Response responseTyped(final String formatted, final String format) throws RedPenException {
+        if (format.startsWith("xml")) {
+            return Response.ok(formatted, RedPenResource.MIME_TYPE_XML).build();
+        } else if (format.startsWith("json")) {
+            return Response.ok(formatted, RedPenResource.MIME_TYPE_JSON).build();
+        } else if (format.startsWith("plain")) {
+            return Response.ok(formatted, RedPenResource.MIME_TYPE_PLAINTEXT).build();
+        } else {
+            throw new RedPenException("MIME type unknown with format: " + format);
+        }
+    }
 
     /**
      * Validate a request encoded in JSON. Valid properties are:
@@ -135,9 +151,9 @@ public class RedPenResource {
     @Path("/validate/json")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.TEXT_PLAIN})
     @WinkAPIDescriber.Description("Process a redpen JSON validation request and returns any redpen errors")
-    public String validateDocumentJSON(JSONObject requestJSON) throws RedPenException {
+    public Response validateDocumentJSON(JSONObject requestJSON) throws RedPenException {
 
         LOG.info("Validating document using JSON request");
         String documentParser = getOrDefault(requestJSON, "documentParser", DEFAULT_DOCUMENT_PARSER);
@@ -216,7 +232,7 @@ public class RedPenResource {
             throw new RedPenException("Unsupported format: " + format + " - please use xml, plain, plain2, json or json2");
         }
 
-        return formatter.format(parsedDocument, errors);
+        return responseTyped(formatter.format(parsedDocument, errors), format);
     }
 
     /**

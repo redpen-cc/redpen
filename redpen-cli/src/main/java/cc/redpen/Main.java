@@ -17,12 +17,13 @@
  */
 package cc.redpen;
 
-import cc.redpen.formatter.*;
+import cc.redpen.formatter.Formatter;
 import cc.redpen.model.Document;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.util.FormatterUtils;
 import cc.redpen.validator.ValidationError;
 import org.apache.commons.cli.*;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -129,17 +130,10 @@ public final class Main {
         }
 
         String[] inputFileNames = commandLine.getArgs();
-        File[] inputFiles = new File[inputFileNames.length];
-        boolean markdownOnly = true;
-        for (int i = 0; i < inputFileNames.length; i++) {
-            inputFiles[i] = new File(inputFileNames[i]);
-            if (!inputFileNames[i].endsWith(".md")) {
-                markdownOnly = false;
-            }
+        if (!commandLine.hasOption("f")) {
+            inputFormat = guessInputFormat(inputFileNames);
         }
-        if (!commandLine.hasOption("f") && markdownOnly) {
-            inputFormat = "markdown";
-        }
+        File[] inputFiles = extractInputFiles(inputFileNames);
 
         DocumentParser parser = DocumentParser.of(inputFormat);
 
@@ -184,6 +178,53 @@ public final class Main {
         } else {
             return 0;
         }
+    }
+
+    static String guessInputFormat(String[] inputFileNames) {
+        String inputFormat = "";
+        for (String inputFileName : inputFileNames) {
+            String format = detectFormat(inputFileName);
+            if (!inputFormat.equals("") && !format.equals(inputFormat)) {
+                LOG.warn("There are more than one file type...: {} and {}", format, inputFormat);
+                LOG.warn("Guess file format as plain...");
+                return "plain"; //NOTE: return file type as "plain" when there are more than one file types...
+            }
+            inputFormat = format;
+        }
+        return inputFormat.equals("") ? "plain" : inputFormat;
+    }
+
+    private static String detectFormat(String inputFileName) {
+        String ext = FilenameUtils.getExtension(inputFileName);
+        switch (ext) {
+            case "txt":
+                return "plain";
+            case "adoc":
+            case "asciidoc":
+                return "asciidoc";
+            case "markdown":
+            case "md":
+                return "markdown";
+            case "tex":
+            case "latex":
+                return "latex";
+            case "re":
+            case "review":
+                return "review";
+            case "properties":
+                return "propery";
+            default:
+                LOG.info("No such file extension as \"{}\"", ext);
+                return "plain";
+        }
+    }
+
+    private static File[] extractInputFiles(String[] inputFileNames) {
+        File[] inputFiles = new File[inputFileNames.length];
+        for (int i = 0; i < inputFileNames.length; i++) {
+            inputFiles[i] = new File(inputFileNames[i]);
+        }
+        return inputFiles;
     }
 
     private static void printHelp(Options opt) {

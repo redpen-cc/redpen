@@ -539,6 +539,21 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
+    public void testAccessTokensInHeader() {
+        String sampleText = "# This is level one section\n";
+        sampleText += "## This is level two section\n";
+
+        Document doc = createFileContent(sampleText);
+        assertEquals(3, doc.size());
+        assertEquals(0, doc.getSection(0).getLevel());
+        assertEquals(1, doc.getSection(1).getLevel());
+        assertEquals(2, doc.getSection(2).getLevel());
+
+        assertEquals("This is level one section", doc.getSection(1).getHeaderContent(0).getContent());
+        assertEquals(5, doc.getSection(1).getHeaderContent(0).getTokens().size());
+    }
+
+    @Test
     public void testDocumentWithHeaderWithoutPeriods()
             throws UnsupportedEncodingException {
         String sampleText = "";
@@ -579,6 +594,22 @@ public class MarkdownParserTest extends BaseParserTest {
                 listBlock.getListElement(1).getSentence(0).getContent());
         assertEquals(" Hower it is a bit wired.",
                 listBlock.getListElement(1).getSentence(1).getContent());
+    }
+
+    @Test
+    public void testAccessTokensInList()
+            throws UnsupportedEncodingException {
+        String sampleText = "";
+        sampleText += "# About Gunma\n";
+        sampleText += "* located at west of Saitama\n";
+        sampleText += "* near Tokyo";
+
+        Document doc = createFileContent(sampleText);
+        Section section = doc.getSection(doc.size() - 1);
+        ListBlock list = section.getListBlock(0);
+        assertEquals(2, list.getNumberOfListElements());
+        assertEquals(5, list.getListElement(0).getSentence(0).getTokens().size());
+        assertEquals(2, list.getListElement(1).getSentence(0).getTokens().size());
     }
 
     @Test
