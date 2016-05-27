@@ -49,6 +49,10 @@ a:hover {
     cursor: pointer;
 }
 
+a:visited {
+    color: rgb(62, 63, 58);
+}
+
 label {
     margin-bottom: 0px;
     min-height: 10px;
@@ -313,6 +317,40 @@ input[type="radio"], input[type="checkbox"] {
     padding-top: 6px;
     cursor: pointer;
     color: #9E9E9E;
+}
+
+#redpen-token-editor {
+    color: #333;
+    background-color: #E8F5E9;
+    font-size: 16px;
+    height: 96px;
+    padding: 12px;
+    width: 100%;
+    z-index: 2;
+    outline: none;
+}
+
+#redpen-rule-editor {
+    color: #333;
+    background-color: #E8F5E9;
+    font-size: 16px;
+    height: 100%;
+    padding: 12px;
+    width: 40%;
+    z-index: 2;
+    outline: none;
+}
+
+.nikkeib2b-token-stream {
+}
+
+.nikkeib2b-token {
+    display: inline-block;
+    padding: 4px;
+    border: solid 1px rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    margin: 2px;
+    background-color: #FFECB3;
 }
 
 .redpen-option-selected {

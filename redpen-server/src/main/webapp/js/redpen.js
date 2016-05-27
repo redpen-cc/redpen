@@ -47,13 +47,13 @@ var redpen = (function ($) {
         });
     };
 
-    this.setBaseUrl = function(url) {
+    this.setBaseUrl = function (url) {
         baseUrl = url;
     };
 
     this.detectLanguage = function (text, callback) {
         if (text) {
-            doAPICall('document/language', {document: text}, function(data) {
+            doAPICall('document/language', {document: text}, function (data) {
                 callback(data.key);
             }, 'POST');
         }
@@ -69,6 +69,10 @@ var redpen = (function ($) {
         doAPICall('config/redpens', {}, callback);
     };
 
+    // tokenize the document {document: text, lang: [en|ja..]}
+    this.tokenize = function (parameters, callback) {
+        doAPICall('document/tokenize', parameters, callback, "POST");
+    };
 
     // validate the document {document: text, lang: [en|ja..]}
     this.validateJSON = function (parameters, callback) {
@@ -84,9 +88,10 @@ var redpen = (function ($) {
                 }
             }
         }).fail(function (err) {
-                console.log(err);
-            });
+            console.log(err);
+        });
     };
+
 
     return this;
 })(jQuery);
