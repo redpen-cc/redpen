@@ -29,8 +29,17 @@ function clearResult() {
     $('#redpen-editor').val('').trigger("input");
 }
 
+function setView(view) {
+    var newView = $("#redpen-view-" + view);
+    if (!$(newView).is(":visible")) {
+        $(".main").filter(":visible").slideUp(500, function () {
+            $(newView).hide().slideDown();
+        });
+    }
+}
 // paste some sample text into the editor and trigger a change
 function pasteSampleText(key) {
+    setView("validator");
     var text;
     if (sampleDocuments[key]) {
         permitLanguageAutoDetect = true;
@@ -460,6 +469,23 @@ function RedPenUI() {
                 });
         };
 
+
+        // call RedPen to tokenize the document return the tokens
+        var tokenizeDocument = function (text, lang, callback) {
+            redpen.tokenize(
+                {
+                    document: text,
+                    lang: lang ? lang : "en"
+                },
+                function (result) {
+                    if (callback && result.tokens) {
+                        callback(result.tokens);
+                    }
+                }
+            );
+        };
+
+
         // show the options for a given redpen
         var showConfigurationOptions = function (redpenName) {
             $("#redpen-active-validators")
@@ -556,6 +582,26 @@ function RedPenUI() {
             validateTimeout = setTimeout(validateDocument, 250);
         };
 
+        var updateTokens = function () {
+            var selected = $("input[type='radio'][name='redpen-token-lang']:checked");
+            var lang = "en";
+            if (selected.length > 0) {
+                lang = selected.val();
+            }
+            tokenizeDocument($("#redpen-token-editor").val(), lang, function (tokens) {
+                var tokenStream = $("<div/>").addClass("nikkeib2b-token-stream");
+                for (var i = 0; i < tokens.length; i++) {
+                    var tokenText = tokens[i].substr(13,tokens[i].length-14);
+                    $(tokenStream).append(
+                        $("<div/>")
+                            .addClass("nikkeib2b-token")
+                            .append(tokenText)
+                    );
+                }
+                $("#redpen-token-output").empty().append(tokenStream);
+            });
+        };
+
         // bind events
         $(editor)
             .on("blur paste input", delayedRevalidateDocument)
@@ -573,6 +619,9 @@ function RedPenUI() {
             showConfigurationOptions($(this).val());
             validateDocument();
         });
+
+        $("#redpen-token-editor").on("change keyup", updateTokens);
+        $("input[type='radio'][name='redpen-token-lang']").on("change", updateTokens);
 
         // set the initial state
         setDocumentParser("PLAIN");

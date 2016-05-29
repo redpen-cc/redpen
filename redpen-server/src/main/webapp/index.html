@@ -191,7 +191,7 @@
             <div class="navbar-collapse collapse" id="navbar-main">
                 <ul class="nav navbar-nav">
                     <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="themes">Examples
+                        <a  href="#validator"  class="dropdown-toggle" data-toggle="dropdown" id="themes">Validator
                             <span class="caret"></span></a>
                         <ul class="dropdown-menu" aria-labelledby="themes">
                             <li><a onclick="pasteSampleText('en')">English Text</a></li>
@@ -205,6 +205,12 @@
                         </ul>
                     </li>
                     <li>
+                        <a href="#tokenizer" onclick="setView('tokenizer')">Tokenizer</a>
+                    </li>
+                    <!--<li>-->
+                        <!--<a href="#rule-editor" onclick="setView('rule-editor')">Rule Tester</a>-->
+                    <!--</li>-->
+                    <li>
                         <a href="/rest" target="_blank">Server API</a>
                     </li>
                     <li>
@@ -217,7 +223,7 @@
     </div>
 </section>
 
-<section id="redpen-validator-test" class="main">
+<section id="redpen-view-validator" class="main">
     <div class="container redpen-fixed-container">
 
         <div class="row redpen-header-row">
@@ -288,6 +294,49 @@
                 <div id="redpen-results-json" style="display:none" class="well">
                 </div>
             </div>
+        </div>
+    </div>
+</section>
+
+<section id="redpen-view-tokenizer" class="main" style="display:none">
+    <div class="container redpen-fixed-container">
+        <div class="row redpen-header-row">
+            <div class="col-md-12">
+                <h1><span class="redpen-red">Red</span>Pen Tokenizer Testbed</h1>
+                <p>Enter some text to discover how it is tokenized.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10">
+                <textarea id="redpen-token-editor" spellcheck="false"></textarea>
+            </div>
+            <div class="col-md-2">
+                <input type="radio" name="redpen-token-lang" value="ja" checked>&nbsp;JA<br/>
+                <input type="radio" name="redpen-token-lang" value="en">&nbsp;EN/RU<br/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div id="redpen-token-output"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="redpen-view-rule-editor" class="main" style="display:none">
+    <div class="container redpen-fixed-container">
+        <div class="row redpen-header-row">
+            <div class="col-md-7">
+                <h1><span class="redpen-red">Red</span>Pen Rule Editor</h1>
+                <p>Enter your rule to see how it is evaluated.
+                </p>
+            </div>
+        </div>
+        <div class="row redpen-fixed-row">
+            <textarea id="redpen-rule-editor" spellcheck="false"></textarea>
         </div>
     </div>
 </section>

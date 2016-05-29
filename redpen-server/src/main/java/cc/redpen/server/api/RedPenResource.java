@@ -26,6 +26,9 @@ import cc.redpen.config.SymbolType;
 import cc.redpen.formatter.Formatter;
 import cc.redpen.model.Document;
 import cc.redpen.parser.DocumentParser;
+import cc.redpen.tokenizer.JapaneseTokenizer;
+import cc.redpen.tokenizer.RedPenTokenizer;
+import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.util.FormatterUtils;
 import cc.redpen.util.LanguageDetector;
 import cc.redpen.validator.ValidationError;
@@ -230,6 +233,30 @@ public class RedPenResource {
         }
 
         return responseTyped(formatter.format(parsedDocument, errors), format);
+    }
+
+    /**
+     * Tokenize some text and return the tokens
+     *
+     * @param document the source text of the document
+     */
+    @Path("/tokenize")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @WinkAPIDescriber.Description("Tokenize a document")
+    public JSONObject tokenize(@FormParam("document") @DefaultValue("") String document,
+                               @FormParam("lang") @DefaultValue(DEFAULT_CONFIGURATION) String lang) throws JSONException {
+        RedPenTokenizer tokenizer;
+        switch (lang == null ? "en" : lang) {
+            case "ja":
+                tokenizer = new JapaneseTokenizer();
+                break;
+            default:
+                tokenizer = new WhiteSpaceTokenizer();
+                break;
+        }
+
+        return new JSONObject().put("tokens", tokenizer.tokenize(document == null ? "" : document));
     }
 
     private String getOrDefault(JSONObject json, String property, String defaultValue) {
