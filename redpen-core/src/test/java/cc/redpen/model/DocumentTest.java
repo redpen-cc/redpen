@@ -94,13 +94,15 @@ public class DocumentTest {
         assertEquals(5, doc.getSection(0).getParagraph(0).getSentence(0).getTokens().size());
     }
 
-    @Test(expected = IllegalStateException.class)
     public void testCreateParagraphBeforeSection() {
-        Document.builder()
+        Document document = Document.builder()
                 .setFileName("Foobar")
                 .addParagraph()
-                .addSection(0)
+                .addSection(1)
                 .build();
+        assertEquals(2,document.size());
+        assertEquals(0, document.getSection(0).getLevel());
+        assertEquals(1, document.getSection(1).getLevel());
     }
 
     @Test(expected = IllegalStateException.class)
