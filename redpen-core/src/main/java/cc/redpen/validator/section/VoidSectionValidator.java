@@ -19,11 +19,7 @@ package cc.redpen.validator.section;
 
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
-import cc.redpen.model.Sentence;
-import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.validator.Validator;
-
-import java.util.*;
 
 /**
  * VoidSectionValidator detects sections with no content..
@@ -31,6 +27,9 @@ import java.util.*;
 final public class VoidSectionValidator extends Validator {
     @Override
     public void validate(Section section) {
+        if (section.getLevel() == 0) {
+            return; // hot fix for auto generated level 0 sections.
+        }
         if (section.getNumberOfParagraphs() == 0) {
             addLocalizedError(section.getJoinedHeaderContents());
         } else {
