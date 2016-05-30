@@ -174,7 +174,7 @@ public class PreprocessorTest {
     public void testAsciiDocErrorSuppressionSpecificValidator() throws Exception {
         String sampleAsciiDocShortText =
                 "[suppress='SuccessiveWord']\n" +
-                "The following is is an example of a glosssary.\n";
+                        "The following is is an example of a glosssary.\n";
 
         Document doc = createFileContent(sampleAsciiDocShortText, DocumentParser.ASCIIDOC);
         Configuration configuration = Configuration.builder()
@@ -193,6 +193,38 @@ public class PreprocessorTest {
                 "The following is is an example of a glosssary.\n";
 
         Document doc = createFileContent(sampleAsciiDocShortText, DocumentParser.ASCIIDOC);
+        Configuration configuration = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("Spelling"))
+                .addValidatorConfig(new ValidatorConfiguration("SuccessiveWord"))
+                .build();
+        RedPen redPen = new RedPen(configuration);
+        List<ValidationError> errors = redPen.validate(doc);
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void testMarkdownErrorSuppressionSpecificValidator() throws Exception {
+        String sampleAsciiDocShortText =
+                "<!-- @suppress SuccessiveWord -->\n" +
+                "The following is is an example of a glosssary.\n";
+
+        Document doc = createFileContent(sampleAsciiDocShortText, DocumentParser.MARKDOWN);
+        Configuration configuration = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("Spelling"))
+                .addValidatorConfig(new ValidatorConfiguration("SuccessiveWord"))
+                .build();
+        RedPen redPen = new RedPen(configuration);
+        List<ValidationError> errors = redPen.validate(doc);
+        assertEquals(1, errors.size()); //NOTE: Spelling is not specified
+    }
+
+    @Test
+    public void testMarkdownErrorSuppression() throws Exception {
+        String sampleAsciiDocShortText =
+                "<!-- @suppress -->\n" +
+                "The following is is an example of a glosssary.\n";
+
+        Document doc = createFileContent(sampleAsciiDocShortText, DocumentParser.MARKDOWN);
         Configuration configuration = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Spelling"))
                 .addValidatorConfig(new ValidatorConfiguration("SuccessiveWord"))

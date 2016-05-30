@@ -54,23 +54,23 @@ public class PreprocessingReader implements AutoCloseable {
             String ruleText = line;
             if (parser instanceof AsciiDocParser) {
                 if (ruleText.toLowerCase().startsWith("[suppress")) {
-                    addSuppressRule(ruleText);
+                    addAsciiDocAttributeSuppressRule(ruleText);
                     return "";
                 }
             } else if (parser instanceof MarkdownParser) {
-                if (ruleText.matches("^ *<!--(.*)")) {
+                if (ruleText.matches("^ *<!-- *@suppress (.*)-->")) {
                     ruleText = line
-                            .replaceAll("^ *<!-- *@", "")
+                            .replaceAll("^ *<!--", "")
                             .replaceAll("-->", "")
                             .trim();
-                    addSuppressRule(ruleText);
+                    addCommentSuppressRule(ruleText);
                 }
             }
         }
         return line;
     }
 
-    private void addSuppressRule(String ruleString) {
+    private void addAsciiDocAttributeSuppressRule(String ruleString) {
         PreprocessorRule rule = new PreprocessorRule(PreprocessorRule.RuleType.SUPPRESS, lineNumber);
         if (lastRule != null) {
             lastRule.setLineNumberLimit(lineNumber);
@@ -82,6 +82,25 @@ public class PreprocessingReader implements AutoCloseable {
             for (String parameter : parameters) {
                 if (!parameter.isEmpty()) {
                     rule.addParameter(parameter);
+                }
+            }
+        }
+        preprocessorRules.add(rule);
+    }
+
+    private void addCommentSuppressRule(String ruleString) {
+        PreprocessorRule rule = new PreprocessorRule(PreprocessorRule.RuleType.SUPPRESS, lineNumber);
+        if (lastRule != null) {
+            lastRule.setLineNumberLimit(lineNumber);
+        }
+        lastRule = rule;
+        System.out.println("ruleString: " +ruleString);
+        String[] parts = ruleString.split(" ");
+        if (parts.length > 1) {
+            for (int i=1; i < parts.length; i++) {
+                System.out.println("parts[i]: " + parts[i] );
+                if (!parts[i].isEmpty()) {
+                    rule.addParameter(parts[i]);
                 }
             }
         }
