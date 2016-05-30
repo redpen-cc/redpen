@@ -94,11 +94,9 @@ public class PreprocessingReader implements AutoCloseable {
             lastRule.setLineNumberLimit(lineNumber);
         }
         lastRule = rule;
-        System.out.println("ruleString: " +ruleString);
         String[] parts = ruleString.split(" ");
         if (parts.length > 1) {
             for (int i=1; i < parts.length; i++) {
-                System.out.println("parts[i]: " + parts[i] );
                 if (!parts[i].isEmpty()) {
                     rule.addParameter(parts[i]);
                 }
