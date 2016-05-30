@@ -18,7 +18,7 @@ import static org.junit.Assert.fail;
 public class PreprocessorTest {
     private static final Logger LOG = LoggerFactory.getLogger(PreprocessorTest.class);
 
-    private String sampleText = "Instances Overview\n==================\n" + "Author's Name <person@email.address>\nv1.2, 2015-08\n" +
+    private String sampleAsiiDocText = "Instances Overview\n==================\n" + "Author's Name <person@email.address>\nv1.2, 2015-08\n" +
         "\nThis is the optional preamble (an untitled section body). Useful for " +
         "writing simple sectionless documents consisting only of a preamble.\n\n" +
 
@@ -81,29 +81,58 @@ public class PreprocessorTest {
         "////////////////////////////////////////////////////////////////\n" +
         "endif::backend-docbook[]";
 
-    @Test
-    public void testSuppressErrors() throws UnsupportedEncodingException, RedPenException {
+    private String sampleMarkdownText =
+            "<!-- @suppress -->\n" +
+            "# Instances \n" +
+            "Some software tools work in more than one machine, and such _distributed_ (cluster) " +
+            "systems can handle huge data or tasks.\n\n" +
+            "In this article, we'll call a computer server that works as a member of a cluster " +
+            "an _instance_. for example, each instance in distributed search engines stores the the" +
+            "fractions of data. Such distriubuted systems need a component to merge the preliminary" +
+            "results from member instances.";
 
-        Document doc = createFileContent(sampleText, DocumentParser.ASCIIDOC);
+    @Test
+    public void testSuppressErrorsInAsciiDoc() throws UnsupportedEncodingException, RedPenException {
+
+        Document doc = createFileContent(sampleAsiiDocText, DocumentParser.ASCIIDOC);
         assertEquals(4, doc.getPreprocessorRules().size());
 
-        doc = createFileContent(sampleText, DocumentParser.PLAIN);
+        doc = createFileContent(sampleAsiiDocText, DocumentParser.PLAIN);
         assertEquals(0, doc.getPreprocessorRules().size());
 
-        doc = createFileContent(sampleText, DocumentParser.LATEX);
+        doc = createFileContent(sampleAsiiDocText, DocumentParser.LATEX);
         assertEquals(0, doc.getPreprocessorRules().size());
 
-        doc = createFileContent(sampleText, DocumentParser.MARKDOWN);
+        doc = createFileContent(sampleAsiiDocText, DocumentParser.MARKDOWN);
         assertEquals(0, doc.getPreprocessorRules().size());
 
-        doc = createFileContent(sampleText, DocumentParser.REVIEW);
+        doc = createFileContent(sampleAsiiDocText, DocumentParser.REVIEW);
+        assertEquals(0, doc.getPreprocessorRules().size());
+    }
+
+    @Test
+    public void testSuppressErrorsInMarkdown() throws UnsupportedEncodingException, RedPenException {
+
+        Document doc = createFileContent(sampleMarkdownText, DocumentParser.ASCIIDOC);
+        assertEquals(0, doc.getPreprocessorRules().size());
+
+        doc = createFileContent(sampleMarkdownText, DocumentParser.PLAIN);
+        assertEquals(0, doc.getPreprocessorRules().size());
+
+        doc = createFileContent(sampleMarkdownText, DocumentParser.LATEX);
+        assertEquals(0, doc.getPreprocessorRules().size());
+
+        doc = createFileContent(sampleMarkdownText, DocumentParser.MARKDOWN);
+        assertEquals(1, doc.getPreprocessorRules().size());
+
+        doc = createFileContent(sampleMarkdownText, DocumentParser.REVIEW);
         assertEquals(0, doc.getPreprocessorRules().size());
     }
 
     @Test
     public void testTriggeredBy() throws UnsupportedEncodingException, RedPenException {
 
-        Document doc = createFileContent(sampleText, DocumentParser.ASCIIDOC);
+        Document doc = createFileContent(sampleAsiiDocText, DocumentParser.ASCIIDOC);
 
         assertEquals(doc.getPreprocessorRules().size(), 4);
 

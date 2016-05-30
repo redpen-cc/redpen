@@ -57,6 +57,14 @@ public class PreprocessingReader implements AutoCloseable {
                     addSuppressRule(ruleText);
                     return "";
                 }
+            } else if (parser instanceof MarkdownParser) {
+                if (ruleText.matches("^ *<!--(.*)")) {
+                    ruleText = line
+                            .replaceAll("^ *<!-- *@", "")
+                            .replaceAll("-->", "")
+                            .trim();
+                    addSuppressRule(ruleText);
+                }
             }
         }
         return line;
