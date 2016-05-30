@@ -1,8 +1,11 @@
 package cc.redpen.parser;
 
+import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
+import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
+import cc.redpen.validator.ValidationError;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -167,6 +170,37 @@ public class PreprocessorTest {
         assertEquals(false, rule.isTriggeredBy(doc, 68, "weakexpression"));
     }
 
+    @Test
+    public void testAsciiDocErrorSuppressionSpecificValidator() throws Exception {
+        String sampleAsciiDocShortText =
+                "[suppress='SuccessiveWord']\n" +
+                "The following is is an example of a glosssary.\n";
+
+        Document doc = createFileContent(sampleAsciiDocShortText, DocumentParser.ASCIIDOC);
+        Configuration configuration = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("Spelling"))
+                .addValidatorConfig(new ValidatorConfiguration("SuccessiveWord"))
+                .build();
+        RedPen redPen = new RedPen(configuration);
+        List<ValidationError> errors = redPen.validate(doc);
+        assertEquals(1, errors.size()); //NOTE: Spelling is not specified
+    }
+
+    @Test
+    public void testAsciiDocErrorSuppression() throws Exception {
+        String sampleAsciiDocShortText =
+                "[suppress]\n" +
+                "The following is is an example of a glosssary.\n";
+
+        Document doc = createFileContent(sampleAsciiDocShortText, DocumentParser.ASCIIDOC);
+        Configuration configuration = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("Spelling"))
+                .addValidatorConfig(new ValidatorConfiguration("SuccessiveWord"))
+                .build();
+        RedPen redPen = new RedPen(configuration);
+        List<ValidationError> errors = redPen.validate(doc);
+        assertEquals(0, errors.size());
+    }
 
     private Document createFileContent(String inputDocumentString, DocumentParser parser) {
         Document doc = null;
