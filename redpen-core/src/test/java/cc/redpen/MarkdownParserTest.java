@@ -82,47 +82,47 @@ public class MarkdownParserTest extends BaseParserTest {
         assertEquals(2, doc.size());
 
         // first section
-        final Section secondSection = doc.getSection(0);
-        assertEquals(1, secondSection.getHeaderContentsListSize());
-        assertEquals("About Gekioko.", secondSection.getHeaderContent(0).getContent());
-        assertEquals(1, secondSection.getHeaderContent(0).getLineNumber());
-        assertEquals(2, secondSection.getHeaderContent(0).getStartPositionOffset());
-        assertEquals(0, secondSection.getNumberOfLists());
-        assertEquals(2, secondSection.getNumberOfParagraphs());
-        assertEquals(1, secondSection.getNumberOfSubsections());
+        final Section firstSection = doc.getSection(0);
+        assertEquals(1, firstSection.getHeaderContentsListSize());
+        assertEquals("About Gekioko.", firstSection.getHeaderContent(0).getContent());
+        assertEquals(1, firstSection.getHeaderContent(0).getLineNumber());
+        assertEquals(2, firstSection.getHeaderContent(0).getStartPositionOffset());
+        assertEquals(0, firstSection.getNumberOfLists());
+        assertEquals(2, firstSection.getNumberOfParagraphs());
+        assertEquals(1, firstSection.getNumberOfSubsections());
 
         // validate paragraph in first section
-        assertEquals(1, secondSection.getParagraph(0).getNumberOfSentences());
-        assertEquals(true, secondSection.getParagraph(0).getSentence(0).isFirstSentence());
-        assertEquals(2, secondSection.getParagraph(0).getSentence(0).getLineNumber());
-        assertEquals(0, secondSection.getParagraph(0).getSentence(0).getStartPositionOffset());
-        assertEquals(1, secondSection.getParagraph(1).getNumberOfSentences());
-        assertEquals(true, secondSection.getParagraph(1).getSentence(0).isFirstSentence());
-        assertEquals(4, secondSection.getParagraph(1).getSentence(0).getLineNumber());
-        assertEquals(0, secondSection.getParagraph(1).getSentence(0).getStartPositionOffset());
+        assertEquals(1, firstSection.getParagraph(0).getNumberOfSentences());
+        assertEquals(true, firstSection.getParagraph(0).getSentence(0).isFirstSentence());
+        assertEquals(2, firstSection.getParagraph(0).getSentence(0).getLineNumber());
+        assertEquals(0, firstSection.getParagraph(0).getSentence(0).getStartPositionOffset());
+        assertEquals(1, firstSection.getParagraph(1).getNumberOfSentences());
+        assertEquals(true, firstSection.getParagraph(1).getSentence(0).isFirstSentence());
+        assertEquals(4, firstSection.getParagraph(1).getSentence(0).getLineNumber());
+        assertEquals(0, firstSection.getParagraph(1).getSentence(0).getStartPositionOffset());
 
         // second section
-        Section lastSection = doc.getSection(doc.size() - 1);
-        assertEquals(1, lastSection.getNumberOfLists());
-        assertEquals(5, lastSection.getListBlock(0).getNumberOfListElements());
-        assertEquals(2, lastSection.getNumberOfParagraphs());
-        assertEquals(1, lastSection.getHeaderContentsListSize());
-        assertEquals(0, lastSection.getNumberOfSubsections());
-        assertEquals("About Gunma.", lastSection.getHeaderContent(0).getContent());
-        assertEquals(3, lastSection.getHeaderContent(0).getStartPositionOffset());
-        assertEquals(secondSection, lastSection.getParentSection());
+        Section secondSection = doc.getSection(doc.size() - 1);
+        assertEquals(1, secondSection.getNumberOfLists());
+        assertEquals(5, secondSection.getListBlock(0).getNumberOfListElements());
+        assertEquals(2, secondSection.getNumberOfParagraphs());
+        assertEquals(1, secondSection.getHeaderContentsListSize());
+        assertEquals(0, secondSection.getNumberOfSubsections());
+        assertEquals("About Gunma.", secondSection.getHeaderContent(0).getContent());
+        assertEquals(3, secondSection.getHeaderContent(0).getStartPositionOffset());
+        assertEquals(firstSection, secondSection.getParentSection());
 
         // validate paragraphs in last section
-        assertEquals(1, lastSection.getParagraph(0).getNumberOfSentences());
-        assertEquals(true, lastSection.getParagraph(0).getSentence(0).isFirstSentence());
-        assertEquals(7, lastSection.getParagraph(0).getSentence(0).getLineNumber());
-        assertEquals(0, lastSection.getParagraph(0).getSentence(0).getStartPositionOffset());
-        assertEquals(2, lastSection.getParagraph(1).getNumberOfSentences());
-        assertEquals(true, lastSection.getParagraph(1).getSentence(0).isFirstSentence());
-        assertEquals(15, lastSection.getParagraph(1).getSentence(0).getLineNumber());
-        assertEquals(false, lastSection.getParagraph(1).getSentence(1).isFirstSentence());
-        assertEquals(15, lastSection.getParagraph(1).getSentence(1).getLineNumber());
-        assertEquals(36, lastSection.getParagraph(1).getSentence(1).getStartPositionOffset());
+        assertEquals(1, secondSection.getParagraph(0).getNumberOfSentences());
+        assertEquals(true, secondSection.getParagraph(0).getSentence(0).isFirstSentence());
+        assertEquals(7, secondSection.getParagraph(0).getSentence(0).getLineNumber());
+        assertEquals(0, secondSection.getParagraph(0).getSentence(0).getStartPositionOffset());
+        assertEquals(2, secondSection.getParagraph(1).getNumberOfSentences());
+        assertEquals(true, secondSection.getParagraph(1).getSentence(0).isFirstSentence());
+        assertEquals(15, secondSection.getParagraph(1).getSentence(0).getLineNumber());
+        assertEquals(false, secondSection.getParagraph(1).getSentence(1).isFirstSentence());
+        assertEquals(15, secondSection.getParagraph(1).getSentence(1).getLineNumber());
+        assertEquals(36, secondSection.getParagraph(1).getSentence(1).getStartPositionOffset());
     }
 
 
@@ -141,7 +141,7 @@ public class MarkdownParserTest extends BaseParserTest {
         assertEquals(0, firstSection.getNumberOfLists());
         assertEquals(1, firstSection.getNumberOfParagraphs());
 
-        // validate paragraph in 2nd section
+        // validate paragraph in first section
         assertEquals(2, firstSection.getParagraph(0).getNumberOfSentences());
         assertEquals(true, firstSection.getParagraph(0).getSentence(0).isFirstSentence());
         assertEquals(2, firstSection.getParagraph(0).getSentence(0).getLineNumber());
@@ -698,15 +698,15 @@ public class MarkdownParserTest extends BaseParserTest {
         assertNotNull("doc is null", doc);
         assertEquals(1, doc.size());
 
-        final Section secondSection = doc.getSection(0);
-        assertEquals(1, secondSection.getHeaderContentsListSize());
-        assertEquals("僕の事。", secondSection.getHeaderContent(0).getContent());
-        assertEquals(1, secondSection.getHeaderContent(0).getLineNumber());
-        assertEquals(2, secondSection.getHeaderContent(0).getStartPositionOffset());
-        assertEquals(0, secondSection.getNumberOfLists());
-        assertEquals(1, secondSection.getNumberOfParagraphs());
-        assertEquals(2, secondSection.getParagraph(0).getNumberOfSentences());
-        assertEquals("わたしもお寿司が大好きです。", secondSection.getParagraph(0).getSentence(1).getContent());
+        final Section firstSection = doc.getSection(0);
+        assertEquals(1, firstSection.getHeaderContentsListSize());
+        assertEquals("僕の事。", firstSection.getHeaderContent(0).getContent());
+        assertEquals(1, firstSection.getHeaderContent(0).getLineNumber());
+        assertEquals(2, firstSection.getHeaderContent(0).getStartPositionOffset());
+        assertEquals(0, firstSection.getNumberOfLists());
+        assertEquals(1, firstSection.getNumberOfParagraphs());
+        assertEquals(2, firstSection.getParagraph(0).getNumberOfSentences());
+        assertEquals("わたしもお寿司が大好きです。", firstSection.getParagraph(0).getSentence(1).getContent());
     }
 
     @Test
