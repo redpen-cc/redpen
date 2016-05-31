@@ -174,7 +174,7 @@ public class PreprocessorTest {
     public void testAsciiDocErrorSuppressionSpecificValidator() throws Exception {
         String sampleAsciiDocShortText =
                 "[suppress='SuccessiveWord']\n" +
-                        "The following is is an example of a glosssary.\n";
+                 "The following is is an example of a glosssary.\n";
 
         Document doc = createFileContent(sampleAsciiDocShortText, DocumentParser.ASCIIDOC);
         Configuration configuration = Configuration.builder()
@@ -239,9 +239,9 @@ public class PreprocessorTest {
         try {
             Configuration configuration = Configuration.builder().build();
             doc = parser.parse(
-                inputDocumentString,
-                new SentenceExtractor(configuration.getSymbolTable()),
-                configuration.getTokenizer());
+                    inputDocumentString,
+                    new SentenceExtractor(configuration.getSymbolTable()),
+                    configuration.getTokenizer());
         } catch (RedPenException e) {
             e.printStackTrace();
             fail();

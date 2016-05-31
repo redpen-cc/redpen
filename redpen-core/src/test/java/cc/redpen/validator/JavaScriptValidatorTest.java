@@ -24,6 +24,8 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
+import cc.redpen.parser.DocumentParser;
+import cc.redpen.parser.SentenceExtractor;
 import org.junit.Test;
 
 import java.io.File;
@@ -36,6 +38,7 @@ import java.util.List;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class JavaScriptValidatorTest extends JavaScriptValidator {
     @Test
@@ -172,6 +175,62 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
     }
 
     @Test
+    public void testErrorSuppressionErrorFromJavaScriptValidator() throws RedPenException, IOException {
+        File javaScriptValidatorsDir = File.createTempFile("test", "js");
+        javaScriptValidatorsDir.delete();
+        javaScriptValidatorsDir.mkdirs();
+        System.setProperty("REDPEN_HOME", javaScriptValidatorsDir.getAbsolutePath());
+        File validatorJS = new File(javaScriptValidatorsDir.getAbsolutePath() + File.separator + "MyValidator.js");
+        String content2 = "function validateSentence(sentence) {\n" +
+                "addLocalizedError(sentence, 'validation error in JavaScript Validator');}";
+        Files.write(Paths.get(validatorJS.getAbsolutePath()), content2.getBytes(UTF_8));
+        validatorJS.deleteOnExit();
+
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("JavaScript").addProperty("script-path", javaScriptValidatorsDir.getAbsolutePath()))
+                .build();
+
+        String sampleAsciiDocShortText =
+                "[suppress]\n" +
+                "the good item is a good example.\n";
+        Document doc = createFileContent(sampleAsciiDocShortText, DocumentParser.ASCIIDOC);
+        RedPen redPen = new RedPen(config);
+        List<ValidationError> errors = redPen.validate(doc);
+        assertEquals(0, errors.size());
+        assertEquals("[MyValidator.js] JavaScript validator validation error in JavaScript Validator", errors.get(0).getMessage());
+    }
+
+/*
+    @Test
+    public void testErrorSuppressionErrorFromSPecifiedJavaScriptValidator() throws RedPenException, IOException {
+        File javaScriptValidatorsDir = File.createTempFile("test", "js");
+        javaScriptValidatorsDir.delete();
+        javaScriptValidatorsDir.mkdirs();
+        System.setProperty("REDPEN_HOME", javaScriptValidatorsDir.getAbsolutePath());
+        File validatorJS = new File(javaScriptValidatorsDir.getAbsolutePath() + File.separator + "MyValidator.js");
+        String content2 =
+                "function validateSentence(sentence) {\n" +
+                "addLocalizedError(sentence, 'validation error in JavaScript Validator');}";
+        Files.write(Paths.get(validatorJS.getAbsolutePath()), content2.getBytes(UTF_8));
+        validatorJS.deleteOnExit();
+
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("JavaScript").
+                        addProperty("script-path", javaScriptValidatorsDir.getAbsolutePath()))
+                .build();
+
+        String sampleAsciiDocShortText =
+                "[suppress='MyValidator']\n" +
+                "the good item is a good example.\n";
+        Document doc = createFileContent(sampleAsciiDocShortText, DocumentParser.ASCIIDOC);
+        RedPen redPen = new RedPen(config);
+        List<ValidationError> errors = redPen.validate(doc);
+        assertEquals(0, errors.size());
+        assertEquals("[MyValidator.js] JavaScript validator validation error in JavaScript Validator", errors.get(0).getMessage());
+    }
+*/
+
+    @Test
     public void testJSValidatorIsConfinedByDefault() throws RedPenException, IOException {
         JavaScriptValidator validator = new JavaScriptValidator();
         validator.scripts.add(new Script(validator, "testScript.js",
@@ -198,4 +257,20 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
     }
 
     ArrayList<ValidationError> errors = new ArrayList<>();
+
+
+    private Document createFileContent(String inputDocumentString, DocumentParser parser) {
+        Document doc = null;
+        try {
+            Configuration configuration = Configuration.builder().build();
+            doc = parser.parse(
+                    inputDocumentString,
+                    new SentenceExtractor(configuration.getSymbolTable()),
+                    configuration.getTokenizer());
+        } catch (RedPenException e) {
+            e.printStackTrace();
+            fail();
+        }
+        return doc;
+    }
 }

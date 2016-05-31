@@ -44,7 +44,7 @@ public class RedPen {
 
     private final Configuration configuration;
     private final SentenceExtractor sentenceExtractor;
-    private final List<Validator> validators;
+    protected final List<Validator> validators;
 
     /**
      * constructs RedPen with specified config file.
