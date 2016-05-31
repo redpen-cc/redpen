@@ -199,9 +199,8 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         assertEquals(0, errors.size());
     }
 
-/*
     @Test
-    public void testErrorSuppressionErrorFromSPecifiedJavaScriptValidator() throws RedPenException, IOException {
+    public void testErrorSuppressionErrorFromSpecifiedJavaScriptValidator() throws RedPenException, IOException {
         File javaScriptValidatorsDir = File.createTempFile("test", "js");
         javaScriptValidatorsDir.delete();
         javaScriptValidatorsDir.mkdirs();
@@ -216,18 +215,17 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("JavaScript").
                         addProperty("script-path", javaScriptValidatorsDir.getAbsolutePath()))
+                .addValidatorConfig(new ValidatorConfiguration("SuccessiveWord"))
                 .build();
 
         String sampleAsciiDocShortText =
-                "[suppress='MyValidator']\n" +
-                "the good item is a good example.\n";
+                "[suppress='MyValidator SuccessiveWord']\n" +
+                "the good item is is a good example.\n";
         Document doc = createFileContent(sampleAsciiDocShortText, DocumentParser.ASCIIDOC);
         RedPen redPen = new RedPen(config);
         List<ValidationError> errors = redPen.validate(doc);
         assertEquals(0, errors.size());
-        assertEquals("[MyValidator.js] JavaScript validator validation error in JavaScript Validator", errors.get(0).getMessage());
     }
-*/
 
     @Test
     public void testJSValidatorIsConfinedByDefault() throws RedPenException, IOException {

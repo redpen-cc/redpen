@@ -44,7 +44,7 @@ public class RedPen {
 
     private final Configuration configuration;
     private final SentenceExtractor sentenceExtractor;
-    protected final List<Validator> validators;
+    private final List<Validator> validators;
 
     /**
      * constructs RedPen with specified config file.
@@ -190,7 +190,7 @@ public class RedPen {
                 for (PreprocessorRule rule : document.getPreprocessorRules()) {
                     switch (rule.getRuleType()) {
                         case SUPPRESS:
-                            if (rule.isTriggeredBy(document, error.getLineNumber(), error.getValidatorName())) {
+                            if (rule.isTriggeredBy(document, error)) {
                                 suppressedErrors.add(error);
                             }
                             break;

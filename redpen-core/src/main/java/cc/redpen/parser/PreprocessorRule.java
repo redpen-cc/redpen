@@ -17,12 +17,8 @@
  */
 package cc.redpen.parser;
 
-import cc.redpen.model.Document;
-import cc.redpen.model.ListBlock;
-import cc.redpen.model.ListElement;
-import cc.redpen.model.Paragraph;
-import cc.redpen.model.Section;
-import cc.redpen.model.Sentence;
+import cc.redpen.model.*;
+import cc.redpen.validator.ValidationError;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -77,36 +73,61 @@ public class PreprocessorRule {
      * Return true if the rule is triggered by the given line and name given the structure
      * of the supplied document
      *
-     * @param document
-     * @param otherLineNumber
-     * @param name
+     * @param document input document
+     * @param error
      * @return
      */
-    public boolean isTriggeredBy(Document document, int otherLineNumber, String name) {
-        if ((lineNumberLimit < lineNumber) || (otherLineNumber < lineNumberLimit)) {
-            if (parameters.isEmpty() || parameters.contains(name.toLowerCase())) {
+    public boolean isTriggeredBy(Document document, ValidationError error) {
+        int errorLineNumber = error.getLineNumber();
+        String validatorName = error.getValidatorName();
+        if (validatorName.equals("JavaScript")) {
+            validatorName = extractJSValidatorName(error.getMessage());
+        }
+        return isTriggeredBy(document, errorLineNumber, validatorName);
+    }
+
+    private String extractJSValidatorName(String message) {
+        String[] segment = message.split(" ");
+        String jsValidatorName = segment[0].replaceAll("\\[", "")
+                .replaceAll(".js\\]", "")
+                .trim();
+        return jsValidatorName;
+    }
+
+    /**
+     * Return true if the rule is triggered by the given line and name given the structure
+     * of the supplied document
+     *
+     * @param document input document
+     * @param errorLineNumber
+     * @param validatorName
+     * @return
+     */
+    public boolean isTriggeredBy(Document document, int errorLineNumber, String validatorName) {
+        if ((lineNumberLimit < lineNumber) || (errorLineNumber < lineNumberLimit)) {
+            if (parameters.isEmpty() || parameters.contains(validatorName.toLowerCase())) {
                 // find out if the rule line number is in the same section as the other line number
                 for (Section section : document) {
                     List<Sentence> allBlockSentences = new ArrayList<>();
                     allBlockSentences.addAll(section.getHeaderContents());
-                    if (isInsideSentences(section.getHeaderContents(), lineNumber, otherLineNumber)) {
+                    if (isInsideSentences(section.getHeaderContents(), lineNumber, errorLineNumber)) {
                         return true;
                     }
                     for (Paragraph paragraph : section.getParagraphs()) {
                         allBlockSentences.addAll(paragraph.getSentences());
-                        if (isInsideSentences(paragraph.getSentences(), lineNumber, otherLineNumber)) {
+                        if (isInsideSentences(paragraph.getSentences(), lineNumber, errorLineNumber)) {
                             return true;
                         }
                     }
                     for (ListBlock listBlock : section.getListBlocks()) {
                         for (ListElement element : listBlock.getListElements()) {
                             allBlockSentences.addAll(element.getSentences());
-                            if (isInsideSentences(element.getSentences(), lineNumber, otherLineNumber)) {
+                            if (isInsideSentences(element.getSentences(), lineNumber, errorLineNumber)) {
                                 return true;
                             }
                         }
                     }
-                    if (isInsideSentences(allBlockSentences, lineNumber, otherLineNumber)) {
+                    if (isInsideSentences(allBlockSentences, lineNumber, errorLineNumber)) {
                         return true;
                     }
                 }
