@@ -190,6 +190,7 @@ public class PreprocessorTest {
     public void testAsciiDocErrorSuppression() throws Exception {
         String sampleAsciiDocShortText =
                 "[suppress]\n" +
+                "= Section 1\n" +
                 "The following is is an example of a glosssary.\n";
 
         Document doc = createFileContent(sampleAsciiDocShortText, DocumentParser.ASCIIDOC);
@@ -206,6 +207,7 @@ public class PreprocessorTest {
     public void testMarkdownErrorSuppressionSpecificValidator() throws Exception {
         String sampleAsciiDocShortText =
                 "<!-- @suppress SuccessiveWord -->\n" +
+                "# Section 1\n" +
                 "The following is is an example of a glosssary.\n";
 
         Document doc = createFileContent(sampleAsciiDocShortText, DocumentParser.MARKDOWN);
@@ -222,6 +224,7 @@ public class PreprocessorTest {
     public void testMarkdownErrorSuppression() throws Exception {
         String sampleAsciiDocShortText =
                 "<!-- @suppress -->\n" +
+                "# Section 1\n" +
                 "The following is is an example of a glosssary.\n";
 
         Document doc = createFileContent(sampleAsciiDocShortText, DocumentParser.MARKDOWN);

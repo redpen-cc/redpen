@@ -155,4 +155,15 @@ public class ValidationError implements Serializable {
     public Optional<LineOffset> getEndPosition() {
         return Optional.ofNullable(endPosition);
     }
+
+    @Override
+    public String toString() {
+        return "ValidationError{" +
+                "message='" + message + '\'' +
+                ", validatorName='" + validatorName + '\'' +
+                ", sentence=" + sentence +
+                ", startPosition=" + startPosition +
+                ", endPosition=" + endPosition +
+                '}';
+    }
 }

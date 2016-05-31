@@ -208,7 +208,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         File validatorJS = new File(javaScriptValidatorsDir.getAbsolutePath() + File.separator + "MyValidator.js");
         String content2 =
                 "function validateSentence(sentence) {\n" +
-                "addLocalizedError(sentence, 'validation error in JavaScript Validator');}";
+                        "addLocalizedError(sentence, 'validation error in JavaScript Validator');}";
         Files.write(Paths.get(validatorJS.getAbsolutePath()), content2.getBytes(UTF_8));
         validatorJS.deleteOnExit();
 
@@ -220,8 +220,72 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
 
         String sampleAsciiDocShortText =
                 "[suppress='MyValidator SuccessiveWord']\n" +
+                "= Title\n" +
                 "the good item is is a good example.\n";
         Document doc = createFileContent(sampleAsciiDocShortText, DocumentParser.ASCIIDOC);
+        RedPen redPen = new RedPen(config);
+        List<ValidationError> errors = redPen.validate(doc);
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void testErrorCommentSuppressionErrorFromScriptValidator() throws RedPenException, IOException {
+        File javaScriptValidatorsDir = File.createTempFile("test", "js");
+        javaScriptValidatorsDir.delete();
+        javaScriptValidatorsDir.mkdirs();
+        System.setProperty("REDPEN_HOME", javaScriptValidatorsDir.getAbsolutePath());
+        File validatorJS = new File(javaScriptValidatorsDir.getAbsolutePath() + File.separator + "MyValidator.js");
+        String content2 =
+                "function validateSentence(sentence) {\n" +
+                        "if (sentence.getContent().length() > 0) {" +
+                        "addLocalizedError(sentence, 'validation error in JavaScript Validator');" +
+                        "}}";
+        Files.write(Paths.get(validatorJS.getAbsolutePath()), content2.getBytes(UTF_8));
+        validatorJS.deleteOnExit();
+
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("JavaScript").
+                        addProperty("script-path", javaScriptValidatorsDir.getAbsolutePath()))
+                .addValidatorConfig(new ValidatorConfiguration("SuccessiveWord"))
+                .build();
+
+        String sampleAsciiDocShortText =
+                "<!-- @suppress -->\n" +
+                "# Section title\n" +
+                "the good item is is a good example.\n";
+        Document doc = createFileContent(sampleAsciiDocShortText, DocumentParser.MARKDOWN);
+        RedPen redPen = new RedPen(config);
+        List<ValidationError> errors = redPen.validate(doc);
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void testErrorCommentSuppressionErrorFromSpecifiedScriptValidator() throws RedPenException, IOException {
+        File javaScriptValidatorsDir = File.createTempFile("test", "js");
+        javaScriptValidatorsDir.delete();
+        javaScriptValidatorsDir.mkdirs();
+        System.setProperty("REDPEN_HOME", javaScriptValidatorsDir.getAbsolutePath());
+        File validatorJS = new File(javaScriptValidatorsDir.getAbsolutePath() + File.separator + "MyValidator.js");
+        String content2 =
+                "function validateSentence(sentence) {\n" +
+                        "if (sentence.getContent().length() > 0) {" +
+                        "addLocalizedError(sentence, 'validation error in JavaScript Validator');" +
+                        "}}";
+
+        Files.write(Paths.get(validatorJS.getAbsolutePath()), content2.getBytes(UTF_8));
+        validatorJS.deleteOnExit();
+
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("JavaScript").
+                        addProperty("script-path", javaScriptValidatorsDir.getAbsolutePath()))
+                .addValidatorConfig(new ValidatorConfiguration("SuccessiveWord"))
+                .build();
+
+        String sampleAsciiDocShortText =
+                "<!-- @suppress MyValidator SuccessiveWord -->\n" +
+                "# Section title\n" +
+                "the good item is a good example.\n";
+        Document doc = createFileContent(sampleAsciiDocShortText, DocumentParser.MARKDOWN);
         RedPen redPen = new RedPen(config);
         List<ValidationError> errors = redPen.validate(doc);
         assertEquals(0, errors.size());
