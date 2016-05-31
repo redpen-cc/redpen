@@ -197,7 +197,6 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         RedPen redPen = new RedPen(config);
         List<ValidationError> errors = redPen.validate(doc);
         assertEquals(0, errors.size());
-        assertEquals("[MyValidator.js] JavaScript validator validation error in JavaScript Validator", errors.get(0).getMessage());
     }
 
 /*
