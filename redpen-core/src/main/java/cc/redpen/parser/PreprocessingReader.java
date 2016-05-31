@@ -18,6 +18,7 @@
 package cc.redpen.parser;
 
 import cc.redpen.parser.asciidoc.AsciiDocParser;
+import cc.redpen.parser.review.ReVIEWParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -62,6 +63,20 @@ public class PreprocessingReader implements AutoCloseable {
                     ruleText = line
                             .replaceAll("^ *<!--", "")
                             .replaceAll("-->", "")
+                            .trim();
+                    addCommentSuppressRule(ruleText);
+                }
+            } else if (parser instanceof ReVIEWParser) {
+                if (ruleText.matches("^#@# *@suppress(.*)")) {
+                    ruleText = line
+                            .replaceAll("^#@#", "")
+                            .trim();
+                    addCommentSuppressRule(ruleText);
+                }
+            } else if (parser instanceof LaTeXParser) {
+                if (ruleText.matches("^% *@suppress(.*)")) {
+                    ruleText = line
+                            .replaceAll("^%", "")
                             .trim();
                     addCommentSuppressRule(ruleText);
                 }

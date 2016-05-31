@@ -86,13 +86,13 @@ public class PreprocessorTest {
 
     private String sampleMarkdownText =
             "<!-- @suppress -->\n" +
-            "# Instances \n" +
-            "Some software tools work in more than one machine, and such _distributed_ (cluster) " +
-            "systems can handle huge data or tasks.\n\n" +
-            "In this article, we'll call a computer server that works as a member of a cluster " +
-            "an _instance_. for example, each instance in distributed search engines stores the the" +
-            "fractions of data. Such distriubuted systems need a component to merge the preliminary" +
-            "results from member instances.";
+                    "# Instances \n" +
+                    "Some software tools work in more than one machine, and such _distributed_ (cluster) " +
+                    "systems can handle huge data or tasks.\n\n" +
+                    "In this article, we'll call a computer server that works as a member of a cluster " +
+                    "an _instance_. for example, each instance in distributed search engines stores the the" +
+                    "fractions of data. Such distriubuted systems need a component to merge the preliminary" +
+                    "results from member instances.";
 
     @Test
     public void testSuppressErrorsInAsciiDoc() throws UnsupportedEncodingException, RedPenException {
@@ -205,12 +205,12 @@ public class PreprocessorTest {
 
     @Test
     public void testMarkdownErrorSuppressionSpecificValidator() throws Exception {
-        String sampleAsciiDocShortText =
+        String sampleMarkdownShortText =
                 "<!-- @suppress SuccessiveWord -->\n" +
                         "# Section 1\n" +
                         "The following is is an example of a glosssary.\n";
 
-        Document doc = createFileContent(sampleAsciiDocShortText, DocumentParser.MARKDOWN);
+        Document doc = createFileContent(sampleMarkdownShortText, DocumentParser.MARKDOWN);
         Configuration configuration = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Spelling"))
                 .addValidatorConfig(new ValidatorConfiguration("SuccessiveWord"))
@@ -222,12 +222,12 @@ public class PreprocessorTest {
 
     @Test
     public void testMarkdownErrorSuppression() throws Exception {
-        String sampleAsciiDocShortText =
+        String sampleMarkdownShortText =
                 "<!-- @suppress -->\n" +
                 "# Section 1\n" +
                 "The following is is an example of a glosssary.\n";
 
-        Document doc = createFileContent(sampleAsciiDocShortText, DocumentParser.MARKDOWN);
+        Document doc = createFileContent(sampleMarkdownShortText, DocumentParser.MARKDOWN);
         Configuration configuration = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Spelling"))
                 .addValidatorConfig(new ValidatorConfiguration("SuccessiveWord"))
@@ -235,6 +235,53 @@ public class PreprocessorTest {
         RedPen redPen = new RedPen(configuration);
         List<ValidationError> errors = redPen.validate(doc);
         assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void testReVIEWErrorSuppressionSpecificValidator() throws Exception {
+        String sampleReVIEWShortText =
+                "#@# @suppress SuccessiveWord -->\n" +
+                        "= Section 1\n" +
+                        "The following is is an example of a glosssary.\n";
+
+        Document doc = createFileContent(sampleReVIEWShortText, DocumentParser.REVIEW);
+        Configuration configuration = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("Spelling"))
+                .addValidatorConfig(new ValidatorConfiguration("SuccessiveWord"))
+                .build();
+        RedPen redPen = new RedPen(configuration);
+        List<ValidationError> errors = redPen.validate(doc);
+        assertEquals(1, errors.size()); //NOTE: Spelling is not specified
+        assertEquals("Spelling", errors.get(0).getValidatorName());
+    }
+
+    @Test
+    public void testLaTeXErrorSuppressionValidator() throws Exception {
+        String samplelatex = "\\documentclass[a4paper, 10pt]{article}\n" +
+                "\\usepackage{url}\n" +
+                "\\usepackage{color}\n" +
+                "\\usepackage{listings}\n" +
+                "\\title{Distributed System}\n" +
+                "\\author{Nick Simhon}\n\n" +
+                "\\begin{document}\n" +
+                "\\maketitle\n" +
+                "\\begin{abstract}\n" +
+                "This article covers distributed systems.\n" +
+                "\\end{abstract}\n" +
+                "% @suppress SuccessiveWord\n" +
+                "\\section{Summary}\n" +
+                "The following is is an example of a glosssary.\n" +
+                "\\end{document}\n";
+
+        Document doc = createFileContent(samplelatex, DocumentParser.LATEX);
+        Configuration configuration = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("Spelling"))
+                .addValidatorConfig(new ValidatorConfiguration("SuccessiveWord"))
+                .build();
+        RedPen redPen = new RedPen(configuration);
+        List<ValidationError> errors = redPen.validate(doc);
+        assertEquals(1, errors.size()); //NOTE: Spelling is not specified
+        assertEquals("Spelling", errors.get(0).getValidatorName());
     }
 
     @Test
