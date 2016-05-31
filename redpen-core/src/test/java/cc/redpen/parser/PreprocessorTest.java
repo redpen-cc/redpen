@@ -174,7 +174,7 @@ public class PreprocessorTest {
     public void testAsciiDocErrorSuppressionSpecificValidator() throws Exception {
         String sampleAsciiDocShortText =
                 "[suppress='SuccessiveWord']\n" +
-                 "The following is is an example of a glosssary.\n";
+                        "The following is is an example of a glosssary.\n";
 
         Document doc = createFileContent(sampleAsciiDocShortText, DocumentParser.ASCIIDOC);
         Configuration configuration = Configuration.builder()
@@ -207,8 +207,8 @@ public class PreprocessorTest {
     public void testMarkdownErrorSuppressionSpecificValidator() throws Exception {
         String sampleAsciiDocShortText =
                 "<!-- @suppress SuccessiveWord -->\n" +
-                "# Section 1\n" +
-                "The following is is an example of a glosssary.\n";
+                        "# Section 1\n" +
+                        "The following is is an example of a glosssary.\n";
 
         Document doc = createFileContent(sampleAsciiDocShortText, DocumentParser.MARKDOWN);
         Configuration configuration = Configuration.builder()
@@ -235,6 +235,32 @@ public class PreprocessorTest {
         RedPen redPen = new RedPen(configuration);
         List<ValidationError> errors = redPen.validate(doc);
         assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void testAsciiDocErrorSuppressionForMultiSectionDoc() throws Exception {
+        String sampleAsciiDocShortText =
+                "[suppress='SuccessiveWord']\n" +
+                "= Section 1\n" +
+                "The following is is an example of a glosssary.\n" +
+                "\n" +
+                "== Section 1.1\n" +
+                "[suppress='Spelling']\n" +
+                "The following is is an example of a glosssary.\n";
+
+        Document doc = createFileContent(sampleAsciiDocShortText, DocumentParser.ASCIIDOC);
+        Configuration configuration = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("Spelling"))
+                .addValidatorConfig(new ValidatorConfiguration("SuccessiveWord"))
+                .build();
+        RedPen redPen = new RedPen(configuration);
+        List<ValidationError> errors = redPen.validate(doc);
+        assertEquals(2, errors.size()); //NOTE: Spelling is not specified
+
+        assertEquals("Spelling", errors.get(0).getValidatorName());
+        assertEquals(3, errors.get(0).getLineNumber());
+        assertEquals("SuccessiveWord", errors.get(1).getValidatorName());
+        assertEquals(7, errors.get(1).getLineNumber());
     }
 
     private Document createFileContent(String inputDocumentString, DocumentParser parser) {
