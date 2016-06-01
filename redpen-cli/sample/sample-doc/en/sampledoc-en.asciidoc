@@ -1,5 +1,4 @@
-Instances Overview
-==================
+= Instances Overview
 Author's Name <person@email.address>
 v1.2, 2015-08
 
@@ -10,8 +9,7 @@ NOTE: The abstract, preface, appendix, bibliography, glossary and index section 
 :numbered!:
 [abstract]
 [suppress='Contraction WeakExpression']
-Instances
----------
+== Instances
 In this article, we'll call a computer server that works as a member of a cluster an _instance_. for example, as shown in this http://redpen.ignored.url/[mishpelled link], each instance in distributed search engines stores the the fractions of data.
 
 Such distriubuted systems need a component to merge the preliminary results from member instnaces.
