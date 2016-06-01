@@ -70,12 +70,12 @@ public class SampleDocumentGeneratorTest {
                 DocumentParser.MARKDOWN);
         assertNotNull(docs);
         assertEquals(1, docs.size());
-        assertEquals(2, docs.get(0).size());
-        assertEquals("About Gekioko.", docs.get(0).getSection(1).getHeaderContent(0).getContent());
-        assertEquals(1, docs.get(0).getSection(1).getNumberOfParagraphs());
-        assertEquals(1, docs.get(0).getSection(1).getParagraph(0)
+        assertEquals(1, docs.get(0).size()); // num of sections
+        assertEquals("About Gekioko.", docs.get(0).getSection(0).getHeaderContent(0).getContent());
+        assertEquals(1, docs.get(0).getSection(0).getNumberOfParagraphs());
+        assertEquals(1, docs.get(0).getSection(0).getParagraph(0)
                 .getNumberOfSentences());
-        assertEquals("Gekioko pun pun maru means very very angry.", docs.get(0).getSection(1)
+        assertEquals("Gekioko pun pun maru means very very angry.", docs.get(0).getSection(0)
                 .getParagraph(0).getSentence(0).getContent());
     }
 

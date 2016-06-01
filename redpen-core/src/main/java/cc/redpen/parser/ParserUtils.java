@@ -4,6 +4,9 @@ import cc.redpen.model.Section;
 
 public class ParserUtils {
   public static boolean addChild(Section candidate, Section child) {
+    if (candidate == null) {
+      return false;
+    }
     if (candidate.getLevel() < child.getLevel()) {
       candidate.appendSubSection(child);
       child.setParentSection(candidate);

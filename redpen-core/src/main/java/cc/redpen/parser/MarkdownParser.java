@@ -19,8 +19,6 @@ package cc.redpen.parser;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
-import cc.redpen.model.Section;
-import cc.redpen.model.Sentence;
 import cc.redpen.parser.markdown.ToFileContentSerializer;
 import cc.redpen.tokenizer.RedPenTokenizer;
 import org.pegdown.Extensions;
@@ -75,10 +73,6 @@ class MarkdownParser extends BaseDocumentParser {
         }
 
         try {
-            List<Sentence> headers = new ArrayList<>();
-            headers.add(new Sentence("", 0));
-            documentBuilder.appendSection(new Section(0, headers));
-
             // TODO create documentBuilder after parsing... overhead...
             RootNode rootNode = pegDownProcessor.parseMarkdown(fullText.toString().toCharArray());
             ToFileContentSerializer serializer = new ToFileContentSerializer(documentBuilder, lineLengths, sentenceExtractor);

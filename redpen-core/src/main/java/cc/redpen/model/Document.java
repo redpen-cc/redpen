@@ -186,7 +186,9 @@ public class Document implements Iterable<Section>, Serializable {
         public DocumentBuilder addSentence(Sentence sentence) {
             ensureNotBuilt();
             if (sections.size() == 0) {
-                throw new IllegalStateException("No section to add a sentence");
+                List<Sentence> headers = new ArrayList<>();
+                headers.add(new Sentence("", 0));
+                this.appendSection(new Section(0, headers));
             }
             Section lastSection = getSection(sections.size() - 1);
             if (lastSection.getNumberOfParagraphs() == 0) {
@@ -234,7 +236,9 @@ public class Document implements Iterable<Section>, Serializable {
         public DocumentBuilder addParagraph() {
             ensureNotBuilt();
             if (sections.size() == 0) {
-                throw new IllegalStateException("No section to add paragraph");
+                List<Sentence> headers = new ArrayList<>();
+                headers.add(new Sentence("", 0));
+                this.appendSection(new Section(0, headers));
             }
             Section lastSection = getSection(sections.size() - 1);
             lastSection.appendParagraph(new Paragraph());
