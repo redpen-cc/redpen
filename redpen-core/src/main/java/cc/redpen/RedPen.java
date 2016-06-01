@@ -190,7 +190,7 @@ public class RedPen {
                 for (PreprocessorRule rule : document.getPreprocessorRules()) {
                     switch (rule.getRuleType()) {
                         case SUPPRESS:
-                            if (rule.isTriggeredBy(document, error.getLineNumber(), error.getValidatorName())) {
+                            if (rule.isTriggeredBy(document, error)) {
                                 suppressedErrors.add(error);
                             }
                             break;

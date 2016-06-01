@@ -42,9 +42,9 @@ public class ValidationError implements Serializable {
      * @param errorMessage      error message
      * @param sentenceWithError sentence containing validation error
      */
-    ValidationError(Class validatorClass,
-            String errorMessage,
-            Sentence sentenceWithError) {
+    public ValidationError(Class validatorClass,
+                           String errorMessage,
+                           Sentence sentenceWithError) {
         this.message = errorMessage;
         this.validatorName = validatorClass.getSimpleName();
         this.sentence = sentenceWithError;
@@ -154,5 +154,16 @@ public class ValidationError implements Serializable {
      */
     public Optional<LineOffset> getEndPosition() {
         return Optional.ofNullable(endPosition);
+    }
+
+    @Override
+    public String toString() {
+        return "ValidationError{" +
+                "message='" + message + '\'' +
+                ", validatorName='" + validatorName + '\'' +
+                ", sentence=" + sentence +
+                ", startPosition=" + startPosition +
+                ", endPosition=" + endPosition +
+                '}';
     }
 }

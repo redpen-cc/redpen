@@ -18,6 +18,7 @@
 package cc.redpen.parser;
 
 import cc.redpen.parser.asciidoc.AsciiDocParser;
+import cc.redpen.parser.review.ReVIEWParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -54,15 +55,37 @@ public class PreprocessingReader implements AutoCloseable {
             String ruleText = line;
             if (parser instanceof AsciiDocParser) {
                 if (ruleText.toLowerCase().startsWith("[suppress")) {
-                    addSuppressRule(ruleText);
+                    addAsciiDocAttributeSuppressRule(ruleText);
                     return "";
+                }
+            } else if (parser instanceof MarkdownParser) {
+                if (ruleText.matches("^ *<!-- *@suppress (.*)-->")) {
+                    ruleText = line
+                            .replaceAll("^ *<!--", "")
+                            .replaceAll("-->", "")
+                            .trim();
+                    addCommentSuppressRule(ruleText);
+                }
+            } else if (parser instanceof ReVIEWParser) {
+                if (ruleText.matches("^#@# *@suppress(.*)")) {
+                    ruleText = line
+                            .replaceAll("^#@#", "")
+                            .trim();
+                    addCommentSuppressRule(ruleText);
+                }
+            } else if (parser instanceof LaTeXParser) {
+                if (ruleText.matches("^% *@suppress(.*)")) {
+                    ruleText = line
+                            .replaceAll("^%", "")
+                            .trim();
+                    addCommentSuppressRule(ruleText);
                 }
             }
         }
         return line;
     }
 
-    private void addSuppressRule(String ruleString) {
+    private void addAsciiDocAttributeSuppressRule(String ruleString) {
         PreprocessorRule rule = new PreprocessorRule(PreprocessorRule.RuleType.SUPPRESS, lineNumber);
         if (lastRule != null) {
             lastRule.setLineNumberLimit(lineNumber);
@@ -74,6 +97,23 @@ public class PreprocessingReader implements AutoCloseable {
             for (String parameter : parameters) {
                 if (!parameter.isEmpty()) {
                     rule.addParameter(parameter);
+                }
+            }
+        }
+        preprocessorRules.add(rule);
+    }
+
+    private void addCommentSuppressRule(String ruleString) {
+        PreprocessorRule rule = new PreprocessorRule(PreprocessorRule.RuleType.SUPPRESS, lineNumber);
+        if (lastRule != null) {
+            lastRule.setLineNumberLimit(lineNumber);
+        }
+        lastRule = rule;
+        String[] parts = ruleString.split(" ");
+        if (parts.length > 1) {
+            for (int i=1; i < parts.length; i++) {
+                if (!parts[i].isEmpty()) {
+                    rule.addParameter(parts[i]);
                 }
             }
         }

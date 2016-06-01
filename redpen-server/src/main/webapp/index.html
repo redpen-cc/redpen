@@ -58,7 +58,8 @@
                 "このような場合、各インデクスの結果をマージしてclientプログラムに渡す機構が必要となります。"
             },
             en_md: {
-                parser: "MARKDOWN", document: "# Instances\n" +
+                parser: "MARKDOWN", document: "<!-- @suppress Contraction WeakExpression -->\n" +
+                "# Instances\n" +
                 "Some software tools work in more than one machine, and such _distributed_ (cluster)systems can handle huge data or tasks, because such software tools make use of large amount of computer resources, such as\n" +
                 "* CPU\n* Disk\n* Memory\n\n" +
                 "In this article, we'll call a computer server that works as a member of a cluster an _instance_. for example, each instance in distributed search engines stores the the fractions of data." +
@@ -66,20 +67,26 @@
             },
             ja_md: {
                 parser: "MARKDOWN",
-                document: "# 分散処理\n最近利用されているソフトウェアの中には複数の計算機上で動作（分散）するものが多く存在し、このような分散ソフトウェアは複数の計算機で動作することで大量のデータを扱えたり，高負荷な状況に対処できたりします。\n" +
+                document: "<!-- @suppress SpaceBetweenAlphabeticalWord -->\n" +
+                "# 分散処理\n" +
+                "最近利用されているソフトウェアの中には複数の計算機上で動作（分散）するものが多く存在し、このような分散ソフトウェアは複数の計算機で動作することで大量のデータを扱えたり，高負荷な状況に対処できたりします。\n" +
                 "本稿では,複数の計算機（クラスタ）でで動作する各サーバーを_「インスタンス」_と呼びまます。\n" +
                 "たとえば検索エンジンやデータベースではインデックスを複数のインスタンスで分割して保持します。\n" +
                 "このような場合、各インデクスの結果をマージして_clientプログラム_に渡す機構が必要となります。"
             },
             en_ad: {
                 parser: "ASCIIDOC",
-                document: "Instances Overview\n==================\n" + "Author's Name <person@email.address>\nv1.2, 2015-08\n" +
+                document: "" +
+                "= Instances Overview\n\n" +
+                "Author's Name <person@email.address>\nv1.2, 2015-08\n" +
                 "\nThis is the optional preamble (an untitled section body). Useful for " +
                 "writing simple sectionless documents consisting only of a preamble.\n\n" +
                 "NOTE: The abstract, preface, appendix, bibliography, glossary and index section titles are significant ('specialsections').\n" +
-                "\n\n:numbered!:\n[abstract]\n" +
-                "Instances\n" +
-                "---------\n" +
+                "\n\n:numbered!:\n" +
+                "[abstract]\n" +
+                "[suppress='Contraction WeakExpression']\n" +
+                "== Instances\n" +
+                "\n" +
                 "In this article, we'll call a computer server that works as a member of a cluster an _instance_. " +
                 "for example, as shown in this http://redpen.ignored.url/[mishpelled link], each instance in distributed search engines stores the the fractions of data.\n" +
                 "\nSuch distriubuted systems need a component to merge the preliminary results from member instnaces.\n\n\n" +
@@ -103,8 +110,8 @@
                 "  'DocBook - The Definitive Guide'. O'Reilly & Associates. 1999.\n" +
                 "  ISBN 1-56592-580-7.\n\n\n" +
                 "[glossary]\n" +
-                "Example Glossary\n" +
-                "----------------\n" +
+                "== Example Glossary\n" +
+                "\n" +
                 "Glossaries are optional. Glossaries entries are an example of a style\n" +
                 "of AsciiDoc labeled lists.\n\n" +
                 "[glossary]\n" +
@@ -114,8 +121,8 @@
                 "  The corresponding (indented) definition.\n\n\n" +
                 "ifdef::backend-docbook[]\n" +
                 "[index]\n" +
-                "Example Index\n" +
-                "-------------\n" +
+                "== Example Index\n" +
+                "\n" +
                 "////////////////////////////////////////////////////////////////\n" +
                 "The index is normally left completely empty, it's contents being\n" +
                 "generated automatically by the DocBook toolchain.\n" +
@@ -124,7 +131,10 @@
             },
             ja_ad: {
                 parser: "ASCIIDOC",
-                document: "[abstract]\n分散処理\n====\n\n最近利用されているソフトウェアの中には複数の計算機上で動作（分散）するものが多く存在し、このような分散ソフトウェアは複数の計算機で動作することで大量のデータを扱えたり，高負荷な状況に対処できたりします。\n" +
+                document: "[abstract]\n" +
+                "[suppress='SpaceBetweenAlphabeticalWord']\n" +
+                "= 分散処理\n\n" +
+                "最近利用されているソフトウェアの中には複数の計算機上で動作（分散）するものが多く存在し、このような分散ソフトウェアは複数の計算機で動作することで大量のデータを扱えたり，高負荷な状況に対処できたりします。\n" +
                 "本稿では,複数の計算機（クラスタ）でで動作する各サーバーを_「インスタンス」_と呼びまます。\n\n" +
                 "たとえば検索エンジンやデータベースではインデックスを複数のインスタンスで分割して保持します。\n" +
                 "このような場合、各インデクスの結果をマージして_clientプログラム_に渡す機構が必要となります。"
@@ -140,7 +150,8 @@
                 "\\maketitle\n\n" +
                 "\\begin{abstract}\n" +
                 "本稿では分散処理について解説します。\n" +
-                "\\end{abstract}\n" +
+                "\\end{abstract}\n\n" +
+                "% @suppress SpaceBetweenAlphabeticalWord" +
                 "\\section{要約}\n" +
                 "最近利用されているソフトウェアの中には複数の計算機上で動作（分散）するものが多く存在し、このような分散ソフトウェアは複数の計算機で動作することで大量のデータを扱えたり，高負荷な状況に対処できたりします。\n" +
                 "本稿では,複数の計算機（クラスタ）でで動作する各サーバーを「インスタンス」と呼びまます。\n" +
@@ -160,6 +171,7 @@
                 "\\begin{abstract}\n" +
                 "This article covers distributed systems.\n" +
                 "\\end{abstract}\n\n" +
+                "% @suppress Contraction WeakExpression\n" +
                 "\\section{Summary}\n" +
                 "Some software tools work in more than one machine, and such distributed (cluster)systems can handle huge data or tasks, because such software tools make use of large amount of computer resources.\n" +
                 "In this article, we'll call a computer server that works as a member of a cluster an ``instance''. for example, each instance in distributed search engines stores the the fractions of data.æ\n" +
