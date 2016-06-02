@@ -626,7 +626,7 @@ function RedPenUI() {
         // set the initial state
         setDocumentParser("PLAIN");
         setLanguage("en");
-        pasteSampleText("en");
+        pasteSampleText("en_md");
 
         // dumb animation
         var x = 1;
