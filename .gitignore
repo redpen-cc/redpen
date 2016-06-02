@@ -40,4 +40,7 @@ target
 # Maven
 *.releaseBackup
 
+# log
+*.log
+
 .DS_Store
