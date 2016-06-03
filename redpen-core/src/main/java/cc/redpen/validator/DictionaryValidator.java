@@ -38,7 +38,8 @@ public abstract class DictionaryValidator extends Validator {
     this.loader = loader;
   }
 
-  @Override protected void init() throws RedPenException {
+  @Override
+  protected void init() throws RedPenException {
     if (dictionaryPrefix != null) {
       String defaultDictionaryFile = "default-resources/" + dictionaryPrefix + "-" + getSymbolTable().getLang() + ".dat";
       dictionary = loader.loadCachedFromResource(defaultDictionaryFile, getClass().getSimpleName() + " default dictionary");

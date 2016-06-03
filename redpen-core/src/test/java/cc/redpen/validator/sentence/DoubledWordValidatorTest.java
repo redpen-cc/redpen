@@ -100,6 +100,14 @@ public class DoubledWordValidatorTest extends BaseValidatorTest {
     }
 
     @Test
+    public void testDoubledSkipListWord2() throws RedPenException {
+        Document document = prepareSimpleDocument("Each instance in distributed search engines stores the the fractions of data.");
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        assertEquals(0, errors.get(document).size());
+    }
+
+    @Test
     public void testDoubledUserDefinedSkipWord() throws RedPenException {
         config = Configuration.builder().addValidatorConfig(new ValidatorConfiguration(validatorName)
           .addProperty("list", "redpen,tool")).build();
