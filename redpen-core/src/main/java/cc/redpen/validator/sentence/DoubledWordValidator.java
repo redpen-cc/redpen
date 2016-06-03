@@ -31,7 +31,9 @@ public final class DoubledWordValidator extends DictionaryValidator {
         addDefaultProperties("min_len", 3); // do not report words shorter than this
     }
 
-    @Override protected void init() throws RedPenException {
+    @Override
+    protected void init() throws RedPenException {
+        super.init();
         if (getSymbolTable().getLang().equals("ja") && !getConfigAttribute("min_len").isPresent())
             getProperties().put("min_len", 1);
     }
