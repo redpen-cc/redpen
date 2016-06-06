@@ -5,11 +5,11 @@
     <parent>
         <groupId>cc.redpen</groupId>
         <artifactId>redpen</artifactId>
-        <version>1.6.0</version>
+        <version>1.6.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>redpen-core</artifactId>
-    <version>1.6.0</version>
+    <version>1.6.1-SNAPSHOT</version>
     <name>redpen-core</name>
     <description>RedPen is an open source proofreading tool a tool to check if your technical documents meet the writing standard . RedPen supports various markup text formats (Markdown, Textile, AsciiDoc, and LaTeX).</description>
     <url>http://redpen.cc</url>
@@ -49,7 +49,7 @@
         <url>https://github.com/redpen-cc/redpen</url>
         <connection>scm:git:https://github.com/redpen-cc/redpen.git</connection>
         <developerConnection>scm:git:https://github.com/redpen-cc/redpen.git</developerConnection>
-      <tag>1.6.0</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <properties>
