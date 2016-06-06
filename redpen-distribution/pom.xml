@@ -3,7 +3,7 @@
     <parent>
         <artifactId>redpen</artifactId>
         <groupId>cc.redpen</groupId>
-        <version>1.5.6-SNAPSHOT</version>
+        <version>1.6.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -51,7 +51,7 @@
         <url>https://github.com/redpen-cc/redpen</url>
         <connection>scm:git:https://github.com/redpen-cc/redpen.git</connection>
         <developerConnection>scm:git:https://github.com/redpen-cc/redpen.git</developerConnection>
-      <tag>HEAD</tag>
+      <tag>1.6.0</tag>
   </scm>
 
     <build>
