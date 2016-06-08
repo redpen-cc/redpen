@@ -145,6 +145,24 @@ public class JapaneseNumberExpressionValidatorTest {
     }
 
     @Test
+    public void testFailureCase() throws RedPenException {
+        Configuration config = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("JapaneseNumberExpression"))
+                .build();
+
+        List<Document> documents = new ArrayList<>();documents.add(
+                Document.builder(new JapaneseTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(new Sentence("SuccessiveWord は同一の単語が連続して使用されたときにエラーを出力します。", 1))
+                        .build());
+
+        RedPen redPen = new RedPen(config);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
+        Assert.assertEquals(0, errors.size());
+    }
+
+    @Test
     public void testVoid() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("JapaneseNumberExpression"))
