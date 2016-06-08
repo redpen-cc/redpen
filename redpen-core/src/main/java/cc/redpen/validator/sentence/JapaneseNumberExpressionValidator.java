@@ -30,11 +30,11 @@ import static java.util.Collections.singletonList;
 
 public class JapaneseNumberExpressionValidator extends Validator {
     private final List<Pattern> patternsNumeric = Arrays.asList(
-        Pattern.compile("[一二三四五六七八九０-９][一二三四五六七八九０-９.．〜、]*[つの]"),
+        Pattern.compile("(?<![\\u4e00-\\u9faf])[一二三四五六七八九０-９][一二三四五六七八九０-９.．〜、]*[つの]"),
         Pattern.compile("(ひと|ふた|[みよむや]っ|いつ|ここの)つ")
     );
     private final List<Pattern> patternsNumericZenkaku = Arrays.asList(
-        Pattern.compile("[一二三四五六七八九0-9][一二三四五六七八九0-9.．〜、]*[つの]"),
+        Pattern.compile("(?<![\\u4e00-\\u9faf])[一二三四五六七八九0-9][一二三四五六七八九0-9.．〜、]*[つの]"),
         Pattern.compile("(ひと|ふた|[みよむや]っ|いつ|ここの)つ")
     );
     private final List<Pattern> patternsKansuji = Arrays.asList(
@@ -42,7 +42,7 @@ public class JapaneseNumberExpressionValidator extends Validator {
         Pattern.compile("(ひと|ふた|[みよむや]っ|いつ|ここの)つ")
     );
     private final List<Pattern> patternsHiragana = Arrays.asList(
-        Pattern.compile("[一二三四五六七八九0-9０-９][一二三四五六七八九0-9０-９.．〜、]*[つの]")
+        Pattern.compile("(?<![\\u4e00-\\u9faf])[一二三四五六七八九0-9０-９][一二三四五六七八九0-9０-９.．〜、]*[つの]")
     );
 
     public JapaneseNumberExpressionValidator() {
