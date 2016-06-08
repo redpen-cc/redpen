@@ -35,14 +35,18 @@ final public class GappedSectionValidator extends Validator {
         int seen = 0;
         for (Section s: document) {
             final int current = s.getLevel();
-            if (current <= seen) {
-                seen = current;
-            } else {
-                if (current == seen + 1) {
+            if (seen > 0) {
+                if (current <= seen) {
                     seen = current;
                 } else {
-                    addLocalizedError(s.getJoinedHeaderContents(), current, seen + 1);
+                    if (current == seen + 1) {
+                        seen = current;
+                    } else {
+                        addLocalizedError(s.getJoinedHeaderContents(), s.getJoinedHeaderContents().getContent(), current, seen + 1);
+                    }
                 }
+            } else {
+                seen = current;
             }
         }
     }

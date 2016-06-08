@@ -70,4 +70,22 @@ public class GappedSectionValidatorTest {
 
         assertEquals(0, errors.size());
     }
+
+    @Test
+    public void testFailureCase() {
+        Document document =
+                Document.builder()
+                        .addSection(2)
+                        .addSectionHeader("Section 1.1")
+                        .addSection(3)
+                        .addSectionHeader("Section 1.1.1")
+                        .build();
+
+        List<ValidationError> errors = new ArrayList<>();
+        validator.setErrorList(errors);
+        validator.validate(document);
+
+        assertEquals(0, errors.size());
+    }
+
 }
