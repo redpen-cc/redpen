@@ -22,14 +22,13 @@ import cc.redpen.model.Sentence;
 import cc.redpen.util.StringUtils;
 import cc.redpen.validator.Validator;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Arrays;
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static cc.redpen.config.SymbolType.*;
-import static java.util.Collections.singletonList;
 
 public class SpaceBetweenAlphabeticalWordValidator extends Validator {
     private char leftParenthesis = '(';
@@ -54,18 +53,10 @@ public class SpaceBetweenAlphabeticalWordValidator extends Validator {
             char prevCharacter = ' ';
             int idx = 0;
             for (char character : sentence.getContent().toCharArray()) {
-                if (!StringUtils.isBasicLatin(prevCharacter)
-                        && prevCharacter != leftParenthesis
-                        && prevCharacter != comma
-                        && StringUtils.isBasicLatin(character)
-                        && Character.isLetter(character)) {
+                if (notHasWhiteSpaceBeforeLeftParenthesis(prevCharacter, character)) {
                     addLocalizedErrorWithPosition("Before", sentence, idx, idx + 1);
                 } else if (
-                        !StringUtils.isBasicLatin(character)
-                                && character != rightParenthesis
-                                && character != comma
-                                && StringUtils.isBasicLatin(prevCharacter)
-                                && Character.isLetter(prevCharacter)) {
+                        notHasWhiteSpaceAfterRightParenthesis(prevCharacter, character)) {
                     addLocalizedErrorWithPosition("After", sentence, idx, idx + 1);
                 }
                 prevCharacter = character;
@@ -80,6 +71,25 @@ public class SpaceBetweenAlphabeticalWordValidator extends Validator {
                 }
             }
         }
+    }
+
+    // TODO: need refactoring...
+    private boolean notHasWhiteSpaceBeforeLeftParenthesis(char prevCharacter, char character) {
+        return !StringUtils.isBasicLatin(prevCharacter)
+                && prevCharacter != leftParenthesis
+                && prevCharacter != comma
+                && (prevCharacter != rightParenthesis && rightParenthesis != '（') // For handling multi-byte Parenthesis
+                && StringUtils.isBasicLatin(character)
+                && Character.isLetter(character);
+    }
+
+    private boolean notHasWhiteSpaceAfterRightParenthesis(char prevCharacter, char character) {
+        return !StringUtils.isBasicLatin(character)
+                && character != rightParenthesis
+                && (character != leftParenthesis && leftParenthesis != '（')  // For handling multi-byte Parenthesis
+                && character != comma
+                && StringUtils.isBasicLatin(prevCharacter)
+                && Character.isLetter(prevCharacter);
     }
 
     @Override

@@ -179,6 +179,24 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
     }
 
     @Test
+    public void testNoErrorAfterParencesinJapaneseText() throws RedPenException {
+        String sampleText  = "現状では平文、Markdown、Textile（Wiki 記法）、AsciiDoc、LaTeX、Re:VIEW に対応している。";
+        Configuration configuration = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
+                .build();
+        DocumentParser parser = DocumentParser.MARKDOWN;
+        List<Document> documents = new ArrayList<>();
+        Document document  = parser.parse(sampleText, new SentenceExtractor(configuration.getSymbolTable()),
+                configuration.getTokenizer());
+        documents.add(document);
+
+        RedPen redPen = new RedPen(configuration);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
+        assertEquals(0, errors.size());
+
+    }
+
+    @Test
     public void testNeedNoBeforeAndAfterSpace() throws RedPenException {
         SpaceBetweenAlphabeticalWordValidator validator = new SpaceBetweenAlphabeticalWordValidator();
         validator.preInit(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord").addProperty("forbidden", "true"), Configuration.builder().build());
@@ -187,6 +205,7 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
         validator.validate(new Sentence("きょうは Coke を飲みたい。", 0));
         assertEquals(1, errors.size());
     }
+
 
     @Test
     public void testSupportedLanguages() {
