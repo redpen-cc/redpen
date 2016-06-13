@@ -44,7 +44,6 @@ public abstract class DictionaryValidator extends Validator {
       String defaultDictionaryFile = "default-resources/" + dictionaryPrefix + "-" + getSymbolTable().getLang() + ".dat";
       dictionary = loader.loadCachedFromResource(defaultDictionaryFile, getClass().getSimpleName() + " default dictionary");
     }
-
     String confFile = getString("dict");
     if (isNotEmpty(confFile)) {
       getSet("list").addAll(loader.loadCachedFromFile(findFile(confFile), getClass().getSimpleName() + " user dictionary"));
