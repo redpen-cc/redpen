@@ -42,6 +42,7 @@ public class UnexpandedAcronymValidator extends SpellingDictionaryValidator {
     private Set<String> contractedAcronyms = new HashSet<>();
 
     public UnexpandedAcronymValidator() {
+        super();
         setDefaultProperties("min_acronym_length", 3); // ignore uppercase words smaller than this length
     }
 
@@ -67,7 +68,8 @@ public class UnexpandedAcronymValidator extends SpellingDictionaryValidator {
             if (!word.trim().isEmpty()) {
                 int minAcronymLength = getInt("min_acronym_length");
                 if (isAllCapitals(word)) {
-                    if ((word.length() >= minAcronymLength) && !inDictionary(word.toLowerCase())) {
+                    if ((word.length() >= minAcronymLength)
+                            && !inDictionary(word) && !inDictionary(word.toLowerCase())) {
                         contractedAcronyms.add(word);
                     }
                 } else if (isCapitalized(word)) {
@@ -128,7 +130,6 @@ public class UnexpandedAcronymValidator extends SpellingDictionaryValidator {
 
     @Override
     public void validate(Document document) {
-
         // process all sentences and remember the last sentence
         Sentence lastSentence = null;
         for (int i = 0; i < document.size(); i++) {

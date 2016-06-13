@@ -18,10 +18,13 @@
 package cc.redpen.validator.section;
 
 import cc.redpen.RedPenException;
+import cc.redpen.config.Configuration;
+import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidationError;
+import cc.redpen.validator.Validator;
 import cc.redpen.validator.ValidatorFactory;
 import org.junit.Test;
 
@@ -52,7 +55,47 @@ public class UnexpandedAcronymValidatorTest {
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(document);
-
         assertEquals(1, errors.size());
+    }
+
+    @Test
+    public void testSimpleSentence() throws Exception {
+        List<Document> documents = new ArrayList<>();documents.add(
+                Document.builder()
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(new Sentence("The JSON data is a output from the command.", 1))
+                        .build());
+
+        Configuration config;
+        config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("UnexpandedAcronym"))
+                .build();
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
+
+        List<ValidationError> errors = new ArrayList<>();
+        validator.setErrorList(errors);
+        validator.validate(documents.get(0));
+        assertEquals(1, errors.size());
+    }
+
+    @Test
+    public void testLoadSkipList() throws Exception {
+        List<Document> documents = new ArrayList<>();documents.add(
+                Document.builder()
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(new Sentence("The output is JSON format.", 1))
+                        .build());
+
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("UnexpandedAcronym").addProperty("list", "JSON"))
+                .build();
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
+
+        List<ValidationError> errors = new ArrayList<>();
+        validator.setErrorList(errors);
+        validator.validate(documents.get(0).getLastSection().getParagraph(0).getSentence(0));
+        assertEquals(0, errors.size());
     }
 }
