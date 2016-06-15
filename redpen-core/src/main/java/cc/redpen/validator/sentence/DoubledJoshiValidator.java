@@ -59,6 +59,9 @@ public class DoubledJoshiValidator extends Validator {
                         if ("格助詞".equals(t.get(1)) && "を".equals(s)) {
                             continue;
                         }
+                        if ("接続助詞".equals(t.get(1)) && "て".equals(s)) {
+                            continue;
+                        }
                     }
                     vec.add(new Pair<>(s, i));
                 }

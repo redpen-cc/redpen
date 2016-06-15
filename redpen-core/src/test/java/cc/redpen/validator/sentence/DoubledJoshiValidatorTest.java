@@ -140,4 +140,22 @@ public class DoubledJoshiValidatorTest {
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         assertEquals(0, errors.get(documents.get(0)).size());
     }
+
+    @Test
+    public void testRelaxedModeConjunctionRule() throws Exception {
+        List<Document> documents = new ArrayList<>();
+        documents.add(Document.builder(new JapaneseTokenizer())
+                .addSection(1)
+                .addParagraph()
+                .addSentence(new Sentence("このあたりは実際に試していただいて決定すると良いでしょう。", 1))
+                .build());
+
+        Configuration config = Configuration.builder("ja")
+            .addValidatorConfig(new ValidatorConfiguration("DoubledJoshi").addProperty("relaxed", true))
+                .build();
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        assertEquals(0, errors.get(documents.get(0)).size());
+    }
 }
