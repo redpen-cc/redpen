@@ -106,7 +106,7 @@ public class DoubledJoshiValidatorTest {
     }
 
     @Test
-    public void testRelaxedMode() throws Exception {
+    public void testRelaxedModeRentaikaRule() throws Exception {
         List<Document> documents = new ArrayList<>();
         documents.add(Document.builder(new JapaneseTokenizer())
                 .addSection(1)
@@ -123,4 +123,21 @@ public class DoubledJoshiValidatorTest {
         assertEquals(0, errors.get(documents.get(0)).size());
     }
 
+    @Test
+    public void testRelaxedModeKakujoshiRule() throws Exception {
+        List<Document> documents = new ArrayList<>();
+        documents.add(Document.builder(new JapaneseTokenizer())
+                .addSection(1)
+                .addParagraph()
+                .addSentence(new Sentence("オブジェクトを返す関数を公開する。", 1))
+                .build());
+
+        Configuration config = Configuration.builder("ja")
+            .addValidatorConfig(new ValidatorConfiguration("DoubledJoshi").addProperty("relaxed", true))
+                .build();
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        assertEquals(0, errors.get(documents.get(0)).size());
+    }
 }
