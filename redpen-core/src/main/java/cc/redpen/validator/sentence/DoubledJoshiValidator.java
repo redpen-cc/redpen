@@ -20,6 +20,7 @@ package cc.redpen.validator.sentence;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.validator.Validator;
+import cc.redpen.util.Pair;
 
 import java.util.*;
 
@@ -33,25 +34,39 @@ import static java.util.Collections.singletonList;
  */
 public class DoubledJoshiValidator extends Validator {
     public DoubledJoshiValidator() {
-        super("list", emptySet());
+        super();
+        addDefaultProperties("list", emptySet());
+        addDefaultProperties("min_dist", Integer.MAX_VALUE);
     }
 
     @Override
     public void validate(Sentence sentence) {
-        Map<String, Integer> counts = new HashMap<>();
+        final List<Pair<String, Integer>> vec = new ArrayList<>();
+
+        int i = 0;
         for (TokenElement tokenElement : sentence.getTokens()) {
             if (tokenElement.getTags().get(0).equals("助詞")) {
-                if (!counts.containsKey(tokenElement.getSurface())) {
-                    counts.put(tokenElement.getSurface(), 0);
+                vec.add(new Pair<>(tokenElement.getSurface(), i));
+            }
+            ++i;
+        }
+
+        Set<String> skipList = getSet("list");
+        final Map<String, Integer> seen = new HashMap<>();
+        final int mininumDistance = getInt("min_dist");
+
+        for (Pair<String, Integer> e : vec) {
+            final String p = e.first;
+            final int q = e.second;
+            if (!skipList.contains(p)) {
+                if (seen.containsKey(p)) {
+                    if ((q - seen.get(p)) < mininumDistance) {
+                        addLocalizedError(sentence, p);
+                    }
                 }
-                counts.put(tokenElement.getSurface(),
-                        counts.get(tokenElement.getSurface())+1);
+                seen.put(p, q);
             }
         }
-        Set<String> skipList = getSet("list");
-        counts.entrySet().stream()
-                .filter(e -> e.getValue() >= 2 && !skipList.contains(e.getKey()))
-                .forEach(e -> addLocalizedError(sentence, e.getKey()));
     }
 
     @Override
