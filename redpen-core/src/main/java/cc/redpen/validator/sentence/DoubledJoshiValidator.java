@@ -37,35 +37,44 @@ public class DoubledJoshiValidator extends Validator {
         super();
         addDefaultProperties("list", emptySet());
         addDefaultProperties("min_dist", Integer.MAX_VALUE);
+        addDefaultProperties("relaxed", false);
     }
 
     @Override
     public void validate(Sentence sentence) {
+        final boolean relaxed = getBoolean("relaxed");
+        final Set<String> skipList = getSet("list");
         final List<Pair<String, Integer>> vec = new ArrayList<>();
 
         int i = 0;
         for (TokenElement tokenElement : sentence.getTokens()) {
-            if (tokenElement.getTags().get(0).equals("助詞")) {
-                vec.add(new Pair<>(tokenElement.getSurface(), i));
+            final List<String> t = tokenElement.getTags();
+            final String s = tokenElement.getSurface();
+            if (t.get(0).equals("助詞")) {
+                if (!skipList.contains(s)) {
+                    if (relaxed) {
+                        if ("連体化".equals(t.get(1)) && "の".equals(s)) {
+                            continue;
+                        }
+                    }
+                    vec.add(new Pair<>(s, i));
+                }
             }
             ++i;
         }
 
-        Set<String> skipList = getSet("list");
         final Map<String, Integer> seen = new HashMap<>();
         final int mininumDistance = getInt("min_dist");
 
         for (Pair<String, Integer> e : vec) {
             final String p = e.first;
             final int q = e.second;
-            if (!skipList.contains(p)) {
-                if (seen.containsKey(p)) {
-                    if ((q - seen.get(p)) < mininumDistance) {
-                        addLocalizedError(sentence, p);
-                    }
+            if (seen.containsKey(p)) {
+                if ((q - seen.get(p)) < mininumDistance) {
+                    addLocalizedError(sentence, p);
                 }
-                seen.put(p, q);
             }
+            seen.put(p, q);
         }
     }
 
