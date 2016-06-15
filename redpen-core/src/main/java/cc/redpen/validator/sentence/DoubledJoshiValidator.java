@@ -23,6 +23,7 @@ import cc.redpen.validator.Validator;
 import cc.redpen.util.Pair;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singletonList;
@@ -33,6 +34,8 @@ import static java.util.Collections.singletonList;
  * Note: this validator works only for Japanese texts.
  */
 public class DoubledJoshiValidator extends Validator {
+    private static final Pattern SEPARATOR_PATTERN = Pattern.compile("[、,，]");
+
     public DoubledJoshiValidator() {
         super();
         addDefaultProperties("list", emptySet());
@@ -65,8 +68,10 @@ public class DoubledJoshiValidator extends Validator {
                     }
                     vec.add(new Pair<>(s, i));
                 }
+                ++i;
+            } else if (SEPARATOR_PATTERN.matcher(s).find()) {
+                ++i;
             }
-            ++i;
         }
 
         final Map<String, Integer> seen = new HashMap<>();
@@ -76,7 +81,7 @@ public class DoubledJoshiValidator extends Validator {
             final String p = e.first;
             final int q = e.second;
             if (seen.containsKey(p)) {
-                if ((q - seen.get(p)) < mininumDistance) {
+                if ((q - seen.get(p)) <= mininumDistance) {
                     addLocalizedError(sentence, p);
                 }
             }
