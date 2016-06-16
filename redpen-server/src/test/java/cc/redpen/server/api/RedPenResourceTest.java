@@ -31,6 +31,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpUpgradeHandler;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.HttpHeaders;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Set;
@@ -92,7 +93,11 @@ public class RedPenResourceTest extends MockServletInvocationTest {
     }
 
     public void testJSValidatorRuns() throws Exception {
-        System.setProperty("REDPEN_HOME", "src/test");
+        if(new File("redpen-server").exists()) {
+            System.setProperty("REDPEN_HOME", "redpen-server/src/test");
+        }else{
+            System.setProperty("REDPEN_HOME", "src/test");
+        }
         MockHttpServletRequest request = constructMockRequest("POST", "/document/validate/json", WILDCARD, APPLICATION_JSON);
         request.setContent(String.format("{\"document\":\"Test, this is a test.\",\"format\":\"json2\",\"documentParser\":\"PLAIN\",\"config\":{\"lang\":\"en\",\"validators\":{\"JavaScript\":{\"properties\":{\"script-path\":\"%s\"}}}}}", "resources/js").getBytes());
         MockHttpServletResponse response = invoke(request);
