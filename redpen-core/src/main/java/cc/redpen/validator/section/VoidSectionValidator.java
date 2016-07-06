@@ -17,16 +17,28 @@
  */
 package cc.redpen.validator.section;
 
+import cc.redpen.RedPenException;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.validator.Validator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
 
 /**
  * VoidSectionValidator detects sections with no content..
  */
 final public class VoidSectionValidator extends Validator {
+    private static final Logger LOG = LoggerFactory.getLogger(VoidSectionValidator.class);
+    private int sectionLevelLimit = 5;
+
     @Override
     public void validate(Section section) {
+        if (section.getLevel() >= sectionLevelLimit) {
+            return;
+        }
+
         if (section.getLevel() == 0) {
             return; // hot fix for auto generated level 0 sections.
         }
@@ -39,6 +51,14 @@ final public class VoidSectionValidator extends Validator {
                     break;
                 }
             }
+        }
+    }
+
+    @Override
+    protected void init() throws RedPenException {
+        Optional<String> limit = getConfigAttribute("limit");
+        if (limit.isPresent()) {
+            sectionLevelLimit = Integer.parseInt(limit.get());
         }
     }
 }
