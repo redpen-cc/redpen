@@ -20,21 +20,21 @@ package cc.redpen.validator.sentence;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.validator.Validator;
-import cc.redpen.util.Pair;
 
-import java.util.*;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
-import static java.util.Collections.emptySet;
 import static java.util.Collections.singletonList;
 
 /**
- * DoubledNegativeConjunctionValidator checks if the input texts has
- * multiple negative conjuctions.
+ * DoubledConjunctiveParticleGaValidator checks if an input Japanese sentence has
+ * multiple conjunctive particles, "ga".
  * <br>
+ * Note: This validator is a port from textlint-rule-no-doubled-conjunctive-particle-ga written by takahashim
  * Note: this validator works only for Japanese texts.
  */
-public class DoubledNegativeConjunctionValidator extends Validator {
+public class DoubledConjunctiveParticleGaValidator extends Validator {
     @Override
     public void validate(Sentence sentence) {
         List<TokenElement> vec = new ArrayList<>();

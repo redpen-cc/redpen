@@ -32,7 +32,7 @@ import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 
-public class DoubledNegativeConjuctionValidatorTest {
+public class DoubledConjunctiveParticleGaValidatorTest {
     @Test
     public void testInvalid() throws Exception {
         List<Document> documents = new ArrayList<>();
@@ -43,7 +43,7 @@ public class DoubledNegativeConjuctionValidatorTest {
                 .build());
 
         Configuration config = Configuration.builder("ja")
-                .addValidatorConfig(new ValidatorConfiguration("DoubledNegativeConjunction"))
+                .addValidatorConfig(new ValidatorConfiguration("DoubledConjunctiveParticleGa"))
                 .build();
 
         RedPen redPen = new RedPen(config);
@@ -61,7 +61,7 @@ public class DoubledNegativeConjuctionValidatorTest {
                 .build());
 
         Configuration config = Configuration.builder("ja")
-                .addValidatorConfig(new ValidatorConfiguration("DoubledNegativeConjunction"))
+                .addValidatorConfig(new ValidatorConfiguration("DoubledConjunctiveParticleGa"))
                 .build();
 
         RedPen redPen = new RedPen(config);
