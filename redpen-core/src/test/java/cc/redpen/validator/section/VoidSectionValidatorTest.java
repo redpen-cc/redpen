@@ -21,10 +21,10 @@ import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
-import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
-import org.junit.Before;
+import cc.redpen.validator.Validator;
+import cc.redpen.validator.ValidatorFactory;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class VoidSectionValidatorTest {
     public void testInvalid() {
         Document document =
                 Document.builder()
-                        .addSection(1)
+                        .addSection(4)
                         .addSectionHeader("Abstract")
                         .build();
 
@@ -80,6 +80,40 @@ public class VoidSectionValidatorTest {
         validator.setErrorList(errors);
         validator.validate(document.getSection(0));
 
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void testInvalidButSmallSection() {
+        Document document =
+                Document.builder()
+                        .addSection(7)
+                        .addSectionHeader("Abstract")
+                        .addParagraph()
+                        .build();
+
+        List<ValidationError> errors = new ArrayList<>();
+        validator.setErrorList(errors);
+        validator.validate(document.getSection(0));
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void testChangeLimit() throws RedPenException {
+        Document document =
+                Document.builder()
+                        .addSection(4)
+                        .addSectionHeader("Abstract")
+                        .addParagraph()
+                        .build();
+
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("VoidSection").addProperty("limit", "3"))
+                .build();
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.setErrorList(errors);
+        validator.validate(document.getSection(0));
         assertEquals(0, errors.size());
     }
 }
