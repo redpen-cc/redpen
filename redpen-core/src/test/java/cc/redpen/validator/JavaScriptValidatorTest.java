@@ -20,6 +20,7 @@ package cc.redpen.validator;
 import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
+import cc.redpen.config.SymbolTable;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Section;
@@ -95,33 +96,50 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         assertEquals("[MyValidator.js] JavaScript validator validation error in JavaScript Validator", errors.get(0).getMessage());
     }
 
-    public static List<String> calledFunctions;
+    public static List dataFromJavaScript;
 
     @Test
     public void testJSLiteralValidator() throws RedPenException, IOException {
         JavaScriptValidator validator = new JavaScriptValidator();
+        validator.preInit(new ValidatorConfiguration("JavaScriptValidator")
+                        .addProperty("script-path", "mypath")
+                        .addProperty("intValue", 1)
+                        .addProperty("floatValue", "2")
+                        .addProperty("booleanValue", "false")
+                        .addProperty("hello", "world")
+                , Configuration.builder().build());
+
         validator.scripts.add(new Script(validator, "testScript.js",
                 "function preValidateSentence(sentence) {" +
-                        // add function names to "calledFunctions" list upon function calls for the later assertions
+                        // add function names to "dataFromJavaScript" list upon function calls for the later assertions
                         // the following script is using Nashorn's lobal object "Java".type to access static member:
                         // http://docs.oracle.com/javase/8/docs/technotes/guides/scripting/nashorn/api.html
-                        "_JavaScriptValidatorTest.calledFunctions.add('preValidateSentence');}" +
+                        "_JavaScriptValidatorTest.dataFromJavaScript.add('preValidateSentence');}" +
                         "function preValidateSection(section) {" +
-                        "_JavaScriptValidatorTest.calledFunctions.add('preValidateSection');}" +
+                        "_JavaScriptValidatorTest.dataFromJavaScript.add('preValidateSection');}" +
                         "function validateDocument(document) {" +
-                        "_JavaScriptValidatorTest.calledFunctions.add('validateDocument');" +
+                        "_JavaScriptValidatorTest.dataFromJavaScript.add('validateDocument');" +
                         // add ValidationError
                         "addError('validation error', document.getSection(0).getHeaderContent(0));" +
                         // add ValidationError
                         "addLocalizedError(document.getSection(0).getHeaderContent(0), 'doc');}" +
                         "function validateSentence(sentence) {" +
-                        "_JavaScriptValidatorTest.calledFunctions.add('validateSentence');" +
+                        "_JavaScriptValidatorTest.dataFromJavaScript.add('validateSentence');" +
                         // add ValidationError
                         "addLocalizedError(sentence, 'sentence');}" +
                         "function validateSection(section) {" +
-                        "_JavaScriptValidatorTest.calledFunctions.add('validateSection');" +
+                        "_JavaScriptValidatorTest.dataFromJavaScript.add('validateSection');" +
                         // add ValidationError
-                        "addLocalizedError(section.getHeaderContent(0), 'section');}"));
+                        "addLocalizedError(section.getHeaderContent(0), 'section');" +
+                        "_JavaScriptValidatorTest.dataFromJavaScript.add(getInt('intValue'));" +
+                        "_JavaScriptValidatorTest.dataFromJavaScript.add(getFloat('floatValue'));" +
+                        "_JavaScriptValidatorTest.dataFromJavaScript.add(getBoolean('booleanValue'));" +
+                        "_JavaScriptValidatorTest.dataFromJavaScript.add(getString('hello'));" +
+                        "_JavaScriptValidatorTest.dataFromJavaScript.add(getString('script-path'));" +
+                        "_JavaScriptValidatorTest.dataFromJavaScript.add(getSymbolTable());" +
+                        "}"));
+
+
         Document document = Document.builder()
                 .addSection(1)
                 .addParagraph()
@@ -130,19 +148,25 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         Section section = document.getSection(0);
         Sentence sentence = section.getHeaderContent(0);
 
-        calledFunctions = new ArrayList<>();
+        dataFromJavaScript = new ArrayList<>();
         validator.setErrorList(errors);
         validator.preValidate(sentence);
         validator.preValidate(section);
         validator.validate(document);
         validator.validate(sentence);
         validator.validate(section);
-        assertEquals(5, calledFunctions.size());
-        assertEquals("preValidateSentence", calledFunctions.get(0));
-        assertEquals("preValidateSection", calledFunctions.get(1));
-        assertEquals("validateDocument", calledFunctions.get(2));
-        assertEquals("validateSentence", calledFunctions.get(3));
-        assertEquals("validateSection", calledFunctions.get(4));
+        assertEquals(11, dataFromJavaScript.size());
+        assertEquals("preValidateSentence", dataFromJavaScript.get(0));
+        assertEquals("preValidateSection", dataFromJavaScript.get(1));
+        assertEquals("validateDocument", dataFromJavaScript.get(2));
+        assertEquals("validateSentence", dataFromJavaScript.get(3));
+        assertEquals("validateSection", dataFromJavaScript.get(4));
+        assertEquals(1, dataFromJavaScript.get(5));
+        assertEquals(2f, dataFromJavaScript.get(6));
+        assertEquals(false, dataFromJavaScript.get(7));
+        assertEquals("world", dataFromJavaScript.get(8));
+        assertEquals("mypath", dataFromJavaScript.get(9));
+        assertEquals(SymbolTable.class, dataFromJavaScript.get(10).getClass());
 
         assertEquals(4, errors.size());
         assertEquals("[testScript.js] validation error", errors.get(0).getMessage());
@@ -167,7 +191,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         Section section = document.getSection(0);
         Sentence sentence = section.getHeaderContent(0);
 
-        calledFunctions = new ArrayList<>();
+        dataFromJavaScript = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(sentence);
         assertEquals(1, errors.size());
@@ -310,7 +334,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         Section section = document.getSection(0);
         Sentence sentence = section.getHeaderContent(0);
 
-        calledFunctions = new ArrayList<>();
+        dataFromJavaScript = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(sentence);
         assertEquals(1, errors.size());
