@@ -18,6 +18,7 @@
 package cc.redpen.validator;
 
 import cc.redpen.RedPenException;
+import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import org.junit.Test;
 
@@ -38,7 +39,7 @@ public class SeparateValidationErrorMessageResourceTest extends Validator {
     @Test
     public void testValidationErrorCreation() throws RedPenException {
         SeparateValidationErrorMessageResourceTest validationErrorMessageTest = new SeparateValidationErrorMessageResourceTest();
-        validationErrorMessageTest.preInit(null, null);
+        validationErrorMessageTest.preInit(new ValidatorConfiguration("SeparateValidationErrorMessageResourceTest"), null);
         // loads SeparateValidationErrorMessageResourceTest.properties
         validationErrorMessageTest.setLocale(Locale.ENGLISH);
         List<ValidationError> validationErrors = new ArrayList<>();

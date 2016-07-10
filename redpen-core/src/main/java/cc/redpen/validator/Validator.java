@@ -162,6 +162,7 @@ public abstract class Validator {
             else
                 properties.put(name, value);
         });
+        config.getProperties().forEach((key, value)-> properties.putIfAbsent(key,value));
     }
 
     void setLocale(Locale locale) {
@@ -200,11 +201,21 @@ public abstract class Validator {
     }
 
     protected int getInt(String name) {
-        return (int)properties.get(name);
+        Object value = properties.get(name);
+        if(value instanceof Integer) {
+            return (int) value;
+        }else{
+            return Integer.valueOf((String)value);
+        }
     }
 
     protected float getFloat(String name) {
-        return (float)properties.get(name);
+        Object value = properties.get(name);
+        if(value instanceof Float) {
+            return (float) value;
+        }else{
+            return Float.valueOf((String)value);
+        }
     }
 
     protected String getString(String name) {
@@ -212,7 +223,12 @@ public abstract class Validator {
     }
 
     protected boolean getBoolean(String name) {
-        return (boolean)properties.get(name);
+        Object value = properties.get(name);
+        if(value instanceof Boolean) {
+            return (boolean) value;
+        }else{
+            return Boolean.valueOf((String)value);
+        }
     }
 
     @SuppressWarnings("unchecked")
