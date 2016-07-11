@@ -68,4 +68,22 @@ public class JapaneseAmbiguousNounConjunctionValidatorTest {
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         assertEquals(0, errors.get(documents.get(0)).size());
     }
+
+    @Test
+    public void testUserDictionary() throws Exception {
+        List<Document> documents = new ArrayList<>();
+        documents.add(Document.builder(new JapaneseTokenizer())
+                .addSection(1)
+                .addParagraph()
+                .addSentence(new Sentence("不思議の国のアリスは面白い。", 1))
+                .build());
+
+        Configuration config = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("JapaneseAmbiguousNounConjunction").addProperty("list", "不思議の国のアリス"))
+                .build();
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        assertEquals(0, errors.get(documents.get(0)).size());
+    }
 }
