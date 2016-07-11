@@ -148,21 +148,7 @@ public abstract class Validator {
     }
 
     private void loadProperties(ValidatorConfiguration config) {
-        properties.forEach((name, defaultValue) -> {
-            String value = config.getProperty(name);
-            if (value == null) return;
-            if (defaultValue instanceof Integer)
-                properties.put(name, Integer.valueOf(value));
-            else if (defaultValue instanceof Float)
-                properties.put(name, Float.valueOf(value));
-            else if (defaultValue instanceof Boolean)
-                properties.put(name, Boolean.valueOf(value));
-            else if (defaultValue instanceof Set)
-                properties.put(name, isEmpty(value) ? defaultValue : asList((value).split(",")).stream().map(String::toLowerCase).collect(toSet()));
-            else
-                properties.put(name, value);
-        });
-        config.getProperties().forEach((key, value)-> properties.putIfAbsent(key,value));
+        config.getProperties().forEach((key, value)-> properties.put(key,value));
     }
 
     void setLocale(Locale locale) {
@@ -233,7 +219,16 @@ public abstract class Validator {
 
     @SuppressWarnings("unchecked")
     protected Set<String> getSet(String name) {
-        return (Set) properties.get(name);
+        Object value = properties.get(name);
+        if(value == null){
+            return null;
+        }
+        if(value instanceof Set){
+            return (Set<String>) value;
+        }
+        Set<String> newValue = Arrays.stream(((String)value).split(",")).map(String::toLowerCase).collect(toSet());
+        properties.put(name,newValue);
+        return newValue;
     }
 
     protected Optional<String> getConfigAttribute(String name) {
