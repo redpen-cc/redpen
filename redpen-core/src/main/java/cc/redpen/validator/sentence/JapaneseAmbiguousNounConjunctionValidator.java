@@ -19,11 +19,12 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.validator.Validator;
+import cc.redpen.validator.DictionaryValidator;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
 
-import static java.util.Collections.emptySet;
 import static java.util.Collections.singletonList;
 
 /**
@@ -31,41 +32,39 @@ import static java.util.Collections.singletonList;
  * <br>
  * Note: this validator works only for Japanese texts.
  */
-public class JapaneseAmbiguousNounConjunctionValidator extends Validator {
-    public JapaneseAmbiguousNounConjunctionValidator() {
-        super("list", emptySet());
-    }
+public class JapaneseAmbiguousNounConjunctionValidator extends DictionaryValidator {
+    public JapaneseAmbiguousNounConjunctionValidator() {}
 
     @Override
     public void validate(Sentence sentence) {
-        int st = 0;
-        final List<String> q = new LinkedList<>();
+        int stackSize = 0;
+        final List<String> surfaces = new LinkedList<>();
 
         for (TokenElement tokenElement : sentence.getTokens()) {
             final List<String> tags = tokenElement.getTags();
-            switch (st) {
+            switch (stackSize) {
             case 0:
                 if (tags.get(0).equals("助詞") && tags.get(6).equals("の")) {
-                    q.add(tags.get(6));
-                    st = 1;
+                    surfaces.add(tags.get(6));
+                    stackSize = 1;
                 }
                 break;
             case 1:
                 if (tags.get(0).equals("名詞")) {
-                    q.add(tags.get(6));
+                    surfaces.add(tags.get(6));
                 } else {
                     if (tags.get(0).equals("助詞") && tags.get(6).equals("の")) {
-                        q.add(tags.get(6));
-                        st = 2;
+                        surfaces.add(tags.get(6));
+                        stackSize = 2;
                     } else {
-                        q.clear();
-                        st = 0;
+                        surfaces.clear();
+                        stackSize = 0;
                     }
                 }
                 break;
             case 2:
-                addLocalizedError(sentence, String.join("", q));
-                st = 0;
+                addLocalizedError(sentence, String.join("", surfaces));
+                stackSize = 0;
                 break;
             }
         }
