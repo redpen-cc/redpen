@@ -181,11 +181,19 @@ public abstract class Validator {
         return properties;
     }
 
-    protected int getInt(String name) {
-        Object value = config.getProperty(name);
+    Object getOrDefault(String name){
+        Object value = null;
+        if(config != null){
+            value = config.getProperty(name);
+        }
         if(value == null) {
             value = properties.get(name);
         }
+        return value;
+    }
+
+    protected int getInt(String name) {
+        Object value = getOrDefault(name);
         if(value instanceof Integer) {
             return (int) value;
         }else{
@@ -194,10 +202,7 @@ public abstract class Validator {
     }
 
     protected float getFloat(String name) {
-        Object value = config.getProperty(name);
-        if(value == null) {
-            value = properties.get(name);
-        }
+        Object value = getOrDefault(name);
         if(value instanceof Float) {
             return (float) value;
         }else{
@@ -210,10 +215,7 @@ public abstract class Validator {
     }
 
     protected boolean getBoolean(String name) {
-        Object value = config.getProperty(name);
-        if(value == null) {
-            value = properties.get(name);
-        }
+        Object value = getOrDefault(name);
         if(value instanceof Boolean) {
             return (boolean) value;
         }else{
@@ -223,7 +225,10 @@ public abstract class Validator {
 
     @SuppressWarnings("unchecked")
     protected Set<String> getSet(String name) {
-        Object value = config.getProperty(name);
+        Object value = null;
+        if(config != null){
+            value = config.getProperty(name);
+        }
         if (isEmpty(((String)value))) {
             value = properties.get(name);
         }
