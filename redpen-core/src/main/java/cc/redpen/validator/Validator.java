@@ -143,12 +143,7 @@ public abstract class Validator {
     public final void preInit(ValidatorConfiguration config, Configuration globalConfig) throws RedPenException {
         this.config = config;
         this.globalConfig = globalConfig;
-        loadProperties(config);
         init();
-    }
-
-    private void loadProperties(ValidatorConfiguration config) {
-        config.getProperties().forEach((key, value)-> properties.put(key,value));
     }
 
     void setLocale(Locale locale) {
@@ -187,7 +182,10 @@ public abstract class Validator {
     }
 
     protected int getInt(String name) {
-        Object value = properties.get(name);
+        Object value = config.getProperty(name);
+        if(value == null) {
+            value = properties.get(name);
+        }
         if(value instanceof Integer) {
             return (int) value;
         }else{
@@ -196,7 +194,10 @@ public abstract class Validator {
     }
 
     protected float getFloat(String name) {
-        Object value = properties.get(name);
+        Object value = config.getProperty(name);
+        if(value == null) {
+            value = properties.get(name);
+        }
         if(value instanceof Float) {
             return (float) value;
         }else{
@@ -205,11 +206,14 @@ public abstract class Validator {
     }
 
     protected String getString(String name) {
-        return (String)properties.get(name);
+        return config.getProperties().getOrDefault(name, (String)properties.get(name));
     }
 
     protected boolean getBoolean(String name) {
-        Object value = properties.get(name);
+        Object value = config.getProperty(name);
+        if(value == null) {
+            value = properties.get(name);
+        }
         if(value instanceof Boolean) {
             return (boolean) value;
         }else{
@@ -219,7 +223,10 @@ public abstract class Validator {
 
     @SuppressWarnings("unchecked")
     protected Set<String> getSet(String name) {
-        Object value = properties.get(name);
+        Object value = config.getProperty(name);
+        if (isEmpty(((String)value))) {
+            value = properties.get(name);
+        }
         if(value == null){
             return null;
         }
