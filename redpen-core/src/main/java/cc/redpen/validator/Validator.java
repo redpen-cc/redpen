@@ -38,7 +38,6 @@ import java.util.*;
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
-import static java.util.Arrays.asList;
 import static java.util.ResourceBundle.Control.FORMAT_DEFAULT;
 import static java.util.stream.Collectors.toSet;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -50,7 +49,7 @@ public abstract class Validator {
     private static final Logger LOG = LoggerFactory.getLogger(Validator.class);
     private final static ResourceBundle.Control fallbackControl = ResourceBundle.Control.getNoFallbackControl(FORMAT_DEFAULT);
 
-    private Map<String, Object> properties;
+    private Map<String, Object> defaultProps;
     private ResourceBundle errorMessages = null;
     private ValidatorConfiguration config;
     private Configuration globalConfig;
@@ -68,14 +67,14 @@ public abstract class Validator {
     }
 
     protected void setDefaultProperties(Object...keyValues) {
-        properties = new LinkedHashMap<>();
+        defaultProps = new LinkedHashMap<>();
         addDefaultProperties(keyValues);
     }
 
     protected void addDefaultProperties(Object...keyValues) {
         if (keyValues.length % 2 != 0) throw new IllegalArgumentException("Not enough values specified");
         for (int i = 0; i < keyValues.length; i+=2) {
-            properties.put(keyValues[i].toString(), keyValues[i+1]);
+            defaultProps.put(keyValues[i].toString(), keyValues[i+1]);
         }
     }
 
@@ -178,7 +177,7 @@ public abstract class Validator {
     }
 
     public Map<String, Object> getProperties() {
-        return properties;
+        return defaultProps;
     }
 
     Object getOrDefault(String name){
@@ -187,7 +186,7 @@ public abstract class Validator {
             value = config.getProperty(name);
         }
         if(value == null) {
-            value = properties.get(name);
+            value = defaultProps.get(name);
         }
         return value;
     }
@@ -211,7 +210,7 @@ public abstract class Validator {
     }
 
     protected String getString(String name) {
-        return config.getProperties().getOrDefault(name, (String)properties.get(name));
+        return config.getProperties().getOrDefault(name, (String) defaultProps.get(name));
     }
 
     protected boolean getBoolean(String name) {
@@ -230,7 +229,7 @@ public abstract class Validator {
             value = config.getProperty(name);
         }
         if (isEmpty(((String)value))) {
-            value = properties.get(name);
+            value = defaultProps.get(name);
         }
         if(value == null){
             return null;
@@ -239,7 +238,7 @@ public abstract class Validator {
             return (Set<String>) value;
         }
         Set<String> newValue = Arrays.stream(((String)value).split(",")).map(String::toLowerCase).collect(toSet());
-        properties.put(name,newValue);
+        defaultProps.put(name,newValue);
         return newValue;
     }
 
@@ -446,7 +445,7 @@ public abstract class Validator {
     }
 
     @Override public String toString() {
-        return getClass().getSimpleName() + properties;
+        return getClass().getSimpleName() + defaultProps;
     }
 
     @Override public boolean equals(Object o) {
