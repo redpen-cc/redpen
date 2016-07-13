@@ -87,4 +87,93 @@ public class DoubledJoshiValidatorTest {
         assertEquals(0, errors.get(documents.get(0)).size());
     }
 
+    @Test
+    public void testMinDistance() throws Exception {
+        List<Document> documents = new ArrayList<>();
+        documents.add(Document.builder(new JapaneseTokenizer())
+                .addSection(1)
+                .addParagraph()
+                .addSentence(new Sentence("iPhoneと、Androidと。", 1))
+                .build());
+
+        Configuration config = Configuration.builder("ja")
+            .addValidatorConfig(new ValidatorConfiguration("DoubledJoshi").addProperty("min_dist", 1))
+                .build();
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        assertEquals(0, errors.get(documents.get(0)).size());
+    }
+
+    @Test
+    public void testMinDistanceBorder() throws Exception {
+        List<Document> documents = new ArrayList<>();
+        documents.add(Document.builder(new JapaneseTokenizer())
+                .addSection(1)
+                .addParagraph()
+                .addSentence(new Sentence("iPhoneと、Androidと。", 1))
+                .build());
+
+        Configuration config = Configuration.builder("ja")
+            .addValidatorConfig(new ValidatorConfiguration("DoubledJoshi").addProperty("min_dist", 2))
+                .build();
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        assertEquals(1, errors.get(documents.get(0)).size());
+    }
+
+    @Test
+    public void testRelaxedModeRentaikaRule() throws Exception {
+        List<Document> documents = new ArrayList<>();
+        documents.add(Document.builder(new JapaneseTokenizer())
+                .addSection(1)
+                .addParagraph()
+                .addSentence(new Sentence("この製品の発表の動画はこちらです。", 1))
+                .build());
+
+        Configuration config = Configuration.builder("ja")
+            .addValidatorConfig(new ValidatorConfiguration("DoubledJoshi").addProperty("relaxed", true))
+                .build();
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        assertEquals(0, errors.get(documents.get(0)).size());
+    }
+
+    @Test
+    public void testRelaxedModeKakujoshiRule() throws Exception {
+        List<Document> documents = new ArrayList<>();
+        documents.add(Document.builder(new JapaneseTokenizer())
+                .addSection(1)
+                .addParagraph()
+                .addSentence(new Sentence("オブジェクトを返す関数を公開する。", 1))
+                .build());
+
+        Configuration config = Configuration.builder("ja")
+            .addValidatorConfig(new ValidatorConfiguration("DoubledJoshi").addProperty("relaxed", true))
+                .build();
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        assertEquals(0, errors.get(documents.get(0)).size());
+    }
+
+    @Test
+    public void testRelaxedModeConjunctionRule() throws Exception {
+        List<Document> documents = new ArrayList<>();
+        documents.add(Document.builder(new JapaneseTokenizer())
+                .addSection(1)
+                .addParagraph()
+                .addSentence(new Sentence("このあたりは実際に試していただいて決定すると良いでしょう。", 1))
+                .build());
+
+        Configuration config = Configuration.builder("ja")
+            .addValidatorConfig(new ValidatorConfiguration("DoubledJoshi").addProperty("relaxed", true))
+                .build();
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        assertEquals(0, errors.get(documents.get(0)).size());
+    }
 }

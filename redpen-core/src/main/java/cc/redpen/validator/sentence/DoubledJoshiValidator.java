@@ -20,8 +20,10 @@ package cc.redpen.validator.sentence;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.validator.Validator;
+import cc.redpen.util.Pair;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singletonList;
@@ -32,26 +34,59 @@ import static java.util.Collections.singletonList;
  * Note: this validator works only for Japanese texts.
  */
 public class DoubledJoshiValidator extends Validator {
+    private static final Pattern SEPARATOR_PATTERN = Pattern.compile("[、,，]");
+
     public DoubledJoshiValidator() {
-        super("list", emptySet());
+        super();
+        addDefaultProperties("list", emptySet());
+        addDefaultProperties("min_dist", Integer.MAX_VALUE);
+        addDefaultProperties("relaxed", false);
     }
 
     @Override
     public void validate(Sentence sentence) {
-        Map<String, Integer> counts = new HashMap<>();
+        final boolean relaxed = getBoolean("relaxed");
+        final Set<String> skipList = getSet("list");
+        final List<Pair<String, Integer>> vec = new ArrayList<>();
+
+        int i = 0;
         for (TokenElement tokenElement : sentence.getTokens()) {
-            if (tokenElement.getTags().get(0).equals("助詞")) {
-                if (!counts.containsKey(tokenElement.getSurface())) {
-                    counts.put(tokenElement.getSurface(), 0);
+            final List<String> t = tokenElement.getTags();
+            final String s = tokenElement.getSurface();
+            if (t.get(0).equals("助詞")) {
+                if (!skipList.contains(s)) {
+                    if (relaxed) {
+                        if ("連体化".equals(t.get(1)) && "の".equals(s)) {
+                            continue;
+                        }
+                        if ("格助詞".equals(t.get(1)) && "を".equals(s)) {
+                            continue;
+                        }
+                        if ("接続助詞".equals(t.get(1)) && "て".equals(s)) {
+                            continue;
+                        }
+                    }
+                    vec.add(new Pair<>(s, i));
                 }
-                counts.put(tokenElement.getSurface(),
-                        counts.get(tokenElement.getSurface())+1);
+                ++i;
+            } else if (SEPARATOR_PATTERN.matcher(s).find()) {
+                ++i;
             }
         }
-        Set<String> skipList = getSet("list");
-        counts.entrySet().stream()
-                .filter(e -> e.getValue() >= 2 && !skipList.contains(e.getKey()))
-                .forEach(e -> addLocalizedError(sentence, e.getKey()));
+
+        final Map<String, Integer> seen = new HashMap<>();
+        final int mininumDistance = getInt("min_dist");
+
+        for (Pair<String, Integer> e : vec) {
+            final String p = e.first;
+            final int q = e.second;
+            if (seen.containsKey(p)) {
+                if ((q - seen.get(p)) <= mininumDistance) {
+                    addLocalizedError(sentence, p);
+                }
+            }
+            seen.put(p, q);
+        }
     }
 
     @Override
