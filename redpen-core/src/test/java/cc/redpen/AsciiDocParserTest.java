@@ -344,17 +344,17 @@ public class AsciiDocParserTest {
     @Test
     public void testCommentsAndTables() {
         String sampleText = "// BLAH BLAH" +
-            "\n" +
-            "Potato" +
-            "\n" +
-            "|===\n" +
-            "|Hex |RGB |CMYK nibble\n" +
-            "\n" +
-            "|ffffff または #ffffff asd asd\n" +
-            "|[255,255,255]\n" +
-            "|[0, 0, 0, 0] または [0, 0, 0, 0%]\n" +
-            "|===\n" +
-            "\n";
+                "\n" +
+                "Potato" +
+                "\n" +
+                "|===\n" +
+                "|Hex |RGB |CMYK nibble\n" +
+                "\n" +
+                "|ffffff または #ffffff asd asd\n" +
+                "|[255,255,255]\n" +
+                "|[0, 0, 0, 0] または [0, 0, 0, 0%]\n" +
+                "|===\n" +
+                "\n";
         Document doc = createFileContent(sampleText);
 
         for (Section section : doc) {
@@ -364,7 +364,62 @@ public class AsciiDocParserTest {
                 });
             }
         }
+    }
 
+    @Test
+    public void testTableSimple() {
+        String sampleText = "Potato" +
+                "\n" +
+                "|===" +
+                "|Name of Column 1 |Name of Column 2 |Name of Column 3 \n" +
+                "|Cell in column 1, row 1\n" +
+                "|Cell in column 2, row 1\n" +
+                "|Cell in column 3, row 1\n\n" +
+                "|Cell in column 1, row 2\n" +
+                "|Cell in column 2, row 2\n" +
+                "|Cell in column 3, row 2\n" +
+                "|===\n" +
+                "\n";
+        Document doc = createFileContent(sampleText);
+
+        for (Section section : doc) {
+            for (Paragraph paragraph : section.getParagraphs()) {
+                paragraph.getSentences().forEach(sentence -> {
+                    assertEquals("Potato", sentence.getContent());
+                });
+            }
+        }
+    }
+
+    @Test
+    public void testTableMultiLineElement() {
+        String sampleText = "\n" +
+        "|===\n" +
+        "|Name\n" +
+        "|Category\n" +
+        "|Description\n\n" +
+
+        "|Firefox\n" +
+        "|Browser\n" +
+        "|Mozilla Firefox is an open-source web browser.\n" +
+        "It's designed for standards compliance,\n" +
+        "performance, portability.\n\n" +
+        "|Arquillian" +
+        "|Testing" +
+        "|An innovative and highly extensible testing platform.\n" +
+        "Empowers developers to easily create real, automated tests.\n" +
+        "|===\n\n" +
+        "Potato";
+
+        Document doc = createFileContent(sampleText);
+
+        for (Section section : doc) {
+            for (Paragraph paragraph : section.getParagraphs()) {
+                paragraph.getSentences().forEach(sentence -> {
+                    assertEquals("Potato", sentence.getContent());
+                });
+            }
+        }
     }
 
     @Test
