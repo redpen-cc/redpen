@@ -190,6 +190,15 @@ public class AsciiDocParser extends LineParser {
             return true;
         }
 
+        // test for single line labeled list
+        // NOTE: single line labeled list must be level 1
+        int position = 0;
+        if ((position = line.getText().indexOf(":: ")) != -1) {
+            line.setListLevel(1);
+            line.setListStart(true);
+            line.erase(0, position+3);
+            return true;
+        }
         return false;
     }
 
