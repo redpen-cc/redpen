@@ -394,22 +394,22 @@ public class AsciiDocParserTest {
     @Test
     public void testTableMultiLineElement() {
         String sampleText = "\n" +
-        "|===\n" +
-        "|Name\n" +
-        "|Category\n" +
-        "|Description\n\n" +
+                "|===\n" +
+                "|Name\n" +
+                "|Category\n" +
+                "|Description\n\n" +
 
-        "|Firefox\n" +
-        "|Browser\n" +
-        "|Mozilla Firefox is an open-source web browser.\n" +
-        "It's designed for standards compliance,\n" +
-        "performance, portability.\n\n" +
-        "|Arquillian" +
-        "|Testing" +
-        "|An innovative and highly extensible testing platform.\n" +
-        "Empowers developers to easily create real, automated tests.\n" +
-        "|===\n\n" +
-        "Potato";
+                "|Firefox\n" +
+                "|Browser\n" +
+                "|Mozilla Firefox is an open-source web browser.\n" +
+                "It's designed for standards compliance,\n" +
+                "performance, portability.\n\n" +
+                "|Arquillian" +
+                "|Testing" +
+                "|An innovative and highly extensible testing platform.\n" +
+                "Empowers developers to easily create real, automated tests.\n" +
+                "|===\n\n" +
+                "Potato";
 
         Document doc = createFileContent(sampleText);
 
@@ -417,6 +417,35 @@ public class AsciiDocParserTest {
             for (Paragraph paragraph : section.getParagraphs()) {
                 paragraph.getSentences().forEach(sentence -> {
                     assertEquals("Potato", sentence.getContent());
+                });
+            }
+        }
+    }
+
+    @Test
+    public void testTableWithTitle() {
+        String sampleText = "\n" +
+                ".This is a title of Table.\n" +
+                "|===\n" +
+                "|Name\n" +
+                "|Category\n" +
+                "|Description\n\n" +
+
+                "|Firefox\n" +
+                "|Browser\n" +
+                "|Mozilla Firefox is an open-source web browser.\n" +
+                "It's designed for standards compliance,\n" +
+                "performance, portability.\n\n" +
+                "|Arquillian" +
+                "|Testing" +
+                "|An innovative and highly extensible testing platform.\n" +
+                "Empowers developers to easily create real, automated tests.\n" +
+                "|===\n\n";
+        Document doc = createFileContent(sampleText);
+        for (Section section : doc) {
+            for (Paragraph paragraph : section.getParagraphs()) {
+                paragraph.getSentences().forEach(sentence -> {
+                    assertEquals("This is a title of Table.", sentence.getContent());
                 });
             }
         }
