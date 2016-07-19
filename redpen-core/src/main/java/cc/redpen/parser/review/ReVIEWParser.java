@@ -144,7 +144,7 @@ public class ReVIEWParser extends LineParser {
         line.eraseEnclosure("@<m>{", "}", Line.EraseStyle.All);
         line.eraseEnclosure("@<icon>{", "}", Line.EraseStyle.Markers);
         line.eraseEnclosure("@<uchar>{", "}", Line.EraseStyle.Markers);
-        line.eraseEnclosure("@<href>{", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<href>{", "}", Line.EraseStyle.PreserveLabel);
         line.eraseEnclosure("@<column>{", "}", Line.EraseStyle.Markers);
         line.eraseEnclosure("@<raw>{|html|", "}", Line.EraseStyle.All);
         line.eraseEnclosure("@<raw>{|latex|", "}", Line.EraseStyle.Markers);
