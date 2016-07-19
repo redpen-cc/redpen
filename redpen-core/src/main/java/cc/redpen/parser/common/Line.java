@@ -381,35 +381,35 @@ public class Line {
                                 EraseStyle eraseStyle,
                                 int lastCommaPosition,
                                 int enclosureStart,
-                                int start) {
+                                int cloaseStart) {
         switch (eraseStyle) {
             case All:
-                erase(enclosureStart, (start - enclosureStart) + close.length());
+                erase(enclosureStart, (cloaseStart - enclosureStart) + close.length());
                 break;
             case Markers:
             case InlineMarkup:
                 erase(enclosureStart, open.length());
-                erase(start, close.length());
+                erase(cloaseStart, close.length());
                 break;
             case PreserveLabel:
                 if (lastCommaPosition != -1) {
                     erase(enclosureStart, (lastCommaPosition + 1) - enclosureStart);
-                    erase(start, close.length());
+                    erase(cloaseStart, close.length());
                 }
                 else {
                     erase(enclosureStart, open.length());
-                    erase(start, close.length());
+                    erase(cloaseStart, close.length());
                 }
                 break;
             case PreserveAfterLabel:
                 erase(enclosureStart, open.length());
-                erase(lastCommaPosition, start - lastCommaPosition);
-                erase(start, close.length());
+                erase(lastCommaPosition, cloaseStart - lastCommaPosition);
+                erase(cloaseStart, close.length());
                 break;
             case CloseMarkerContainsDelimiters:
-                erase(enclosureStart, (start == length() - 1)
+                erase(enclosureStart, (cloaseStart == length() - 1)
                         ? (length() - enclosureStart)
-                        : (start - enclosureStart));
+                        : (cloaseStart - enclosureStart));
                 break;
             case None:
                 break;
