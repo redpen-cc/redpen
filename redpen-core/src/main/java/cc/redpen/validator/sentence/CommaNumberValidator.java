@@ -43,8 +43,7 @@ public final class CommaNumberValidator extends Validator {
         String content = sentence.getContent();
         int commaCount = 0;
         int position = 0;
-        while (position != -1) {
-            position = content.indexOf(this.comma);
+        while ((position = content.indexOf(this.comma)) != -1) {
             commaCount++;
             content = content.substring(position + 1, content.length());
         }
