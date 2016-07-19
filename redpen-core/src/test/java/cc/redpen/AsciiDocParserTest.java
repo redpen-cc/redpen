@@ -459,7 +459,6 @@ public class AsciiDocParserTest {
         }
     }
 
-
     private Document createResourceContent(String filename) {
         return createResourceContent(filename, "en");
     }

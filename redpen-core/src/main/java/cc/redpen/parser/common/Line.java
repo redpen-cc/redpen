@@ -55,7 +55,7 @@ public class Line {
         Markers,
         InlineMarkup,
         PreserveLabel,
-        CloseMarkerContainsDelimiters
+        PreserveAfterLabel, CloseMarkerContainsDelimiters
     }
 
     public Line(String str, int lineNo) {
@@ -400,6 +400,11 @@ public class Line {
                     erase(enclosureStart, open.length());
                     erase(start, close.length());
                 }
+                break;
+            case PreserveAfterLabel:
+                erase(enclosureStart, open.length());
+                erase(lastCommaPosition, start - lastCommaPosition);
+                erase(start, close.length());
                 break;
             case CloseMarkerContainsDelimiters:
                 erase(enclosureStart, (start == length() - 1)
