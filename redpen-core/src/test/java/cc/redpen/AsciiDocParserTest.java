@@ -451,6 +451,33 @@ public class AsciiDocParserTest {
         }
     }
 
+
+    @Test
+    public void testTableWithList() {
+        String sampleText = "\n" +
+        "[cols=\"2,2,5a\"]\n" +
+        "|===\n" +
+        "|Firefox\n" +
+        "|Browser\n" +
+        "|Mozilla Firefox is an open-source web browser.\n\n" +
+        "It's designed for:\n\n" +
+        "* standards compliance\n" +
+        "* performance\n" +
+        "* portability\n\n" +
+        "http://getfirefox.com[Get Firefox]!\n" +
+        "|===\n\n" +
+        "Potato.";
+
+        Document doc = createFileContent(sampleText);
+        for (Section section : doc) {
+            for (Paragraph paragraph : section.getParagraphs()) {
+                paragraph.getSentences().forEach(sentence -> {
+                    assertEquals("Potato.", sentence.getContent());
+                });
+            }
+        }
+    }
+
     @Test
     public void testDocumentWithItalicWord() {
         String sampleText = "It is a *good* day.";
