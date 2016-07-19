@@ -423,8 +423,42 @@ public class AsciiDocParserTest {
                 });
             }
         }
-
     }
+
+    @Test
+    public void testLabeledListBlock() {
+        String sampleText = "\n" +
+                "first term::\n" +
+                "definition of first term\n" +
+                "second term::\n" +
+                "definition of second term\n";
+
+        Document doc = createFileContent(sampleText);
+        assertEquals(2, doc.getSection(0).getListBlock(0).getNumberOfListElements());
+        assertEquals("definition of first term ", doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).getContent());
+        assertEquals("definition of second term", doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).getContent());
+    }
+
+    @Test
+    public void testSingleLineLabeledListBlock() {
+        String sampleText = "\n" +
+                "first term:: definition of first term\n" +
+                "second term:: definition of second term\n\n" +
+                "Potato\n";
+
+        Document doc = createFileContent(sampleText);
+        assertEquals(2, doc.getSection(0).getListBlock(0).getNumberOfListElements());
+        assertEquals("definition of first term", doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).getContent());
+        assertEquals("definition of second term", doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).getContent());
+        for (Section section : doc) {
+            for (Paragraph paragraph : section.getParagraphs()) {
+                paragraph.getSentences().forEach(sentence -> {
+                    assertEquals("Potato", sentence.getContent());
+                });
+            }
+        }
+    }
+
 
     private Document createResourceContent(String filename) {
         return createResourceContent(filename, "en");
