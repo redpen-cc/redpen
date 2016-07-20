@@ -31,11 +31,8 @@ import static java.util.Collections.singletonList;
  * Validate Japanese document if it contains both Desumasu and Dearu styles.
  */
 public class JapaneseStyleValidator extends Validator {
-    private static final Pattern DEARU_PATTERN = Pattern.compile("のだが|したが|したので|ないかと|してきた|であるから");
-    private static final Pattern DEARU_END_PATTERN = Pattern.compile("(だ|である|った|ではない｜ないか|しろ|しなさい|いただきたい|いただく|ならない|あろう|られる)$");
-
-    private static final Pattern DESUMASU_PATTERN = Pattern.compile("でしたが|でしたので|ですので|ですが");
-    private static final Pattern DESUMASU_END_PATTERN = Pattern.compile("(です|ます|ました|ません|ですね|でしょうか|ください|ませ)$");
+    private static final Pattern DEARU_PATTERN = Pattern.compile("である|のだが|であった|あるが|あった|だった");
+    private static final Pattern DESUMASU_PATTERN = Pattern.compile("ですね|でした|ました|でしたが|でしたので|ですので|ですが|です");
 
     private int dearuCount = 0;
     private int desumasuCount = 0;
@@ -45,10 +42,6 @@ public class JapaneseStyleValidator extends Validator {
         // match content
         dearuCount += countMatch(sentence, DEARU_PATTERN);
         desumasuCount += countMatch(sentence, DESUMASU_PATTERN);
-
-        // match end content
-        dearuCount += countEndMatch(sentence, DEARU_END_PATTERN);
-        desumasuCount += countEndMatch(sentence, DESUMASU_END_PATTERN);
     }
 
     private int countMatch(Sentence sentence, Pattern pattern) {
@@ -79,10 +72,8 @@ public class JapaneseStyleValidator extends Validator {
     public void validate(Sentence sentence) {
         if (dearuCount > desumasuCount) {
             detectPattern(sentence, DESUMASU_PATTERN);
-            detectPattern(sentence, DESUMASU_END_PATTERN);
         } else {
             detectPattern(sentence, DEARU_PATTERN);
-            detectPattern(sentence, DEARU_END_PATTERN);
         }
     }
 

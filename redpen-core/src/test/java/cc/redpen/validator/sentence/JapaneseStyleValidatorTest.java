@@ -38,8 +38,8 @@ public class JapaneseStyleValidatorTest {
     @Test
     public void mixedtStyles() throws RedPenException {
         String sampleText =
-                "今日はいい天気ですね。\n" +
-                "昨日は雨だったのだが、持ち直した。\n" +
+                "今日はいい天気です。\n" +
+                "昨日は雨だったが、持ち直しました。\n" +
                 "明日もいい天気だといいですね。";
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("JapaneseStyle"))
@@ -55,8 +55,8 @@ public class JapaneseStyleValidatorTest {
 
         Assert.assertEquals(1, errors.get(documents.get(0)).size());
         Assert.assertEquals(2, errors.get(documents.get(0)).get(0).getLineNumber());
-        Assert.assertEquals(7, errors.get(documents.get(0)).get(0).getStartPosition().get().offset);
-        Assert.assertEquals(10, errors.get(documents.get(0)).get(0).getEndPosition().get().offset);
+        Assert.assertEquals(4, errors.get(documents.get(0)).get(0).getStartPosition().get().offset);
+        Assert.assertEquals(7, errors.get(documents.get(0)).get(0).getEndPosition().get().offset);
         Assert.assertEquals("JapaneseStyle", errors.get(documents.get(0)).get(0).getValidatorName());
     }
 
@@ -72,7 +72,7 @@ public class JapaneseStyleValidatorTest {
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("今日はいい天気ですね。", 1))
-                        .addSentence(new Sentence("昨日は雨だったのですが、持ち直しました。", 2))
+                        .addSentence(new Sentence("昨日は雨でしたが、持ち直しました。", 2))
                         .addSentence(new Sentence("明日もいい天気だといいですね。", 3))
                         .build());
 
