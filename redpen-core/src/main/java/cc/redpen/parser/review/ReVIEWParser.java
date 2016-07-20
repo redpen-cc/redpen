@@ -128,7 +128,7 @@ public class ReVIEWParser extends LineParser {
         line.eraseEnclosure("@<title>{", "}", Line.EraseStyle.Markers);
         line.eraseEnclosure("@<chapref>{", "}", Line.EraseStyle.Markers);
         line.eraseEnclosure("@<bou>{", "}", Line.EraseStyle.Markers);
-        line.eraseEnclosure("@<kw>{", "}", Line.EraseStyle.Markers); // TODO: extract keyword only
+        line.eraseEnclosure("@<kw>{", "}", Line.EraseStyle.PreserveAfterLabel);
         line.eraseEnclosure("@<chapter>{", "}", Line.EraseStyle.Markers);
         line.eraseEnclosure("@<ruby>{", "}", Line.EraseStyle.Markers);
         line.eraseEnclosure("@<ami>{", "}", Line.EraseStyle.Markers);
@@ -144,7 +144,7 @@ public class ReVIEWParser extends LineParser {
         line.eraseEnclosure("@<m>{", "}", Line.EraseStyle.All);
         line.eraseEnclosure("@<icon>{", "}", Line.EraseStyle.Markers);
         line.eraseEnclosure("@<uchar>{", "}", Line.EraseStyle.Markers);
-        line.eraseEnclosure("@<href>{", "}", Line.EraseStyle.Markers);
+        line.eraseEnclosure("@<href>{", "}", Line.EraseStyle.PreserveLabel);
         line.eraseEnclosure("@<column>{", "}", Line.EraseStyle.Markers);
         line.eraseEnclosure("@<raw>{|html|", "}", Line.EraseStyle.All);
         line.eraseEnclosure("@<raw>{|latex|", "}", Line.EraseStyle.Markers);
