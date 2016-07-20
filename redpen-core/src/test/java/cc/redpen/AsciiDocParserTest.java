@@ -459,6 +459,24 @@ public class AsciiDocParserTest {
         }
     }
 
+    @Test
+    public void testSimpleImage() {
+        String sampleText = "\n" +
+                "image:images/logo.png[Company Logo]\n\n" +
+                "Potato\n";
+        Document doc = createFileContent(sampleText);
+        assertEquals("Potato", doc.getLastSection().getParagraph(0).getSentence(0).getContent());
+    }
+
+    @Test
+    public void testImageWithAttributes() {
+        String sampleText = "\n" +
+                "image:images/logo.png[scaledwidth=\"75%\",alt=\"Company Logo\"]\n\n" +
+                "Potato\n";
+        Document doc = createFileContent(sampleText);
+        assertEquals("Potato", doc.getLastSection().getParagraph(0).getSentence(0).getContent());
+    }
+
     private Document createResourceContent(String filename) {
         return createResourceContent(filename, "en");
     }
