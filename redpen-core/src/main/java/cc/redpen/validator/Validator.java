@@ -54,6 +54,7 @@ public abstract class Validator {
     private ResourceBundle errorMessages = null;
     private ValidatorConfiguration config;
     private Configuration globalConfig;
+    private Locale locale;
 
     public Validator() {
         this(new Object[0]);
@@ -165,6 +166,7 @@ public abstract class Validator {
     }
 
     void setLocale(Locale locale) {
+        this.locale = locale;
         // getPackage() would return null for default package
         String packageName = this.getClass().getPackage() != null ? this.getClass().getPackage().getName() : "";
         try {
@@ -351,7 +353,8 @@ public abstract class Validator {
     protected String getLocalizedErrorMessage(String key, Object... args) {
         if (errorMessages != null) {
             String suffix = key != null ? "." + key : "";
-            return MessageFormat.format(errorMessages.getString(this.getClass().getSimpleName() + suffix), args);
+            MessageFormat fmt = new MessageFormat(errorMessages.getString(this.getClass().getSimpleName() + suffix), locale);
+            return fmt.format(args);
         } else {
             throw new AssertionError("message resource not found.");
         }
