@@ -82,6 +82,11 @@ final public class DuplicatedSectionValidator extends Validator {
             if (sectionVector.header != section.getHeaderContent(0) &&
                     calcCosine(targetVector, candidateVector) > getFloat("threshold")) {
                 Optional<Sentence> header = Optional.ofNullable(section.getHeaderContent(0));
+                //NOTE: without the following information, addLocaledError cannot create an error.
+                //FIXME: ideally document.builder should take a responsibility not to have void paragraph and header.
+                if (section.getNumberOfParagraphs() == 0 || sectionVector.header == null) {
+                    continue;
+                }
                 addLocalizedError(header.orElse(section.getParagraph(0).getSentence(0)),
                         sectionVector.header.getLineNumber());
             }
@@ -93,6 +98,11 @@ final public class DuplicatedSectionValidator extends Validator {
         int innerProduct = 0;
         int targetVecLen = calcLength(targetVector);
         int argumentVecLen = calcLength(argumentVector);
+
+        if (targetVecLen == 0 || argumentVecLen == 0) {
+            return 0.0;
+        }
+
         for (String word : targetVector.keySet()) {
             if (argumentVector.containsKey(word)) {
                 innerProduct += targetVector.get(word) * argumentVector.get(word);
