@@ -87,4 +87,41 @@ public class DoubledJoshiValidatorTest {
         assertEquals(0, errors.get(documents.get(0)).size());
     }
 
+
+    @Test
+    public void testInterval2() throws Exception {
+        List<Document> documents = new ArrayList<>();
+        documents.add(Document.builder(new JapaneseTokenizer())
+                .addSection(1)
+                .addParagraph()
+                .addSentence(new Sentence("彼の色鉛筆と私の筆箱。", 1))
+                .build());
+
+        Configuration config = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("DoubledJoshi"))
+                .build();
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        assertEquals(0, errors.get(documents.get(0)).size());
+    }
+
+    @Test
+    public void testInterval2SettingMinInterval() throws Exception {
+        List<Document> documents = new ArrayList<>();
+        documents.add(Document.builder(new JapaneseTokenizer())
+                .addSection(1)
+                .addParagraph()
+                .addSentence(new Sentence("彼の色鉛筆と私の筆箱。", 1))
+                .build());
+
+        Configuration config = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("DoubledJoshi").addProperty("min_interval", 2))
+                .build();
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        assertEquals(1, errors.get(documents.get(0)).size());
+    }
+
 }
