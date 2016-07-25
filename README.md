@@ -61,7 +61,7 @@ Extensions
 
   * [unsuggested-kanji](https://github.com/so-c/redpen-validator) by so-c
   * [ra-removed-word](http://www.clear-code.com/blog/2015/8/29.html) by ClearCode
-  * [redepn-validator](https://github.com/kongou-ae/redpen-validator) by kongou-ae
+  * [redpen-validator](https://github.com/kongou-ae/redpen-validator) by kongou-ae
 
 How to contribute
 ==================
