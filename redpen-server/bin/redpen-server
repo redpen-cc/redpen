@@ -93,10 +93,10 @@ if [ $COMMAND = "start" ]; then
         echo "starting RedPen server with stop key..." 1>&2
     if [ -z $REDPEN_CONF_FILE ]; then
         echo "starting RedPen server without specified configuration file..." 1>&2
-        exec "$JAVA_CMD" -jar $JAVA_OPTS $REDPEN_WAR_FILE -p $REDPEN_PORT -STOP_KEY $STOP_KEY >> $REDPEN_LOG_FILE 2>&1 &
+        exec "$JAVA_CMD" -jar $JAVA_OPTS $REDPEN_WAR_FILE -p $REDPEN_PORT -key $STOP_KEY >> $REDPEN_LOG_FILE 2>&1 &
     else
         echo "starting RedPen server specifying a configuration file " $REDPEN_CONF_FILE " ..." 1>&2
-        exec "$JAVA_CMD" -jar $JAVA_OPTS $REDPEN_WAR_FILE -p $REDPEN_PORT -STOP_KEY $STOP_KEY -c $REDPEN_CONF_FILE >> $REDPEN_LOG_FILE 2>&1 &
+        exec "$JAVA_CMD" -jar $JAVA_OPTS $REDPEN_WAR_FILE -p $REDPEN_PORT -key $STOP_KEY -c $REDPEN_CONF_FILE >> $REDPEN_LOG_FILE 2>&1 &
     fi
         exit 0
     fi
