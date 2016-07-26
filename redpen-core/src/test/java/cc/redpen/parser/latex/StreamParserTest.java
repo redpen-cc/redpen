@@ -201,7 +201,7 @@ public class StreamParserTest {
 
         for (String t:
                  Arrays.asList(
-                     "hfill", "hfill*", "vfill", "vfill*", "phantom", "documentclass", "usepackage", "author", "date", "label", "cite", "biblio*whatever*", "includegraphics"
+                     "hfill", "hfill*", "vfill", "vfill*", "phantom", "documentclass", "usepackage", "author", "date", "label", "cite", "biblio*whatever*", "includegraphics", "footnote"
                  )) {
             tokens.add(token("CONTROL", t));
             tokens.addAll(garbage);
