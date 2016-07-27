@@ -18,6 +18,7 @@
 package cc.redpen.validator;
 
 import cc.redpen.RedPenException;
+import cc.redpen.config.SymbolTable;
 import cc.redpen.model.Document;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
@@ -165,7 +166,42 @@ public class JavaScriptValidator extends Validator {
         }
     }
 
-    // give ValidationError factory methods public access so that they can be bound with JavaScript
+    // give Validator methods public access so that they can be bound with JavaScript
+    @Override
+    public int getInt(String name) {
+        return super.getInt(name);
+    }
+
+    @Override
+    public float getFloat(String name) {
+        return super.getFloat(name);
+    }
+
+    @Override
+    public String getString(String name) {
+        return super.getString(name);
+    }
+
+    @Override
+    public boolean getBoolean(String name) {
+        return super.getBoolean(name);
+    }
+
+    @Override
+    public Set<String> getSet(String name) {
+        return super.getSet(name);
+    }
+
+    @Override
+    public Optional<String> getConfigAttribute(String name) {
+        return super.getConfigAttribute(name);
+    }
+
+    @Override
+    public SymbolTable getSymbolTable() {
+        return super.getSymbolTable();
+    }
+
     @Override
     public void addError(String message, Sentence sentenceWithError) {
         super.addError(String.format("[%s] %s", currentJS.name, message), sentenceWithError);
@@ -222,12 +258,16 @@ public class JavaScriptValidator extends Validator {
             ScriptEngine engine = manager.getEngineByName("nashorn");
             try {
                 engine.put("redpenToBeBound", validator);
-                engine.eval("var addError = Function.prototype.bind.call(redpenToBeBound.addError, redpenToBeBound);" +
-                        "var addErrorWithPosition = Function.prototype.bind.call(redpenToBeBound.addErrorWithPosition, redpenToBeBound);" +
-                        "var addLocalizedError = Function.prototype.bind.call(redpenToBeBound.addLocalizedError, redpenToBeBound);" +
-                        "var addLocalizedErrorFromToken = Function.prototype.bind.call(redpenToBeBound.addLocalizedErrorFromToken, redpenToBeBound);" +
-                        "var addLocalizedErrorWithPosition = Function.prototype.bind.call(redpenToBeBound.addLocalizedErrorWithPosition, redpenToBeBound);");
 
+                String[] methodsToBeExposedToJS = {"getInt", "getFloat", "getString", "getBoolean", "getSet",
+                        "getConfigAttribute", "getSymbolTable", "addError", "addErrorWithPosition",
+                        "addLocalizedError", "addLocalizedErrorFromToken", "addLocalizedErrorWithPosition"};
+
+                for (String methodToBeExposed : methodsToBeExposedToJS) {
+                    engine.eval(String.format(
+                            "var %s = Function.prototype.bind.call(redpenToBeBound.%s, redpenToBeBound);",
+                            methodToBeExposed, methodToBeExposed));
+                }
                 try {
                     engine.eval("var _JavaScriptValidatorTest = Java.type('cc.redpen.validator.JavaScriptValidatorTest');");
                 } catch (RuntimeException e) {
