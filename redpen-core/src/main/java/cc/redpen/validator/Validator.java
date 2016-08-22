@@ -244,6 +244,62 @@ public abstract class Validator {
         return newValue;
     }
 
+    @SuppressWarnings("unchecked")
+    protected Map<String, String> getMap(String name) {
+        Object value = null;
+        if(config != null){
+            value = config.getProperty(name);
+        }
+        if (isEmpty(((String)value))) {
+            value = defaultProps.get(name);
+        }
+        if(value == null){
+            return null;
+        }
+        if(value instanceof Map){
+            return (Map<String,String>) value;
+        }
+        Map<String, String> newValue = parseMap((String)value);
+        defaultProps.put(name,newValue);
+        return newValue;
+    }
+
+    private Map<String,String> parseMap(String mapStr) {
+        Map<String,String> map = new HashMap<>();
+        int start = 0, splitter = 0, end = 0;
+        boolean found = false;
+        for (int i=0; i<mapStr.length(); i++) {
+            if (mapStr.charAt(i) == '{') {
+                start = i+1;
+            } else if (mapStr.charAt(i) == '}') {
+                end = i-1;
+                found = true;
+            } else if (mapStr.charAt(i) == ',') {
+                if (found == false) {
+                    splitter = i+1; // e.g., SVM, SupportVector Machine
+                    continue;
+                }
+                // extract key value pair
+                String key = mapStr.substring(start, splitter-1);
+                while(mapStr.charAt(splitter+1) == ' ') { ++splitter; } // skip white spaces
+                String value = mapStr.substring(splitter, end+1);
+                map.put(key, value);
+                // move pivots
+                start = i+1;
+                end = i+1;
+                splitter = i+1;
+                found = false;
+            }
+        }
+        // extract last key value pair
+        if (splitter > 0 && end < mapStr.length()) { // for safe
+            String key = mapStr.substring(start, splitter - 1);
+            String value = mapStr.substring(splitter, end + 1);
+            map.put(key, value);
+        }
+        return map;
+    }
+
     protected Optional<String> getConfigAttribute(String name) {
         return Optional.ofNullable(config.getProperty(name));
     }
