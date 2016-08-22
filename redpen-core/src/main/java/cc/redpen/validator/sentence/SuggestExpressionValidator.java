@@ -23,7 +23,6 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static cc.redpen.util.StringUtils.isProbablyJapanese;
@@ -36,7 +35,6 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
  */
 public final class SuggestExpressionValidator extends Validator {
     private static final Logger LOG = LoggerFactory.getLogger(SuggestExpressionValidator.class);
-    private Map<String, String> synonyms = new HashMap<>();
 
     public SuggestExpressionValidator() {
         super("dict", "");
@@ -45,13 +43,13 @@ public final class SuggestExpressionValidator extends Validator {
     @Override
     public void validate(Sentence sentence) {
         String text = sentence.getContent();
-        synonyms.keySet().stream().forEach(value -> {
+        getMap("map").keySet().stream().forEach(value -> {
             int start = text.indexOf(value);
             if (start < 0) return;
             int end = start + value.length();
             boolean hasWordBoundaries = (start == 0 || !isLetter(text.charAt(start - 1))) && (end == text.length() || !isLetter(text.charAt(end)));
             if (isProbablyJapanese(text.charAt(start)) || hasWordBoundaries) {
-                addLocalizedErrorWithPosition(sentence, start, end, value, synonyms.get(value));
+                addLocalizedErrorWithPosition(sentence, start, end, value, getMap("map").get(value));
             }
         });
     }
@@ -62,7 +60,8 @@ public final class SuggestExpressionValidator extends Validator {
         String confFile = getString("dict");
         if (isNotEmpty(confFile)) {
             LOG.info("Dictionary file is " + confFile);
-            synonyms = KEY_VALUE.loadCachedFromFile(findFile(confFile), "SuggestExpressionValidator dictionary");
+            getMap("map").putAll(KEY_VALUE.loadCachedFromFile(findFile(confFile), "SuggestExpressionValidator " +
+                    "dictionary"));
         }
         else {
             LOG.warn("Dictionary file is not specified");
@@ -70,6 +69,6 @@ public final class SuggestExpressionValidator extends Validator {
     }
 
     protected void setSynonyms(Map<String, String> synonymMap) {
-        this.synonyms = synonymMap;
+        getMap("map").putAll(synonymMap);
     }
 }
