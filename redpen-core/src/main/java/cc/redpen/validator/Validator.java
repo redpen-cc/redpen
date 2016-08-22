@@ -246,7 +246,6 @@ public abstract class Validator {
 
     @SuppressWarnings("unchecked")
     protected Map<String, String> getMap(String name) {
-        System.out.println("called getmap");
         Object value = null;
         if(config != null){
             value = config.getProperty(name);
@@ -262,7 +261,6 @@ public abstract class Validator {
         }
         Map<String, String> newValue = parseMap((String)value);
         defaultProps.put(name,newValue);
-        System.out.println("return " + newValue);
         return newValue;
     }
 
