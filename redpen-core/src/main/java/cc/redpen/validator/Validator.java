@@ -283,7 +283,6 @@ public abstract class Validator {
                 // extract key value pair
                 String key = mapStr.substring(start, splitter-1);
                 String value = mapStr.substring(splitter, end+1);
-                System.out.println("key:" + key + "\tvalue: " + value);
                 map.put(key, value);
                 // move pivots
                 start = i+1;
@@ -293,10 +292,11 @@ public abstract class Validator {
             }
         }
         // extract last key value pair
-        String key = mapStr.substring(start, splitter-1);
-        String value = mapStr.substring(splitter, end+1);
-        System.out.println("key:" + key + "\tvalue: " + value);
-        map.put(key, value);
+        if (splitter > 0 && end < mapStr.length()) { // for safe
+            String key = mapStr.substring(start, splitter - 1);
+            String value = mapStr.substring(splitter, end + 1);
+            map.put(key, value);
+        }
         return map;
     }
 

@@ -23,7 +23,7 @@ import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
+import java.util.HashMap;
 
 import static cc.redpen.util.StringUtils.isProbablyJapanese;
 import static java.lang.Character.isLetter;
@@ -37,21 +37,21 @@ public final class SuggestExpressionValidator extends Validator {
     private static final Logger LOG = LoggerFactory.getLogger(SuggestExpressionValidator.class);
 
     public SuggestExpressionValidator() {
-        super("dict", "");
+        super("map", new HashMap<>(), "dict", "");
     }
 
     @Override
     public void validate(Sentence sentence) {
         String text = sentence.getContent();
         getMap("map").keySet().stream().forEach(value -> {
-            int start = text.indexOf(value);
-            if (start < 0) return;
-            int end = start + value.length();
-            boolean hasWordBoundaries = (start == 0 || !isLetter(text.charAt(start - 1))) && (end == text.length() || !isLetter(text.charAt(end)));
-            if (isProbablyJapanese(text.charAt(start)) || hasWordBoundaries) {
-                addLocalizedErrorWithPosition(sentence, start, end, value, getMap("map").get(value));
-            }
-        });
+                int start = text.indexOf(value);
+                if (start < 0) return;
+                int end = start + value.length();
+                boolean hasWordBoundaries = (start == 0 || !isLetter(text.charAt(start - 1))) && (end == text.length() || !isLetter(text.charAt(end)));
+                if (isProbablyJapanese(text.charAt(start)) || hasWordBoundaries) {
+                    addLocalizedErrorWithPosition(sentence, start, end, value, getMap("map").get(value));
+                }
+            });
     }
 
     @Override
@@ -68,7 +68,4 @@ public final class SuggestExpressionValidator extends Validator {
         }
     }
 
-    protected void setSynonyms(Map<String, String> synonymMap) {
-        getMap("map").putAll(synonymMap);
-    }
 }
