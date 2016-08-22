@@ -56,6 +56,20 @@ public class SuggestExpressionValidatorTest extends BaseValidatorTest {
     }
 
     @Test
+    public void testSynonymSplitPlusWhiteSpace() throws RedPenException {
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("SuggestExpression").addProperty("map", "{like, such " +
+                        "as}"))
+                .build();
+
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.setErrorList(errors);
+        validator.validate(new Sentence("they like a piece of a cake.", 0));
+        assertEquals(1, errors.size());
+    }
+
+    @Test
     public void testWithoutSynonym() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SuggestExpression").addProperty("map", "{like,such " +

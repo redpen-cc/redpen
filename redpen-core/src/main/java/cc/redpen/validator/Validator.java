@@ -276,12 +276,12 @@ public abstract class Validator {
                 found = true;
             } else if (mapStr.charAt(i) == ',') {
                 if (found == false) {
-                    while(mapStr.charAt(i+1) == ' ') { ++i; } // skip white spaces
                     splitter = i+1; // e.g., SVM, SupportVector Machine
                     continue;
                 }
                 // extract key value pair
                 String key = mapStr.substring(start, splitter-1);
+                while(mapStr.charAt(splitter+1) == ' ') { ++splitter; } // skip white spaces
                 String value = mapStr.substring(splitter, end+1);
                 map.put(key, value);
                 // move pivots
