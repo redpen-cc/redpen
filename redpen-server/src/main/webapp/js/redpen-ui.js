@@ -58,23 +58,19 @@ RedPenUI.pasteSampleText = function(key) {
 }
 
 RedPenUI.showComponents = function(configuration) {
-    var editor = $('#redpen-editor');
-    var configSelect = $("#redpen-configuration");
-    var languageSelect = $("#redpen-language");
-    var documentParserSelect = $("#redpen-document-parser");
 
     var editorText = function (newText) {
         if (newText) {
-            $(editor).val(newText);
+            $('#redpen-editor').val(newText);
         }
-        return $(editor).val();
+        return $('#redpen-editor').val();
     };
 
     var setEditPosition = function (error) {
         if (error.position && error.position.end) {
-            var tarea = $(editor)[0];
+            var tarea = $('#redpen-editor')[0];
             if (tarea.setSelectionRange) {
-                var text = $(editor).val();
+                var text = $('#redpen-editor').val();
                 var line = 1;
                 var offset = 0;
                 var characterPosition = 0;
@@ -103,7 +99,7 @@ RedPenUI.showComponents = function(configuration) {
     // build options for each configured redpen
     for (var redpenName in configuration.redpens) {
         var config = configuration.redpens[redpenName];
-        $(configSelect).append(
+        $("#redpen-configuration").append(
             $('<option></option>')
                 .prop("value", redpenName)
                 .data("lang", config.lang)
@@ -201,7 +197,7 @@ RedPenUI.showComponents = function(configuration) {
 
     // populate the language options
     for (var language in discoveredLanguages) {
-        $(languageSelect).append(
+        $("#redpen-language").append(
             $('<option></option>')
                 .prop("value", language)
                 .text(language)
@@ -211,7 +207,7 @@ RedPenUI.showComponents = function(configuration) {
     // populate the document parser options
     for (var i = 0; i < configuration.documentParsers.length; i++) {
         var parser = configuration.documentParsers[i];
-        $(documentParserSelect).append(
+        $("#redpen-document-parser").append(
             $('<option></option>')
                 .prop("value", parser)
                 .text(parser)
@@ -220,21 +216,21 @@ RedPenUI.showComponents = function(configuration) {
 
     // set the document parser
     var setDocumentParser = function (parser) {
-        $(documentParserSelect).val(parser);
+        $("#redpen-document-parser").val(parser);
     };
 
     // ensure the options displayed are appropriate for the selected language
     var setLanguage = function (lang) {
         var firstValidRedpen = false;
-        $(configSelect).find("option").each(function () {
+        $("#redpen-configuration").find("option").each(function () {
             var valid = $(this).data("lang") == lang;
             $(this).toggle(valid);
             if (valid && !firstValidRedpen) {
                 firstValidRedpen = $(this).val();
             }
         });
-        $(configSelect).val(firstValidRedpen);
-        $(languageSelect).val(lang);
+        $("#redpen-configuration").val(firstValidRedpen);
+        $("#redpen-language").val(lang);
         showConfigurationOptions(firstValidRedpen);
     };
 
@@ -430,7 +426,7 @@ RedPenUI.showComponents = function(configuration) {
     // return the current configuration
     var getConfiguration = function () {
         var validators = {};
-        var redpen = $(configSelect).val();
+        var redpen = $("#redpen-configuration").val();
         $("#redpen-active-validators").find("input:checked").each(function () {
             var validator = $(this).val();
             validators[validator] = {};
@@ -440,7 +436,7 @@ RedPenUI.showComponents = function(configuration) {
         });
 
         return {
-            lang: $(languageSelect).val(),
+            lang: $("#redpen-language").val(),
             validators: validators,
             symbols: configuration.redpens[redpen].symbols
         };
@@ -451,7 +447,7 @@ RedPenUI.showComponents = function(configuration) {
         var requestParams = {
             document: editorText(),
             format: 'json2',
-            documentParser: $(documentParserSelect).val(),
+            documentParser: $("#redpen-document-parser").val(),
             config: getConfiguration()
         };
         $("#redpen-results-request").text(JSON.stringify(requestParams, null, 2));
@@ -601,20 +597,20 @@ RedPenUI.showComponents = function(configuration) {
     };
 
     // bind events
-    $(editor)
+    $('#redpen-editor')
         .on("blur paste input", delayedRevalidateDocument)
         .scroll(repositionEditorUnderlay);
 
-    $(documentParserSelect).change(validateDocument);
+    $("#redpen-document-parser").change(validateDocument);
 
-    $(languageSelect).change(function () {
+    $("#redpen-language").change(function () {
         RedPenUI.permitLanguageAutoDetect = false; // prevent auto-detection from subsequently overriding the user's
         // selection
         setLanguage($(this).val());
         validateDocument();
     });
 
-    $(configSelect).change(function () {
+    $("#redpen-configuration").change(function () {
         showConfigurationOptions($(this).val());
         validateDocument();
     });
