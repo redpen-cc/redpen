@@ -54,11 +54,10 @@ function pasteSampleText(key) {
         .prop("placeholder", "Please type or paste some text here...");
 }
 
-
 // load the configuration and build the options and controls
-function RedPenUI() {
-    redpen.getRedPens(function (configuration) {
+function ShowRedPenUI() {
 
+    redpen.getRedPens(function (configuration) {
         var editor = $('#redpen-editor');
         var configSelect = $("#redpen-configuration");
         var languageSelect = $("#redpen-language");
@@ -95,7 +94,6 @@ function RedPenUI() {
                 }
             }
         };
-
 
         $("#redpen-version").text("RedPen version " + configuration.version);
         var discoveredLanguages = {};
@@ -591,7 +589,7 @@ function RedPenUI() {
             tokenizeDocument($("#redpen-token-editor").val(), lang, function (tokens) {
                 var tokenStream = $("<div/>").addClass("nikkeib2b-token-stream");
                 for (var i = 0; i < tokens.length; i++) {
-                    var tokenText = tokens[i].substr(13,tokens[i].length-14);
+                    var tokenText = tokens[i].substr(13, tokens[i].length - 14);
                     $(tokenStream).append(
                         $("<div/>")
                             .addClass("nikkeib2b-token")
@@ -633,5 +631,5 @@ function RedPenUI() {
         setInterval(function () {
             $(".redpen-annotated-sentence i").css("background-position", (x++) + "px 0px");
         }, 150);
-    });
-}
+    }); // end of getRedPens
+} // end of ShowRedPenUI
