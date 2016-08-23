@@ -21,6 +21,7 @@
  */
 
 var RedPenUI = RedPenUI || {};
+RedPenUI.Utils = RedPenUI.Utils || {};
 
 // ensure the language autodetect doesn't override the user's selection
 RedPenUI.permitLanguageAutoDetect = true;
@@ -57,6 +58,31 @@ RedPenUI.pasteSampleText = function(key) {
         .prop("placeholder", "Please type or paste some text here...");
 }
 
+RedPenUI.Utils.setEditPosition = function (error) {
+    if (error.position && error.position.end) {
+        var tarea = $('#redpen-editor')[0];
+        if (tarea.setSelectionRange) {
+            var text = $('#redpen-editor').val();
+            var line = 1;
+            var offset = 0;
+            var characterPosition = 0;
+            for (var i = 0; i < text.length; i++) {
+                if ((line >= error.position.end.line) && (offset >= error.position.end.offset)) {
+                    characterPosition = i;
+                    break;
+                }
+                offset++;
+                if (text[i] == "\n") {
+                    line++;
+                    offset = 0;
+                }
+            }
+            tarea.focus();
+            tarea.setSelectionRange(characterPosition, characterPosition);
+        }
+    }
+};
+
 RedPenUI.showComponents = function(configuration) {
 
     var editorText = function (newText) {
@@ -64,31 +90,6 @@ RedPenUI.showComponents = function(configuration) {
             $('#redpen-editor').val(newText);
         }
         return $('#redpen-editor').val();
-    };
-
-    var setEditPosition = function (error) {
-        if (error.position && error.position.end) {
-            var tarea = $('#redpen-editor')[0];
-            if (tarea.setSelectionRange) {
-                var text = $('#redpen-editor').val();
-                var line = 1;
-                var offset = 0;
-                var characterPosition = 0;
-                for (var i = 0; i < text.length; i++) {
-                    if ((line >= error.position.end.line) && (offset >= error.position.end.offset)) {
-                        characterPosition = i;
-                        break;
-                    }
-                    offset++;
-                    if (text[i] == "\n") {
-                        line++;
-                        offset = 0;
-                    }
-                }
-                tarea.focus();
-                tarea.setSelectionRange(characterPosition, characterPosition);
-            }
-        }
     };
 
     $("#redpen-version").text("RedPen version " + configuration.version);
@@ -271,7 +272,7 @@ RedPenUI.showComponents = function(configuration) {
                     .text(error.validator)
                 )
                 .click(function () {
-                    setEditPosition(error);
+                    RedPenUI.Utils.setEditPosition(error);
                 })
             )
         };
@@ -463,7 +464,6 @@ RedPenUI.showComponents = function(configuration) {
             });
     };
 
-
     // call RedPen to tokenize the document return the tokens
     var tokenizeDocument = function (text, lang, callback) {
         redpen.tokenize(
@@ -478,7 +478,6 @@ RedPenUI.showComponents = function(configuration) {
             }
         );
     };
-
 
     // show the options for a given redpen
     var showConfigurationOptions = function (redpenName) {
