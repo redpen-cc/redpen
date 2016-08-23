@@ -15,10 +15,53 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-describe('test', function() {
+describe('setEditPosition', function() {
 
-    it('test1', function() {
-        'test1' == 'test1';
+    var textarea;
+
+    beforeEach(function() {
+        $('body').empty();
+        textarea = $('<textarea id="redpen-editor"></textarea>').val('This is is a pen.').appendTo('body');
     });
 
+    it('setSelectionPosition', function() {
+        var errors = [
+            {
+                "sentence": "This is is a pen.",
+                "position": {
+                    "start": {
+                        "offset": 0,
+                        "line": 1
+                    },
+                    "end": {
+                        "offset": 16,
+                        "line": 1
+                    }
+                },
+                "errors": [
+                    {
+                        "subsentence": {
+                            "offset": 8,
+                            "length": 2
+                        },
+                        "validator": "SuccessiveWord",
+                        "position": {
+                            "start": {
+                                "offset": 8,
+                                "line": 1
+                            },
+                            "end": {
+                                "offset": 10,
+                                "line": 1
+                            }
+                        },
+                        "message": "Found word \"is\" repeated twice in succession."
+                    }
+                ]
+            }
+        ]
+        spyOn(textarea[0], 'setSelectionRange');
+        RedPenUI.Utils.setEditPosition(errors[0]);
+        expect(textarea[0].setSelectionRange).toHaveBeenCalled();
+    });
 });

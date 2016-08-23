@@ -457,7 +457,6 @@ RedPenUI.showComponents = function(configuration) {
             function (data) {
                 // display the raw results as JSON
                 $('#redpen-results-json').text(JSON.stringify(data, null, 2));
-
                 showErrorsInSitu(data['errors']);
                 $('#redpen-editor-underlay').fadeIn();
                 $('#redpen-results-report').text(createRedPenReport(data['errors']));
