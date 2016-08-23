@@ -20,16 +20,18 @@
  *
  */
 
+var RedPenUI = RedPenUI || {};
+
 // ensure the language autodetect doesn't override the user's selection
-var permitLanguageAutoDetect = true;
+RedPenUI.permitLanguageAutoDetect = true;
 
 
 // clear editor and results
-function clearResult() {
+RedPenUI.clearResult = function() {
     $('#redpen-editor').val('').trigger("input");
 }
 
-function setView(view) {
+RedPenUI.setView = function(view) {
     var newView = $("#redpen-view-" + view);
     if (!$(newView).is(":visible")) {
         $(".main").filter(":visible").slideUp(500, function () {
@@ -37,12 +39,13 @@ function setView(view) {
         });
     }
 }
+
 // paste some sample text into the editor and trigger a change
-function pasteSampleText(key) {
-    setView("validator");
+RedPenUI.pasteSampleText = function(key) {
+    RedPenUI.setView("validator");
     var text;
     if (sampleDocuments[key]) {
-        permitLanguageAutoDetect = true;
+        RedPenUI.permitLanguageAutoDetect = true;
         text = sampleDocuments[key].document;
         $("#redpen-document-parser").val(sampleDocuments[key].parser);
         $('#redpen-errors').empty();
@@ -55,7 +58,7 @@ function pasteSampleText(key) {
 }
 
 // load the configuration and build the options and controls
-function ShowRedPenUI() {
+RedPenUI.Show = function() {
 
     redpen.getRedPens(function (configuration) {
         var editor = $('#redpen-editor');
@@ -570,7 +573,7 @@ function ShowRedPenUI() {
         var delayedRevalidateDocument = function () {
             repositionEditorUnderlay();
             $('#redpen-editor-underlay').fadeOut(50);
-            if (permitLanguageAutoDetect) {
+            if (RedPenUI.permitLanguageAutoDetect) {
                 redpen.detectLanguage(editorText(), function (lang) {
                     setLanguage(lang);
                 });
@@ -608,7 +611,8 @@ function ShowRedPenUI() {
         $(documentParserSelect).change(validateDocument);
 
         $(languageSelect).change(function () {
-            permitLanguageAutoDetect = false; // prevent auto-detection from subsequently overriding the user's selection
+            RedPenUI.permitLanguageAutoDetect = false; // prevent auto-detection from subsequently overriding the user's
+            // selection
             setLanguage($(this).val());
             validateDocument();
         });
@@ -624,7 +628,7 @@ function ShowRedPenUI() {
         // set the initial state
         setDocumentParser("PLAIN");
         setLanguage("en");
-        pasteSampleText("en_md");
+        RedPenUI.pasteSampleText("en_md");
 
         // dumb animation
         var x = 1;
@@ -632,4 +636,4 @@ function ShowRedPenUI() {
             $(".redpen-annotated-sentence i").css("background-position", (x++) + "px 0px");
         }, 150);
     }); // end of getRedPens
-} // end of ShowRedPenUI
+} // end of Show
