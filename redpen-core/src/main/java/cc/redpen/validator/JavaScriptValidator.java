@@ -207,6 +207,17 @@ public class JavaScriptValidator extends Validator {
         super.addError(String.format("[%s] %s", currentJS.name, message), sentenceWithError);
     }
 
+    @Override
+    Object getOrDefault(String name){
+        // script specific parameter wins
+        Object value = super.getOrDefault(currentJS.name.replaceAll("\\.js$","") + "-" + name);
+        if (value == null) {
+            // fallback to normal parameter
+            value = super.getOrDefault(name);
+        }
+        return value;
+    }
+
 
     @Override
     public void addErrorWithPosition(String message, Sentence sentenceWithError,
@@ -244,7 +255,7 @@ public class JavaScriptValidator extends Validator {
         } else {
             formatted = super.getLocalizedErrorMessage(key, args);
         }
-        return MessageFormat.format("[{0}] {1}",currentJS.name, formatted);
+        return MessageFormat.format("[{0}] {1}", currentJS.name, formatted);
     }
 
     class Script {
