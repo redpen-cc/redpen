@@ -29,10 +29,13 @@ RedPenUI.permitLanguageAutoDetect = true;
 // store validator configuration for each language
 RedPenUI.validatorConfiguration = {};
 
+// configuration object
+RedPenUI.currentConfiguration = null;
+
 // clear editor and results
 RedPenUI.clearResult = function() {
     $('#redpen-editor').val('').trigger("input");
-}
+};
 
 RedPenUI.setView = function(view) {
     var newView = $("#redpen-view-" + view);
@@ -41,7 +44,7 @@ RedPenUI.setView = function(view) {
             $(newView).hide().slideDown();
         });
     }
-}
+};
 
 // paste some sample text into the editor and trigger a change
 RedPenUI.pasteSampleText = function(key) {
@@ -58,7 +61,7 @@ RedPenUI.pasteSampleText = function(key) {
         .trigger("input")
         .prop("disabled", false)
         .prop("placeholder", "Please type or paste some text here...");
-}
+};
 
 RedPenUI.Utils.setEditPosition = function (error) {
     if (error.position && error.position.end) {
@@ -120,9 +123,29 @@ RedPenUI.Utils.updateTokens = function() {
     });
 };
 
+// return the current configuration
+RedPenUI.Utils.getConfiguration = function () {
+    var validators = {};
+    var redpen = $("#redpen-configuration").val();
+    $("#redpen-active-validators").find("input:checked").each(function () {
+        var validator = $(this).val();
+        validators[validator] = {};
+        if (!$.isEmptyObject(RedPenUI.currentConfiguration.redpens[redpen].validators[validator].properties)) {
+            validators[validator].properties = RedPenUI.currentConfiguration.redpens[redpen].validators[validator].properties;
+        }
+    });
+
+    return {
+        lang: $("#redpen-language").val(),
+        validators: validators,
+        symbols: RedPenUI.currentConfiguration.redpens[redpen].symbols
+    };
+};
+
 RedPenUI.showComponents = function(configuration) {
     // debouncer for user input
     var validateTimeout = 0;
+    RedPenUI.currentConfiguration = configuration; // for non-inner methods
 
     // misc inner methods
     var editorText = function (newText) {
@@ -331,32 +354,13 @@ RedPenUI.showComponents = function(configuration) {
         return report;
     };
 
-    // return the current configuration
-    var getConfiguration = function () {
-        var validators = {};
-        var redpen = $("#redpen-configuration").val();
-        $("#redpen-active-validators").find("input:checked").each(function () {
-            var validator = $(this).val();
-            validators[validator] = {};
-            if (!$.isEmptyObject(configuration.redpens[redpen].validators[validator].properties)) {
-                validators[validator].properties = configuration.redpens[redpen].validators[validator].properties;
-            }
-        });
-
-        return {
-            lang: $("#redpen-language").val(),
-            validators: validators,
-            symbols: configuration.redpens[redpen].symbols
-        };
-    };
-
     // call RedPen to validate the document and display any errors
     var validateDocument = function () {
         var requestParams = {
             document: editorText(),
             format: 'json2',
             documentParser: $("#redpen-document-parser").val(),
-            config: getConfiguration()
+            config: RedPenUI.Utils.getConfiguration()
         };
         $("#redpen-results-request").text(JSON.stringify(requestParams, null, 2));
         redpen.validateJSON(
@@ -629,7 +633,7 @@ RedPenUI.showComponents = function(configuration) {
     setInterval(function () {
         $(".redpen-annotated-sentence i").css("background-position", (x++) + "px 0px");
     }, 150);
-}
+};
 
 // load the configuration and build the options and controls
 RedPenUI.Show = function() {
