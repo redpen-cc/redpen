@@ -142,6 +142,41 @@ RedPenUI.Utils.getConfiguration = function () {
     };
 };
 
+// sample "plain text" report
+RedPenUI.Utils.createRedPenReport = function (errors) {
+    var report = "";
+    var contextWidth = 12;
+    if (errors) {
+        var formatError = function (sentence, error) {
+            var message = "";
+            message += "Line " + error.position.start.line + ":" + error.position.start.offset + " \u201C";
+            var left = Math.max(0, error.subsentence.offset - contextWidth);
+            var right = Math.min(sentence.length, error.subsentence.offset + error.subsentence.length + contextWidth);
+            message += left == 0 ? "" : "\u2026";
+
+            message += sentence.substring(left, error.subsentence.offset);
+            message += error.subsentence.length ? "\u3010" : "\u25b6";
+            message += sentence.substr(error.subsentence.offset, error.subsentence.length);
+            message += error.subsentence.length ? "\u3011" : "";
+            message += sentence.substring(error.subsentence.offset + error.subsentence.length, right);
+
+            message += right == sentence.length ? "" : "\u2026";
+            message += "\u201D\n";
+            message += error.message;
+            message += "\n";
+            return message;
+        };
+        for (var i = 0; i < errors.length; i++) {
+            var error = errors[i];
+            for (j = 0; j < error.errors.length; j++) {
+                report += formatError(error.sentence, error.errors[j]);
+                report += '\n';
+            }
+        }
+    }
+    return report;
+};
+
 RedPenUI.showComponents = function(configuration) {
     // debouncer for user input
     var validateTimeout = 0;
@@ -319,41 +354,6 @@ RedPenUI.showComponents = function(configuration) {
         }
     }; // end of ShowErrorsInSitu
 
-    // sample "plain text" report
-    var createRedPenReport = function (errors) {
-        var report = "";
-        var contextWidth = 12;
-        if (errors) {
-            var formatError = function (sentence, error) {
-                var message = "";
-                message += "Line " + error.position.start.line + ":" + error.position.start.offset + " \u201C";
-                var left = Math.max(0, error.subsentence.offset - contextWidth);
-                var right = Math.min(sentence.length, error.subsentence.offset + error.subsentence.length + contextWidth);
-                message += left == 0 ? "" : "\u2026";
-
-                message += sentence.substring(left, error.subsentence.offset);
-                message += error.subsentence.length ? "\u3010" : "\u25b6";
-                message += sentence.substr(error.subsentence.offset, error.subsentence.length);
-                message += error.subsentence.length ? "\u3011" : "";
-                message += sentence.substring(error.subsentence.offset + error.subsentence.length, right);
-
-                message += right == sentence.length ? "" : "\u2026";
-                message += "\u201D\n";
-                message += error.message;
-                message += "\n";
-                return message;
-            };
-            for (var i = 0; i < errors.length; i++) {
-                var error = errors[i];
-                for (j = 0; j < error.errors.length; j++) {
-                    report += formatError(error.sentence, error.errors[j]);
-                    report += '\n';
-                }
-            }
-        }
-        return report;
-    };
-
     // call RedPen to validate the document and display any errors
     var validateDocument = function () {
         var requestParams = {
@@ -370,7 +370,7 @@ RedPenUI.showComponents = function(configuration) {
                 $('#redpen-results-json').text(JSON.stringify(data, null, 2));
                 showErrorsInSitu(data['errors']);
                 $('#redpen-editor-underlay').fadeIn();
-                $('#redpen-results-report').text(createRedPenReport(data['errors']));
+                $('#redpen-results-report').text(RedPenUI.Utils.createRedPenReport(data['errors']));
             });
     };
 
