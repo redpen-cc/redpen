@@ -27,41 +27,26 @@ describe('setEditPosition', function() {
     it('setSelectionPosition', function() {
         var errors = [
             {
-                "sentence": "This is is a pen.",
+                "subsentence": {
+                    "offset": 8,
+                    "length": 2
+                },
+                "validator": "SuccessiveWord",
                 "position": {
                     "start": {
-                        "offset": 0,
+                        "offset": 8,
                         "line": 1
                     },
                     "end": {
-                        "offset": 16,
+                        "offset": 10,
                         "line": 1
                     }
                 },
-                "errors": [
-                    {
-                        "subsentence": {
-                            "offset": 8,
-                            "length": 2
-                        },
-                        "validator": "SuccessiveWord",
-                        "position": {
-                            "start": {
-                                "offset": 8,
-                                "line": 1
-                            },
-                            "end": {
-                                "offset": 10,
-                                "line": 1
-                            }
-                        },
-                        "message": "Found word \"is\" repeated twice in succession."
-                    }
-                ]
+                "message": "Found word \"is\" repeated twice in succession."
             }
         ]
         spyOn(textarea[0], 'setSelectionRange');
         RedPenUI.Utils.setEditPosition(errors[0]);
-        expect(textarea[0].setSelectionRange).toHaveBeenCalled();
+        expect(textarea[0].setSelectionRange).toHaveBeenCalledWith(10,10);
     });
 });
