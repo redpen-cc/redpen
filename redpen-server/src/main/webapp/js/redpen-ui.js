@@ -26,6 +26,8 @@ RedPenUI.Utils = RedPenUI.Utils || {};
 // ensure the language autodetect doesn't override the user's selection
 RedPenUI.permitLanguageAutoDetect = true;
 
+// store validator configuration for each language
+RedPenUI.validatorConfiguration = {};
 
 // clear editor and results
 RedPenUI.clearResult = function() {
@@ -352,7 +354,7 @@ RedPenUI.showComponents = function(configuration) {
     var showConfigurationOptions = function (redpenName) {
         $("#redpen-active-validators")
             .empty()
-            .append(validatorConfiguration[redpenName])
+            .append(RedPenUI.validatorConfiguration[redpenName])
             .find('input').click(validateDocument);
 
         $("#redpen-active-validators").find(".redpen-editable").each(function (i, n) {
@@ -460,7 +462,6 @@ RedPenUI.showComponents = function(configuration) {
     // start of main procedure
     $("#redpen-version").text("RedPen version " + configuration.version);
     var discoveredLanguages = {};
-    var validatorConfiguration = {};
     var symbolTables = {};
 
     // build options for each configured redpen
@@ -474,7 +475,7 @@ RedPenUI.showComponents = function(configuration) {
         );
         discoveredLanguages[config.lang] = true;
         var validatorCheckboxes = $('<div></div>').addClass('redpen-validators');
-        validatorConfiguration[redpenName] = validatorCheckboxes;
+        RedPenUI.validatorConfiguration[redpenName] = validatorCheckboxes;
         for (var validatorName in config.validators) {
             var validator = config.validators[validatorName];
             var propertiesText = "";
