@@ -84,12 +84,37 @@ RedPenUI.Utils.setEditPosition = function (error) {
 };
 
 RedPenUI.showComponents = function(configuration) {
-
+    // misc inner methods
     var editorText = function (newText) {
         if (newText) {
             $('#redpen-editor').val(newText);
         }
         return $('#redpen-editor').val();
+    };
+
+    // set the document parser
+    var setDocumentParser = function (parser) {
+        $("#redpen-document-parser").val(parser);
+    };
+
+    // ensure the options displayed are appropriate for the selected language
+    var setLanguage = function (lang) {
+        var firstValidRedpen = false;
+        $("#redpen-configuration").find("option").each(function () {
+            var valid = $(this).data("lang") == lang;
+            $(this).toggle(valid);
+            if (valid && !firstValidRedpen) {
+                firstValidRedpen = $(this).val();
+            }
+        });
+        $("#redpen-configuration").val(firstValidRedpen);
+        $("#redpen-language").val(lang);
+        showConfigurationOptions(firstValidRedpen);
+    };
+
+    var getSourceLines = function () {
+        var document = editorText();
+        return ("\n" + document).split("\n");
     };
 
     $("#redpen-version").text("RedPen version " + configuration.version);
@@ -214,31 +239,6 @@ RedPenUI.showComponents = function(configuration) {
                 .text(parser)
         );
     }
-
-    // set the document parser
-    var setDocumentParser = function (parser) {
-        $("#redpen-document-parser").val(parser);
-    };
-
-    // ensure the options displayed are appropriate for the selected language
-    var setLanguage = function (lang) {
-        var firstValidRedpen = false;
-        $("#redpen-configuration").find("option").each(function () {
-            var valid = $(this).data("lang") == lang;
-            $(this).toggle(valid);
-            if (valid && !firstValidRedpen) {
-                firstValidRedpen = $(this).val();
-            }
-        });
-        $("#redpen-configuration").val(firstValidRedpen);
-        $("#redpen-language").val(lang);
-        showConfigurationOptions(firstValidRedpen);
-    };
-
-    var getSourceLines = function () {
-        var document = editorText();
-        return ("\n" + document).split("\n");
-    };
 
     // cheap tabs
     $("#redpen-option-results li").click(function () {
@@ -387,7 +387,7 @@ RedPenUI.showComponents = function(configuration) {
         for (var j = 0; j < allErrors.length; j++) {
             addError(errorList, allErrors[j]);
         }
-    };
+    }; // end of ShowErrorsInSitu
 
     // sample "plain text" report
     var createRedPenReport = function (errors) {
@@ -551,7 +551,7 @@ RedPenUI.showComponents = function(configuration) {
                 validateDocument();
             });
         });
-    };
+    }; // end of ShowConfigurationOptions
 
     // align the annotated underlay with the textarea
     var repositionEditorUnderlay = function () {
