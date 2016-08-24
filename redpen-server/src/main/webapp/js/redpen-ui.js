@@ -85,6 +85,41 @@ RedPenUI.Utils.setEditPosition = function (error) {
     }
 };
 
+// call RedPen to tokenize the document return the tokens
+RedPenUI.Utils.tokenizeDocument = function (text, lang, callback) {
+    redpen.tokenize(
+        {
+            document: text,
+            lang: lang ? lang : "en"
+        },
+        function (result) {
+            if (callback && result.tokens) {
+                callback(result.tokens);
+            }
+        }
+    );
+};
+
+RedPenUI.Utils.updateTokens = function() {
+    var selected = $("input[type='radio'][name='redpen-token-lang']:checked");
+    var lang = "en";
+    if (selected.length > 0) {
+        lang = selected.val();
+    }
+    RedPenUI.Utils.tokenizeDocument($("#redpen-token-editor").val(), lang, function (tokens) {
+        var tokenStream = $("<div/>").addClass("nikkeib2b-token-stream");
+        for (var i = 0; i < tokens.length; i++) {
+            var tokenText = tokens[i].substr(13, tokens[i].length - 14);
+            $(tokenStream).append(
+                $("<div/>")
+                    .addClass("nikkeib2b-token")
+                    .append(tokenText)
+            );
+        }
+        $("#redpen-token-output").empty().append(tokenStream);
+    });
+};
+
 RedPenUI.showComponents = function(configuration) {
     // debouncer for user input
     var validateTimeout = 0;
@@ -335,21 +370,6 @@ RedPenUI.showComponents = function(configuration) {
             });
     };
 
-    // call RedPen to tokenize the document return the tokens
-    var tokenizeDocument = function (text, lang, callback) {
-        redpen.tokenize(
-            {
-                document: text,
-                lang: lang ? lang : "en"
-            },
-            function (result) {
-                if (callback && result.tokens) {
-                    callback(result.tokens);
-                }
-            }
-        );
-    };
-
     // show the options for a given redpen
     var showConfigurationOptions = function (redpenName) {
         $("#redpen-active-validators")
@@ -424,26 +444,6 @@ RedPenUI.showComponents = function(configuration) {
             });
         });
     }; // end of ShowConfigurationOptions
-
-    var updateTokens = function () {
-        var selected = $("input[type='radio'][name='redpen-token-lang']:checked");
-        var lang = "en";
-        if (selected.length > 0) {
-            lang = selected.val();
-        }
-        tokenizeDocument($("#redpen-token-editor").val(), lang, function (tokens) {
-            var tokenStream = $("<div/>").addClass("nikkeib2b-token-stream");
-            for (var i = 0; i < tokens.length; i++) {
-                var tokenText = tokens[i].substr(13, tokens[i].length - 14);
-                $(tokenStream).append(
-                    $("<div/>")
-                        .addClass("nikkeib2b-token")
-                        .append(tokenText)
-                );
-            }
-            $("#redpen-token-output").empty().append(tokenStream);
-        });
-    };
 
     // revalidate the document using the currently selected options
     var delayedRevalidateDocument = function () {
@@ -616,8 +616,8 @@ RedPenUI.showComponents = function(configuration) {
         validateDocument();
     });
 
-    $("#redpen-token-editor").on("change keyup", updateTokens);
-    $("input[type='radio'][name='redpen-token-lang']").on("change", updateTokens);
+    $("#redpen-token-editor").on("change keyup", RedPenUI.Utils.updateTokens);
+    $("input[type='radio'][name='redpen-token-lang']").on("change", RedPenUI.Utils.updateTokens);
 
     // set the initial state
     setDocumentParser("PLAIN");
