@@ -84,6 +84,9 @@ RedPenUI.Utils.setEditPosition = function (error) {
 };
 
 RedPenUI.showComponents = function(configuration) {
+    // debouncer for user input
+    var validateTimeout = 0;
+
     // misc inner methods
     var editorText = function (newText) {
         if (newText) {
@@ -116,139 +119,6 @@ RedPenUI.showComponents = function(configuration) {
         var document = editorText();
         return ("\n" + document).split("\n");
     };
-
-    $("#redpen-version").text("RedPen version " + configuration.version);
-    var discoveredLanguages = {};
-    var validatorConfiguration = {};
-    var symbolTables = {};
-
-    // build options for each configured redpen
-    for (var redpenName in configuration.redpens) {
-        var config = configuration.redpens[redpenName];
-        $("#redpen-configuration").append(
-            $('<option></option>')
-                .prop("value", redpenName)
-                .data("lang", config.lang)
-                .text(redpenName)
-        );
-        discoveredLanguages[config.lang] = true;
-        var validatorCheckboxes = $('<div></div>').addClass('redpen-validators');
-        validatorConfiguration[redpenName] = validatorCheckboxes;
-        for (var validatorName in config.validators) {
-            var validator = config.validators[validatorName];
-            var propertiesText = "";
-
-            if (validator.properties) {
-                for (var property in validator.properties) {
-                    propertiesText += (propertiesText == "") ? "" : "; ";
-                    propertiesText += property + "=" + validator.properties[property];
-                }
-            }
-            var properties = $("<div></div>")
-                .addClass("redpen-validator-properties")
-                .addClass("redpen-editable")
-                .attr("name", validatorName)
-                .attr("data-pk", redpenName)
-                .attr("data-title", validatorName + " properties")
-                .text(propertiesText);
-
-            $(validatorCheckboxes).append(
-                $('<div></div>')
-                    .addClass("checkbox")
-                    .append(
-                        $('<label></label>')
-                            .append(
-                                $('<input/>')
-                                    .prop("type", "checkbox")
-                                    .prop("checked", true)
-                                    .prop("value", validatorName)
-                            )
-                            .append($('<span></span>')
-                                .html(validatorName + (validator.languages.length ? ' <i>' + validator.languages.join(',') + '</i>' : ''))
-                            )
-                    ).append(properties)
-            );
-        }
-
-        var symbolTableEntry = $('<table></table>').addClass('redpen-symboltable');
-        symbolTables[redpenName] = symbolTableEntry;
-        $(symbolTableEntry).append(
-            $('<tr></tr>')
-                .append($('<th></th>').text(""))
-                .append($('<th></th>').text("Value"))
-                .append($('<th></th>').html("Invalid<br/>Chars"))
-                .append($('<th></th>').html("Space<br/>Before"))
-                .append($('<th></th>').html("Space<br/>After"))
-        );
-        for (var symbolName in config.symbols) {
-            var symbol = config.symbols[symbolName];
-            $(symbolTableEntry).append(
-                $('<tr></tr>')
-                    .append($('<td></td>').text(symbolName))
-                    .append($('<td></td>')
-                        .addClass("redpen-editable")
-                        .text(symbol.value)
-                        .attr("name", symbolName)
-                        .attr("data-pk", redpenName)
-                        .attr("data-invalid-chars", false)
-                    )
-                    .append($('<td></td>')
-                        .addClass("redpen-editable")
-                        .text(symbol.invalid_chars)
-                        .attr("name", symbolName)
-                        .attr("data-pk", redpenName)
-                        .attr("data-invalid-chars", true)
-                    )
-                    .append($('<td></td>')
-                        .append(
-                            $('<input/>')
-                                .attr("type", "checkbox")
-                                .attr("checked", symbol.before_space)
-                                .attr("name", symbolName)
-                                .attr("value", "before_space")
-                                .attr("data-pk", redpenName)
-                        ))
-                    .append($('<td></td>')
-                        .append(
-                            $('<input/>')
-                                .attr("type", "checkbox")
-                                .attr("checked", symbol.after_space)
-                                .attr("name", symbolName)
-                                .attr("value", "after_space")
-                                .attr("data-pk", redpenName)
-                        ))
-            );
-        }
-    }
-
-    // populate the language options
-    for (var language in discoveredLanguages) {
-        $("#redpen-language").append(
-            $('<option></option>')
-                .prop("value", language)
-                .text(language)
-        );
-    }
-
-    // populate the document parser options
-    for (var i = 0; i < configuration.documentParsers.length; i++) {
-        var parser = configuration.documentParsers[i];
-        $("#redpen-document-parser").append(
-            $('<option></option>')
-                .prop("value", parser)
-                .text(parser)
-        );
-    }
-
-    // cheap tabs
-    $("#redpen-option-results li").click(function () {
-        $(this).siblings().each(function (i, item) {
-            $(this).removeClass("redpen-option-selected");
-            $($(this).data("target")).hide();
-        });
-        $($(this).data("target")).show();
-        $(this).addClass("redpen-option-selected");
-    });
 
     // format RedPen errors in situ
     var showErrorsInSitu = function (errors) {
@@ -553,27 +423,6 @@ RedPenUI.showComponents = function(configuration) {
         });
     }; // end of ShowConfigurationOptions
 
-    // align the annotated underlay with the textarea
-    var repositionEditorUnderlay = function () {
-        $("#redpen-editor-underlay").css("top", -$("#redpen-editor").scrollTop());
-    };
-
-    // debouncer for user input
-    var validateTimeout = 0;
-    // revalidate the document using the currently selected options
-    var delayedRevalidateDocument = function () {
-        repositionEditorUnderlay();
-        $('#redpen-editor-underlay').fadeOut(50);
-        if (RedPenUI.permitLanguageAutoDetect) {
-            redpen.detectLanguage(editorText(), function (lang) {
-                setLanguage(lang);
-            });
-        }
-        // debounce changes
-        clearTimeout(validateTimeout);
-        validateTimeout = setTimeout(validateDocument, 250);
-    };
-
     var updateTokens = function () {
         var selected = $("input[type='radio'][name='redpen-token-lang']:checked");
         var lang = "en";
@@ -592,6 +441,159 @@ RedPenUI.showComponents = function(configuration) {
             }
             $("#redpen-token-output").empty().append(tokenStream);
         });
+    };
+
+    // revalidate the document using the currently selected options
+    var delayedRevalidateDocument = function () {
+        repositionEditorUnderlay();
+        $('#redpen-editor-underlay').fadeOut(50);
+        if (RedPenUI.permitLanguageAutoDetect) {
+            redpen.detectLanguage(editorText(), function (lang) {
+                setLanguage(lang);
+            });
+        }
+        // debounce changes
+        clearTimeout(validateTimeout);
+        validateTimeout = setTimeout(validateDocument, 250);
+    };
+
+    // start of main procedure
+    $("#redpen-version").text("RedPen version " + configuration.version);
+    var discoveredLanguages = {};
+    var validatorConfiguration = {};
+    var symbolTables = {};
+
+    // build options for each configured redpen
+    for (var redpenName in configuration.redpens) {
+        var config = configuration.redpens[redpenName];
+        $("#redpen-configuration").append(
+            $('<option></option>')
+                .prop("value", redpenName)
+                .data("lang", config.lang)
+                .text(redpenName)
+        );
+        discoveredLanguages[config.lang] = true;
+        var validatorCheckboxes = $('<div></div>').addClass('redpen-validators');
+        validatorConfiguration[redpenName] = validatorCheckboxes;
+        for (var validatorName in config.validators) {
+            var validator = config.validators[validatorName];
+            var propertiesText = "";
+
+            if (validator.properties) {
+                for (var property in validator.properties) {
+                    propertiesText += (propertiesText == "") ? "" : "; ";
+                    propertiesText += property + "=" + validator.properties[property];
+                }
+            }
+            var properties = $("<div></div>")
+                .addClass("redpen-validator-properties")
+                .addClass("redpen-editable")
+                .attr("name", validatorName)
+                .attr("data-pk", redpenName)
+                .attr("data-title", validatorName + " properties")
+                .text(propertiesText);
+
+            $(validatorCheckboxes).append(
+                $('<div></div>')
+                    .addClass("checkbox")
+                    .append(
+                        $('<label></label>')
+                            .append(
+                                $('<input/>')
+                                    .prop("type", "checkbox")
+                                    .prop("checked", true)
+                                    .prop("value", validatorName)
+                            )
+                            .append($('<span></span>')
+                                .html(validatorName + (validator.languages.length ? ' <i>' + validator.languages.join(',') + '</i>' : ''))
+                            )
+                    ).append(properties)
+            );
+        }
+
+        var symbolTableEntry = $('<table></table>').addClass('redpen-symboltable');
+        symbolTables[redpenName] = symbolTableEntry;
+        $(symbolTableEntry).append(
+            $('<tr></tr>')
+                .append($('<th></th>').text(""))
+                .append($('<th></th>').text("Value"))
+                .append($('<th></th>').html("Invalid<br/>Chars"))
+                .append($('<th></th>').html("Space<br/>Before"))
+                .append($('<th></th>').html("Space<br/>After"))
+        );
+        for (var symbolName in config.symbols) {
+            var symbol = config.symbols[symbolName];
+            $(symbolTableEntry).append(
+                $('<tr></tr>')
+                    .append($('<td></td>').text(symbolName))
+                    .append($('<td></td>')
+                        .addClass("redpen-editable")
+                        .text(symbol.value)
+                        .attr("name", symbolName)
+                        .attr("data-pk", redpenName)
+                        .attr("data-invalid-chars", false)
+                    )
+                    .append($('<td></td>')
+                        .addClass("redpen-editable")
+                        .text(symbol.invalid_chars)
+                        .attr("name", symbolName)
+                        .attr("data-pk", redpenName)
+                        .attr("data-invalid-chars", true)
+                    )
+                    .append($('<td></td>')
+                        .append(
+                            $('<input/>')
+                                .attr("type", "checkbox")
+                                .attr("checked", symbol.before_space)
+                                .attr("name", symbolName)
+                                .attr("value", "before_space")
+                                .attr("data-pk", redpenName)
+                        ))
+                    .append($('<td></td>')
+                        .append(
+                            $('<input/>')
+                                .attr("type", "checkbox")
+                                .attr("checked", symbol.after_space)
+                                .attr("name", symbolName)
+                                .attr("value", "after_space")
+                                .attr("data-pk", redpenName)
+                        ))
+            );
+        }
+    }
+
+    // populate the language options
+    for (var language in discoveredLanguages) {
+        $("#redpen-language").append(
+            $('<option></option>')
+                .prop("value", language)
+                .text(language)
+        );
+    }
+
+    // populate the document parser options
+    for (var i = 0; i < configuration.documentParsers.length; i++) {
+        var parser = configuration.documentParsers[i];
+        $("#redpen-document-parser").append(
+            $('<option></option>')
+                .prop("value", parser)
+                .text(parser)
+        );
+    }
+
+    // cheap tabs
+    $("#redpen-option-results li").click(function () {
+        $(this).siblings().each(function (i, item) {
+            $(this).removeClass("redpen-option-selected");
+            $($(this).data("target")).hide();
+        });
+        $($(this).data("target")).show();
+        $(this).addClass("redpen-option-selected");
+    });
+
+    // align the annotated underlay with the textarea
+    var repositionEditorUnderlay = function () {
+        $("#redpen-editor-underlay").css("top", -$("#redpen-editor").scrollTop());
     };
 
     // bind events
