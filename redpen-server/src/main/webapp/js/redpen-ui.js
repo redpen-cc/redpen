@@ -177,19 +177,163 @@ RedPenUI.Utils.createRedPenReport = function (errors) {
     return report;
 };
 
+RedPenUI.Utils.editorText = function (newText) {
+    if (newText) {
+        $('#redpen-editor').val(newText);
+    }
+    return $('#redpen-editor').val();
+};
+
+// format RedPen errors in situ
+RedPenUI.Utils.showErrorsInSitu = function (errors) {
+    // get a list of the checked validators
+    var validators = {};
+    $("#redpen-active-validators").find("input:checked").each(function () {
+        validators[$(this).val()] = true;
+    });
+
+    var errorsList = $('#redpen-errors').empty();
+    var editorUnderlay = $('#redpen-editor-underlay').empty();
+
+    // display an error
+    var addError = function (errorList, error) {
+        $(errorList).append($('<li></li>')
+            .addClass('redpen-error-message')
+            .toggleClass('redpen-error-message-annotated', error.annotated)
+            .text(error.message)
+            .append($("<div></div>")
+                .addClass('redpen-error-validator')
+                .text(error.validator)
+            )
+            .click(function () {
+                RedPenUI.Utils.setEditPosition(error);
+            })
+        )
+    };
+
+    var getSourceLines = function () {
+        var document = RedPenUI.Utils.editorText();
+        return ("\n" + document).split("\n");
+    };
+
+    var annotateDocument = function (errors) {
+        var lines = getSourceLines();
+        var annotated = [];
+
+        for (var i = 1; i < lines.length; i++) {
+            var sentence = lines[i];
+            annotated[i] = [];
+            for (var j = 0; j < sentence.length; j++) {
+                annotated[i].push({char: sentence[j], errorStart: [], errorEnd: []});
+            }
+        }
+
+        for (var i = 0; i < errors.length; i++) {
+            var lineNo = errors[i].position.end.line;
+            if (lineNo < lines.length) {
+                var sentence = lines[lineNo];
+                var start = errors[i].position.start.offset ? errors[i].position.start.offset : 0;
+                var end = errors[i].position.end.offset ? errors[i].position.end.offset : 0;
+                if ((start != 0) || (end != 0)) {
+                    if (annotated[lineNo][start]) {
+                        annotated[lineNo][start].errorStart.push({id: i + 1, error: errors[i]});
+                    }
+                    errors[i].annotated = true;
+                }
+                if (annotated[lineNo] && annotated[lineNo][end]) {
+                    annotated[lineNo][end].errorEnd.push({id: i + 1, error: errors[i]});
+                    errors[i].annotated = true;
+                }
+            }
+        }
+
+        // renderer the errors as HTML
+        var annotatedSpan = $("<span></span>").addClass("redpen-annotated-sentence");
+        var text = "";
+        var errorOpen = false;
+        var addText = function (highlight) {
+            if (text != "") {
+                $(annotatedSpan).append($(highlight ? "<i></i>" : "<span></span>").text(text));
+            }
+            text = "";
+        };
+
+        for (var line = 1; line < annotated.length; line++) {
+            if (line != 1) {
+                addText(false);
+                $(annotatedSpan).append("<br/>");
+            }
+            for (var i = 0; i < annotated[line].length; i++) {
+                if (errorOpen && annotated[line][i].errorEnd.length) {
+                    addText(true);
+                    errorOpen = false;
+                }
+                if (annotated[line][i].errorEnd.length) {
+                    var ids = "";
+                    for (var j = 0; j < annotated[line][i].errorEnd.length; j++) {
+                        if (j > 3) {
+                            ids += "&hellip;";
+                            break;
+                        }
+                        if (ids != "") {
+                            ids += ",";
+                        }
+                        ids += annotated[line][i].errorEnd[j].id;
+                    }
+                    addText(false);
+                    $(annotatedSpan).append(
+                        $('<div></div>')
+                            .addClass("redpen-annotated-sentence-marker")
+                            .html(ids)
+                    );
+                }
+                if (annotated[line][i].errorStart.length) {
+                    addText(false);
+                    errorOpen = true;
+                }
+                if (errorOpen && annotated[line][i].errorEnd.length) {
+                    addText(true);
+                    errorOpen = false;
+                }
+                text += annotated[line][i].char;
+            }
+        }
+        addText();
+        return $(annotatedSpan);
+    };
+
+    var allErrors = [];
+    for (var i = 0; i < errors.length; i++) {
+        for (var j = 0; j < errors[i].errors.length; j++) {
+            allErrors.push(errors[i].errors[j]);
+        }
+    }
+    allErrors.sort(function (a, b) {
+        var lineDiff = a.position.end.line - b.position.end.line;
+        return lineDiff == 0 ? a.position.end.offset - b.position.end.offset : lineDiff;
+    });
+
+    var annotatedSentence = annotateDocument(allErrors);
+    var errorDiv = $('<div></div>').addClass('redpen-error-section');
+    var errorList = $('<ol></ol>').addClass('redpen-error-list');
+    $(errorsList).append(errorDiv);
+    $(editorUnderlay)
+        .addClass('redpen-error-sentence')
+        .html(annotatedSentence);
+    $(errorDiv)
+        .append($("<p></p>").html("<span class='redpen-red'>Red</span>Pen found " + allErrors.length + " error" + (allErrors.length == 1 ? "" : "s")))
+        .append(errorList);
+    for (var j = 0; j < allErrors.length; j++) {
+        addError(errorList, allErrors[j]);
+    }
+}; // end of ShowErrorsInSitu
+
 RedPenUI.showComponents = function(configuration) {
     // debouncer for user input
     var validateTimeout = 0;
     RedPenUI.currentConfiguration = configuration; // for non-inner methods
 
     // misc inner methods
-    var editorText = function (newText) {
-        if (newText) {
-            $('#redpen-editor').val(newText);
-        }
-        return $('#redpen-editor').val();
-    };
-
     // set the document parser
     var setDocumentParser = function (parser) {
         $("#redpen-document-parser").val(parser);
@@ -210,154 +354,10 @@ RedPenUI.showComponents = function(configuration) {
         showConfigurationOptions(firstValidRedpen);
     };
 
-    var getSourceLines = function () {
-        var document = editorText();
-        return ("\n" + document).split("\n");
-    };
-
-    // format RedPen errors in situ
-    var showErrorsInSitu = function (errors) {
-        // get a list of the checked validators
-        var validators = {};
-        $("#redpen-active-validators").find("input:checked").each(function () {
-            validators[$(this).val()] = true;
-        });
-
-        var errorsList = $('#redpen-errors').empty();
-        var editorUnderlay = $('#redpen-editor-underlay').empty();
-
-        // display an error
-        var addError = function (errorList, error) {
-            $(errorList).append($('<li></li>')
-                .addClass('redpen-error-message')
-                .toggleClass('redpen-error-message-annotated', error.annotated)
-                .text(error.message)
-                .append($("<div></div>")
-                    .addClass('redpen-error-validator')
-                    .text(error.validator)
-                )
-                .click(function () {
-                    RedPenUI.Utils.setEditPosition(error);
-                })
-            )
-        };
-
-        var annotateDocument = function (errors) {
-            var lines = getSourceLines();
-            var annotated = [];
-
-            for (var i = 1; i < lines.length; i++) {
-                var sentence = lines[i];
-                annotated[i] = [];
-                for (var j = 0; j < sentence.length; j++) {
-                    annotated[i].push({char: sentence[j], errorStart: [], errorEnd: []});
-                }
-            }
-
-            for (var i = 0; i < errors.length; i++) {
-                var lineNo = errors[i].position.end.line;
-                if (lineNo < lines.length) {
-                    var sentence = lines[lineNo];
-                    var start = errors[i].position.start.offset ? errors[i].position.start.offset : 0;
-                    var end = errors[i].position.end.offset ? errors[i].position.end.offset : 0;
-                    if ((start != 0) || (end != 0)) {
-                        if (annotated[lineNo][start]) {
-                            annotated[lineNo][start].errorStart.push({id: i + 1, error: errors[i]});
-                        }
-                        errors[i].annotated = true;
-                    }
-                    if (annotated[lineNo] && annotated[lineNo][end]) {
-                        annotated[lineNo][end].errorEnd.push({id: i + 1, error: errors[i]});
-                        errors[i].annotated = true;
-                    }
-                }
-            }
-
-            // renderer the errors as HTML
-            var annotatedSpan = $("<span></span>").addClass("redpen-annotated-sentence");
-            var text = "";
-            var errorOpen = false;
-            var addText = function (highlight) {
-                if (text != "") {
-                    $(annotatedSpan).append($(highlight ? "<i></i>" : "<span></span>").text(text));
-                }
-                text = "";
-            };
-
-            for (var line = 1; line < annotated.length; line++) {
-                if (line != 1) {
-                    addText(false);
-                    $(annotatedSpan).append("<br/>");
-                }
-                for (var i = 0; i < annotated[line].length; i++) {
-                    if (errorOpen && annotated[line][i].errorEnd.length) {
-                        addText(true);
-                        errorOpen = false;
-                    }
-                    if (annotated[line][i].errorEnd.length) {
-                        var ids = "";
-                        for (var j = 0; j < annotated[line][i].errorEnd.length; j++) {
-                            if (j > 3) {
-                                ids += "&hellip;";
-                                break;
-                            }
-                            if (ids != "") {
-                                ids += ",";
-                            }
-                            ids += annotated[line][i].errorEnd[j].id;
-                        }
-                        addText(false);
-                        $(annotatedSpan).append(
-                            $('<div></div>')
-                                .addClass("redpen-annotated-sentence-marker")
-                                .html(ids)
-                        );
-                    }
-                    if (annotated[line][i].errorStart.length) {
-                        addText(false);
-                        errorOpen = true;
-                    }
-                    if (errorOpen && annotated[line][i].errorEnd.length) {
-                        addText(true);
-                        errorOpen = false;
-                    }
-                    text += annotated[line][i].char;
-                }
-            }
-            addText();
-            return $(annotatedSpan);
-        };
-
-        var allErrors = [];
-        for (var i = 0; i < errors.length; i++) {
-            for (var j = 0; j < errors[i].errors.length; j++) {
-                allErrors.push(errors[i].errors[j]);
-            }
-        }
-        allErrors.sort(function (a, b) {
-            var lineDiff = a.position.end.line - b.position.end.line;
-            return lineDiff == 0 ? a.position.end.offset - b.position.end.offset : lineDiff;
-        });
-
-        var annotatedSentence = annotateDocument(allErrors);
-        var errorDiv = $('<div></div>').addClass('redpen-error-section');
-        var errorList = $('<ol></ol>').addClass('redpen-error-list');
-        $(errorsList).append(errorDiv);
-        $(editorUnderlay)
-            .addClass('redpen-error-sentence')
-            .html(annotatedSentence);
-        $(errorDiv)
-            .append($("<p></p>").html("<span class='redpen-red'>Red</span>Pen found " + allErrors.length + " error" + (allErrors.length == 1 ? "" : "s")))
-            .append(errorList);
-        for (var j = 0; j < allErrors.length; j++) {
-            addError(errorList, allErrors[j]);
-        }
-    }; // end of ShowErrorsInSitu
-
     // call RedPen to validate the document and display any errors
     var validateDocument = function () {
         var requestParams = {
-            document: editorText(),
+            document: RedPenUI.Utils.editorText(),
             format: 'json2',
             documentParser: $("#redpen-document-parser").val(),
             config: RedPenUI.Utils.getConfiguration()
@@ -368,7 +368,7 @@ RedPenUI.showComponents = function(configuration) {
             function (data) {
                 // display the raw results as JSON
                 $('#redpen-results-json').text(JSON.stringify(data, null, 2));
-                showErrorsInSitu(data['errors']);
+                RedPenUI.Utils.showErrorsInSitu(data['errors']);
                 $('#redpen-editor-underlay').fadeIn();
                 $('#redpen-results-report').text(RedPenUI.Utils.createRedPenReport(data['errors']));
             });
@@ -454,7 +454,7 @@ RedPenUI.showComponents = function(configuration) {
         repositionEditorUnderlay();
         $('#redpen-editor-underlay').fadeOut(50);
         if (RedPenUI.permitLanguageAutoDetect) {
-            redpen.detectLanguage(editorText(), function (lang) {
+            redpen.detectLanguage(RedPenUI.Utils.editorText(), function (lang) {
                 setLanguage(lang);
             });
         }
