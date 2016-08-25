@@ -331,6 +331,101 @@ RedPenUI.Utils.showErrorsInSitu = function (errors) {
     }
 }; // end of ShowErrorsInSitu
 
+// call RedPen to validate the document and display any errors
+RedPenUI.Utils.validateDocument = function () {
+    var requestParams = {
+        document: RedPenUI.Utils.editorText(),
+        format: 'json2',
+        documentParser: $("#redpen-document-parser").val(),
+        config: RedPenUI.Utils.getConfiguration()
+    };
+    $("#redpen-results-request").text(JSON.stringify(requestParams, null, 2));
+    redpen.validateJSON(
+        requestParams,
+        function (data) {
+            // display the raw results as JSON
+            $('#redpen-results-json').text(JSON.stringify(data, null, 2));
+            RedPenUI.Utils.showErrorsInSitu(data['errors']);
+            $('#redpen-editor-underlay').fadeIn();
+            $('#redpen-results-report').text(RedPenUI.Utils.createRedPenReport(data['errors']));
+        });
+};
+
+// show the options for a given redpen
+RedPenUI.Utils.showConfigurationOptions = function (redpenName) {
+    $("#redpen-active-validators")
+        .empty()
+        .append(RedPenUI.validatorConfiguration[redpenName])
+        .find('input').click(RedPenUI.Utils.validateDocument);
+
+    $("#redpen-active-validators").find(".redpen-editable").each(function (i, n) {
+        if ($(this).text() == "add properties") { // workaround to fix x-editable empty-detection on reapplication
+            $(this).text("");
+        }
+        $(this).editable({
+            mode: 'popup',
+            container: 'body',
+            emptytext: 'add properties',
+            placement: "left",
+            type: 'text',
+            success: function (response, newValue) {
+                var redpen = $(this).data("pk");
+                var validator = $(this).attr("name");
+                var properties = newValue.split(";");
+                for (var i = 0; i < properties.length; i++) {
+                    if (properties[i].trim().length == 0) continue;
+                    var nameValue = properties[i].split("=", 2);
+                    if (nameValue.length == 2) {
+                        RedPenUI.currentConfiguration.redpens[redpen].validators[validator].properties[nameValue[0].trim()] = nameValue[1].trim();
+                    } else {
+                        alert("Property must be in key=value format: " + nameValue);
+                        return false;
+                    }
+                }
+                RedPenUI.Utils.validateDocument();
+            }
+        });
+    });
+
+    $("#redpen-active-symbols")
+        .empty()
+        .append(RedPenUI.symbolTables[redpenName]);
+
+    $("#redpen-active-symbols").find(".redpen-editable").each(function (i, n) {
+        if ($(this).text() == "none") { // workaround to fix x-editable empty-detection on reapplication
+            $(this).text("");
+        }
+        $(this).editable({
+            mode: 'popup',
+            emptytext: 'none',
+            placement: "top",
+            type: 'text',
+            success: function (response, newValue) {
+                var redpen = $(this).data("pk");
+                var symbolName = $(this).attr("name");
+                var invalidChars = $(this).data("invalid-chars");
+                if (invalidChars) {
+                    RedPenUI.currentConfiguration.redpens[redpen].symbols[symbolName].invalid_chars = newValue;
+                }
+                else {
+                    RedPenUI.currentConfiguration.redpens[redpen].symbols[symbolName].value = newValue[0] ? newValue[0] : "";
+                }
+                RedPenUI.Utils.validateDocument();
+            }
+        });
+    });
+
+    $("#redpen-active-symbols").find("[type=checkbox]").each(function (i, n) {
+        $(this).off("change").on("change", function () {
+            var redpen = $(this).data("pk");
+            var symbolName = $(this).attr("name");
+            var property = $(this).attr("value");
+            RedPenUI.currentConfiguration.redpens[redpen].symbols[symbolName][property] = $(this).is(":checked");
+            RedPenUI.Utils.validateDocument();
+        });
+    });
+}; // end of ShowConfigurationOptions
+
 RedPenUI.showComponents = function(configuration) {
     // debouncer for user input
     var validateTimeout = 0;
@@ -354,103 +449,8 @@ RedPenUI.showComponents = function(configuration) {
         });
         $("#redpen-configuration").val(firstValidRedpen);
         $("#redpen-language").val(lang);
-        showConfigurationOptions(firstValidRedpen);
+        RedPenUI.Utils.showConfigurationOptions(firstValidRedpen);
     };
-
-    // call RedPen to validate the document and display any errors
-    var validateDocument = function () {
-        var requestParams = {
-            document: RedPenUI.Utils.editorText(),
-            format: 'json2',
-            documentParser: $("#redpen-document-parser").val(),
-            config: RedPenUI.Utils.getConfiguration()
-        };
-        $("#redpen-results-request").text(JSON.stringify(requestParams, null, 2));
-        redpen.validateJSON(
-            requestParams,
-            function (data) {
-                // display the raw results as JSON
-                $('#redpen-results-json').text(JSON.stringify(data, null, 2));
-                RedPenUI.Utils.showErrorsInSitu(data['errors']);
-                $('#redpen-editor-underlay').fadeIn();
-                $('#redpen-results-report').text(RedPenUI.Utils.createRedPenReport(data['errors']));
-            });
-    };
-
-    // show the options for a given redpen
-    var showConfigurationOptions = function (redpenName) {
-        $("#redpen-active-validators")
-            .empty()
-            .append(RedPenUI.validatorConfiguration[redpenName])
-            .find('input').click(validateDocument);
-
-        $("#redpen-active-validators").find(".redpen-editable").each(function (i, n) {
-            if ($(this).text() == "add properties") { // workaround to fix x-editable empty-detection on reapplication
-                $(this).text("");
-            }
-            $(this).editable({
-                mode: 'popup',
-                container: 'body',
-                emptytext: 'add properties',
-                placement: "left",
-                type: 'text',
-                success: function (response, newValue) {
-                    var redpen = $(this).data("pk");
-                    var validator = $(this).attr("name");
-                    var properties = newValue.split(";");
-                    for (var i = 0; i < properties.length; i++) {
-                        if (properties[i].trim().length == 0) continue;
-                        var nameValue = properties[i].split("=", 2);
-                        if (nameValue.length == 2) {
-                            RedPenUI.currentConfiguration.redpens[redpen].validators[validator].properties[nameValue[0].trim()] = nameValue[1].trim();
-                        } else {
-                            alert("Property must be in key=value format: " + nameValue);
-                            return false;
-                        }
-                    }
-                    validateDocument();
-                }
-            });
-        });
-
-        $("#redpen-active-symbols")
-            .empty()
-            .append(RedPenUI.symbolTables[redpenName]);
-
-        $("#redpen-active-symbols").find(".redpen-editable").each(function (i, n) {
-            if ($(this).text() == "none") { // workaround to fix x-editable empty-detection on reapplication
-                $(this).text("");
-            }
-            $(this).editable({
-                mode: 'popup',
-                emptytext: 'none',
-                placement: "top",
-                type: 'text',
-                success: function (response, newValue) {
-                    var redpen = $(this).data("pk");
-                    var symbolName = $(this).attr("name");
-                    var invalidChars = $(this).data("invalid-chars");
-                    if (invalidChars) {
-                        RedPenUI.currentConfiguration.redpens[redpen].symbols[symbolName].invalid_chars = newValue;
-                    }
-                    else {
-                        RedPenUI.currentConfiguration.redpens[redpen].symbols[symbolName].value = newValue[0] ? newValue[0] : "";
-                    }
-                    validateDocument();
-                }
-            });
-        });
-
-        $("#redpen-active-symbols").find("[type=checkbox]").each(function (i, n) {
-            $(this).off("change").on("change", function () {
-                var redpen = $(this).data("pk");
-                var symbolName = $(this).attr("name");
-                var property = $(this).attr("value");
-                RedPenUI.currentConfiguration.redpens[redpen].symbols[symbolName][property] = $(this).is(":checked");
-                validateDocument();
-            });
-        });
-    }; // end of ShowConfigurationOptions
 
     // revalidate the document using the currently selected options
     var delayedRevalidateDocument = function () {
@@ -463,7 +463,7 @@ RedPenUI.showComponents = function(configuration) {
         }
         // debounce changes
         clearTimeout(validateTimeout);
-        validateTimeout = setTimeout(validateDocument, 250);
+        validateTimeout = setTimeout(RedPenUI.Utils.validateDocument, 250);
     };
 
     // start of main procedure
@@ -608,7 +608,7 @@ RedPenUI.showComponents = function(configuration) {
         .on("blur paste input", delayedRevalidateDocument)
         .scroll(repositionEditorUnderlay);
 
-    $("#redpen-document-parser").change(validateDocument);
+    $("#redpen-document-parser").change(RedPenUI.Utils.validateDocument);
 
     $("#redpen-language").change(function () {
         RedPenUI.permitLanguageAutoDetect = false; // prevent auto-detection from subsequently overriding the user's
@@ -618,8 +618,8 @@ RedPenUI.showComponents = function(configuration) {
     });
 
     $("#redpen-configuration").change(function () {
-        showConfigurationOptions($(this).val());
-        validateDocument();
+        RedPenUI.Utils.showConfigurationOptions($(this).val());
+        RedPenUI.Utils.validateDocument();
     });
 
     $("#redpen-token-editor").on("change keyup", RedPenUI.Utils.updateTokens);
