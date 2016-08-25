@@ -35,6 +35,9 @@ RedPenUI.symbolTables = {};
 // configuration object
 RedPenUI.currentConfiguration = null;
 
+// debouncer for user input
+RedPenUI.validateTimeout = 0;
+
 // clear editor and results
 RedPenUI.clearResult = function() {
     $('#redpen-editor').val('').trigger("input");
@@ -427,8 +430,6 @@ RedPenUI.Utils.showConfigurationOptions = function (redpenName) {
 }; // end of ShowConfigurationOptions
 
 RedPenUI.showComponents = function(configuration) {
-    // debouncer for user input
-    var validateTimeout = 0;
     RedPenUI.currentConfiguration = configuration; // for non-inner methods
 
     // misc inner methods
@@ -462,8 +463,8 @@ RedPenUI.showComponents = function(configuration) {
             });
         }
         // debounce changes
-        clearTimeout(validateTimeout);
-        validateTimeout = setTimeout(RedPenUI.Utils.validateDocument, 250);
+        clearTimeout(RedPenUI.validateTimeout);
+        RedPenUI.validateTimeout = setTimeout(RedPenUI.Utils.validateDocument, 250);
     };
 
     // start of main procedure
