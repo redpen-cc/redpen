@@ -402,7 +402,7 @@ RedPenUI.showComponents = function(configuration) {
                         if (properties[i].trim().length == 0) continue;
                         var nameValue = properties[i].split("=", 2);
                         if (nameValue.length == 2) {
-                            configuration.redpens[redpen].validators[validator].properties[nameValue[0].trim()] = nameValue[1].trim();
+                            RedPenUI.currentConfiguration.redpens[redpen].validators[validator].properties[nameValue[0].trim()] = nameValue[1].trim();
                         } else {
                             alert("Property must be in key=value format: " + nameValue);
                             return false;
@@ -431,10 +431,10 @@ RedPenUI.showComponents = function(configuration) {
                     var symbolName = $(this).attr("name");
                     var invalidChars = $(this).data("invalid-chars");
                     if (invalidChars) {
-                        configuration.redpens[redpen].symbols[symbolName].invalid_chars = newValue;
+                        RedPenUI.currentConfiguration.redpens[redpen].symbols[symbolName].invalid_chars = newValue;
                     }
                     else {
-                        configuration.redpens[redpen].symbols[symbolName].value = newValue[0] ? newValue[0] : "";
+                        RedPenUI.currentConfiguration.redpens[redpen].symbols[symbolName].value = newValue[0] ? newValue[0] : "";
                     }
                     validateDocument();
                 }
@@ -446,7 +446,7 @@ RedPenUI.showComponents = function(configuration) {
                 var redpen = $(this).data("pk");
                 var symbolName = $(this).attr("name");
                 var property = $(this).attr("value");
-                configuration.redpens[redpen].symbols[symbolName][property] = $(this).is(":checked");
+                RedPenUI.currentConfiguration.redpens[redpen].symbols[symbolName][property] = $(this).is(":checked");
                 validateDocument();
             });
         });
