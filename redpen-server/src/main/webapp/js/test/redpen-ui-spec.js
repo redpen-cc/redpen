@@ -49,4 +49,33 @@ describe('setEditPosition', function() {
         RedPenUI.Utils.setEditPosition(errors[0]);
         expect(textarea[0].setSelectionRange).toHaveBeenCalledWith(10,10);
     });
+
+    it('canPasteSampleText', function() {
+        RedPenUI.sampleDocuments = {
+            en: {
+                parser: "PLAIN",
+                document: "It is is cool!"
+            },
+            ja: {
+                parser: "PLAIN",
+                document: "そこにシビれる あこがれるゥ。"
+            },
+            en_md: {
+                parser: "MARKDOWN", document: "# Instances\n" +
+                "Soo cool!"
+            },
+            ja_md: {
+                parser: "MARKDOWN",
+                document: "# 分散処理\n"
+            }
+        }
+
+        var viewValidator = $('<section id="redpen-view-validator">').appendTo('body');
+        RedPenUI.pasteSampleText("en"); // plain
+        expect("It is is cool!", viewValidator.val())
+
+        RedPenUI.pasteSampleText("ja_md"); // markdown
+        expect("# 分散処理", viewValidator.val())
+    });
+
 });
