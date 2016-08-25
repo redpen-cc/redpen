@@ -38,6 +38,9 @@ RedPenUI.currentConfiguration = null;
 // debouncer for user input
 RedPenUI.validateTimeout = 0;
 
+// sample documents
+RedPenUI.sampleDocuments = {};
+
 // clear editor and results
 RedPenUI.clearResult = function() {
     $('#redpen-editor').val('').trigger("input");
@@ -56,11 +59,13 @@ RedPenUI.setView = function(view) {
 RedPenUI.pasteSampleText = function(key) {
     RedPenUI.setView("validator");
     var text;
-    if (sampleDocuments[key]) {
+    if (RedPenUI.sampleDocuments[key]) {
         RedPenUI.permitLanguageAutoDetect = true;
-        text = sampleDocuments[key].document;
-        $("#redpen-document-parser").val(sampleDocuments[key].parser);
+        text = RedPenUI.sampleDocuments[key].document;
+        $("#redpen-document-parser").val(RedPenUI.sampleDocuments[key].parser);
         $('#redpen-errors').empty();
+    } else {
+        console.error("No sample text for " + key + "...")
     }
     $("#redpen-editor")
         .val(text ? text : "")
