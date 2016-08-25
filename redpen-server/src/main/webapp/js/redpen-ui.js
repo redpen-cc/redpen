@@ -29,6 +29,9 @@ RedPenUI.permitLanguageAutoDetect = true;
 // store validator configuration for each language
 RedPenUI.validatorConfiguration = {};
 
+// store symbol setting for each language
+RedPenUI.symbolTables = {};
+
 // configuration object
 RedPenUI.currentConfiguration = null;
 
@@ -412,7 +415,7 @@ RedPenUI.showComponents = function(configuration) {
 
         $("#redpen-active-symbols")
             .empty()
-            .append(symbolTables[redpenName]);
+            .append(RedPenUI.symbolTables[redpenName]);
 
         $("#redpen-active-symbols").find(".redpen-editable").each(function (i, n) {
             if ($(this).text() == "none") { // workaround to fix x-editable empty-detection on reapplication
@@ -466,7 +469,6 @@ RedPenUI.showComponents = function(configuration) {
     // start of main procedure
     $("#redpen-version").text("RedPen version " + configuration.version);
     var discoveredLanguages = {};
-    var symbolTables = {};
 
     // build options for each configured redpen
     for (var redpenName in configuration.redpens) {
@@ -517,7 +519,7 @@ RedPenUI.showComponents = function(configuration) {
         }
 
         var symbolTableEntry = $('<table></table>').addClass('redpen-symboltable');
-        symbolTables[redpenName] = symbolTableEntry;
+        RedPenUI.symbolTables[redpenName] = symbolTableEntry;
         $(symbolTableEntry).append(
             $('<tr></tr>')
                 .append($('<th></th>').text(""))
