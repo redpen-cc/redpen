@@ -77,25 +77,25 @@ RedPenUI.pasteSampleText = function(key) {
 RedPenUI.Utils.setEditPosition = function (error) {
     if (error.position && error.position.end) {
         var tarea = $('#redpen-editor')[0];
-        if (tarea.setSelectionRange) {
-            var text = $('#redpen-editor').val();
-            var line = 1;
-            var offset = 0;
-            var characterPosition = 0;
-            for (var i = 0; i < text.length; i++) {
-                if ((line >= error.position.end.line) && (offset >= error.position.end.offset)) {
-                    characterPosition = i;
-                    break;
-                }
-                offset++;
-                if (text[i] == "\n") {
-                    line++;
-                    offset = 0;
-                }
+        if (!tarea.setSelectionRange) { return; }
+
+        var text = $('#redpen-editor').val();
+        var line = 1;
+        var offset = 0;
+        var characterPosition = 0;
+        for (var i = 0; i < text.length; i++) {
+            if ((line >= error.position.end.line) && (offset >= error.position.end.offset)) {
+                characterPosition = i;
+                break;
             }
-            tarea.focus();
-            tarea.setSelectionRange(characterPosition, characterPosition);
+            offset++;
+            if (text[i] == "\n") {
+                line++;
+                offset = 0;
+            }
         }
+        tarea.focus();
+        tarea.setSelectionRange(characterPosition, characterPosition);
     }
 };
 
