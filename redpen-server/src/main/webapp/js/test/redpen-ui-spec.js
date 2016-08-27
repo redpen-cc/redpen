@@ -73,9 +73,11 @@ describe('setEditPosition', function() {
         var viewValidator = $('<section id="redpen-view-validator">').appendTo('body');
         RedPenUI.pasteSampleText("en"); // plain
         expect("It is is cool!", viewValidator.val())
+        expect(true, viewValidator.is(":visible"))
 
         RedPenUI.pasteSampleText("ja_md"); // markdown
         expect("# 分散処理", viewValidator.val())
+        expect(true, viewValidator.is(":visible"))
     });
 
 });
