@@ -38,15 +38,15 @@ public class ValidationError implements Serializable {
     /**
      * Constructor.
      *
-     * @param validatorClass    validator class
+     * @param validatorName    validator name
      * @param errorMessage      error message
      * @param sentenceWithError sentence containing validation error
      */
-    public ValidationError(Class validatorClass,
+    public ValidationError(String validatorName,
                            String errorMessage,
                            Sentence sentenceWithError) {
         this.message = errorMessage;
-        this.validatorName = validatorClass.getSimpleName();
+        this.validatorName = validatorName;;
         this.sentence = sentenceWithError;
         this.startPosition = null;
         this.endPosition = null;
@@ -55,16 +55,16 @@ public class ValidationError implements Serializable {
     /**
      * Constructor.
      *
-     * @param validatorClass    validator class
+     * @param validatorName    validator name
      * @param errorMessage      error message
      * @param sentenceWithError sentence containing validation error
      * @param startPosition     position where error starts
      * @param endPosition       position where error ends
      */
-    ValidationError(Class validatorClass, String errorMessage, Sentence sentenceWithError,
+    ValidationError(String validatorName, String errorMessage, Sentence sentenceWithError,
             int startPosition, int endPosition) {
         this.message = errorMessage;
-        this.validatorName = validatorClass.getSimpleName();
+        this.validatorName = validatorName;
         this.sentence = sentenceWithError;
         this.startPosition = sentenceWithError.getOffset(startPosition).get();
         this.endPosition = sentenceWithError.getOffset(endPosition).get();

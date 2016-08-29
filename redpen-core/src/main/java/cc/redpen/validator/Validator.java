@@ -51,9 +51,10 @@ public abstract class Validator {
 
     private Map<String, Object> defaultProps;
     private ResourceBundle errorMessages = null;
-    private ValidatorConfiguration config;
-    private Configuration globalConfig;
+    protected ValidatorConfiguration config;
+    protected Configuration globalConfig;
     private Locale locale;
+    private String validatorName = this.getClass().getSimpleName();
 
     public Validator() {
         this(new Object[0]);
@@ -140,7 +141,7 @@ public abstract class Validator {
         return Collections.emptyList();
     }
 
-    public final void preInit(ValidatorConfiguration config, Configuration globalConfig) throws RedPenException {
+    public void preInit(ValidatorConfiguration config, Configuration globalConfig) throws RedPenException {
         this.config = config;
         this.globalConfig = globalConfig;
         init();
@@ -304,6 +305,10 @@ public abstract class Validator {
         return Optional.ofNullable(config.getProperty(name));
     }
 
+    protected void setValidatorName(String validatorName){
+        this.validatorName = validatorName;
+    }
+
     /** @deprecated Please use constructor with default properties instead, and then getXXX() methods */
     @Deprecated
     protected String getConfigAttribute(String name, String defaultValue) {
@@ -340,7 +345,7 @@ public abstract class Validator {
      * @param sentenceWithError sentence
      */
     protected void addError(String message, Sentence sentenceWithError) {
-        errors.add(new ValidationError(this.getClass(), message, sentenceWithError));
+        errors.add(new ValidationError(this.validatorName, message, sentenceWithError));
     }
 
     /**
@@ -353,7 +358,7 @@ public abstract class Validator {
      */
     protected void addErrorWithPosition(String message, Sentence sentenceWithError,
                                         int start, int end) {
-        errors.add(new ValidationError(this.getClass(), message, sentenceWithError, start, end));
+        errors.add(new ValidationError(this.validatorName, message, sentenceWithError, start, end));
     }
 
 
@@ -365,7 +370,7 @@ public abstract class Validator {
      * @param args              objects to format
      */
     protected void addLocalizedError(Sentence sentenceWithError, Object... args) {
-        errors.add(new ValidationError(this.getClass(), getLocalizedErrorMessage(null, args), sentenceWithError));
+        errors.add(new ValidationError(this.validatorName, getLocalizedErrorMessage(null, args), sentenceWithError));
     }
 
     /**
@@ -376,7 +381,7 @@ public abstract class Validator {
      * @param args              objects to format
      */
     protected void addLocalizedError(String messageKey, Sentence sentenceWithError, Object... args) {
-        errors.add(new ValidationError(this.getClass(), getLocalizedErrorMessage(messageKey, args), sentenceWithError));
+        errors.add(new ValidationError(this.validatorName, getLocalizedErrorMessage(messageKey, args), sentenceWithError));
     }
 
     /**
@@ -418,7 +423,7 @@ public abstract class Validator {
      */
     protected void addLocalizedErrorWithPosition(String messageKey, Sentence sentenceWithError,
                                                  int start, int end, Object... args) {
-        errors.add(new ValidationError(this.getClass(), getLocalizedErrorMessage(messageKey, args), sentenceWithError, start, end));
+        errors.add(new ValidationError(this.validatorName, getLocalizedErrorMessage(messageKey, args), sentenceWithError, start, end));
     }
 
     /**
