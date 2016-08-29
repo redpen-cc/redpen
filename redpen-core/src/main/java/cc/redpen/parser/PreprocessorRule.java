@@ -74,38 +74,13 @@ public class PreprocessorRule {
      * of the supplied document
      *
      * @param document input document
-     * @param error
-     * @return
-     */
-    public boolean isTriggeredBy(Document document, ValidationError error) {
-        int errorLineNumber = error.getLineNumber();
-        String validatorName = error.getValidatorName();
-        if (validatorName.equals("JavaScript")) {
-            validatorName = extractJSValidatorName(error.getMessage());
-        }
-        return isTriggeredBy(document, errorLineNumber, validatorName);
-    }
-
-    private String extractJSValidatorName(String message) {
-        String[] segment = message.split(" ");
-        String jsValidatorName = segment[0].replaceAll("\\[", "")
-                .replaceAll(".js\\]", "")
-                .trim();
-        return jsValidatorName;
-    }
-
-    /**
-     * Return true if the rule is triggered by the given line and name given the structure
-     * of the supplied document
-     *
-     * @param document input document
-     * @param errorLineNumber
-     * @param validatorName
-     * @return
+     * @param errorLineNumber line number
+     * @param validatorName validator name
+     * @return true if the error is triggered by the specified validator
      */
     public boolean isTriggeredBy(Document document, int errorLineNumber, String validatorName) {
         if ((lineNumberLimit < lineNumber) || (errorLineNumber < lineNumberLimit)) {
-            if (parameters.isEmpty() || parameters.contains(validatorName.toLowerCase())) {
+            if (parameters.isEmpty() || parameters.contains(validatorName.toLowerCase().replaceAll("\\.js$",""))) {
                 // find out if the rule line number is in the same section as the other line number
                 for (Section section : document) {
                     List<Sentence> allBlockSentences = new ArrayList<>();
