@@ -105,6 +105,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
                         .addProperty("script-path", "mypath")
                         .addProperty("intValue", 1)
                         .addProperty("floatValue", "2")
+                        .addProperty("testScript-floatValue", "4")
                         .addProperty("booleanValue", "false")
                         .addProperty("hello", "world")
                 , Configuration.builder().build());
@@ -162,7 +163,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         assertEquals("validateSentence", dataFromJavaScript.get(3));
         assertEquals("validateSection", dataFromJavaScript.get(4));
         assertEquals(1, dataFromJavaScript.get(5));
-        assertEquals(2f, dataFromJavaScript.get(6));
+        assertEquals(4f, dataFromJavaScript.get(6));
         assertEquals(false, dataFromJavaScript.get(7));
         assertEquals("world", dataFromJavaScript.get(8));
         assertEquals("mypath", dataFromJavaScript.get(9));

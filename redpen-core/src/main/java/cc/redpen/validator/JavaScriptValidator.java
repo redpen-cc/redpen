@@ -1,4 +1,4 @@
-/**
+/*
  * redpen: a text inspection tool
  * Copyright (c) 2014-2015 Recruit Technologies Co., Ltd. and contributors
  * (see CONTRIBUTORS.md)
@@ -88,8 +88,8 @@ public class JavaScriptValidator extends Validator {
         }
     }
 
-    static final Map<File, String> fileCache = new HashMap<>();
-    static final Map<File, Long> loadTime = new HashMap<>();
+    private static final Map<File, String> fileCache = new HashMap<>();
+    private static final Map<File, Long> loadTime = new HashMap<>();
 
     /**
      * Load file content. Returns cached content if the last modified date is same as previous.
@@ -148,9 +148,9 @@ public class JavaScriptValidator extends Validator {
 
     private Map<Script, Map<String, Boolean>> functionExistenceMap = new HashMap<>();
 
-   Script currentJS;
+   private Script currentJS;
 
-    void call(Script js, String functionName, Object... args) {
+    private void call(Script js, String functionName, Object... args) {
         this.currentJS = js;
         Map<String, Boolean> map = functionExistenceMap.computeIfAbsent(js, e -> new HashMap<>());
         Boolean functionExists = map
@@ -207,6 +207,17 @@ public class JavaScriptValidator extends Validator {
         super.addError(String.format("[%s] %s", currentJS.name, message), sentenceWithError);
     }
 
+    @Override
+    Object getOrDefault(String name){
+        // script specific parameter wins
+        Object value = super.getOrDefault(currentJS.name.replaceAll("\\.js$","") + "-" + name);
+        if (value == null) {
+            // fallback to normal parameter
+            value = super.getOrDefault(name);
+        }
+        return value;
+    }
+
 
     @Override
     public void addErrorWithPosition(String message, Sentence sentenceWithError,
@@ -244,7 +255,7 @@ public class JavaScriptValidator extends Validator {
         } else {
             formatted = super.getLocalizedErrorMessage(key, args);
         }
-        return MessageFormat.format("[{0}] {1}",currentJS.name, formatted);
+        return MessageFormat.format("[{0}] {1}", currentJS.name, formatted);
     }
 
     class Script {
@@ -271,8 +282,7 @@ public class JavaScriptValidator extends Validator {
                 try {
                     engine.eval("var _JavaScriptValidatorTest = Java.type('cc.redpen.validator.JavaScriptValidatorTest');");
                 } catch (RuntimeException e) {
-                    if (e.getCause() instanceof ClassNotFoundException) {
-                    } else {
+                    if (!(e.getCause() instanceof ClassNotFoundException)) {
                         throw e;
                     }
                 }
