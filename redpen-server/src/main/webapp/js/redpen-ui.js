@@ -26,11 +26,11 @@ RedPenUI.Utils = RedPenUI.Utils || {};
 // ensure the language autodetect doesn't override the user's selection
 RedPenUI.permitLanguageAutoDetect = true;
 
-// store validator configuration for each language
-RedPenUI.validatorConfiguration = {};
+// store validator configuration for each language (HTML block)
+RedPenUI.validatorConfigBlocks = {};
 
-// store symbol setting for each language
-RedPenUI.symbolTables = {};
+// store symbol setting for each language (HTML block)
+RedPenUI.symbolTableBlocks = {};
 
 // configuration object
 RedPenUI.currentConfiguration = null;
@@ -361,7 +361,7 @@ RedPenUI.Utils.validateDocument = function () {
 RedPenUI.Utils.showConfigurationOptions = function (redpenName) {
     $("#redpen-active-validators")
         .empty()
-        .append(RedPenUI.validatorConfiguration[redpenName])
+        .append(RedPenUI.validatorConfigBlocks[redpenName])
         .find('input').click(RedPenUI.Utils.validateDocument);
 
     $("#redpen-active-validators").find(".redpen-editable").each(function (i, n) {
@@ -395,7 +395,7 @@ RedPenUI.Utils.showConfigurationOptions = function (redpenName) {
 
     $("#redpen-active-symbols")
         .empty()
-        .append(RedPenUI.symbolTables[redpenName]);
+        .append(RedPenUI.symbolTableBlocks[redpenName]);
 
     $("#redpen-active-symbols").find(".redpen-editable").each(function (i, n) {
         if ($(this).text() == "none") { // workaround to fix x-editable empty-detection on reapplication
@@ -485,7 +485,7 @@ RedPenUI.showComponents = function(configuration) {
         );
         discoveredLanguages[config.lang] = true;
         var validatorCheckboxes = $('<div></div>').addClass('redpen-validators');
-        RedPenUI.validatorConfiguration[redpenName] = validatorCheckboxes;
+        RedPenUI.validatorConfigBlocks[redpenName] = validatorCheckboxes;
         for (var validatorName in config.validators) {
             var validator = config.validators[validatorName];
             var propertiesText = "";
@@ -523,7 +523,7 @@ RedPenUI.showComponents = function(configuration) {
         }
 
         var symbolTableEntry = $('<table></table>').addClass('redpen-symboltable');
-        RedPenUI.symbolTables[redpenName] = symbolTableEntry;
+        RedPenUI.symbolTableBlocks[redpenName] = symbolTableEntry;
         $(symbolTableEntry).append(
             $('<tr></tr>')
                 .append($('<th></th>').text(""))
