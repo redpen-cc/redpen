@@ -134,21 +134,20 @@ RedPenUI.Utils.updateTokens = function() {
 };
 
 // return the current configuration
-RedPenUI.Utils.getConfiguration = function () {
+RedPenUI.Utils.getConfiguration = function(lang, activeValidators) {
     var validators = {};
-    var redpen = $("#redpen-configuration").val();
-    $("#redpen-active-validators").find("input:checked").each(function () {
+    activeValidators.each(function () {
         var validator = $(this).val();
         validators[validator] = {};
-        if (!$.isEmptyObject(RedPenUI.currentConfiguration.redpens[redpen].validators[validator].properties)) {
-            validators[validator].properties = RedPenUI.currentConfiguration.redpens[redpen].validators[validator].properties;
+        if (!$.isEmptyObject(RedPenUI.currentConfiguration.redpens[lang].validators[validator].properties)) {
+            validators[validator].properties = RedPenUI.currentConfiguration.redpens[lang].validators[validator].properties;
         }
     });
 
     return {
         lang: $("#redpen-language").val(),
         validators: validators,
-        symbols: RedPenUI.currentConfiguration.redpens[redpen].symbols
+        symbols: RedPenUI.currentConfiguration.redpens[lang].symbols
     };
 };
 
@@ -344,7 +343,7 @@ RedPenUI.Utils.validateDocument = function () {
         document: RedPenUI.Utils.editorText(),
         format: 'json2',
         documentParser: $("#redpen-document-parser").val(),
-        config: RedPenUI.Utils.getConfiguration()
+        config: RedPenUI.Utils.getConfiguration($("#redpen-configuration").val(), $("#redpen-active-validators").find("input:checked"))
     };
     $("#redpen-results-request").text(JSON.stringify(requestParams, null, 2));
     redpen.validateJSON(
