@@ -80,4 +80,48 @@ describe('setEditPosition', function() {
         expect(true, viewValidator.is(":visible"))
     });
 
+    it('canGetConfiguration', function() {
+        var sampleConfig = {
+            "documentParsers": ["PLAIN", "LATEX"],
+            "redpens": {
+                "en": {
+                    "lang": "en",
+                    "symbols": {
+                        "AMPERSAND": {
+                            "after_space": false,
+                            "before_space": false,
+                            "invalid_chars": "ï¼†",
+                            "value": "&"
+                        },
+                        "ASTERISK": {
+                            "after_space": false,
+                            "before_space": false,
+                            "invalid_chars": "ï¼Š",
+                            "value": "*"
+                        }
+                    },
+                    "tokenizer": "cc.redpen.tokenizer.WhiteSpaceTokenizer",
+                    "validators": {
+                        "CommaNumber": {
+                            "languages": [],
+                            "properties": {"max_num": "3"}
+                        },
+                        "Contraction": {
+                            "languages": ["en"],
+                            "properties": {}
+                        }
+                    },
+                    "variant": ""
+                }
+            },
+            "version": "1.7.0"
+        }
+
+        var activeValidators = ["Contraction"]; // NOTE: CommaNumber is not active
+        RedPenUI.currentConfiguration = sampleConfig;
+        var config = RedPenUI.Utils.getConfiguration("en", activeValidators);
+        expect(1, config.validators.length)
+        expect(2, config.symbols.length)
+    });
+
 });

@@ -134,10 +134,9 @@ RedPenUI.Utils.updateTokens = function() {
 };
 
 // return the current configuration
-RedPenUI.Utils.getConfiguration = function(lang, activeValidators) {
+RedPenUI.Utils.getConfiguration = function(lang, activeValidatorNames) { // NOTE: properties are stored in currentConfiguration
     var validators = {};
-    activeValidators.each(function () {
-        var validator = $(this).val();
+    $.each(activeValidatorNames, function(i, validator) {
         validators[validator] = {};
         if (!$.isEmptyObject(RedPenUI.currentConfiguration.redpens[lang].validators[validator].properties)) {
             validators[validator].properties = RedPenUI.currentConfiguration.redpens[lang].validators[validator].properties;
@@ -339,11 +338,14 @@ RedPenUI.Utils.showErrorsInSitu = function (errors) {
 
 // call RedPen to validate the document and display any errors
 RedPenUI.Utils.validateDocument = function () {
+    var activeValidators = $("#redpen-active-validators").find("input:checked")
     var requestParams = {
         document: RedPenUI.Utils.editorText(),
         format: 'json2',
         documentParser: $("#redpen-document-parser").val(),
-        config: RedPenUI.Utils.getConfiguration($("#redpen-configuration").val(), $("#redpen-active-validators").find("input:checked"))
+        config: RedPenUI.Utils.getConfiguration(
+            $("#redpen-configuration").val(),
+            $.map(activeValidators, function(element){return $(element).val()}))
     };
     $("#redpen-results-request").text(JSON.stringify(requestParams, null, 2));
     redpen.validateJSON(
