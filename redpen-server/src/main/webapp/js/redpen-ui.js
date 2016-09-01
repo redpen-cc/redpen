@@ -446,12 +446,6 @@ RedPenUI.Utils.showConfigurationOptions = function (redpenName) {
 RedPenUI.showComponents = function(configuration) {
     RedPenUI.currentConfiguration = configuration; // for non-inner methods
 
-    // misc inner methods
-    // set the document parser
-    var setDocumentParser = function (parser) {
-        $("#redpen-document-parser").val(parser);
-    };
-
     // ensure the options displayed are appropriate for the selected language
     var setLanguage = function (lang) {
         var firstValidRedpen = false;
@@ -641,7 +635,6 @@ RedPenUI.showComponents = function(configuration) {
     $("input[type='radio'][name='redpen-token-lang']").on("change", RedPenUI.Utils.updateTokens);
 
     // set the initial state
-    setDocumentParser("PLAIN");
     setLanguage("en");
     RedPenUI.pasteSampleText("en_md");
 
