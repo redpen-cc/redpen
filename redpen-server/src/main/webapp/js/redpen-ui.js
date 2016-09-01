@@ -194,14 +194,6 @@ RedPenUI.Utils.editorText = function (newText) {
 
 // format RedPen errors in situ
 RedPenUI.Utils.showErrorsInSitu = function (errors) {
-    // get a list of the checked validators
-    var validators = {};
-    $("#redpen-active-validators").find("input:checked").each(function () {
-        validators[$(this).val()] = true;
-    });
-
-    var errorsList = $('#redpen-errors').empty();
-    var editorUnderlay = $('#redpen-editor-underlay').empty();
 
     // display an error
     var addError = function (errorList, error) {
@@ -308,7 +300,16 @@ RedPenUI.Utils.showErrorsInSitu = function (errors) {
         }
         addText();
         return $(annotatedSpan);
-    };
+    }; // end of annotateDocument
+
+    // get a list of the checked validators
+    var validators = {};
+    $("#redpen-active-validators").find("input:checked").each(function () {
+        validators[$(this).val()] = true;
+    });
+
+    var errorsList = $('#redpen-errors').empty();
+    var editorUnderlay = $('#redpen-editor-underlay').empty();
 
     var allErrors = [];
     for (var i = 0; i < errors.length; i++) {
