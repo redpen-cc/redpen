@@ -606,4 +606,442 @@ describe('setEditPosition', function() {
     });
 
 
+    it('canAnnotateText', function() {
+        var annotation = [
+            null,
+            [
+                {
+                    "char": "S",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "u",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "c",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "h",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": " ",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "d",
+                    "errorStart": [
+                        {
+                            "id": 1,
+                            "error": {
+                                "subsentence": {
+                                    "offset": 5,
+                                    "length": 12
+                                },
+                                "validator": "Spelling",
+                                "position": {
+                                    "start": {
+                                        "offset": 5,
+                                        "line": 1
+                                    },
+                                    "end": {
+                                        "offset": 17,
+                                        "line": 1
+                                    }
+                                },
+                                "message": "Found possibly misspelled word \"distriubuted\".",
+                                "annotated": true
+                            }
+                        }
+                    ],
+                    "errorEnd": []
+                },
+                {
+                    "char": "i",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "s",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "t",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "r",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "i",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "u",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "b",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "u",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "t",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "e",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "d",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": " ",
+                    "errorStart": [],
+                    "errorEnd": [
+                        {
+                            "id": 1,
+                            "error": {
+                                "subsentence": {
+                                    "offset": 5,
+                                    "length": 12
+                                },
+                                "validator": "Spelling",
+                                "position": {
+                                    "start": {
+                                        "offset": 5,
+                                        "line": 1
+                                    },
+                                    "end": {
+                                        "offset": 17,
+                                        "line": 1
+                                    }
+                                },
+                                "message": "Found possibly misspelled word \"distriubuted\".",
+                                "annotated": true
+                            }
+                        }
+                    ]
+                },
+                {
+                    "char": "s",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "y",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "s",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "t",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "e",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "m",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "s",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": " ",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "n",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "e",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "e",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "d",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": " ",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "a",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": " ",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "c",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "o",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "m",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "p",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "o",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "n",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "e",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "n",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "t",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": " ",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "t",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "o",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": " ",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "m",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "e",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "r",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "g",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "e",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": " ",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "t",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "h",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "e",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": " ",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "p",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "r",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "e",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "l",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "i",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "m",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "i",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "n",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "a",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "r",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "y",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": " ",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "r",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "e",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "s",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "u",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "l",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "t",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": "s",
+                    "errorStart": [],
+                    "errorEnd": []
+                },
+                {
+                    "char": ".",
+                    "errorStart": [],
+                    "errorEnd": []
+                }
+            ]
+        ];
+
+        var expected = "<span>Such </span><i>distriubuted</i><div" +
+            " class=\"redpen-annotated-sentence-marker\">1</div><span> systems need a component to merge the preliminary results.</span>"
+        expect(expected, RedPenUI.Utils.renderErrors(annotation))
+    });
+
 });
