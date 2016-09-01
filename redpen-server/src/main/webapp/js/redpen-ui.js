@@ -192,6 +192,35 @@ RedPenUI.Utils.editorText = function (newText) {
     return $('#redpen-editor').val();
 };
 
+RedPenUI.Utils.extractAnnotations = function(lines, errors) {
+    var annotated = [];
+    for (var i = 1; i < lines.length; i++) { // NOTE: start sentence from 1
+        var sentence = lines[i];
+        annotated[i] = [];
+        for (var j = 0; j < sentence.length; j++) {
+            annotated[i].push({char: sentence[j], errorStart: [], errorEnd: []});
+        }
+    }
+
+    for (var i = 0; i < errors.length; i++) {
+        var lineNo = errors[i].position.end.line;
+        if (lineNo < lines.length) {
+            var start = errors[i].position.start.offset ? errors[i].position.start.offset : 0;
+            var end = errors[i].position.end.offset ? errors[i].position.end.offset : 0;
+            if ((start != 0) || (end != 0)) {
+                if (annotated[lineNo][start]) {
+                    annotated[lineNo][start].errorStart.push({id: i + 1, error: errors[i]});
+                }
+                errors[i].annotated = true;
+            }
+            if (annotated[lineNo] && annotated[lineNo][end]) {
+                annotated[lineNo][end].errorEnd.push({id: i + 1, error: errors[i]});
+                errors[i].annotated = true;
+            }
+        }
+    }
+    return annotated;
+};
 
 RedPenUI.Utils.annotateDocument = function (errors) {
 
@@ -199,37 +228,6 @@ RedPenUI.Utils.annotateDocument = function (errors) {
         var document = RedPenUI.Utils.editorText();
         return ("\n" + document).split("\n");
     };
-
-    var extractAnnotations = function(lines, errors) {
-        var annotated = [];
-
-        for (var i = 1; i < lines.length; i++) {
-            var sentence = lines[i];
-            annotated[i] = [];
-            for (var j = 0; j < sentence.length; j++) {
-                annotated[i].push({char: sentence[j], errorStart: [], errorEnd: []});
-            }
-        }
-
-        for (var i = 0; i < errors.length; i++) {
-            var lineNo = errors[i].position.end.line;
-            if (lineNo < lines.length) {
-                var start = errors[i].position.start.offset ? errors[i].position.start.offset : 0;
-                var end = errors[i].position.end.offset ? errors[i].position.end.offset : 0;
-                if ((start != 0) || (end != 0)) {
-                    if (annotated[lineNo][start]) {
-                        annotated[lineNo][start].errorStart.push({id: i + 1, error: errors[i]});
-                    }
-                    errors[i].annotated = true;
-                }
-                if (annotated[lineNo] && annotated[lineNo][end]) {
-                    annotated[lineNo][end].errorEnd.push({id: i + 1, error: errors[i]});
-                    errors[i].annotated = true;
-                }
-            }
-        }
-        return annotated;
-    }
 
     var renderErrors = function(annotated) {
         var text = "";
@@ -285,9 +283,9 @@ RedPenUI.Utils.annotateDocument = function (errors) {
         }
         addText(false);
         return $(annotatedSpan);
-    }
+    };
 
-    var annotated = extractAnnotations(getSourceLines(), errors);
+    var annotated = RedPenUI.Utils.extractAnnotations(getSourceLines(), errors);
     return renderErrors(annotated);
 }; // end of annotateDocument
 
@@ -656,4 +654,4 @@ RedPenUI.showComponents = function(configuration) {
 // load the configuration and build the options and controls
 RedPenUI.Show = function() {
     redpen.getRedPens(RedPenUI.showComponents); // end of getRedPens
-} // end of Show
+}; // end of Show
