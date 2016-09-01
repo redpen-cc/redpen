@@ -150,34 +150,34 @@ RedPenUI.Utils.getConfiguration = function(lang, activeValidatorNames) { // NOTE
     };
 };
 
+RedPenUI.Utils.formatError = function(sentence, error, contextWidth) {
+    var message = "";
+    message += "Line " + error.position.start.line + ":" + error.position.start.offset + " \u201C";
+    var left = Math.max(0, error.subsentence.offset - contextWidth);
+    var right = Math.min(sentence.length, error.subsentence.offset + error.subsentence.length + contextWidth);
+    message += left == 0 ? "" : "\u2026";
+
+    message += sentence.substring(left, error.subsentence.offset);
+    message += error.subsentence.length ? "\u3010" : "\u25b6";
+    message += sentence.substr(error.subsentence.offset, error.subsentence.length);
+    message += error.subsentence.length ? "\u3011" : "";
+    message += sentence.substring(error.subsentence.offset + error.subsentence.length, right);
+
+    message += right == sentence.length ? "" : "\u2026";
+    message += "\u201D\n";
+    message += error.message;
+    message += "\n";
+    return message;
+};
+
 // sample "plain text" report
-RedPenUI.Utils.createRedPenReport = function (errors) {
+RedPenUI.Utils.createRedPenReport = function(errorListBySentences) {
     var report = "";
-    var contextWidth = 12;
-    if (errors) {
-        var formatError = function (sentence, error) {
-            var message = "";
-            message += "Line " + error.position.start.line + ":" + error.position.start.offset + " \u201C";
-            var left = Math.max(0, error.subsentence.offset - contextWidth);
-            var right = Math.min(sentence.length, error.subsentence.offset + error.subsentence.length + contextWidth);
-            message += left == 0 ? "" : "\u2026";
-
-            message += sentence.substring(left, error.subsentence.offset);
-            message += error.subsentence.length ? "\u3010" : "\u25b6";
-            message += sentence.substr(error.subsentence.offset, error.subsentence.length);
-            message += error.subsentence.length ? "\u3011" : "";
-            message += sentence.substring(error.subsentence.offset + error.subsentence.length, right);
-
-            message += right == sentence.length ? "" : "\u2026";
-            message += "\u201D\n";
-            message += error.message;
-            message += "\n";
-            return message;
-        };
-        for (var i = 0; i < errors.length; i++) {
-            var error = errors[i];
-            for (j = 0; j < error.errors.length; j++) {
-                report += formatError(error.sentence, error.errors[j]);
+    if (errorListBySentences) {
+        for (var i = 0; i < errorListBySentences.length; i++) {
+            var errorsInSentence = errorListBySentences[i];
+            for (var j = 0; j < errorsInSentence.errors.length; j++) {
+                report += RedPenUI.Utils.formatError(errorsInSentence.sentence, errorsInSentence.errors[j], 12);
                 report += '\n';
             }
         }

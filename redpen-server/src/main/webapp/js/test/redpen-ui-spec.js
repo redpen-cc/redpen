@@ -124,4 +124,28 @@ describe('setEditPosition', function() {
         expect(2, config.symbols.length)
     });
 
+    it('canFormatError', function() {
+        var error = {
+            "subsentence": {
+                "offset": 5,
+                "length": 12
+            },
+            "validator": "Spelling",
+            "position": {
+                "start": {
+                    "offset": 5,
+                    "line": 1
+                },
+                "end": {
+                    "offset": 17,
+                    "line": 1
+                }
+            },
+            "message": "Found possibly misspelled word \"distriubuted\".",
+            "annotated": true
+        };
+        var sentence = "Such distriubuted systems need a component to merge the preliminary results from member instnaces.";
+        expect("Line 1:5 “Such 【distriubuted】 systems nee…\nFound possibly misspelled word \"distriubuted\".",
+            RedPenUI.Utils.formatError(sentence, error, 12));
+    });
 });
