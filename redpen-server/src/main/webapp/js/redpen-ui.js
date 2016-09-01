@@ -443,22 +443,28 @@ RedPenUI.Utils.showConfigurationOptions = function (redpenName) {
     });
 }; // end of ShowConfigurationOptions
 
+// ensure the options displayed are appropriate for the selected language
+RedPenUI.Utils.setLanguage = function (lang) {
+    var firstValidRedpen = false;
+    $("#redpen-configuration").find("option").each(function () {
+        var valid = $(this).data("lang") == lang;
+        $(this).toggle(valid);
+        if (valid && !firstValidRedpen) {
+            firstValidRedpen = $(this).val();
+        }
+    });
+    $("#redpen-configuration").val(firstValidRedpen);
+    $("#redpen-language").val(lang);
+    RedPenUI.Utils.showConfigurationOptions(firstValidRedpen);
+};
+
+
 RedPenUI.showComponents = function(configuration) {
     RedPenUI.currentConfiguration = configuration; // for non-inner methods
 
-    // ensure the options displayed are appropriate for the selected language
-    var setLanguage = function (lang) {
-        var firstValidRedpen = false;
-        $("#redpen-configuration").find("option").each(function () {
-            var valid = $(this).data("lang") == lang;
-            $(this).toggle(valid);
-            if (valid && !firstValidRedpen) {
-                firstValidRedpen = $(this).val();
-            }
-        });
-        $("#redpen-configuration").val(firstValidRedpen);
-        $("#redpen-language").val(lang);
-        RedPenUI.Utils.showConfigurationOptions(firstValidRedpen);
+    // align the annotated underlay with the textarea
+    var repositionEditorUnderlay = function () {
+        $("#redpen-editor-underlay").css("top", -$("#redpen-editor").scrollTop());
     };
 
     // revalidate the document using the currently selected options
@@ -467,7 +473,7 @@ RedPenUI.showComponents = function(configuration) {
         $('#redpen-editor-underlay').fadeOut(50);
         if (RedPenUI.permitLanguageAutoDetect) {
             redpen.detectLanguage(RedPenUI.Utils.editorText(), function (lang) {
-                setLanguage(lang);
+                RedPenUI.Utils.setLanguage(lang);
             });
         }
         // debounce changes
@@ -607,11 +613,6 @@ RedPenUI.showComponents = function(configuration) {
         $(this).addClass("redpen-option-selected");
     });
 
-    // align the annotated underlay with the textarea
-    var repositionEditorUnderlay = function () {
-        $("#redpen-editor-underlay").css("top", -$("#redpen-editor").scrollTop());
-    };
-
     // bind events
     $('#redpen-editor')
         .on("blur paste input", delayedRevalidateDocument)
@@ -622,8 +623,8 @@ RedPenUI.showComponents = function(configuration) {
     $("#redpen-language").change(function () {
         RedPenUI.permitLanguageAutoDetect = false; // prevent auto-detection from subsequently overriding the user's
         // selection
-        setLanguage($(this).val());
-        validateDocument();
+        RedPenUI.Utils.setLanguage($(this).val());
+        RedPenUI.Utils.validateDocument();
     });
 
     $("#redpen-configuration").change(function () {
@@ -635,7 +636,7 @@ RedPenUI.showComponents = function(configuration) {
     $("input[type='radio'][name='redpen-token-lang']").on("change", RedPenUI.Utils.updateTokens);
 
     // set the initial state
-    setLanguage("en");
+    RedPenUI.Utils.setLanguage("en");
     RedPenUI.pasteSampleText("en_md");
 
     // dumb animation
