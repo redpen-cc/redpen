@@ -51,7 +51,7 @@ public class ValidatorFactory {
 
     static {
         Reflections reflections = new Reflections("cc.redpen.validator");
-        // register Validator implimentations under cc.redpen.validator package
+        // register Validator implementations under cc.redpen.validator package
         reflections.getSubTypesOf(Validator.class).stream()
                 .filter(validator -> !Modifier.isAbstract(validator.getModifiers()))
                 .forEach(validator -> {
