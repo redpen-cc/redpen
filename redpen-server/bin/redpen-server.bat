@@ -78,7 +78,7 @@ set REDPEN_LOG_FILE=%REDPEN_LOG_DIR%\%REDPEN_LOG_FILENAME%
 
 if ["%COMMAND%"] == ["start"] (
     echo starting RedPen server [Ctrl-C to stop]...
-    if ["%REDPEN_CONF_FILE%"] == [] (
+    if not exist "%REDPEN_CONF_FILE%" (
         echo starting RedPen server without specified configuration file...
         "%JAVA_CMD%" -jar %JAVA_OPTS% "%REDPEN_WAR_FILE%" -p %REDPEN_PORT% >> "%REDPEN_LOG_FILE%"
     ) else (
