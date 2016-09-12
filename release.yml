@@ -7,17 +7,19 @@ pipeline:
     - name: Set Version
       command: mvn versions:set -DnewVersion=$REDPEN_VERSION
     - name: Add Files to the Next Changes
-      command: git add **/*.xml
+      command: git add pom.xml; git add **/*.xml 
     - name: Commit Version Changes
       command: git commit -m "Bump version $REDPEN_VERSION"
     - name: Delopy to Sonatype
       command: mvn clean deploy -Dgpg.passphrase=$GPG_PASSPHRASE
-    - name: Checkout master
-      command: git checkout master
-    - name: Merge version
-      command: git merge redpen-$REDPEN_VERSION
-    - name: Set the snapshot version of next release 
-      command: mvn versions:set -DnewVersion="REDPEN_NEW_VERSION-SNAPSHOT
+    # - name: Checkout master
+    #   command: git checkout master
+    # - name: Merge version
+    #   command: git merge redpen-$REDPEN_VERSION
+    # - name: Set the snapshot version of next release 
+    #   command: mvn versions:set -DnewVersion=$REDPEN_NEW_VERSION-SNAPSHOT
+    # - name: Commit Version Changes
+    #   command: git commit -m "Update versions for next release"
 
 cleanup:
   - name: Checkout master branch 
