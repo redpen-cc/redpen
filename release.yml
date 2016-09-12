@@ -1,34 +1,20 @@
 
 pipeline:
-    - name: Create Release Tag
-      command: git tag -a redpen-$REDPEN_VERSION -m 'RedPen release $REDPEN_VERSION'
-    - name: Checkout Release Tag
-      command: git checkout -b redpen-$REDPEN_VERSION refs/tags/redpen-$REDPEN_VERSION
     - name: Set Version
       command: mvn versions:set -DnewVersion=$REDPEN_VERSION
     - name: Add Files to the Next Changes
-      command: git add pom.xml; git add **/*.xml 
+      command: git add pom.xml; git add **/*.xml
     - name: Commit Version Changes
       command: git commit -m "Bump version $REDPEN_VERSION"
     - name: Delopy to Sonatype
-      command: mvn clean deploy -Dgpg.passphrase=$GPG_PASSPHRASE
-    # - name: Checkout master
-    #   command: git checkout master
-    # - name: Merge version
-    #   command: git merge redpen-$REDPEN_VERSION
-    # - name: Set the snapshot version of next release 
-    #   command: mvn versions:set -DnewVersion=$REDPEN_NEW_VERSION-SNAPSHOT
-    # - name: Commit Version Changes
-    #   command: git commit -m "Update versions for next release"
+      command: mvn clean deploy -DperformRelease --settings ~/.m2/settings.xml
+    - name: Create Release Tag
+      command: git tag -a redpen-$REDPEN_VERSION -m "RedPen release $REDPEN_VERSION"
+    - name: Set the snapshot version of next release 
+      command: mvn versions:set -DnewVersion=$REDPEN_NEW_VERSION-SNAPSHOT
+    - name: Commit Version Changes
+      command: git commit -m "Update versions for next release"
 
 cleanup:
-  - name: Checkout master branch 
-    command: git checkout master
   - name: Remove temporary files
     command: git clean -f
-  - name: Checkout files
-    command: git checkout .
-  - name: Delete tag 
-    command: git tag -d redpen-$REDPEN_VERSION
-  - name: Delete branch
-    command: git branch -d redpen-$REDPEN_VERSION
