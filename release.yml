@@ -1,16 +1,20 @@
 
 pipeline:
-    - name: Create Relase Tag
-      command: git tag -a readpen-$REDPEN_VERSION
+    - name: Create Release Tag
+      command: git tag -a redpen-$REDPEN_VERSION -m 'RedPen release $REDPEN_VERSION'
     - name: Checkout Release Tag
       command: git checkout -b redpen-$REDPEN_VERSION refs/tags/redpen-$REDPEN_VERSION
     - name: Set Version
       command: mvn versions:set -DnewVersion=$REDPEN_VERSION
-    # - name: Delopy to Sonatype
-    #   command: clean deploy -Dgpg.passphrase=$GPG_PASSPRASE
-    # - name: Checkout master
-    #   command: git checkout master
-    # - name: Merge version
-    #   command: git merge redpen-$REDPEN_VERSION
-    # - name: Set the snapshot version of next release 
-    #   command: mvn versions:set -DnewVersion="$REDPEN_NEW_VERSION"-SNAPSHOT
+    - name: Add Files to the Next Changes
+      command: git add **/*.xml
+    - name: Commit Version Changes
+      command: git commit 
+    - name: Delopy to Sonatype
+      command: mvn clean deploy -Dgpg.passphrase=$GPG_PASSPHRASE
+    - name: Checkout master
+      command: git checkout master
+    - name: Merge version
+      command: git merge redpen-$REDPEN_VERSION
+    - name: Set the snapshot version of next release 
+      command: mvn versions:set -DnewVersion="REDPEN_NEW_VERSION-SNAPSHOT
