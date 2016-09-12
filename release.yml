@@ -9,7 +9,7 @@ pipeline:
     - name: Add Files to the Next Changes
       command: git add **/*.xml
     - name: Commit Version Changes
-      command: git commit 
+      command: git commit -m "Bump version $REDPEN_VERSION"
     - name: Delopy to Sonatype
       command: mvn clean deploy -Dgpg.passphrase=$GPG_PASSPHRASE
     - name: Checkout master
@@ -18,3 +18,15 @@ pipeline:
       command: git merge redpen-$REDPEN_VERSION
     - name: Set the snapshot version of next release 
       command: mvn versions:set -DnewVersion="REDPEN_NEW_VERSION-SNAPSHOT
+
+cleanup:
+  - name: Checkout master branch 
+    command: git checkout master
+  - name: Remove temporary files
+    command: git clean -f
+  - name: Checkout files
+    command: git checkout .
+  - name: Delete tag 
+    command: git tag -d redpen-$REDPEN_VERSION
+  - name: Delete branch
+    command: git branch -d redpen-$REDPEN_VERSION
