@@ -60,7 +60,7 @@ public class MarkdownParserTest extends BaseParserTest {
     @Test
     public void testBasicDocument() throws UnsupportedEncodingException {
         String sampleText = "";
-        sampleText += "# About Gekioko.\n";
+        sampleText += "# About Gekoioko.\n";
         sampleText += "Gekioko pun pun maru means _very very_ angry.\n";
         sampleText += "\n";
         sampleText += "The word also has a positive meaning.\n";
@@ -844,6 +844,13 @@ public class MarkdownParserTest extends BaseParserTest {
         } catch (Exception e) {
             fail();
         }
+    }
+
+    @Test
+    public void testNotExtractNoLabelImage() throws Exception {
+        String sampleText = "![foobar](https://aimless.jp/blog/images/2016-09-07-001.png)\n";
+        Document doc = createFileContent(sampleText);
+        assertEquals(0, doc.getSection(0).getParagraph(0).getNumberOfSentences());
     }
 
     private Document createFileContent(String inputDocumentString,
