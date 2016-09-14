@@ -846,6 +846,13 @@ public class MarkdownParserTest extends BaseParserTest {
         }
     }
 
+    @Test
+    public void testNotExtractNoLabelImage() throws Exception {
+        String sampleText = "![](https://aimless.jp/blog/images/2016-09-07-001.png)\n";
+        Document doc = createFileContent(sampleText);
+        assertEquals(0, doc.getSection(0).getParagraph(0).getNumberOfSentences());
+    }
+
     private Document createFileContent(String inputDocumentString,
                                        Configuration config) {
         DocumentParser parser = DocumentParser.MARKDOWN;
