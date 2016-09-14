@@ -60,7 +60,7 @@ public class MarkdownParserTest extends BaseParserTest {
     @Test
     public void testBasicDocument() throws UnsupportedEncodingException {
         String sampleText = "";
-        sampleText += "# About Gekoioko.\n";
+        sampleText += "# About Gekioko.\n";
         sampleText += "Gekioko pun pun maru means _very very_ angry.\n";
         sampleText += "\n";
         sampleText += "The word also has a positive meaning.\n";
