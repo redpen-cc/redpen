@@ -17,19 +17,21 @@
  */
 package cc.redpen.validator.sentence;
 
+import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
+import cc.redpen.model.Sentence;
 import cc.redpen.validator.BaseValidatorTest;
 import cc.redpen.validator.ValidationError;
-import org.junit.Before;
+import cc.redpen.validator.Validator;
+import cc.redpen.validator.ValidatorFactory;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 
 public class SuggestExpressionValidatorTest extends BaseValidatorTest {
@@ -39,75 +41,111 @@ public class SuggestExpressionValidatorTest extends BaseValidatorTest {
         super("SuggestExpression");
     }
 
-    @Before
-    public void init() {
-        validator = new SuggestExpressionValidator();
-        Map<String, String> synonymSamples = new HashMap<>();
-        synonymSamples.put("like", "such as");
-        synonymSamples.put("info", "information");
-        synonymSamples.put("こんにちは", "良い一日");
-        validator.setSynonyms(synonymSamples);
-    }
-
     @Test
-    public void testSynonym() {
+    public void testSynonym() throws RedPenException {
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("SuggestExpression").addProperty("map", "{like,such " +
+                        "as}, {info,information}"))
+                .build();
+
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
-        validator.validate(sentence("it like a piece of a cake."));
+        validator.validate(new Sentence("they like a piece of a cake.", 0));
         assertEquals(1, errors.size());
     }
 
     @Test
-    public void testWithoutSynonym() {
+    public void testSynonymSplitPlusWhiteSpace() throws RedPenException {
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("SuggestExpression").addProperty("map", "{like, such " +
+                        "as}"))
+                .build();
+
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
-        validator.validate(sentence("it love a piece of a cake."));
+        validator.validate(new Sentence("they like a piece of a cake.", 0));
+        assertEquals(1, errors.size());
+    }
+
+    @Test
+    public void testWithoutSynonym() throws RedPenException {
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("SuggestExpression").addProperty("map", "{like,such " +
+                        "as}, {info,information}"))
+                .build();
+
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.validate(new Sentence("it loves a piece of a cake.", 0));
         assertEquals(0, errors.size());
     }
 
     @Test
-    public void testWithMultipleSynonyms() {
+    public void testWithMultipleSynonyms() throws RedPenException {
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("SuggestExpression").addProperty("map", "{like,such " +
+                        "as}, {info,information}"))
+                .build();
+
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
-        validator.validate(sentence("it like a the info."));
+        validator.validate(new Sentence("it like a the info.", 0));
         assertEquals(2, errors.size());
     }
 
     @Test
-    public void matchWholeExpressionsOnly() {
-        List<ValidationError> errors = new ArrayList<>();
-        validator.setErrorList(errors);
-        validator.validate(sentence("the information."));
-        assertEquals(0, errors.size());
-    }
+    public void japanese() throws RedPenException {
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("SuggestExpression").addProperty("map", "{like,such " +
+                        "as}, {info,information},{おはよう,お早う}"))
+                .build();
 
-    @Test
-    public void japanese() {
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
-        validator.validate(sentence("こんにちは世界"));
+        validator.validate(new Sentence("おはよう世界", 0));
         assertEquals(1, errors.size());
     }
 
     @Test
-    public void testWitoutZeroLengthSentence() {
+    public void testWithZeroLengthSentence() throws RedPenException {
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("SuggestExpression").addProperty("map", "{like,such " +
+                        "as}, {info,information},{おはよう,お早う}"))
+                .build();
+
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
-        validator.validate(sentence(""));
+        validator.validate(new Sentence("", 0));
         assertEquals(0, errors.size());
     }
 
     @Test
-    public void testErrorMessageIsProperlyFormatted() {
+    public void testErrorMessageIsProperlyFormatted() throws RedPenException {
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("SuggestExpression").addProperty("map", "{like,such " +
+                        "as}, {info,information}"))
+                .build();
+
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
-        validator.validate(sentence("Thank you for the info."));
+        validator.validate(new Sentence("Thank you for the info.", 0));
         assertEquals(1, errors.size());
         assertEquals("Found invalid word \"info\". Use the synonym \"information\" instead.", errors.get(0).getMessage());
     }
 
     @Test
-    public void initDoesNotFailIfDictionaryIsNotSpecified() throws Exception {
-        validator.preInit(new ValidatorConfiguration("SuggestExpression"), Configuration.builder().build());
+    public void initDoesNotFailIfDictionaryIsNotSpecified() {
+        try {
+            Configuration config = Configuration.builder()
+                    .addValidatorConfig(new ValidatorConfiguration("SuggestExpression")).build();
+        } catch(Exception e) {
+            fail();
+        }
     }
 }

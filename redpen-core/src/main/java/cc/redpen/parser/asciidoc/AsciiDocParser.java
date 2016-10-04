@@ -74,7 +74,6 @@ public class AsciiDocParser extends LineParser {
             "link:",
             "http://",
             "https://",
-            "image:",
             "include:"
     };
 
@@ -190,6 +189,15 @@ public class AsciiDocParser extends LineParser {
             return true;
         }
 
+        // test for single line labeled list
+        // NOTE: single line labeled list must be level 1
+        int position = 0;
+        if ((position = line.getText().indexOf(":: ")) != -1) {
+            line.setListLevel(1);
+            line.setListStart(true);
+            line.erase(0, position+3);
+            return true;
+        }
         return false;
     }
 
@@ -377,12 +385,18 @@ public class AsciiDocParser extends LineParser {
             line.eraseEnclosure(prefix, " ,[", AsciiDocLine.EraseStyle.CloseMarkerContainsDelimiters);
         }
 
-        // enclosed directives
-        line.eraseEnclosure("+++", "+++", AsciiDocLine.EraseStyle.All);
-        line.eraseEnclosure("[[", "]]", AsciiDocLine.EraseStyle.All);
-        line.eraseEnclosure("<<", ">>", AsciiDocLine.EraseStyle.PreserveLabel);
-        line.eraseEnclosure("{", "}", AsciiDocLine.EraseStyle.Markers); // NOTE: should we make substitutions?
-        line.eraseEnclosure("[", "]", AsciiDocLine.EraseStyle.Markers);
+        // handle images
+        int position = line.eraseEnclosure("image:", " ,[", AsciiDocLine.EraseStyle.CloseMarkerContainsDelimiters);
+        if (position != -1) {
+            line.eraseEnclosure("[", "]", AsciiDocLine.EraseStyle.All); // TODO: extract "caption" and "title" as a sentence
+        } else {
+            // enclosed directives
+            line.eraseEnclosure("+++", "+++", AsciiDocLine.EraseStyle.All);
+            line.eraseEnclosure("[[", "]]", AsciiDocLine.EraseStyle.All);
+            line.eraseEnclosure("<<", ">>", AsciiDocLine.EraseStyle.PreserveLabel);
+            line.eraseEnclosure("{", "}", AsciiDocLine.EraseStyle.Markers); // NOTE: should we make substitutions?
+            line.eraseEnclosure("[", "]", AsciiDocLine.EraseStyle.Markers);
+        }
 
         int headerIndent = 0;
         while (line.charAt(headerIndent) == '=') {

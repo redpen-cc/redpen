@@ -68,6 +68,7 @@ public class TokenElement implements Serializable {
     public int hashCode() {
         int result = surface != null ? surface.hashCode() : 0;
         result = 31 * result + (tags != null ? tags.hashCode() : 0);
+        result = 64 * result + offset;
         return result;
     }
 

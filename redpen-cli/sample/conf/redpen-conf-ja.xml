@@ -7,7 +7,6 @@
         <validator name="CommaNumber" />
 
         <!--Rules on expressions-->
-        <validator name="ParagraphNumber"/>
         <validator name="SuccessiveWord" />
         <validator name="JapaneseStyle" />
         <validator name="InvalidExpression" />
@@ -16,6 +15,8 @@
         <validator name="JapaneseNumberExpression"/>
         <validator name="JapaneseAmbiguousNounConjunction" />
         <validator name="LongKanjiChain" />
+        <validator name="DoubledConjunctiveParticleGa" />
+        <!--<validator name="SuggestExpression" />-->
 
         <!--Rules on symbols and terminologies-->
         <validator name="InvalidSymbol"/>
@@ -35,6 +36,7 @@
         <validator name="VoidSection" />
         <validator name="GappedSection" />
         <validator name="SectionLevel" />
+        <validator name="ParagraphNumber"/>
 
         <!--Load JavaScript validators-->
         <validator name="JavaScript" />

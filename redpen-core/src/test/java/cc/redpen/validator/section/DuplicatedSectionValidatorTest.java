@@ -129,4 +129,50 @@ public class DuplicatedSectionValidatorTest {
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(2, errors.get(documents.get(0)).size());
     }
+
+    @Test
+    public void testEmpty() throws RedPenException {
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("DuplicatedSection"))
+                .build();
+
+        List<Document> documents = new ArrayList<>();
+        // create two section which contains only one same word, "baz"
+        documents.add(
+                Document.builder()
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(new Sentence("baz foo foo", 1))
+                        .addSection(1)
+                        .addSectionHeader("foobar")
+                        .addParagraph().addSentence(new Sentence("baz foo foo", 1))
+                        .build());
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        Assert.assertEquals(1, errors.get(documents.get(0)).size());
+    }
+
+    @Test
+    public void testEmpty2() throws RedPenException {
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("DuplicatedSection").addProperty("threshold", "0.0"))
+                .build();
+
+        List<Document> documents = new ArrayList<>();
+        // create two section which contains only one same word, "baz"
+        documents.add(
+                Document.builder()
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence("baz foo foo", 2)
+                        .addSection(2)
+                        .addSectionHeader("baz foo foo")
+                        .addParagraph()
+                        .build());
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        Assert.assertEquals(1, errors.get(documents.get(0)).size());
+    }
 }

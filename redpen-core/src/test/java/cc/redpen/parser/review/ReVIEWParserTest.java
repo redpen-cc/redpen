@@ -250,6 +250,32 @@ public class ReVIEWParserTest {
         }
     }
 
+    @Test
+    public void testKeywordHandling() {
+        String sampleText = "\n" +
+                "This is the @<kw>{SVM, a popular machine learning method}.";
+        Document doc = createFileContent(sampleText);
+        assertEquals("This is the SVM.", doc.getSection(0).getParagraph(0).getSentence(0).getContent());
+    }
+
+    @Test
+    public void testHrefHandling() {
+        String sampleText = "\n" +
+                "This is @<href>{http://github.com/,GitHub}.";
+        Document doc = createFileContent(sampleText);
+        assertEquals("This is GitHub.", doc.getSection(0).getParagraph(0).getSentence(0).getContent());
+    }
+
+    /** FIXME sentenceextractor split www.google.com as three sentences...
+    @Test
+    public void testHrefHandlingWithoutLabel() {
+        String sampleText = "\n" +
+                "this is @<href>{http://www.google.com/}.";
+        Document doc = createFileContent(sampleText);
+        assertEquals("This is http://github.com/.", doc.getSection(0).getParagraph(0).getSentence(0).getContent());
+    }
+    */
+
     private static List<LineOffset> initializeMappingTable(LineOffset... offsets) {
         List<LineOffset> offsetTable = new ArrayList<>();
         for (LineOffset offset : offsets) {
@@ -257,7 +283,6 @@ public class ReVIEWParserTest {
         }
         return offsetTable;
     }
-
 
     private Document createFileContent(String inputDocumentString) {
         DocumentParser parser = DocumentParser.REVIEW;

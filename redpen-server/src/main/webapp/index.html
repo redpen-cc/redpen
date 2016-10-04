@@ -159,9 +159,7 @@
         };
 
         $(document).ready(function () {
-
-            RedPenUI();
-
+            RedPenUI.Show();
         });
     </script>
 </head>
@@ -184,20 +182,20 @@
                         <a  href="#validator"  class="dropdown-toggle" data-toggle="dropdown" id="themes">Validator
                             <span class="caret"></span></a>
                         <ul class="dropdown-menu" aria-labelledby="themes">
-                            <li><a onclick="pasteSampleText('en_md')">English Markdown</a></li>
-                            <li><a onclick="pasteSampleText('ja_md')">Japanese Markdown</a></li>
-                            <li><a onclick="pasteSampleText('en_ad')">English AsciiDoc</a></li>
-                            <li><a onclick="pasteSampleText('ja_ad')">Japanese AsciiDoc</a></li>
-                            <li><a onclick="pasteSampleText('en_tex')">English LaTeX</a></li>
-                            <li><a onclick="pasteSampleText('ja_tex')">Japanese LaTeX</a></li>
-                            <li><a onclick="pasteSampleText('en_review')">English Re:VIEW</a></li>
-                            <li><a onclick="pasteSampleText('ja_review')">Japanese Re:VIEW</a></li>
-                            <li><a onclick="pasteSampleText('en')">English Text</a></li>
-                            <li><a onclick="pasteSampleText('ja')">Japanese Text</a></li>
+                            <li><a onclick="RedPenUI.pasteSampleText('en_md')">English Markdown</a></li>
+                            <li><a onclick="RedPenUI.pasteSampleText('ja_md')">Japanese Markdown</a></li>
+                            <li><a onclick="RedPenUI.pasteSampleText('en_ad')">English AsciiDoc</a></li>
+                            <li><a onclick="RedPenUI.pasteSampleText('ja_ad')">Japanese AsciiDoc</a></li>
+                            <li><a onclick="RedPenUI.pasteSampleText('en_tex')">English LaTeX</a></li>
+                            <li><a onclick="RedPenUI.pasteSampleText('ja_tex')">Japanese LaTeX</a></li>
+                            <li><a onclick="RedPenUI.pasteSampleText('en_review')">English Re:VIEW</a></li>
+                            <li><a onclick="RedPenUI.pasteSampleText('ja_review')">Japanese Re:VIEW</a></li>
+                            <li><a onclick="RedPenUI.pasteSampleText('en')">English Text</a></li>
+                            <li><a onclick="RedPenUI.pasteSampleText('ja')">Japanese Text</a></li>
                         </ul>
                     </li>
                     <li>
-                        <a href="#tokenizer" onclick="setView('tokenizer')">Tokenizer</a>
+                        <a onclick="RedPenUI.setView('tokenizer')">Tokenizer</a>
                     </li>
                     <!--<li>-->
                         <!--<a href="#rule-editor" onclick="setView('rule-editor')">Rule Tester</a>-->
@@ -246,7 +244,8 @@
                         <pre id="redpen-editor-underlay" class="redpen-superimposed-editor-panel"></pre>
                     </div>
                     <div class="redpen-clear-button">
-                        <button type="button" class="btn btn-xs" onclick="clearResult()" title="Clear text">✕</button>
+                        <button type="button" class="btn btn-xs" onclick="RedPenUI.clearResult()" title="Clear text">✕
+                        </button>
                     </div>
                 </div>
 

@@ -21,8 +21,9 @@ Features
 - Language independent
 - Highly customizable
 - Multi platform (MacOS, Windows, and Linux)
-- Support various markup text formats (Wiki, AsciiDoc, LaTeX)
+- Support various markup text formats (Wiki, Markdown, AsciiDoc, LaTeX, Re:VIEW)
 - [Plugin system: users can write their extensions with JavaScript](http://blog.redpen.cc/2015/09/08/writing-extension-with-javascript/)
+- [Annotation based error suppression](https://blog.redpen.cc/2016/06/14/introduction-of-annotation-for-suppressing-errors-from-document-checking-tool-redpen/)
 - [Practical REST API and UI](http://redpen.herokuapp.com/)
 <p align="center">
    <a href="http://redpen.herokuapp.com/"><img src="logo/redpen-ui.png"/></a>
@@ -60,7 +61,7 @@ Extensions
 
   * [unsuggested-kanji](https://github.com/so-c/redpen-validator) by so-c
   * [ra-removed-word](http://www.clear-code.com/blog/2015/8/29.html) by ClearCode
-  * [redepn-validator](https://github.com/kongou-ae/redpen-validator) by kongou-ae
+  * [redpen-validator](https://github.com/kongou-ae/redpen-validator) by kongou-ae
 
 How to contribute
 ==================

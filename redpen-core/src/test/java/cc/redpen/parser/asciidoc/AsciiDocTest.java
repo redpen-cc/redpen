@@ -127,48 +127,65 @@ public class AsciiDocTest {
     }
 
     @Test
-    public void testEraseEnclosure() {
+    public void testEraseMismatchedEnclosure() {
         String testLine = "A line *with* an [enclosure] and one with a [enclosure,with a description] " +
                 "and then an URL like http://fred.fish/";
 
-        String[] expectedResults = new String[]{
-                "  0-0-001: A line *with* an [enclosure] and one with a [enclosure,with a description] and then an URL like http://fred.fish/",
-                "  0-0-001: A line *with* an ·[·e·n·c·l·o·s·u·r·e·] and one with a ·[·e·n·c·l·o·s·u·r·e·,·w·i·t·h· ·a· ·d·e·s·c·r·i·p·t·i·o·n·] and then an URL like http://fred.fish/",
-                "  0-0-001: A line *with* an [enclosure] and one with a [enclosure,with a description] and then an URL like ·h·t·t·p·:·/·/·f·r·e·d·.·f·i·s·h·/",
-                "  0-0-001: A line ·*with·* an [enclosure] and one with a [enclosure,with a description] and then an URL like http://fred.fish/",
-                "  0-0-001: A line *with* an ·[enclosure·] and one with a ·[enclosure,with a description·] and then an URL like http://fred.fish/",
-                "  0-0-001: A line *with* an ·[enclosure·] and one with a ·[·e·n·c·l·o·s·u·r·e·,with a description·] and then an URL like http://fred.fish/"
-        };
         AsciiDocLine line;
-
         // this erases nothing since the close tag is not found
         line = new AsciiDocLine(testLine, 1);
         line.eraseEnclosure("[", "]]", AsciiDocLine.EraseStyle.All);
-        assertEquals(expectedResults[0], line.toString());
+        assertEquals("  0-0-001: A line *with* an [enclosure] and one with a [enclosure,with a description] and then an URL like http://fred.fish/", line.toString());
+    }
 
-        // すべてが消去されますか？
-        line = new AsciiDocLine(testLine, 1);
+    @Test
+    public void testEraseMatchedAll() {
+        String testLine = "A line *with* an [enclosure] and one with a [enclosure,with a description] " +
+                "and then an URL like http://fred.fish/";
+
+        AsciiDocLine  line = new AsciiDocLine(testLine, 1);
         line.eraseEnclosure("[", "]", AsciiDocLine.EraseStyle.All);
-        assertEquals(expectedResults[1], line.toString());
+        assertEquals("  0-0-001: A line *with* an ·[·e·n·c·l·o·s·u·r·e·] and one with a ·[·e·n·c·l·o·s·u·r·e·,·w·i·t·h· ·a· ·d·e·s·c·r·i·p·t·i·o·n·] and then an URL like http://fred.fish/", line.toString());
+    }
+
+    @Test
+    public void testEraseDelimitersAsEndingTag() {
+        String testLine = "A line *with* an [enclosure] and one with a [enclosure,with a description] " +
+                "and then an URL like http://fred.fish/";
 
         // Test a string of delimiters as an ending tag
-        line = new AsciiDocLine(testLine, 1);
+        AsciiDocLine line = new AsciiDocLine(testLine, 1);
         line.eraseEnclosure("http://", " ,[", AsciiDocLine.EraseStyle.CloseMarkerContainsDelimiters);
-        assertEquals(expectedResults[2], line.toString());
+        assertEquals("  0-0-001: A line *with* an [enclosure] and one with a [enclosure,with a description] and then an URL like ·h·t·t·p·:·/·/·f·r·e·d·.·f·i·s·h·/", line.toString());
+    }
 
-        // Test inline markup erasure
-        line = new AsciiDocLine(testLine, 1);
+    @Test
+    public void testEraseInlineMarkup() {
+        String testLine = "A line *with* an [enclosure] and one with a [enclosure,with a description] " +
+                "and then an URL like http://fred.fish/";
+
+        AsciiDocLine line = new AsciiDocLine(testLine, 1);
         line.eraseEnclosure("*", "*", AsciiDocLine.EraseStyle.InlineMarkup);
-        assertEquals(expectedResults[3], line.toString());
+        assertEquals("  0-0-001: A line ·*with·* an [enclosure] and one with a [enclosure,with a description] and then an URL like http://fred.fish/", line.toString());
+    }
 
+    @Test
+    public void testEraseMarkers() {
+        String testLine = "A line *with* an [enclosure] and one with a [enclosure,with a description] " +
+                "and then an URL like http://fred.fish/";
         // Test just removing the markers
-        line = new AsciiDocLine(testLine, 1);
+        AsciiDocLine line = new AsciiDocLine(testLine, 1);
         line.eraseEnclosure("[", "]", AsciiDocLine.EraseStyle.Markers);
-        assertEquals(expectedResults[4], line.toString());
+        assertEquals("  0-0-001: A line *with* an ·[enclosure·] and one with a ·[enclosure,with a description·] and then an URL like http://fred.fish/", line.toString());
+    }
 
-        // Test just removing the delimter tags
-        line = new AsciiDocLine(testLine, 1);
+    @Test
+    public void testEraseDelimiterTags() {
+        String testLine = "A line *with* an [enclosure] and one with a [enclosure,with a description] " +
+                "and then an URL like http://fred.fish/";
+
+        AsciiDocLine line = new AsciiDocLine(testLine, 1);
         line.eraseEnclosure("[", "]", AsciiDocLine.EraseStyle.PreserveLabel);
-        assertEquals(expectedResults[5], line.toString());
+        assertEquals("  0-0-001: A line *with* an ·[enclosure·] and one with a ·[·e·n·c·l·o·s·u·r·e·,with a description·] and then an URL like http://fred.fish/", line.toString());
     }
 }

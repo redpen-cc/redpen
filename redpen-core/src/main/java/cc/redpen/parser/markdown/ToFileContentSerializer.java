@@ -206,6 +206,11 @@ public class ToFileContentSerializer implements Visitor {
         // current not implement
     }
 
+    @Override
+    public void visit(AnchorLinkNode anchorLinkNode) {
+        // current not implement
+    }
+
     public void visit(AutoLinkNode autoLinkNode) {
         // TODO GitHub Markdown Extension
         int lineNumber = getLineNumberFromStartIndex(autoLinkNode.getStartIndex());

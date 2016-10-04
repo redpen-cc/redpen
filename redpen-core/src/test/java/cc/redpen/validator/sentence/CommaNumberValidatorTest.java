@@ -18,6 +18,8 @@
 package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
+import cc.redpen.config.Configuration;
+import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
@@ -68,4 +70,19 @@ public class CommaNumberValidatorTest {
         assertNotNull(errors);
         assertEquals(0, errors.size());
     }
+
+    @Test
+    public void testJapaneseCornerCase() throws RedPenException {
+        Configuration config = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("CommaNumber"))
+                .build();
+
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.setErrorList(errors);
+        validator.validate(new Sentence("しかし、この仕組みで背中を押した結果、挑戦できない人は、ゴールに到達するためのタスクに挑戦するようになりました。", 0));
+        assertEquals(0, errors.size());
+    }
+
+
 }

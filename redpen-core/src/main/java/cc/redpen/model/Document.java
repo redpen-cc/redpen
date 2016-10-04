@@ -324,7 +324,9 @@ public class Document implements Iterable<Section>, Serializable {
                 throw new IllegalStateException("Document does not have any section");
             }
             List<Sentence> headers = lastSection.getHeaderContents();
-            headers.add(new Sentence(header, headers.size()));
+            Sentence sentence  = new Sentence(header, headers.size());
+            sentence.setTokens(tokenizer.tokenize(sentence.getContent()));
+            headers.add(sentence);
             return this;
         }
 

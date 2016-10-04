@@ -35,6 +35,8 @@ public class RedPenRunner {
     public static void main(String[] args) throws Exception {
         Options options = new Options();
         options.addOption("h", "help", false, "help");
+        options.addOption("v", "version", false,
+                "print the version information and exit");
 
         OptionBuilder.withLongOpt("port");
         OptionBuilder.withDescription("port number");
@@ -42,12 +44,17 @@ public class RedPenRunner {
         OptionBuilder.withArgName("PORT");
         options.addOption(OptionBuilder.create("p"));
 
-        options.addOption("v", "version", false,
-                "print the version information and exit");
+        OptionBuilder.withLongOpt("key");
+        OptionBuilder.withDescription("stop key");
+        OptionBuilder.hasArg();
+        OptionBuilder.withArgName("STOP_KEY");
+        options.addOption(OptionBuilder.create("k"));
 
-        options.addOption(new Option(STOP_KEY, true, "stop key"));
-
-        options.addOption("c", "conf", true, "Configuration file (REQUIRED)");
+        OptionBuilder.withLongOpt("conf");
+        OptionBuilder.withDescription("configuration file");
+        OptionBuilder.hasArg();
+        OptionBuilder.withArgName("CONFIG_FILE");
+        options.addOption(OptionBuilder.create("c"));
 
         CommandLineParser parser = new BasicParser();
         CommandLine commandLine = null;

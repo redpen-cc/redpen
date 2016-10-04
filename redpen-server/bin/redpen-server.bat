@@ -25,6 +25,11 @@ rem RedPen log file
 set REDPEN_LOG_DIR=%REDPEN_HOME%\logs
 set REDPEN_LOG_FILENAME=redpen.log
 
+rem RedPen configuration file
+rem NOTE: If you want to specify RedPen configuration file, please uncomment out the following line.
+rem NOTE: the configuration file need to be under REDPEN_HOME.
+rem set REDPEN_CONF_FILE=%REDPEN_HOME%\conf\redpen-conf-en.xml
+
 rem
 rem
 rem Main procedure
@@ -63,17 +68,23 @@ if not exist "%REDPEN_LOG_DIR%" (
         if not ["%TEMP%"] == [] (
             set REDPEN_LOG_DIR="%TEMP%"
             echo temporarily changed log dir: %REDPEN_LOG_DIR%
-	) else (
-	    echo Error: TEMP is not defined.  Can not start RedPen
-	    exit /b 1
-	)
+        ) else (
+            echo Error: TEMP is not defined.  Can not start RedPen
+            exit /b 1
+        )
     )
 )
 set REDPEN_LOG_FILE=%REDPEN_LOG_DIR%\%REDPEN_LOG_FILENAME%
 
 if ["%COMMAND%"] == ["start"] (
     echo starting RedPen server [Ctrl-C to stop]...
-    "%JAVA_CMD%" -jar %JAVA_OPTS% "%REDPEN_WAR_FILE%" -p %REDPEN_PORT% >> "%REDPEN_LOG_FILE%" 2>&1
+    if not exist "%REDPEN_CONF_FILE%" (
+        echo starting RedPen server without specified configuration file...
+        "%JAVA_CMD%" -jar %JAVA_OPTS% "%REDPEN_WAR_FILE%" -p %REDPEN_PORT% >> "%REDPEN_LOG_FILE%"
+    ) else (
+        echo starting RedPen server specifying a configuration file %REDPEN_CONF_FILE% ...
+        "%JAVA_CMD%" -jar %JAVA_OPTS% "%REDPEN_WAR_FILE%" -p %REDPEN_PORT% -c %REDPEN_CONF_FILE% >> "%REDPEN_LOG_FILE%"
+    )
 ) else (
     echo Invalid command: %COMMAND%
     exit /b 1

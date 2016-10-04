@@ -38,7 +38,6 @@ import java.util.*;
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
-import static java.util.Arrays.asList;
 import static java.util.ResourceBundle.Control.FORMAT_DEFAULT;
 import static java.util.stream.Collectors.toSet;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -50,10 +49,11 @@ public abstract class Validator {
     private static final Logger LOG = LoggerFactory.getLogger(Validator.class);
     private final static ResourceBundle.Control fallbackControl = ResourceBundle.Control.getNoFallbackControl(FORMAT_DEFAULT);
 
-    private Map<String, Object> properties;
+    private Map<String, Object> defaultProps;
     private ResourceBundle errorMessages = null;
     private ValidatorConfiguration config;
     private Configuration globalConfig;
+    private Locale locale;
 
     public Validator() {
         this(new Object[0]);
@@ -68,14 +68,14 @@ public abstract class Validator {
     }
 
     protected void setDefaultProperties(Object...keyValues) {
-        properties = new LinkedHashMap<>();
+        defaultProps = new LinkedHashMap<>();
         addDefaultProperties(keyValues);
     }
 
     protected void addDefaultProperties(Object...keyValues) {
         if (keyValues.length % 2 != 0) throw new IllegalArgumentException("Not enough values specified");
         for (int i = 0; i < keyValues.length; i+=2) {
-            properties.put(keyValues[i].toString(), keyValues[i+1]);
+            defaultProps.put(keyValues[i].toString(), keyValues[i+1]);
         }
     }
 
@@ -143,28 +143,11 @@ public abstract class Validator {
     public final void preInit(ValidatorConfiguration config, Configuration globalConfig) throws RedPenException {
         this.config = config;
         this.globalConfig = globalConfig;
-        loadProperties(config);
         init();
     }
 
-    private void loadProperties(ValidatorConfiguration config) {
-        properties.forEach((name, defaultValue) -> {
-            String value = config.getProperty(name);
-            if (value == null) return;
-            if (defaultValue instanceof Integer)
-                properties.put(name, Integer.valueOf(value));
-            else if (defaultValue instanceof Float)
-                properties.put(name, Float.valueOf(value));
-            else if (defaultValue instanceof Boolean)
-                properties.put(name, Boolean.valueOf(value));
-            else if (defaultValue instanceof Set)
-                properties.put(name, isEmpty(value) ? defaultValue : asList((value).split(",")).stream().map(String::toLowerCase).collect(toSet()));
-            else
-                properties.put(name, value);
-        });
-    }
-
     void setLocale(Locale locale) {
+        this.locale = locale;
         // getPackage() would return null for default package
         String packageName = this.getClass().getPackage() != null ? this.getClass().getPackage().getName() : "";
         try {
@@ -196,28 +179,125 @@ public abstract class Validator {
     }
 
     public Map<String, Object> getProperties() {
-        return properties;
+        return defaultProps;
+    }
+
+    Object getOrDefault(String name){
+        Object value = null;
+        if(config != null){
+            value = config.getProperty(name);
+        }
+        if(value == null) {
+            value = defaultProps.get(name);
+        }
+        return value;
     }
 
     protected int getInt(String name) {
-        return (int)properties.get(name);
+        Object value = getOrDefault(name);
+        if(value instanceof Integer) {
+            return (int) value;
+        }else{
+            return Integer.valueOf((String)value);
+        }
     }
 
     protected float getFloat(String name) {
-        return (float)properties.get(name);
+        Object value = getOrDefault(name);
+        if(value instanceof Float) {
+            return (float) value;
+        }else{
+            return Float.valueOf((String)value);
+        }
     }
 
     protected String getString(String name) {
-        return (String)properties.get(name);
+        return config.getProperties().getOrDefault(name, (String) defaultProps.get(name));
     }
 
     protected boolean getBoolean(String name) {
-        return (boolean)properties.get(name);
+        Object value = getOrDefault(name);
+        if(value instanceof Boolean) {
+            return (boolean) value;
+        }else{
+            return Boolean.valueOf((String)value);
+        }
     }
 
     @SuppressWarnings("unchecked")
     protected Set<String> getSet(String name) {
-        return (Set) properties.get(name);
+        Object value = null;
+        if(config != null){
+            value = config.getProperty(name);
+        }
+        if (isEmpty(((String)value))) {
+            value = defaultProps.get(name);
+        }
+        if(value == null){
+            return null;
+        }
+        if(value instanceof Set){
+            return (Set<String>) value;
+        }
+        Set<String> newValue = Arrays.stream(((String)value).split(",")).map(String::toLowerCase).collect(toSet());
+        defaultProps.put(name,newValue);
+        return newValue;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected Map<String, String> getMap(String name) {
+        Object value = null;
+        if(config != null){
+            value = config.getProperty(name);
+        }
+        if (isEmpty(((String)value))) {
+            value = defaultProps.get(name);
+        }
+        if(value == null){
+            return null;
+        }
+        if(value instanceof Map){
+            return (Map<String,String>) value;
+        }
+        Map<String, String> newValue = parseMap((String)value);
+        defaultProps.put(name,newValue);
+        return newValue;
+    }
+
+    private Map<String,String> parseMap(String mapStr) {
+        Map<String,String> map = new HashMap<>();
+        int start = 0, splitter = 0, end = 0;
+        boolean found = false;
+        for (int i=0; i<mapStr.length(); i++) {
+            if (mapStr.charAt(i) == '{') {
+                start = i+1;
+            } else if (mapStr.charAt(i) == '}') {
+                end = i-1;
+                found = true;
+            } else if (mapStr.charAt(i) == ',') {
+                if (found == false) {
+                    splitter = i+1; // e.g., SVM, SupportVector Machine
+                    continue;
+                }
+                // extract key value pair
+                String key = mapStr.substring(start, splitter-1);
+                while(mapStr.charAt(splitter+1) == ' ') { ++splitter; } // skip white spaces
+                String value = mapStr.substring(splitter, end+1);
+                map.put(key, value);
+                // move pivots
+                start = i+1;
+                end = i+1;
+                splitter = i+1;
+                found = false;
+            }
+        }
+        // extract last key value pair
+        if (splitter > 0 && end < mapStr.length()) { // for safe
+            String key = mapStr.substring(start, splitter - 1);
+            String value = mapStr.substring(splitter, end + 1);
+            map.put(key, value);
+        }
+        return map;
     }
 
     protected Optional<String> getConfigAttribute(String name) {
@@ -351,7 +431,8 @@ public abstract class Validator {
     protected String getLocalizedErrorMessage(String key, Object... args) {
         if (errorMessages != null) {
             String suffix = key != null ? "." + key : "";
-            return MessageFormat.format(errorMessages.getString(this.getClass().getSimpleName() + suffix), args);
+            MessageFormat fmt = new MessageFormat(errorMessages.getString(this.getClass().getSimpleName() + suffix), locale);
+            return fmt.format(args);
         } else {
             throw new AssertionError("message resource not found.");
         }
@@ -423,7 +504,7 @@ public abstract class Validator {
     }
 
     @Override public String toString() {
-        return getClass().getSimpleName() + properties;
+        return getClass().getSimpleName() + defaultProps;
     }
 
     @Override public boolean equals(Object o) {
