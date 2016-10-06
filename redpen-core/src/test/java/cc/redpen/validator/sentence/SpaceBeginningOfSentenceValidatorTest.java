@@ -23,6 +23,8 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
+import cc.redpen.parser.DocumentParser;
+import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.validator.ValidationError;
 import org.junit.Test;
 
@@ -31,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class SpaceBeginningOfSentenceValidatorTest {
     @Test
@@ -96,11 +99,29 @@ public class SpaceBeginningOfSentenceValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();
-                documents.add(Document.builder()
-                        .addSection(1)
-                        .addParagraph()
-                        .addSentence(new Sentence("", 0))
-                        .build());
+        documents.add(Document.builder()
+                .addSection(1)
+                .addParagraph()
+                .addSentence(new Sentence("", 0))
+                .build());
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        assertEquals(0, errors.get(documents.get(0)).size());
+    }
+
+    @Test
+    public void testProcessBasicSentences() throws RedPenException {
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("SpaceBeginningOfSentence"))
+                .build();
+
+        List<Document> documents = new ArrayList<>();
+        documents.add(Document.builder()
+                .addSection(1)
+                .addParagraph()
+                .addSentence(new Sentence("", 0))
+                .build());
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
@@ -142,5 +163,37 @@ public class SpaceBeginningOfSentenceValidatorTest {
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         assertEquals(0, errors.get(documents.get(0)).size());
+    }
+
+    @Test
+    public void testWithMarkdownParser() throws Exception {
+        String sampleText =
+                "This is a pen.this is a pen.";
+        Configuration conf = Configuration.
+                builder("en")
+                .addValidatorConfig(new ValidatorConfiguration("SpaceBeginningOfSentence")).
+                build();
+        List<Document> documents = new ArrayList<>();
+        try {
+            documents.add(createFileContent(sampleText, conf));
+        } catch (Exception e) {
+            fail();
+        }
+        RedPen redPen = new RedPen(conf);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        assertEquals(1, errors.get(documents.get(0)).size());
+    }
+
+    private Document createFileContent(String inputDocumentString, Configuration conf) {
+        DocumentParser parser = DocumentParser.MARKDOWN;
+        Document doc = null;
+        try {
+            doc = parser.parse(inputDocumentString, new SentenceExtractor(conf.getSymbolTable()),
+                    conf.getTokenizer());
+        } catch (RedPenException e) {
+            e.printStackTrace();
+            fail();
+        }
+        return doc;
     }
 }
