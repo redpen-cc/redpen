@@ -107,7 +107,8 @@ public class RedPenResourceTest extends MockServletInvocationTest {
         assertTrue(errors.length() > 0);
         for (int i=0; i<errors.length(); ++i) {
             JSONObject o = errors.getJSONObject(i).getJSONArray("errors").getJSONObject(0);
-            assertEquals("[pass.js] called", o.getString("message"));
+            assertEquals("pass.js", o.getString("validator"));
+            assertEquals("called", o.getString("message"));
         }
     }
 
