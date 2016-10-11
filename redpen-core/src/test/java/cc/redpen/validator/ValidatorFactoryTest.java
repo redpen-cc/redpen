@@ -27,6 +27,7 @@ import org.junit.Test;
 import java.io.File;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
@@ -47,6 +48,15 @@ public class ValidatorFactoryTest {
         Configuration conf = Configuration.builder().addValidatorConfig(new ValidatorConfiguration("Custom")).build();
         assertEquals(CustomValidator.class, ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf).getClass());
         assertTrue(ValidatorFactory.getConfigurations("en").contains(new ValidatorConfiguration("Custom")));
+        List<ValidatorConfiguration> en = ValidatorFactory.getConfigurations("");
+        boolean foundEmbeddedJSValidator = false;
+        for (ValidatorConfiguration configuration : en) {
+            if (configuration.getConfigurationName().equals("MyEmbeddedJS")) {
+                foundEmbeddedJSValidator = true;
+                break;
+            }
+        }
+        assertTrue(foundEmbeddedJSValidator);
     }
 
     @Test(expected = RedPenException.class)
