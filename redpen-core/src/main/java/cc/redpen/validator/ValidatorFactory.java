@@ -21,6 +21,9 @@ import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import org.reflections.Reflections;
+import org.reflections.scanners.ResourcesScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,6 +34,7 @@ import java.nio.charset.Charset;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -42,8 +46,8 @@ import static org.apache.commons.lang3.StringUtils.join;
 public class ValidatorFactory {
     private static final String validatorPackage = Validator.class.getPackage().getName();
     private static final List<String> VALIDATOR_PACKAGES = asList(validatorPackage, validatorPackage + ".sentence", validatorPackage + ".section");
-    private static final List<String> JS_VALIDATOR_DIRECTORIES = VALIDATOR_PACKAGES.stream().map(e -> "/" + e.replaceAll("\\.", "/") + "/").collect(toList());
     static final Map<String, Validator> validators = new LinkedHashMap<>();
+    private static final Map<String, String> jsValidators = new LinkedHashMap<>();
 
     static void registerValidator(Class<? extends Validator> clazz) {
         validators.put(clazz.getSimpleName().replace("Validator", ""), createValidator(clazz));
@@ -61,13 +65,45 @@ public class ValidatorFactory {
                         // the validator doesn't implement default constructor
                     }
                 });
+        Reflections jsReflections = new Reflections(
+                new ConfigurationBuilder()
+                        .setScanners(new ResourcesScanner())
+                        .setUrls(ClasspathHelper.forPackage("cc.redpen.validator")));
+        jsReflections.getResources(Pattern.compile(".*js"))
+                .forEach(e -> {
+                    InputStream inputStream = ValidatorFactory.class.getResourceAsStream("/" + e);
+                    try (InputStreamReader isr = new InputStreamReader(inputStream, Charset.forName("UTF-8"));
+                         BufferedReader br = new BufferedReader(isr)) {
+                        StringBuilder sb = new StringBuilder(1024);
+                        String str;
+                        while ((str = br.readLine()) != null) {
+                            sb.append(str);
+                        }
+                        String validatorName = e.replaceFirst(".*/", "").replaceFirst("\\.js$", "");
+                        jsValidators.put(validatorName, sb.toString());
+                    } catch (IOException ignored) {
+                    }
+
+                });
     }
 
     public static List<ValidatorConfiguration> getConfigurations(String lang) {
-        return validators.entrySet().stream().filter(e -> {
+        List<ValidatorConfiguration> configurations = validators.entrySet().stream().filter(e -> {
             List<String> supportedLanguages = e.getValue().getSupportedLanguages();
             return supportedLanguages.isEmpty() || supportedLanguages.contains(lang);
         }).map(e -> new ValidatorConfiguration(e.getKey(), toStrings(e.getValue().getProperties()))).collect(toList());
+        Map<String, String> emptyMap = new LinkedHashMap<>();
+        for (String jsValidator : jsValidators.keySet()) {
+            try {
+                Validator jsValidatorInstance = getInstance(jsValidator);
+                List<String> supportedLanguages = jsValidatorInstance.getSupportedLanguages();
+                if (supportedLanguages.isEmpty() || supportedLanguages.contains(lang)) {
+                    configurations.add(new ValidatorConfiguration(jsValidator, emptyMap));
+                }
+            } catch (RedPenException ignored) {
+            }
+        }
+        return configurations;
     }
 
     @SuppressWarnings("unchecked")
@@ -90,23 +126,11 @@ public class ValidatorFactory {
     public static Validator getInstance(ValidatorConfiguration config, Configuration globalConfig) throws RedPenException {
         String validatorName = config.getConfigurationName();
         // lookup JavaScript validators
-        for (String p : JS_VALIDATOR_DIRECTORIES) {
-                InputStream inputStream = ValidatorFactory.class.getResourceAsStream(p + validatorName + ".js");
-                if (inputStream != null) {
-                    try (InputStreamReader isr = new InputStreamReader(inputStream, Charset.forName("UTF-8"));
-                         BufferedReader br = new BufferedReader(isr)) {
-                        StringBuilder sb = new StringBuilder(1024);
-                        String str;
-                        while ((str = br.readLine()) != null) {
-                            sb.append(str);
-                        }
-                        JavaScriptLoader javaScriptValidator = new JavaScriptLoader(validatorName, sb.toString());
-                        javaScriptValidator.preInit(config, globalConfig);
-                        return javaScriptValidator;
-                    } catch (IOException ignored) {
-                    }
-
-                }
+        String script = jsValidators.get(validatorName);
+        if(script != null){
+            JavaScriptLoader javaScriptValidator = new JavaScriptLoader(validatorName, script);
+            javaScriptValidator.preInit(config, globalConfig);
+            return javaScriptValidator;
         }
 
         // fallback to Java validators
