@@ -74,7 +74,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         javaScriptValidatorsDir.delete();
         javaScriptValidatorsDir.mkdirs();
         System.setProperty("REDPEN_HOME", javaScriptValidatorsDir.getAbsolutePath());
-        File validatorJS = new File(javaScriptValidatorsDir.getAbsolutePath() + File.separator + "MyValidator.js");
+        File validatorJS = new File(javaScriptValidatorsDir.getAbsolutePath() + File.separator + "MyValidationScript.js");
         String content2 = "function validateSentence(sentence) {\n" +
                 "addLocalizedError(sentence, 'validation error in JavaScript Validator');}";
         Files.write(Paths.get(validatorJS.getAbsolutePath()), content2.getBytes(UTF_8));
@@ -93,7 +93,8 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         RedPen redPen = new RedPen(config);
         List<ValidationError> errors = redPen.validate(document);
         assertEquals(1, errors.size());
-        assertEquals("[MyValidator.js] JavaScript validator validation error in JavaScript Validator", errors.get(0).getMessage());
+        assertEquals("JavaScript validator validation error in JavaScript Validator", errors.get(0).getMessage());
+        assertEquals("MyValidationScript.js", errors.get(0).getValidatorName());
     }
 
     public static List dataFromJavaScript;
@@ -101,16 +102,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
     @Test
     public void testJSLiteralValidator() throws RedPenException, IOException {
         JavaScriptValidator validator = new JavaScriptValidator();
-        validator.preInit(new ValidatorConfiguration("JavaScriptValidator")
-                        .addProperty("script-path", "mypath")
-                        .addProperty("intValue", 1)
-                        .addProperty("floatValue", "2")
-                        .addProperty("testScript-floatValue", "4")
-                        .addProperty("booleanValue", "false")
-                        .addProperty("hello", "world")
-                , Configuration.builder().build());
-
-        validator.scripts.add(new Script(validator, "testScript.js",
+        validator.scripts.add(new JavaScriptLoader("testScript.js",
                 "function preValidateSentence(sentence) {" +
                         // add function names to "dataFromJavaScript" list upon function calls for the later assertions
                         // the following script is using Nashorn's lobal object "Java".type to access static member:
@@ -139,6 +131,16 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
                         "_JavaScriptValidatorTest.dataFromJavaScript.add(getString('script-path'));" +
                         "_JavaScriptValidatorTest.dataFromJavaScript.add(getSymbolTable());" +
                         "}"));
+
+
+        validator.preInit(new ValidatorConfiguration("JavaScriptValidator")
+                        .addProperty("script-path", "mypath")
+                        .addProperty("intValue", 1)
+                        .addProperty("floatValue", "2")
+                        .addProperty("testScript-floatValue", "4")
+                        .addProperty("booleanValue", "false")
+                        .addProperty("hello", "world")
+                , Configuration.builder().build());
 
 
         Document document = Document.builder()
@@ -170,16 +172,20 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         assertEquals(SymbolTable.class, dataFromJavaScript.get(10).getClass());
 
         assertEquals(4, errors.size());
-        assertEquals("[testScript.js] validation error", errors.get(0).getMessage());
-        assertEquals("[testScript.js] JavaScript validator doc", errors.get(1).getMessage());
-        assertEquals("[testScript.js] JavaScript validator sentence", errors.get(2).getMessage());
-        assertEquals("[testScript.js] JavaScript validator section", errors.get(3).getMessage());
+        assertEquals("validation error", errors.get(0).getMessage());
+        assertEquals("testScript.js", errors.get(0).getValidatorName());
+        assertEquals("JavaScript validator doc", errors.get(1).getMessage());
+        assertEquals("testScript.js", errors.get(1).getValidatorName());
+        assertEquals("JavaScript validator sentence", errors.get(2).getMessage());
+        assertEquals("testScript.js", errors.get(2).getValidatorName());
+        assertEquals("JavaScript validator section", errors.get(3).getMessage());
+        assertEquals("testScript.js", errors.get(3).getValidatorName());
     }
 
     @Test
     public void testEmbeddedmessage() throws RedPenException, IOException {
         JavaScriptValidator validator = new JavaScriptValidator();
-        validator.scripts.add(new Script(validator, "testScript.js",
+        validator.scripts.add(new JavaScriptLoader("testScript.js",
                 "var message = 'embedded message {0}';" +
                         "function validateSentence(sentence) {" +
                         // add ValidationError
@@ -196,7 +202,8 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         validator.setErrorList(errors);
         validator.validate(sentence);
         assertEquals(1, errors.size());
-        assertEquals("[testScript.js] embedded message [placeholder]", errors.get(0).getMessage());
+        assertEquals("embedded message [placeholder]", errors.get(0).getMessage());
+        assertEquals("testScript.js", errors.get(0).getValidatorName());
     }
 
     @Test
@@ -205,7 +212,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         javaScriptValidatorsDir.delete();
         javaScriptValidatorsDir.mkdirs();
         System.setProperty("REDPEN_HOME", javaScriptValidatorsDir.getAbsolutePath());
-        File validatorJS = new File(javaScriptValidatorsDir.getAbsolutePath() + File.separator + "MyValidator.js");
+        File validatorJS = new File(javaScriptValidatorsDir.getAbsolutePath() + File.separator + "MyValidationScript.js");
         String content2 = "function validateSentence(sentence) {\n" +
                 "addLocalizedError(sentence, 'validation error in JavaScript Validator');}";
         Files.write(Paths.get(validatorJS.getAbsolutePath()), content2.getBytes(UTF_8));
@@ -230,7 +237,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         javaScriptValidatorsDir.delete();
         javaScriptValidatorsDir.mkdirs();
         System.setProperty("REDPEN_HOME", javaScriptValidatorsDir.getAbsolutePath());
-        File validatorJS = new File(javaScriptValidatorsDir.getAbsolutePath() + File.separator + "MyValidator.js");
+        File validatorJS = new File(javaScriptValidatorsDir.getAbsolutePath() + File.separator + "MyJSValidation.js");
         String content2 =
                 "function validateSentence(sentence) {\n" +
                         "addLocalizedError(sentence, 'validation error in JavaScript Validator');}";
@@ -244,7 +251,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
                 .build();
 
         String sampleAsciiDocShortText =
-                "[suppress='MyValidator SuccessiveWord']\n" +
+                "[suppress='MyJSValidation SuccessiveWord']\n" +
                 "= Title\n" +
                 "the good item is is a good example.\n";
         Document doc = createFileContent(sampleAsciiDocShortText, DocumentParser.ASCIIDOC);
@@ -259,7 +266,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         javaScriptValidatorsDir.delete();
         javaScriptValidatorsDir.mkdirs();
         System.setProperty("REDPEN_HOME", javaScriptValidatorsDir.getAbsolutePath());
-        File validatorJS = new File(javaScriptValidatorsDir.getAbsolutePath() + File.separator + "MyValidator.js");
+        File validatorJS = new File(javaScriptValidatorsDir.getAbsolutePath() + File.separator + "MyValidationScript.js");
         String content2 =
                 "function validateSentence(sentence) {\n" +
                         "if (sentence.getContent().length() > 0) {" +
@@ -290,7 +297,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         javaScriptValidatorsDir.delete();
         javaScriptValidatorsDir.mkdirs();
         System.setProperty("REDPEN_HOME", javaScriptValidatorsDir.getAbsolutePath());
-        File validatorJS = new File(javaScriptValidatorsDir.getAbsolutePath() + File.separator + "MyValidator.js");
+        File validatorJS = new File(javaScriptValidatorsDir.getAbsolutePath() + File.separator + "MyJSValidation.js");
         String content2 =
                 "function validateSentence(sentence) {\n" +
                         "if (sentence.getContent().length() > 0) {" +
@@ -307,7 +314,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
                 .build();
 
         String sampleAsciiDocShortText =
-                "<!-- @suppress MyValidator SuccessiveWord -->\n" +
+                "<!-- @suppress MyJSValidation SuccessiveWord -->\n" +
                 "# Section title\n" +
                 "the good item is a good example.\n";
         Document doc = createFileContent(sampleAsciiDocShortText, DocumentParser.MARKDOWN);
@@ -319,7 +326,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
     @Test
     public void testJSValidatorIsConfinedByDefault() throws RedPenException, IOException {
         JavaScriptValidator validator = new JavaScriptValidator();
-        validator.scripts.add(new Script(validator, "testScript.js",
+        validator.scripts.add(new JavaScriptLoader("testScript.js",
                                          "function validateSentence(sentence) {"
                                          + "if (java || javax || Java || redpenToBeBound || load) {"
                                          + "addLocalizedError(sentence, 'runtime environment is NOT confined');"
@@ -339,7 +346,8 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         validator.setErrorList(errors);
         validator.validate(sentence);
         assertEquals(1, errors.size());
-        assertEquals("[testScript.js] JavaScript validator runtime environment is confined", errors.get(0).getMessage());
+        assertEquals("JavaScript validator runtime environment is confined", errors.get(0).getMessage());
+        assertEquals("testScript.js", errors.get(0).getValidatorName());
     }
 
     ArrayList<ValidationError> errors = new ArrayList<>();

@@ -18,21 +18,19 @@
 package cc.redpen.validator;
 
 import cc.redpen.RedPenException;
-import cc.redpen.config.SymbolTable;
+import cc.redpen.config.Configuration;
+import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
-import cc.redpen.tokenizer.TokenElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.script.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.MessageFormat;
 import java.util.*;
 
 /**
@@ -58,7 +56,7 @@ import java.util.*;
  */
 public class JavaScriptValidator extends Validator {
     private static final Logger LOG = LoggerFactory.getLogger(JavaScriptValidator.class);
-    final List<Script> scripts = new ArrayList<>();
+    final List<JavaScriptLoader> scripts = new ArrayList<>();
 
     public JavaScriptValidator() {
         super("script-path", "js");
@@ -75,16 +73,24 @@ public class JavaScriptValidator extends Validator {
                 for (File file : jsValidatorFiles) {
                     if (file.isFile() && file.getName().endsWith(".js")) {
                         try {
-                            scripts.add(new Script(this, file.getName(), loadCached(file)));
+                            JavaScriptLoader valid = new JavaScriptLoader(file.getName(), loadCached(file));
+                            scripts.add(valid);
                         } catch (IOException e) {
                             LOG.error("Exception while reading js file", e);
                         }
                     }
                 }
             }
-        }
-        catch (RedPenException e) {
+        } catch (RedPenException e) {
             LOG.warn("JavaScript validators directory is missing: {}", e.toString());
+        }
+    }
+
+    @Override
+    public void preInit(ValidatorConfiguration config, Configuration globalConfig) throws RedPenException {
+        super.preInit(config, globalConfig);
+        for (JavaScriptLoader js : scripts) {
+            js.preInit(config, globalConfig);
         }
     }
 
@@ -111,192 +117,50 @@ public class JavaScriptValidator extends Validator {
         return read;
     }
 
+    List<ValidationError> errors;
+
+    @Override
+    public void setErrorList(List<ValidationError> errors) {
+        this.errors = errors;
+    }
+
     @Override
     public void preValidate(Sentence sentence) {
-        for (Script js : scripts) {
-            call(js, "preValidateSentence", sentence);
+        for (JavaScriptLoader js : scripts) {
+            js.setErrorList(errors);
+            js.preValidate(sentence);
         }
     }
 
     @Override
     public void preValidate(Section section) {
-        for (Script js : scripts) {
-            call(js, "preValidateSection", section);
+        for (JavaScriptLoader js : scripts) {
+            js.setErrorList(errors);
+            js.preValidate(section);
         }
     }
 
     @Override
     public void validate(Document document) {
-        for (Script js : scripts) {
-            call(js, "validateDocument", document);
+        for (JavaScriptLoader js : scripts) {
+            js.setErrorList(errors);
+            js.validate(document);
         }
     }
 
     @Override
     public void validate(Sentence sentence) {
-        for (Script js : scripts) {
-            call(js, "validateSentence", sentence);
+        for (JavaScriptLoader js : scripts) {
+            js.setErrorList(errors);
+            js.validate(sentence);
         }
     }
 
     @Override
     public void validate(Section section) {
-        for (Script js : scripts) {
-            call(js, "validateSection", section);
+        for (JavaScriptLoader js : scripts) {
+            js.setErrorList(errors);
+            js.validate(section);
         }
     }
-
-    private Map<Script, Map<String, Boolean>> functionExistenceMap = new HashMap<>();
-
-   private Script currentJS;
-
-    private void call(Script js, String functionName, Object... args) {
-        this.currentJS = js;
-        Map<String, Boolean> map = functionExistenceMap.computeIfAbsent(js, e -> new HashMap<>());
-        Boolean functionExists = map
-                .getOrDefault(functionName, true);
-        if (functionExists) {
-            try {
-                js.invocable.invokeFunction(functionName, args);
-            } catch (ScriptException e) {
-                LOG.error("failed to invoke {}", functionName, e);
-            } catch (NoSuchMethodException ignore) {
-                map.put(functionName, false);
-            }
-        }
-    }
-
-    // give Validator methods public access so that they can be bound with JavaScript
-    @Override
-    public int getInt(String name) {
-        return super.getInt(name);
-    }
-
-    @Override
-    public float getFloat(String name) {
-        return super.getFloat(name);
-    }
-
-    @Override
-    public String getString(String name) {
-        return super.getString(name);
-    }
-
-    @Override
-    public boolean getBoolean(String name) {
-        return super.getBoolean(name);
-    }
-
-    @Override
-    public Set<String> getSet(String name) {
-        return super.getSet(name);
-    }
-
-    @Override
-    public Optional<String> getConfigAttribute(String name) {
-        return super.getConfigAttribute(name);
-    }
-
-    @Override
-    public SymbolTable getSymbolTable() {
-        return super.getSymbolTable();
-    }
-
-    @Override
-    public void addError(String message, Sentence sentenceWithError) {
-        super.addError(String.format("[%s] %s", currentJS.name, message), sentenceWithError);
-    }
-
-    @Override
-    Object getOrDefault(String name){
-        // script specific parameter wins
-        Object value = super.getOrDefault(currentJS.name.replaceAll("\\.js$","") + "-" + name);
-        if (value == null) {
-            // fallback to normal parameter
-            value = super.getOrDefault(name);
-        }
-        return value;
-    }
-
-
-    @Override
-    public void addErrorWithPosition(String message, Sentence sentenceWithError,
-                                     int start, int end) {
-        super.addLocalizedErrorWithPosition(String.format("[%s] %s", currentJS.name, message),
-                sentenceWithError, start, end);
-    }
-
-    @Override
-    public void addLocalizedError(Sentence sentenceWithError, Object... args) {
-        super.addLocalizedError(sentenceWithError, args);
-    }
-
-    @Override
-    public void addLocalizedError(String messageKey, Sentence sentenceWithError, Object... args) {
-        super.addLocalizedError(messageKey, sentenceWithError, args);
-    }
-
-    @Override
-    public void addLocalizedErrorFromToken(Sentence sentenceWithError, TokenElement token) {
-        super.addLocalizedErrorFromToken(sentenceWithError, token);
-    }
-
-    @Override
-    public void addLocalizedErrorWithPosition(Sentence sentenceWithError,
-                                              int start, int end, Object... args) {
-        super.addLocalizedErrorWithPosition(sentenceWithError, start, end, args);
-    }
-
-    @Override
-    protected String getLocalizedErrorMessage(String key, Object... args) {
-        String formatted;
-        if (currentJS.message != null) {
-            formatted = MessageFormat.format(currentJS.message, args);
-        } else {
-            formatted = super.getLocalizedErrorMessage(key, args);
-        }
-        return MessageFormat.format("[{0}] {1}", currentJS.name, formatted);
-    }
-
-    class Script {
-        final String name;
-        final Invocable invocable;
-        final String message;
-        ScriptEngineManager manager = new ScriptEngineManager();
-
-        Script(JavaScriptValidator validator, String name, String script) throws RedPenException {
-            this.name = name;
-            ScriptEngine engine = manager.getEngineByName("nashorn");
-            try {
-                engine.put("redpenToBeBound", validator);
-
-                String[] methodsToBeExposedToJS = {"getInt", "getFloat", "getString", "getBoolean", "getSet",
-                        "getConfigAttribute", "getSymbolTable", "addError", "addErrorWithPosition",
-                        "addLocalizedError", "addLocalizedErrorFromToken", "addLocalizedErrorWithPosition"};
-
-                for (String methodToBeExposed : methodsToBeExposedToJS) {
-                    engine.eval(String.format(
-                            "var %s = Function.prototype.bind.call(redpenToBeBound.%s, redpenToBeBound);",
-                            methodToBeExposed, methodToBeExposed));
-                }
-                try {
-                    engine.eval("var _JavaScriptValidatorTest = Java.type('cc.redpen.validator.JavaScriptValidatorTest');");
-                } catch (RuntimeException e) {
-                    if (!(e.getCause() instanceof ClassNotFoundException)) {
-                        throw e;
-                    }
-                }
-
-                engine.eval("java = undefined; javax = undefined; Java = undefined; load = undefined; redpenToBeBound = undefined;");
-
-                CompiledScript compiledScript = ((Compilable) engine).compile(script);
-                compiledScript.eval();
-                this.message = (String)engine.get("message");
-                this.invocable = (Invocable) engine;
-            } catch (ScriptException e) {
-                throw new RedPenException(e);
-            }
-        }
-    }
-
 }

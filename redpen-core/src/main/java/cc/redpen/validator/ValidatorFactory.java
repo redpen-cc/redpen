@@ -22,7 +22,12 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import org.reflections.Reflections;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Modifier;
+import java.nio.charset.Charset;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +42,7 @@ import static org.apache.commons.lang3.StringUtils.join;
 public class ValidatorFactory {
     private static final String validatorPackage = Validator.class.getPackage().getName();
     private static final List<String> VALIDATOR_PACKAGES = asList(validatorPackage, validatorPackage + ".sentence", validatorPackage + ".section");
+    private static final List<String> JS_VALIDATOR_DIRECTORIES = VALIDATOR_PACKAGES.stream().map(e -> "/" + e.replaceAll("\\.", "/") + "/").collect(toList());
     static final Map<String, Validator> validators = new LinkedHashMap<>();
 
     static void registerValidator(Class<? extends Validator> clazz) {
@@ -45,7 +51,7 @@ public class ValidatorFactory {
 
     static {
         Reflections reflections = new Reflections("cc.redpen.validator");
-        // register Validator implimentations under cc.redpen.validator package
+        // register Validator implementations under cc.redpen.validator package
         reflections.getSubTypesOf(Validator.class).stream()
                 .filter(validator -> !Modifier.isAbstract(validator.getModifiers()))
                 .forEach(validator -> {
@@ -82,8 +88,30 @@ public class ValidatorFactory {
     }
 
     public static Validator getInstance(ValidatorConfiguration config, Configuration globalConfig) throws RedPenException {
+        String validatorName = config.getConfigurationName();
+        // lookup JavaScript validators
+        for (String p : JS_VALIDATOR_DIRECTORIES) {
+                InputStream inputStream = ValidatorFactory.class.getResourceAsStream(p + validatorName + ".js");
+                if (inputStream != null) {
+                    try (InputStreamReader isr = new InputStreamReader(inputStream, Charset.forName("UTF-8"));
+                         BufferedReader br = new BufferedReader(isr)) {
+                        StringBuilder sb = new StringBuilder(1024);
+                        String str;
+                        while ((str = br.readLine()) != null) {
+                            sb.append(str);
+                        }
+                        JavaScriptLoader javaScriptValidator = new JavaScriptLoader(validatorName, sb.toString());
+                        javaScriptValidator.preInit(config, globalConfig);
+                        return javaScriptValidator;
+                    } catch (IOException ignored) {
+                    }
+
+                }
+        }
+
+        // fallback to Java validators
         Validator prototype = validators.get(config.getConfigurationName());
-        Class<? extends Validator> validatorClass = prototype != null ? prototype.getClass() : loadPlugin(config.getConfigurationName());
+        Class<? extends Validator> validatorClass = prototype != null ? prototype.getClass() : loadPlugin(validatorName);
         Validator validator = createValidator(validatorClass);
         validator.preInit(config, globalConfig);
         return validator;
