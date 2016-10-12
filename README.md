@@ -37,6 +37,7 @@ Tools
 -----
 
   * [Docker Image by Naoki Ainoya](https://registry.hub.docker.com/u/ainoya/redpen-server/)
+  * [Latex RedPen Wercker Box by abcang](https://hub.docker.com/r/abcang/latex-redpen-wercker-box/)
   * [RubyGem by akinomurasame](https://rubygems.org/gems/redpen_ruby)
   * [Python Client](https://pypi.python.org/pypi/pyredpen/)
   * [Android App by Shintaro Katafuchi](https://play.google.com/store/apps/details?id=cc.redpen)
