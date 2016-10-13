@@ -81,7 +81,7 @@ public class WordNumberValidatorTest extends BaseValidatorTest {
         Document document = prepareSimpleDocument("There is no real path, so first follow the line of the foot of the rocks past Kawa, then cut straight up to the next level of slabs.");
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
-        assertEquals(1, errors.get(document).size());
+        assertEquals(0, errors.get(document).size());
     }
 
 
