@@ -17,17 +17,27 @@
  */
 package cc.redpen.validator.sentence;
 
+import cc.redpen.RedPen;
+import cc.redpen.RedPenException;
+import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
+import cc.redpen.validator.BaseValidatorTest;
 import cc.redpen.validator.ValidationError;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class WordNumberValidatorTest {
+public class WordNumberValidatorTest extends BaseValidatorTest {
+
+    public WordNumberValidatorTest() {
+        super("WordNumber");
+    }
 
     @Test
     public void testWithShortSentence() {
@@ -64,4 +74,16 @@ public class WordNumberValidatorTest {
         assertNotNull(errors);
         assertEquals(0, errors.size());
     }
+
+    @Test
+    public void testSentenceWithCommas() throws RedPenException {
+        // NOTE: the following sentence contains 29 words.
+        Document document = prepareSimpleDocument("There is no real path, so first follow the line of the foot of the rocks past Kawa, then cut straight up to the next level of slabs.");
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        assertEquals(1, errors.get(document).size());
+    }
+
+
+
 }
