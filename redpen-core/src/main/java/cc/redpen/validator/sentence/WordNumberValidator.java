@@ -18,7 +18,10 @@
 package cc.redpen.validator.sentence;
 
 import cc.redpen.model.Sentence;
+import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.validator.Validator;
+
+import java.util.List;
 
 /**
  * Validate input sentences have more words than specified.
@@ -30,7 +33,16 @@ final public class WordNumberValidator extends Validator {
 
     @Override
     public void validate(Sentence sentence) {
-        int wordNum = sentence.getTokens().size();
+        List<TokenElement> words = sentence.getTokens();
+        int wordNum = 0;
+        for (TokenElement word : words) {
+            if (!word.getSurface().equals(",") && !word.getSurface().equals(",") &&
+                    !word.getSurface().equals("?") && !word.getSurface().equals("!") &&
+                    !word.getSurface().equals(":") && !word.getSurface().equals(";") &&
+                    !word.getSurface().equals("\"") && !word.getSurface().equals("'")) {
+                wordNum++;
+            }
+        }
         int maxNum = getInt("max_num");
         if (wordNum > maxNum) {
             addLocalizedError(sentence, wordNum, maxNum);
