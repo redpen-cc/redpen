@@ -1,15 +1,15 @@
 
 pipeline:
-    # - name: Set Version
-    #   command: mvn versions:set -DnewVersion=$REDPEN_VERSION
-    # - name: Add Files to the Next Changes
-    #   command: git add pom.xml; git add **/*.xml
-    # - name: Commit Version Changes
-    #   command: git commit -m "Set version in pom.xml to $REDPEN_VERSION"
-    # - name: Delopy to Sonatype
-    #   command: mvn clean deploy -DperformRelease --settings ~/.m2/settings.xml
-    # - name: Create Release Tag
-    #   command: git tag -a redpen-$REDPEN_VERSION -m "RedPen release $REDPEN_VERSION"
+   - name: Set Version
+     command: mvn versions:set -DnewVersion=$REDPEN_VERSION
+   - name: Add Files to the Next Changes
+     command: git add pom.xml; git add **/*.xml
+   - name: Commit Version Changes
+     command: git commit -m "Set version in pom.xml to $REDPEN_VERSION"
+   - name: Delopy to Sonatype
+     command: mvn clean deploy -DperformRelease --settings ~/.m2/settings.xml > /dev/null
+   - name: Create Release Tag
+     command: git tag -a redpen-$REDPEN_VERSION -m "RedPen release $REDPEN_VERSION"
     - name: Flush Next Release Version Number
       command: echo $REDPEN_VERSION | awk -F. -v OFS=. 'NF==1{print ++$NF}; NF>1{if(length($NF+1)>length($NF))$(NF-1)++; $NF=sprintf("%0*d-SNAPSHOT", length($NF), ($NF+1)%(10^length($NF))); print}'
     - name: Echo Next Version
