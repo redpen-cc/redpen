@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 import static java.util.Collections.singletonList;
 
 public class HankakuKanaValidator extends Validator {
-    static Pattern pattern = Pattern.compile("[\\uFF65-\\uFF9F\\s-]");
+    static Pattern pattern = Pattern.compile("[\\uFF65-\\uFF9F]");
 
     public HankakuKanaValidator() {}
 

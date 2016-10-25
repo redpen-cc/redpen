@@ -28,4 +28,13 @@ public class HankakuKanaValidatorTest {
         validator.validate(new Sentence("岩の木陰にハナが咲いている", 0));
         assertEquals(0, errors.size());
     }
+
+    @Test
+    public void testRunValidatorWithHankakuSpace() {
+        Validator validator = new HankakuKanaValidator();
+        List<ValidationError> errors = new ArrayList<>();
+        validator.setErrorList(errors);
+        validator.validate(new Sentence("岩の木陰に ハナ が咲いている", 0));
+        assertEquals(0, errors.size());
+    }
 }
