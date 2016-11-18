@@ -87,6 +87,4 @@ Acknowledgements
 
 This project is supported by [ATL](http://atl.recruit-tech.co.jp/en/).
 
-<p align="center">
-   <a href="http://atl.recruit-tech.co.jp/en/"><img src="logo/atl.png"/></a>
-</p>
+<a href="http://atl.recruit-tech.co.jp/en/"><img src="logo/atl.png"/></a>
