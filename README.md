@@ -81,3 +81,12 @@ Links
 * [Docs](http://redpen.cc/docs.html)
 * [JavaDoc](http://redpen.cc/javadoc/latest/index.html)
 * [Blog](http://blog.redpen.cc)
+
+Acknowledgements
+================
+
+This project is supported by [ATL](http://atl.recruit-tech.co.jp/en/).
+
+<p align="center">
+   <a href="http://atl.recruit-tech.co.jp/en/"><img src="logo/atl.png"/></a>
+</p>
