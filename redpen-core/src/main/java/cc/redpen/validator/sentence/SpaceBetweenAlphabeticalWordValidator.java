@@ -78,7 +78,7 @@ public class SpaceBetweenAlphabeticalWordValidator extends Validator {
         return !StringUtils.isBasicLatin(prevCharacter)
                 && prevCharacter != leftParenthesis
                 && prevCharacter != comma
-                && (prevCharacter != rightParenthesis && rightParenthesis != '（') // For handling multi-byte Parenthesis
+                && (prevCharacter != rightParenthesis && rightParenthesis != '）') // For handling multi-byte Parenthesis
                 && StringUtils.isBasicLatin(character)
                 && Character.isLetter(character);
     }
