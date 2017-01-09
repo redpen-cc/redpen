@@ -206,6 +206,36 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
         assertEquals(1, errors.size());
     }
 
+    @Test
+    public void testSkipBeforeChars() throws RedPenException {
+        SpaceBetweenAlphabeticalWordValidator validator = new SpaceBetweenAlphabeticalWordValidator();
+        validator.preInit(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord").addProperty("skip_before_chars", "「"), Configuration.builder().build());
+        List<ValidationError> errors = new ArrayList<>();
+        validator.setErrorList(errors);
+        validator.validate(new Sentence("きょうは「Coke 」を飲みたい。", 0));
+        assertEquals(0, errors.size());
+    }
+    
+    @Test
+    public void testSkipAfterChars() throws RedPenException {
+        SpaceBetweenAlphabeticalWordValidator validator = new SpaceBetweenAlphabeticalWordValidator();
+        validator.preInit(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord").addProperty("skip_after_chars", "」"), Configuration.builder().build());
+        List<ValidationError> errors = new ArrayList<>();
+        validator.setErrorList(errors);
+        validator.validate(new Sentence("きょうは「 Coke」を飲みたい。", 0));
+        assertEquals(0, errors.size());
+    }
+    
+    @Test
+    public void testSkipBeforeAndAfterChars() throws RedPenException {
+        SpaceBetweenAlphabeticalWordValidator validator = new SpaceBetweenAlphabeticalWordValidator();
+        validator.preInit(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord").addProperty("skip_before_chars", "・「").addProperty("skip_after_chars", "・」"), Configuration.builder().build());
+        List<ValidationError> errors = new ArrayList<>();
+        validator.setErrorList(errors);
+        validator.validate(new Sentence("きょうは「Coke・Pepsi」を飲みたい。", 0));
+        assertEquals(0, errors.size());
+    }
+
 
     @Test
     public void testSupportedLanguages() {

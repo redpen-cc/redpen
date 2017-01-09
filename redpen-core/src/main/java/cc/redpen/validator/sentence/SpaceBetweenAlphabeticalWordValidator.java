@@ -40,7 +40,9 @@ public class SpaceBetweenAlphabeticalWordValidator extends Validator {
     private final Pattern pat = Pattern.compile(shard + "\\s+(" + word + ")\\s+" + shard);
 
     public SpaceBetweenAlphabeticalWordValidator() {
-        super("forbidden", false); // Spaces are enforced (false) or forbidden (true)
+        super("forbidden", false, // Spaces are enforced (false) or forbidden (true)
+              "skip_before_chars", "",
+              "skip_after_chars", "");
     }
 
     @Override public List<String> getSupportedLanguages() {
@@ -76,6 +78,7 @@ public class SpaceBetweenAlphabeticalWordValidator extends Validator {
     // TODO: need refactoring...
     private boolean notHasWhiteSpaceBeforeLeftParenthesis(char prevCharacter, char character) {
         return !StringUtils.isBasicLatin(prevCharacter)
+                && getString("skip_before_chars").indexOf(prevCharacter) == -1
                 && prevCharacter != leftParenthesis
                 && prevCharacter != comma
                 && (prevCharacter != rightParenthesis && rightParenthesis != '）') // For handling multi-byte Parenthesis
@@ -85,6 +88,7 @@ public class SpaceBetweenAlphabeticalWordValidator extends Validator {
 
     private boolean notHasWhiteSpaceAfterRightParenthesis(char prevCharacter, char character) {
         return !StringUtils.isBasicLatin(character)
+                && getString("skip_after_chars").indexOf(character) == -1
                 && character != rightParenthesis
                 && (character != leftParenthesis && leftParenthesis != '（')  // For handling multi-byte Parenthesis
                 && character != comma
