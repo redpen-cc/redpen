@@ -89,6 +89,10 @@ public final class Main {
                 .withArgName("LIMIT NUMBER")
                 .create("l"));
 
+        options.addOption(OptionBuilder.withLongOpt("sentence")
+                .withDescription("input sentences")
+                .create("s"));
+
         options.addOption(OptionBuilder.withLongOpt("version")
                 .withDescription("Displays version information and exits")
                 .create("v"));
@@ -106,6 +110,8 @@ public final class Main {
         String inputFormat = "plain";
         String configFileName = null;
         String resultFormat = "plain";
+        String inputSentence = null;
+
         int limit = DEFAULT_LIMIT;
 
         if (commandLine.hasOption("h")) {
@@ -128,13 +134,15 @@ public final class Main {
         if (commandLine.hasOption("l")) {
             limit = Integer.valueOf(commandLine.getOptionValue("l"));
         }
+        if (commandLine.hasOption("s")) {
+            inputSentence = commandLine.getOptionValue("s");
+        }
 
         String[] inputFileNames = commandLine.getArgs();
         if (!commandLine.hasOption("f")) {
             inputFormat = guessInputFormat(inputFileNames);
         }
         File[] inputFiles = extractInputFiles(inputFileNames);
-
         DocumentParser parser = DocumentParser.of(inputFormat);
 
         Formatter formatter = FormatterUtils.getFormatterByName(resultFormat);
@@ -150,17 +158,21 @@ public final class Main {
             return 1;
         }
 
-        if (inputFileNames.length == 0) {
-            LOG.error("Input file is not given");
+        if (inputFileNames.length == 0 && inputSentence == null) {
+            LOG.error("Input is not given");
             printHelp(options);
             return 1;
         }
 
         RedPen redPen;
-        List<Document> documents;
+        List<Document> documents = new ArrayList<>();
         try {
             redPen = new RedPen(configFile);
-            documents = redPen.parse(parser, inputFiles);
+            if (inputSentence != null) {
+                documents.add(redPen.parse(parser, inputSentence));
+            } else {
+                documents.addAll(redPen.parse(parser, inputFiles));
+            }
         } catch (RedPenException e) {
             LOG.error("Failed to parse input files: " + e);
             return -1;
