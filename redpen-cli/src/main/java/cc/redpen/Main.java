@@ -91,6 +91,8 @@ public final class Main {
 
         options.addOption(OptionBuilder.withLongOpt("sentence")
                 .withDescription("input sentences")
+                .hasArg()
+                .withArgName("INPUT SENTENCES")
                 .create("s"));
 
         options.addOption(OptionBuilder.withLongOpt("version")
@@ -168,10 +170,10 @@ public final class Main {
         List<Document> documents = new ArrayList<>();
         try {
             redPen = new RedPen(configFile);
-            if (inputSentence != null) {
-                documents.add(redPen.parse(parser, inputSentence));
-            } else {
+            if (inputSentence == null) {
                 documents.addAll(redPen.parse(parser, inputFiles));
+            } else {
+                documents.add(redPen.parse(parser, inputSentence));
             }
         } catch (RedPenException e) {
             LOG.error("Failed to parse input files: " + e);
