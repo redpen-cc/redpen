@@ -207,9 +207,9 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
     }
 
     @Test
-    public void testSkipBeforeChars() throws RedPenException {
+    public void testSkipBefore() throws RedPenException {
         SpaceBetweenAlphabeticalWordValidator validator = new SpaceBetweenAlphabeticalWordValidator();
-        validator.preInit(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord").addProperty("skip_before_chars", "「"), Configuration.builder().build());
+        validator.preInit(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord").addProperty("skip_before", "「"), Configuration.builder().build());
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(new Sentence("きょうは「Coke 」を飲みたい。", 0));
@@ -217,9 +217,9 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
     }
     
     @Test
-    public void testSkipAfterChars() throws RedPenException {
+    public void testSkipAfter() throws RedPenException {
         SpaceBetweenAlphabeticalWordValidator validator = new SpaceBetweenAlphabeticalWordValidator();
-        validator.preInit(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord").addProperty("skip_after_chars", "」"), Configuration.builder().build());
+        validator.preInit(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord").addProperty("skip_after", "」"), Configuration.builder().build());
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(new Sentence("きょうは「 Coke」を飲みたい。", 0));
@@ -227,9 +227,9 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
     }
     
     @Test
-    public void testSkipBeforeAndAfterChars() throws RedPenException {
+    public void testSkipBeforeAndAfter() throws RedPenException {
         SpaceBetweenAlphabeticalWordValidator validator = new SpaceBetweenAlphabeticalWordValidator();
-        validator.preInit(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord").addProperty("skip_before_chars", "・「").addProperty("skip_after_chars", "・」"), Configuration.builder().build());
+        validator.preInit(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord").addProperty("skip_before", "・「").addProperty("skip_after", "・」"), Configuration.builder().build());
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(new Sentence("きょうは「Coke・Pepsi」を飲みたい。", 0));
