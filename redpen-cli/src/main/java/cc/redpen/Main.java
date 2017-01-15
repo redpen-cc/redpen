@@ -113,7 +113,6 @@ public final class Main {
         String configFileName = null;
         String resultFormat = "plain";
         String inputSentence = null;
-
         int limit = DEFAULT_LIMIT;
 
         if (commandLine.hasOption("h")) {
@@ -144,14 +143,6 @@ public final class Main {
         if (!commandLine.hasOption("f")) {
             inputFormat = guessInputFormat(inputFileNames);
         }
-        File[] inputFiles = extractInputFiles(inputFileNames);
-        DocumentParser parser = DocumentParser.of(inputFormat);
-
-        Formatter formatter = FormatterUtils.getFormatterByName(resultFormat);
-        if (formatter == null) {
-            LOG.error("Unsupported format: " + resultFormat + " - please use xml, plain, plain2, json or json2");
-            return -1;
-        }
 
         File configFile = resolveConfigLocation(configFileName);
         if (configFile == null) {
@@ -167,20 +158,21 @@ public final class Main {
         }
 
         RedPen redPen;
-        List<Document> documents = new ArrayList<>();
         try {
             redPen = new RedPen(configFile);
-            if (inputSentence == null) {
-                documents.addAll(redPen.parse(parser, inputFiles));
-            } else {
-                documents.add(redPen.parse(parser, inputSentence));
-            }
         } catch (RedPenException e) {
             LOG.error("Failed to parse input files: " + e);
             return -1;
         }
 
+        List<Document> documents = getDocuments(inputFormat, inputSentence, inputFileNames, redPen);
         Map<Document, List<ValidationError>> documentListMap = redPen.validate(documents);
+
+        Formatter formatter = FormatterUtils.getFormatterByName(resultFormat);
+        if (formatter == null) {
+            LOG.error("Unsupported format: " + resultFormat + " - please use xml, plain, plain2, json or json2");
+            return -1;
+        }
         String result = formatter.format(documentListMap);
         System.out.println(result);
 
@@ -192,6 +184,17 @@ public final class Main {
         } else {
             return 0;
         }
+    }
+
+    private static List<Document> getDocuments(String inputFormat, String inputSentence, String[] inputFileNames, RedPen redPen) throws RedPenException {
+        List<Document> documents = new ArrayList<>();
+        DocumentParser parser = DocumentParser.of(inputFormat);
+        if (inputSentence == null) {
+            documents.addAll(redPen.parse(parser, extractInputFiles(inputFileNames)));
+        } else {
+            documents.add(redPen.parse(parser, inputSentence));
+        }
+        return documents;
     }
 
     static String guessInputFormat(String[] inputFileNames) {
