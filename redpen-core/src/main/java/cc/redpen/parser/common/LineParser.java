@@ -19,6 +19,7 @@ package cc.redpen.parser.common;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
+import cc.redpen.model.Section;
 import cc.redpen.parser.BaseDocumentParser;
 import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.tokenizer.RedPenTokenizer;
@@ -27,6 +28,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static cc.redpen.parser.ParserUtils.addChild;
 
 public abstract class LineParser extends BaseDocumentParser {
 
@@ -98,10 +101,12 @@ public abstract class LineParser extends BaseDocumentParser {
 
             // check for new sections
             if (model.getCurrentLine().getSectionLevel() > 0) {
+                Section currentSection = builder.getLastSection();
                 builder.addSection(
                         model.getCurrentLine().getSectionLevel(),
                         model.convertToSentences(model.getCurrentLine())
                 );
+                addChild(currentSection, builder.getLastSection());
                 model.getNextLine();
             }
             // check for a list item
