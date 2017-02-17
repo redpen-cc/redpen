@@ -89,6 +89,12 @@ public final class Main {
                 .withArgName("LIMIT NUMBER")
                 .create("l"));
 
+        options.addOption(OptionBuilder.withLongOpt("sentence")
+                .withDescription("input sentences")
+                .hasArg()
+                .withArgName("INPUT SENTENCES")
+                .create("s"));
+
         options.addOption(OptionBuilder.withLongOpt("version")
                 .withDescription("Displays version information and exits")
                 .create("v"));
@@ -106,6 +112,7 @@ public final class Main {
         String inputFormat = "plain";
         String configFileName = null;
         String resultFormat = "plain";
+        String inputSentence = null;
         int limit = DEFAULT_LIMIT;
 
         if (commandLine.hasOption("h")) {
@@ -128,19 +135,13 @@ public final class Main {
         if (commandLine.hasOption("l")) {
             limit = Integer.valueOf(commandLine.getOptionValue("l"));
         }
+        if (commandLine.hasOption("s")) {
+            inputSentence = commandLine.getOptionValue("s");
+        }
 
         String[] inputFileNames = commandLine.getArgs();
         if (!commandLine.hasOption("f")) {
             inputFormat = guessInputFormat(inputFileNames);
-        }
-        File[] inputFiles = extractInputFiles(inputFileNames);
-
-        DocumentParser parser = DocumentParser.of(inputFormat);
-
-        Formatter formatter = FormatterUtils.getFormatterByName(resultFormat);
-        if (formatter == null) {
-            LOG.error("Unsupported format: " + resultFormat + " - please use xml, plain, plain2, json or json2");
-            return -1;
         }
 
         File configFile = resolveConfigLocation(configFileName);
@@ -150,23 +151,28 @@ public final class Main {
             return 1;
         }
 
-        if (inputFileNames.length == 0) {
-            LOG.error("Input file is not given");
+        if (inputFileNames.length == 0 && inputSentence == null) {
+            LOG.error("Input is not given");
             printHelp(options);
             return 1;
         }
 
         RedPen redPen;
-        List<Document> documents;
         try {
             redPen = new RedPen(configFile);
-            documents = redPen.parse(parser, inputFiles);
         } catch (RedPenException e) {
             LOG.error("Failed to parse input files: " + e);
             return -1;
         }
 
+        List<Document> documents = getDocuments(inputFormat, inputSentence, inputFileNames, redPen);
         Map<Document, List<ValidationError>> documentListMap = redPen.validate(documents);
+
+        Formatter formatter = FormatterUtils.getFormatterByName(resultFormat);
+        if (formatter == null) {
+            LOG.error("Unsupported format: " + resultFormat + " - please use xml, plain, plain2, json or json2");
+            return -1;
+        }
         String result = formatter.format(documentListMap);
         System.out.println(result);
 
@@ -178,6 +184,17 @@ public final class Main {
         } else {
             return 0;
         }
+    }
+
+    private static List<Document> getDocuments(String inputFormat, String inputSentence, String[] inputFileNames, RedPen redPen) throws RedPenException {
+        List<Document> documents = new ArrayList<>();
+        DocumentParser parser = DocumentParser.of(inputFormat);
+        if (inputSentence == null) {
+            documents.addAll(redPen.parse(parser, extractInputFiles(inputFileNames)));
+        } else {
+            documents.add(redPen.parse(parser, inputSentence));
+        }
+        return documents;
     }
 
     static String guessInputFormat(String[] inputFileNames) {

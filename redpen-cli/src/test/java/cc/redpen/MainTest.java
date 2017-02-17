@@ -77,6 +77,15 @@ public class MainTest {
     }
 
     @Test
+    public void testMainWithSentenceInput() throws RedPenException {
+        String[] args = new String[]{
+                "-c", "sample/conf/redpen-conf-en.xml",
+                "-s", "this is a pen",
+        };
+        assertEquals(0, Main.run(args));
+    }
+
+    @Test
     public void testPlugin() throws Exception {
         String[] args = new String[]{
                 "-c", "sample/conf/redpen-conf-plugin.xml",
