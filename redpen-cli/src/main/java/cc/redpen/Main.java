@@ -84,13 +84,13 @@ public final class Main {
                 .create("r"));
 
         options.addOption(OptionBuilder.withLongOpt("limit")
-                .withDescription("error limit number")
+                .withDescription("Error limit number")
                 .hasArg()
                 .withArgName("LIMIT NUMBER")
                 .create("l"));
 
         options.addOption(OptionBuilder.withLongOpt("sentence")
-                .withDescription("input sentences")
+                .withDescription("Input sentences")
                 .hasArg()
                 .withArgName("INPUT SENTENCES")
                 .create("s"));
