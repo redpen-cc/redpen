@@ -213,11 +213,7 @@ public abstract class Validator {
     }
 
     protected String getString(String name) {
-        if(config != null){
-            return config.getProperties().getOrDefault(name, (String) defaultProps.get(name));
-        }else{
-            return (String) defaultProps.get(name);
-        }
+        return config.getProperties().getOrDefault(name, (String) defaultProps.get(name));
     }
 
     protected boolean getBoolean(String name) {
