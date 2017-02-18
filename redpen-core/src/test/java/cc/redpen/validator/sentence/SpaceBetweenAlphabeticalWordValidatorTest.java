@@ -40,48 +40,90 @@ import static org.junit.Assert.assertEquals;
 
 public class SpaceBetweenAlphabeticalWordValidatorTest {
     @Test
-    public void testNeedBeforeSpace() {
-        SpaceBetweenAlphabeticalWordValidator validator = new SpaceBetweenAlphabeticalWordValidator();
-        List<ValidationError> errors = new ArrayList<>();
-        validator.setErrorList(errors);
-        validator.validate(new Sentence("きょうはCoke を飲みたい。", 0));
-        assertEquals(1, errors.size());
+    public void testNeedBeforeSpace() throws RedPenException {
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
+                .build();
+
+        List<Document> documents = new ArrayList<>();documents.add(
+                Document.builder(new JapaneseTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(new Sentence("きょうはCoke を飲みたい。", 1))
+                        .build());
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        Assert.assertEquals(1, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testNeedAfterSpace() {
-        SpaceBetweenAlphabeticalWordValidator validator = new SpaceBetweenAlphabeticalWordValidator();
-        List<ValidationError> errors = new ArrayList<>();
-        validator.setErrorList(errors);
-        validator.validate(new Sentence("きょうは Cokeを飲みたい。", 0));
-        assertEquals(1, errors.size());
+    public void testNeedAfterSpace() throws RedPenException {
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
+                .build();
+
+        List<Document> documents = new ArrayList<>();documents.add(
+                Document.builder(new JapaneseTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(new Sentence("きょうは Cokeを飲みたい。", 1))
+                        .build());
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        Assert.assertEquals(1, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testNeedBeforeAndAfterSpace() {
-        SpaceBetweenAlphabeticalWordValidator validator = new SpaceBetweenAlphabeticalWordValidator();
-        List<ValidationError> errors = new ArrayList<>();
-        validator.setErrorList(errors);
-        validator.validate(new Sentence("きょうはCokeを飲みたい。", 0));
-        assertEquals(2, errors.size());
+    public void testNeedBeforeAndAfterSpace() throws RedPenException {
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
+                .build();
+
+        List<Document> documents = new ArrayList<>();documents.add(
+                Document.builder(new JapaneseTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(new Sentence("きょうはCokeを飲みたい。", 1))
+                        .build());
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        Assert.assertEquals(2, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testNotNeedSpaces() {
-        SpaceBetweenAlphabeticalWordValidator validator = new SpaceBetweenAlphabeticalWordValidator();
-        List<ValidationError> errors = new ArrayList<>();
-        validator.setErrorList(errors);
-        validator.validate(new Sentence("This Coke is cold", 0));
-        assertEquals(0, errors.size());
+    public void testNotNeedSpaces() throws RedPenException {
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
+                .build();
+
+        List<Document> documents = new ArrayList<>();documents.add(
+                Document.builder(new JapaneseTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(new Sentence("This Coke is cold", 1))
+                        .build());
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        Assert.assertEquals(0, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testLatinSymbolWithoutSpace() {
-        SpaceBetweenAlphabeticalWordValidator validator = new SpaceBetweenAlphabeticalWordValidator();
-        List<ValidationError> errors = new ArrayList<>();
-        validator.setErrorList(errors);
-        validator.validate(new Sentence("きょうは,コーラを飲みたい。", 0));
-        assertEquals(0, errors.size());
+    public void testLatinSymbolWithoutSpace() throws RedPenException {
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
+                .build();
+
+        List<Document> documents = new ArrayList<>();documents.add(
+                Document.builder(new JapaneseTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(new Sentence("きょうは,コーラを飲みたい。", 1))
+                        .build());
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        Assert.assertEquals(0, errors.get(documents.get(0)).size());
     }
 
     @Test
