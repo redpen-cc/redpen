@@ -55,14 +55,14 @@ public class DoubledJoshiValidatorTest {
     public void testNotDetectSingleJoshi() throws Exception {
         List<Document> documents = new ArrayList<>();
         documents.add(Document.builder(new JapaneseTokenizer())
-                .addSection(1)
-                .addParagraph()
-                .addSentence(new Sentence("私は彼が好き。", 1))
-                .build());
+                              .addSection(1)
+                              .addParagraph()
+                              .addSentence(new Sentence("私は彼が好き。", 1))
+                              .build());
 
         Configuration config = Configuration.builder("ja")
-                .addValidatorConfig(new ValidatorConfiguration("DoubledJoshi"))
-                .build();
+                                       .addValidatorConfig(new ValidatorConfiguration("DoubledJoshi"))
+                                       .build();
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);

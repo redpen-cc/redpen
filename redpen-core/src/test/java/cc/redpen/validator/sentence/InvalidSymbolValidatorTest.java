@@ -146,4 +146,19 @@ public class InvalidSymbolValidatorTest {
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(0, errors.get(documents.get(0)).size());
     }
+
+    @Test
+    public void testDefaultJapaneseSetting() throws Exception {
+        List<Document> documents = new ArrayList<>();
+        documents.add(Document.builder(new JapaneseTokenizer())
+                              .addSection(1)
+                              .addParagraph()
+                              .addSentence(new Sentence("Re:VIEW フォーマットが好きだ。", 1)).build());
+        Configuration config = Configuration.builder("ja")
+                               .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol")).build();
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        assertEquals(0, errors.get(documents.get(0)).size());
+    }
 }
