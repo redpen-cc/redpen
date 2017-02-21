@@ -16,4 +16,4 @@
 * Anton Keks
 * Dmitri Ess
 * Heiko W. Rupp
-* midnightSuyama　midnightSuyama@gmail.com
+* midnightSuyama<midnightSuyama _at_ gmail.com>
