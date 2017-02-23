@@ -44,6 +44,13 @@ public class ValidatorFactoryTest {
     }
 
     @Test
+    public void getConfigurationsDoesNotReturnsDeprecatedOnes() {
+        List<ValidatorConfiguration> configurations = ValidatorFactory.getConfigurations("en");
+        assertTrue(configurations.stream().filter(s->s.toString().equals("SentenceLength")).count() == 1);
+        assertTrue(configurations.stream().filter(s->s.toString().equals("SpaceBeginningOfSentence")).count() == 0); //NOTE: SpaceBeginningOfSentenceValidator is deprecated
+    }
+
+    @Test
     public void validatorPluginsAreCreatedAndRegistered() throws RedPenException {
         Configuration conf = Configuration.builder().addValidatorConfig(new ValidatorConfiguration("Custom")).build();
         assertEquals(CustomValidator.class, ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf).getClass());

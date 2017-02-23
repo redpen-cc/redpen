@@ -91,7 +91,7 @@ public class ValidatorFactory {
         List<ValidatorConfiguration> configurations = validators.entrySet().stream().filter(e -> {
             List<String> supportedLanguages = e.getValue().getSupportedLanguages();
             boolean deprecated = e.getValue().getClass().getAnnotation(Deprecated.class) == null ? false : true;
-            return supportedLanguages.isEmpty() || supportedLanguages.contains(lang) || deprecated;
+            return (supportedLanguages.isEmpty() || supportedLanguages.contains(lang)) && !deprecated;
         }).map(e -> new ValidatorConfiguration(e.getKey(), toStrings(e.getValue().getProperties()))).collect(toList());
         Map<String, String> emptyMap = new LinkedHashMap<>();
         for (String jsValidator : jsValidators.keySet()) {
