@@ -22,6 +22,7 @@ import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.validator.sentence.SentenceLengthValidator;
+import cc.redpen.validator.sentence.SpaceBeginningOfSentenceValidator;
 import org.junit.Test;
 
 import java.io.File;
@@ -41,6 +42,12 @@ public class ValidatorFactoryTest {
     public void createValidator() throws RedPenException {
         Configuration conf = Configuration.builder().addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
         assertEquals(SentenceLengthValidator.class, ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf).getClass());
+    }
+
+    @Test
+    public void registerDeprecatedValidator() {
+        ValidatorFactory.registerValidator(SpaceBeginningOfSentenceValidator.class);
+        assertNotNull(ValidatorFactory.validators.get("SpaceBeginningOfSentence"));
     }
 
     @Test
