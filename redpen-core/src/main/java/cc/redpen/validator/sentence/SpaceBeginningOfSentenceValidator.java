@@ -29,6 +29,13 @@ import java.util.Map;
  * Validate input sentences except for first sentence of a paragraph start with
  * a space.
  */
+
+/**
+ * This validator became Deprecated see the following pull request
+ *
+ * https://github.com/redpen-cc/redpen/pull/720
+ */
+@Deprecated
 public final class SpaceBeginningOfSentenceValidator extends Validator {
     private Map<Integer, List<Sentence>> sentencePositions = new HashMap<>();
 

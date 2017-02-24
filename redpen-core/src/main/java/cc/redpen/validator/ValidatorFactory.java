@@ -24,6 +24,8 @@ import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -44,12 +46,17 @@ import static org.apache.commons.lang3.StringUtils.join;
  * Factory class of validators.
  */
 public class ValidatorFactory {
+    private static final Logger LOG = LoggerFactory.getLogger(ValidatorFactory.class);
     private static final String validatorPackage = Validator.class.getPackage().getName();
     private static final List<String> VALIDATOR_PACKAGES = asList(validatorPackage, validatorPackage + ".sentence", validatorPackage + ".section");
     static final Map<String, Validator> validators = new LinkedHashMap<>();
     private static final Map<String, String> jsValidators = new LinkedHashMap<>();
 
     static void registerValidator(Class<? extends Validator> clazz) {
+        boolean deprecated = clazz.getAnnotation(Deprecated.class) == null ? false : true;
+        if (deprecated) {
+            LOG.warn(clazz.getName() + " is deprecated");
+        }
         validators.put(clazz.getSimpleName().replace("Validator", ""), createValidator(clazz));
     }
 
@@ -90,7 +97,8 @@ public class ValidatorFactory {
     public static List<ValidatorConfiguration> getConfigurations(String lang) {
         List<ValidatorConfiguration> configurations = validators.entrySet().stream().filter(e -> {
             List<String> supportedLanguages = e.getValue().getSupportedLanguages();
-            return supportedLanguages.isEmpty() || supportedLanguages.contains(lang);
+            boolean deprecated = e.getValue().getClass().getAnnotation(Deprecated.class) == null ? false : true;
+            return (supportedLanguages.isEmpty() || supportedLanguages.contains(lang)) && !deprecated;
         }).map(e -> new ValidatorConfiguration(e.getKey(), toStrings(e.getValue().getProperties()))).collect(toList());
         Map<String, String> emptyMap = new LinkedHashMap<>();
         for (String jsValidator : jsValidators.keySet()) {
