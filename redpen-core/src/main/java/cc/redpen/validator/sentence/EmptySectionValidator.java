@@ -1,3 +1,13 @@
+package cc.redpen.validator.sentence;
+
+import cc.redpen.RedPenException;
+import cc.redpen.model.Paragraph;
+import cc.redpen.model.Section;
+import cc.redpen.validator.Validator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
 /**
  * redpen: a text inspection tool
  * Copyright (c) 2014-2015 Recruit Technologies Co., Ltd. and contributors
@@ -15,23 +25,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cc.redpen.validator.section;
-
-import cc.redpen.RedPenException;
-import cc.redpen.model.Paragraph;
-import cc.redpen.model.Section;
-import cc.redpen.validator.Validator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Optional;
-
-/**
- * VoidSectionValidator detects sections with no content..
- */
-@Deprecated
-final public class VoidSectionValidator extends Validator {
-    private static final Logger LOG = LoggerFactory.getLogger(VoidSectionValidator.class);
+public class EmptySectionValidator extends Validator {
+    private static final Logger LOG = LoggerFactory.getLogger(EmptySectionValidator.class);
     private int sectionLevelLimit = 5;
 
     @Override
