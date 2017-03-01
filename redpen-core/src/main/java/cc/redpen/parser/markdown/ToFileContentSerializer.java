@@ -197,8 +197,10 @@ public class ToFileContentSerializer implements Visitor {
         builder.appendSection(new Section(headerNode.getLevel(), headerContents));
         //FIXME move this validate process to addChild
         if (!addChild(currentSection, builder.getLastSection())) {
-            LOG.warn("Failed to add parent for a Section: "
-                    + builder.getLastSection().getHeaderContents().get(0));
+            LOG.warn("Failed to add parent for a Section");
+            if (builder.getLastSection().getHeaderContents() != null && builder.getLastSection().getHeaderContents().size() > 0) {
+                builder.getLastSection().getHeaderContents().get(0);
+            }
         }
     }
 
