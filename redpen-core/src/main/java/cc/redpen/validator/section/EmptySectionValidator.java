@@ -1,4 +1,4 @@
-package cc.redpen.validator.sentence;
+package cc.redpen.validator.section;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Paragraph;
