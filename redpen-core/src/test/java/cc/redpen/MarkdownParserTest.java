@@ -795,6 +795,13 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
+    public void testImageNestedLink2() throws Exception {
+        String sampleText = "#[![Neomake](https://cloud.githubusercontent.com/assets/111942/22717189/9e3e1760-ed67-11e6-94c5-e8955869d6d0.png)](#neomake)\n";
+        Document doc = createFileContent(sampleText);
+        assertEquals(0, doc.getSection(0).getParagraph(0).getNumberOfSentences());
+    }
+
+    @Test
     public void testSuccuessiveImageNestedLink() throws Exception {
         String sampleText =
                 "[![label1](https://example.com/path/to/img1.png)](https://example.com/path/to/link)\n" +
