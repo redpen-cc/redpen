@@ -33,7 +33,7 @@
         <validator name="SectionLength">
             <property name="max_num" value="1500"/>
         </validator>
-        <validator name="VoidSection" />
+        <validator name="EmptySection" />
         <validator name="GappedSection" />
         <validator name="SectionLevel" />
         <validator name="ParagraphNumber"/>

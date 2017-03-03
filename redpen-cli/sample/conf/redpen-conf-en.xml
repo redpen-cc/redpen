@@ -22,7 +22,7 @@
         <validator name="ParagraphNumber"/>
         <validator name="SpaceBeginningOfSentence" />
         <validator name="ParenthesizedSentence"/>
-        <validator name="VoidSection" />
+        <validator name="EmptySection" />
         <validator name="GappedSection" />
         <validator name="SectionLevel" />
 
