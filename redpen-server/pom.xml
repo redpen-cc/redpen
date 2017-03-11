@@ -169,19 +169,19 @@
         <dependency>
             <groupId>org.apache.wink</groupId>
             <artifactId>wink-component-test-support</artifactId>
-            <version>1.3.0</version>
+            <version>1.4</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.apache.wink</groupId>
             <artifactId>wink-server</artifactId>
-            <version>1.3.0</version>
+            <version>1.4</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.apache.wink</groupId>
             <artifactId>wink-json-provider</artifactId>
-            <version>1.3.0</version>
+            <version>1.4</version>
             <type>jar</type>
         </dependency>
         <dependency>
