@@ -24,18 +24,20 @@ import cc.redpen.validator.Validator;
 import java.util.List;
 
 public class HeaderLengthValidator extends Validator {
-
     public HeaderLengthValidator() {
-        super("max_len", 20); // Default maximum length of section headers
+        super("max_len", 70, "limit", 3);
     }
 
     @Override
     public void validate(Section section) {
+        if (section.getLevel() >= getInt("limit")) {
+            return;
+        }
+
         List<Sentence> headerContents = section.getHeaderContents();
         int headerLength = headerContents.stream().map(s -> s.getContent().length()).reduce(0, (s, r) -> s + r);
         if (headerLength > getInt("max_len")) {
-            addLocalizedError(section.getJoinedHeaderContents(), getInt("max_num"));
+            addLocalizedError(section.getJoinedHeaderContents(), getInt("max_len"));
         }
     }
-
 }
