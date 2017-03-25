@@ -25,12 +25,12 @@ import java.util.List;
 
 public class HeaderLengthValidator extends Validator {
     public HeaderLengthValidator() {
-        super("max_len", 70, "limit", 3);
+        super("max_len", 70, "min_level", 3);
     }
 
     @Override
     public void validate(Section section) {
-        if (section.getLevel() >= getInt("limit")) {
+        if (section.getLevel() >= getInt("min_level")) {
             return;
         }
 
