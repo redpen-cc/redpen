@@ -17,4 +17,4 @@
 * Dmitri Ess
 * Heiko W. Rupp
 * midnightSuyama<midnightSuyama _at_ gmail.com>
-* Haruki　Okada
+* Haruki Okada
