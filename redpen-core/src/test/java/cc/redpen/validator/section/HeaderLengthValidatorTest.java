@@ -17,8 +17,13 @@
  */
 package cc.redpen.validator.section;
 
+import cc.redpen.RedPenException;
+import cc.redpen.config.Configuration;
+import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Section;
 import cc.redpen.validator.ValidationError;
+import cc.redpen.validator.Validator;
+import cc.redpen.validator.ValidatorFactory;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -27,9 +32,11 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 
 public class HeaderLengthValidatorTest {
-    private HeaderLengthValidator validator = new HeaderLengthValidator();
     @Test
-    public void testSectionWithLongHeader() {
+    public void testSectionWithLongHeader() throws RedPenException {
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("HeaderLength")).build();
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
         Section section = new Section(0, "This is a long long long long" +
                 " long long long long long long long long header");
         List<ValidationError> errors = new ArrayList<>();
@@ -40,13 +47,39 @@ public class HeaderLengthValidatorTest {
     }
 
     @Test
-    public void testSectionWithLongHeaderInLowLevelSection() {
+    public void testSpecifyTheMaxLength() throws RedPenException {
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("HeaderLength").addProperty("max_len", "10")).build();
+        HeaderLengthValidator validator = (HeaderLengthValidator) ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.setErrorList(errors);
+        validator.validate(new Section(1, "This is not a header"));
+        assertEquals(1, errors.size());
+    }
+
+    @Test
+    public void testSectionWithLongHeaderInLowLevelSection() throws RedPenException {
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("HeaderLength")).build();
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
         Section section = new Section(5, "This is a long long long long" +
                 " long long long long long long long long header");
         List<ValidationError> errors = new ArrayList<>();
 
         validator.setErrorList(errors);
         validator.validate(section);
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void testSpecifyTheMinimumLevel() throws RedPenException {
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("HeaderLength").addProperty("min_level", "2")).build();
+        HeaderLengthValidator validator = (HeaderLengthValidator) ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.setErrorList(errors);
+        validator.validate(new Section(5, "This is a long long long long" +
+                " long long long long long long long long header"));
         assertEquals(0, errors.size());
     }
 }
