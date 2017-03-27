@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cc.redpen.validator.section;
+package cc.redpen.validator.document;
 
 import cc.redpen.model.Document;
 import cc.redpen.model.Paragraph;
