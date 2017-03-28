@@ -1,7 +1,6 @@
 [![Build Status](https://travis-ci.org/redpen-cc/redpen.svg?branch=master)](https://travis-ci.org/redpen-cc/redpen)
 [![Coverage Status](https://coveralls.io/repos/recruit-tech/redpen/badge.png)](https://coveralls.io/r/recruit-tech/redpen)
 [![Build status](https://ci.appveyor.com/api/projects/status/qtqmphigaip8lfwk?svg=true)](https://ci.appveyor.com/project/takahi-i/redpen)
-[![Gitter chat](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/recruit-tech/redpen)
 
 Overview
 =========
@@ -42,7 +41,7 @@ Tools
   * [Python Client](https://pypi.python.org/pypi/pyredpen/)
   * [Android App by Shintaro Katafuchi](https://play.google.com/store/apps/details?id=cc.redpen)
 
-Editor support
+Editor packages
 ---------------
 
 ![Image of IntelliJ IDEA plugin](logo/intellij-redpen-image.png "Image of IntelliJ IDEA plugin")
@@ -55,6 +54,7 @@ Editor support
   * [WordPress plugin](https://github.com/redpen-cc/redpen-wordpress-plugin)
   * [IntelliJ IDEA plugin](https://plugins.jetbrains.com/plugin/8210)
   * [SublimeLinter module for RedPen](https://github.com/taky/sublimelinter-redpen)
+  * [Visual Studio Code redpen-extension by takeo-asai](https://marketplace.visualstudio.com/items?itemName=takeo-asai.redpen-extension)
 
 
 Extensions
