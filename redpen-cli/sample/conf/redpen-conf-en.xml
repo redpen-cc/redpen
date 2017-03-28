@@ -5,6 +5,7 @@
             <property name="max_len" value="120"/>
         </validator>
         <validator name="CommaNumber" />
+        <validator name="HeaderLength" />
 
         <!--Rules on expressions-->
         <validator name="SymbolWithSpace"/>
