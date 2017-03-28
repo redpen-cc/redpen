@@ -15,16 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cc.redpen.validator.section;
+package cc.redpen.validator.document;
 
-import cc.redpen.RedPenException;
-import cc.redpen.config.Configuration;
-import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
-import cc.redpen.model.Section;
-import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
