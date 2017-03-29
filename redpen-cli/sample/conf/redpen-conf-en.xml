@@ -26,6 +26,7 @@
         <validator name="EmptySection" />
         <validator name="GappedSection" />
         <validator name="SectionLevel" />
+        <validator name="ListLevel" />
 
         <!--Rules on symbols and terminologies-->
         <validator name="InvalidSymbol"/>
