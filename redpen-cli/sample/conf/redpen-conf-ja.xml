@@ -39,6 +39,7 @@
         <validator name="GappedSection" />
         <validator name="SectionLevel" />
         <validator name="ParagraphNumber"/>
+        <validator name="ListLevel" />
 
         <!--Load JavaScript validators-->
         <validator name="JavaScript" />
