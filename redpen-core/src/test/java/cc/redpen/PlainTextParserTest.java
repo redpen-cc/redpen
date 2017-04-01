@@ -340,4 +340,27 @@ public class PlainTextParserTest {
         assertEquals(Optional.of(new LineOffset(1, 18)), errors.get(0).getStartPosition());
         assertEquals(Optional.of(new LineOffset(1, 19)), errors.get(0).getEndPosition());
     }
+
+    @Test
+    public void testErrorPositionOfPlainTextWithQuotations() throws RedPenException {
+        String sampleText = "I 'Dockerfile'.\n";
+        Configuration conf = Configuration.builder().build();
+        List<Document> documents = new ArrayList<>();
+
+        DocumentParser parser = DocumentParser.PLAIN;
+        Document doc = parser.parse(sampleText, new SentenceExtractor(conf.getSymbolTable()), conf.getTokenizer());
+        documents.add(doc);
+
+        Configuration configuration = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("Spelling"))
+                .build();
+
+        RedPen redPen = new RedPen(configuration);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
+        assertEquals(1, errors.size());
+        assertEquals("Spelling", errors.get(0).getValidatorName());
+        assertEquals(15, errors.get(0).getSentence().getContent().length());
+        assertEquals(Optional.of(new LineOffset(1, 3)), errors.get(0).getStartPosition());
+        assertEquals(Optional.of(new LineOffset(1, 13)), errors.get(0).getEndPosition());
+    }
 }

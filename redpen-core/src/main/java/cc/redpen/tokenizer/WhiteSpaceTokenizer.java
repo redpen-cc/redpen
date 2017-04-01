@@ -29,7 +29,7 @@ public class WhiteSpaceTokenizer implements RedPenTokenizer {
             Pattern.compile("^[-+#$€£¥]?\\d+(\\.\\d+)?[%€¥¢₽]?$") // a number [+-]n[.n]
     };
 
-    private static final String DELIMITERS = " \u00A0\t\n\r?!,:;.()\u2014\"";
+    private static final String DELIMITERS = " \u00A0\t\n\r?!,:;.()\u2014\"\'";
 
     public WhiteSpaceTokenizer() {
     }
