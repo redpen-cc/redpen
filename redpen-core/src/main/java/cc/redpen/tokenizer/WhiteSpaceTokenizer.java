@@ -29,7 +29,8 @@ public class WhiteSpaceTokenizer implements RedPenTokenizer {
             Pattern.compile("^[-+#$€£¥]?\\d+(\\.\\d+)?[%€¥¢₽]?$") // a number [+-]n[.n]
     };
 
-    private static final String DELIMITERS = " \u00A0\t\n\r?!,:;.()\u2014\"\'";
+    private static final String DELIMITERS = " \u00A0\t\n\r?!,:;.()\u2014\"";
+
 
     public WhiteSpaceTokenizer() {
     }
@@ -44,7 +45,8 @@ public class WhiteSpaceTokenizer implements RedPenTokenizer {
 
         for (int i = 0, l = content.length(); i < l; i++) {
             char ch = content.charAt(i);
-            if (DELIMITERS.indexOf(ch) != -1) {
+            if ((DELIMITERS.indexOf(ch) != -1) ||
+                    (ch == '\'' && ((i > 0 && content.charAt(i-1) == ' ') || (i < l - 1 && content.charAt(i + 1) == ' ')))) { // TODO: simplify this pattern
                 if (isSuitableToken(surface)) {
                     tokens.add(new TokenElement(surface, tags, offset));
                 }

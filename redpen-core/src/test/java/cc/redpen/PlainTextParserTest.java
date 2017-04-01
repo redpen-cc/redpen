@@ -361,6 +361,6 @@ public class PlainTextParserTest {
         assertEquals("Spelling", errors.get(0).getValidatorName());
         assertEquals(15, errors.get(0).getSentence().getContent().length());
         assertEquals(Optional.of(new LineOffset(1, 3)), errors.get(0).getStartPosition());
-        assertEquals(Optional.of(new LineOffset(1, 13)), errors.get(0).getEndPosition());
+        assertEquals(Optional.of(new LineOffset(1, 14)), errors.get(0).getEndPosition());
     }
 }
