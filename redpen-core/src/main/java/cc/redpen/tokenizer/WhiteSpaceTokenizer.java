@@ -30,6 +30,8 @@ public class WhiteSpaceTokenizer implements RedPenTokenizer {
     };
 
     private static final String DELIMITERS = " \u00A0\t\n\r?!,:;.()\u2014\"";
+    private static final String WRAPPED_DELIMITERS = "\'"; // delimiters need to wrapped with white spaces
+
 
     public WhiteSpaceTokenizer() {
     }
@@ -44,7 +46,7 @@ public class WhiteSpaceTokenizer implements RedPenTokenizer {
 
         for (int i = 0, l = content.length(); i < l; i++) {
             char ch = content.charAt(i);
-            if (DELIMITERS.indexOf(ch) != -1) {
+            if ((DELIMITERS.indexOf(ch) != -1) || isWrappedDelimiters(content, i)) {
                 if (isSuitableToken(surface)) {
                     tokens.add(new TokenElement(surface, tags, offset));
                 }
@@ -66,6 +68,14 @@ public class WhiteSpaceTokenizer implements RedPenTokenizer {
         }
 
         return tokens;
+    }
+
+    private boolean isWrappedDelimiters(String content, int i) {
+        Character ch = content.charAt(i);
+        return WRAPPED_DELIMITERS.indexOf(ch) != -1 && (
+                    (i > 0 && content.charAt(i - 1) == ' ') ||
+                    (i < content.length() - 1 && content.charAt(i + 1) == ' ')
+                );
     }
 
     private boolean isSuitableToken(String surface) {
