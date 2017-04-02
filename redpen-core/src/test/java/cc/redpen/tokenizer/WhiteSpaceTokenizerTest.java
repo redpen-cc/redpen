@@ -55,4 +55,26 @@ public class WhiteSpaceTokenizerTest {
         assertEquals("good", results.get(6).getSurface());
         assertEquals(0, results.get(4).getTags().size());
     }
+
+    @Test
+    public void testTokenizeSentenceEndsWithPeriod() {
+        RedPenTokenizer tokenizer = new WhiteSpaceTokenizer();
+        List<TokenElement> results = tokenizer.tokenize("I am an engineer.");
+        assertEquals(5, results.size());
+        assertEquals("I", results.get(0).getSurface());
+        assertEquals("am", results.get(1).getSurface());
+        assertEquals("an", results.get(2).getSurface());
+        assertEquals("engineer", results.get(3).getSurface());
+        assertEquals(".", results.get(4).getSurface());
+    }
+
+    @Test
+    public void testTokenizeSentenceWithContraction() {
+        RedPenTokenizer tokenizer = new WhiteSpaceTokenizer();
+        List<TokenElement> results = tokenizer.tokenize("I'm an engineer");
+        assertEquals(3, results.size());
+        assertEquals("I'm", results.get(0).getSurface());
+        assertEquals("an", results.get(1).getSurface());
+        assertEquals("engineer", results.get(2).getSurface());
+    }
 }
