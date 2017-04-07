@@ -101,4 +101,29 @@ public class JapaneseStyleValidatorTest {
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         Assert.assertEquals(0, errors.get(documents.get(0)).size());
     }
+
+    @Test
+    public void mixedStyleWithDesuError() throws RedPenException {
+        Configuration config = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("JapaneseStyle"))
+                .build();
+
+        List<Document> documents = new ArrayList<>();
+        documents.add(
+                Document.builder(new JapaneseTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(new Sentence("彼の今日のお昼の弁当はのり弁とのり弁とのり弁です。", 1))
+                        .addSentence(new Sentence("それは贅沢である。", 2))
+                        .addSentence(new Sentence("しかし彼には選択肢がなかったのである。", 3))
+                        .build());
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        Assert.assertEquals(1, errors.get(documents.get(0)).size());
+        Assert.assertEquals(1, errors.get(documents.get(0)).get(0).getLineNumber());
+        Assert.assertEquals(22, errors.get(documents.get(0)).get(0).getStartPosition().get().offset);
+        Assert.assertEquals(24, errors.get(documents.get(0)).get(0).getEndPosition().get().offset);
+        Assert.assertEquals("JapaneseStyle", errors.get(documents.get(0)).get(0).getValidatorName());
+    }
 }
