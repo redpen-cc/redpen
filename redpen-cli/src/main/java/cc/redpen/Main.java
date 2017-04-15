@@ -95,6 +95,12 @@ public final class Main {
                 .withArgName("INPUT SENTENCES")
                 .create("s"));
 
+        options.addOption(OptionBuilder.withLongOpt("lang")
+                .withDescription("Language of error messages")
+                .hasArg()
+                .withArgName("LANGUAGE")
+                .create("L"));
+
         options.addOption(OptionBuilder.withLongOpt("version")
                 .withDescription("Displays version information and exits")
                 .create("v"));
@@ -113,6 +119,7 @@ public final class Main {
         String configFileName = null;
         String resultFormat = "plain";
         String inputSentence = null;
+        String language = "en";
         int limit = DEFAULT_LIMIT;
 
         if (commandLine.hasOption("h")) {
@@ -135,8 +142,18 @@ public final class Main {
         if (commandLine.hasOption("l")) {
             limit = Integer.valueOf(commandLine.getOptionValue("l"));
         }
+        if (commandLine.hasOption("L")) {
+            language = commandLine.getOptionValue("L");
+        }
         if (commandLine.hasOption("s")) {
             inputSentence = commandLine.getOptionValue("s");
+        }
+
+        // set language
+        if (language.equals("ja")) {
+            Locale.setDefault(new Locale("ja", "JA"));
+        }  else {
+            Locale.setDefault(new Locale("en", "EN"));
         }
 
         String[] inputFileNames = commandLine.getArgs();
