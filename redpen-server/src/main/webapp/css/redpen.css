@@ -95,6 +95,10 @@ input[type="radio"], input[type="checkbox"] {
     font-size: 11px;
 }
 
+.float-right {
+    float: right;
+}
+
 .control-label {
     color: #838178;
     font-size: 12px;

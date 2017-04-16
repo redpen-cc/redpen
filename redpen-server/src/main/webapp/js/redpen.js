@@ -92,6 +92,23 @@ var redpen = (function ($) {
         });
     };
 
+    this.export = function (parameters, callback) {
+        $.ajax({
+            type: "POST",
+            url: baseUrl + "rest/config/export",
+            data: JSON.stringify(parameters),
+            dataType: 'xml',
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                if (callback) {
+                    callback(data);
+                }
+            }
+        }).fail(function (err) {
+            console.log(err);
+        });
+    };
+
 
     return this;
 })(jQuery);
