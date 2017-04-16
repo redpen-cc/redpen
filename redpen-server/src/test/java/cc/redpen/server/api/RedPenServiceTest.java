@@ -1,6 +1,9 @@
 package cc.redpen.server.api;
 
 import cc.redpen.RedPen;
+import cc.redpen.config.Configuration;
+import cc.redpen.config.SymbolType;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockServletContext;
@@ -49,5 +52,17 @@ public class RedPenServiceTest {
     public void redPensWithCustomPropertiesAreAlsoSecure() throws Exception {
         RedPen en = new RedPenService(null).getRedPen("en", emptyMap());
         assertTrue(en.getConfiguration().isSecure());
+    }
+
+    @Test
+    public void redPenFromJSON() throws Exception {
+        String json = "{\"config\": {\"symbols\": {\"SPACE\": {\"value\": \" \",\"invalid_chars\": \"\",\"before_space\": false,\"after_space\": false}},\"validators\": {\"WordNumber\": {\"properties\": {\"max_num\": \"30\"}}},\"lang\": \"ru\"}}";
+        Configuration conf = new RedPenService(null)
+                .getRedPenFromJSON(new JSONObject(json)).getConfiguration();
+
+        assertEquals(conf.getValidatorConfigs().size(), 1);
+        assertEquals(conf.getValidatorConfigs().get(0).getConfigurationName(), "WordNumber");
+        assertEquals(conf.getLang(), "ru");
+        assertEquals(conf.getSymbolTable().getSymbol(SymbolType.SPACE).getValue(), ' ');
     }
 }

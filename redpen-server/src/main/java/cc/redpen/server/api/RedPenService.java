@@ -20,19 +20,15 @@ package cc.redpen.server.api;
 
 import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
-import cc.redpen.config.Configuration;
-import cc.redpen.config.ConfigurationLoader;
-import cc.redpen.config.ValidatorConfiguration;
+import cc.redpen.config.*;
 import cc.redpen.model.Document;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Helper class to access RedPen instances for use within the webapp
@@ -91,6 +87,78 @@ public class RedPenService {
     }
 
     /**
+     * Create a new redpen for the JSON object.
+     * @param requestJSON the JSON contains configurations
+     * @return a configured redpen instance
+     */
+    public RedPen getRedPenFromJSON(JSONObject requestJSON) {
+        String lang = "en";
+
+        Map<String, Map<String, String>> properties = new HashMap<>();
+        JSONObject config = null;
+        if (requestJSON.has("config")) {
+            try {
+                config = requestJSON.getJSONObject("config");
+                lang = getOrDefault(config, "lang", "en");
+                if (config.has("validators")) {
+                    JSONObject validators = config.getJSONObject("validators");
+                    Iterator keyIter = validators.keys();
+                    while (keyIter.hasNext()) {
+                        String validator = String.valueOf(keyIter.next());
+                        Map<String, String> props = new HashMap<>();
+                        properties.put(validator, props);
+                        JSONObject validatorConfig = validators.getJSONObject(validator);
+                        if ((validatorConfig != null) && validatorConfig.has("properties")) {
+                            JSONObject validatorProps = validatorConfig.getJSONObject("properties");
+                            Iterator propsIter = validatorProps.keys();
+                            while (propsIter.hasNext()) {
+                                String propname = String.valueOf(propsIter.next());
+                                props.put(propname, validatorProps.getString(propname));
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                LOG.error("Exception when processing JSON properties", e);
+            }
+        }
+
+        RedPen redPen = this.getRedPen(lang, properties);
+
+        // override any symbols
+        if ((config != null) && config.has("symbols")) {
+            try {
+                JSONObject symbols = config.getJSONObject("symbols");
+                Iterator keyIter = symbols.keys();
+                while (keyIter.hasNext()) {
+                    String symbolName = String.valueOf(keyIter.next());
+                    try {
+                        SymbolType symbolType = SymbolType.valueOf(symbolName);
+                        JSONObject symbolConfig = symbols.getJSONObject(symbolName);
+                        Symbol originalSymbol = redPen.getConfiguration().getSymbolTable().getSymbol(symbolType);
+                        if ((originalSymbol != null) && (symbolConfig != null) && symbolConfig.has("value")) {
+                            String value = symbolConfig.has("value") ? symbolConfig.getString("value") : String.valueOf(originalSymbol.getValue());
+                            boolean spaceBefore = symbolConfig.has("before_space") ? symbolConfig.getBoolean("before_space") : originalSymbol.isNeedBeforeSpace();
+                            boolean spaceAfter = symbolConfig.has("after_space") ? symbolConfig.getBoolean("after_space") : originalSymbol.isNeedAfterSpace();
+                            String invalidChars = symbolConfig.has("invalid_chars") ? symbolConfig.getString("invalid_chars") : String.valueOf(originalSymbol.getInvalidChars());
+                            if ((value != null) && !value.isEmpty()) {
+                                redPen.getConfiguration().getSymbolTable().overrideSymbol(new Symbol(symbolType, value.charAt(0), invalidChars, spaceBefore, spaceAfter));
+                            }
+                        }
+
+                    } catch (IllegalArgumentException iae) {
+                        LOG.error("Ignoring unknown SymbolType " + symbolName);
+                    }
+                }
+            } catch (Exception e) {
+                LOG.error("Exception when processing JSON symbol overrides", e);
+            }
+        }
+
+        return redPen;
+    }
+
+    /**
      * Create a new redpen for the specified language. The validator properties map is a map of validator names to their (optional) properties.
      * Only validitors present in this map are added to the redpen configuration
      *
@@ -122,5 +190,17 @@ public class RedPenService {
      */
     public Map<String, RedPen> getRedPens() {
         return redPens;
+    }
+
+    public static String getOrDefault(JSONObject json, String property, String defaultValue) {
+        try {
+            String value = json.getString(property);
+            if (value != null) {
+                return value;
+            }
+        } catch (Exception e) {
+            // intentionally empty
+        }
+        return defaultValue;
     }
 }
