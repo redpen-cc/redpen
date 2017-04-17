@@ -408,4 +408,31 @@ public class ConfigurationLoaderTest {
         Configuration config = new ConfigurationLoader().load(file);
         assertEquals(file.getParentFile(), config.getBase());
     }
+
+    @Test
+    public void testDuplicatedValidatorConfiguration() throws RedPenException{
+        String sampleConfigString =
+                "<redpen-conf lang=\"ja\">" +
+                        "<validators>" +
+                        "<validator name=\"SentenceLength\">" +
+                        "<property name=\"max_length\" value=\"200\" />" +
+                        "</validator>" +
+                        "<validator name=\"SentenceLength\">" +
+                        "<property name=\"max_length\" value=\"300\" />" +
+                        "</validator>" +
+                        "</validators>" +
+                        "<symbols>" +
+                        "<symbol name=\"EXCLAMATION_MARK\" value=\"！\" invalid-chars=\"!\" after-space=\"true\" />" +
+                        "</symbols>" +
+                        "</redpen-conf>";
+
+        Configuration configuration = new ConfigurationLoader().loadFromString(sampleConfigString);
+
+        assertNotNull(configuration);
+        assertEquals(1, configuration.getValidatorConfigs().size());
+        assertEquals("SentenceLength",
+                configuration.getValidatorConfigs().get(0).getConfigurationName());
+        assertEquals("300",
+                configuration.getValidatorConfigs().get(0).getProperty("max_length"));
+    }
 }
