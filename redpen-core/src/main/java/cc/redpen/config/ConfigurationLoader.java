@@ -32,6 +32,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static cc.redpen.config.Configuration.ConfigurationBuilder;
 
@@ -214,6 +216,7 @@ public class ConfigurationLoader {
 
     private void extractValidatorConfigurations(ConfigurationBuilder configBuilder, NodeList validatorElementList) {
         ValidatorConfiguration currentConfiguration;
+        Map<String, ValidatorConfiguration> validatorConfigurations = new LinkedHashMap<>();
         for (int i = 0; i < validatorElementList.getLength(); i++) {
             Node nNode = validatorElementList.item(i);
             if (nNode.getNodeType() != Node.ELEMENT_NODE) {
@@ -221,9 +224,13 @@ public class ConfigurationLoader {
             }
             Element element = (Element) nNode;
             if (element.getNodeName().equals("validator")) {
+                final String currentValidatorName = element.getAttribute("name");
                 currentConfiguration =
-                        new ValidatorConfiguration(element.getAttribute("name"));
-                configBuilder.addValidatorConfig(currentConfiguration);
+                        new ValidatorConfiguration(currentValidatorName);
+                if (validatorConfigurations.containsKey(currentValidatorName)) {
+                    LOG.warn("Duplicated validator configuration was found: " + currentValidatorName);
+                }
+                validatorConfigurations.put(currentValidatorName, currentConfiguration);
                 NodeList propertyElementList = nNode.getChildNodes();
                 extractProperties(currentConfiguration, propertyElementList);
             } else {
@@ -231,6 +238,7 @@ public class ConfigurationLoader {
                 LOG.warn("Skip this block ...");
             }
         }
+        validatorConfigurations.values().forEach(configBuilder::addValidatorConfig);
     }
 
     private void extractProperties(ValidatorConfiguration currentConfiguration,
