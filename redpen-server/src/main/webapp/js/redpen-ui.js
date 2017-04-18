@@ -458,6 +458,38 @@ RedPenUI.Utils.setLanguage = function (lang) {
     RedPenUI.Utils.showConfigurationOptions(firstValidRedpen);
 };
 
+RedPenUI.Utils.exportConfiguration = function () {
+    var activeValidators = $("#redpen-active-validators").find("input:checked");
+    var params = {
+        config: RedPenUI.Utils.getConfiguration(
+          $("#redpen-configuration").val(),
+          $.map(activeValidators, function(element){return $(element).val()}))
+    };
+    redpen.export(params, function (data) {
+        var URL = window.URL || window.webkitURL;
+        var url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(data)], {type: 'application/xml'}));
+
+        var link = document.createElement('a');
+        if (typeof link.download === 'undefined') {
+            window.location = url;
+            // cleanup
+            setTimeout(function () {
+                URL.revokeObjectURL(url);
+            }, 100);
+        } else {
+            document.body.appendChild(link);
+            link.href = url;
+            link.download = 'redpen-conf.xml';
+            link.click();
+            // cleanup
+            setTimeout(function () {
+                URL.revokeObjectURL(url);
+                document.body.removeChild(link);
+            }, 100);
+        }
+    });
+};
+
 
 RedPenUI.showComponents = function(configuration) {
     RedPenUI.currentConfiguration = configuration; // for non-inner methods
@@ -630,6 +662,10 @@ RedPenUI.showComponents = function(configuration) {
     $("#redpen-configuration").change(function () {
         RedPenUI.Utils.showConfigurationOptions($(this).val());
         RedPenUI.Utils.validateDocument();
+    });
+
+    $("#redpen-export").click(function () {
+        RedPenUI.Utils.exportConfiguration();
     });
 
     $("#redpen-token-editor").on("change keyup", RedPenUI.Utils.updateTokens);

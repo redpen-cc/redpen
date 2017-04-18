@@ -74,4 +74,12 @@ public class RedPenConfigurationResourceTest {
         assertTrue(!ja.getString("validators").isEmpty());
         assertTrue(!ja.getString("symbols").isEmpty());
     }
+
+    @Test
+    public void exportConfiguration() throws Exception {
+        String json = "{\"config\": {\"lang\": \"ru\"}}";
+        String response = (String)resource.exportConfiguration(new JSONObject(json)).getEntity();
+
+        assertTrue(response.contains("redpen-conf lang=\"ru\""));
+    }
 }

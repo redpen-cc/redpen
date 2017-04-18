@@ -20,6 +20,7 @@ package cc.redpen.server.api;
 
 import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
+import cc.redpen.config.ConfigurationExporter;
 import cc.redpen.config.Symbol;
 import cc.redpen.config.SymbolType;
 import cc.redpen.parser.DocumentParser;
@@ -34,6 +35,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -117,5 +120,28 @@ public class RedPenConfigurationResource {
         }
 
         return Response.ok().entity(response).build();
+    }
+
+    @Path("/export")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_XML)
+    @WinkAPIDescriber.Description("Returns the configuration XML corresponds to the UI")
+    public Response exportConfiguration(JSONObject requestJSON) {
+
+        LOG.info("Exporting configuration using JSON request");
+
+        RedPen redPen = new RedPenService(context).getRedPenFromJSON(requestJSON);
+
+        String result = null;
+
+        try(ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            new ConfigurationExporter().export(redPen.getConfiguration(), baos);
+            result = new String(baos.toByteArray());
+        } catch (IOException e) {
+            LOG.error("Exception when exporting configuration", e);
+        }
+
+        return Response.ok(result, RedPenResource.MIME_TYPE_XML).build();
     }
 }
