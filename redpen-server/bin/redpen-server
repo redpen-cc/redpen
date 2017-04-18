@@ -39,6 +39,9 @@ REDPEN_PORT=8080
 REDPEN_LOG_DIR=$REDPEN_HOME/logs
 REDPEN_LOG_FILENAME=redpen.log
 
+# Language of error messages
+REDPEN_LANGUAGE=en
+
 # RedPen configuration file
 # NOTE: If you want to specify RedPen configuration file, please uncomment out the following line.
 # NOTE: the configuration file need to be under REDPEN_HOME.
@@ -93,15 +96,15 @@ if [ $COMMAND = "start" ]; then
         echo "starting RedPen server with stop key..." 1>&2
     if [ -z $REDPEN_CONF_FILE ]; then
         echo "starting RedPen server without specified configuration file..." 1>&2
-        exec "$JAVA_CMD" -jar $JAVA_OPTS $REDPEN_WAR_FILE -p $REDPEN_PORT -key $STOP_KEY >> $REDPEN_LOG_FILE 2>&1 &
+        exec "$JAVA_CMD" -jar $JAVA_OPTS $REDPEN_WAR_FILE -p $REDPEN_PORT -key $STOP_KEY -L $REDPEN_LANGUAGE >> $REDPEN_LOG_FILE 2>&1 &
     else
         echo "starting RedPen server specifying a configuration file " $REDPEN_CONF_FILE " ..." 1>&2
-        exec "$JAVA_CMD" -jar $JAVA_OPTS $REDPEN_WAR_FILE -p $REDPEN_PORT -key $STOP_KEY -c $REDPEN_CONF_FILE >> $REDPEN_LOG_FILE 2>&1 &
+        exec "$JAVA_CMD" -jar $JAVA_OPTS $REDPEN_WAR_FILE -p $REDPEN_PORT -key $STOP_KEY -L $REDPEN_LANGUAGE -c $REDPEN_CONF_FILE >> $REDPEN_LOG_FILE 2>&1 &
     fi
         exit 0
     fi
     echo "starting RedPen server without stop key..." 1>&2
-    exec "$JAVA_CMD" -jar $JAVA_OPTS $REDPEN_WAR_FILE -p $REDPEN_PORT >> $REDPEN_LOG_FILE 2>&1 &
+    exec "$JAVA_CMD" -jar $JAVA_OPTS $REDPEN_WAR_FILE -p $REDPEN_PORT -L $REDPEN_LANGUAGE >> $REDPEN_LOG_FILE 2>&1 &
     exit 0
 elif [ $COMMAND = "stop" ]; then
     echo "stopping RedPen server" 1>&2
