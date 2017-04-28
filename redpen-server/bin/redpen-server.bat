@@ -24,6 +24,7 @@ set REDPEN_PORT=8080
 rem RedPen log file
 set REDPEN_LOG_DIR=%REDPEN_HOME%\logs
 set REDPEN_LOG_FILENAME=redpen.log
+set REDPEN_LANGUAGE=en
 
 rem RedPen configuration file
 rem NOTE: If you want to specify RedPen configuration file, please uncomment out the following line.
@@ -80,10 +81,10 @@ if ["%COMMAND%"] == ["start"] (
     echo starting RedPen server [Ctrl-C to stop]...
     if not exist "%REDPEN_CONF_FILE%" (
         echo starting RedPen server without specified configuration file...
-        "%JAVA_CMD%" -jar %JAVA_OPTS% "%REDPEN_WAR_FILE%" -p %REDPEN_PORT% >> "%REDPEN_LOG_FILE%"
+        "%JAVA_CMD%" -jar %JAVA_OPTS% "%REDPEN_WAR_FILE%" -p %REDPEN_PORT% -L %REDPEN_LANGUAGE% >> "%REDPEN_LOG_FILE%"
     ) else (
         echo starting RedPen server specifying a configuration file %REDPEN_CONF_FILE% ...
-        "%JAVA_CMD%" -jar %JAVA_OPTS% "%REDPEN_WAR_FILE%" -p %REDPEN_PORT% -c %REDPEN_CONF_FILE% >> "%REDPEN_LOG_FILE%"
+        "%JAVA_CMD%" -jar %JAVA_OPTS% "%REDPEN_WAR_FILE%" -p %REDPEN_PORT% -c %REDPEN_CONF_FILE% -L %REDPEN_LANGUAGE% >> "%REDPEN_LOG_FILE%"
     )
 ) else (
     echo Invalid command: %COMMAND%

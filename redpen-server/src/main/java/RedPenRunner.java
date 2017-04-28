@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.URL;
 import java.security.ProtectionDomain;
+import java.util.Locale;
 
 public class RedPenRunner {
 
@@ -54,6 +55,12 @@ public class RedPenRunner {
         OptionBuilder.withArgName("CONFIG_FILE");
         options.addOption(OptionBuilder.create("c"));
 
+        OptionBuilder.withLongOpt("lang");
+        OptionBuilder.withDescription("Language of error messages");
+        OptionBuilder.hasArg();
+        OptionBuilder.withArgName("LANGUAGE");
+        options.addOption(OptionBuilder.create("L"));
+
         CommandLineParser parser = new BasicParser();
         CommandLine commandLine = null;
 
@@ -65,7 +72,7 @@ public class RedPenRunner {
         }
 
         int portNum = 8080;
-
+        String language = "en";
         if (commandLine.hasOption("h")) {
             printHelp(options);
             System.exit(0);
@@ -77,10 +84,19 @@ public class RedPenRunner {
         if (commandLine.hasOption("p")) {
             portNum = Integer.parseInt(commandLine.getOptionValue("p"));
         }
-
+        if (commandLine.hasOption("L")) {
+            language = commandLine.getOptionValue("L");
+        }
         if (isPortTaken(portNum)) {
             System.err.println("port is taken...");
             System.exit(1);
+        }
+
+        // set language
+        if (language.equals("ja")) {
+            Locale.setDefault(new Locale("ja", "JA"));
+        }  else {
+            Locale.setDefault(new Locale("en", "EN"));
         }
 
         final String contextPath = System.getProperty("redpen.home", "/");
