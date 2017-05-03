@@ -1,0 +1,149 @@
+/**
+ * redpen: a text inspection tool
+ * Copyright (c) 2014-2015 Recruit Technologies Co., Ltd. and contributors
+ * (see CONTRIBUTORS.md)
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package cc.redpen.parser.rest;
+
+import cc.redpen.parser.PreprocessingReader;
+import cc.redpen.parser.common.Line;
+import cc.redpen.parser.common.LineParser;
+import cc.redpen.parser.common.Model;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.InputStream;
+
+import static cc.redpen.parser.rest.MultiLineProcessUtils.processMultiLineMatch;
+
+public class ReSTParser extends LineParser {
+    private static final Logger LOG = LoggerFactory.getLogger(ReSTParser.class);
+    /**
+     * current parser state
+     */
+    private class State {
+        // are we in a block
+        public boolean inBlock = false;
+        // are we in a list?
+        public boolean inList = false;
+        // are we in a table?
+        public boolean inTable = false;
+        // should we erase lines within the current block?
+        public boolean eraseBlock = true;
+        // the sort of block we are in
+        public String type;
+    }
+
+    @Override
+    protected void populateModel(Model model, InputStream io) {
+        State state = new State();
+        PreprocessingReader reader = createReader(io);
+        int lineno = 0;
+        try {
+            // add the lines to the model
+            while (true) {
+                String line = reader.readLine();
+                if (line == null) {
+                    break;
+                }
+                lineno++;
+                model.add(new ReSTLine(line, lineno));
+            }
+            reader.close();
+            model.setPreprocessorRules(reader.getPreprocessorRules());
+            for (model.rewind(); model.isMore(); model.getNextLine()) {
+                processLine(model.getCurrentLine(), model, state);
+            }
+        } catch (Exception e) {
+            LOG.error("Exception when parsing reST file", e);
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("reST parser model (X=erased line,[=block,section-listlevel-lineno,*=list item):\n" + model.toString());
+        }
+    }
+
+    private void processLine(Line line, Model model, State state) {
+        if (line.isErased()) { return; }
+
+        TargetLine target = new TargetLine(line,
+                model.getLine(line.getLineNo() - 1),
+                model.getLine(line.getLineNo() + 1));
+
+        // handle section
+        int level = extractSectionLevel(target);
+        if (level > 0) {line.setSectionLevel(level);}
+
+        // handle inline markups
+        this.eraseInlineMarkup(line);
+
+        // handle list (bullets, definition...)
+
+        // handle table (normal, csv)
+
+        // handle directives (image, raw, contents...)
+
+        // handle source codes
+
+        // handle comments
+    }
+
+    private int extractSectionLevel(TargetLine target) {
+        if (processMultiLineMatch('#', '#', target)) {
+            return 1;
+        } else if (processMultiLineMatch('*', '*', target)) {
+            return 2;
+        } else if (processMultiLineMatch('=', '=', target)) {
+            return 3;
+        } else if (processMultiLineMatch(null, '=', target)) {
+            return 4;
+        } else if (processMultiLineMatch('-', '-', target)) { // this is a subtitle?
+            return 0;
+        } else if (processMultiLineMatch(null, '-', target)) {
+            return 5;
+        } else if (processMultiLineMatch('~', '~', target)) {
+            return 6;
+        } else if (processMultiLineMatch(null, '~', target)) {
+            return 7;
+        } else if (processMultiLineMatch('^', '^', target)) {
+            return 8;
+        } else if (processMultiLineMatch(null, '^', target)) {
+            return 9;
+        }
+        return -1;
+    }
+
+    /**
+     * Erase all inline markup (bold, italics, special tokens etc)
+     *
+     * @param line
+     */
+    private void eraseInlineMarkup(Line line) {
+        // inline markup (bold, italics etc)
+        line.eraseEnclosure("：ref:`", "`", ReSTLine.EraseStyle.InlineMarkup); // inline cross section reference
+        line.eraseEnclosure("`", "`:sup:", ReSTLine.EraseStyle.InlineMarkup); // superscript
+        line.eraseEnclosure("`", "`sub:", ReSTLine.EraseStyle.InlineMarkup); // subscript
+
+        line.eraseEnclosure("*", "*", ReSTLine.EraseStyle.InlineMarkup); // emphasis
+        line.eraseEnclosure("**", "**", ReSTLine.EraseStyle.InlineMarkup); // strong emphasis
+        line.eraseEnclosure("`", "`", ReSTLine.EraseStyle.InlineMarkup); // interpreted text
+        line.eraseEnclosure("``", "``", ReSTLine.EraseStyle.InlineMarkup); // inline literal
+        line.eraseEnclosure("`", "`_", ReSTLine.EraseStyle.InlineMarkup); //phrase reference
+        line.eraseEnclosure("_`", "`", ReSTLine.EraseStyle.InlineMarkup); // inline literal target
+        line.eraseEnclosure("[", "]_", ReSTLine.EraseStyle.InlineMarkup); // footnote reference
+        line.eraseEnclosure("|", "|", ReSTLine.EraseStyle.InlineMarkup); // inline figure
+
+        // FIXME: inline annotation with reference_ and anonymous__ not covered yet.
+    }
+}

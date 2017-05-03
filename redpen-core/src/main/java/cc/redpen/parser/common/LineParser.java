@@ -33,7 +33,7 @@ public abstract class LineParser extends BaseDocumentParser {
     /**
      * Target line of parser
      */
-    public class TargetLine {
+    static public class TargetLine {
         // target line
         public Line line;
         // previous line of target line
