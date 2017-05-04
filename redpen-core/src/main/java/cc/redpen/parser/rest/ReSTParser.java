@@ -37,6 +37,7 @@ public class ReSTParser extends LineParser {
     static Pattern NORMAL_TABLE_PATTERN = Pattern.compile("^[+][-+]+[+]$");
     static Pattern CSV_TABLE_PATTERN = Pattern.compile("^=+[= ]+=$");
     static Pattern DIRECTIVE_PATTERN = Pattern.compile("^[.][.] [a-z]+::");
+    static Pattern INLINE_COMMENT_PATTERN = Pattern.compile("^[.][.] [^\\[][^:]+$");
 
     /**
      * current parser state
@@ -48,6 +49,8 @@ public class ReSTParser extends LineParser {
         public boolean inDirective = false;
         // are we in a list?
         public boolean inList = false;
+        // are we in a comment?
+        public boolean inComment;
         // should we erase lines within the current block?
         public boolean eraseDirective = true;
         // the sort of directives we are in
@@ -99,14 +102,21 @@ public class ReSTParser extends LineParser {
         if (!state.inDirective && isListElement(target, state)) { state.inList = true; }
 
         // handle table (normal, csv)
-        if (isTable(target, state)) { state.inTable = true; }
+        if (!state.inDirective && isTable(target, state)) { state.inTable = true; }
 
         // handle directives (image, raw, contents...)
         if (isDirective(target, state)) { state.inDirective = true; }
 
-        // handle source codes
+        // handle source codes (literal blocks)
 
         // handle comments
+        if (isComment(target, state)) { state.inComment = true; }
+
+        // handle block quotes
+
+        // handle line blocks
+
+        // handle footnotes
 
         // a blank line will reset any blocks element we are in
         if (isEndBlock(target)) { reset(state); }
@@ -116,6 +126,28 @@ public class ReSTParser extends LineParser {
         if (target.line.length() == 0 &&
                 ((target.nextLine.charAt(0) != ' ' && target.nextLine.charAt(1) != ' ')
                         && target.nextLine.charAt(0) != '\t')) { // not continue indent in the next line
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isComment(TargetLine target, State state) {
+        Line line = target.line;
+        // check if in comment?
+        if (state.inComment) {
+            line.erase();
+            return true;
+        }
+
+        // check if inline comment start?
+        Matcher m = INLINE_COMMENT_PATTERN.matcher(target.line.getText());
+        if (m.find()) {
+            target.line.erase();
+            return true;
+        }
+
+        // check if block comment start?
+        if (line.length() == 2 && (line.charAt(0) == '.' && line.charAt(1) == '.')) {
             return true;
         }
         return false;
@@ -143,6 +175,7 @@ public class ReSTParser extends LineParser {
         state.inDirective = false;
         state.inTable = false;
         state.eraseDirective = false;
+        state.inComment = false;
         state.type = "";
     }
 
@@ -212,7 +245,7 @@ public class ReSTParser extends LineParser {
         if (
                 (line.charAt(0) != ' ' && line.charAt(1) != ' ' && line.charAt(0) != '\t') && // not start from indents
                 (line.charAt(line.length() - 1) != ':' && line.charAt(line.length() - 2) != ':') && // not source code
-                (nextLine.charAt(0) == ' ' && (nextLine.charAt(1) == ' ') || nextLine.charAt(0) == '\t') // have indentation in next line
+                        (nextLine.charAt(0) == ' ' && (nextLine.charAt(1) == ' ') || nextLine.charAt(0) == '\t') // have indentation in next line
                 )
         {
             line.erase();

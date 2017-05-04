@@ -239,7 +239,8 @@ public class ReSTParserTest {
     public void testDirectives() {
         String sampleText = "Before directive.\n";
         sampleText += "\n";
-        sampleText += ".. code-block:: python\n" +
+        sampleText +=
+                ".. code-block:: python\n" +
                 "   :emphasize-lines: 4,5\n" +
                 "\n" +
                 "   def function():\n" +
@@ -258,6 +259,28 @@ public class ReSTParserTest {
         assertEquals("Before directive.", section.getParagraph(0).getSentence(0).getContent());
         assertEquals(1, section.getParagraph(1).getNumberOfSentences());
         assertEquals("Finished a directive yay!", section.getParagraph(1).getSentence(0).getContent());
+    }
+
+    @Test
+    public void testComments() {
+        String sampleText = "Before comments.\n";
+        sampleText += "\n";
+        sampleText +=
+                ".. This is a comment.\n" +
+                "   And still this is also a comment.\n" +
+                "\n" +
+                "Finished a comment yay!";
+
+        Document doc = createFileContent(sampleText);
+        assertNotNull("doc is null", doc);
+        assertEquals(1, doc.size());
+
+        Section section = doc.getSection(0);
+        assertEquals(2, section.getParagraphs().size());
+        assertEquals(1, section.getParagraph(0).getNumberOfSentences());
+        assertEquals("Before comments.", section.getParagraph(0).getSentence(0).getContent());
+        assertEquals(1, section.getParagraph(1).getNumberOfSentences());
+        assertEquals("Finished a comment yay!", section.getParagraph(1).getSentence(0).getContent());
     }
 
     private Document createFileContent(String inputDocumentString) {
