@@ -45,12 +45,10 @@ public class ReSTParser extends LineParser {
     private class State {
         // are we in table
         public boolean inTable = false;
-        // are we in a block
-        public boolean inDirective = false;
+        // are we in a block such as directives, comments and so on
+        public boolean inBlock = false;
         // are we in a list?
         public boolean inList = false;
-        // are we in a comment?
-        public boolean inComment;
         // should we erase lines within the current block?
         public boolean eraseDirective = true;
         // the sort of directives we are in
@@ -99,18 +97,18 @@ public class ReSTParser extends LineParser {
         this.eraseInlineMarkup(line);
 
         // handle list (bullets, definition...)
-        if (!state.inDirective && isListElement(target, state)) { state.inList = true; }
+        if (!state.inBlock && isListElement(target, state)) { state.inList = true; }
 
         // handle table (normal, csv)
-        if (!state.inDirective && isTable(target, state)) { state.inTable = true; }
+        if (!state.inBlock && isTable(target, state)) { state.inTable = true; }
 
         // handle directives (image, raw, contents...)
-        if (isDirective(target, state)) { state.inDirective = true; }
+        if (isDirective(target, state)) { state.inBlock = true; }
 
         // handle source codes (literal blocks)
 
         // handle comments
-        if (isComment(target, state)) { state.inComment = true; }
+        if (isComment(target, state)) { state.inBlock = true; }
 
         // handle block quotes
 
@@ -134,7 +132,7 @@ public class ReSTParser extends LineParser {
     private boolean isComment(TargetLine target, State state) {
         Line line = target.line;
         // check if in comment?
-        if (state.inComment) {
+        if (state.inBlock) {
             line.erase();
             return true;
         }
@@ -156,7 +154,7 @@ public class ReSTParser extends LineParser {
     private boolean isDirective(TargetLine target, State state) {
         Line line = target.line;
         // check if in directive?
-        if (state.inDirective) {
+        if (state.inBlock) {
             line.erase();
             return true;
         }
@@ -172,10 +170,9 @@ public class ReSTParser extends LineParser {
 
     private void reset(State state) {
         state.inList = false;
-        state.inDirective = false;
+        state.inBlock = false;
         state.inTable = false;
         state.eraseDirective = false;
-        state.inComment = false;
         state.type = "";
     }
 
