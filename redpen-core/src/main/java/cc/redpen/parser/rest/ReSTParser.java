@@ -106,18 +106,26 @@ public class ReSTParser extends LineParser {
         if (isDirective(target, state)) { state.inBlock = true; }
 
         // handle source codes (literal blocks)
+        if (isLiteral(target, state)) { state.inBlock = true; }
 
         // handle comments
         if (isComment(target, state)) { state.inBlock = true; }
 
-        // handle block quotes
-
-        // handle line blocks
+        // handle line block
+        handlelineBlock(line); //NOTE: line block does not effect upcoming lines
 
         // handle footnotes
 
         // a blank line will reset any blocks element we are in
         if (isEndBlock(target)) { reset(state); }
+    }
+
+    private void handlelineBlock(Line line) {
+        if (line.charAt(0) == '|' && line.charAt(1) == ' ') {
+            line.erase();
+        } else if (line.startsWith(">>>")) {
+            line.erase();
+        }
     }
 
     private boolean isEndBlock(TargetLine target) {
@@ -128,6 +136,23 @@ public class ReSTParser extends LineParser {
         }
         return false;
     }
+
+    private boolean isLiteral(TargetLine target, State state) {
+        Line line = target.line;
+        // check if in comment?
+        if (state.inBlock) {
+            line.erase();
+            return true;
+        }
+
+        // check if block comment start?
+        if (line.length() == 2 && (line.charAt(0) == ':' && line.charAt(1) == ':')
+                && target.nextLine.length() == 0) {
+            return true;
+        }
+        return false;
+    }
+
 
     private boolean isComment(TargetLine target, State state) {
         Line line = target.line;

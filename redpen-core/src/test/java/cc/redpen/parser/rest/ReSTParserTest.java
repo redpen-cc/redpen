@@ -283,6 +283,51 @@ public class ReSTParserTest {
         assertEquals("Finished a comment yay!", section.getParagraph(1).getSentence(0).getContent());
     }
 
+    @Test
+    public void testLiterals() {
+        String sampleText = "Before literals.\n";
+        sampleText += "\n";
+        sampleText += "::\n" +
+                "\n" +
+                "   This is in a literal block.\n" +
+                "\n" +
+                "Finished a literal yay!";
+
+        Document doc = createFileContent(sampleText);
+        assertNotNull("doc is null", doc);
+        assertEquals(1, doc.size());
+
+        Section section = doc.getSection(0);
+        assertEquals(2, section.getParagraphs().size());
+        assertEquals(1, section.getParagraph(0).getNumberOfSentences());
+        assertEquals("Before literals.", section.getParagraph(0).getSentence(0).getContent());
+        assertEquals(1, section.getParagraph(1).getNumberOfSentences());
+        assertEquals("Finished a literal yay!", section.getParagraph(1).getSentence(0).getContent());
+    }
+
+    @Test
+    public void testLineBlock() {
+        String sampleText = "Before line block.\n";
+        sampleText += "\n";
+        sampleText += "::\n" +
+                "\n" +
+                "| This is in a line block.\n" +
+                "| This is also in a line block.\n" +
+                "\n" +
+                "Finished a line block yay!";
+
+        Document doc = createFileContent(sampleText);
+        assertNotNull("doc is null", doc);
+        assertEquals(1, doc.size());
+
+        Section section = doc.getSection(0);
+        assertEquals(2, section.getParagraphs().size());
+        assertEquals(1, section.getParagraph(0).getNumberOfSentences());
+        assertEquals("Before line block.", section.getParagraph(0).getSentence(0).getContent());
+        assertEquals(1, section.getParagraph(1).getNumberOfSentences());
+        assertEquals("Finished a line block yay!", section.getParagraph(1).getSentence(0).getContent());
+    }
+
     private Document createFileContent(String inputDocumentString) {
         DocumentParser parser = DocumentParser.REST;
         Document doc = null;
