@@ -36,6 +36,7 @@ public class ReSTParser extends LineParser {
     static Pattern DIGIT_PATTERN = Pattern.compile("^\\s*[0-9#]+\\.");
     static Pattern NORMAL_TABLE_PATTERN = Pattern.compile("^[+][-+]+[+]$");
     static Pattern CSV_TABLE_PATTERN = Pattern.compile("^=+[= ]+=$");
+    static Pattern DIRECTIVE_PATTERN = Pattern.compile("^[.][.] [a-z]+::");
 
     /**
      * current parser state
@@ -101,16 +102,40 @@ public class ReSTParser extends LineParser {
         if (isTable(target, state)) { state.inTable = true; }
 
         // handle directives (image, raw, contents...)
+        if (isDirective(target, state)) { state.inDirective = true; }
 
         // handle source codes
 
         // handle comments
 
-        // a blank line will any blocks element we are in
-        if (line.length()== 0) {
-            reset(state);
-            line.setListLevel(0);
+        // a blank line will reset any blocks element we are in
+        if (isEndBlock(target)) { reset(state); }
+    }
+
+    private boolean isEndBlock(TargetLine target) {
+        if (target.line.length() == 0 &&
+                ((target.nextLine.charAt(0) != ' ' && target.nextLine.charAt(1) != ' ')
+                        && target.nextLine.charAt(0) != '\t')) { // not continue indent in the next line
+            return true;
         }
+        return false;
+    }
+
+    private boolean isDirective(TargetLine target, State state) {
+        Line line = target.line;
+        // check if in directive?
+        if (state.inDirective) {
+            line.erase();
+            return true;
+        }
+
+        // check if start directive?
+        Matcher m = DIRECTIVE_PATTERN.matcher(target.line.getText());
+        if (m.find()) {
+            target.line.erase();
+            return true;
+        }
+        return false;
     }
 
     private void reset(State state) {
@@ -195,7 +220,7 @@ public class ReSTParser extends LineParser {
         }
 
         // handling list contents
-        if (state.inList && ((line.charAt(0) == ' ' && line.charAt(1) == ' ')  || (line.charAt(0) == '\n'))) {
+        if (state.inList && ((line.charAt(0) == ' ' && line.charAt(1) == ' ')  || (line.charAt(0) == '\t'))) {
             line.setListLevel(1);
             line.setListStart(true);
             int spacePos = 0;

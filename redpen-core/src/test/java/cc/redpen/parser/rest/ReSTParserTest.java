@@ -235,6 +235,31 @@ public class ReSTParserTest {
         assertEquals("Finished table yay!", section.getParagraph(1).getSentence(0).getContent());
     }
 
+    @Test
+    public void testDirectives() {
+        String sampleText = "Before directive.\n";
+        sampleText += "\n";
+        sampleText += ".. code-block:: python\n" +
+                "   :emphasize-lines: 4,5\n" +
+                "\n" +
+                "   def function():\n" +
+                "       interesting = True\n" +
+                "       print('This is a very important function.')\n" +
+                "\n" +
+                "Finished a directive yay!";
+
+        Document doc = createFileContent(sampleText);
+        assertNotNull("doc is null", doc);
+        assertEquals(1, doc.size());
+
+        Section section = doc.getSection(0);
+        assertEquals(2, section.getParagraphs().size());
+        assertEquals(1, section.getParagraph(0).getNumberOfSentences());
+        assertEquals("Before directive.", section.getParagraph(0).getSentence(0).getContent());
+        assertEquals(1, section.getParagraph(1).getNumberOfSentences());
+        assertEquals("Finished a directive yay!", section.getParagraph(1).getSentence(0).getContent());
+    }
+
     private Document createFileContent(String inputDocumentString) {
         DocumentParser parser = DocumentParser.REST;
         Document doc = null;
