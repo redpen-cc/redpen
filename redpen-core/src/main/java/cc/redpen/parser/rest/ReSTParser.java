@@ -34,20 +34,22 @@ public class ReSTParser extends LineParser {
     private static final Logger LOG = LoggerFactory.getLogger(ReSTParser.class);
 
     static Pattern DIGIT_PATTERN = Pattern.compile("^\\s*[0-9#]+\\.");
+    static Pattern NORMAL_TABLE_PATTERN = Pattern.compile("^[+][-+]+[+]$");
+    static Pattern CSV_TABLE_PATTERN = Pattern.compile("^=+[= ]+=$");
 
     /**
      * current parser state
      */
     private class State {
+        // are we in table
+        public boolean inTable = false;
         // are we in a block
         public boolean inDirective = false;
         // are we in a list?
         public boolean inList = false;
-        // are we in a table?
-        public boolean inTable = false;
         // should we erase lines within the current block?
-        public boolean eraseBlock = true;
-        // the sort of block we are in
+        public boolean eraseDirective = true;
+        // the sort of directives we are in
         public String type;
     }
 
@@ -93,11 +95,10 @@ public class ReSTParser extends LineParser {
         this.eraseInlineMarkup(line);
 
         // handle list (bullets, definition...)
-        if (!state.inDirective && isListElement(target, state)) {
-            state.inList = true;
-        }
+        if (!state.inDirective && isListElement(target, state)) { state.inList = true; }
 
         // handle table (normal, csv)
+        if (isTable(target, state)) { state.inTable = true; }
 
         // handle directives (image, raw, contents...)
 
@@ -105,12 +106,53 @@ public class ReSTParser extends LineParser {
 
         // handle comments
 
-        // a blank line will cancel any list element we are in
-        if (state.inList && (line.length() == 0)) {
-            state.inList = false;
+        // a blank line will any blocks element we are in
+        if (line.length()== 0) {
+            reset(state);
             line.setListLevel(0);
         }
     }
+
+    private void reset(State state) {
+        state.inList = false;
+        state.inDirective = false;
+        state.inTable = false;
+        state.eraseDirective = false;
+        state.type = "";
+    }
+
+    private boolean isTable(TargetLine target, State state) {
+        Line line = target.line;
+        if (state.inTable) {
+            line.erase();
+            return true;
+        }
+
+        if (isNormalTable(target, state)) return true;
+        if (isCSVTable(target, state)) return true;
+        return false;
+    }
+
+    private boolean isNormalTable(TargetLine target, State state) {
+        // start of normal table
+        Matcher m = NORMAL_TABLE_PATTERN.matcher(target.line.getText());
+        if (m.find()) {
+            target.line.erase();
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isCSVTable(TargetLine target, State state) {
+        // start of csv table
+        Matcher m = CSV_TABLE_PATTERN.matcher(target.line.getText());
+        if (m.find()) {
+            target.line.erase();
+            return true;
+        }
+        return false;
+    }
+
 
     // FIXME: current implmentation does not extract list level...
     private boolean isListElement(TargetLine line, State state) {

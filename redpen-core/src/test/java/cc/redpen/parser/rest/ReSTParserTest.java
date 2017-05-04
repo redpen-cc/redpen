@@ -183,6 +183,57 @@ public class ReSTParserTest {
         assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).getStartPositionOffset());
     }
 
+    @Test
+    public void testNormalTables() {
+        String sampleText = "Before table.\n";
+        sampleText += "\n";
+        sampleText += "+------------------------+------------+----------+----------+\n" +
+                "| Header row, column 1   | Header 2   | Header 3 | Header 4 |\n" +
+                "| (header rows optional) |            |          |          |\n" +
+                "+========================+============+==========+==========+\n" +
+                "| body row 1, column 1   | column 2   | column 3 | column 4 |\n" +
+                "+------------------------+------------+----------+----------+\n" +
+                "| body row 2             | ...        | ...      |          |\n" +
+                "+------------------------+------------+----------+----------+\n" +
+                "\n" +
+                "Finished table yay!";
+
+        Document doc = createFileContent(sampleText);
+        assertNotNull("doc is null", doc);
+        assertEquals(1, doc.size());
+
+        Section section = doc.getSection(0);
+        assertEquals(2, section.getParagraphs().size());
+        assertEquals(1, section.getParagraph(0).getNumberOfSentences());
+        assertEquals("Before table.", section.getParagraph(0).getSentence(0).getContent());
+        assertEquals(1, section.getParagraph(1).getNumberOfSentences());
+        assertEquals("Finished table yay!", section.getParagraph(1).getSentence(0).getContent());
+    }
+
+    @Test
+    public void testCSVTables() {
+        String sampleText = "Before table.\n";
+        sampleText += "\n";
+        sampleText += "=====  =====  =======\n" +
+                      "A      B      A and B\n" +
+                      "=====  =====  =======\n" +
+                      "False  False  False\n" +
+                      "True   False  False\n" +
+                      "=====  =====  =======\n" +
+                      "\n" +
+                      "Finished table yay!";
+
+        Document doc = createFileContent(sampleText);
+        assertNotNull("doc is null", doc);
+        assertEquals(1, doc.size());
+
+        Section section = doc.getSection(0);
+        assertEquals(2, section.getParagraphs().size());
+        assertEquals(1, section.getParagraph(0).getNumberOfSentences());
+        assertEquals("Before table.", section.getParagraph(0).getSentence(0).getContent());
+        assertEquals(1, section.getParagraph(1).getNumberOfSentences());
+        assertEquals("Finished table yay!", section.getParagraph(1).getSentence(0).getContent());
+    }
 
     private Document createFileContent(String inputDocumentString) {
         DocumentParser parser = DocumentParser.REST;
