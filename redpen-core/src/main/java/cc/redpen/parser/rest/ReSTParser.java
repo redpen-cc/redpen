@@ -25,17 +25,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static cc.redpen.parser.rest.MultiLineProcessUtils.processMultiLineMatch;
 
 public class ReSTParser extends LineParser {
     private static final Logger LOG = LoggerFactory.getLogger(ReSTParser.class);
+
+    static Pattern DIGIT_PATTERN = Pattern.compile("^\\s*[0-9#]+\\.");
+
     /**
      * current parser state
      */
     private class State {
         // are we in a block
-        public boolean inBlock = false;
+        public boolean inDirective = false;
         // are we in a list?
         public boolean inList = false;
         // are we in a table?
@@ -76,7 +81,6 @@ public class ReSTParser extends LineParser {
 
     private void processLine(Line line, Model model, State state) {
         if (line.isErased()) { return; }
-
         TargetLine target = new TargetLine(line,
                 model.getLine(line.getLineNo() - 1),
                 model.getLine(line.getLineNo() + 1));
@@ -89,6 +93,9 @@ public class ReSTParser extends LineParser {
         this.eraseInlineMarkup(line);
 
         // handle list (bullets, definition...)
+        if (!state.inDirective && isListElement(target, state)) {
+            state.inList = true;
+        }
 
         // handle table (normal, csv)
 
@@ -97,6 +104,83 @@ public class ReSTParser extends LineParser {
         // handle source codes
 
         // handle comments
+
+        // a blank line will cancel any list element we are in
+        if (state.inList && (line.length() == 0)) {
+            state.inList = false;
+            line.setListLevel(0);
+        }
+    }
+
+    // FIXME: current implmentation does not extract list level...
+    private boolean isListElement(TargetLine line, State state) {
+        if (isNormalList(line, state)) return true;
+        if (isDigitList(line, state)) return true;
+        if (isDefinitionList(line, state)) return true;
+        return false;
+    }
+
+    private boolean isNormalList(TargetLine target, State state) {
+        Line line = target.line;
+        int spacePos = 0;
+        while(' ' == line.charAt(spacePos)) { spacePos++; }
+        if (line.charAt(spacePos) == '*') {
+            line.setListLevel(1);
+            line.setListStart(true);
+            line.erase(0, spacePos+1);
+            while (Character.isWhitespace(line.charAt(++spacePos))) {
+                line.erase(spacePos, 1);
+                spacePos++;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isDefinitionList(TargetLine target, State state) {
+        Line line = target.line;
+        Line nextLine = target.nextLine;
+
+        // handling block tag
+        if (
+                (line.charAt(0) != ' ' && line.charAt(1) != ' ' && line.charAt(0) != '\t') && // not start from indents
+                (line.charAt(line.length() - 1) != ':' && line.charAt(line.length() - 2) != ':') && // not source code
+                (nextLine.charAt(0) == ' ' && (nextLine.charAt(1) == ' ') || nextLine.charAt(0) == '\t') // have indentation in next line
+                )
+        {
+            line.erase();
+            return true;
+        }
+
+        // handling list contents
+        if (state.inList && ((line.charAt(0) == ' ' && line.charAt(1) == ' ')  || (line.charAt(0) == '\n'))) {
+            line.setListLevel(1);
+            line.setListStart(true);
+            int spacePos = 0;
+            while (Character.isWhitespace(line.charAt(spacePos))) {
+                line.erase(spacePos, 1);
+                spacePos++;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isDigitList(TargetLine target, State state) {
+        Line line = target.line;
+        Matcher m = DIGIT_PATTERN.matcher(target.line.getText());
+        if (m.find()) {
+            line.setListLevel(1);
+            line.setListStart(true);
+            int dotPos = target.line.getText().indexOf(".");
+            line.erase(0, ++dotPos);
+            while (Character.isWhitespace(target.line.charAt(dotPos))) {
+                line.erase(dotPos, 1);
+                dotPos++;
+            }
+            return true;
+        }
+        return false;
     }
 
     private int extractSectionLevel(TargetLine target) {

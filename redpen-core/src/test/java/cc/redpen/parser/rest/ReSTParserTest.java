@@ -30,7 +30,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 public class ReSTParserTest {
-
     @Test
     public void testSections() {
         String sampleText = "" +
@@ -69,6 +68,122 @@ public class ReSTParserTest {
         assertEquals("blah blah blah", thirdSection.getParagraph(0).getSentence(0).getContent());
     }
 
+
+    @Test
+    public void testLists() {
+        String sampleText = "There are several railway companies in Japan as follows.\n";
+        sampleText += "\n";
+        sampleText += "* Tokyu\n";
+        sampleText += "  * Toyoko Line\n";
+        sampleText += "  * Denentoshi Line\n";
+        sampleText += "* Keio\n";
+        sampleText += "  * Odakyu\n";
+
+        Document doc = createFileContent(sampleText);
+        assertNotNull("doc is null", doc);
+        assertEquals(1, doc.size());
+
+        assertEquals(5, doc.getSection(0).getListBlock(0).getNumberOfListElements());
+        assertEquals("Tokyu", doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).getContent());
+        assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(0).getLevel());
+        assertEquals(3, doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).getLineNumber());
+        assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).getStartPositionOffset());
+
+        assertEquals("Toyoko Line", doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).getContent());
+        assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(1).getLevel());
+        assertEquals(4, doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).getLineNumber());
+        assertEquals(4, doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).getStartPositionOffset());
+
+        assertEquals("Denentoshi Line", doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).getContent());
+        assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(2).getLevel());
+        assertEquals(5, doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).getLineNumber());
+        assertEquals(4, doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).getStartPositionOffset());
+
+        assertEquals("Keio", doc.getSection(0).getListBlock(0).getListElement(3).getSentence(0).getContent());
+        assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(3).getLevel());
+        assertEquals(6, doc.getSection(0).getListBlock(0).getListElement(3).getSentence(0).getLineNumber());
+        assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(3).getSentence(0).getStartPositionOffset());
+
+        assertEquals("Odakyu", doc.getSection(0).getListBlock(0).getListElement(4).getSentence(0).getContent());
+        assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(4).getLevel());
+        assertEquals(7, doc.getSection(0).getListBlock(0).getListElement(4).getSentence(0).getLineNumber());
+        assertEquals(4, doc.getSection(0).getListBlock(0).getListElement(4).getSentence(0).getStartPositionOffset());
+    }
+
+    @Test
+    public void testNumberedLists() {
+        String sampleText = "There are several railway companies in Japan as follows.\n";
+        sampleText += "\n";
+        sampleText += "1. Tokyu\n";
+        sampleText += "  1. Toyoko Line\n";
+        sampleText += "  2. Denentoshi Line\n";
+        sampleText += "1. Keio\n";
+        sampleText += "  1. Odakyu\n";
+
+        Document doc = createFileContent(sampleText);
+        assertNotNull("doc is null", doc);
+        assertEquals(1, doc.size());
+
+        assertEquals(5, doc.getSection(0).getListBlock(0).getNumberOfListElements());
+        assertEquals("Tokyu", doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).getContent());
+        assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(0).getLevel());
+        assertEquals(3, doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).getLineNumber());
+        assertEquals(3, doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).getStartPositionOffset());
+
+        assertEquals("Toyoko Line", doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).getContent());
+        assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(1).getLevel());
+        assertEquals(4, doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).getLineNumber());
+        assertEquals(5, doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).getStartPositionOffset());
+
+        assertEquals("Denentoshi Line", doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).getContent());
+        assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(2).getLevel());
+        assertEquals(5, doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).getLineNumber());
+        assertEquals(5, doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).getStartPositionOffset());
+
+        assertEquals("Keio", doc.getSection(0).getListBlock(0).getListElement(3).getSentence(0).getContent());
+        assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(3).getLevel());
+        assertEquals(6, doc.getSection(0).getListBlock(0).getListElement(3).getSentence(0).getLineNumber());
+        assertEquals(3, doc.getSection(0).getListBlock(0).getListElement(3).getSentence(0).getStartPositionOffset());
+
+        assertEquals("Odakyu", doc.getSection(0).getListBlock(0).getListElement(4).getSentence(0).getContent());
+        assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(4).getLevel());
+        assertEquals(7, doc.getSection(0).getListBlock(0).getListElement(4).getSentence(0).getLineNumber());
+        assertEquals(5, doc.getSection(0).getListBlock(0).getListElement(4).getSentence(0).getStartPositionOffset());
+    }
+
+    @Test
+    public void testDefinitionLists() {
+        String sampleText = "There are several railway companies in Japan as follows.\n";
+        sampleText += "\n";
+        sampleText += "Tokyu\n";
+        sampleText += "  Toyoko Line\n";
+        sampleText += "  Denentoshi Line\n";
+        sampleText += "\n";
+        sampleText += "Keio\n";
+        sampleText += "  Odakyu\n";
+
+        Document doc = createFileContent(sampleText);
+        assertNotNull("doc is null", doc);
+        assertEquals(1, doc.size());
+        assertEquals(3, doc.getSection(0).getListBlock(0).getNumberOfListElements());
+
+        assertEquals("Toyoko Line", doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).getContent());
+        assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(0).getLevel());
+        assertEquals(4, doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).getLineNumber());
+        assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(0).getSentence(0).getStartPositionOffset());
+
+        assertEquals("Denentoshi Line", doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).getContent());
+        assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(1).getLevel());
+        assertEquals(5, doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).getLineNumber());
+        assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(1).getSentence(0).getStartPositionOffset());
+
+        assertEquals("Odakyu", doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).getContent());
+        assertEquals(1, doc.getSection(0).getListBlock(0).getListElement(2).getLevel());
+        assertEquals(8, doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).getLineNumber());
+        assertEquals(2, doc.getSection(0).getListBlock(0).getListElement(2).getSentence(0).getStartPositionOffset());
+    }
+
+
     private Document createFileContent(String inputDocumentString) {
         DocumentParser parser = DocumentParser.REST;
         Document doc = null;
@@ -84,6 +199,4 @@ public class ReSTParserTest {
         }
         return doc;
     }
-
-
 }
