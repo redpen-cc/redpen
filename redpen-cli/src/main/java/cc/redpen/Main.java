@@ -247,6 +247,9 @@ public final class Main {
                 return "review";
             case "properties":
                 return "propery";
+            case "rst":
+            case "rest":
+                return "rest";
             default:
                 LOG.info("No such file extension as \"{}\"", ext);
                 return "plain";

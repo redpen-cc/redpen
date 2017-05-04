@@ -89,7 +89,7 @@ public interface DocumentParser {
                 put("ASCIIDOC", ASCIIDOC);
                 put("PROPERTIES", PROPERTIES);
                 put("REVIEW", REVIEW);
-                put("REST", REVIEW);
+                put("REST", REST);
             }
         });
 

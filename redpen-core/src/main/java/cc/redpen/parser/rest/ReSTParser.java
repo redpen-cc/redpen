@@ -91,7 +91,10 @@ public class ReSTParser extends LineParser {
 
         // handle section
         int level = extractSectionLevel(target);
-        if (level > 0) {line.setSectionLevel(level);}
+        if (level > 0) {
+            line.setSectionLevel(level);
+            reset(state);
+        }
 
         // handle inline markups
         this.eraseInlineMarkup(line);
@@ -118,6 +121,9 @@ public class ReSTParser extends LineParser {
 
         // a blank line will reset any blocks element we are in
         if (isEndBlock(target)) { reset(state); }
+
+        // lines in block is not checked
+        if (state.inBlock) { line.erase();  }
     }
 
     private void handlelineBlock(Line line) {
@@ -139,13 +145,6 @@ public class ReSTParser extends LineParser {
 
     private boolean isLiteral(TargetLine target, State state) {
         Line line = target.line;
-        // check if in comment?
-        if (state.inBlock) {
-            line.erase();
-            return true;
-        }
-
-        // check if block comment start?
         if (line.length() == 2 && (line.charAt(0) == ':' && line.charAt(1) == ':')
                 && target.nextLine.length() == 0) {
             return true;
@@ -153,14 +152,8 @@ public class ReSTParser extends LineParser {
         return false;
     }
 
-
     private boolean isComment(TargetLine target, State state) {
         Line line = target.line;
-        // check if in comment?
-        if (state.inBlock) {
-            line.erase();
-            return true;
-        }
 
         // check if inline comment start?
         Matcher m = INLINE_COMMENT_PATTERN.matcher(target.line.getText());
@@ -177,14 +170,6 @@ public class ReSTParser extends LineParser {
     }
 
     private boolean isDirective(TargetLine target, State state) {
-        Line line = target.line;
-        // check if in directive?
-        if (state.inBlock) {
-            line.erase();
-            return true;
-        }
-
-        // check if start directive?
         Matcher m = DIRECTIVE_PATTERN.matcher(target.line.getText());
         if (m.find()) {
             target.line.erase();
@@ -214,7 +199,6 @@ public class ReSTParser extends LineParser {
     }
 
     private boolean isNormalTable(TargetLine target, State state) {
-        // start of normal table
         Matcher m = NORMAL_TABLE_PATTERN.matcher(target.line.getText());
         if (m.find()) {
             target.line.erase();
@@ -224,7 +208,6 @@ public class ReSTParser extends LineParser {
     }
 
     private boolean isCSVTable(TargetLine target, State state) {
-        // start of csv table
         Matcher m = CSV_TABLE_PATTERN.matcher(target.line.getText());
         if (m.find()) {
             target.line.erase();
@@ -337,15 +320,14 @@ public class ReSTParser extends LineParser {
      */
     private void eraseInlineMarkup(Line line) {
         // inline markup (bold, italics etc)
-        line.eraseEnclosure("：ref:`", "`", ReSTLine.EraseStyle.InlineMarkup); // inline cross section reference
+        line.eraseEnclosure(":ref:`", "`", ReSTLine.EraseStyle.InlineMarkup); // inline cross section reference
         line.eraseEnclosure("`", "`:sup:", ReSTLine.EraseStyle.InlineMarkup); // superscript
         line.eraseEnclosure("`", "`sub:", ReSTLine.EraseStyle.InlineMarkup); // subscript
-
         line.eraseEnclosure("*", "*", ReSTLine.EraseStyle.InlineMarkup); // emphasis
         line.eraseEnclosure("**", "**", ReSTLine.EraseStyle.InlineMarkup); // strong emphasis
         line.eraseEnclosure("`", "`", ReSTLine.EraseStyle.InlineMarkup); // interpreted text
         line.eraseEnclosure("``", "``", ReSTLine.EraseStyle.InlineMarkup); // inline literal
-        line.eraseEnclosure("`", "`_", ReSTLine.EraseStyle.InlineMarkup); //phrase reference
+        line.eraseEnclosure("`", "`_", ReSTLine.EraseStyle.InlineMarkup); // phrase reference
         line.eraseEnclosure("_`", "`", ReSTLine.EraseStyle.InlineMarkup); // inline literal target
         line.eraseEnclosure("[", "]_", ReSTLine.EraseStyle.InlineMarkup); // footnote reference
         line.eraseEnclosure("|", "|", ReSTLine.EraseStyle.InlineMarkup); // inline figure
