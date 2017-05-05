@@ -38,6 +38,7 @@ public class ReSTParser extends LineParser {
     static Pattern CSV_TABLE_PATTERN = Pattern.compile("^=+[= ]+=$");
     static Pattern DIRECTIVE_PATTERN = Pattern.compile("^[.][.] [a-z]+::");
     static Pattern INLINE_COMMENT_PATTERN = Pattern.compile("^[.][.] [^\\[][^:]+$");
+    static Pattern FOOTNOTE_PATTERN = Pattern.compile("^[.][.] \\[.+\\].+");
 
     /**
      * current parser state
@@ -118,12 +119,20 @@ public class ReSTParser extends LineParser {
         handlelineBlock(line); //NOTE: line block does not effect upcoming lines
 
         // handle footnotes
+        handleFootnote(line);
 
         // a blank line will reset any blocks element we are in
         if (isEndBlock(target)) { reset(state); }
 
         // lines in block is not checked
         if (state.inBlock) { line.erase();  }
+    }
+
+    private void handleFootnote(Line line) {
+        Matcher m = FOOTNOTE_PATTERN.matcher(line.getText());
+        if (m.find()) {
+            line.erase(0, line.getText().indexOf(']')+2);
+        }
     }
 
     private void handlelineBlock(Line line) {
@@ -329,7 +338,7 @@ public class ReSTParser extends LineParser {
         line.eraseEnclosure("``", "``", ReSTLine.EraseStyle.InlineMarkup); // inline literal
         line.eraseEnclosure("`", "`_", ReSTLine.EraseStyle.InlineMarkup); // phrase reference
         line.eraseEnclosure("_`", "`", ReSTLine.EraseStyle.InlineMarkup); // inline literal target
-        line.eraseEnclosure("[", "]_", ReSTLine.EraseStyle.InlineMarkup); // footnote reference
+        line.eraseEnclosure("[", "]_", ReSTLine.EraseStyle.All); // footnote reference
         line.eraseEnclosure("|", "|", ReSTLine.EraseStyle.InlineMarkup); // inline figure
 
         // FIXME: inline annotation with reference_ and anonymous__ not covered yet.

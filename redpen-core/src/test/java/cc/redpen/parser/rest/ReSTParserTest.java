@@ -328,6 +328,34 @@ public class ReSTParserTest {
         assertEquals("Finished a line block yay!", section.getParagraph(1).getSentence(0).getContent());
     }
 
+
+    @Test
+    public void testFootnote() {
+        String sampleText =
+                "Before footnote.\n" +
+                        "\n" +
+                        "This power is gravity[*]_.\n" +
+                        "\n" +
+                        ".. [*] Gravity is blah blah\n" +
+                        "\n" +
+                        "Finished a footnote yay!";
+
+        Document doc = createFileContent(sampleText);
+        assertNotNull("doc is null", doc);
+        assertEquals(1, doc.size());
+
+        Section section = doc.getSection(0);
+        assertEquals(4, section.getParagraphs().size());
+        assertEquals(1, section.getParagraph(0).getNumberOfSentences());
+        assertEquals("Before footnote.", section.getParagraph(0).getSentence(0).getContent());
+        assertEquals(1, section.getParagraph(1).getNumberOfSentences());
+        assertEquals("This power is gravity.", section.getParagraph(1).getSentence(0).getContent());
+        assertEquals(1, section.getParagraph(2).getNumberOfSentences());
+        assertEquals("Gravity is blah blah", section.getParagraph(2).getSentence(0).getContent());
+        assertEquals(1, section.getParagraph(3).getNumberOfSentences());
+        assertEquals("Finished a footnote yay!", section.getParagraph(3).getSentence(0).getContent());
+    }
+
     private Document createFileContent(String inputDocumentString) {
         DocumentParser parser = DocumentParser.REST;
         Document doc = null;
