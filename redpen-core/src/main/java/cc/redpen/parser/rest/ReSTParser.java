@@ -242,10 +242,7 @@ public class ReSTParser extends LineParser {
             line.setListLevel(1);
             line.setListStart(true);
             line.erase(0, spacePos+1);
-            while (Character.isWhitespace(line.charAt(++spacePos))) {
-                line.erase(spacePos, 1);
-                spacePos++;
-            }
+            removeWhitespaces(line, ++spacePos);
             return true;
         }
         return false;
@@ -270,11 +267,7 @@ public class ReSTParser extends LineParser {
         if (state.inList && ((line.charAt(0) == ' ' && line.charAt(1) == ' ')  || (line.charAt(0) == '\t'))) {
             line.setListLevel(1);
             line.setListStart(true);
-            int spacePos = 0;
-            while (Character.isWhitespace(line.charAt(spacePos))) {
-                line.erase(spacePos, 1);
-                spacePos++;
-            }
+            removeWhitespaces(line, 0);
             return true;
         }
         return false;
@@ -288,10 +281,7 @@ public class ReSTParser extends LineParser {
             line.setListStart(true);
             int dotPos = target.line.getText().indexOf(".");
             line.erase(0, ++dotPos);
-            while (Character.isWhitespace(target.line.charAt(dotPos))) {
-                line.erase(dotPos, 1);
-                dotPos++;
-            }
+            removeWhitespaces(line, dotPos);
             return true;
         }
         return false;
@@ -342,5 +332,12 @@ public class ReSTParser extends LineParser {
         line.eraseEnclosure("|", "|", ReSTLine.EraseStyle.InlineMarkup); // inline figure
 
         // FIXME: inline annotation with reference_ and anonymous__ not covered yet.
+    }
+
+    private void removeWhitespaces(Line line, int startPosition) {
+        while (Character.isWhitespace(line.charAt(startPosition))) {
+            line.erase(startPosition, 1);
+            startPosition++;
+        }
     }
 }
