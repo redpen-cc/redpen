@@ -72,8 +72,10 @@ please run test before throw the pull reqest. You can run test with the mvn test
 
 Deploy
 ======
+#### Heroku
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
-
+#### Azure
+[![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://azuredeploy.net/)
 Links
 ======
 
