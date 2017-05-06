@@ -18,6 +18,7 @@
 package cc.redpen.parser;
 
 import cc.redpen.parser.asciidoc.AsciiDocParser;
+import cc.redpen.parser.rest.ReSTParser;
 import cc.redpen.parser.review.ReVIEWParser;
 
 import java.io.BufferedReader;
@@ -81,15 +82,20 @@ public class PreprocessingReader implements AutoCloseable {
                         .trim();
                 addCommentSuppressRule(ruleText);
             }
+        }  else if (parser instanceof ReSTParser) {
+            if (ruleText.matches("[.][.] *@suppress(.*)")) {
+                ruleText = line
+                        .replaceAll("[.][.]", "")
+                        .trim();
+                addCommentSuppressRule(ruleText, 3);
+            }
         }
         return line;
     }
 
     private void addAsciiDocAttributeSuppressRule(String ruleString) {
         PreprocessorRule rule = new PreprocessorRule(PreprocessorRule.RuleType.SUPPRESS, lineNumber);
-        if (lastRule != null) {
-            lastRule.setLineNumberLimit(lineNumber);
-        }
+        if (lastRule != null) { lastRule.setLineNumberLimit(lineNumber); }
         lastRule = rule;
         String[] parts = ruleString.split("=");
         if (parts.length > 1) {
@@ -104,10 +110,12 @@ public class PreprocessingReader implements AutoCloseable {
     }
 
     private void addCommentSuppressRule(String ruleString) {
-        PreprocessorRule rule = new PreprocessorRule(PreprocessorRule.RuleType.SUPPRESS, lineNumber);
-        if (lastRule != null) {
-            lastRule.setLineNumberLimit(lineNumber);
-        }
+        addCommentSuppressRule(ruleString, 0);
+    }
+
+    private void addCommentSuppressRule(String ruleString, int gap) {
+        PreprocessorRule rule = new PreprocessorRule(PreprocessorRule.RuleType.SUPPRESS, lineNumber + gap);
+        if (lastRule != null) { lastRule.setLineNumberLimit(lineNumber); }
         lastRule = rule;
         String[] parts = ruleString.split(" ");
         if (parts.length > 1) {
