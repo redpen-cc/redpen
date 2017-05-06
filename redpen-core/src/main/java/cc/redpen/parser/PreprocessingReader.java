@@ -51,35 +51,35 @@ public class PreprocessingReader implements AutoCloseable {
     public String readLine() throws IOException {
         String line = reader.readLine();
         lineNumber++;
-        if (line != null) {
-            String ruleText = line;
-            if (parser instanceof AsciiDocParser) {
-                if (ruleText.toLowerCase().startsWith("[suppress")) {
-                    addAsciiDocAttributeSuppressRule(ruleText);
-                    return "";
-                }
-            } else if (parser instanceof MarkdownParser) {
-                if (ruleText.matches("^ *<!-- *@suppress (.*)-->")) {
-                    ruleText = line
-                            .replaceAll("^ *<!--", "")
-                            .replaceAll("-->", "")
-                            .trim();
-                    addCommentSuppressRule(ruleText);
-                }
-            } else if (parser instanceof ReVIEWParser) {
-                if (ruleText.matches("^#@# *@suppress(.*)")) {
-                    ruleText = line
-                            .replaceAll("^#@#", "")
-                            .trim();
-                    addCommentSuppressRule(ruleText);
-                }
-            } else if (parser instanceof LaTeXParser) {
-                if (ruleText.matches("^% *@suppress(.*)")) {
-                    ruleText = line
-                            .replaceAll("^%", "")
-                            .trim();
-                    addCommentSuppressRule(ruleText);
-                }
+        if (line == null) { return line; }
+
+        String ruleText = line;
+        if (parser instanceof AsciiDocParser) {
+            if (ruleText.toLowerCase().startsWith("[suppress")) {
+                addAsciiDocAttributeSuppressRule(ruleText);
+                return "";
+            }
+        } else if (parser instanceof MarkdownParser) {
+            if (ruleText.matches("^ *<!-- *@suppress (.*)-->")) {
+                ruleText = line
+                        .replaceAll("^ *<!--", "")
+                        .replaceAll("-->", "")
+                        .trim();
+                addCommentSuppressRule(ruleText);
+            }
+        } else if (parser instanceof ReVIEWParser) {
+            if (ruleText.matches("^#@# *@suppress(.*)")) {
+                ruleText = line
+                        .replaceAll("^#@#", "")
+                        .trim();
+                addCommentSuppressRule(ruleText);
+            }
+        } else if (parser instanceof LaTeXParser) {
+            if (ruleText.matches("^% *@suppress(.*)")) {
+                ruleText = line
+                        .replaceAll("^%", "")
+                        .trim();
+                addCommentSuppressRule(ruleText);
             }
         }
         return line;
