@@ -94,6 +94,16 @@ public class PreprocessorTest {
                     "fractions of data. Such distriubuted systems need a component to merge the preliminary" +
                     "results from member instances.";
 
+    private String sampleReStructuredText = "" +
+            ".. @suppress\n" +
+            "\n" +
+            "##################\n" +
+            "Distributed system\n" +
+            "##################\n\n" +
+            "Some software tools work in more than one machine, and such distributed (cluster)systems can handle huge data or tasks, because such software tools make use of large amount of computer resources.\n" +
+            "In this article, we'll call a computer server that works as a member of a cluster an \"instance\". for example, each instance in distributed search engines stores the the fractions of data.\n" +
+            "Such distriubuted systems need a component to merge the preliminary results from member instnaces.\n";
+
     @Test
     public void testSuppressErrorsInAsciiDoc() throws UnsupportedEncodingException, RedPenException {
 
@@ -115,7 +125,6 @@ public class PreprocessorTest {
 
     @Test
     public void testSuppressErrorsInMarkdown() throws UnsupportedEncodingException, RedPenException {
-
         Document doc = createFileContent(sampleMarkdownText, DocumentParser.ASCIIDOC);
         assertEquals(0, doc.getPreprocessorRules().size());
 
@@ -130,6 +139,12 @@ public class PreprocessorTest {
 
         doc = createFileContent(sampleMarkdownText, DocumentParser.REVIEW);
         assertEquals(0, doc.getPreprocessorRules().size());
+    }
+
+    @Test
+    public void testSuppressErrorsInReStructuredtext() throws UnsupportedEncodingException, RedPenException {
+        Document doc = createFileContent(sampleReStructuredText, DocumentParser.REST);
+        assertEquals(1, doc.getPreprocessorRules().size());
     }
 
     @Test
@@ -201,6 +216,52 @@ public class PreprocessorTest {
         RedPen redPen = new RedPen(configuration);
         List<ValidationError> errors = redPen.validate(doc);
         assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void testReStructuredtextSuppression() throws Exception {
+        Document doc = createFileContent(sampleReStructuredText, DocumentParser.REST);
+        Configuration configuration = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("Spelling"))
+                .addValidatorConfig(new ValidatorConfiguration("SuccessiveWord"))
+                .build();
+        RedPen redPen = new RedPen(configuration);
+        List<ValidationError> errors = redPen.validate(doc);
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void testReStructuredtextSuppressionWith2LineSction() throws Exception {
+        Document doc = createFileContent(".. @suppress\n\n" +
+                        "Distributed system\n" +
+                        "##################\n" +
+                        "\n" +
+                        "Some software tools work in more than one machine, and such distributed (cluster)systems can handle huge data or tasks, because such software tools make use of large amount of computer resources.\n" +
+                        "In this article, we'll call a computer server that works as a member of a cluster an \"instance\". for example, each instance in distributed search engines stores the the fractions of data.\n" +
+                        "Such distriubuted systems need a component to merge the preliminary results from member instnaces.\n"
+                , DocumentParser.REST);
+        Configuration configuration = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("Spelling"))
+                .addValidatorConfig(new ValidatorConfiguration("SuccessiveWord"))
+                .build();
+        RedPen redPen = new RedPen(configuration);
+        List<ValidationError> errors = redPen.validate(doc);
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void testReStructuredtextSuppressionSpecificValidator() throws Exception {
+        Document doc = createFileContent(".. @suppress SuccessiveWord\n\n" +
+                "Section 1\n" +
+                "###########\n\n" +
+                "The following is is an example of a glosssary.\n", DocumentParser.REST);
+        Configuration configuration = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("Spelling"))
+                .addValidatorConfig(new ValidatorConfiguration("SuccessiveWord"))
+                .build();
+        RedPen redPen = new RedPen(configuration);
+        List<ValidationError> errors = redPen.validate(doc);
+        assertEquals(1, errors.size()); //NOTE: Spelling is not specified
     }
 
     @Test

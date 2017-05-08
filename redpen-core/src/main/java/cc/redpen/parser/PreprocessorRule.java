@@ -18,7 +18,6 @@
 package cc.redpen.parser;
 
 import cc.redpen.model.*;
-import cc.redpen.validator.ValidationError;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,8 +34,12 @@ public class PreprocessorRule {
         SUPPRESS
     }
 
+    // line number the rule is set
     private int lineNumber = 0;
+
+    // max line number of the previous rule covers
     private int lineNumberLimit = 0;
+
     private List<String> parameters = new ArrayList<>();
     private RuleType ruleType;
 
@@ -85,21 +88,12 @@ public class PreprocessorRule {
                 for (Section section : document) {
                     List<Sentence> allBlockSentences = new ArrayList<>();
                     allBlockSentences.addAll(section.getHeaderContents());
-                    if (isInsideSentences(section.getHeaderContents(), lineNumber, errorLineNumber)) {
-                        return true;
-                    }
                     for (Paragraph paragraph : section.getParagraphs()) {
                         allBlockSentences.addAll(paragraph.getSentences());
-                        if (isInsideSentences(paragraph.getSentences(), lineNumber, errorLineNumber)) {
-                            return true;
-                        }
                     }
                     for (ListBlock listBlock : section.getListBlocks()) {
                         for (ListElement element : listBlock.getListElements()) {
                             allBlockSentences.addAll(element.getSentences());
-                            if (isInsideSentences(element.getSentences(), lineNumber, errorLineNumber)) {
-                                return true;
-                            }
                         }
                     }
                     if (isInsideSentences(allBlockSentences, lineNumber, errorLineNumber)) {
@@ -112,20 +106,20 @@ public class PreprocessorRule {
     }
 
     private boolean isInsideSentences(Collection<Sentence> sentences, int ruleLineNumber, int errorLineNumber) {
-        if (ruleLineNumber <= errorLineNumber) {
-            int startLine = Integer.MAX_VALUE;
-            int endLine = 0;
-            for (Sentence sentence : sentences) {
-                startLine = Math.min(startLine, sentence.getLineNumber());
-                endLine = Math.max(endLine, sentence.getLineNumber());
-            }
+        if (ruleLineNumber > errorLineNumber) { return false; }
 
-            // if we are in this paragraph, and the other line number is
-            if ((startLine <= ruleLineNumber) && (endLine >= ruleLineNumber) &&
+        int startLine = Integer.MAX_VALUE;
+        int endLine = 0;
+        for (Sentence sentence : sentences) {
+            startLine = Math.min(startLine, sentence.getLineNumber());
+            endLine = Math.max(endLine, sentence.getLineNumber());
+        }
+
+        // if we are in this paragraph, and the other line number is
+        if ((startLine <= ruleLineNumber) && (endLine >= ruleLineNumber) &&
                 (startLine <= errorLineNumber) && (endLine >= errorLineNumber)
                 ) {
-                return true;
-            }
+            return true;
         }
         return false;
     }
