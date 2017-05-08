@@ -291,23 +291,23 @@ public class ReSTParser extends LineParser {
         if (processMultiLineMatch('#', '#', target)) {
             return 1;
         } else if (processMultiLineMatch('*', '*', target)) {
-            return 2;
+            return 1;
         } else if (processMultiLineMatch('=', '=', target)) {
-            return 3;
+            return 1;
         } else if (processMultiLineMatch(null, '=', target)) {
-            return 4;
+            return 1;
         } else if (processMultiLineMatch('-', '-', target)) { // this is a subtitle?
-            return 0;
+            return 1;
         } else if (processMultiLineMatch(null, '-', target)) {
-            return 5;
+            return 1;
         } else if (processMultiLineMatch('~', '~', target)) {
-            return 6;
+            return 1;
         } else if (processMultiLineMatch(null, '~', target)) {
-            return 7;
+            return 1;
         } else if (processMultiLineMatch('^', '^', target)) {
-            return 8;
+            return 1;
         } else if (processMultiLineMatch(null, '^', target)) {
-            return 9;
+            return 1;
         }
         return -1;
     }
