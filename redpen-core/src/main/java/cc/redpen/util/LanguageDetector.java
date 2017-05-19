@@ -6,18 +6,23 @@ import static java.lang.Math.min;
 
 public class LanguageDetector {
   public String detectLanguage(String text) {
-    if (!has(text, StringUtils::isProbablyJapanese)) {
-      return has(text, StringUtils::isCyrillic) ? "ru" : "en";
+    if (has(text, StringUtils::isProbablyJapanese)) {
+      boolean zenkaku = text.indexOf('。') >= 0 || text.indexOf('、') >= 0 || text.indexOf('！') >= 0 || text.indexOf('？') >= 0;
+      boolean zenkaku2 = text.indexOf('．') >= 0 || text.indexOf('，') >= 0;
+      boolean hankaku = text.indexOf('.') >= 0 || text.indexOf(',') >= 0 || text.indexOf('!') >= 0 || text.indexOf('?') >= 0;
+
+      return zenkaku ? "ja" :
+        zenkaku2 ? "ja.zenkaku2" :
+        hankaku ? "ja.hankaku":
+        "ja";
+    }
+    else if (has(text, StringUtils::isCyrillic)) {
+      return "ru";
+    } else if (has(text, StringUtils::isKorean)) {
+      return "ko";
     }
 
-    boolean zenkaku = text.indexOf('。') >= 0 || text.indexOf('、') >= 0 || text.indexOf('！') >= 0 || text.indexOf('？') >= 0;
-    boolean zenkaku2 = text.indexOf('．') >= 0 || text.indexOf('，') >= 0;
-    boolean hankaku = text.indexOf('.') >= 0 || text.indexOf(',') >= 0 || text.indexOf('!') >= 0 || text.indexOf('?') >= 0;
-
-    return zenkaku ? "ja" :
-           zenkaku2 ? "ja.zenkaku2" :
-           hankaku ? "ja.hankaku":
-           "ja";
+    return "en";
   }
 
   private boolean has(String text, Predicate<Character> func) {

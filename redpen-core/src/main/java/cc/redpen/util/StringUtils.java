@@ -44,4 +44,9 @@ public class StringUtils {
     public static boolean isCyrillic(char c) {
         return Character.UnicodeBlock.of(c) == Character.UnicodeBlock.CYRILLIC;
     }
+
+    public static boolean isKorean(char c) {
+        Character.UnicodeBlock block = Character.UnicodeBlock.of(c);
+        return block == HANGUL_SYLLABLES || block == HANGUL_JAMO;
+    }
 }
