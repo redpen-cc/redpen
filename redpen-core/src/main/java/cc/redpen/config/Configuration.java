@@ -19,6 +19,7 @@ package cc.redpen.config;
 
 import cc.redpen.RedPenException;
 import cc.redpen.tokenizer.NeologdJapaneseTokenizer;
+import cc.redpen.tokenizer.KoreanTokenizer;
 import cc.redpen.tokenizer.RedPenTokenizer;
 import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidatorFactory;
@@ -66,7 +67,13 @@ public class Configuration implements Serializable, Cloneable {
     }
 
     private void initTokenizer() {
-        this.tokenizer = lang.equals("ja") ? new NeologdJapaneseTokenizer() : new WhiteSpaceTokenizer();
+        if (lang.equals("ja")) {
+            this.tokenizer = new NeologdJapaneseTokenizer();
+        } else if(lang.equals("ko")) {
+            this.tokenizer = new KoreanTokenizer();
+        } else {
+            this.tokenizer = new WhiteSpaceTokenizer();
+        }
     }
 
     /**
