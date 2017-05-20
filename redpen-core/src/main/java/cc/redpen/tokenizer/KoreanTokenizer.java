@@ -29,7 +29,7 @@ public class KoreanTokenizer implements RedPenTokenizer {
     private Komoran tokenizer;
 
     public KoreanTokenizer() {
-        this.tokenizer = new Komoran(DEFAULT_MODEL.LIGHT);
+        this.tokenizer = new Komoran(DEFAULT_MODEL.FULL);
      }
 
     @Override
