@@ -10,6 +10,17 @@
             <includes>
                 <include>**/*</include>
             </includes>
+            <excludes>
+                <exclude>/bin/</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>../redpen-cli/target/redpen-cli-${version}-assembled/redpen-cli-${version}</directory>
+            <outputDirectory>/</outputDirectory>
+            <includes>
+                <include>/bin/</include>
+            </includes>
+            <fileMode>755</fileMode>
         </fileSet>
         <fileSet>
             <directory>../redpen-server/target</directory>
@@ -24,6 +35,7 @@
             <includes>
                 <include>**/*</include>
             </includes>
+            <fileMode>755</fileMode>
         </fileSet>
     </fileSets>
 </assembly>
