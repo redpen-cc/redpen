@@ -51,7 +51,7 @@
         <url>https://github.com/redpen-cc/redpen</url>
         <connection>scm:git:https://github.com/redpen-cc/redpen.git</connection>
         <developerConnection>scm:git:https://github.com/redpen-cc/redpen.git</developerConnection>
-      <tag>redpen-1.8.0</tag>
+      <tag>redpen-1.9.0</tag>
   </scm>
 
     <build>
