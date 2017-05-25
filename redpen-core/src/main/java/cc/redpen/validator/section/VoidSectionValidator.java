@@ -17,7 +17,6 @@
  */
 package cc.redpen.validator.section;
 
-import cc.redpen.RedPenException;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.validator.Validator;
@@ -32,16 +31,23 @@ import java.util.Optional;
 @Deprecated
 final public class VoidSectionValidator extends Validator {
     private static final Logger LOG = LoggerFactory.getLogger(VoidSectionValidator.class);
-    private int sectionLevelLimit = 5;
+
+    public VoidSectionValidator() {
+        super("limit", 5,
+              "subsection", false);
+    }
 
     @Override
     public void validate(Section section) {
-        if (section.getLevel() >= sectionLevelLimit) {
+        if (section.getLevel() >= getInt("limit")) {
             return;
         }
 
         if (section.getLevel() == 0) {
             return; // hot fix for auto generated level 0 sections.
+        }
+        if (getBoolean("subsection") && section.getNumberOfSubsections() > 0) {
+            return;
         }
         if (section.getNumberOfParagraphs() == 0) {
             addLocalizedError(section.getJoinedHeaderContents());
@@ -52,14 +58,6 @@ final public class VoidSectionValidator extends Validator {
                     break;
                 }
             }
-        }
-    }
-
-    @Override
-    protected void init() throws RedPenException {
-        Optional<String> limit = getConfigAttribute("limit");
-        if (limit.isPresent()) {
-            sectionLevelLimit = Integer.parseInt(limit.get());
         }
     }
 }

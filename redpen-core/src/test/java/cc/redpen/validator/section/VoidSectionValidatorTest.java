@@ -21,6 +21,8 @@ import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
+import cc.redpen.model.Paragraph;
+import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
@@ -29,6 +31,8 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static cc.redpen.parser.ParserUtils.addChild;
 
 import static org.junit.Assert.assertEquals;
 
@@ -109,6 +113,47 @@ public class VoidSectionValidatorTest {
 
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("VoidSection").addProperty("limit", "3"))
+                .build();
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.setErrorList(errors);
+        validator.validate(document.getSection(0));
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public void testInvalidSubsection() throws RedPenException {
+        Document document =
+                Document.builder()
+                        .addSection(1)
+                        .addSectionHeader("Abstract")
+                        .build();
+
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("VoidSection").addProperty("subsection", "true"))
+                .build();
+        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.setErrorList(errors);
+        validator.validate(document.getSection(0));
+        assertEquals(1, errors.size());
+    }
+
+    @Test
+    public void testValidSubsection() throws RedPenException {
+        Document document =
+                Document.builder()
+                        .addSection(1)
+                        .addSectionHeader("Abstract")
+                        .addSection(2)
+                        .addSectionHeader("SubSection")
+                        .addParagraph()
+                        .addSentence(new Sentence("he is a super man.", 1))
+                        .build();
+        addChild(document.getSection(0), document.getSection(1));
+
+        Configuration config = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("VoidSection").addProperty("subsection", "true"))
                 .build();
         Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
         List<ValidationError> errors = new ArrayList<>();
