@@ -19,6 +19,7 @@ package cc.redpen.config;
 
 import cc.redpen.RedPenException;
 import cc.redpen.tokenizer.JapaneseTokenizer;
+import cc.redpen.tokenizer.KoreanTokenizer;
 import cc.redpen.tokenizer.RedPenTokenizer;
 import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidatorFactory;
@@ -52,7 +53,7 @@ public class Configuration implements Serializable, Cloneable {
      * @return default supported languages and variants that can be used with {@link #builder(String)}
      */
     public static List<String> getDefaultConfigKeys() {
-        return asList("en", "ja", "ja.hankaku", "ja.zenkaku2", "ru");
+        return asList("en", "ja", "ja.hankaku", "ja.zenkaku2", "ru", "ko");
     }
 
     Configuration(File base, SymbolTable symbolTable, List<ValidatorConfiguration> validatorConfigs, String lang, boolean secure) {
@@ -66,7 +67,13 @@ public class Configuration implements Serializable, Cloneable {
     }
 
     private void initTokenizer() {
-        this.tokenizer = lang.equals("ja") ? new JapaneseTokenizer() : new WhiteSpaceTokenizer();
+        if (lang.equals("ja")) {
+            this.tokenizer = new JapaneseTokenizer();
+        } else if(lang.equals("ko")) {
+            this.tokenizer = new KoreanTokenizer();
+        } else {
+            this.tokenizer = new WhiteSpaceTokenizer();
+        }
     }
 
     /**
