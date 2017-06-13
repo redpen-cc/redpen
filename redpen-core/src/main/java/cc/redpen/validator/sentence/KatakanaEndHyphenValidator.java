@@ -62,7 +62,8 @@ public final class KatakanaEndHyphenValidator extends DictionaryValidator {
 
     public static boolean isKatakanaEndHyphen(String katakana) {
         return (DEFAULT_KATAKANA_LIMIT_LENGTH < katakana.length()
-                && katakana.charAt(katakana.length() - 1) == HYPHEN);
+                && katakana.charAt(katakana.length() - 1) == HYPHEN
+                && isEndWithSmallLetter(katakana));
     }
 
     @Override
@@ -83,6 +84,12 @@ public final class KatakanaEndHyphenValidator extends DictionaryValidator {
             }
         }
         this.checkKatakanaEndHyphen(sentence, katakana.toString(), sentence.getContent().length() - 1);
+    }
+
+    private static boolean isEndWithSmallLetter(String katakana) {
+        if (katakana.length() <= 2) return false;
+        char c = katakana.charAt(katakana.length()-2);
+        return c != 'ュ' && c != 'ャ' && c != 'ョ';
     }
 
     private void checkKatakanaEndHyphen(Sentence sentence, String katakana, int position) {
