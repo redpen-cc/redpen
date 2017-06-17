@@ -73,6 +73,15 @@ public class KatakanaEndHyphenValidatorTest {
     }
 
     @Test
+    public void testKatakanaOfLength2andHyphen() {
+        Sentence str = new Sentence("ポー", 0);
+        List<ValidationError> errors = new ArrayList<>();
+        validator.setErrorList(errors);
+        validator.validate(str);
+        assertEquals(str.toString(), 0, errors.size());
+    }
+
+    @Test
     public void testKatakanaOfLength3andHyphen() {
         Sentence str = new Sentence("ミラー", 0);
         List<ValidationError> errors = new ArrayList<>();
@@ -186,6 +195,24 @@ public class KatakanaEndHyphenValidatorTest {
                         .build());
 
         System.setProperty("REDPEN_HOME",new File("src/test/resources/").getAbsolutePath());
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        assertEquals(0, errors.get(documents.get(0)).size());
+    }
+
+    @Test
+    public void testEndWithSmallLetter() throws RedPenException {
+        Configuration config = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("KatakanaEndHyphen"))
+                .build();
+
+        List<Document> documents = new ArrayList<>();documents.add(
+                Document.builder()
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(new Sentence("メニューは必要ですか", 1))
+                        .build());
+
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         assertEquals(0, errors.get(documents.get(0)).size());
