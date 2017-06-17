@@ -60,12 +60,6 @@ public final class KatakanaEndHyphenValidator extends DictionaryValidator {
      */
     private static final char KATAKANA_MIDDLE_DOT = '・';
 
-    public static boolean isKatakanaEndHyphen(String katakana) {
-        return (DEFAULT_KATAKANA_LIMIT_LENGTH < katakana.length()
-                && katakana.charAt(katakana.length() - 1) == HYPHEN
-                && isEndWithSmallLetter(katakana));
-    }
-
     @Override
     public List<String> getSupportedLanguages() {
         return singletonList(Locale.JAPANESE.getLanguage());
@@ -86,9 +80,13 @@ public final class KatakanaEndHyphenValidator extends DictionaryValidator {
         this.checkKatakanaEndHyphen(sentence, katakana.toString(), sentence.getContent().length() - 1);
     }
 
-    private static boolean isEndWithSmallLetter(String katakana) {
-        if (katakana.length() <= 2) return false;
-        char c = katakana.charAt(katakana.length()-2);
+    public static boolean isKatakanaEndHyphen(String katakana) {
+        return (DEFAULT_KATAKANA_LIMIT_LENGTH < katakana.length() &&
+                katakana.charAt(katakana.length() - 1) == HYPHEN &&
+                checkCharacterBeforeHyphen(katakana.charAt(katakana.length() - 2)));
+    }
+
+    private static boolean checkCharacterBeforeHyphen(char c) {
         return c != 'ュ' && c != 'ャ' && c != 'ョ';
     }
 
