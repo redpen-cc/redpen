@@ -26,8 +26,16 @@ import java.util.Objects;
  * Configuration for Validators.
  */
 public class ValidatorConfiguration implements Serializable, Cloneable {
+    /**
+     * Define how severe the validation errors are.
+     */
+    public enum SEVERITY {
+        INFO, WARN, ERROR
+    }
+
     private final String configurationName;
     private Map<String, String> properties;
+    private SEVERITY severity;
 
     /**
      * @param name name configuration settings
@@ -40,9 +48,17 @@ public class ValidatorConfiguration implements Serializable, Cloneable {
      * @param name name configuration settings
      * @param properties validator properties
      */
-    public ValidatorConfiguration(String name, Map<String, String> properties) {
+    public ValidatorConfiguration(String name, Map<String, String> properties) { this(name, properties, SEVERITY.ERROR); }
+
+    /**
+     * @param name name configuration settings
+     * @param properties validator properties
+     * @param severity error level
+     */
+    public ValidatorConfiguration(String name, Map<String, String> properties, SEVERITY severity) {
         this.configurationName = name;
         this.properties = properties;
+        this.severity = severity;
     }
 
     /**
@@ -71,6 +87,23 @@ public class ValidatorConfiguration implements Serializable, Cloneable {
      */
     public String getConfigurationName() {
         return configurationName;
+    }
+
+    /**
+     * Get error level.
+     * @return error level
+     */
+    public SEVERITY getSeverity() {
+        return severity;
+    }
+
+    /**
+     * Set error level.
+     * @param severity error level
+     */
+    public ValidatorConfiguration setSeverity(SEVERITY severity) {
+        this.severity = severity;
+        return this;
     }
 
     /**
@@ -104,7 +137,8 @@ public class ValidatorConfiguration implements Serializable, Cloneable {
         if (!(o instanceof ValidatorConfiguration)) return false;
         ValidatorConfiguration that = (ValidatorConfiguration)o;
         return Objects.equals(configurationName, that.configurationName) &&
-               Objects.equals(properties, that.properties);
+                Objects.equals(properties, that.properties) &&
+                Objects.equals(severity, that.severity);
     }
 
     @Override public int hashCode() {
@@ -122,6 +156,7 @@ public class ValidatorConfiguration implements Serializable, Cloneable {
         try {
             ValidatorConfiguration clone = (ValidatorConfiguration)super.clone();
             clone.properties = new HashMap<>(properties);
+            clone.severity = severity;
             return clone;
         }
         catch (CloneNotSupportedException e) {
