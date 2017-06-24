@@ -35,7 +35,7 @@ public class ValidatorConfiguration implements Serializable, Cloneable {
 
     private final String configurationName;
     private Map<String, String> properties;
-    private SEVERITY severity;
+    private SEVERITY severity = SEVERITY.ERROR;
 
     /**
      * @param name name configuration settings
@@ -101,6 +101,15 @@ public class ValidatorConfiguration implements Serializable, Cloneable {
      * Set error level.
      * @param severity error level
      */
+    public ValidatorConfiguration setSeverity(String severity) {
+        try {
+            setSeverity(SEVERITY.valueOf(severity));
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("No such a error level as " + severity, e);
+        }
+        return this;
+    }
+
     public ValidatorConfiguration setSeverity(SEVERITY severity) {
         this.severity = severity;
         return this;

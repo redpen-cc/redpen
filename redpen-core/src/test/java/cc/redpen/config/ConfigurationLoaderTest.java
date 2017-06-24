@@ -435,4 +435,35 @@ public class ConfigurationLoaderTest {
         assertEquals("300",
                 configuration.getValidatorConfigs().get(0).getProperty("max_length"));
     }
+
+    @Test
+    public void testValidatorConfigurationWithErrorLevel() throws RedPenException {
+        String sampleConfigString =
+                "<redpen-conf lang=\"ja\">" +
+                        "<validators>" +
+                        "<validator name=\"SentenceLength\" level=\"INFO\" />" +
+                        "</validators>" +
+                        "</redpen-conf>";
+
+        Configuration configuration = new ConfigurationLoader().loadFromString(sampleConfigString);
+
+        assertNotNull(configuration);
+        assertEquals(1, configuration.getValidatorConfigs().size());
+        assertEquals("SentenceLength",
+                configuration.getValidatorConfigs().get(0).getConfigurationName());
+        assertEquals(ValidatorConfiguration.SEVERITY.INFO,
+                configuration.getValidatorConfigs().get(0).getSeverity());
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testValidatorConfigurationWithInvalidErrorLevel() throws RedPenException {
+        String sampleConfigString =
+                "<redpen-conf lang=\"ja\">" +
+                        "<validators>" +
+                        "<validator name=\"SentenceLength\" level=\"FOOBAR\" />" +
+                        "</validators>" +
+                        "</redpen-conf>";
+
+        Configuration configuration = new ConfigurationLoader().loadFromString(sampleConfigString);
+    }
 }
