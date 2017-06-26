@@ -72,6 +72,7 @@ public class ConfigurationLoader {
     private static Document toDocument(InputStream input) throws RedPenException {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         try (BufferedInputStream bis = new BufferedInputStream(input)) {
+            dbFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             dBuilder.setErrorHandler(new SAXErrorHandler());
             return dBuilder.parse(bis);
