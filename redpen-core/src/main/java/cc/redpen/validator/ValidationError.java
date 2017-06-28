@@ -17,6 +17,7 @@
  */
 package cc.redpen.validator;
 
+import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.parser.LineOffset;
 
@@ -28,12 +29,13 @@ import java.util.Optional;
  */
 public class ValidationError implements Serializable {
 
-    private static final long serialVersionUID = -7759439419047004667L;
+    private static final long serialVersionUID = -1273191135155157144L;
     private final String message;
     private final String validatorName;
     private final Sentence sentence;
     private final LineOffset startPosition;
     private final LineOffset endPosition;
+    private final ValidatorConfiguration.SEVERITY level;
 
     /**
      * Constructor.
@@ -43,13 +45,28 @@ public class ValidationError implements Serializable {
      * @param sentenceWithError sentence containing validation error
      */
     public ValidationError(String validatorName,
-                           String errorMessage,
-                           Sentence sentenceWithError) {
+            String errorMessage,
+            Sentence sentenceWithError) {
+        this(validatorName, errorMessage, sentenceWithError, ValidatorConfiguration.SEVERITY.ERROR);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param validatorName    validator name
+     * @param errorMessage      error message
+     * @param sentenceWithError sentence containing validation error
+     */
+    public ValidationError(String validatorName,
+            String errorMessage,
+            Sentence sentenceWithError,
+            ValidatorConfiguration.SEVERITY level) {
         this.message = errorMessage;
         this.validatorName = validatorName;;
         this.sentence = sentenceWithError;
         this.startPosition = null;
         this.endPosition = null;
+        this.level = level;
     }
 
     /**
@@ -63,14 +80,31 @@ public class ValidationError implements Serializable {
      */
     ValidationError(String validatorName, String errorMessage, Sentence sentenceWithError,
             int startPosition, int endPosition) {
+        this(validatorName, errorMessage, sentenceWithError, startPosition, endPosition, ValidatorConfiguration.SEVERITY.ERROR);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param validatorName    validator name
+     * @param errorMessage      error message
+     * @param sentenceWithError sentence containing validation error
+     * @param startPosition     position where error starts
+     * @param endPosition       position where error ends
+     */
+    ValidationError(String validatorName, String errorMessage, Sentence sentenceWithError,
+            int startPosition, int endPosition,
+            ValidatorConfiguration.SEVERITY level) {
         this.message = errorMessage;
         this.validatorName = validatorName;
         this.sentence = sentenceWithError;
         this.startPosition = sentenceWithError.getOffset(startPosition).get();
         this.endPosition = sentenceWithError.getOffset(endPosition).get();
+        this.level = level;
     }
 
     /**
+     * Constructor.
      *
      * @param validatorClass    validator class
      * @param errorMessage      error message
@@ -80,12 +114,13 @@ public class ValidationError implements Serializable {
      * @deprecated
      */
     ValidationError(Class validatorClass, String errorMessage, Sentence sentenceWithError,
-                    LineOffset startPosition, LineOffset endPosition) {
+            LineOffset startPosition, LineOffset endPosition) {
         this.message = errorMessage;
         this.validatorName = validatorClass.getSimpleName();
         this.sentence = sentenceWithError;
         this.startPosition = startPosition;
         this.endPosition = endPosition;
+        this.level = ValidatorConfiguration.SEVERITY.ERROR;
     }
 
     /**
@@ -156,6 +191,14 @@ public class ValidationError implements Serializable {
         return Optional.ofNullable(endPosition);
     }
 
+    /**
+     * Get error level.
+     * @return error level
+     */
+    public ValidatorConfiguration.SEVERITY getLevel() {
+        return level;
+    }
+
     @Override
     public String toString() {
         return "ValidationError{" +
@@ -164,6 +207,7 @@ public class ValidationError implements Serializable {
                 ", sentence=" + sentence +
                 ", startPosition=" + startPosition +
                 ", endPosition=" + endPosition +
+                ", level=" + level +
                 '}';
     }
 }
