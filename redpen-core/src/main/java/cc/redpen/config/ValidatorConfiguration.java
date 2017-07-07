@@ -30,7 +30,20 @@ public class ValidatorConfiguration implements Serializable, Cloneable {
      * Define how severe the validation errors are.
      */
     public enum SEVERITY {
-        INFO, WARN, ERROR
+        INFO, WARN, ERROR;
+
+        Map<String, String> mapping = new HashMap<String, String>() {
+            {
+                put("INFO", "Info");
+                put("WARN", "Warn");
+                put("ERROR", "Error");
+            }
+        };
+
+        @Override
+        public String toString() {
+            return mapping.get(name());
+        }
     }
 
     private final String configurationName;

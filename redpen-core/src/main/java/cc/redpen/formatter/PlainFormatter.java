@@ -37,9 +37,7 @@ public final class PlainFormatter extends Formatter {
 
     @Override
     public void format(PrintWriter pw, Map<Document, List<ValidationError>> docErrorsMap) throws RedPenException, IOException {
-
         BufferedWriter writer = new BufferedWriter(new PrintWriter(pw));
-
         for (Document document : docErrorsMap.keySet()) {
             List<ValidationError> errors = docErrorsMap.get(document);
             for (ValidationError error : errors) {
@@ -58,7 +56,7 @@ public final class PlainFormatter extends Formatter {
         StringBuilder str = new StringBuilder();
         document.getFileName().ifPresent(e -> str.append(e).append(":"));
         str.append(error.getLineNumber());
-        str.append(": ValidationError[").append(error.getValidatorName()).append("], ");
+        str.append(": Validation" + error.getLevel()).append("[").append(error.getValidatorName()).append("], ");
         str.append(error.getMessage());
         str.append(" at line: ").append(error.getSentence().getContent());
         str.append("\n");

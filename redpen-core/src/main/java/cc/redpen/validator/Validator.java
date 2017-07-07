@@ -338,6 +338,13 @@ public abstract class Validator {
         return globalConfig.findFile(relativePath);
     }
 
+    protected ValidatorConfiguration.SEVERITY getSeverity() {
+        if( config == null) {
+            return ValidatorConfiguration.SEVERITY.ERROR;
+        }
+        return config.getSeverity();
+    }
+
     /**
      * create a ValidationError for the specified position with specified message
      *
@@ -345,7 +352,7 @@ public abstract class Validator {
      * @param sentenceWithError sentence
      */
     protected void addError(String message, Sentence sentenceWithError) {
-        errors.add(new ValidationError(this.validatorName, message, sentenceWithError));
+        errors.add(new ValidationError(this.validatorName, message, sentenceWithError, getSeverity()));
     }
 
     /**
@@ -358,10 +365,8 @@ public abstract class Validator {
      */
     protected void addErrorWithPosition(String message, Sentence sentenceWithError,
                                         int start, int end) {
-        errors.add(new ValidationError(this.validatorName, message, sentenceWithError, start, end));
+        errors.add(new ValidationError(this.validatorName, message, sentenceWithError, start, end, getSeverity()));
     }
-
-
 
     /**
      * create a ValidationError for the specified position with localized default error message
@@ -370,7 +375,7 @@ public abstract class Validator {
      * @param args              objects to format
      */
     protected void addLocalizedError(Sentence sentenceWithError, Object... args) {
-        errors.add(new ValidationError(this.validatorName, getLocalizedErrorMessage(null, args), sentenceWithError));
+        errors.add(new ValidationError(this.validatorName, getLocalizedErrorMessage(null, args), sentenceWithError, getSeverity()));
     }
 
     /**
@@ -381,7 +386,7 @@ public abstract class Validator {
      * @param args              objects to format
      */
     protected void addLocalizedError(String messageKey, Sentence sentenceWithError, Object... args) {
-        errors.add(new ValidationError(this.validatorName, getLocalizedErrorMessage(messageKey, args), sentenceWithError));
+        errors.add(new ValidationError(this.validatorName, getLocalizedErrorMessage(messageKey, args), sentenceWithError, getSeverity()));
     }
 
     /**
@@ -395,7 +400,8 @@ public abstract class Validator {
                 sentenceWithError,
                 token.getOffset(),
                 token.getOffset() + token.getSurface().length(),
-                token.getSurface()
+                token.getSurface(),
+                getSeverity()
         );
     }
 
@@ -423,7 +429,7 @@ public abstract class Validator {
      */
     protected void addLocalizedErrorWithPosition(String messageKey, Sentence sentenceWithError,
                                                  int start, int end, Object... args) {
-        errors.add(new ValidationError(this.validatorName, getLocalizedErrorMessage(messageKey, args), sentenceWithError, start, end));
+        errors.add(new ValidationError(this.validatorName, getLocalizedErrorMessage(messageKey, args), sentenceWithError, start, end, getSeverity()));
     }
 
     /**
