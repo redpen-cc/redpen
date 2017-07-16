@@ -17,12 +17,19 @@
  */
 package cc.redpen.config;
 
+import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
+import cc.redpen.model.Document;
+import cc.redpen.model.Sentence;
+import cc.redpen.validator.ValidationError;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static cc.redpen.config.SymbolType.*;
 import static org.junit.Assert.assertEquals;
@@ -465,5 +472,28 @@ public class ConfigurationLoaderTest {
                         "</redpen-conf>";
 
         Configuration configuration = new ConfigurationLoader().loadFromString(sampleConfigString);
+    }
+
+    @Test
+    public void testSpecifiedErrorLevelComeInErrors() throws RedPenException {
+        String sampleConfigString =
+                "<redpen-conf lang=\"ja\">" +
+                        "<validators>" +
+                        "<validator name=\"SentenceLength\" level=\"INFO\" />" +
+                        "</validators>" +
+                        "</redpen-conf>";
+
+        Configuration config = new ConfigurationLoader().loadFromString(sampleConfigString);
+        List<Document> documents = new ArrayList<>();documents.add(
+                Document.builder()
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(new Sentence("This is a long long long long long long long long long long long long long long long long long long long long long long long long sentence", 1))
+                        .build());
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        assertEquals(1, errors.get(documents.get(0)).size());
+        assertEquals(ValidatorConfiguration.SEVERITY.INFO, errors.get(documents.get(0)).get(0).getLevel());
     }
 }
