@@ -74,13 +74,16 @@ Deploy
 ======
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
-Links
-======
+Supports
+=========
 
 * [Mailing List](https://groups.google.com/forum/#!forum/redpen-validator)
 * [Docs](http://redpen.cc/docs.html)
 * [JavaDoc](http://redpen.cc/javadoc/latest/index.html)
 * [Blog](http://blog.redpen.cc)
+* Chat
+  * [English](https://gitter.im/redpen-cc/redpen)
+  * [Japanese](https://gitter.im/redpen-cc/redpen/redpen-ja)
 
 Acknowledgements
 ================
