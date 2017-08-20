@@ -68,6 +68,9 @@ public class XMLFormatterTest extends Validator {
         assertEquals(1, document.getElementsByTagName("lineNum").getLength());
         assertEquals("0",
                 document.getElementsByTagName("lineNum").item(0).getTextContent());
+        assertEquals(1, document.getElementsByTagName("level").getLength());
+        assertEquals("Error",
+                document.getElementsByTagName("level").item(0).getTextContent());
         assertEquals(1, document.getElementsByTagName("sentence").getLength());
         assertEquals("This is a sentence",
                 document.getElementsByTagName("sentence").item(0).getTextContent());
@@ -92,9 +95,12 @@ public class XMLFormatterTest extends Validator {
                 document.getElementsByTagName("message").item(0).getTextContent());
         assertEquals(0, document.getElementsByTagName("file").getLength());
         assertEquals(1, document.getElementsByTagName("lineNum").getLength());
+        assertEquals(1, document.getElementsByTagName("level").getLength());
+        assertEquals(1, document.getElementsByTagName("validator").getLength());
+        assertEquals("Error",
+                document.getElementsByTagName("level").item(0).getTextContent());
         assertEquals("0",
                 document.getElementsByTagName("lineNum").item(0).getTextContent());
-        assertEquals(1, document.getElementsByTagName("validator").getLength());
         assertEquals(this.getClass().getSimpleName(),
                 document.getElementsByTagName("validator").item(0).getTextContent());
     }
@@ -124,15 +130,39 @@ public class XMLFormatterTest extends Validator {
         assertEquals(1, document.getElementsByTagName("message").getLength());
         assertEquals(0, document.getElementsByTagName("file").getLength());
         assertEquals(1, document.getElementsByTagName("lineNum").getLength());
+        assertEquals(1, document.getElementsByTagName("validator").getLength());
         assertEquals("1",
                 document.getElementsByTagName("lineNum").item(0).getTextContent());
-        assertEquals(1, document.getElementsByTagName("validator").getLength());
         assertEquals("InvalidSymbol",
                 document.getElementsByTagName("validator").item(0).getTextContent());
         assertEquals("1,18",
                 document.getElementsByTagName("errorStartPosition").item(0).getTextContent());
         assertEquals("1,19",
                 document.getElementsByTagName("errorEndPosition").item(0).getTextContent());
+    }
+
+    @Test
+    public void testConvertedValidationErrorChangingLevel() throws RedPenException {
+        String sampleText = "This is a good day。\n"; // invalid end of sentence symbol
+        Configuration conf = Configuration.builder().build();
+        Configuration configuration = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol").setSeverity(ValidatorConfiguration.SEVERITY.INFO))
+                .build();
+
+        List<cc.redpen.model.Document> documents = new ArrayList<>();
+        DocumentParser parser = DocumentParser.MARKDOWN;
+        documents.add(parser.parse(sampleText,
+                new SentenceExtractor(conf.getSymbolTable()), conf.getTokenizer()));
+        RedPen redPen = new RedPen(configuration);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
+
+        XMLFormatter formatter = new XMLFormatter();
+        String resultString = formatter.format(new cc.redpen.model.Document.DocumentBuilder(
+                new WhiteSpaceTokenizer()).build(), errors);
+
+        Document document = extractDocument(resultString);
+        assertEquals("Info",
+                document.getElementsByTagName("level").item(0).getTextContent());
     }
 
     private Document extractDocument(String resultString) {
