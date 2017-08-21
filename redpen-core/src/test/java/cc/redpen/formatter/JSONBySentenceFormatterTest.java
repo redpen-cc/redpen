@@ -49,6 +49,7 @@ public class JSONBySentenceFormatterTest extends Validator {
         JSONObject error = sentenceErrors.getJSONArray("errors").getJSONObject(0);
         assertEquals("json by sentence test error", error.getString("message"));
         assertEquals("JSONBySentenceFormatterTest", error.getString("validator"));
+        assertEquals("Error", error.getString("level"));
     }
 
     @Test
@@ -82,6 +83,36 @@ public class JSONBySentenceFormatterTest extends Validator {
         assertEquals(1, sentenceErrors.getJSONArray("errors").length());
         JSONObject error = sentenceErrors.getJSONArray("errors").getJSONObject(0);
         assertEquals("InvalidSymbol", error.getString("validator"));
+        assertEquals("Error", error.getString("level"));
+    }
 
+    @Test
+    public void testFormatDocumentsSettingErrorLevel() throws RedPenException, JSONException {
+        String sampleText = "This is a good day。"; // invalid end of sentence symbol
+        Configuration conf = Configuration.builder().build();
+        Configuration configuration = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol").setSeverity(ValidatorConfiguration.SEVERITY.INFO))
+                .build();
+
+        List<Document> documents = new ArrayList<>();
+        DocumentParser parser = DocumentParser.MARKDOWN;
+        documents.add(parser.parse(sampleText,
+                new SentenceExtractor(conf.getSymbolTable()), conf.getTokenizer()));
+        RedPen redPen = new RedPen(configuration);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
+
+        JSONFormatter formatter = new JSONBySentenceFormatter();
+        String resultString = formatter.format(new cc.redpen.model.Document.DocumentBuilder(
+                new WhiteSpaceTokenizer()).build(), errors);
+
+        JSONObject jsonObject = new JSONObject(resultString);
+        JSONArray jsonErrors = jsonObject.getJSONArray("errors");
+        assertEquals(1, jsonErrors.length());
+        JSONObject sentenceErrors = jsonErrors.getJSONObject(0);
+        assertNotNull(sentenceErrors.getJSONArray("errors"));
+        assertEquals(1, sentenceErrors.getJSONArray("errors").length());
+        JSONObject error = sentenceErrors.getJSONArray("errors").getJSONObject(0);
+        assertEquals("InvalidSymbol", error.getString("validator"));
+        assertEquals("Info", error.getString("level"));
     }
 }

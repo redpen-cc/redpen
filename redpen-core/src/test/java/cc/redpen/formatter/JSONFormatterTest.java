@@ -142,5 +142,4 @@ public class JSONFormatterTest extends Validator {
         assertEquals(sampleText, jsonErrors.getJSONObject(0).getString("sentence"));
         assertEquals("Info", jsonErrors.getJSONObject(0).getString("level"));
     }
-
 }
