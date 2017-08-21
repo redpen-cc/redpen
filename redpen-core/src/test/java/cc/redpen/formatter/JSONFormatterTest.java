@@ -59,7 +59,8 @@ public class JSONFormatterTest extends Validator {
         assertEquals("testing JSONFormatter", jsonErrors.getJSONObject(0).getString("sentence"));
         assertEquals("json test error", jsonErrors.getJSONObject(0).getString("message"));
         assertEquals(1, jsonErrors.getJSONObject(0).getInt("lineNum"));
-        assertEquals("{\"document\":\"docName\",\"errors\":[{\"sentence\":\"testing JSONFormatter\",\"validator\":\"JSONFormatterTest\",\"lineNum\":1,\"sentenceStartColumnNum\":0,\"message\":\"json test error\"}]}", result);
+        assertEquals("Error", jsonErrors.getJSONObject(0).getString("level"));
+        assertEquals("{\"document\":\"docName\",\"errors\":[{\"sentence\":\"testing JSONFormatter\",\"level\":\"Error\",\"validator\":\"JSONFormatterTest\",\"lineNum\":1,\"sentenceStartColumnNum\":0,\"message\":\"json test error\"}]}", result);
     }
 
     @Test
@@ -73,7 +74,7 @@ public class JSONFormatterTest extends Validator {
         documentListMap.put(document, errors);
 
         String result = formatter.format(documentListMap);
-        assertEquals("[{\"document\":\"docName\",\"errors\":[{\"sentence\":\"testing JSONFormatter\",\"validator\":\"JSONFormatterTest\",\"lineNum\":1,\"sentenceStartColumnNum\":0,\"message\":\"json test error\"}]}]", result);
+        assertEquals("[{\"document\":\"docName\",\"errors\":[{\"sentence\":\"testing JSONFormatter\",\"level\":\"Error\",\"validator\":\"JSONFormatterTest\",\"lineNum\":1,\"sentenceStartColumnNum\":0,\"message\":\"json test error\"}]}]", result);
         JSONArray jsonArray = new JSONArray(result);
         assertTrue(jsonArray.length() == 1);
         JSONObject jsonObject = jsonArray.getJSONObject(0);
@@ -115,6 +116,31 @@ public class JSONFormatterTest extends Validator {
         assertEquals("18", jsonErrors.getJSONObject(0).getJSONObject("startPosition").getString("offset"));
         assertEquals("1", jsonErrors.getJSONObject(0).getJSONObject("endPosition").getString("lineNum"));
         assertEquals("19", jsonErrors.getJSONObject(0).getJSONObject("endPosition").getString("offset"));
+    }
+
+    @Test
+    public void testFormatDocumentsSettingErrorLevel() throws RedPenException, JSONException {
+        String sampleText = "This is a good day。"; // invalid end of sentence symbol
+        Configuration conf = Configuration.builder().build();
+        Configuration configuration = Configuration.builder()
+                .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol").setSeverity(ValidatorConfiguration.SEVERITY.INFO))
+                .build();
+
+        List<Document> documents = new ArrayList<>();
+        DocumentParser parser = DocumentParser.MARKDOWN;
+        documents.add(parser.parse(sampleText,
+                new SentenceExtractor(conf.getSymbolTable()), conf.getTokenizer()));
+        RedPen redPen = new RedPen(configuration);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
+
+        JSONFormatter formatter = new JSONFormatter();
+        String resultString = formatter.format(new cc.redpen.model.Document.DocumentBuilder(
+                new WhiteSpaceTokenizer()).build(), errors);
+        JSONObject jsonObject = new JSONObject(resultString);
+        JSONArray jsonErrors = jsonObject.getJSONArray("errors");
+        assertEquals(1, jsonErrors.length());
+        assertEquals(sampleText, jsonErrors.getJSONObject(0).getString("sentence"));
+        assertEquals("Info", jsonErrors.getJSONObject(0).getString("level"));
     }
 
 }
