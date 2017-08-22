@@ -116,7 +116,7 @@ public class ValidatorConfiguration implements Serializable, Cloneable {
      */
     public ValidatorConfiguration setSeverity(String severity) {
         try {
-            setSeverity(SEVERITY.valueOf(severity));
+            setSeverity(SEVERITY.valueOf(severity.toUpperCase()));
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("No such a error level as " + severity, e);
         }
