@@ -4,8 +4,8 @@
         <validator name="SentenceLength">
             <property name="max_len" value="100"/>
         </validator>
-        <validator name="CommaNumber" />
-        <validator name="HeaderLength" />
+        <validator name="CommaNumber"/>
+        <validator name="HeaderLength"/>
 
         <!--Rules on expressions-->
         <validator name="SuccessiveWord" />
@@ -23,7 +23,7 @@
         <!--Rules on symbols and terminologies-->
         <validator name="InvalidSymbol"/>
         <validator name="KatakanaEndHyphen"/>
-        <validator name="KatakanaSpellCheck"/>
+        <validator name="KatakanaSpellCheck" level="info"/>
         <validator name="SpaceBetweenAlphabeticalWord" />
         <validator name="ParenthesizedSentence">
             <property name="max_count" value="3"/>
@@ -35,7 +35,7 @@
         <validator name="SectionLength">
             <property name="max_num" value="1500"/>
         </validator>
-        <validator name="EmptySection" />
+        <validator name="EmptySection" level="Info"/>
         <validator name="GappedSection" />
         <validator name="SectionLevel" />
         <validator name="ParagraphNumber"/>
