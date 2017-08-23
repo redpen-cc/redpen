@@ -35,7 +35,7 @@ public class ValidationError implements Serializable {
     private final Sentence sentence;
     private final LineOffset startPosition;
     private final LineOffset endPosition;
-    private final ValidatorConfiguration.SEVERITY level;
+    private final ValidatorConfiguration.LEVEL level;
 
     /**
      * Constructor.
@@ -47,7 +47,7 @@ public class ValidationError implements Serializable {
     public ValidationError(String validatorName,
             String errorMessage,
             Sentence sentenceWithError) {
-        this(validatorName, errorMessage, sentenceWithError, ValidatorConfiguration.SEVERITY.ERROR);
+        this(validatorName, errorMessage, sentenceWithError, ValidatorConfiguration.LEVEL.ERROR);
     }
 
     /**
@@ -60,7 +60,7 @@ public class ValidationError implements Serializable {
     public ValidationError(String validatorName,
             String errorMessage,
             Sentence sentenceWithError,
-            ValidatorConfiguration.SEVERITY level) {
+            ValidatorConfiguration.LEVEL level) {
         this.message = errorMessage;
         this.validatorName = validatorName;;
         this.sentence = sentenceWithError;
@@ -80,7 +80,7 @@ public class ValidationError implements Serializable {
      */
     ValidationError(String validatorName, String errorMessage, Sentence sentenceWithError,
             int startPosition, int endPosition) {
-        this(validatorName, errorMessage, sentenceWithError, startPosition, endPosition, ValidatorConfiguration.SEVERITY.ERROR);
+        this(validatorName, errorMessage, sentenceWithError, startPosition, endPosition, ValidatorConfiguration.LEVEL.ERROR);
     }
 
     /**
@@ -94,7 +94,7 @@ public class ValidationError implements Serializable {
      */
     ValidationError(String validatorName, String errorMessage, Sentence sentenceWithError,
             int startPosition, int endPosition,
-            ValidatorConfiguration.SEVERITY level) {
+            ValidatorConfiguration.LEVEL level) {
         this.message = errorMessage;
         this.validatorName = validatorName;
         this.sentence = sentenceWithError;
@@ -120,7 +120,7 @@ public class ValidationError implements Serializable {
         this.sentence = sentenceWithError;
         this.startPosition = startPosition;
         this.endPosition = endPosition;
-        this.level = ValidatorConfiguration.SEVERITY.ERROR;
+        this.level = ValidatorConfiguration.LEVEL.ERROR;
     }
 
     /**
@@ -195,7 +195,7 @@ public class ValidationError implements Serializable {
      * Get error level.
      * @return error level
      */
-    public ValidatorConfiguration.SEVERITY getLevel() {
+    public ValidatorConfiguration.LEVEL getLevel() {
         return level;
     }
 

@@ -68,7 +68,7 @@ public class PlainFormatterTest extends Validator {
     @Test
     public void testConvertValidationErrorChangingErrorLevel() throws RedPenException {
         Configuration config = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration("SentenceLength").setSeverity(ValidatorConfiguration.SEVERITY.INFO)).build();
+                .addValidatorConfig(new ValidatorConfiguration("SentenceLength").setLevel(ValidatorConfiguration.LEVEL.INFO)).build();
         Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
         Sentence sentence = new Sentence("This is a long long long long long long long long long long long long" +
                 " long long long long long long long long long long long long long long long long long long long long sentence", 0);

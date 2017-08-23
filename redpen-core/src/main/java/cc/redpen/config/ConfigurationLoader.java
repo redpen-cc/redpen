@@ -233,7 +233,7 @@ public class ConfigurationLoader {
                 validatorConfigurations.put(currentValidatorName, currentConfiguration);
                 NodeList propertyElementList = nNode.getChildNodes();
                 extractProperties(currentConfiguration, propertyElementList);
-                extractSeverity(currentConfiguration, element);
+                extractLevel(currentConfiguration, element);
             } else {
                 LOG.warn("Invalid block: \"" + element.getNodeName() + "\"");
                 LOG.warn("Skip this block ...");
@@ -242,10 +242,10 @@ public class ConfigurationLoader {
         validatorConfigurations.values().forEach(configBuilder::addValidatorConfig);
     }
 
-    private void extractSeverity(ValidatorConfiguration currentConfiguration, Element element) {
+    private void extractLevel(ValidatorConfiguration currentConfiguration, Element element) {
         String level = element.getAttribute("level");
         if (level == null || level.length() == 0) return;
-        currentConfiguration.setSeverity(level);
+        currentConfiguration.setLevel(level);
      }
 
     private void extractProperties(ValidatorConfiguration currentConfiguration,

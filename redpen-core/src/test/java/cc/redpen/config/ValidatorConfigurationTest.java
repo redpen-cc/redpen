@@ -18,13 +18,13 @@ public class ValidatorConfigurationTest {
     assertEquals(conf.getProperties(), clone.getProperties());
 
     assertNotSame(conf.getProperties(), clone.getProperties());
-    assertEquals(conf.getSeverity(), clone.getSeverity());
+    assertEquals(conf.getLevel(), clone.getLevel());
   }
 
   @Test
   public void equals() throws Exception {
-    ValidatorConfiguration conf = new ValidatorConfiguration("test").addProperty("foo", "bar").setSeverity(ValidatorConfiguration.SEVERITY.ERROR);
-    ValidatorConfiguration conf2 = new ValidatorConfiguration("test").addProperty("foo", "bar").setSeverity(ValidatorConfiguration.SEVERITY.ERROR);
+    ValidatorConfiguration conf = new ValidatorConfiguration("test").addProperty("foo", "bar").setLevel(ValidatorConfiguration.LEVEL.ERROR);
+    ValidatorConfiguration conf2 = new ValidatorConfiguration("test").addProperty("foo", "bar").setLevel(ValidatorConfiguration.LEVEL.ERROR);
     assertEquals(conf, conf2);
   }
 
@@ -44,8 +44,8 @@ public class ValidatorConfigurationTest {
 
   @Test
   public void equals_levels() throws Exception {
-    ValidatorConfiguration conf = new ValidatorConfiguration("test").setSeverity(ValidatorConfiguration.SEVERITY.INFO);
-    ValidatorConfiguration conf2 = new ValidatorConfiguration("test2").setSeverity(ValidatorConfiguration.SEVERITY.INFO);;
+    ValidatorConfiguration conf = new ValidatorConfiguration("test").setLevel(ValidatorConfiguration.LEVEL.INFO);
+    ValidatorConfiguration conf2 = new ValidatorConfiguration("test2").setLevel(ValidatorConfiguration.LEVEL.INFO);;
     assertFalse(conf.equals(conf2));
   }
 }

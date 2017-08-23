@@ -458,8 +458,8 @@ public class ConfigurationLoaderTest {
         assertEquals(1, configuration.getValidatorConfigs().size());
         assertEquals("SentenceLength",
                 configuration.getValidatorConfigs().get(0).getConfigurationName());
-        assertEquals(ValidatorConfiguration.SEVERITY.INFO,
-                configuration.getValidatorConfigs().get(0).getSeverity());
+        assertEquals(ValidatorConfiguration.LEVEL.INFO,
+                configuration.getValidatorConfigs().get(0).getLevel());
     }
 
     @Test(expected = RuntimeException.class)
@@ -494,6 +494,6 @@ public class ConfigurationLoaderTest {
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         assertEquals(1, errors.get(documents.get(0)).size());
-        assertEquals(ValidatorConfiguration.SEVERITY.INFO, errors.get(documents.get(0)).get(0).getLevel());
+        assertEquals(ValidatorConfiguration.LEVEL.INFO, errors.get(documents.get(0)).get(0).getLevel());
     }
 }

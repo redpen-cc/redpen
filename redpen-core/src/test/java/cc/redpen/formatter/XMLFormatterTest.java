@@ -146,7 +146,7 @@ public class XMLFormatterTest extends Validator {
         String sampleText = "This is a good day。\n"; // invalid end of sentence symbol
         Configuration conf = Configuration.builder().build();
         Configuration configuration = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol").setSeverity(ValidatorConfiguration.SEVERITY.INFO))
+                .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol").setLevel(ValidatorConfiguration.LEVEL.INFO))
                 .build();
 
         List<cc.redpen.model.Document> documents = new ArrayList<>();

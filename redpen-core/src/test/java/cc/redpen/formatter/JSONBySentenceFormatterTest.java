@@ -91,7 +91,7 @@ public class JSONBySentenceFormatterTest extends Validator {
         String sampleText = "This is a good day。"; // invalid end of sentence symbol
         Configuration conf = Configuration.builder().build();
         Configuration configuration = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol").setSeverity(ValidatorConfiguration.SEVERITY.INFO))
+                .addValidatorConfig(new ValidatorConfiguration("InvalidSymbol").setLevel(ValidatorConfiguration.LEVEL.INFO))
                 .build();
 
         List<Document> documents = new ArrayList<>();

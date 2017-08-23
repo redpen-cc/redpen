@@ -29,7 +29,7 @@ public class ValidatorConfiguration implements Serializable, Cloneable {
     /**
      * Define how severe the validation errors are.
      */
-    public enum SEVERITY {
+    public enum LEVEL {
         INFO, WARN, ERROR;
 
         Map<String, String> mapping = new HashMap<String, String>() {
@@ -48,7 +48,7 @@ public class ValidatorConfiguration implements Serializable, Cloneable {
 
     private final String configurationName;
     private Map<String, String> properties;
-    private SEVERITY severity = SEVERITY.ERROR;
+    private LEVEL level = LEVEL.ERROR;
 
     /**
      * @param name name configuration settings
@@ -61,17 +61,17 @@ public class ValidatorConfiguration implements Serializable, Cloneable {
      * @param name name configuration settings
      * @param properties validator properties
      */
-    public ValidatorConfiguration(String name, Map<String, String> properties) { this(name, properties, SEVERITY.ERROR); }
+    public ValidatorConfiguration(String name, Map<String, String> properties) { this(name, properties, LEVEL.ERROR); }
 
     /**
      * @param name name configuration settings
      * @param properties validator properties
-     * @param severity error level
+     * @param level error level
      */
-    public ValidatorConfiguration(String name, Map<String, String> properties, SEVERITY severity) {
+    public ValidatorConfiguration(String name, Map<String, String> properties, LEVEL level) {
         this.configurationName = name;
         this.properties = properties;
-        this.severity = severity;
+        this.level = level;
     }
 
     /**
@@ -106,25 +106,25 @@ public class ValidatorConfiguration implements Serializable, Cloneable {
      * Get error level.
      * @return error level
      */
-    public SEVERITY getSeverity() {
-        return severity;
+    public LEVEL getLevel() {
+        return level;
     }
 
     /**
      * Set error level.
-     * @param severity error level
+     * @param level error level
      */
-    public ValidatorConfiguration setSeverity(String severity) {
+    public ValidatorConfiguration setLevel(String level) {
         try {
-            setSeverity(SEVERITY.valueOf(severity.toUpperCase()));
+            setLevel(LEVEL.valueOf(level.toUpperCase()));
         } catch (IllegalArgumentException e) {
-            throw new RuntimeException("No such a error level as " + severity, e);
+            throw new RuntimeException("No such a error level as " + level, e);
         }
         return this;
     }
 
-    public ValidatorConfiguration setSeverity(SEVERITY severity) {
-        this.severity = severity;
+    public ValidatorConfiguration setLevel(LEVEL level) {
+        this.level = level;
         return this;
     }
 
@@ -160,7 +160,7 @@ public class ValidatorConfiguration implements Serializable, Cloneable {
         ValidatorConfiguration that = (ValidatorConfiguration)o;
         return Objects.equals(configurationName, that.configurationName) &&
                 Objects.equals(properties, that.properties) &&
-                Objects.equals(severity, that.severity);
+                Objects.equals(level, that.level);
     }
 
     @Override public int hashCode() {
@@ -178,7 +178,7 @@ public class ValidatorConfiguration implements Serializable, Cloneable {
         try {
             ValidatorConfiguration clone = (ValidatorConfiguration)super.clone();
             clone.properties = new HashMap<>(properties);
-            clone.severity = severity;
+            clone.level = level;
             return clone;
         }
         catch (CloneNotSupportedException e) {
