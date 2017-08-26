@@ -73,6 +73,7 @@ public class JSONBySentenceFormatter extends JSONFormatter {
 
         jsonError.put("message", error.getMessage());
         jsonError.put("validator", error.getValidatorName());
+        jsonError.put("level", error.getLevel());
 
         LineOffset startOffset;
         LineOffset endOffset;

@@ -234,6 +234,7 @@ public class ConfigurationLoader {
                 validatorConfigurations.put(currentValidatorName, currentConfiguration);
                 NodeList propertyElementList = nNode.getChildNodes();
                 extractProperties(currentConfiguration, propertyElementList);
+                extractLevel(currentConfiguration, element);
             } else {
                 LOG.warn("Invalid block: \"" + element.getNodeName() + "\"");
                 LOG.warn("Skip this block ...");
@@ -241,6 +242,12 @@ public class ConfigurationLoader {
         }
         validatorConfigurations.values().forEach(configBuilder::addValidatorConfig);
     }
+
+    private void extractLevel(ValidatorConfiguration currentConfiguration, Element element) {
+        String level = element.getAttribute("level");
+        if (level == null || level.length() == 0) return;
+        currentConfiguration.setLevel(level);
+     }
 
     private void extractProperties(ValidatorConfiguration currentConfiguration,
                                    NodeList propertyElementList) {

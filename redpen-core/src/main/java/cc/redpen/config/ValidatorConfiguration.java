@@ -26,8 +26,29 @@ import java.util.Objects;
  * Configuration for Validators.
  */
 public class ValidatorConfiguration implements Serializable, Cloneable {
+    /**
+     * Define how severe the validation errors are.
+     */
+    public enum LEVEL {
+        INFO, WARN, ERROR;
+
+        Map<String, String> mapping = new HashMap<String, String>() {
+            {
+                put("INFO", "Info");
+                put("WARN", "Warn");
+                put("ERROR", "Error");
+            }
+        };
+
+        @Override
+        public String toString() {
+            return mapping.get(name());
+        }
+    }
+
     private final String configurationName;
     private Map<String, String> properties;
+    private LEVEL level = LEVEL.ERROR;
 
     /**
      * @param name name configuration settings
@@ -40,9 +61,17 @@ public class ValidatorConfiguration implements Serializable, Cloneable {
      * @param name name configuration settings
      * @param properties validator properties
      */
-    public ValidatorConfiguration(String name, Map<String, String> properties) {
+    public ValidatorConfiguration(String name, Map<String, String> properties) { this(name, properties, LEVEL.ERROR); }
+
+    /**
+     * @param name name configuration settings
+     * @param properties validator properties
+     * @param level error level
+     */
+    public ValidatorConfiguration(String name, Map<String, String> properties, LEVEL level) {
         this.configurationName = name;
         this.properties = properties;
+        this.level = level;
     }
 
     /**
@@ -71,6 +100,32 @@ public class ValidatorConfiguration implements Serializable, Cloneable {
      */
     public String getConfigurationName() {
         return configurationName;
+    }
+
+    /**
+     * Get error level.
+     * @return error level
+     */
+    public LEVEL getLevel() {
+        return level;
+    }
+
+    /**
+     * Set error level.
+     * @param level error level
+     */
+    public ValidatorConfiguration setLevel(String level) {
+        try {
+            setLevel(LEVEL.valueOf(level.toUpperCase()));
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("No such a error level as " + level, e);
+        }
+        return this;
+    }
+
+    public ValidatorConfiguration setLevel(LEVEL level) {
+        this.level = level;
+        return this;
     }
 
     /**
@@ -104,7 +159,8 @@ public class ValidatorConfiguration implements Serializable, Cloneable {
         if (!(o instanceof ValidatorConfiguration)) return false;
         ValidatorConfiguration that = (ValidatorConfiguration)o;
         return Objects.equals(configurationName, that.configurationName) &&
-               Objects.equals(properties, that.properties);
+                Objects.equals(properties, that.properties) &&
+                Objects.equals(level, that.level);
     }
 
     @Override public int hashCode() {
@@ -122,6 +178,7 @@ public class ValidatorConfiguration implements Serializable, Cloneable {
         try {
             ValidatorConfiguration clone = (ValidatorConfiguration)super.clone();
             clone.properties = new HashMap<>(properties);
+            clone.level = level;
             return clone;
         }
         catch (CloneNotSupportedException e) {

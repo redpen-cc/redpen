@@ -89,6 +89,7 @@ public class JSONFormatter extends Formatter {
         jsonError.put("message", error.getMessage());
         jsonError.put("validator", error.getValidatorName());
         jsonError.put("sentenceStartColumnNum", error.getStartColumnNumber());
+        jsonError.put("level", error.getLevel().toString());
         if (error.getStartPosition().isPresent()) {
             jsonError.put("startPosition", asJSON(error.getStartPosition().get()));
         }

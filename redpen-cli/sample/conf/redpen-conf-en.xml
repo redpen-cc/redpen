@@ -20,7 +20,7 @@
         <validator name="WeakExpression"/>
 
         <!--Rules on sections and paragraphs-->
-        <validator name="ParagraphNumber"/>
+        <validator name="ParagraphNumber" level="info"/>
         <validator name="SpaceBeginningOfSentence" />
         <validator name="ParenthesizedSentence"/>
         <validator name="EmptySection" />
@@ -30,8 +30,8 @@
 
         <!--Rules on symbols and terminologies-->
         <validator name="InvalidSymbol"/>
-        <validator name="Spelling"/>
-        <validator name="WordFrequency"/>
+        <validator name="Spelling" level="info"/>
+        <validator name="WordFrequency" level="info"/>
         <validator name="Hyphenation"/>
         <validator name="NumberFormat"/>
 

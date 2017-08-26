@@ -114,6 +114,11 @@ public class XMLFormatter extends Formatter {
         Text lineNum = doc.createTextNode(Integer.toString(error.getLineNumber()));
         lineNumberElement.appendChild(lineNum);
 
+        Element errorLevelElement = doc.createElement("level");
+        errorElement.appendChild(errorLevelElement);
+        Text level = doc.createTextNode(error.getLevel().toString());
+        errorLevelElement.appendChild(level);
+
         Element sentenceStartOffset = doc.createElement("sentenceStartColumnNum");
         errorElement.appendChild(sentenceStartOffset);
         Text offset = doc.createTextNode(Integer.toString(error.getStartColumnNumber()));
