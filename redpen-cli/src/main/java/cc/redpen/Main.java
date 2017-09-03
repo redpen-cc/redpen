@@ -101,6 +101,12 @@ public final class Main {
                 .withArgName("LANGUAGE")
                 .create("L"));
 
+        options.addOption(OptionBuilder.withLongOpt("threshold")
+                .withDescription("Threshold of error level (info, warn, error)")
+                .hasArg()
+                .withArgName("THRESHOLD")
+                .create("t"));
+
         options.addOption(OptionBuilder.withLongOpt("version")
                 .withDescription("Displays version information and exits")
                 .create("v"));
@@ -120,6 +126,8 @@ public final class Main {
         String resultFormat = "plain";
         String inputSentence = null;
         String language = "en";
+        String threshold = "error";
+
         int limit = DEFAULT_LIMIT;
 
         if (commandLine.hasOption("h")) {
@@ -147,6 +155,9 @@ public final class Main {
         }
         if (commandLine.hasOption("s")) {
             inputSentence = commandLine.getOptionValue("s");
+        }
+        if (commandLine.hasOption("t")) {
+            threshold= commandLine.getOptionValue("t");
         }
 
         // set language
@@ -183,7 +194,7 @@ public final class Main {
         }
 
         List<Document> documents = getDocuments(inputFormat, inputSentence, inputFileNames, redPen);
-        Map<Document, List<ValidationError>> documentListMap = redPen.validate(documents);
+        Map<Document, List<ValidationError>> documentListMap = redPen.validate(documents, threshold);
 
         Formatter formatter = FormatterUtils.getFormatterByName(resultFormat);
         if (formatter == null) {
