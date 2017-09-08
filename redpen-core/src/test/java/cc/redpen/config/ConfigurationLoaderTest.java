@@ -492,7 +492,7 @@ public class ConfigurationLoaderTest {
                         .build());
 
         RedPen redPen = new RedPen(config);
-        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents, "info");
         assertEquals(1, errors.get(documents.get(0)).size());
         assertEquals(ValidatorConfiguration.LEVEL.INFO, errors.get(documents.get(0)).get(0).getLevel());
     }

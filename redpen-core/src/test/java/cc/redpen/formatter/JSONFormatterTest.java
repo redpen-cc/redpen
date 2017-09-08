@@ -131,7 +131,7 @@ public class JSONFormatterTest extends Validator {
         documents.add(parser.parse(sampleText,
                 new SentenceExtractor(conf.getSymbolTable()), conf.getTokenizer()));
         RedPen redPen = new RedPen(configuration);
-        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
+        List<ValidationError> errors = redPen.validate(documents, "info").get(documents.get(0));
 
         JSONFormatter formatter = new JSONFormatter();
         String resultString = formatter.format(new cc.redpen.model.Document.DocumentBuilder(

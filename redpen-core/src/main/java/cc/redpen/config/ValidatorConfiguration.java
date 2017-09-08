@@ -30,7 +30,9 @@ public class ValidatorConfiguration implements Serializable, Cloneable {
      * Define how severe the validation errors are.
      */
     public enum LEVEL {
-        INFO, WARN, ERROR;
+        INFO(0),
+        WARN(1),
+        ERROR(2);
 
         Map<String, String> mapping = new HashMap<String, String>() {
             {
@@ -39,6 +41,16 @@ public class ValidatorConfiguration implements Serializable, Cloneable {
                 put("ERROR", "Error");
             }
         };
+
+        public boolean isWorseThan(LEVEL other) {
+            return this.severity >= other.severity;
+        }
+
+        private Integer severity;
+
+        LEVEL(int severity) {
+            this.severity = severity;
+        }
 
         @Override
         public String toString() {
