@@ -107,7 +107,7 @@ class SpellingValidatorTest extends BaseValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
-        assertEquals(1, errors.get(document).size());
+        assertEquals(0, errors.get(document).size());
     }
 
     @Test

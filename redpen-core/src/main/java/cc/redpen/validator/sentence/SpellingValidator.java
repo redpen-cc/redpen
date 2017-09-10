@@ -23,6 +23,12 @@ import cc.redpen.tokenizer.TokenElement;
 public final class SpellingValidator extends SpellingDictionaryValidator {
     @Override
     public void validate(Sentence sentence) {
+        if (getSymbolTable().getLang().equals("en")) {
+            validate_en(sentence);
+        }
+    }
+
+    private void validate_en(Sentence sentence) {
         for (TokenElement token : sentence.getTokens()) {
             String surface = token.getSurface().toLowerCase();
             if (surface.length() == 0 || surface.matches("\\P{L}+")) continue;
@@ -32,4 +38,5 @@ public final class SpellingValidator extends SpellingDictionaryValidator {
             }
         }
     }
+
 }
