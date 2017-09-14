@@ -20,11 +20,36 @@ package cc.redpen.validator.sentence;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 public final class SpellingValidator extends SpellingDictionaryValidator {
+
+    private Map<String, List<TokenElement>> words = new HashMap<>();
+
     @Override
     public void validate(Sentence sentence) {
-        if (getSymbolTable().getLang().equals("en")) {
+        String lang = getSymbolTable().getLang();
+        if (lang.equals("ja")) {
+            validate_ja(sentence);
+        } else if (lang.equals("en")) {
             validate_en(sentence);
+        }
+    }
+
+    private void validate_ja(Sentence sentence) {
+        for (TokenElement token : sentence.getTokens()) {
+            String reading = token.getTags().get(7);
+            if (this.words.containsKey(reading)) {
+                List<TokenElement> tokens = this.words.get(reading);
+                for (TokenElement candidate : tokens) {
+                    if (candidate != token && !token.getSurface().equals(candidate.getSurface())) {
+                        addLocalizedErrorFromToken(sentence, token);
+                    }
+                }
+            }
         }
     }
 
@@ -39,4 +64,20 @@ public final class SpellingValidator extends SpellingDictionaryValidator {
         }
     }
 
+    @Override
+    public void preValidate(Sentence sentence) {
+        String lang = getSymbolTable().getLang();
+        if (!lang.equals("ja")) {
+            return;
+        }
+
+        for (TokenElement token : sentence.getTokens()) {
+            String reading = token.getTags().get(7);
+            if (!this.words.containsKey(reading)) {
+                this.words.put(reading, new LinkedList<TokenElement>());
+            }
+            this.words.get(reading).add(token);
+
+        }
+    }
 }
