@@ -82,7 +82,8 @@ public class RedPenDemoTest {
             new URL(redpenServerUrl).openConnection().connect();
             open(redpenServerUrl);
         } catch (IllegalStateException e) {
-            assumeNoException("Please install " + System.getProperty("browser") + " for UI tests to run", e);
+            System.out.println("Please install " + System.getProperty("browser") + " for UI tests to run");
+            assumeNoException(e);
         }
     }
 
