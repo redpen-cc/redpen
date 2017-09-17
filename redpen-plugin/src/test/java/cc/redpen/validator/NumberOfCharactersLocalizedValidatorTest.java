@@ -3,13 +3,14 @@ package cc.redpen.validator;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.sentence.NumberOfCharactersLocalizedValidator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 public class NumberOfCharactersLocalizedValidatorTest extends Validator {
     @Test
