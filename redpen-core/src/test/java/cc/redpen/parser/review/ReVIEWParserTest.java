@@ -25,17 +25,19 @@ import cc.redpen.model.Section;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class ReVIEWParserTest {
+class ReVIEWParserTest {
     @Test
-    public void ParseBlock() throws Exception {
+    void ParseBlock() throws Exception {
         String sample = "//list[yml_sample][my.yml]{";
         ReVIEWParser parser = new ReVIEWParser();
         ReVIEWParser.ReVIEWBlock block = parser.parseBlock(new ReVIEWLine(sample, 0));
@@ -47,7 +49,7 @@ public class ReVIEWParserTest {
     }
 
     @Test
-    public void ParseBlockWithoutProperties() throws Exception {
+    void ParseBlockWithoutProperties() throws Exception {
         String sample = "//lead{";
         ReVIEWParser parser = new ReVIEWParser();
         ReVIEWParser.ReVIEWBlock block = parser.parseBlock(new ReVIEWLine(sample, 0));
@@ -57,7 +59,7 @@ public class ReVIEWParserTest {
     }
 
     @Test
-    public void ParseRawLatexBlock() throws Exception {
+    void ParseRawLatexBlock() throws Exception {
         String sample = "This is @<raw>{|latex|$A_x = b$}.";
         ReVIEWParser parser = new ReVIEWParser();
         Document doc = createFileContent(sample);
@@ -66,7 +68,7 @@ public class ReVIEWParserTest {
     }
 
     @Test
-    public void testMultipleShortLine() {
+    void testMultipleShortLine() {
         String sampleText = "Tokyu\n" +
                 "is a good\n" +
                 "railway company. But there\n" +
@@ -87,7 +89,7 @@ public class ReVIEWParserTest {
     }
 
     @Test
-    public void testRemoveTextDecoration() throws UnsupportedEncodingException {
+    void testRemoveTextDecoration() throws UnsupportedEncodingException {
         String sampleText = "About @<b>{Gekioko}.\n";
         Document doc = createFileContent(sampleText);
         assertEquals(1, doc.size());
@@ -95,7 +97,7 @@ public class ReVIEWParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithList() {
+    void testGenerateDocumentWithList() {
         String sampleText = "There are several railway companies in Japan as follows.\n";
         sampleText += "\n";
         sampleText += " * Tokyu\n";
@@ -133,7 +135,7 @@ public class ReVIEWParserTest {
     }
 
     @Test
-    public void testLabelledList() {
+    void testLabelledList() {
         String sampleText = "= SampleDoc\n" +
                 "\n" +
                 "== 用語定義\n" +
@@ -156,7 +158,7 @@ public class ReVIEWParserTest {
     }
 
     @Test
-    public void testComment() {
+    void testComment() {
         String sampleText = "#@# BLAH BLAH" +
                 "\n" +
                 "Potato";
@@ -173,7 +175,7 @@ public class ReVIEWParserTest {
     }
 
     @Test
-    public void testTable() {
+    void testTable() {
         String sampleText = "#@# BLAH BLAH" +
                 "\n" +
                 "//table[envvars][重要な環境変数]{" +
@@ -194,7 +196,7 @@ public class ReVIEWParserTest {
     }
 
     @Test
-    public void testSectionHeader() throws UnsupportedEncodingException {
+    void testSectionHeader() throws UnsupportedEncodingException {
         String sampleText = "= About @<i>{Gekioko}.\n\n" +
                 "Gekioko means angry.";
 
@@ -204,7 +206,7 @@ public class ReVIEWParserTest {
     }
 
     @Test
-    public void testColumnSectionHeader() throws UnsupportedEncodingException {
+    void testColumnSectionHeader() throws UnsupportedEncodingException {
         String sampleText = "==[column] About Gekioko. \n\n";
         Document doc = createFileContent(sampleText);
         assertEquals(1, doc.size());
@@ -212,7 +214,7 @@ public class ReVIEWParserTest {
     }
 
     @Test
-    public void testInvalidColumnSectionHeader() throws UnsupportedEncodingException {
+    void testInvalidColumnSectionHeader() throws UnsupportedEncodingException {
         String sampleText = "==[column About Gekioko.\n\n"; // NOTE: no "]"
         Document doc = createFileContent(sampleText);
         assertEquals(1, doc.size());
@@ -220,7 +222,7 @@ public class ReVIEWParserTest {
     }
 
     @Test
-    public void testDocumentWithBoldWord() {
+    void testDocumentWithBoldWord() {
         String sampleText = "It is a @<b>{good} day.";
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
@@ -251,7 +253,7 @@ public class ReVIEWParserTest {
     }
 
     @Test
-    public void testKeywordHandling() {
+    void testKeywordHandling() {
         String sampleText = "\n" +
                 "This is the @<kw>{SVM, a popular machine learning method}.";
         Document doc = createFileContent(sampleText);
@@ -259,7 +261,7 @@ public class ReVIEWParserTest {
     }
 
     @Test
-    public void testHrefHandling() {
+    void testHrefHandling() {
         String sampleText = "\n" +
                 "This is @<href>{http://github.com/,GitHub}.";
         Document doc = createFileContent(sampleText);
@@ -295,7 +297,7 @@ public class ReVIEWParserTest {
                     configuration.getTokenizer());
         } catch (RedPenException e) {
             e.printStackTrace();
-            fail();
+            fail("Exception not expected.");
         }
         return doc;
     }

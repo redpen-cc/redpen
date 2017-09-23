@@ -24,17 +24,17 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SpaceBeginningOfSentenceValidatorTest {
+class SpaceBeginningOfSentenceValidatorTest {
     @Test
-    public void testProcessSentenceWithoutEndSpace() throws RedPenException {
+    void testProcessSentenceWithoutEndSpace() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBeginningOfSentence"))
                 .build();
@@ -53,7 +53,7 @@ public class SpaceBeginningOfSentenceValidatorTest {
     }
 
     @Test
-    public void testProcessFirstSpace() throws RedPenException {
+    void testProcessFirstSpace() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBeginningOfSentence"))
                 .build();
@@ -72,7 +72,7 @@ public class SpaceBeginningOfSentenceValidatorTest {
     }
 
     @Test
-    public void testProcessHeadSentenceInAParagraph() throws RedPenException {
+    void testProcessHeadSentenceInAParagraph() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBeginningOfSentence"))
                 .build();
@@ -90,7 +90,7 @@ public class SpaceBeginningOfSentenceValidatorTest {
     }
 
     @Test
-    public void testProcessZeroLengthSentence() throws RedPenException {
+    void testProcessZeroLengthSentence() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBeginningOfSentence"))
                 .build();
@@ -108,7 +108,7 @@ public class SpaceBeginningOfSentenceValidatorTest {
     }
 
     @Test
-    public void testProcessNewLineSentenceWithoutEndSpace() throws RedPenException {
+    void testProcessNewLineSentenceWithoutEndSpace() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBeginningOfSentence"))
                 .build();
@@ -127,7 +127,7 @@ public class SpaceBeginningOfSentenceValidatorTest {
     }
 
     @Test
-    public void testProcessVoidSentence() throws RedPenException {
+    void testProcessVoidSentence() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBeginningOfSentence"))
                 .build();

@@ -17,17 +17,17 @@
  */
 package cc.redpen.model;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DocumentCollectionTest {
+class DocumentCollectionTest {
     @Test
-    public void testCreateDocumentCollection() {
+    void testCreateDocumentCollection() {
         List<Document> docs = new ArrayList<>();
         docs.add(Document.builder()
                 .setFileName("Foobar")
@@ -54,7 +54,7 @@ public class DocumentCollectionTest {
     }
 
     @Test
-    public void testDocumentCollectionWithMultipleDocument() {
+    void testDocumentCollectionWithMultipleDocument() {
         List<Document> docs = new ArrayList<>();
         docs.add(Document.builder()
                 .setFileName("doc1")

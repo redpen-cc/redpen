@@ -27,20 +27,19 @@ import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import cc.redpen.validator.ValidatorFactory;
-import junit.framework.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class LongKanjiChainValidatorTest {
+class LongKanjiChainValidatorTest {
 
     @Test
-    public void testSimpleRun() throws RedPenException {
+    void testSimpleRun() throws RedPenException {
         List<Document> documents = new ArrayList<>();documents.add(
                 Document.builder(new JapaneseTokenizer())
                         .addSection(1)
@@ -60,7 +59,7 @@ public class LongKanjiChainValidatorTest {
     }
 
     @Test
-    public void testVoid() throws RedPenException {
+    void testVoid() throws RedPenException {
         List<Document> documents = new ArrayList<>();documents.add(
                 Document.builder(new JapaneseTokenizer())
                         .addSection(1)
@@ -79,7 +78,7 @@ public class LongKanjiChainValidatorTest {
     }
 
     @Test
-    public void testLoadDefaultDictionary() throws RedPenException {
+    void testLoadDefaultDictionary() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("LongKanjiChain"))
                 .build();
@@ -93,14 +92,14 @@ public class LongKanjiChainValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(2, errors.get(documents.get(0)).size());
+        assertEquals(2, errors.get(documents.get(0)).size());
         assertTrue(errors.get(documents.get(0)).get(0).getMessage().contains("圧倒的当事者意識"));
         assertTrue(errors.get(documents.get(0)).get(1).getMessage().contains("特殊相対性理論"));
     }
 
 
     @Test
-    public void testLoadUserDictionary() throws RedPenException {
+    void testLoadUserDictionary() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("LongKanjiChain").addProperty("list", "特殊相対性理論"))
                 .build();
@@ -121,7 +120,7 @@ public class LongKanjiChainValidatorTest {
      * Assert not throw a exception even when there is no default dictionary.
      */
     @Test
-    public void testLoadNotExistingDefaultDictionary() throws RedPenException {
+    void testLoadNotExistingDefaultDictionary() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("LongKanjiChain"))
                 .build(); // NOTE: no dictionary for japanese or other languages whose words are not split by white space.

@@ -23,7 +23,7 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.validator.sentence.SentenceLengthValidator;
 import cc.redpen.validator.sentence.SpaceBeginningOfSentenceValidator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.lang.reflect.Modifier;
@@ -32,33 +32,33 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class CustomValidator extends Validator {
 }
 
-public class ValidatorFactoryTest {
+class ValidatorFactoryTest {
     @Test
-    public void createValidator() throws RedPenException {
+    void createValidator() throws RedPenException {
         Configuration conf = Configuration.builder().addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
         assertEquals(SentenceLengthValidator.class, ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf).getClass());
     }
 
     @Test
-    public void registerDeprecatedValidator() {
+    void registerDeprecatedValidator() {
         ValidatorFactory.registerValidator(SpaceBeginningOfSentenceValidator.class);
         assertNotNull(ValidatorFactory.validators.get("SpaceBeginningOfSentence"));
     }
 
     @Test
-    public void getConfigurationsDoesNotReturnsDeprecatedOnes() {
+    void getConfigurationsDoesNotReturnsDeprecatedOnes() {
         List<ValidatorConfiguration> configurations = ValidatorFactory.getConfigurations("en");
         assertTrue(configurations.stream().filter(s->s.toString().equals("SentenceLength")).count() == 1);
         assertTrue(configurations.stream().filter(s->s.toString().equals("SpaceBeginningOfSentence")).count() == 0); //NOTE: SpaceBeginningOfSentenceValidator is deprecated
     }
 
     @Test
-    public void validatorPluginsAreCreatedAndRegistered() throws RedPenException {
+    void validatorPluginsAreCreatedAndRegistered() throws RedPenException {
         Configuration conf = Configuration.builder().addValidatorConfig(new ValidatorConfiguration("Custom")).build();
         assertEquals(CustomValidator.class, ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf).getClass());
         assertTrue(ValidatorFactory.getConfigurations("en").contains(new ValidatorConfiguration("Custom")));
@@ -73,19 +73,23 @@ public class ValidatorFactoryTest {
         assertTrue(foundEmbeddedJSValidator);
     }
 
-    @Test(expected = RedPenException.class)
-    public void validatorDoesNotExist() throws RedPenException {
-        Configuration conf = Configuration.builder().addValidatorConfig(new ValidatorConfiguration("Foobar")).build();
-        ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf);
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void noDefaultConstructor() {
-        ValidatorFactory.registerValidator(NoDefaultConstructorValidator.class);
+    @Test
+    void validatorDoesNotExist() throws RedPenException {
+        assertThrows(RedPenException.class, () -> {
+            Configuration conf = Configuration.builder().addValidatorConfig(new ValidatorConfiguration("Foobar")).build();
+            ValidatorFactory.getInstance(conf.getValidatorConfigs().get(0), conf);
+        });
     }
 
     @Test
-    public void allDefaultValidatorsAreRegistered() throws Exception {
+    void noDefaultConstructor() {
+        assertThrows(RuntimeException.class, ()-> {
+            ValidatorFactory.registerValidator(NoDefaultConstructorValidator.class);
+        });
+    }
+
+    @Test
+    void allDefaultValidatorsAreRegistered() throws Exception {
         String validatorsPackage = Validator.class.getPackage().getName();
         File classes = new File(Validator.class.getProtectionDomain().getCodeSource().getLocation().getPath());
         File validators = new File(classes, validatorsPackage.replace(".", "/"));
@@ -93,7 +97,7 @@ public class ValidatorFactoryTest {
     }
 
     @Test
-    public void mapToStrings() throws Exception {
+    void mapToStrings() throws Exception {
         Map<String, Object> properties = new HashMap<>();
         properties.put("string", "bar");
         properties.put("integer", 100);
@@ -120,9 +124,9 @@ public class ValidatorFactoryTest {
                 if (Modifier.isAbstract(validatorClass.getModifiers())) continue;
                 String validatorName = name.substring(0, name.length() - "Validator.class".length());
                 Validator validator = ValidatorFactory.validators.get(validatorName);
-                assertNotNull(validatorName + " must be registered in " + ValidatorFactory.class, validator);
-                assertTrue(validatorClass + " must extend " + Validator.class, validator instanceof Validator);
-                assertTrue("Registered validator " + name + " must be of " + validatorClass, validatorClass.isAssignableFrom(validator.getClass()));
+                assertNotNull(validator, validatorName + " must be registered in " + ValidatorFactory.class);
+                assertTrue(validator instanceof Validator, validatorClass + " must extend " + Validator.class);
+                assertTrue(validatorClass.isAssignableFrom(validator.getClass()), "Registered validator " + name + " must be of " + validatorClass);
             }
         }
     }

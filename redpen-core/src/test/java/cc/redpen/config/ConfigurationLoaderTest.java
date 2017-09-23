@@ -22,7 +22,7 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -32,12 +32,11 @@ import java.util.List;
 import java.util.Map;
 
 import static cc.redpen.config.SymbolType.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class ConfigurationLoaderTest {
+class ConfigurationLoaderTest {
     @Test
-    public void emptyConfiguration() throws RedPenException {
+    void emptyConfiguration() throws RedPenException {
         Configuration configuration = new ConfigurationLoader().loadFromString("<redpen-conf/>");
 
         assertNotNull(configuration);
@@ -45,7 +44,7 @@ public class ConfigurationLoaderTest {
     }
 
     @Test
-    public void testLoadJapaneseConfiguration() throws RedPenException{
+    void testLoadJapaneseConfiguration() throws RedPenException{
         String sampleConfigString =
                 "<redpen-conf lang=\"ja\">" +
                         "<validators>" +
@@ -80,7 +79,7 @@ public class ConfigurationLoaderTest {
     }
 
     @Test
-    public void testLoadJapaneseConfigurationWithHankakuVariant() throws RedPenException{
+    void testLoadJapaneseConfigurationWithHankakuVariant() throws RedPenException{
         String sampleConfigString =
                 "<redpen-conf lang=\"ja\" variant=\"hankaku\">" +
                         "<validators>" +
@@ -112,7 +111,7 @@ public class ConfigurationLoaderTest {
     }
 
     @Test
-    public void testVariantCanBeSpecifiedAsTypeForBackwardsCompatibility() throws RedPenException{
+    void testVariantCanBeSpecifiedAsTypeForBackwardsCompatibility() throws RedPenException{
         String sampleConfigString = "<redpen-conf lang=\"ja\" type=\"hankaku\"><validators/></redpen-conf>";
 
         Configuration configuration = new ConfigurationLoader().loadFromString(sampleConfigString);
@@ -121,7 +120,7 @@ public class ConfigurationLoaderTest {
     }
 
     @Test
-    public void testLoadJapaneseConfigurationWithZenkaku2Variant() throws RedPenException{
+    void testLoadJapaneseConfigurationWithZenkaku2Variant() throws RedPenException{
         String sampleConfigString =
                 "<redpen-conf lang=\"ja\" variant=\"zenkaku2\">" +
                         "<validators>" +
@@ -155,7 +154,7 @@ public class ConfigurationLoaderTest {
     }
 
     @Test
-    public void testNewLoadConfigurationWithoutSymbolTableConfig() throws RedPenException{
+    void testNewLoadConfigurationWithoutSymbolTableConfig() throws RedPenException{
         String sampleConfigString =
                 "<redpen-conf>" +
                         "<validators>" +
@@ -181,7 +180,7 @@ public class ConfigurationLoaderTest {
     }
 
     @Test
-    public void testNewLoadConfigurationWithoutSymbolTableConfigContent() throws RedPenException{
+    void testNewLoadConfigurationWithoutSymbolTableConfigContent() throws RedPenException{
         String sampleConfigString =
                 "<redpen-conf lang=\"en\">" +
                         "<validators>" +
@@ -207,7 +206,7 @@ public class ConfigurationLoaderTest {
     }
 
     @Test
-    public void testNewLoadConfigurationWithoutValidatorConfigContent() throws RedPenException{
+    void testNewLoadConfigurationWithoutValidatorConfigContent() throws RedPenException{
         String sampleConfigString =
                 "<redpen-conf lang=\"en\">" +
                         "<validators>" +
@@ -221,27 +220,29 @@ public class ConfigurationLoaderTest {
         assertNotNull(configuration);
     }
 
-    @Test(expected = RedPenException.class)
-    public void testNewLoadInvalidConfiguration() throws RedPenException{
-        String sampleConfigString =
-                "<redpen-conf lang=\"en\">" +
-                        "<validators>" +
-                        "<validator name=\"SentenceLength\">" +
-                        "<property name=\"max_length\" value=\"200\" />" +
-                        "</validator>" +
-                        "<validator name=\"MaxParagraphNumber\" />" +
-                        "</validators>" +
-                        "<symbols>" +
-                        "<symbol name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\" after-space=\"true\" />" +
-                        "</symbols>" +
-                        "<redpen-conf>";  // NOTE: Invalid xml since slash should be exist.
+    @Test
+    void testNewLoadInvalidConfiguration() throws RedPenException{
+        assertThrows(RedPenException.class, () -> {
+            String sampleConfigString =
+                    "<redpen-conf lang=\"en\">" +
+                            "<validators>" +
+                            "<validator name=\"SentenceLength\">" +
+                            "<property name=\"max_length\" value=\"200\" />" +
+                            "</validator>" +
+                            "<validator name=\"MaxParagraphNumber\" />" +
+                            "</validators>" +
+                            "<symbols>" +
+                            "<symbol name=\"EXCLAMATION_MARK\" value=\"!\" invalid-chars=\"！\" after-space=\"true\" />" +
+                            "</symbols>" +
+                            "<redpen-conf>";  // NOTE: Invalid xml since slash should be exist.
 
-        // expecting RedPenException
-        new ConfigurationLoader().loadFromString(sampleConfigString);
+            // expecting RedPenException
+            new ConfigurationLoader().loadFromString(sampleConfigString);
+        });
     }
 
     @Test
-    public void testSpaceConfiguration() throws RedPenException{
+    void testSpaceConfiguration() throws RedPenException{
         String sampleConfigString =
                 "<redpen-conf lang=\"en\">" +
                         "<validators>" +
@@ -270,7 +271,7 @@ public class ConfigurationLoaderTest {
     }
 
     @Test
-    public void testConfigurationWithoutSpaceSetting() throws RedPenException{
+    void testConfigurationWithoutSpaceSetting() throws RedPenException{
         String sampleConfigString =
                 "<redpen-conf lang=\"en\">" +
                         "<validators>" +
@@ -299,7 +300,7 @@ public class ConfigurationLoaderTest {
     }
 
     @Test
-    public void testConfigurationMultipleInvalids() throws RedPenException{
+    void testConfigurationMultipleInvalids() throws RedPenException{
         String sampleConfigString =
                 "<redpen-conf lang=\"en\">" +
                         "<validators>" +
@@ -324,7 +325,7 @@ public class ConfigurationLoaderTest {
     }
 
     @Test
-    public void testSymbolConfigurationWithoutInvalid() throws RedPenException{
+    void testSymbolConfigurationWithoutInvalid() throws RedPenException{
         String sampleConfigString =
                 "<redpen-conf lang=\"en\">" +
                         "<validators>" +
@@ -351,7 +352,7 @@ public class ConfigurationLoaderTest {
     }
 
     @Test
-    public void testAccessNotRegisteredSymbol() throws RedPenException{
+    void testAccessNotRegisteredSymbol() throws RedPenException{
         String sampleConfigString =
                 "<redpen-conf lang=\"en\">" +
                         "<validators>" +
@@ -372,7 +373,7 @@ public class ConfigurationLoaderTest {
     }
 
     @Test
-    public void testConfigurationWithMisspelledBlock() throws RedPenException{
+    void testConfigurationWithMisspelledBlock() throws RedPenException{
         String sampleConfigString =
                 "<redpen-conf lang=\"en\">" +
                         "<validators>" +
@@ -389,24 +390,26 @@ public class ConfigurationLoaderTest {
         assertNotNull(configuration.getSymbolTable());
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void testSymbolConfigurationWithoutName() throws RedPenException{
-        String sampleConfigString =
-                "<redpen-conf lang=\"en\">" +
-                        "<validators>" +
-                        "<validator name=\"SentenceLength\" />" +
-                        "<validator name=\"MaxParagraphNumber\" />" +
-                        "</validators>" +
-                        "<symbols>" +
-                        "<symbol value=\"!\" invalid-chars=\"！\"/>" + //NOTE: NO NAME!
-                        "</symbols>" +
-                        "</redpen-conf>";
+    @Test
+    void testSymbolConfigurationWithoutName() throws RedPenException{
+        assertThrows(IllegalStateException.class, () -> {
+            String sampleConfigString =
+                    "<redpen-conf lang=\"en\">" +
+                            "<validators>" +
+                            "<validator name=\"SentenceLength\" />" +
+                            "<validator name=\"MaxParagraphNumber\" />" +
+                            "</validators>" +
+                            "<symbols>" +
+                            "<symbol value=\"!\" invalid-chars=\"！\"/>" + //NOTE: NO NAME!
+                            "</symbols>" +
+                            "</redpen-conf>";
 
-        new ConfigurationLoader().loadFromString(sampleConfigString);
+            new ConfigurationLoader().loadFromString(sampleConfigString);
+        });
     }
 
     @Test
-    public void loadFromFileSetsBaseDir() throws Exception {
+    void loadFromFileSetsBaseDir() throws Exception {
         File file = File.createTempFile("redpen-conf", ".xml");
         file.deleteOnExit();
         try (OutputStream out = new FileOutputStream(file)) {
@@ -417,7 +420,7 @@ public class ConfigurationLoaderTest {
     }
 
     @Test
-    public void testDuplicatedValidatorConfiguration() throws RedPenException{
+    void testDuplicatedValidatorConfiguration() throws RedPenException{
         String sampleConfigString =
                 "<redpen-conf lang=\"ja\">" +
                         "<validators>" +
@@ -444,7 +447,7 @@ public class ConfigurationLoaderTest {
     }
 
     @Test
-    public void testValidatorConfigurationWithErrorLevel() throws RedPenException {
+    void testValidatorConfigurationWithErrorLevel() throws RedPenException {
         String sampleConfigString =
                 "<redpen-conf lang=\"ja\">" +
                         "<validators>" +
@@ -462,20 +465,22 @@ public class ConfigurationLoaderTest {
                 configuration.getValidatorConfigs().get(0).getLevel());
     }
 
-    @Test(expected = RuntimeException.class)
-    public void testValidatorConfigurationWithInvalidErrorLevel() throws RedPenException {
-        String sampleConfigString =
-                "<redpen-conf lang=\"ja\">" +
-                        "<validators>" +
-                        "<validator name=\"SentenceLength\" level=\"FOOBAR\" />" +
-                        "</validators>" +
-                        "</redpen-conf>";
+    @Test()
+    void testValidatorConfigurationWithInvalidErrorLevel() throws RedPenException {
+        assertThrows(RuntimeException.class, () -> {
+            String sampleConfigString =
+                    "<redpen-conf lang=\"ja\">" +
+                            "<validators>" +
+                            "<validator name=\"SentenceLength\" level=\"FOOBAR\" />" +
+                            "</validators>" +
+                            "</redpen-conf>";
 
-        Configuration configuration = new ConfigurationLoader().loadFromString(sampleConfigString);
+            Configuration configuration = new ConfigurationLoader().loadFromString(sampleConfigString);
+        });
     }
 
     @Test
-    public void testSpecifiedErrorLevelComeInErrors() throws RedPenException {
+    void testSpecifiedErrorLevelComeInErrors() throws RedPenException {
         String sampleConfigString =
                 "<redpen-conf lang=\"ja\">" +
                         "<validators>" +

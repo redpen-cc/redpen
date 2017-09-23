@@ -17,10 +17,10 @@
  */
 package cc.redpen.validator;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ExpressionRuleTest {
+class ExpressionRuleTest {
     @Test
-    public void testMatch() throws Exception {
+    void testMatch() throws Exception {
     }
 }

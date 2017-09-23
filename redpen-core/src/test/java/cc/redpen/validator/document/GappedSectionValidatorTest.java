@@ -19,18 +19,18 @@ package cc.redpen.validator.document;
 
 import cc.redpen.model.Document;
 import cc.redpen.validator.ValidationError;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class GappedSectionValidatorTest {
+class GappedSectionValidatorTest {
     private GappedSectionValidator validator = new GappedSectionValidator();
 
     @Test
-    public void testInvalid() {
+    void testInvalid() {
         Document document =
                 Document.builder()
                         .addSection(1)
@@ -47,7 +47,7 @@ public class GappedSectionValidatorTest {
     }
 
     @Test
-    public void testValid() {
+    void testValid() {
         Document document =
                 Document.builder()
                         .addSection(1)
@@ -66,7 +66,7 @@ public class GappedSectionValidatorTest {
     }
 
     @Test
-    public void testFailureCase() {
+    void testFailureCase() {
         Document document =
                 Document.builder()
                         .addSection(2)

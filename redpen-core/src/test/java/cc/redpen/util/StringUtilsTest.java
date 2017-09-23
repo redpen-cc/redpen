@@ -17,54 +17,54 @@
  */
 package cc.redpen.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class StringUtilsTest {
+class StringUtilsTest {
     @Test
-    public void tesIsKatakanaWithHiraganaA() {
+    void tesIsKatakanaWithHiraganaA() {
         assertFalse(StringUtils.isKatakana('あ'));
     }
 
     @Test
-    public void tesIsKatakanaWithKatakanaA() {
+    void tesIsKatakanaWithKatakanaA() {
         assertTrue(StringUtils.isKatakana('ア'));
     }
 
     @Test
-    public void tesIsKatakanaWithHyphen() {
+    void tesIsKatakanaWithHyphen() {
         assertTrue(StringUtils.isKatakana('ー'));
     }
 
     @Test
-    public void tesIsKatakanaWithKatakanaMiddleDot() {
+    void tesIsKatakanaWithKatakanaMiddleDot() {
         assertTrue(StringUtils.isKatakana('・'));
     }
 
     @Test
-    public void tesIsBasicLatinWithHiraganaA() {
+    void tesIsBasicLatinWithHiraganaA() {
         assertFalse(StringUtils.isBasicLatin('あ'));
     }
 
     @Test
-    public void tesIsBasicLatinWithKatakanaA() {
+    void tesIsBasicLatinWithKatakanaA() {
         assertFalse(StringUtils.isBasicLatin('ア'));
     }
 
     @Test
-    public void tesIsBasicLatinWithHyphen() {
+    void tesIsBasicLatinWithHyphen() {
         assertTrue(StringUtils.isBasicLatin('-'));
     }
 
     @Test
-    public void tesIsBasicLatinWithPeriod() {
+    void tesIsBasicLatinWithPeriod() {
         assertTrue(StringUtils.isBasicLatin('.'));
     }
 
     @Test
-    public void tesIsBasicLatinWithKatakanaMiddleDot() {
+    void tesIsBasicLatinWithKatakanaMiddleDot() {
         assertFalse(StringUtils.isBasicLatin('・'));
     }
 

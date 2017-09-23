@@ -25,18 +25,17 @@ import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
-import junit.framework.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class JapaneseJoyoKanjiValidatorTest {
+class JapaneseJoyoKanjiValidatorTest {
 
     @Test
-    public void testValid() throws RedPenException {
+    void testValid() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("JapaneseJoyoKanji"))
                 .build();
@@ -50,11 +49,11 @@ public class JapaneseJoyoKanjiValidatorTest {
 
         RedPen redPen = new RedPen(config);
         List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
-        Assert.assertEquals(0, errors.size());
+        assertEquals(0, errors.size());
     }
 
     @Test
-    public void testInvalid() throws RedPenException {
+    void testInvalid() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("JapaneseJoyoKanji"))
                 .build();
@@ -68,7 +67,7 @@ public class JapaneseJoyoKanjiValidatorTest {
 
         RedPen redPen = new RedPen(config);
         List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
-        Assert.assertEquals(2, errors.size());
+        assertEquals(2, errors.size());
         assertEquals("JapaneseJoyoKanji", errors.get(0).getValidatorName());
         assertEquals("JapaneseJoyoKanji", errors.get(1).getValidatorName());
     }

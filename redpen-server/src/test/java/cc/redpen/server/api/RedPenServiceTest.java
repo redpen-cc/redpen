@@ -4,24 +4,25 @@ import cc.redpen.RedPen;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.SymbolType;
 import org.json.JSONObject;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockServletContext;
 
 import java.util.Map;
 
 import static java.util.Collections.emptyMap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class RedPenServiceTest {
-    @Before
-    public void setUp() {
+class RedPenServiceTest {
+    @BeforeEach
+    void setUp() {
         RedPenService.redPens.clear();
     }
 
     @Test
-    public void defaultConfigurations() throws Exception {
+    void defaultConfigurations() throws Exception {
         RedPenService service = new RedPenService(null);
         Map<String, RedPen> redPens = service.getRedPens();
         assertEquals("en", redPens.get("default").getConfiguration().getLang());
@@ -40,7 +41,7 @@ public class RedPenServiceTest {
     }
 
     @Test
-    public void canSpecifyDifferentDefaultConfiguration() throws Exception {
+    void canSpecifyDifferentDefaultConfiguration() throws Exception {
         MockServletContext context = new MockServletContext();
         context.addInitParameter("redpen.conf.path", "/conf/redpen-conf-ru.xml");
         RedPen defaultRedPen = new RedPenService(context).getRedPen("default");
@@ -49,13 +50,13 @@ public class RedPenServiceTest {
     }
 
     @Test
-    public void redPensWithCustomPropertiesAreAlsoSecure() throws Exception {
+    void redPensWithCustomPropertiesAreAlsoSecure() throws Exception {
         RedPen en = new RedPenService(null).getRedPen("en", emptyMap());
         assertTrue(en.getConfiguration().isSecure());
     }
 
     @Test
-    public void redPenFromJSON() throws Exception {
+    void redPenFromJSON() throws Exception {
         String json = "{\"config\": {\"symbols\": {\"SPACE\": {\"value\": \" \",\"invalid_chars\": \"\",\"before_space\": false,\"after_space\": false}},\"validators\": {\"WordNumber\": {\"properties\": {\"max_num\": \"30\"}}},\"lang\": \"ru\"}}";
         Configuration conf = new RedPenService(null)
                 .getRedPenFromJSON(new JSONObject(json)).getConfiguration();

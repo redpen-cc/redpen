@@ -17,17 +17,17 @@
  */
 package cc.redpen.config;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static cc.redpen.config.SymbolType.FULL_STOP;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests for creating Configuration object with the Builder.
  */
-public class ConfigurationRedPenBuilderTest {
+class ConfigurationRedPenBuilderTest {
     @Test
-    public void testBuildSimpleConfiguration() {
+    void testBuildSimpleConfiguration() {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .addValidatorConfig(new ValidatorConfiguration("SentenceLength"))
@@ -42,7 +42,7 @@ public class ConfigurationRedPenBuilderTest {
     }
 
     @Test
-    public void testBuildConfigurationWithoutSymbolTable() {
+    void testBuildConfigurationWithoutSymbolTable() {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
@@ -56,7 +56,7 @@ public class ConfigurationRedPenBuilderTest {
     }
 
     @Test
-    public void testBuildConfigurationAddingProperties() {
+    void testBuildConfigurationAddingProperties() {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression")
                         .addProperty("dict", "./foobar.dict"))
@@ -76,7 +76,7 @@ public class ConfigurationRedPenBuilderTest {
     }
 
     @Test
-    public void testBuildConfigurationSpecifyingLanguage() {
+    void testBuildConfigurationSpecifyingLanguage() {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .build();
@@ -87,7 +87,7 @@ public class ConfigurationRedPenBuilderTest {
     }
 
     @Test
-    public void testBuildConfigurationSpecifyingLanguageAndType() {
+    void testBuildConfigurationSpecifyingLanguageAndType() {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .setVariant("hankaku")
@@ -99,7 +99,7 @@ public class ConfigurationRedPenBuilderTest {
     }
 
     @Test
-    public void testBuildConfigurationOverrideSymbolSetting() {
+    void testBuildConfigurationOverrideSymbolSetting() {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .addSymbol(new Symbol(FULL_STOP, '.'))
@@ -111,7 +111,7 @@ public class ConfigurationRedPenBuilderTest {
     }
 
     @Test
-    public void testBuildConfigurationOverrideAddInvalidSymbolSetting() {
+    void testBuildConfigurationOverrideAddInvalidSymbolSetting() {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .addSymbol(new Symbol(SymbolType.FULL_STOP, '。', ".．●"))
@@ -125,7 +125,7 @@ public class ConfigurationRedPenBuilderTest {
     }
 
     @Test
-    public void testBuildConfigurationAccessingSymbolByValue() {
+    void testBuildConfigurationAccessingSymbolByValue() {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .addSymbol(new Symbol(SymbolType.FULL_STOP, '。', ".．●"))
@@ -141,11 +141,13 @@ public class ConfigurationRedPenBuilderTest {
                 .getSymbolByValue('。').getInvalidChars()).contains("●"));
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void testBuildTwice() {
-        Configuration.ConfigurationBuilder builder = Configuration.builder();
-        builder.build();
-        // ConfigurationBuilder is not designed to build more than one RedPen instance
-        builder.setLanguage("ja");
+    @Test
+    void testBuildTwice() {
+        assertThrows(IllegalStateException.class, () -> {
+            Configuration.ConfigurationBuilder builder = Configuration.builder();
+            builder.build();
+            // ConfigurationBuilder is not designed to build more than one RedPen instance
+            builder.setLanguage("ja");
+        });
     }
 }

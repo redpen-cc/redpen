@@ -28,26 +28,26 @@ import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
-import junit.framework.Assert;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class EndOfSentenceValidatorTest {
+class EndOfSentenceValidatorTest {
     private EndOfSentenceValidator validator = new EndOfSentenceValidator();
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() throws Exception {
         validator.preInit(new ValidatorConfiguration("EndOfSentence"), Configuration.builder().build());
     }
 
     @Test
-    public void testInvalidEndOfSentence() {
+    void testInvalidEndOfSentence() {
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(new Sentence("He said \"that is right\".", 0));
@@ -55,7 +55,7 @@ public class EndOfSentenceValidatorTest {
     }
 
     @Test
-    public void testValidEndOfSentence() {
+    void testValidEndOfSentence() {
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(new Sentence("He said \"that is right.\"", 0));
@@ -63,7 +63,7 @@ public class EndOfSentenceValidatorTest {
     }
 
     @Test
-    public void testInValidEndOfSentenceWithQuestionMark() {
+    void testInValidEndOfSentenceWithQuestionMark() {
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(new Sentence("He said \"Is it right\"?", 0));
@@ -71,7 +71,7 @@ public class EndOfSentenceValidatorTest {
     }
 
     @Test
-    public void testVoid() {
+    void testVoid() {
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(new Sentence("", 0));
@@ -79,7 +79,7 @@ public class EndOfSentenceValidatorTest {
     }
 
     @Test
-    public void testJapaneseInvalidEndOfSentence() throws RedPenException {
+    void testJapaneseInvalidEndOfSentence() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("EndOfSentence"))
                 .build();
@@ -93,11 +93,11 @@ public class EndOfSentenceValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(1, errors.get(documents.get(0)).size());
+        assertEquals(1, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testErrorPosition() throws RedPenException {
+    void testErrorPosition() throws RedPenException {
         String sampleText = "He said \"that is right\".";
         Configuration configuration = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("EndOfSentence"))

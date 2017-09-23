@@ -27,17 +27,17 @@ import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import cc.redpen.validator.ValidatorFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class StartWithCapitalLetterValidatorTest {
+class StartWithCapitalLetterValidatorTest {
     @Test
-    public void testDetectStartWithSmallCharacter() throws RedPenException {
+    void testDetectStartWithSmallCharacter() throws RedPenException {
         List<Document> documents = new ArrayList<>();
         documents.add(Document.builder()
                 .addSection(1)
@@ -55,7 +55,7 @@ public class StartWithCapitalLetterValidatorTest {
     }
 
     @Test
-    public void testDetectStartWithCapitalCharacter() throws RedPenException {
+    void testDetectStartWithCapitalCharacter() throws RedPenException {
         List<Document> documents = new ArrayList<>();
         documents.add(Document.builder()
                 .addSection(1)
@@ -73,7 +73,7 @@ public class StartWithCapitalLetterValidatorTest {
     }
 
     @Test
-    public void testStartWithElementOfWhiteList() throws RedPenException {
+    void testStartWithElementOfWhiteList() throws RedPenException {
         List<Document> documents = new ArrayList<>();
         documents.add(Document.builder()
                 .addSection(1)
@@ -91,7 +91,7 @@ public class StartWithCapitalLetterValidatorTest {
     }
 
     @Test
-    public void testStartWithWhiteListItemInJapaneseSentence() throws RedPenException {
+    void testStartWithWhiteListItemInJapaneseSentence() throws RedPenException {
         List<Document> documents = new ArrayList<>();
         documents.add(Document.builder(new JapaneseTokenizer())
                 .addSection(1)
@@ -109,7 +109,7 @@ public class StartWithCapitalLetterValidatorTest {
     }
 
     @Test
-    public void testStartWithWhiteSpaceAndThenItemOfWhiteList() throws RedPenException {
+    void testStartWithWhiteSpaceAndThenItemOfWhiteList() throws RedPenException {
         List<Document> documents = new ArrayList<>();
         documents.add(Document.builder()
                 .addSection(1)
@@ -127,7 +127,7 @@ public class StartWithCapitalLetterValidatorTest {
     }
 
     @Test
-    public void testVoid() throws RedPenException {
+    void testVoid() throws RedPenException {
         List<Document> documents = new ArrayList<>();
         documents.add(Document.builder()
                 .addSection(1)
@@ -145,7 +145,7 @@ public class StartWithCapitalLetterValidatorTest {
     }
 
     @Test
-    public void testLoadDefaultDictionary() throws RedPenException {
+    void testLoadDefaultDictionary() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter"))
                 .build();
@@ -163,7 +163,7 @@ public class StartWithCapitalLetterValidatorTest {
     }
 
     @Test
-    public void testDetectStartWithSmallCharacterInSecondSentence() throws RedPenException {
+    void testDetectStartWithSmallCharacterInSecondSentence() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("StartWithCapitalLetter"))
                 .build();

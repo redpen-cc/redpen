@@ -25,18 +25,18 @@ import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import cc.redpen.validator.ValidatorFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class VoidSectionValidatorTest {
+class VoidSectionValidatorTest {
     private VoidSectionValidator validator = new VoidSectionValidator();
 
     @Test
-    public void testInvalid() {
+    void testInvalid() {
         Document document =
                 Document.builder()
                         .addSection(4)
@@ -51,7 +51,7 @@ public class VoidSectionValidatorTest {
     }
 
     @Test
-    public void testInvalidWithVoidSentence() {
+    void testInvalidWithVoidSentence() {
         Document document =
                 Document.builder()
                         .addSection(1)
@@ -67,7 +67,7 @@ public class VoidSectionValidatorTest {
     }
 
     @Test
-    public void testValid() {
+    void testValid() {
         Document document =
                 Document.builder()
                         .addSection(1)
@@ -84,7 +84,7 @@ public class VoidSectionValidatorTest {
     }
 
     @Test
-    public void testInvalidButSmallSection() {
+    void testInvalidButSmallSection() {
         Document document =
                 Document.builder()
                         .addSection(7)
@@ -99,7 +99,7 @@ public class VoidSectionValidatorTest {
     }
 
     @Test
-    public void testChangeLimit() throws RedPenException {
+    void testChangeLimit() throws RedPenException {
         Document document =
                 Document.builder()
                         .addSection(4)

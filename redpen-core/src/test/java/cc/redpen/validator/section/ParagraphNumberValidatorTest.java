@@ -23,24 +23,25 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.validator.ValidationError;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ParagraphNumberValidatorTest {
+class ParagraphNumberValidatorTest {
     private ParagraphNumberValidator validator = new ParagraphNumberValidator();
 
-    @Before
-    public void setUp() throws RedPenException {
+    @BeforeEach
+    void setUp() throws RedPenException {
         validator.preInit(new ValidatorConfiguration("ParagraphNumber").addProperty("max_num", "3"), Configuration.builder().build());
     }
 
     @Test
-    public void testSectionWithManySection() {
+    void testSectionWithManySection() {
         Section section = new Section(0, "header");
 
         section.appendParagraph(new Paragraph());
@@ -55,7 +56,7 @@ public class ParagraphNumberValidatorTest {
     }
 
     @Test
-    public void testSectionWithOnlyOneSection() {
+    void testSectionWithOnlyOneSection() {
         Section section = new Section(0);
         section.appendParagraph(new Paragraph());
 

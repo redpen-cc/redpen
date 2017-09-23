@@ -28,17 +28,18 @@ import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.validator.ValidationError;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class PlainTextParserTest {
+class PlainTextParserTest {
 
     private DocumentParser parser = null;
 
@@ -70,18 +71,18 @@ public class PlainTextParserTest {
         try {
             doc = parser.parse(sampleText, new SentenceExtractor(configuration.getSymbolTable()), configuration.getTokenizer());
         } catch (RedPenException e) {
-            fail();
+            fail("Exception not expected.");
         }
         return doc;
     }
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         parser = DocumentParser.PLAIN;
     }
 
     @Test
-    public void testGenerateDocument() {
+    void testGenerateDocument() {
         String sampleText = "";
         sampleText += "This is a pen.\n";
         sampleText += "That is a orange.\n";
@@ -112,7 +113,7 @@ public class PlainTextParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithTailingReturns() {
+    void testGenerateDocumentWithTailingReturns() {
         String sampleText = "";
         sampleText += "This is a pen.\n";
         sampleText += "That is a orange.\n";
@@ -131,7 +132,7 @@ public class PlainTextParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithMultipleSentenceInOneLine() {
+    void testGenerateDocumentWithMultipleSentenceInOneLine() {
         String sampleText = "Tokyu is a good railway company. ";
         sampleText += "The company is reliable. In addition it is rich. ";
         sampleText += "I like the company. Howerver someone does not like it.";
@@ -152,7 +153,7 @@ public class PlainTextParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithMultipleSentenceContainsVariousStopCharacters() {
+    void testGenerateDocumentWithMultipleSentenceContainsVariousStopCharacters() {
         String sampleText = "Is Tokyu a good railway company? ";
         sampleText += "Yes it is. In addition it is rich!";
         String[] expectedResult = {"Is Tokyu a good railway company?",
@@ -171,7 +172,7 @@ public class PlainTextParserTest {
     }
 
     @Test
-    public void testPlainTextDocumentOffsets() {
+    void testPlainTextDocumentOffsets() {
         String sampleText = "Is Tokyu a good railway company? It is indeed. Additionally, its cash reserves\nwould fill " +
                 "a small \ncrater on the\nmoon! Yes it would\n\nAnother paragraph resides here.";
         String[] expectedParagraph1Sentences = {
@@ -224,7 +225,7 @@ public class PlainTextParserTest {
     }
 
     @Test
-    public void testPlainTextJapaneseDocumentOffsets() {
+    void testPlainTextJapaneseDocumentOffsets() {
         String sampleText = "お祖母さんの鉛筆は田の\n中にあります。お祖母さんの鉛筆が中にあるの\n田はどこですか？私の家\nの後ろあります\n\nつぎだんらくです。";
         String[] expectedParagraph1Sentences = {
                 "お祖母さんの鉛筆は田の中にあります。",
@@ -274,7 +275,7 @@ public class PlainTextParserTest {
     }
 
     @Test
-    public void testPlainTextOffsets() {
+    void testPlainTextOffsets() {
         String sampleText = "ラ、、になる。ラ、、\nになる。ラ、、になる。";
         Document doc = generateDocument(sampleText, "ja");
         Section section = doc.getLastSection();
@@ -290,7 +291,7 @@ public class PlainTextParserTest {
     }
 
     @Test
-    public void testPlainTextReverseOffsets() {
+    void testPlainTextReverseOffsets() {
         String sampleText = "お祖母さんの鉛筆は田の\n中にあります。お祖母さんの鉛筆が中にあるの\n田はどこですか？私の家\nの後ろあります";
         Document doc = generateDocument(sampleText, "ja");
         Section section = doc.getLastSection();
@@ -309,7 +310,7 @@ public class PlainTextParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithNoContent() {
+    void testGenerateDocumentWithNoContent() {
         String sampleText = "";
         Document doc = generateDocument(sampleText);
         Section section = doc.getLastSection();
@@ -319,7 +320,7 @@ public class PlainTextParserTest {
     }
 
     @Test
-    public void testErrorPositionOfPlainTextParser() throws RedPenException {
+    void testErrorPositionOfPlainTextParser() throws RedPenException {
         String sampleText = "This is a good day。\n"; // invalid end of sentence symbol
         Configuration conf = Configuration.builder().build();
         List<Document> documents = new ArrayList<>();
@@ -342,7 +343,7 @@ public class PlainTextParserTest {
     }
 
     @Test
-    public void testErrorPositionOfPlainTextWithQuotations() throws RedPenException {
+    void testErrorPositionOfPlainTextWithQuotations() throws RedPenException {
         String sampleText = "I 'Dockerfile'.\n";
         Configuration conf = Configuration.builder().build();
         List<Document> documents = new ArrayList<>();

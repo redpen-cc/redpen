@@ -23,28 +23,28 @@ import cc.redpen.tokenizer.JapaneseTokenizer;
 import com.google.common.collect.ImmutableMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-public class RedPenConfigurationResourceTest {
-    RedPenConfigurationResource resource = new RedPenConfigurationResource();
+class RedPenConfigurationResourceTest {
+    private RedPenConfigurationResource resource = new RedPenConfigurationResource();
 
     @Test
-    public void versionIsReturned() throws Exception {
+    void versionIsReturned() throws Exception {
         JSONObject response = (JSONObject)resource.getRedPens("").getEntity();
         assertEquals(RedPen.VERSION, response.getString("version"));
     }
 
     @Test
-    public void availableDocumentParsersAreReturned() throws Exception {
+    void availableDocumentParsersAreReturned() throws Exception {
         JSONObject response = (JSONObject)resource.getRedPens("").getEntity();
         assertEquals(new JSONArray(DocumentParser.PARSER_MAP.keySet()).toString(), response.get("documentParsers").toString());
     }
 
     @Test
-    public void allConfigurationsIfLangNotSpecified() throws Exception {
+    void allConfigurationsIfLangNotSpecified() throws Exception {
         RedPenService service = mock(RedPenService.class);
         RedPen redPen = mock(RedPen.class, RETURNS_DEEP_STUBS);
         doReturn(ImmutableMap.of("en", redPen, "ja", redPen, "et", redPen)).when(service).getRedPens();
@@ -63,7 +63,7 @@ public class RedPenConfigurationResourceTest {
     }
 
     @Test
-    public void redPenFields() throws Exception {
+    void redPenFields() throws Exception {
         JSONObject response = (JSONObject)resource.getRedPens(null).getEntity();
         JSONObject redpens = response.getJSONObject("redpens");
 
@@ -76,7 +76,7 @@ public class RedPenConfigurationResourceTest {
     }
 
     @Test
-    public void exportConfiguration() throws Exception {
+    void exportConfiguration() throws Exception {
         String json = "{\"config\": {\"lang\": \"ru\"}}";
         String response = (String)resource.exportConfiguration(new JSONObject(json)).getEntity();
 

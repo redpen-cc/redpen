@@ -14,17 +14,17 @@ import cc.redpen.validator.Validator;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class JSONBySentenceFormatterTest extends Validator {
+class JSONBySentenceFormatterTest extends Validator {
     @Test
-    public void testFormat() throws JSONException {
+    void testFormat() throws JSONException {
         JSONFormatter formatter = new JSONBySentenceFormatter();
         List<ValidationError> errors = new ArrayList<>();
         setErrorList(errors);
@@ -53,7 +53,7 @@ public class JSONBySentenceFormatterTest extends Validator {
     }
 
     @Test
-    public void testFormatErrorsFromMarkdownParser() throws RedPenException, JSONException {
+    void testFormatErrorsFromMarkdownParser() throws RedPenException, JSONException {
         String sampleText = "This is a good day。"; // invalid end of sentence symbol
         Configuration conf = Configuration.builder().build();
         Configuration configuration = Configuration.builder()
@@ -87,7 +87,7 @@ public class JSONBySentenceFormatterTest extends Validator {
     }
 
     @Test
-    public void testFormatDocumentsSettingErrorLevel() throws RedPenException, JSONException {
+    void testFormatDocumentsSettingErrorLevel() throws RedPenException, JSONException {
         String sampleText = "This is a good day。"; // invalid end of sentence symbol
         Configuration conf = Configuration.builder().build();
         Configuration configuration = Configuration.builder()

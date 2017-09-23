@@ -9,7 +9,7 @@ public abstract class BaseValidatorTest {
   protected String validatorName;
   protected Configuration config;
 
-  public BaseValidatorTest(String validatorName) {
+  protected BaseValidatorTest(String validatorName) {
     this.validatorName = validatorName;
     this.config = getConfiguration("en");
   }

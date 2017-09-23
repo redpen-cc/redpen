@@ -23,16 +23,16 @@ import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.ValidatorFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class WeakExpressionValidatorTest {
+class WeakExpressionValidatorTest {
     @Test
-    public void testSingleSentence() throws RedPenException {
+    void testSingleSentence() throws RedPenException {
         WeakExpressionValidator validator = (WeakExpressionValidator) ValidatorFactory.getInstance("WeakExpression");
 
         List<Document> documents = new ArrayList<>();
@@ -49,11 +49,11 @@ public class WeakExpressionValidatorTest {
         validator.setErrorList(errors);
         validator.validate(st);
 
-        assertEquals(st.toString(), 4, errors.size());
+        assertEquals(4, errors.size(), st.toString());
         st = documents.get(0).getLastSection().getParagraph(0).getSentence(1);
         errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(st);
-        assertEquals(st.toString(), 2, errors.size());
+        assertEquals(2, errors.size(), st.toString());
     }
 }

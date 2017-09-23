@@ -19,12 +19,13 @@ package cc.redpen;
 
 import cc.redpen.model.Document;
 import cc.redpen.parser.DocumentParser;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class SampleDocumentGeneratorTest {
     @Test
@@ -79,8 +80,10 @@ public class SampleDocumentGeneratorTest {
                 .getParagraph(0).getSentence(0).getContent());
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testInputNullDocument() throws RedPenException {
-        SampleDocumentGenerator.generateOneFileDocument(null, DocumentParser.MARKDOWN);
+        assertThrows(NullPointerException.class, () -> {
+            SampleDocumentGenerator.generateOneFileDocument(null, DocumentParser.MARKDOWN);
+        });
     }
 }

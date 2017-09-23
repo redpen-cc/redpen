@@ -6,7 +6,7 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.validator.ValidationError;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,11 +14,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
-public class PreprocessorTest {
+class PreprocessorTest {
     private static final Logger LOG = LoggerFactory.getLogger(PreprocessorTest.class);
 
     private String sampleAsiiDocText = "Instances Overview\n==================\n" + "Author's Name <person@email.address>\nv1.2, 2015-08\n" +
@@ -105,7 +105,7 @@ public class PreprocessorTest {
             "Such distriubuted systems need a component to merge the preliminary results from member instnaces.\n";
 
     @Test
-    public void testSuppressErrorsInAsciiDoc() throws UnsupportedEncodingException, RedPenException {
+    void testSuppressErrorsInAsciiDoc() {
 
         Document doc = createFileContent(sampleAsiiDocText, DocumentParser.ASCIIDOC);
         assertEquals(4, doc.getPreprocessorRules().size());
@@ -124,7 +124,7 @@ public class PreprocessorTest {
     }
 
     @Test
-    public void testSuppressErrorsInMarkdown() throws UnsupportedEncodingException, RedPenException {
+    void testSuppressErrorsInMarkdown() {
         Document doc = createFileContent(sampleMarkdownText, DocumentParser.ASCIIDOC);
         assertEquals(0, doc.getPreprocessorRules().size());
 
@@ -142,13 +142,13 @@ public class PreprocessorTest {
     }
 
     @Test
-    public void testSuppressErrorsInReStructuredtext() throws UnsupportedEncodingException, RedPenException {
+    void testSuppressErrorsInReStructuredtext() {
         Document doc = createFileContent(sampleReStructuredText, DocumentParser.REST);
         assertEquals(1, doc.getPreprocessorRules().size());
     }
 
     @Test
-    public void testTriggeredBy() throws UnsupportedEncodingException, RedPenException {
+    void testTriggeredBy() {
 
         Document doc = createFileContent(sampleAsiiDocText, DocumentParser.ASCIIDOC);
 
@@ -186,7 +186,7 @@ public class PreprocessorTest {
     }
 
     @Test
-    public void testAsciiDocErrorSuppressionSpecificValidator() throws Exception {
+    void testAsciiDocErrorSuppressionSpecificValidator() throws Exception {
         String sampleAsciiDocShortText =
                 "[suppress='SuccessiveWord']\n" +
                         "The following is is an example of a glosssary.\n";
@@ -202,7 +202,7 @@ public class PreprocessorTest {
     }
 
     @Test
-    public void testAsciiDocErrorSuppression() throws Exception {
+    void testAsciiDocErrorSuppression() throws Exception {
         String sampleAsciiDocShortText =
                 "[suppress]\n" +
                 "= Section 1\n" +
@@ -219,7 +219,7 @@ public class PreprocessorTest {
     }
 
     @Test
-    public void testReStructuredtextSuppression() throws Exception {
+    void testReStructuredtextSuppression() throws Exception {
         Document doc = createFileContent(sampleReStructuredText, DocumentParser.REST);
         Configuration configuration = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Spelling"))
@@ -231,7 +231,7 @@ public class PreprocessorTest {
     }
 
     @Test
-    public void testReStructuredtextSuppressionWith2LineSction() throws Exception {
+    void testReStructuredtextSuppressionWith2LineSction() throws Exception {
         Document doc = createFileContent(".. @suppress\n\n" +
                         "Distributed system\n" +
                         "##################\n" +
@@ -250,7 +250,7 @@ public class PreprocessorTest {
     }
 
     @Test
-    public void testReStructuredtextSuppressionSpecificValidator() throws Exception {
+    void testReStructuredtextSuppressionSpecificValidator() throws Exception {
         Document doc = createFileContent(".. @suppress SuccessiveWord\n\n" +
                 "Section 1\n" +
                 "###########\n\n" +
@@ -265,7 +265,7 @@ public class PreprocessorTest {
     }
 
     @Test
-    public void testMarkdownErrorSuppressionSpecificValidator() throws Exception {
+    void testMarkdownErrorSuppressionSpecificValidator() throws Exception {
         String sampleMarkdownShortText =
                 "<!-- @suppress SuccessiveWord -->\n" +
                         "# Section 1\n" +
@@ -282,7 +282,7 @@ public class PreprocessorTest {
     }
 
     @Test
-    public void testMarkdownErrorSuppression() throws Exception {
+    void testMarkdownErrorSuppression() throws Exception {
         String sampleMarkdownShortText =
                 "<!-- @suppress -->\n" +
                 "# Section 1\n" +
@@ -299,7 +299,7 @@ public class PreprocessorTest {
     }
 
     @Test
-    public void testReVIEWErrorSuppressionSpecificValidator() throws Exception {
+    void testReVIEWErrorSuppressionSpecificValidator() throws Exception {
         String sampleReVIEWShortText =
                 "#@# @suppress SuccessiveWord -->\n" +
                         "= Section 1\n" +
@@ -317,7 +317,7 @@ public class PreprocessorTest {
     }
 
     @Test
-    public void testLaTeXErrorSuppressionValidator() throws Exception {
+    void testLaTeXErrorSuppressionValidator() throws Exception {
         String samplelatex = "\\documentclass[a4paper, 10pt]{article}\n" +
                 "\\usepackage{url}\n" +
                 "\\usepackage{color}\n" +
@@ -346,7 +346,7 @@ public class PreprocessorTest {
     }
 
     @Test
-    public void testAsciiDocErrorSuppressionForMultiSectionDoc() throws Exception {
+    void testAsciiDocErrorSuppressionForMultiSectionDoc() throws Exception {
         String sampleAsciiDocShortText =
                 "[suppress='SuccessiveWord']\n" +
                 "= Section 1\n" +
@@ -381,7 +381,7 @@ public class PreprocessorTest {
                     configuration.getTokenizer());
         } catch (RedPenException e) {
             e.printStackTrace();
-            fail();
+            fail("Exception not expected.");
         }
         return doc;
     }

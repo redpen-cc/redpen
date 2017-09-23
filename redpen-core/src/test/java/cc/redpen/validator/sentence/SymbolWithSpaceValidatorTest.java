@@ -28,7 +28,7 @@ import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.validator.BaseValidatorTest;
 import cc.redpen.validator.ValidationError;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,16 +38,16 @@ import static cc.redpen.config.SymbolType.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SymbolWithSpaceValidatorTest extends BaseValidatorTest {
+class SymbolWithSpaceValidatorTest extends BaseValidatorTest {
 
-    public SymbolWithSpaceValidatorTest() {
+    SymbolWithSpaceValidatorTest() {
         super("SymbolWithSpace");
     }
 
     @Test
-    public void testNotNeedSpace() throws RedPenException {
+    void testNotNeedSpace() throws RedPenException {
         Document document = prepareSimpleDocument("I like apple/orange");
 
         config = Configuration.builder()
@@ -61,7 +61,7 @@ public class SymbolWithSpaceValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testNeedAfterSpace() throws RedPenException {
+    void testNeedAfterSpace() throws RedPenException {
         Document document = prepareSimpleDocument("I like her:yes it is");
 
         config = Configuration.builder()
@@ -77,7 +77,7 @@ public class SymbolWithSpaceValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testDoNotNeedAfterSpaceAtTheEndOfSentence() throws RedPenException {
+    void testDoNotNeedAfterSpaceAtTheEndOfSentence() throws RedPenException {
         Document document = prepareSimpleDocument("Hello (world).");
 
         config = Configuration.builder()
@@ -91,7 +91,7 @@ public class SymbolWithSpaceValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testNeedBeforeSpace() throws RedPenException {
+    void testNeedBeforeSpace() throws RedPenException {
         Document document = prepareSimpleDocument("I like her(Nancy) very much.");
 
         config = Configuration.builder()
@@ -107,7 +107,7 @@ public class SymbolWithSpaceValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testNeedSpaceInMultiplePosition() throws RedPenException {
+    void testNeedSpaceInMultiplePosition() throws RedPenException {
         Document document = prepareSimpleDocument("I like her(Nancy)very much.");
 
         config = Configuration.builder()
@@ -124,7 +124,7 @@ public class SymbolWithSpaceValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testReturnOnlyOneForHitBothBeforeAndAfter() throws RedPenException {
+    void testReturnOnlyOneForHitBothBeforeAndAfter() throws RedPenException {
         Document document = prepareSimpleDocument("I like 1*10.");
 
         Configuration config = Configuration.builder()
@@ -139,7 +139,7 @@ public class SymbolWithSpaceValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testErrorBeforePosition() throws RedPenException {
+    void testErrorBeforePosition() throws RedPenException {
         String sampleText = "I like her(Nancy) very much.";
         Configuration configuration = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))
@@ -160,7 +160,7 @@ public class SymbolWithSpaceValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testErrorAfterPosition() throws RedPenException {
+    void testErrorAfterPosition() throws RedPenException {
         String sampleText = "I like her (Nancy)very much.";
         Configuration configuration = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SymbolWithSpace"))

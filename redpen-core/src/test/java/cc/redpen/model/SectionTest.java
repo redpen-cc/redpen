@@ -17,23 +17,23 @@
  */
 package cc.redpen.model;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SectionTest {
+class SectionTest {
     @Test
-    public void testGetJoinedHeaderFromSectionHasOneSentenceHeader() {
+    void testGetJoinedHeaderFromSectionHasOneSentenceHeader() {
         Section section = new Section(0, "header");
         assertEquals("header", section.getJoinedHeaderContents().getContent());
         assertEquals(0, section.getJoinedHeaderContents().getLineNumber());
     }
 
     @Test
-    public void testGetJoinedHeaderFromSectionHasMultipleSentenceHeader() {
+    void testGetJoinedHeaderFromSectionHasMultipleSentenceHeader() {
         List<Sentence> headers = new ArrayList<>();
         headers.add(new Sentence("header1.", 0));
         headers.add(new Sentence("header2.", 0));
@@ -43,7 +43,7 @@ public class SectionTest {
     }
 
     @Test
-    public void testGetJoinedHeaderFromSectionWithoutHeader() {
+    void testGetJoinedHeaderFromSectionWithoutHeader() {
         Section section = new Section(0);
         assertEquals("", section.getJoinedHeaderContents().getContent());
         assertEquals(0, section.getJoinedHeaderContents().getLineNumber());

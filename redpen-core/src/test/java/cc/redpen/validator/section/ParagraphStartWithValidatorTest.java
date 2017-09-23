@@ -22,45 +22,46 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.validator.ValidationError;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ParagraphStartWithValidatorTest {
-    ParagraphStartWithValidator validator = new ParagraphStartWithValidator();
+class ParagraphStartWithValidatorTest {
+    private ParagraphStartWithValidator validator = new ParagraphStartWithValidator();
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() throws Exception {
         validator.preInit(new ValidatorConfiguration("ParagraphStartWith").addProperty("start_from", "  "), Configuration.builder().build());
     }
 
     @Test
-    public void startWithoutSpace() {
+    void startWithoutSpace() {
         assertEquals(1, validateParagraphs(new Paragraph().appendSentence("it like a piece of a cake.", 1)).size());
     }
 
     @Test
-    public void startWithIncorrectPrefix() {
+    void startWithIncorrectPrefix() {
         assertEquals(1, validateParagraphs(new Paragraph().appendSentence(" it like a piece of a cake.", 1)).size());
     }
 
     @Test
-    public void startWithTooLongPrefix() {
+    void startWithTooLongPrefix() {
         assertEquals(1, validateParagraphs(new Paragraph().appendSentence("   it like a piece of a cake.", 1)).size());
     }
 
     @Test
-    public void startWithCorrectPrefix() {
+    void startWithCorrectPrefix() {
         assertEquals(0, validateParagraphs(new Paragraph().appendSentence("  it like a piece of a cake.", 1)).size());
     }
 
     @Test
-    public void twoParagraphs() {
+    void twoParagraphs() {
         List<ValidationError> errors = validateParagraphs(
           new Paragraph().appendSentence("p1.", 1),
           new Paragraph().appendSentence("p2.", 2)
@@ -71,7 +72,7 @@ public class ParagraphStartWithValidatorTest {
     }
 
     @Test
-    public void voidParagraph() {
+    void voidParagraph() {
         assertEquals(0, validateParagraphs(new Paragraph()).size());
     }
 

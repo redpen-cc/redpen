@@ -24,17 +24,17 @@ import cc.redpen.model.Document;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.validator.ValidationError;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DoubleNegativeValidatorTest {
+class DoubleNegativeValidatorTest {
     @Test
-    public void testDetectDoubleNegative() throws Exception {
+    void testDetectDoubleNegative() throws Exception {
         String sampleText = "そういう話なら、理解できないこともない。";
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("DoubleNegative"))
@@ -56,7 +56,7 @@ public class DoubleNegativeValidatorTest {
     }
 
     @Test
-    public void testNotDetectSingleNegative() throws Exception {
+    void testNotDetectSingleNegative() throws Exception {
         String sampleText =
                 "そういう話は理解できない。";
         Configuration config = Configuration.builder("ja")
@@ -76,7 +76,7 @@ public class DoubleNegativeValidatorTest {
     }
 
     @Test
-    public void testNotDetectPositiveType() throws Exception {
+    void testNotDetectPositiveType() throws Exception {
         String sampleText =
                 "そういう話は理解できる。";
         Configuration config = Configuration.builder("ja")
@@ -95,7 +95,7 @@ public class DoubleNegativeValidatorTest {
     }
 
     @Test
-    public void testDetectFuzzyDoubleNegative() throws Exception {
+    void testDetectFuzzyDoubleNegative() throws Exception {
         String sampleText =
                 "そういう話なら、ないことないでしょう。";
         Configuration config = Configuration.builder("ja")
@@ -116,7 +116,7 @@ public class DoubleNegativeValidatorTest {
     }
 
     @Test
-    public void testDetectEnDoubleNegative() throws Exception {
+    void testDetectEnDoubleNegative() throws Exception {
         String sampleText = "We believe it, unless it is not true";
         Configuration config = Configuration.builder()
                 .addValidatorConfig(
@@ -141,7 +141,7 @@ public class DoubleNegativeValidatorTest {
 
 
     @Test
-    public void testDetectEnDoubleNegativeWithDistance() throws Exception {
+    void testDetectEnDoubleNegativeWithDistance() throws Exception {
         String sampleText = "unless that is not true, I will go there.";
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("DoubleNegative"))

@@ -30,19 +30,18 @@ import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import cc.redpen.validator.ValidatorFactory;
-import junit.framework.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class InvalidExpressionValidatorTest {
+class InvalidExpressionValidatorTest {
 
     @Test
-    public void testSimpleRun() throws RedPenException {
+    void testSimpleRun() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression").addProperty("list", "may"))
                 .build();
@@ -54,7 +53,7 @@ public class InvalidExpressionValidatorTest {
     }
 
     @Test
-    public void testVoid() throws RedPenException {
+    void testVoid() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression").addProperty("list", "may"))
                 .build();
@@ -66,7 +65,7 @@ public class InvalidExpressionValidatorTest {
     }
 
     @Test
-    public void testLoadDefaultDictionary() throws RedPenException {
+    void testLoadDefaultDictionary() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .build();
@@ -80,11 +79,11 @@ public class InvalidExpressionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(1, errors.get(documents.get(0)).size());
+        assertEquals(1, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testLoadJapaneseDefaultDictionary() throws RedPenException {
+    void testLoadJapaneseDefaultDictionary() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
                 .build();
@@ -98,12 +97,12 @@ public class InvalidExpressionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(1, errors.get(documents.get(0)).size());
+        assertEquals(1, errors.get(documents.get(0)).size());
     }
 
 
     @Test
-    public void testLoadJapaneseInvalidList() throws RedPenException {
+    void testLoadJapaneseInvalidList() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression").addProperty("list", "うふぉ,ガチ"))
                 .build();
@@ -117,11 +116,11 @@ public class InvalidExpressionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(1, errors.get(documents.get(0)).size());
+        assertEquals(1, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testErrorPosition() throws RedPenException {
+    void testErrorPosition() throws RedPenException {
         String sampleText = "Hello You know."; // invalid expression "You know"
         Configuration configuration = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))

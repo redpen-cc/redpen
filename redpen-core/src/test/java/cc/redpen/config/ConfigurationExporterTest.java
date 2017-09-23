@@ -1,39 +1,39 @@
 package cc.redpen.config;
 
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 
 import static cc.redpen.config.SymbolType.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class ConfigurationExporterTest {
-  ConfigurationExporter exporter = new ConfigurationExporter();
-  ByteArrayOutputStream out = new ByteArrayOutputStream();
+class ConfigurationExporterTest {
+  private ConfigurationExporter exporter = new ConfigurationExporter();
+  private ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-  @After
-  public void assertConfigIsLoadable() throws Exception {
+  @AfterEach
+  void assertConfigIsLoadable() throws Exception {
     assertNotNull(new ConfigurationLoader().loadFromString(out.toString()));
   }
 
   @Test
-  public void emptyConfig() throws Exception {
+  void emptyConfig() throws Exception {
     Configuration config = Configuration.builder().build();
     exporter.export(config, out);
     assertEquals("<redpen-conf lang=\"en\">\n</redpen-conf>", out.toString());
   }
 
   @Test
-  public void emptyConfigForJapaneseLanguage() throws Exception {
+  void emptyConfigForJapaneseLanguage() throws Exception {
     Configuration config = Configuration.builder("ja").build();
     exporter.export(config, out);
     assertEquals("<redpen-conf lang=\"ja\" variant=\"zenkaku\">\n</redpen-conf>", out.toString());
   }
 
   @Test
-  public void validators() throws Exception {
+  void validators() throws Exception {
     Configuration config = Configuration.builder()
       .addValidatorConfig(new ValidatorConfiguration("Mega"))
       .addValidatorConfig(new ValidatorConfiguration("Super").addProperty("hello", "world")).build();
@@ -50,7 +50,7 @@ public class ConfigurationExporterTest {
   }
 
   @Test
-  public void symbols() throws Exception {
+  void symbols() throws Exception {
     Configuration config = Configuration.builder()
       .addSymbol(new Symbol(ASTERISK, 'X'))
       .addSymbol(new Symbol(COLON, ';', ":", false, true))
@@ -69,7 +69,7 @@ public class ConfigurationExporterTest {
   }
 
   @Test
-  public void generatedConfigIsLoadable() throws Exception {
+  void generatedConfigIsLoadable() throws Exception {
     String config = "<redpen-conf lang=\"en\">\n" +
       "	<validators>\n" +
       "		<validator name=\"SentenceLength\">\n" +

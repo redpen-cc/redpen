@@ -17,21 +17,5 @@
  */
 package cc.redpen.parser.latex;
 
-import org.junit.Test;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.ArrayDeque;
-
-import java.util.regex.Pattern;
-
-import static org.junit.Assert.*;
-import static cc.redpen.parser.latex.Tools.*;
-import static cc.redpen.parser.latex.Assert.*;
-
-import org.pegdown.ast.*;
-import org.apache.commons.lang3.StringUtils;
-
-public class LaTeXProcessorTest {
+class LaTeXProcessorTest {
 }

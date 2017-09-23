@@ -20,14 +20,15 @@ package cc.redpen.parser;
 import cc.redpen.config.Configuration;
 import cc.redpen.model.Sentence;
 import cc.redpen.util.Pair;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class SentenceExtractorTest {
+class SentenceExtractorTest {
 
     private List<Sentence> createSentences(List<Pair<Integer, Integer>> outputPositions,
                                            int lastPosition, String line) {
@@ -39,7 +40,7 @@ public class SentenceExtractorTest {
     }
 
     @Test
-    public void testSimple() {
+    void testSimple() {
         SentenceExtractor extractor = new SentenceExtractor(
                 Configuration.builder().build().getSymbolTable());
         List<Pair<Integer, Integer>> outputPositions = new ArrayList<>();
@@ -52,7 +53,7 @@ public class SentenceExtractorTest {
     }
 
     @Test
-    public void testMultipleSentences() {
+    void testMultipleSentences() {
         SentenceExtractor extractor = new SentenceExtractor(
                 Configuration.builder().build().getSymbolTable());
         final String input = "this is a pen. that is a paper.";
@@ -66,7 +67,7 @@ public class SentenceExtractorTest {
     }
 
     @Test
-    public void testTwoSentencesWithDifferentStopCharacters() {
+    void testTwoSentencesWithDifferentStopCharacters() {
         SentenceExtractor extractor = new SentenceExtractor(
                 Configuration.builder().build().getSymbolTable());
         final String input = "is this a pen? that is a paper.";
@@ -80,7 +81,7 @@ public class SentenceExtractorTest {
     }
 
     @Test
-    public void testMultipleSentencesWithoutPeriodInTheEnd() {
+    void testMultipleSentencesWithoutPeriodInTheEnd() {
         SentenceExtractor extractor = new SentenceExtractor(Configuration.builder().build().getSymbolTable());
         final String input = "this is a pen. that is a paper";
         List<Pair<Integer, Integer>> outputPositions = new ArrayList<>();
@@ -92,7 +93,7 @@ public class SentenceExtractorTest {
     }
 
     @Test
-    public void testEndWithDoubleQuotation() {
+    void testEndWithDoubleQuotation() {
         SentenceExtractor extractor = new SentenceExtractor(
                 Configuration.builder().build().getSymbolTable());
         List<Pair<Integer, Integer>> outputPositions = new ArrayList<>();
@@ -105,7 +106,7 @@ public class SentenceExtractorTest {
     }
 
     @Test
-    public void testEndWithSingleQuotation() {
+    void testEndWithSingleQuotation() {
         SentenceExtractor extractor = new SentenceExtractor(
                 Configuration.builder().build().getSymbolTable());
         final String input = "this is a \'pen.\'";
@@ -118,7 +119,7 @@ public class SentenceExtractorTest {
     }
 
     @Test
-    public void testEndWithDoubleQuotationEnglishVersion() {
+    void testEndWithDoubleQuotationEnglishVersion() {
         SentenceExtractor extractor = new SentenceExtractor(
                 Configuration.builder().build().getSymbolTable());
         final String input = "this is a \"pen\".";
@@ -131,7 +132,7 @@ public class SentenceExtractorTest {
     }
 
     @Test
-    public void testEndWithSingleQuotationEnglishVersion() {
+    void testEndWithSingleQuotationEnglishVersion() {
         SentenceExtractor extractor = new SentenceExtractor(
                 Configuration.builder().build().getSymbolTable());
         final String input = "this is a \'pen\'.";
@@ -144,7 +145,7 @@ public class SentenceExtractorTest {
     }
 
     @Test
-    public void testMultipleSentencesOneOfThemIsEndWithDoubleQuotation() {
+    void testMultipleSentencesOneOfThemIsEndWithDoubleQuotation() {
         SentenceExtractor extractor = new SentenceExtractor(
                 Configuration.builder().build().getSymbolTable());
         final String input = "this is a \"pen.\" Another one is not a pen.";
@@ -158,7 +159,7 @@ public class SentenceExtractorTest {
     }
 
     @Test
-    public void testMultipleSentencesWithPartialSplit() {
+    void testMultipleSentencesWithPartialSplit() {
         SentenceExtractor extractor = new SentenceExtractor(
                 Configuration.builder().build().getSymbolTable());
         final String input = "this is a pen. Another\n" + "one is not a pen.";
@@ -172,7 +173,7 @@ public class SentenceExtractorTest {
     }
 
     @Test
-    public void testMultipleSentencesWithSplitInEndOfSentence() {
+    void testMultipleSentencesWithSplitInEndOfSentence() {
         SentenceExtractor extractor = new SentenceExtractor(
                 Configuration.builder().build().getSymbolTable());
         final String input = "this is a pen.\nAnother one is not a pen.";
@@ -186,7 +187,7 @@ public class SentenceExtractorTest {
     }
 
     @Test
-    public void testMultipleSentencesWithPartialSentence() {
+    void testMultipleSentencesWithPartialSentence() {
         SentenceExtractor extractor = new SentenceExtractor(
                 Configuration.builder().build().getSymbolTable());
         final String input = "this is a pen. Another\n";
@@ -199,7 +200,7 @@ public class SentenceExtractorTest {
     }
 
     @Test
-    public void testJapaneseSimple() {
+    void testJapaneseSimple() {
         char[] stopChars = {'。', '？'};
         SentenceExtractor extractor = new SentenceExtractor(stopChars);
         final String input = "これは埼玉ですか？いいえ群馬です。";
@@ -213,7 +214,7 @@ public class SentenceExtractorTest {
     }
 
     @Test
-    public void testJapaneseSimpleWithSpace() {
+    void testJapaneseSimpleWithSpace() {
         char[] stopChars = {'。', '？'};
         SentenceExtractor extractor = new SentenceExtractor(stopChars);
         final String input = "これは埼玉ですか？ いいえ群馬です。";
@@ -227,7 +228,7 @@ public class SentenceExtractorTest {
     }
 
     @Test
-    public void testJapaneseSimpleWithEndQuotations() {
+    void testJapaneseSimpleWithEndQuotations() {
         char[] stopChars = {'。', '？'};
         char[] rightQuotations = {'’', '”'};
         SentenceExtractor extractor = new SentenceExtractor(stopChars, rightQuotations);
@@ -241,7 +242,7 @@ public class SentenceExtractorTest {
     }
 
     @Test
-    public void testJapaneseMultipleSentencesWithEndQuotations() {
+    void testJapaneseMultipleSentencesWithEndQuotations() {
         char[] stopChars = {'。', '？'};
         char[] rightQuotations = {'’', '”'};
         SentenceExtractor extractor = new SentenceExtractor(stopChars, rightQuotations);
@@ -256,7 +257,7 @@ public class SentenceExtractorTest {
     }
 
     @Test
-    public void testJapaneseMultipleSentencesWithPartialSplit() {
+    void testJapaneseMultipleSentencesWithPartialSplit() {
         char[] stopChars = {'．', '？'};
         char[] rightQuotations = {'”', '’'};
         SentenceExtractor extractor = new SentenceExtractor(stopChars, rightQuotations);
@@ -272,7 +273,7 @@ public class SentenceExtractorTest {
     }
 
     @Test
-    public void testJapanesSentenceWithEndWithNonFullStop() {
+    void testJapanesSentenceWithEndWithNonFullStop() {
         char[] stopChars = {'．'};
         char[] rightQuotations = {'’', '”'};
         SentenceExtractor extractor = new SentenceExtractor(stopChars, rightQuotations);
@@ -286,7 +287,7 @@ public class SentenceExtractorTest {
     }
 
     @Test
-    public void testSentenceWithWhiteWordPosition() {
+    void testSentenceWithWhiteWordPosition() {
         SentenceExtractor extractor = new SentenceExtractor(
                 Configuration.builder().build().getSymbolTable());
         final String input = "He is a Dr. candidate.";
@@ -299,7 +300,7 @@ public class SentenceExtractorTest {
     }
 
     @Test
-    public void testMultipleSentencesWithWhiteWordPosition() {
+    void testMultipleSentencesWithWhiteWordPosition() {
         SentenceExtractor extractor = new SentenceExtractor
                 (Configuration.builder().build().getSymbolTable());
         final String input = "Is he a Dr. candidate? Yes, he is.";  // NOTE: white word list contains "Dr."
@@ -313,7 +314,7 @@ public class SentenceExtractorTest {
     }
 
     @Test
-    public void testVoidLine() {
+    void testVoidLine() {
         SentenceExtractor extractor = new SentenceExtractor(
                 Configuration.builder().build().getSymbolTable());
         final String input = "";
@@ -325,7 +326,7 @@ public class SentenceExtractorTest {
     }
 
     @Test
-    public void testJustPeriodLine() {
+    void testJustPeriodLine() {
         SentenceExtractor extractor = new SentenceExtractor(
                 Configuration.builder().build().getSymbolTable());
         final String input = ".";
@@ -337,21 +338,23 @@ public class SentenceExtractorTest {
     }
 
     @Test
-    public void testConstructPatternStringWithoutEscape() {
+    void testConstructPatternStringWithoutEscape() {
         char[] endCharacters = {'.', '?', '!'};
         SentenceExtractor extractor = new SentenceExtractor(endCharacters);
         assertEquals("[\\.\\?\\!][\'\"]?", extractor.constructEndSentencePattern().pattern());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testThrowExceptionGivenVoidList() {
-        char[] endCharacters = {};
-        SentenceExtractor extractor = new SentenceExtractor(endCharacters);
-        extractor.constructEndSentencePattern();
+    @Test
+    void testThrowExceptionGivenVoidList() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            char[] endCharacters = {};
+            SentenceExtractor extractor = new SentenceExtractor(endCharacters);
+            extractor.constructEndSentencePattern();
+        });
     }
 
     @Test
-    public void testThrowExceptionGivenNull() {
+    void testThrowExceptionGivenNull() {
         SentenceExtractor extractor = new SentenceExtractor(Configuration.builder().build().getSymbolTable());
         extractor.constructEndSentencePattern(); // not a throw exception
     }

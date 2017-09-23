@@ -24,17 +24,17 @@ import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DoubledJoshiValidatorTest {
+class DoubledJoshiValidatorTest {
     @Test
-    public void testDetectDoubledJoshi() throws Exception {
+    void testDetectDoubledJoshi() throws Exception {
         List<Document> documents = new ArrayList<>();
         documents.add(Document.builder(new JapaneseTokenizer())
                 .addSection(1)
@@ -52,7 +52,7 @@ public class DoubledJoshiValidatorTest {
     }
 
     @Test
-    public void testNotDetectSingleJoshi() throws Exception {
+    void testNotDetectSingleJoshi() throws Exception {
         List<Document> documents = new ArrayList<>();
         documents.add(Document.builder(new JapaneseTokenizer())
                               .addSection(1)
@@ -70,7 +70,7 @@ public class DoubledJoshiValidatorTest {
     }
 
     @Test
-    public void testLoadSkipList() throws Exception {
+    void testLoadSkipList() throws Exception {
         List<Document> documents = new ArrayList<>();
         documents.add(Document.builder(new JapaneseTokenizer())
                 .addSection(1)
@@ -89,7 +89,7 @@ public class DoubledJoshiValidatorTest {
 
 
     @Test
-    public void testInterval2() throws Exception {
+    void testInterval2() throws Exception {
         List<Document> documents = new ArrayList<>();
         documents.add(Document.builder(new JapaneseTokenizer())
                 .addSection(1)
@@ -107,7 +107,7 @@ public class DoubledJoshiValidatorTest {
     }
 
     @Test
-    public void testInterval2SettingMinInterval() throws Exception {
+    void testInterval2SettingMinInterval() throws Exception {
         List<Document> documents = new ArrayList<>();
         documents.add(Document.builder(new JapaneseTokenizer())
                 .addSection(1)

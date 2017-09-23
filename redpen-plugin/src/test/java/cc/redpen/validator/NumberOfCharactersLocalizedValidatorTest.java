@@ -12,9 +12,9 @@ import java.util.Locale;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-public class NumberOfCharactersLocalizedValidatorTest extends Validator {
+class NumberOfCharactersLocalizedValidatorTest extends Validator {
     @Test
-    public void testValidationErrorCreation() throws RedPenException {
+    void testValidationErrorCreation() throws RedPenException {
         Validator validator = new NumberOfCharactersLocalizedValidator();
         validator.setLocale(Locale.ENGLISH);
         List<ValidationError> validationErrors = new ArrayList<>();

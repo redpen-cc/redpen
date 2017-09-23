@@ -17,18 +17,17 @@
  */
 package cc.redpen.parser.latex;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
 import static cc.redpen.parser.latex.Tools.*;
 import static cc.redpen.parser.latex.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class LexerTest {
+class LexerTest {
     @Test
-    public void testCommentShouldAppearAsWhitespace() {
+    void testCommentShouldAppearAsWhitespace() {
         final String corpse = "This is a sentence.\n% This is a comment\nAnd this is another sentence.\n";
         assertTokensEqual(
             Arrays.asList(
@@ -42,7 +41,7 @@ public class LexerTest {
 
 
     @Test
-    public void testCommentWorksAgainstNewline() {
+    void testCommentWorksAgainstNewline() {
         final String corpse = "This is a sentence.\n%\nThis is a line should be concatenated.\n";
         assertTokensEqual(
             Arrays.asList(
@@ -54,7 +53,7 @@ public class LexerTest {
     }
 
     @Test
-    public void testTextile() {
+    void testTextile() {
         final String corpse = "This is a comment\n";
         final List<Token> tokens = Lexer.on(corpse).parse();
         assertEquals(1, tokens.size());
@@ -63,7 +62,7 @@ public class LexerTest {
     }
 
     @Test
-    public void testEscapedCharacters() {
+    void testEscapedCharacters() {
         final String corpse = "This is an \\\\escaped\\\\ backslash ( \\\\ ).";
         final List<Token> tokens = Lexer.on(corpse).parse();
         assertTokensLike(
@@ -77,7 +76,7 @@ public class LexerTest {
     }
 
     @Test
-    public void testControl() {
+    void testControl() {
         final String corpse = "This\\control is\\s3_q a \\gimmeAbre@k .";
         final List<Token> tokens = Lexer.on(corpse).parse();
         assertTokensLike(
@@ -94,7 +93,7 @@ public class LexerTest {
     }
 
     @Test
-    public void testVerbatimText() {
+    void testVerbatimText() {
         final String corpse = "This is a \\verb|v$e$r$b{a}\t\ri\nm,| \\verb,v|e|r+b+atim, \\verb+v,e|rba\\tim+ text\n";
         final List<Token> tokens = Lexer.on(corpse).parse();
         assertTokensLike(
@@ -111,7 +110,7 @@ public class LexerTest {
     }
 
     @Test
-    public void testFormulaShouldNotAppear() {
+    void testFormulaShouldNotAppear() {
         final String corpse = "This is $\\mathrm{science, formulated:} e^{i\\pi} = \\mathrm{cos}\\pi + i\\mathrm{sin}\\pi = 1$.\n";
         final List<Token> tokens = Lexer.on(corpse).parse();
         assertTokensLike(

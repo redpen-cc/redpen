@@ -23,15 +23,15 @@ import cc.redpen.model.Document;
 import cc.redpen.model.Section;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.SentenceExtractor;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class ReSTParserTest {
+class ReSTParserTest {
     @Test
-    public void testSections() {
+    void testSections() {
         String sampleText = "" +
                 "sub section\n" +
                 "-----------\n" +
@@ -49,7 +49,7 @@ public class ReSTParserTest {
                 "blah blah blah";
 
         Document doc = createFileContent(sampleText);
-        assertNotNull("doc is null", doc);
+        assertNotNull(doc, "doc is null");
         assertEquals(3, doc.size());
 
         final Section firstSection = doc.getSection(0);
@@ -70,7 +70,7 @@ public class ReSTParserTest {
 
 
     @Test
-    public void testLists() {
+    void testLists() {
         String sampleText = "There are several railway companies in Japan as follows.\n";
         sampleText += "\n";
         sampleText += "* Tokyu\n";
@@ -80,7 +80,7 @@ public class ReSTParserTest {
         sampleText += "  * Odakyu\n";
 
         Document doc = createFileContent(sampleText);
-        assertNotNull("doc is null", doc);
+        assertNotNull(doc, "doc is null");
         assertEquals(1, doc.size());
 
         assertEquals(5, doc.getSection(0).getListBlock(0).getNumberOfListElements());
@@ -111,7 +111,7 @@ public class ReSTParserTest {
     }
 
     @Test
-    public void testNumberedLists() {
+    void testNumberedLists() {
         String sampleText = "There are several railway companies in Japan as follows.\n";
         sampleText += "\n";
         sampleText += "1. Tokyu\n";
@@ -121,7 +121,7 @@ public class ReSTParserTest {
         sampleText += "  1. Odakyu\n";
 
         Document doc = createFileContent(sampleText);
-        assertNotNull("doc is null", doc);
+        assertNotNull(doc, "doc is null");
         assertEquals(1, doc.size());
 
         assertEquals(5, doc.getSection(0).getListBlock(0).getNumberOfListElements());
@@ -152,7 +152,7 @@ public class ReSTParserTest {
     }
 
     @Test
-    public void testDefinitionLists() {
+    void testDefinitionLists() {
         String sampleText = "There are several railway companies in Japan as follows.\n";
         sampleText += "\n";
         sampleText += "Tokyu\n";
@@ -163,7 +163,7 @@ public class ReSTParserTest {
         sampleText += "  Odakyu\n";
 
         Document doc = createFileContent(sampleText);
-        assertNotNull("doc is null", doc);
+        assertNotNull(doc, "doc is null");
         assertEquals(1, doc.size());
         assertEquals(3, doc.getSection(0).getListBlock(0).getNumberOfListElements());
 
@@ -184,7 +184,7 @@ public class ReSTParserTest {
     }
 
     @Test
-    public void testNormalTables() {
+    void testNormalTables() {
         String sampleText = "Before table.\n";
         sampleText += "\n";
         sampleText += "+------------------------+------------+----------+----------+\n" +
@@ -199,7 +199,7 @@ public class ReSTParserTest {
                 "Finished table yay!";
 
         Document doc = createFileContent(sampleText);
-        assertNotNull("doc is null", doc);
+        assertNotNull(doc, "doc is null");
         assertEquals(1, doc.size());
 
         Section section = doc.getSection(0);
@@ -211,7 +211,7 @@ public class ReSTParserTest {
     }
 
     @Test
-    public void testCSVTables() {
+    void testCSVTables() {
         String sampleText = "Before table.\n";
         sampleText += "\n";
         sampleText += "=====  =====  =======\n" +
@@ -224,7 +224,7 @@ public class ReSTParserTest {
                       "Finished table yay!";
 
         Document doc = createFileContent(sampleText);
-        assertNotNull("doc is null", doc);
+        assertNotNull(doc, "doc is null");
         assertEquals(1, doc.size());
 
         Section section = doc.getSection(0);
@@ -236,7 +236,7 @@ public class ReSTParserTest {
     }
 
     @Test
-    public void testDirectives() {
+    void testDirectives() {
         String sampleText = "Before directive.\n";
         sampleText += "\n";
         sampleText +=
@@ -250,7 +250,7 @@ public class ReSTParserTest {
                 "Finished a directive yay!";
 
         Document doc = createFileContent(sampleText);
-        assertNotNull("doc is null", doc);
+        assertNotNull(doc, "doc is null");
         assertEquals(1, doc.size());
 
         Section section = doc.getSection(0);
@@ -262,7 +262,7 @@ public class ReSTParserTest {
     }
 
     @Test
-    public void testComments() {
+    void testComments() {
         String sampleText = "Before comments.\n";
         sampleText += "\n";
         sampleText +=
@@ -272,7 +272,7 @@ public class ReSTParserTest {
                 "Finished a comment yay!";
 
         Document doc = createFileContent(sampleText);
-        assertNotNull("doc is null", doc);
+        assertNotNull(doc, "doc is null");
         assertEquals(1, doc.size());
 
         Section section = doc.getSection(0);
@@ -284,7 +284,7 @@ public class ReSTParserTest {
     }
 
     @Test
-    public void testLiterals() {
+    void testLiterals() {
         String sampleText = "Before literals.\n";
         sampleText += "\n";
         sampleText += "::\n" +
@@ -294,7 +294,7 @@ public class ReSTParserTest {
                 "Finished a literal yay!";
 
         Document doc = createFileContent(sampleText);
-        assertNotNull("doc is null", doc);
+        assertNotNull(doc, "doc is null");
         assertEquals(1, doc.size());
 
         Section section = doc.getSection(0);
@@ -306,7 +306,7 @@ public class ReSTParserTest {
     }
 
     @Test
-    public void testLineBlock() {
+    void testLineBlock() {
         String sampleText = "Before line block.\n";
         sampleText += "\n";
         sampleText += "::\n" +
@@ -317,7 +317,7 @@ public class ReSTParserTest {
                 "Finished a line block yay!";
 
         Document doc = createFileContent(sampleText);
-        assertNotNull("doc is null", doc);
+        assertNotNull(doc, "doc is null");
         assertEquals(1, doc.size());
 
         Section section = doc.getSection(0);
@@ -330,7 +330,7 @@ public class ReSTParserTest {
 
 
     @Test
-    public void testFootnote() {
+    void testFootnote() {
         String sampleText =
                 "Before footnote.\n" +
                         "\n" +
@@ -341,7 +341,7 @@ public class ReSTParserTest {
                         "Finished a footnote yay!";
 
         Document doc = createFileContent(sampleText);
-        assertNotNull("doc is null", doc);
+        assertNotNull(doc, "doc is null");
         assertEquals(1, doc.size());
 
         Section section = doc.getSection(0);
@@ -367,7 +367,7 @@ public class ReSTParserTest {
                     configuration.getTokenizer());
         } catch (RedPenException e) {
             e.printStackTrace();
-            fail();
+            fail("Exception not expected.");
         }
         return doc;
     }

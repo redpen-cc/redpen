@@ -17,38 +17,38 @@
  */
 package cc.redpen.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class LevenshteinDistanceTest {
+class LevenshteinDistanceTest {
 
     private static final int TARGET_COST = 1;
     private static final int ALTERNATE_COST = 100;
 
     @Test
-    public void testSetGetInsertionCost() {
+    void testSetGetInsertionCost() {
         LevenshteinDistance.setInsertionCost(5);
         assertEquals(5, LevenshteinDistance.getInsertionCost());
         resetCost();
     }
 
     @Test
-    public void testSetGetDeletionCost() {
+    void testSetGetDeletionCost() {
         LevenshteinDistance.setDeletionCost(7);
         assertEquals(7, LevenshteinDistance.getDeletionCost());
         resetCost();
     }
 
     @Test
-    public void testSetGetSubstitutionCost() {
+    void testSetGetSubstitutionCost() {
         LevenshteinDistance.setSubstitutionCost(9);
         assertEquals(9, LevenshteinDistance.getSubstitutionCost());
         resetCost();
     }
 
     @Test
-    public void testDistanceOfNullAndEmpty() {
+    void testDistanceOfNullAndEmpty() {
         String a = null;
         String b = null;
         assertEquals(0, LevenshteinDistance.getDistance(a, b));
@@ -83,7 +83,7 @@ public class LevenshteinDistanceTest {
     }
 
     @Test
-    public void testDistanceOfInsertion() {
+    void testDistanceOfInsertion() {
         String a;
         String b;
 
@@ -107,7 +107,7 @@ public class LevenshteinDistanceTest {
     }
 
     @Test
-    public void testDistanceOfDeletion() {
+    void testDistanceOfDeletion() {
         String a;
         String b;
 
@@ -131,7 +131,7 @@ public class LevenshteinDistanceTest {
     }
 
     @Test
-    public void testDistanceOfSubstitution() {
+    void testDistanceOfSubstitution() {
         String a;
         String b;
 
@@ -155,7 +155,7 @@ public class LevenshteinDistanceTest {
     }
 
     @Test
-    public void testDistanceMixed() {
+    void testDistanceMixed() {
         int cost;
         String a = "kitten";
         String b = "sitting";
@@ -169,7 +169,7 @@ public class LevenshteinDistanceTest {
         resetCost();
     }
 
-    public void resetCost() {
+    private void resetCost() {
         LevenshteinDistance.setInsertionCost(1);
         LevenshteinDistance.setDeletionCost(1);
         LevenshteinDistance.setSubstitutionCost(1);

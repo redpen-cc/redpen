@@ -6,22 +6,22 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class EmbeddedJavaScriptValidatorTest {
+class EmbeddedJavaScriptValidatorTest {
     @Test
-    public void loadEmbeddedJS() throws RedPenException {
+    void loadEmbeddedJS() throws RedPenException {
         ValidatorFactory.getInstance("MyEmbeddedJS");
         ValidatorFactory.getInstance("MyEmbeddedJSSection");
         ValidatorFactory.getInstance("MyEmbeddedJSSentence");
     }
 
     @Test
-    public void embeddedJS() throws RedPenException {
+    void embeddedJS() throws RedPenException {
         Document document = Document.builder()
                 .addSection(1)
                 .addParagraph()

@@ -10,9 +10,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class NumberOfCharactersValidatorTest extends Validator {
+class NumberOfCharactersValidatorTest extends Validator {
     @Test
-    public void testValidationErrorCreation() throws RedPenException {
+    void testValidationErrorCreation() throws RedPenException {
         Validator validator = new NumberOfCharactersValidator();
         List<ValidationError> validationErrors = new ArrayList<>();
         validator.setErrorList(validationErrors);

@@ -24,17 +24,17 @@ import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DoubledConjunctiveParticleGaValidatorTest {
+class DoubledConjunctiveParticleGaValidatorTest {
     @Test
-    public void testInvalid() throws Exception {
+    void testInvalid() throws Exception {
         List<Document> documents = new ArrayList<>();
         documents.add(Document.builder(new JapaneseTokenizer())
                 .addSection(1)
@@ -52,7 +52,7 @@ public class DoubledConjunctiveParticleGaValidatorTest {
     }
 
     @Test
-    public void testValid() throws Exception {
+    void testValid() throws Exception {
         List<Document> documents = new ArrayList<>();
         documents.add(Document.builder(new JapaneseTokenizer())
                 .addSection(1)

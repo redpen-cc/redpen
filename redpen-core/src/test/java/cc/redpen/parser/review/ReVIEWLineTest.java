@@ -18,13 +18,13 @@
 
 package cc.redpen.parser.review;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ReVIEWLineTest {
+class ReVIEWLineTest {
     @Test
-    public void testEraseInlineEnclosure() {
+    void testEraseInlineEnclosure() {
         String testLine = "A line with an @<b>{enclosure}.";
         String expectedResult =
                 "  0-0-001: A line with an ·@·<·b·>·{enclosure·}.";
@@ -34,7 +34,7 @@ public class ReVIEWLineTest {
     }
 
     @Test
-    public void testEraseWholeEnclosure() {
+    void testEraseWholeEnclosure() {
         String testLine = "This is a comment: @<comment>{TODO}.";
         String expectedResult =
                 "  0-0-001: This is a comment: ·@·<·c·o·m·m·e·n·t·>·{·T·O·D·O·}.";

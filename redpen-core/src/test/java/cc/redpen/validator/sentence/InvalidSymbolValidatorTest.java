@@ -27,8 +27,7 @@ import cc.redpen.model.Sentence;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
-import junit.framework.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,11 +37,11 @@ import java.util.Optional;
 import static cc.redpen.config.SymbolType.COMMA;
 import static cc.redpen.config.SymbolType.EXCLAMATION_MARK;
 import static cc.redpen.config.SymbolType.FULL_STOP;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class InvalidSymbolValidatorTest {
+class InvalidSymbolValidatorTest {
     @Test
-    public void testWithInvalidSymbol() throws RedPenException {
+    void testWithInvalidSymbol() throws RedPenException {
         List<Document> documents = new ArrayList<>();
         documents.add(
                 Document.builder(new JapaneseTokenizer())
@@ -58,13 +57,13 @@ public class InvalidSymbolValidatorTest {
 
         RedPen redPen = new RedPen(conf);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(1, errors.get(documents.get(0)).size());
+        assertEquals(1, errors.get(documents.get(0)).size());
         assertEquals(Optional.of(new LineOffset(1, 12)), errors.get(documents.get(0)).get(0).getStartPosition());
         assertEquals(Optional.of(new LineOffset(1, 13)), errors.get(documents.get(0)).get(0).getEndPosition());
     }
 
     @Test
-    public void testWithoutInvalidSymbol() throws RedPenException {
+    void testWithoutInvalidSymbol() throws RedPenException {
         List<Document> documents = new ArrayList<>();
         documents.add(
                 Document.builder()
@@ -80,11 +79,11 @@ public class InvalidSymbolValidatorTest {
 
         RedPen redPen = new RedPen(conf);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.get(0)).size());
+        assertEquals(0, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testWithoutMultipleInvalidSymbol() throws RedPenException {
+    void testWithoutMultipleInvalidSymbol() throws RedPenException {
 
         List<Document> documents = new ArrayList<>();
         documents.add(
@@ -102,11 +101,11 @@ public class InvalidSymbolValidatorTest {
 
         RedPen redPen = new RedPen(conf);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(2, errors.get(documents.get(0)).size());
+        assertEquals(2, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testFloatingNumber() throws RedPenException {
+    void testFloatingNumber() throws RedPenException {
 
         List<Document> documents = new ArrayList<>();
         documents.add(
@@ -123,11 +122,11 @@ public class InvalidSymbolValidatorTest {
 
         RedPen redPen = new RedPen(conf);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.get(0)).size());
+        assertEquals(0, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testFloatingNumberInTheEndOfSentence() throws RedPenException {
+    void testFloatingNumberInTheEndOfSentence() throws RedPenException {
 
         List<Document> documents = new ArrayList<>();
         documents.add(
@@ -144,11 +143,11 @@ public class InvalidSymbolValidatorTest {
 
         RedPen redPen = new RedPen(conf);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.get(0)).size());
+        assertEquals(0, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testDefaultJapaneseSetting() throws Exception {
+    void testDefaultJapaneseSetting() throws Exception {
         List<Document> documents = new ArrayList<>();
         documents.add(Document.builder(new JapaneseTokenizer())
                               .addSection(1)

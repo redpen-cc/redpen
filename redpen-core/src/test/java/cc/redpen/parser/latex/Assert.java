@@ -1,24 +1,23 @@
 package cc.redpen.parser.latex;
 
 import java.util.List;
-import static org.junit.Assert.*;
-
+import static org.junit.jupiter.api.Assertions.*;
 public class Assert {
     public static void assertTokensLike(final List<Token> expected, final List<Token> actual) {
-        assertEquals("token streams differ in size", expected.size(), actual.size());
+        assertEquals(expected.size(), actual.size(), "token streams differ in size");
         for (int i=0; i<expected.size(); ++i) {
             final Token p = expected.get(i);
             final Token q = actual.get(i);
-            assertTrue(String.format("token streams do not look like at index %d: expected: <%s>, got: <%s>", i, p, q), isTokenLikeTo(p, q));
+            assertTrue(isTokenLikeTo(p, q), String.format("token streams do not look like at index %d: expected: <%s>, got: <%s>", i, p, q));
         }
     }
 
     public static void assertTokensEqual(final List<Token> expected, final List<Token> actual) {
-        assertEquals("token streams differ in size", expected.size(), actual.size());
+        assertEquals(expected.size(), actual.size(),"token streams differ in size");
         for (int i=0; i<expected.size(); ++i) {
             final Token p = expected.get(i);
             final Token q = actual.get(i);
-            assertTrue(String.format("token streams differ at index %d: expected: <%s>, got: <%s>", i, p, q), isTokenEqualTo(p, q));
+            assertTrue(isTokenEqualTo(p, q), String.format("token streams differ at index %d: expected: <%s>, got: <%s>", i, p, q));
         }
     }
 

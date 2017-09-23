@@ -24,146 +24,146 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class KatakanaEndHyphenValidatorTest {
+class KatakanaEndHyphenValidatorTest {
     private KatakanaEndHyphenValidator validator = new KatakanaEndHyphenValidator();
 
     @Test
-    public void testEmptyString() {
+    void testEmptyString() {
         Sentence str = new Sentence("", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(str);
-        assertEquals(str.toString(), 0, errors.size());
+        assertEquals(0, errors.size(), str.toString());
     }
 
     @Test
-    public void testSingleHiragana() {
+    void testSingleHiragana() {
         Sentence str = new Sentence("あ", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(str);
-        assertEquals(str.toString(), 0, errors.size());
+        assertEquals(0, errors.size(), str.toString());
     }
 
     @Test
-    public void testSingleKatakana() {
+    void testSingleKatakana() {
         Sentence str = new Sentence("ア", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(str);
-        assertEquals(str.toString(), 0, errors.size());
+        assertEquals(0, errors.size(), str.toString());
     }
 
     @Test
-    public void testKatakanaOfLength2() {
+    void testKatakanaOfLength2() {
         Sentence str = new Sentence("ドア", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(str);
-        assertEquals(str.toString(), 0, errors.size());
+        assertEquals(0, errors.size(), str.toString());
     }
 
     @Test
-    public void testKatakanaOfLength2andHyphen() {
+    void testKatakanaOfLength2andHyphen() {
         Sentence str = new Sentence("ポー", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(str);
-        assertEquals(str.toString(), 0, errors.size());
+        assertEquals(0, errors.size(), str.toString());
     }
 
     @Test
-    public void testKatakanaOfLength3andHyphen() {
+    void testKatakanaOfLength3andHyphen() {
         Sentence str = new Sentence("ミラー", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(str);
-        assertEquals(str.toString(), 0, errors.size());
+        assertEquals(0, errors.size(), str.toString());
     }
 
     @Test
-    public void testKatakanaOfLength4andHyphen() {
+    void testKatakanaOfLength4andHyphen() {
         Sentence str = new Sentence("コーヒー", 0); // This is an error.
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(str);
-        assertEquals(str.toString(), 1, errors.size());
+        assertEquals(1, errors.size(), str.toString());
     }
 
     @Test
-    public void testSentenceBeginningWithKatakanaWithHypen() {
+    void testSentenceBeginningWithKatakanaWithHypen() {
         Sentence str = new Sentence("コンピューターが壊れた。", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(str);
-        assertEquals(str.toString(), 1, errors.size());
+        assertEquals(1, errors.size(), str.toString());;
     }
 
     @Test
-    public void testSentenceBeginningWithKatakanaWithoutHypen() {
+    void testSentenceBeginningWithKatakanaWithoutHypen() {
         Sentence str = new Sentence("コンピュータが壊れた。", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(str);
-        assertEquals(str.toString(), 0, errors.size());
+        assertEquals(0, errors.size(), str.toString());
     }
 
     @Test
-    public void testSentenceContainKatakanaWithHypen() {
+    void testSentenceContainKatakanaWithHypen() {
         Sentence str = new Sentence("僕のコンピューターが壊れた。", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(str);
-        assertEquals(str.toString(), 1, errors.size());
+        assertEquals(1, errors.size(), str.toString());;
     }
 
     @Test
-    public void testSentenceContainKatakanaWitouthHypen() {
+    void testSentenceContainKatakanaWitouthHypen() {
         Sentence str = new Sentence("僕のコンピュータが壊れた。", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(str);
-        assertEquals(str.toString(), 0, errors.size());
+        assertEquals(0, errors.size(), str.toString());
     }
 
     @Test
-    public void testSentenceEndingWithKatakanaWithHypen() {
+    void testSentenceEndingWithKatakanaWithHypen() {
         Sentence str = new Sentence("僕のコンピューター", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(str);
-        assertEquals(str.toString(), 1, errors.size());
+        assertEquals(1, errors.size(), str.toString());;
     }
 
     @Test
-    public void testSentenceEndingWithKatakanaWithoutHypen() {
+    void testSentenceEndingWithKatakanaWithoutHypen() {
         Sentence str = new Sentence("僕のコンピュータ", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(str);
-        assertEquals(str.toString(), 0, errors.size());
+        assertEquals(0, errors.size(), str.toString());
     }
 
     @Test
-    public void testSentenceContainWithKatakanaMiddleDot() {
+    void testSentenceContainWithKatakanaMiddleDot() {
         Sentence str = new Sentence("コーヒー・コンピューター", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(str);
-        assertEquals(str.toString(), 2, errors.size());
+        assertEquals(2, errors.size(), str.toString());
     }
 
     @Test
-    public void testHonorsSkipWordList() throws RedPenException {
+    void testHonorsSkipWordList() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("KatakanaEndHyphen").addProperty("list", "コーヒー"))
                 .build();
@@ -181,7 +181,7 @@ public class KatakanaEndHyphenValidatorTest {
     }
 
     @Test
-    public void testHonorsSkipWordDict() throws RedPenException {
+    void testHonorsSkipWordDict() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("KatakanaEndHyphen")
                         .addProperty("dict", "src/test/resources/cc/redpen/validator/KatakanaEndHyphenValidatorTest-skipworddict.txt")) // XXX
@@ -201,7 +201,7 @@ public class KatakanaEndHyphenValidatorTest {
     }
 
     @Test
-    public void testEndWithSmallLetter() throws RedPenException {
+    void testEndWithSmallLetter() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("KatakanaEndHyphen"))
                 .build();

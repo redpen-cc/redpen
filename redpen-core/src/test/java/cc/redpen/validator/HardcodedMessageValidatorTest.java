@@ -18,21 +18,21 @@
 package cc.redpen.validator;
 
 import cc.redpen.model.Sentence;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class HardcodedMessageValidatorTest extends Validator {
+class HardcodedMessageValidatorTest extends Validator {
     @Override
     public void validate(Sentence sentence) {
         addError("hard-coded error message", sentence);
     }
 
     @Test
-    public void testAddError() {
+    void testAddError() {
         HardcodedMessageValidatorTest validator = new HardcodedMessageValidatorTest();
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);

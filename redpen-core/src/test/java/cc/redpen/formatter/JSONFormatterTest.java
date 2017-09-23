@@ -31,19 +31,22 @@ import cc.redpen.validator.Validator;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class JSONFormatterTest extends Validator {
+
+class JSONFormatterTest extends Validator {
 
     @Test
-    public void testFormatSingleDocumentErrors() throws RedPenException, JSONException {
+    void testFormatSingleDocumentErrors() throws RedPenException, JSONException {
         JSONFormatter formatter = new JSONFormatter();
         List<ValidationError> errors = new ArrayList<>();
         setErrorList(errors);
@@ -64,7 +67,7 @@ public class JSONFormatterTest extends Validator {
     }
 
     @Test
-    public void testFormatDocumentsAndErrors() throws RedPenException, JSONException {
+    void testFormatDocumentsAndErrors() throws RedPenException, JSONException {
         JSONFormatter formatter = new JSONFormatter();
         List<ValidationError> errors = new ArrayList<>();
         setErrorList(errors);
@@ -90,7 +93,7 @@ public class JSONFormatterTest extends Validator {
     }
 
     @Test
-    public void testFormatDocumentsAndErrorsWithPosition() throws RedPenException, JSONException {
+    void testFormatDocumentsAndErrorsWithPosition() throws RedPenException, JSONException {
         String sampleText = "This is a good day。"; // invalid end of sentence symbol
         Configuration conf = Configuration.builder().build();
         Configuration configuration = Configuration.builder()
@@ -119,7 +122,7 @@ public class JSONFormatterTest extends Validator {
     }
 
     @Test
-    public void testFormatDocumentsSettingErrorLevel() throws RedPenException, JSONException {
+    void testFormatDocumentsSettingErrorLevel() throws RedPenException, JSONException {
         String sampleText = "This is a good day。"; // invalid end of sentence symbol
         Configuration conf = Configuration.builder().build();
         Configuration configuration = Configuration.builder()

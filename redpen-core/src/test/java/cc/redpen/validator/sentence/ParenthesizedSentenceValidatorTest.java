@@ -24,16 +24,16 @@ import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidationError;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ParenthesizedSentenceValidatorTest {
+class ParenthesizedSentenceValidatorTest {
     @Test
-    public void testSingleSentence() throws RedPenException {
+    void testSingleSentence() throws RedPenException {
         ParenthesizedSentenceValidator validator = new ParenthesizedSentenceValidator();
         validator.preInit(new ValidatorConfiguration("ParenthesizedSentence").addProperty("max_nesting_level", "2"), Configuration.builder().build());
 
@@ -53,13 +53,13 @@ public class ParenthesizedSentenceValidatorTest {
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(st);
-        assertEquals(st.toString(), 3, errors.size());
+        assertEquals(3, errors.size(), st.toString());
 
         st = documents.get(0).getLastSection().getParagraph(0).getSentence(1);
         errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(st);
-        assertEquals(st.toString(), 2, errors.size());
+        assertEquals(2, errors.size(), st.toString());
 
     }
 }
