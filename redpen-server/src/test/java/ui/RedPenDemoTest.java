@@ -5,7 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
-import org.junit.*;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 
@@ -17,16 +17,16 @@ import java.net.URL;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeNoException;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
-public class RedPenDemoTest {
+class RedPenDemoTest {
     private static String redpenServerUrl;
     private static Server server;
 
-    @BeforeClass
-    public static void beforeClass() throws Exception {
+    @BeforeAll
+    static void beforeClass() throws Exception {
         // Run tests in PhantomJS by default if browser property is not set
         if (System.getProperty("browser") == null) {
             System.setProperty("browser", "phantomjs");
@@ -62,8 +62,8 @@ public class RedPenDemoTest {
         }
     }
 
-    @AfterClass
-    public static void afterClass() throws Exception {
+    @AfterAll
+    static void afterClass() throws Exception {
         if (server != null) {
             server.stop();
         }
@@ -75,25 +75,28 @@ public class RedPenDemoTest {
 
     }
 
-    @Before
-    public void loadRedPen() throws IOException {
+    @BeforeEach
+    void loadRedPen() throws IOException {
+        boolean redPenLoaded;
         System.out.println(redpenServerUrl);
         try {
             new URL(redpenServerUrl).openConnection().connect();
             open(redpenServerUrl);
+            redPenLoaded = true;
         } catch (IllegalStateException e) {
-            assumeNoException("Please install " + System.getProperty("browser") + " for UI tests to run", e);
+            redPenLoaded = false;
         }
+        assumeTrue(redPenLoaded, "Please install " + System.getProperty("browser") + " for UI tests to run");
     }
 
     @Test
-    public void redpenEditorIsPrepopulated() throws Exception {
+    void redpenEditorIsPrepopulated() throws Exception {
         String value = $("#redpen-editor").getAttribute("class");
         assertEquals("redpen-superimposed-editor-panel", value);
     }
 
     @Test
-    public void userCanChooseSampleTexts() throws Exception {
+    void userCanChooseSampleTexts() throws Exception {
         if ($(".navbar-toggle").isDisplayed())
             $(".navbar-toggle").click();
 
@@ -105,13 +108,13 @@ public class RedPenDemoTest {
     }
 
     @Test
-    public void userCanClearTheText() throws Exception {
+    void userCanClearTheText() throws Exception {
         $("[title='Clear text']").click();
         $("#redpen-editor").shouldBe(empty);
     }
 
     @Test
-    public void textIsValidatedAsItEntered() throws Exception {
+    void textIsValidatedAsItEntered() throws Exception {
         $("#redpen-editor").val("Hello Wodrl");
         $("#redpen-errors").shouldHave(text("RedPen found 1 error"));
 
@@ -121,14 +124,14 @@ public class RedPenDemoTest {
     }
 
     @Test
-    public void validatorsCanBeDisabled() throws Exception {
+    void validatorsCanBeDisabled() throws Exception {
         $("input[type=checkbox][value=Spelling]").click();
         $("#redpen-editor").val("Hello Wodrl");
         $("#redpen-errors").shouldHave(text("RedPen found 0 errors"));
     }
 
     @Test
-    public void validatorPropertiesCanBeChanged() throws Exception {
+    void validatorPropertiesCanBeChanged() throws Exception {
         SelenideElement validatorProperties = $(".redpen-validator-properties[name=SentenceLength]");
         validatorProperties.click();
 

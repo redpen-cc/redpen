@@ -1,24 +1,29 @@
 package cc.redpen.util;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
-public class RuleExtractorTest extends TestCase {
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-    public void testSplit() throws Exception {
+class RuleExtractorTest  {
+
+    @Test
+    void testSplit() throws Exception {
         String[] segments = RuleExtractor.split("This:n + is:v");
         assertEquals(2, segments.length);
         assertEquals("This:n", segments[0]);
         assertEquals("is:v", segments[1]);
     }
 
-    public void testSplitWithoutSpaces() throws Exception {
+    @Test
+    void testSplitWithoutSpaces() throws Exception {
         String[] segments = RuleExtractor.split("This:n+is:v");
         assertEquals(2, segments.length);
         assertEquals("This:n", segments[0]);
         assertEquals("is:v", segments[1]);
     }
 
-    public void testSplitWithoutBeforeSpaces() throws Exception {
+    @Test
+    void testSplitWithoutBeforeSpaces() throws Exception {
         String[] segments = RuleExtractor.split("This:n +is:v");
         assertEquals(2, segments.length);
         assertEquals("This:n", segments[0]);

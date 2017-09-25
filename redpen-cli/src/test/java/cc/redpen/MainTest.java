@@ -17,18 +17,21 @@
  */
 package cc.redpen;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class MainTest {
+
+class MainTest {
 
     @Test
-    public void testMain() throws RedPenException {
+    void testMain() throws RedPenException {
         String[] args = new String[]{
                 "-c", "sample/conf/redpen-conf-en.xml",
                 "sample/sample-doc/en/sampledoc-en.txt"
@@ -37,7 +40,7 @@ public class MainTest {
     }
 
     @Test
-    public void testDefaultConfigFile() throws RedPenException, IOException {
+    void testDefaultConfigFile() throws RedPenException, IOException {
         File file;
 
         file = Main.resolveConfigLocation("not-exist.conf");
@@ -77,7 +80,7 @@ public class MainTest {
     }
 
     @Test
-    public void testMainWithSentenceInput() throws RedPenException {
+    void testMainWithSentenceInput() throws RedPenException {
         String[] args = new String[]{
                 "-c", "sample/conf/redpen-conf-en.xml",
                 "-s", "this is a pen",
@@ -86,7 +89,7 @@ public class MainTest {
     }
 
     @Test
-    public void testPlugin() throws Exception {
+    void testPlugin() throws Exception {
         String[] args = new String[]{
                 "-c", "sample/conf/redpen-conf-plugin.xml",
                 "sample/sample-doc/en/sampledoc-en.txt",
@@ -96,13 +99,13 @@ public class MainTest {
     }
 
     @Test
-    public void testMainWithoutParameters() throws RedPenException {
+    void testMainWithoutParameters() throws RedPenException {
         String[] args = new String[]{};
         assertEquals(1, Main.run(args));
     }
 
     @Test
-    public void testMainWithoutConfig() throws RedPenException {
+    void testMainWithoutConfig() throws RedPenException {
         String[] args = new String[]{
                 "sample/sample-doc/en/sampledoc-en.txt"
         };
@@ -110,7 +113,7 @@ public class MainTest {
     }
 
     @Test
-    public void testMainWithoutInput() throws RedPenException {
+    void testMainWithoutInput() throws RedPenException {
         String[] args = new String[]{
                 "-c", "sample/conf/redpen-conf-en.xml",
         };
@@ -118,17 +121,17 @@ public class MainTest {
     }
 
     @Test
-    public void testHelp() throws RedPenException {
+    void testHelp() throws RedPenException {
         assertEquals(0, Main.run("-h"));
     }
 
     @Test
-    public void testVersion() throws RedPenException {
+    void testVersion() throws RedPenException {
         assertEquals(0, Main.run("-v"));
     }
 
     @Test
-    public void testGuessFormat() throws Exception {
+    void testGuessFormat() throws Exception {
         String[] inputs = new String[]{
                 "sample/conf/sampledoc1.adoc",
                 "sample/conf/sampledoc2.adoc",
@@ -137,7 +140,7 @@ public class MainTest {
     }
 
     @Test
-    public void testGuessTwoFormats() throws Exception {
+    void testGuessTwoFormats() throws Exception {
         String[] inputs = new String[]{
                 "sample/conf/sampledoc1.md",
                 "sample/conf/sampledoc2.adoc",
@@ -146,7 +149,7 @@ public class MainTest {
     }
 
     @Test
-    public void testGuessFromAbbrebiatedFoamts() throws Exception {
+    void testGuessFromAbbrebiatedFoamts() throws Exception {
         String[] inputs = new String[]{
                 "sample/conf/sampledoc1.md",
                 "sample/conf/sampledoc2.markdown",
@@ -155,7 +158,7 @@ public class MainTest {
     }
 
     @Test
-    public void testGuessFromNoExtensions() throws Exception {
+    void testGuessFromNoExtensions() throws Exception {
         String[] inputs = new String[]{
                 "sample/conf/sampledoc",
                 "sample/conf/sampledoc",

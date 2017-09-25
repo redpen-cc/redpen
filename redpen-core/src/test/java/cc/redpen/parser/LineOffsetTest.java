@@ -17,13 +17,13 @@
  */
 package cc.redpen.parser;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class LineOffsetTest {
+class LineOffsetTest {
     @Test
-    public void testCompareToDifferentOffset() {
+    void testCompareToDifferentOffset() {
         LineOffset offsetOne = new LineOffset(1, 1);
         LineOffset offsetTwo = new LineOffset(1, 2);
         assertTrue(offsetOne.compareTo(offsetTwo) < 0);
@@ -31,7 +31,7 @@ public class LineOffsetTest {
     }
 
     @Test
-    public void testCompareToDifferentLineNum() {
+    void testCompareToDifferentLineNum() {
         LineOffset offsetOne = new LineOffset(1, 1);
         LineOffset offsetTwo = new LineOffset(2, 1);
         assertTrue(offsetOne.compareTo(offsetTwo) < 0);
@@ -39,7 +39,7 @@ public class LineOffsetTest {
     }
 
     @Test
-    public void testCompareToSameOffset() {
+    void testCompareToSameOffset() {
         LineOffset offsetOne = new LineOffset(1, 1);
         LineOffset offsetTwo = new LineOffset(1, 1);
         assertTrue(offsetOne.compareTo(offsetTwo) == 0);

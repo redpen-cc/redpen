@@ -24,16 +24,17 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
-import junit.framework.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ContractionValidatorTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class ContractionValidatorTest {
     @Test
-    public void testContraction() throws RedPenException {
+    void testContraction() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Contraction"))
                 .build();
@@ -50,11 +51,11 @@ public class ContractionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(1, errors.get(documents.get(0)).size());
+        assertEquals(1, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testNoContraction() throws RedPenException {
+    void testNoContraction() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Contraction"))
                 .build();
@@ -71,11 +72,11 @@ public class ContractionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.get(0)).size());
+        assertEquals(0, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testUpperCaseContraction() throws RedPenException {
+    void testUpperCaseContraction() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Contraction"))
                 .build();
@@ -92,14 +93,14 @@ public class ContractionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(1, errors.get(documents.get(0)).size());
+        assertEquals(1, errors.get(documents.get(0)).size());
     }
 
     /**
      * When there are lot of contractions in input document, the contractions should be ignored.
      */
     @Test
-    public void testManyContractions() throws RedPenException {
+    void testManyContractions() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Contraction"))
                 .build();
@@ -116,6 +117,6 @@ public class ContractionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.get(0)).size());
+        assertEquals(0, errors.get(documents.get(0)).size());
     }
 }

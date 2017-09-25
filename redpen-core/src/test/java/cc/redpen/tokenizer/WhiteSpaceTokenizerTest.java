@@ -17,15 +17,15 @@
  */
 package cc.redpen.tokenizer;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class WhiteSpaceTokenizerTest {
+class WhiteSpaceTokenizerTest {
     @Test
-    public void testTokenize() {
+    void testTokenize() {
         RedPenTokenizer tokenizer = new WhiteSpaceTokenizer();
         List<TokenElement> results = tokenizer.tokenize("this is a\u00A0pen");
         assertEquals(4, results.size());
@@ -40,7 +40,7 @@ public class WhiteSpaceTokenizerTest {
     }
 
     @Test
-    public void testTokenizeSentenceWithNoSpaceBracket() {
+    void testTokenizeSentenceWithNoSpaceBracket() {
         RedPenTokenizer tokenizer = new WhiteSpaceTokenizer();
         List<TokenElement> results = tokenizer.tokenize("distributed(cluster) systems are good");
         assertEquals(7, results.size());
@@ -57,7 +57,7 @@ public class WhiteSpaceTokenizerTest {
     }
 
     @Test
-    public void testTokenizeSentenceEndsWithPeriod() {
+    void testTokenizeSentenceEndsWithPeriod() {
         RedPenTokenizer tokenizer = new WhiteSpaceTokenizer();
         List<TokenElement> results = tokenizer.tokenize("I am an engineer.");
         assertEquals(5, results.size());
@@ -69,7 +69,7 @@ public class WhiteSpaceTokenizerTest {
     }
 
     @Test
-    public void testTokenizeSentenceWithContraction() {
+    void testTokenizeSentenceWithContraction() {
         RedPenTokenizer tokenizer = new WhiteSpaceTokenizer();
         List<TokenElement> results = tokenizer.tokenize("I'm an engineer");
         assertEquals(3, results.size());

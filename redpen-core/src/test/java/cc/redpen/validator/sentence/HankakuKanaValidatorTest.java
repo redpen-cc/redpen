@@ -3,16 +3,16 @@ package cc.redpen.validator.sentence;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class HankakuKanaValidatorTest {
+class HankakuKanaValidatorTest {
     @Test
-    public void testDetectHankakuKana() {
+    void testDetectHankakuKana() {
         Validator validator = new HankakuKanaValidator();
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
@@ -21,7 +21,7 @@ public class HankakuKanaValidatorTest {
     }
 
     @Test
-    public void testRunValidatorWithoutHanakakuKana() {
+    void testRunValidatorWithoutHanakakuKana() {
         Validator validator = new HankakuKanaValidator();
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
@@ -30,7 +30,7 @@ public class HankakuKanaValidatorTest {
     }
 
     @Test
-    public void testRunValidatorWithHankakuSpace() {
+    void testRunValidatorWithHankakuSpace() {
         Validator validator = new HankakuKanaValidator();
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);

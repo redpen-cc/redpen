@@ -22,22 +22,22 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
 import cc.redpen.validator.BaseValidatorTest;
 import cc.redpen.validator.ValidationError;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.singletonList;
-import static junit.framework.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SuccessiveWordValidatorTest extends BaseValidatorTest {
+class SuccessiveWordValidatorTest extends BaseValidatorTest {
 
-    public SuccessiveWordValidatorTest() {
+    SuccessiveWordValidatorTest() {
         super("SuccessiveWord");
     }
 
     @Test
-    public void detectSuccessiveWord() throws RedPenException {
+    void detectSuccessiveWord() throws RedPenException {
         Document document = prepareSimpleDocument("the item is is a good.");
 
         RedPen redPen = new RedPen(config);
@@ -47,7 +47,7 @@ public class SuccessiveWordValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void detectSuccessiveWordWithDifferentCase() throws RedPenException {
+    void detectSuccessiveWordWithDifferentCase() throws RedPenException {
         Document document = prepareSimpleDocument("Welcome welcome to Estonia.");
 
         RedPen redPen = new RedPen(config);
@@ -57,7 +57,7 @@ public class SuccessiveWordValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void detectJapaneseSuccessiveWord() throws RedPenException {
+    void detectJapaneseSuccessiveWord() throws RedPenException {
         config = getConfiguration("ja");
 
         Document document = prepareSimpleDocument("私はは嬉しい.");
@@ -69,7 +69,7 @@ public class SuccessiveWordValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void nonSuccessiveDoubledWord() throws RedPenException {
+    void nonSuccessiveDoubledWord() throws RedPenException {
         Document document = prepareSimpleDocument("the item is a item good.");
 
         RedPen redPen = new RedPen(config);
@@ -78,7 +78,7 @@ public class SuccessiveWordValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void ignoreNumbers() throws Exception {
+    void ignoreNumbers() throws Exception {
         Document document = prepareSimpleDocument("Amount is $123,456,789.45");
 
         RedPen redPen = new RedPen(config);

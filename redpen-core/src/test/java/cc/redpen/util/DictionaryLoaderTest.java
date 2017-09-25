@@ -19,7 +19,7 @@ package cc.redpen.util;
 
 import cc.redpen.RedPenException;
 import cc.redpen.validator.Validator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -32,12 +32,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class DictionaryLoaderTest extends Validator {
+class DictionaryLoaderTest extends Validator {
     @Test
-    public void testCreateWordList() throws IOException {
+    void testCreateWordList() throws IOException {
         String sampleWordSet = "Saitama\n";
         sampleWordSet += "Gumma\n";
         sampleWordSet += "Gifu\n";
@@ -47,7 +47,7 @@ public class DictionaryLoaderTest extends Validator {
     }
 
     @Test
-    public void testCreateVacantWordList() throws IOException {
+    void testCreateVacantWordList() throws IOException {
         String sampleWordSet = "";
 
         Set<String> result = WORD_LIST.load(new ByteArrayInputStream(sampleWordSet.getBytes(StandardCharsets.UTF_8)));
@@ -55,7 +55,7 @@ public class DictionaryLoaderTest extends Validator {
     }
 
     @Test
-    public void testCreateKeyValueList() throws IOException {
+    void testCreateKeyValueList() throws IOException {
         String sampleWordSet = "Saitama\t100\n";
         sampleWordSet += "Gumma\t530000\n";
         sampleWordSet += "Gifu\t1200\n";
@@ -68,14 +68,14 @@ public class DictionaryLoaderTest extends Validator {
     }
 
     @Test
-    public void testCreateVacantKeyValueList() throws IOException {
+    void testCreateVacantKeyValueList() throws IOException {
         String sampleWordSet = "";
         Map<String, String> result = KEY_VALUE.load(new ByteArrayInputStream(sampleWordSet.getBytes(StandardCharsets.UTF_8)));
         assertEquals(0, result.size());
     }
 
     @Test
-    public void testLoadCachedFile() throws IOException, RedPenException {
+    void testLoadCachedFile() throws IOException, RedPenException {
         Path path = Files.createTempFile("test", "txt");
         File file = path.toFile();
         System.setProperty("REDPEN_HOME", file.getParentFile().getAbsolutePath());
@@ -109,7 +109,7 @@ public class DictionaryLoaderTest extends Validator {
     }
 
     @Test
-    public void testLoadingInexistingResourceReturnsAnEmptyCollection() throws Exception {
+    void testLoadingInexistingResourceReturnsAnEmptyCollection() throws Exception {
         Set<String> result = new DictionaryLoader<Set<String>>(HashSet::new, null).loadCachedFromResource("hello.xml", "hello");
         assertTrue(result.isEmpty());
     }

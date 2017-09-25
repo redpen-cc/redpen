@@ -23,17 +23,17 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SuccessiveSentenceValidatorTest {
+class SuccessiveSentenceValidatorTest {
     @Test
-    public void testIdenticalSentences() throws Exception {
+    void testIdenticalSentences() throws Exception {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SuccessiveSentence"))
                 .build();
@@ -54,7 +54,7 @@ public class SuccessiveSentenceValidatorTest {
 
 
     @Test
-    public void testSimilarButNotSame() throws Exception {
+    void testSimilarButNotSame() throws Exception {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SuccessiveSentence"))
                 .build();
@@ -74,7 +74,7 @@ public class SuccessiveSentenceValidatorTest {
     }
 
     @Test
-    public void testChangeProperty() throws Exception {
+    void testChangeProperty() throws Exception {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SuccessiveSentence").addProperty("dist", 10))
                 .build();
@@ -94,7 +94,7 @@ public class SuccessiveSentenceValidatorTest {
     }
 
     @Test
-    public void testIdenticalButDifferentLetterCases() throws Exception {
+    void testIdenticalButDifferentLetterCases() throws Exception {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SuccessiveSentence"))
                 .build();

@@ -23,23 +23,18 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
-import cc.redpen.parser.DocumentParser;
-import cc.redpen.parser.LineOffset;
-import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
-import junit.framework.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class JapaneseAnchorExpressionValidatorTest {
+class JapaneseAnchorExpressionValidatorTest {
     @Test
-    public void testValid() throws RedPenException {
+    void testValid() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("JapaneseAnchorExpression"))
                 .build();
@@ -53,11 +48,11 @@ public class JapaneseAnchorExpressionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
-        Assert.assertEquals(0, errors.size());
+        assertEquals(0, errors.size());
     }
 
     @Test
-    public void testValid2() throws RedPenException {
+    void testValid2() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("JapaneseAnchorExpression"))
                 .build();
@@ -71,11 +66,11 @@ public class JapaneseAnchorExpressionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
-        Assert.assertEquals(0, errors.size());
+        assertEquals(0, errors.size());
     }
 
     @Test
-    public void testValidNumeric() throws RedPenException {
+    void testValidNumeric() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("JapaneseAnchorExpression").addProperty("mode", "numeric"))
                 .build();
@@ -89,11 +84,11 @@ public class JapaneseAnchorExpressionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
-        Assert.assertEquals(0, errors.size());
+        assertEquals(0, errors.size());
     }
 
     @Test
-    public void testValidZenkakuNumeric() throws RedPenException {
+    void testValidZenkakuNumeric() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("JapaneseAnchorExpression").addProperty("mode", "numeric-zenkaku"))
                 .build();
@@ -107,11 +102,11 @@ public class JapaneseAnchorExpressionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
-        Assert.assertEquals(0, errors.size());
+        assertEquals(0, errors.size());
     }
 
     @Test
-    public void testValidKansuji() throws RedPenException {
+    void testValidKansuji() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("JapaneseAnchorExpression").addProperty("mode", "kansuji"))
                 .build();
@@ -125,11 +120,11 @@ public class JapaneseAnchorExpressionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
-        Assert.assertEquals(0, errors.size());
+        assertEquals(0, errors.size());
     }
 
     @Test
-    public void testInvalid() throws RedPenException {
+    void testInvalid() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("JapaneseAnchorExpression"))
                 .build();
@@ -143,13 +138,13 @@ public class JapaneseAnchorExpressionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
-        Assert.assertEquals(2, errors.size());
+        assertEquals(2, errors.size());
         assertEquals("JapaneseAnchorExpression", errors.get(0).getValidatorName());
         assertEquals("JapaneseAnchorExpression", errors.get(1).getValidatorName());
     }
 
     @Test
-    public void testVoid() throws RedPenException {
+    void testVoid() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("JapaneseAnchorExpression"))
                 .build();
@@ -163,6 +158,6 @@ public class JapaneseAnchorExpressionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
-        Assert.assertEquals(0, errors.size());
+        assertEquals(0, errors.size());
     }
 }

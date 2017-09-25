@@ -18,22 +18,22 @@
 package cc.redpen.config;
 
 import cc.redpen.RedPenException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.util.Optional;
 
 import static cc.redpen.config.SymbolType.AMPERSAND;
 import static java.util.Collections.emptyList;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test for Configuration Structure
  */
-public class ConfigurationTest {
+class ConfigurationTest {
 
     @Test
-    public void testSentenceValidatorConfiguration() throws Exception {
+    void testSentenceValidatorConfiguration() throws Exception {
         Configuration configuration = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SentenceLength"))
                 .addValidatorConfig(new ValidatorConfiguration("InvalidExpression"))
@@ -50,19 +50,19 @@ public class ConfigurationTest {
     }
 
     @Test
-    public void testInvalidValidatorConfiguration() {
+    void testInvalidValidatorConfiguration() {
         // NOTE: not throw a exception even when adding a non exist validator.
         // The errors occurs when creating the added non existing validator instance.
         try {
             Configuration.builder()
                     .addValidatorConfig(new ValidatorConfiguration("ThereIsNoSuchValidator")).build();
         } catch (Exception e) {
-            fail();
+            fail("Exception not expected.");
         }
     }
 
     @Test
-    public void testSectionValidatorConfiguration() throws Exception {
+    void testSectionValidatorConfiguration() throws Exception {
         Configuration configuration = Configuration.builder().addValidatorConfig(new ValidatorConfiguration("SectionLength"))
                 .addValidatorConfig(new ValidatorConfiguration("MaxParagraphNumber"))
                 .addValidatorConfig(new ValidatorConfiguration("ParagraphStartWith")).build();
@@ -70,61 +70,61 @@ public class ConfigurationTest {
     }
 
     @Test
-    public void testSymbolTableWithoutLanguageSetting() throws Exception {
+    void testSymbolTableWithoutLanguageSetting() throws Exception {
         Configuration configuration = Configuration.builder().build(); // NOTE: load "en" setting when lang is not specified
         assertEquals("en", configuration.getLang());
         assertNotNull(configuration.getLang());
     }
 
     @Test
-    public void keyIsLangAndType() throws Exception {
+    void keyIsLangAndType() throws Exception {
         SymbolTable symbolTable = new SymbolTable("ja", Optional.of("hankaku"), emptyList());
         assertEquals("ja.hankaku", new Configuration(new File(""), symbolTable, emptyList(), "ja", false).getKey());
     }
 
     @Test
-    public void keyIsLangOnlyIfTypeIsMissing() throws Exception {
+    void keyIsLangOnlyIfTypeIsMissing() throws Exception {
         SymbolTable symbolTable = new SymbolTable("en", Optional.empty(), emptyList());
         assertEquals("en", new Configuration(new File(""), symbolTable, emptyList(), "en", false).getKey());
     }
 
     @Test
-    public void keyIsLangOnlyForZenkaku() throws Exception {
+    void keyIsLangOnlyForZenkaku() throws Exception {
         SymbolTable symbolTable = new SymbolTable("ja", Optional.of("zenkaku"), emptyList());
         assertEquals("ja", new Configuration(new File(""), symbolTable, emptyList(), "ja", false).getKey());
     }
 
     @Test
-    public void homeIsWorkingDirectoryByDefault() throws Exception {
+    void homeIsWorkingDirectoryByDefault() throws Exception {
         System.clearProperty("REDPEN_HOME");
         assertEquals(new File(""), Configuration.builder().build().getHome());
     }
 
     @Test
-    public void homeIsResolvedFromSystemPropertyOrEnvironment() throws Exception {
+    void homeIsResolvedFromSystemPropertyOrEnvironment() throws Exception {
         System.setProperty("REDPEN_HOME", "/foo");
         assertEquals(new File("/foo"), Configuration.builder().build().getHome());
     }
 
     @Test
-    public void findFileLooksInWorkingDirectoryFirst() throws Exception {
+    void findFileLooksInWorkingDirectoryFirst() throws Exception {
         String localFile = new File(".").list()[0];
         assertEquals(new File(localFile), Configuration.builder().build().findFile(localFile));
     }
 
     @Test
-    public void findFileLooksInConfigBaseDirectorySecond() throws Exception {
+    void findFileLooksInConfigBaseDirectorySecond() throws Exception {
         assertEquals(new File("src/main"), Configuration.builder().setBaseDir(new File("src")).build().findFile("main"));
     }
 
     @Test
-    public void findFileLooksInRedPenHomeDirectoryThird() throws Exception {
+    void findFileLooksInRedPenHomeDirectoryThird() throws Exception {
         System.setProperty("REDPEN_HOME", "src");
         assertEquals(new File("src/main"), Configuration.builder().build().findFile("main"));
     }
 
     @Test
-    public void findFileFailsIfFileNotFound() throws Exception {
+    void findFileFailsIfFileNotFound() throws Exception {
         try {
             System.setProperty("REDPEN_HOME", "src");
             Configuration.builder().build().findFile("hello.xml");
@@ -136,7 +136,7 @@ public class ConfigurationTest {
     }
 
     @Test
-    public void findFileFailsIfFileNotFound_basePathPresent() throws Exception {
+    void findFileFailsIfFileNotFound_basePathPresent() throws Exception {
         try {
             System.setProperty("REDPEN_HOME", "src");
             Configuration.builder().setBaseDir(new File("base_dir")).build().findFile("hello.xml");
@@ -148,7 +148,7 @@ public class ConfigurationTest {
     }
 
     @Test
-    public void findFile_workingDirectorySecureMode() throws Exception {
+    void findFile_workingDirectorySecureMode() throws Exception {
         String localFile = new File(".").list()[0];
         try {
             System.setProperty("REDPEN_HOME", "");
@@ -161,7 +161,7 @@ public class ConfigurationTest {
     }
 
     @Test
-    public void findFile_secureMode() throws Exception {
+    void findFile_secureMode() throws Exception {
         try {
             System.setProperty("REDPEN_HOME", "");
             Configuration.builder().secure().build().findFile("/etc/passwd");
@@ -173,7 +173,7 @@ public class ConfigurationTest {
     }
 
     @Test
-    public void canBeCloned() throws Exception {
+    void canBeCloned() throws Exception {
         Configuration conf = Configuration.builder("ja.hankaku")
           .addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
 
@@ -191,7 +191,7 @@ public class ConfigurationTest {
     }
 
     @Test
-    public void equals() throws Exception {
+    void equals() throws Exception {
         Configuration conf = Configuration.builder("ja.hankaku")
           .addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
 
@@ -208,7 +208,7 @@ public class ConfigurationTest {
     }
 
     @Test
-    public void serializable() throws Exception {
+    void serializable() throws Exception {
         Configuration conf = Configuration.builder("ja.hankaku")
           .addValidatorConfig(new ValidatorConfiguration("SentenceLength")).build();
 
@@ -224,7 +224,7 @@ public class ConfigurationTest {
     }
 
     @Test
-    public void addAvailableValidatorsForLanguage() throws Exception {
+    void addAvailableValidatorsForLanguage() throws Exception {
         Configuration ja = Configuration.builder("ja").addAvailableValidatorConfigs().build();
         assertTrue(ja.getValidatorConfigs().stream().anyMatch(v -> v.getConfigurationName().equals("SentenceLength")));
         assertTrue(ja.getValidatorConfigs().stream().anyMatch(v -> v.getConfigurationName().equals("HankakuKana")));

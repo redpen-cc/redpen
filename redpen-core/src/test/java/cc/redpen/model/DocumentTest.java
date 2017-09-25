@@ -18,22 +18,23 @@
 package cc.redpen.model;
 
 import cc.redpen.tokenizer.JapaneseTokenizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class DocumentTest {
+class DocumentTest {
     @Test
-    public void testCreateDocument() {
+    void testCreateDocument() {
         Document doc = Document.builder()
                         .setFileName("Foobar").build();
         assertEquals(0, doc.size());
     }
 
     @Test
-    public void testCreateDocumentWithList() {
+    void testCreateDocumentWithList() {
         Document doc = Document.builder()
                 .setFileName("Foobar")
                 .addSection(0)
@@ -69,7 +70,7 @@ public class DocumentTest {
     }
 
     @Test
-    public void testSentenceIsTokenized() {
+    void testSentenceIsTokenized() {
         Document doc = Document.builder()
                 .setFileName("foobar")
                 .addSection(0)
@@ -82,7 +83,7 @@ public class DocumentTest {
     }
 
     @Test
-    public void testJapaneseSentenceIsTokenized() {
+    void testJapaneseSentenceIsTokenized() {
         Document doc = Document.builder(new JapaneseTokenizer())
                 .setFileName("今日")
                 .addSection(0)
@@ -94,7 +95,7 @@ public class DocumentTest {
         assertEquals(5, doc.getSection(0).getParagraph(0).getSentence(0).getTokens().size());
     }
 
-    public void testCreateParagraphBeforeSection() {
+    void testCreateParagraphBeforeSection() {
         Document document = Document.builder()
                 .setFileName("Foobar")
                 .addParagraph()
@@ -105,21 +106,25 @@ public class DocumentTest {
         assertEquals(1, document.getSection(1).getLevel());
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void testCreateListBlockBeforeSection() {
-        Document.builder()
-                .setFileName("Foobar")
-                .addListBlock()
-                .addSection(0)
-                .build();
+    @Test
+    void testCreateListBlockBeforeSection() {
+        assertThrows(IllegalStateException.class, ()->{
+            Document.builder()
+                    .setFileName("Foobar")
+                    .addListBlock()
+                    .addSection(0)
+                    .build();
+        });
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void testCreateListElementBeforeListBlock() {
-        Document.builder()
-                .setFileName("Foobar")
-                .addListElement(0, "foo")
-                .addListBlock()
-                .build();
+    @Test
+    void testCreateListElementBeforeListBlock() {
+        assertThrows(IllegalStateException.class, ()-> {
+            Document.builder()
+                    .setFileName("Foobar")
+                    .addListElement(0, "foo")
+                    .addListBlock()
+                    .build();
+        });
     }
 }

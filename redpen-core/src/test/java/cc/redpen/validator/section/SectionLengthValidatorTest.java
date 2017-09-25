@@ -23,25 +23,26 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
 import cc.redpen.validator.ValidationError;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SectionLengthValidatorTest {
+class SectionLengthValidatorTest {
     private SectionLengthValidator validator;
 
-    @Before
-    public void setUp() throws RedPenException {
+    @BeforeEach
+    void setUp() throws RedPenException {
         validator = new SectionLengthValidator();
         validator.preInit(new ValidatorConfiguration("SectionLength").addProperty("max_num", "10"), Configuration.builder().build());
     }
 
     @Test
-    public void testSectionLength() {
+    void testSectionLength() {
         Section section = new Section(0, "header");
         Paragraph paragraph = new Paragraph();
         paragraph.appendSentence("it like a piece of a cake.", 0);
@@ -53,7 +54,7 @@ public class SectionLengthValidatorTest {
     }
 
     @Test
-    public void testWithSectionWithoutHeader() {
+    void testWithSectionWithoutHeader() {
         Section section = new Section(0);
         Paragraph paragraph = new Paragraph();
         paragraph.appendSentence("it like a piece of a cake.", 0);

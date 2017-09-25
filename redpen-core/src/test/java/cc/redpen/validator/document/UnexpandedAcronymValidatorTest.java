@@ -26,17 +26,17 @@ import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import cc.redpen.validator.ValidatorFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class UnexpandedAcronymValidatorTest {
+class UnexpandedAcronymValidatorTest {
 
     @Test
-    public void testDocument() throws RedPenException {
+    void testDocument() throws RedPenException {
         UnexpandedAcronymValidator validator = (UnexpandedAcronymValidator) ValidatorFactory.getInstance("UnexpandedAcronym");
 
         Document document =
@@ -59,7 +59,7 @@ public class UnexpandedAcronymValidatorTest {
     }
 
     @Test
-    public void testSimpleSentence() throws Exception {
+    void testSimpleSentence() throws Exception {
         List<Document> documents = new ArrayList<>();documents.add(
                 Document.builder()
                         .addSection(1)
@@ -80,7 +80,7 @@ public class UnexpandedAcronymValidatorTest {
     }
 
     @Test
-    public void testLoadSkipList() throws Exception {
+    void testLoadSkipList() throws Exception {
         List<Document> documents = new ArrayList<>();documents.add(
                 Document.builder()
                         .addSection(1)

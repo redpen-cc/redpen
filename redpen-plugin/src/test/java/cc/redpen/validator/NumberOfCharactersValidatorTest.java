@@ -3,16 +3,16 @@ package cc.redpen.validator;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.sentence.NumberOfCharactersValidator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class NumberOfCharactersValidatorTest extends Validator {
+class NumberOfCharactersValidatorTest extends Validator {
     @Test
-    public void testValidationErrorCreation() throws RedPenException {
+    void testValidationErrorCreation() throws RedPenException {
         Validator validator = new NumberOfCharactersValidator();
         List<ValidationError> validationErrors = new ArrayList<>();
         validator.setErrorList(validationErrors);

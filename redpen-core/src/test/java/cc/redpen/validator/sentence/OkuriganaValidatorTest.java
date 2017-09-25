@@ -24,17 +24,17 @@ import cc.redpen.model.Document;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.validator.ValidationError;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class OkuriganaValidatorTest {
+class OkuriganaValidatorTest {
     @Test
-    public void testInvalidOkurigana() throws Exception {
+    void testInvalidOkurigana() throws Exception {
         String sampleText = "このタスクに長い年月を費してきた。";
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("Okurigana"))
@@ -56,7 +56,7 @@ public class OkuriganaValidatorTest {
     }
 
     @Test
-    public void testNoInvalidOkurigana() throws Exception {
+    void testNoInvalidOkurigana() throws Exception {
         String sampleText = "このタスクに長い年月を費やしてきた。";
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("Okurigana"))
@@ -77,7 +77,7 @@ public class OkuriganaValidatorTest {
 
 
     @Test
-    public void testInvalidOkuriganaWithRule() throws Exception {
+    void testInvalidOkuriganaWithRule() throws Exception {
         String sampleText = "彼に合せた。";
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("Okurigana"))
@@ -101,7 +101,7 @@ public class OkuriganaValidatorTest {
 
     // Fix Issue #517 (https://github.com/redpen-cc/redpen/issues/517)
     @Test
-    public void testValidOkuriganaWithRule() throws Exception {
+    void testValidOkuriganaWithRule() throws Exception {
         String sampleText = "それとは競合している。";
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("Okurigana"))

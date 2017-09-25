@@ -17,15 +17,15 @@
  */
 package cc.redpen.tokenizer;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class JapaneseTokenizerTest {
+class JapaneseTokenizerTest {
     @Test
-    public void testTokenize() {
+    void testTokenize() {
         JapaneseTokenizer tokenizer = new JapaneseTokenizer();
         List<TokenElement> tokens = tokenizer.tokenize("今日も晴天だ。");
         assertEquals(5, tokens.size());
@@ -42,7 +42,7 @@ public class JapaneseTokenizerTest {
     }
 
     @Test
-    public void testTokenizeVoid() {
+    void testTokenizeVoid() {
         JapaneseTokenizer tokenizer = new JapaneseTokenizer();
         List<TokenElement> tokens = tokenizer.tokenize("");
         assertEquals(0, tokens.size());

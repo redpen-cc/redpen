@@ -4,40 +4,40 @@ import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.WhiteSpaceTokenizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static java.util.stream.IntStream.of;
 import static java.util.stream.IntStream.range;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class PropertiesParserTest extends BaseParserTest {
-  PropertiesParser parser = new PropertiesParser();
+class PropertiesParserTest extends BaseParserTest {
+  private PropertiesParser parser = new PropertiesParser();
 
   @Test
-  public void keyEqualsValue() throws Exception {
+  void keyEqualsValue() throws Exception {
     Document doc = parse("hello=world");
     Sentence sentence = doc.getLastSection().getParagraph(0).getSentence(0);
     assertEquals("world", sentence.getContent());
   }
 
   @Test
-  public void keyColonValue() throws Exception {
+  void keyColonValue() throws Exception {
     Document doc = parse("hello:world");
     Sentence sentence = doc.getLastSection().getParagraph(0).getSentence(0);
     assertEquals("world", sentence.getContent());
   }
 
   @Test
-  public void keySpaceValue() throws Exception {
+  void keySpaceValue() throws Exception {
     Document doc = parse("hello world");
     Sentence sentence = doc.getLastSection().getParagraph(0).getSentence(0);
     assertEquals("world", sentence.getContent());
   }
 
   @Test
-  public void extraSpaces() throws Exception {
+  void extraSpaces() throws Exception {
     Document doc = parse("hello = world ");
     List<Sentence> sentences = doc.getSection(0).getParagraph(0).getSentences();
     assertEquals(1, sentences.size());
@@ -48,7 +48,7 @@ public class PropertiesParserTest extends BaseParserTest {
   }
 
   @Test
-  public void extraWhitespace() throws Exception {
+  void extraWhitespace() throws Exception {
     Document doc = parse("\t hello\f=\tworld ");
     Sentence sentence = doc.getSection(0).getParagraph(0).getSentences().get(0);
     assertEquals("world ", sentence.getContent());
@@ -56,7 +56,7 @@ public class PropertiesParserTest extends BaseParserTest {
   }
 
   @Test
-  public void threeLines() throws Exception {
+  void threeLines() throws Exception {
     Document doc = parse("hello = world\r\nworld:earth\n  key=val");
 
     Sentence sentence = doc.getSection(0).getParagraph(0).getSentence(0);
@@ -76,7 +76,7 @@ public class PropertiesParserTest extends BaseParserTest {
   }
 
   @Test
-  public void manyWhitespaces() throws Exception {
+  void manyWhitespaces() throws Exception {
     Document doc = parse("hi there the first hi is a key");
     Sentence sentence = doc.getSection(0).getParagraph(0).getSentence(0);
     assertEquals("there the first hi is a key", sentence.getContent());
@@ -84,7 +84,7 @@ public class PropertiesParserTest extends BaseParserTest {
   }
 
   @Test
-  public void whitespaceInKey() throws Exception {
+  void whitespaceInKey() throws Exception {
     Document doc = parse("two\\ words=value");
     Sentence sentence = doc.getSection(0).getParagraph(0).getSentence(0);
     assertEquals("value", sentence.getContent());
@@ -92,7 +92,7 @@ public class PropertiesParserTest extends BaseParserTest {
   }
 
   @Test
-  public void multipleDelimiters() throws Exception {
+  void multipleDelimiters() throws Exception {
     Document doc = parse("key=:value");
     Sentence sentence = doc.getSection(0).getParagraph(0).getSentence(0);
     assertEquals(":value", sentence.getContent());
@@ -100,7 +100,7 @@ public class PropertiesParserTest extends BaseParserTest {
   }
 
   @Test
-  public void emptyLines() throws Exception {
+  void emptyLines() throws Exception {
     Document doc = parse("\nkey=value\n\n\n   \n\n");
     assertEquals(doc.getSection(0), doc.getLastSection());
     Sentence sentence = doc.getSection(0).getParagraph(0).getSentence(0);
@@ -108,7 +108,7 @@ public class PropertiesParserTest extends BaseParserTest {
   }
 
   @Test
-  public void comments() throws Exception {
+  void comments() throws Exception {
     Document doc = parse(" #Hello World\n!Another comment\n#");
     Sentence sentence = doc.getSection(0).getParagraph(0).getSentence(0);
     assertEquals("Hello World", sentence.getContent());
@@ -117,7 +117,7 @@ public class PropertiesParserTest extends BaseParserTest {
   }
 
   @Test
-  public void valuesAreUnescaped() throws Exception {
+  void valuesAreUnescaped() throws Exception {
     Document doc = parse("hello=Hello\\ W\\u00F6rld\\t");
     Sentence sentence = doc.getSection(0).getParagraph(0).getSentence(0);
     assertEquals("Hello Wörld\t", sentence.getContent());
@@ -125,7 +125,7 @@ public class PropertiesParserTest extends BaseParserTest {
   }
 
   @Test
-  public void multilineValue() throws Exception {
+  void multilineValue() throws Exception {
     Document doc = parse("hello=Hello\\\n World\\\n\\\n   foo");
     Sentence sentence = doc.getSection(0).getParagraph(0).getSentence(0);
     assertEquals("Hello\nWorld\n\nfoo", sentence.getContent());
@@ -137,7 +137,7 @@ public class PropertiesParserTest extends BaseParserTest {
   }
 
   @Test
-  public void multipleSentences() throws Exception {
+  void multipleSentences() throws Exception {
     Document doc = parse("hello=One sentence. Second one! Third one");
 
     Sentence sentence = doc.getSection(0).getParagraph(0).getSentence(0);

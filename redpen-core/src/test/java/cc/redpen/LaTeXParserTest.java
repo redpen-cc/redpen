@@ -26,25 +26,25 @@ import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.validator.ValidationError;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class LaTeXParserTest {
+class LaTeXParserTest {
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
     }
 
     @Test
-    public void testBasicDocument() throws UnsupportedEncodingException {
+    void testBasicDocument() throws UnsupportedEncodingException {
         String sampleText = ""
             + "\\documentclass[a4paper]{jsarticle}\n"
             + "\\author{asdasd}\n"
@@ -75,7 +75,7 @@ public class LaTeXParserTest {
 
         Document doc = createFileContent(sampleText);
 
-        assertNotNull("doc is null", doc);
+        assertNotNull(doc, "doc is null");
         assertEquals(3, doc.size());
         // first section
         final Section firstSection = doc.getSection(0);
@@ -163,7 +163,7 @@ public class LaTeXParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithOneLineComment() {
+    void testGenerateDocumentWithOneLineComment() {
         String sampleText = ""
             + "\\documentclass[a4paper]{jsarticle}\n"
             + "\\author{asdasd}\n"
@@ -182,7 +182,7 @@ public class LaTeXParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithVoidComment() {
+    void testGenerateDocumentWithVoidComment() {
         String sampleText = ""
             + "\\documentclass[a4paper]{jsarticle}\n"
             + "\\author{asdasd}\n"
@@ -201,7 +201,7 @@ public class LaTeXParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithVoidComment2() {
+    void testGenerateDocumentWithVoidComment2() {
         String sampleText = ""
             + "\\documentclass[a4paper]{jsarticle}\n"
             + "\\author{asdasd}\n"
@@ -219,7 +219,7 @@ public class LaTeXParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithMultipleSentenceInOneSentence() {
+    void testGenerateDocumentWithMultipleSentenceInOneSentence() {
         String sampleText = ""
             + "\\documentclass[a4paper]{jsarticle}\n"
             + "\\author{asdasd}\n"
@@ -240,7 +240,7 @@ public class LaTeXParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithMultipleSentences() {
+    void testGenerateDocumentWithMultipleSentences() {
         String sampleText = ""
             + "\\documentclass[a4paper]{jsarticle}\n"
             + "\\author{asdasd}\n"
@@ -257,7 +257,7 @@ public class LaTeXParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithMultipleSentencesWithVaraiousStopCharacters() {
+    void testGenerateDocumentWithMultipleSentencesWithVaraiousStopCharacters() {
         String sampleText = ""
             + "\\documentclass[a4paper]{jsarticle}\n"
             + "\\author{asdasd}\n"
@@ -276,7 +276,7 @@ public class LaTeXParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWitVoidContent() {
+    void testGenerateDocumentWitVoidContent() {
         String sampleText = "";
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
@@ -285,7 +285,7 @@ public class LaTeXParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithPeriodInSuccession() {
+    void testGenerateDocumentWithPeriodInSuccession() {
         String sampleText = ""
             + "\\documentclass[a4paper]{jsarticle}\n"
             + "\\author{asdasd}\n"
@@ -301,7 +301,7 @@ public class LaTeXParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWitoutPeriodInLastSentence() {
+    void testGenerateDocumentWitoutPeriodInLastSentence() {
         String sampleText = ""
             + "\\documentclass[a4paper]{jsarticle}\n"
             + "\\author{asdasd}\n"
@@ -317,7 +317,7 @@ public class LaTeXParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithSentenceLongerThanOneLine() {
+    void testGenerateDocumentWithSentenceLongerThanOneLine() {
         String sampleText = ""
             + "\\documentclass[a4paper]{jsarticle}\n"
             + "\\author{asdasd}\n"
@@ -338,7 +338,7 @@ public class LaTeXParserTest {
     // TBD: The LaTeX parser has not interest in hyperlinks yet.
 
     @Test
-    public void testDocumentWithItalicWord() {
+    void testDocumentWithItalicWord() {
         String sampleText = ""
             + "\\documentclass[a4paper]{jsarticle}\n"
             + "\\author{asdasd}\n"
@@ -354,7 +354,7 @@ public class LaTeXParserTest {
     }
 
     @Test
-    public void testDocumentWithMultipleItalicWords() {
+    void testDocumentWithMultipleItalicWords() {
         String sampleText = ""
             + "\\documentclass[a4paper]{jsarticle}\n"
             + "\\author{asdasd}\n"
@@ -370,7 +370,7 @@ public class LaTeXParserTest {
     }
 
     @Test
-    public void testDocumentWithMultipleNearItalicWords() {
+    void testDocumentWithMultipleNearItalicWords() {
         String sampleText = ""
             + "\\documentclass[a4paper]{jsarticle}\n"
             + "\\author{asdasd}\n"
@@ -386,7 +386,7 @@ public class LaTeXParserTest {
     }
 
     @Test
-    public void testDocumentWithItalicExpression() {
+    void testDocumentWithItalicExpression() {
         String sampleText = ""
             + "\\documentclass[a4paper]{jsarticle}\n"
             + "\\author{asdasd}\n"
@@ -402,7 +402,7 @@ public class LaTeXParserTest {
     }
 
     @Test
-    public void testDocumentWithHeaderCotainingMultipleSentences()
+    void testDocumentWithHeaderCotainingMultipleSentences()
             throws UnsupportedEncodingException {
         String sampleText = ""
             + "\\documentclass[a4paper]{jsarticle}\n"
@@ -422,7 +422,7 @@ public class LaTeXParserTest {
     }
 
     @Test
-    public void testDocumentWithHeaderWitoutPeriod()
+    void testDocumentWithHeaderWitoutPeriod()
             throws UnsupportedEncodingException {
         String sampleText = ""
             + "\\documentclass[a4paper]{jsarticle}\n"
@@ -441,7 +441,7 @@ public class LaTeXParserTest {
     }
 
     @Test
-    public void testDocumentWithMultipleSections()
+    void testDocumentWithMultipleSections()
             throws UnsupportedEncodingException {
         String sampleText = ""
             + "\\documentclass[a4paper]{jsarticle}\n"
@@ -489,7 +489,7 @@ public class LaTeXParserTest {
     }
 
     @Test
-    public void testDocumentWithoutLastPeriod()
+    void testDocumentWithoutLastPeriod()
             throws UnsupportedEncodingException {
         String sampleText = ""
             + "\\documentclass[a4paper]{jsarticle}\n"
@@ -523,7 +523,7 @@ public class LaTeXParserTest {
     }
 
     @Test
-    public void testGenerateJapaneseDocument() {
+    void testGenerateJapaneseDocument() {
         String sampleText = ""
             + "\\documentclass[a4paper]{jsarticle}\n"
             + "\\author{asdasd}\n"
@@ -543,7 +543,7 @@ public class LaTeXParserTest {
     }
 
     @Test
-    public void testErrorPositionOfMarkdownParser() throws RedPenException {
+    void testErrorPositionOfMarkdownParser() throws RedPenException {
         String sampleText = ""
             + "\\documentclass[a4paper]{jsarticle}\n"
             + "\\author{asdasd}\n"
@@ -570,7 +570,7 @@ public class LaTeXParserTest {
     }
 
     @Test
-    public void testErrorPositionWithComments() throws RedPenException {
+    void testErrorPositionWithComments() throws RedPenException {
         String sampleText = ""
             + "\\documentclass[a4paper]{jsarticle}\n"
             + "\\author{asdasd}\n"

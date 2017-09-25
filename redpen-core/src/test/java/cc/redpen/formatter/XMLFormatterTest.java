@@ -27,7 +27,7 @@ import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -41,13 +41,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class XMLFormatterTest extends Validator {
+class XMLFormatterTest extends Validator {
 
     @Test
-    public void testConvertValidationError() throws RedPenException {
+    void testConvertValidationError() throws RedPenException {
         List<ValidationError> errors = new ArrayList<>();
         setErrorList(errors);
         addLocalizedError(new Sentence("This is a sentence", 0));
@@ -80,7 +80,7 @@ public class XMLFormatterTest extends Validator {
     }
 
     @Test
-    public void testConvertValidationErrorWithoutFileName() throws RedPenException {
+    void testConvertValidationErrorWithoutFileName() throws RedPenException {
         List<ValidationError> errors = new ArrayList<>();
         setErrorList(errors);
         addLocalizedError(new Sentence("text", 0));
@@ -106,7 +106,7 @@ public class XMLFormatterTest extends Validator {
     }
 
     @Test
-    public void testConvertedValidationErrorWithErrorPosition() throws RedPenException {
+    void testConvertedValidationErrorWithErrorPosition() throws RedPenException {
         // TODO: shorten the procedure before getting formatter result.
         String sampleText = "This is a good day。\n"; // invalid end of sentence symbol
         Configuration conf = Configuration.builder().build();
@@ -142,7 +142,7 @@ public class XMLFormatterTest extends Validator {
     }
 
     @Test
-    public void testConvertedValidationErrorChangingLevel() throws RedPenException {
+    void testConvertedValidationErrorChangingLevel() throws RedPenException {
         String sampleText = "This is a good day。\n"; // invalid end of sentence symbol
         Configuration conf = Configuration.builder().build();
         Configuration configuration = Configuration.builder()
@@ -170,7 +170,7 @@ public class XMLFormatterTest extends Validator {
         try {
             docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         } catch (ParserConfigurationException e) {
-            fail();
+            fail("Exception not expected.");
             e.printStackTrace();
         }
 
@@ -179,7 +179,7 @@ public class XMLFormatterTest extends Validator {
             document = docBuilder.parse(new ByteArrayInputStream(resultString.getBytes(StandardCharsets.UTF_8)));
         } catch (SAXException | IOException e) {
             e.printStackTrace();
-            fail();
+            fail("Exception not expected.");
         }
         return document;
     }

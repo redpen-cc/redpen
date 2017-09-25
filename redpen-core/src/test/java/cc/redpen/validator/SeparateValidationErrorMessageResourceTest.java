@@ -20,15 +20,15 @@ package cc.redpen.validator;
 import cc.redpen.RedPenException;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SeparateValidationErrorMessageResourceTest extends Validator {
+class SeparateValidationErrorMessageResourceTest extends Validator {
 
     @Override
     public void validate(Sentence sentence) {
@@ -37,7 +37,7 @@ public class SeparateValidationErrorMessageResourceTest extends Validator {
     }
 
     @Test
-    public void testValidationErrorCreation() throws RedPenException {
+    void testValidationErrorCreation() throws RedPenException {
         SeparateValidationErrorMessageResourceTest validationErrorMessageTest = new SeparateValidationErrorMessageResourceTest();
         validationErrorMessageTest.preInit(new ValidatorConfiguration("SeparateValidationErrorMessageResourceTest"), null);
         // loads SeparateValidationErrorMessageResourceTest.properties

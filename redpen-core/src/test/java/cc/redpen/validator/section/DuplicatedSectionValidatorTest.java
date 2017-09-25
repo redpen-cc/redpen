@@ -24,17 +24,18 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
-import junit.framework.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class DuplicatedSectionValidatorTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class DuplicatedSectionValidatorTest {
 
     @Test
-    public void testDetectDuplicatedSection() throws RedPenException {
+    void testDetectDuplicatedSection() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("DuplicatedSection"))
                 .build();
@@ -54,11 +55,11 @@ public class DuplicatedSectionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(2, errors.get(documents.get(0)).size());
+        assertEquals(2, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testDetectNonDuplicatedSection() throws RedPenException {
+    void testDetectNonDuplicatedSection() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("DuplicatedSection"))
                 .build();
@@ -78,11 +79,11 @@ public class DuplicatedSectionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.get(0)).size());
+        assertEquals(0, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testDetectDuplicatedSectionWithSameHeader() throws RedPenException {
+    void testDetectDuplicatedSectionWithSameHeader() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("DuplicatedSection"))
                 .build();
@@ -102,11 +103,11 @@ public class DuplicatedSectionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(2, errors.get(documents.get(0)).size());
+        assertEquals(2, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testDetectNonDuplicatedSectionWithLowThreshold() throws RedPenException {
+    void testDetectNonDuplicatedSectionWithLowThreshold() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("DuplicatedSection").addProperty("threshold", "0.0"))
                 .build();
@@ -127,11 +128,11 @@ public class DuplicatedSectionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(2, errors.get(documents.get(0)).size());
+        assertEquals(2, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testEmpty() throws RedPenException {
+    void testEmpty() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("DuplicatedSection"))
                 .build();
@@ -150,11 +151,11 @@ public class DuplicatedSectionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(1, errors.get(documents.get(0)).size());
+        assertEquals(1, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testEmpty2() throws RedPenException {
+    void testEmpty2() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("DuplicatedSection").addProperty("threshold", "0.0"))
                 .build();
@@ -173,6 +174,6 @@ public class DuplicatedSectionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(1, errors.get(documents.get(0)).size());
+        assertEquals(1, errors.get(documents.get(0)).size());
     }
 }

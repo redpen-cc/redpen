@@ -24,22 +24,22 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.validator.BaseValidatorTest;
 import cc.redpen.validator.ValidationError;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.singletonList;
-import static junit.framework.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DoubledWordValidatorTest extends BaseValidatorTest {
+class DoubledWordValidatorTest extends BaseValidatorTest {
 
-    public DoubledWordValidatorTest() {
+    DoubledWordValidatorTest() {
         super("DoubledWord");
     }
 
     @Test
-    public void testDoubledWord() throws RedPenException {
+    void testDoubledWord() throws RedPenException {
         Document document = prepareSimpleDocument("the good item is a good example.");
 
         RedPen redPen = new RedPen(config);
@@ -49,7 +49,7 @@ public class DoubledWordValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testDoubledWordWithDifferentCase() throws RedPenException {
+    void testDoubledWordWithDifferentCase() throws RedPenException {
         Document document = prepareSimpleDocument("Good item is a good example.");
 
         RedPen redPen = new RedPen(config);
@@ -59,7 +59,7 @@ public class DoubledWordValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void noErrorsForShortWordsByDefault() throws RedPenException {
+    void noErrorsForShortWordsByDefault() throws RedPenException {
         Document document = prepareSimpleDocument("A validator is a validator.");
 
         RedPen redPen = new RedPen(config);
@@ -69,7 +69,7 @@ public class DoubledWordValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void minimumWordLengthIsConfigurable() throws RedPenException {
+    void minimumWordLengthIsConfigurable() throws RedPenException {
         config.getValidatorConfigs().get(0).addProperty("min_len", "10");
         Document document = prepareSimpleDocument("A validator is a validator.");
 
@@ -79,7 +79,7 @@ public class DoubledWordValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void minimumWordLengthIsConfigurableForJapanese() throws RedPenException {
+    void minimumWordLengthIsConfigurableForJapanese() throws RedPenException {
         config = Configuration.builder("ja")
           .addValidatorConfig(new ValidatorConfiguration(validatorName).addProperty("min_len", "5"))
           .build();
@@ -91,7 +91,7 @@ public class DoubledWordValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testDoubledSkipListWord() throws RedPenException {
+    void testDoubledSkipListWord() throws RedPenException {
         Document document = prepareSimpleDocument("That is true, as far as I know.");
 
         RedPen redPen = new RedPen(config);
@@ -100,7 +100,7 @@ public class DoubledWordValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testDoubledSkipListWord2() throws RedPenException {
+    void testDoubledSkipListWord2() throws RedPenException {
         Document document = prepareSimpleDocument("Each instance in distributed search engines stores the the fractions of data.");
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
@@ -108,7 +108,7 @@ public class DoubledWordValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testDoubledUserDefinedSkipWord() throws RedPenException {
+    void testDoubledUserDefinedSkipWord() throws RedPenException {
         config = Configuration.builder().addValidatorConfig(new ValidatorConfiguration(validatorName)
           .addProperty("list", "redpen,tool")).build();
 
@@ -120,7 +120,7 @@ public class DoubledWordValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testDoubledUserDefinedSkipWordWithoutNormalization() throws RedPenException {
+    void testDoubledUserDefinedSkipWordWithoutNormalization() throws RedPenException {
         config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration(validatorName).addProperty("list", "RedPen,Tool"))
                 .build();
@@ -133,7 +133,7 @@ public class DoubledWordValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testDoubledWordInJapaneseSentence() throws RedPenException {
+    void testDoubledWordInJapaneseSentence() throws RedPenException {
         config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration(validatorName))
                 .build();

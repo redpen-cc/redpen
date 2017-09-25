@@ -18,5 +18,5 @@
 
 package cc.redpen.parser.common;
 
-public class LineTest {
+class LineTest {
 }

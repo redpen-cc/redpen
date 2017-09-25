@@ -19,16 +19,16 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class NumberFormatValidatorTest {
+class NumberFormatValidatorTest {
     @Test
-    public void testSingleSentence() {
+    void testSingleSentence() {
         NumberFormatValidator validator = new NumberFormatValidator();
         Sentence st0 = new Sentence("1, 10, 200, 1,000.00, and 10,000 and 10,000.00 and 100,000.00 and 10,000,000.0 should all be fine.", 0);
         Sentence st1 = new Sentence("10000 gives an error because it should really be formatted as 10,000.", 0);
@@ -48,6 +48,6 @@ public class NumberFormatValidatorTest {
         validator.validate(st5); // 1 error
         validator.validate(st6); // 0 errors
 
-        assertEquals(st1.toString(), 6, errors.size());
+        assertEquals(6, errors.size(), st1.toString());
     }
 }

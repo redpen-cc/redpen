@@ -27,7 +27,7 @@ import cc.redpen.parser.BaseParserTest;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.validator.ValidationError;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -37,11 +37,11 @@ import static cc.redpen.parser.DocumentParser.WIKI;
 import static java.util.Collections.singletonList;
 import static java.util.stream.IntStream.of;
 import static java.util.stream.IntStream.range;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class WikiParserTest extends BaseParserTest {
+class WikiParserTest extends BaseParserTest {
     @Test
-    public void testBasicDocument() throws UnsupportedEncodingException {
+    void testBasicDocument() throws UnsupportedEncodingException {
         String sampleText = ""
             + "h1. About Gekioko.\n"
             + "Gekioko pun pun maru means very very angry.\n"
@@ -102,7 +102,7 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithList() {
+    void testGenerateDocumentWithList() {
         String sampleText = "Threre are several railway companies in Japan as follows.\n"
             + "- Tokyu\n"
             + "-- Toyoko Line\n"
@@ -125,7 +125,7 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithNumberedList() {
+    void testGenerateDocumentWithNumberedList() {
         String sampleText = "Threre are several railway companies in Japan as follows.\n"
             + "# Tokyu\n"
             + "## Toyoko Line\n"
@@ -153,7 +153,7 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithOneLineComment() {
+    void testGenerateDocumentWithOneLineComment() {
         String sampleText = "There are various tests.\n"
             + " [!-- The following should be exmples --] \n"
             + "Most common one is unit test.\n"
@@ -165,7 +165,7 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithMultiLinesComment() {
+    void testGenerateDocumentWithMultiLinesComment() {
         String sampleText = "There are various tests.\n"
             + "[!-- \n"
             + "The following should be exmples\n"
@@ -179,7 +179,7 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithMultiLinesComment2() {
+    void testGenerateDocumentWithMultiLinesComment2() {
         String sampleText = "There are various tests.\n"
             + "[!-- \n"
             + "The following should be exmples\n"
@@ -194,7 +194,7 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithVoidComment() {
+    void testGenerateDocumentWithVoidComment() {
         String sampleText = "There are various tests.\n"
             + "[!----]\n"
             + "Most common one is unit test.\n"
@@ -206,7 +206,7 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithOnlySpaceComment() {
+    void testGenerateDocumentWithOnlySpaceComment() {
         String sampleText = "There are various tests.\n"
             + "[!-- --]\n"
             + "Most common one is unit test.\n"
@@ -218,7 +218,7 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithCommentHavingHeadSpace() {
+    void testGenerateDocumentWithCommentHavingHeadSpace() {
         String sampleText = "There are various tests.\n"
             + " [!-- BLAH BLAH --]\n"
             + "Most common one is unit test.\n"
@@ -230,7 +230,7 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithCommentHavingTailingSpace() {
+    void testGenerateDocumentWithCommentHavingTailingSpace() {
         String sampleText = "There are various tests.\n"
             + "[!-- BLAH BLAH --] \n"
             + "Most common one is unit test.\n"
@@ -242,7 +242,7 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithMultiLinesCommentHavingSpaces() {
+    void testGenerateDocumentWithMultiLinesCommentHavingSpaces() {
         String sampleText = "There are various tests.\n"
             + " [!-- \n"
             + "The following should be exmples\n"
@@ -257,7 +257,7 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithMultipleSentenceInOneSentence() {
+    void testGenerateDocumentWithMultipleSentenceInOneSentence() {
         String sampleText =
                 "Tokyu is a good railway company. The company is reliable. In addition it is rich.";
         String[] expectedResult = {"Tokyu is a good railway company.",
@@ -272,7 +272,7 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithMultipleSentences() {
+    void testGenerateDocumentWithMultipleSentences() {
         String sampleText = "Tokyu is a good railway company. The company is reliable. In addition it is rich.\n"
             + "I like the company. Howerver someone does not like it.";
         Document doc = createFileContent(sampleText);
@@ -282,7 +282,7 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithMultipleSentencesWithVaraiousStopCharacters() {
+    void testGenerateDocumentWithMultipleSentencesWithVaraiousStopCharacters() {
         String sampleText = "Is Tokyu a good railway company? The company is reliable. In addition it is rich!\n";
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
@@ -297,19 +297,19 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWitVoidContent() {
+    void testGenerateDocumentWitVoidContent() {
         Document doc = createFileContent("");
         assertEquals(0, doc.getSection(0).getParagraphs().size());
     }
 
     @Test
-    public void testGenerateDocumentWithPeriodInSuccession() {
+    void testGenerateDocumentWithPeriodInSuccession() {
         Document doc = createFileContent("...");
         assertEquals(1, doc.getSection(0).getParagraph(0).getNumberOfSentences());
     }
 
     @Test
-    public void testGenerateDocumentWithoutPeriodInLastSentence() {
+    void testGenerateDocumentWithoutPeriodInLastSentence() {
         Document doc = createFileContent("Hongo is located at the west of Tokyo. Saitama is located at the north");
         Paragraph paragraph = doc.getSection(0).getParagraph(0);
         assertEquals(2, paragraph.getNumberOfSentences());
@@ -318,7 +318,7 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testGenerateOffsetesForMultiLineSentence() {
+    void testGenerateOffsetesForMultiLineSentence() {
         Document doc = createFileContent("OK! Saitama\n is located at the nor\nth. OK!");
         Paragraph paragraph = doc.getSection(0).getParagraph(0);
         assertEquals(3, paragraph.getNumberOfSentences());
@@ -329,7 +329,7 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithSentenceLongerThanOneLine() {
+    void testGenerateDocumentWithSentenceLongerThanOneLine() {
         String sampleText = "This is a good day.\n"
             + "Hongo is located at the west of Tokyo "
             + "which is the capital of Japan "
@@ -339,7 +339,7 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testPlainLink() {
+    void testPlainLink() {
         Document doc = createFileContent("this is not a [[pen]], but also this is not [[Google|http://google.com]] either.");
         Paragraph paragraph = doc.getSection(0).getParagraph(0);
         assertEquals(1, paragraph.getNumberOfSentences());
@@ -351,7 +351,7 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testPlainLinkWithSpaces() {
+    void testPlainLinkWithSpaces() {
         Document doc = createFileContent("the url is not [[Google | http://google.com ]].");
         Paragraph paragraph = doc.getSection(0).getParagraph(0);
         assertEquals(1, paragraph.getNumberOfSentences());
@@ -362,7 +362,7 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testLinkWithoutTag() {
+    void testLinkWithoutTag() {
         Document doc = createFileContent("url of google is [[http://google.com]].");
         Paragraph paragraph = doc.getSection(0).getParagraph(0);
         assertEquals(1, paragraph.getNumberOfSentences());
@@ -373,7 +373,7 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testIncompleteLink() {
+    void testIncompleteLink() {
         Document doc = createFileContent("url of google is [[http://google.com.");
         Paragraph paragraph = doc.getSection(0).getParagraph(0);
         assertEquals(1, paragraph.getNumberOfSentences());
@@ -383,7 +383,7 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testPlainLinkWithThreeBlock() {
+    void testPlainLinkWithThreeBlock() {
         Document doc = createFileContent("this is not a pen, but also this is not [[Google|http://google.com|dummy]] either.");
         Paragraph paragraph = doc.getSection(0).getParagraph(0);
         assertEquals(1, paragraph.getNumberOfSentences());
@@ -393,7 +393,7 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testVacantListBlock() {
+    void testVacantListBlock() {
         Document doc = createFileContent("this is not a pen, but also this is not [[]] Google either.");
         Paragraph paragraph = doc.getSection(0).getParagraph(0);
         assertEquals(1, paragraph.getNumberOfSentences());
@@ -404,33 +404,33 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testDocumentWithItalicWord() {
+    void testDocumentWithItalicWord() {
         Document doc = createFileContent("This is a //good// day.\n");
         assertEquals("This is a good day.", doc.getSection(0).getParagraph(0).getSentence(0).getContent());
         assertEquals(offsets(1, range(0, 10), range(12, 16), range(18, 23)), doc.getSection(0).getParagraph(0).getSentence(0).getOffsetMap());
     }
 
     @Test
-    public void testDocumentWithMultipleItalicWords() {
+    void testDocumentWithMultipleItalicWords() {
         Document doc = createFileContent("//This// is a //good// day.\n");
         assertEquals("This is a good day.", doc.getSection(0).getParagraph(0).getSentence(0).getContent());
         assertEquals(offsets(1, range(2, 6), range(8, 14), range(16, 20), range(22, 27)), doc.getSection(0).getParagraph(0).getSentence(0).getOffsetMap());
     }
 
     @Test
-    public void testDocumentWithMultipleNearItalicWords() {
+    void testDocumentWithMultipleNearItalicWords() {
         Document doc = createFileContent("This is //a// //good// day.\n");
         assertEquals("This is a good day.", doc.getSection(0).getParagraph(0).getSentence(0).getContent());
     }
 
     @Test
-    public void testDocumentWithItalicExpression() {
+    void testDocumentWithItalicExpression() {
         Document doc = createFileContent("This is //a good// day.\n");
         assertEquals("This is a good day.", doc.getSection(0).getParagraph(0).getSentence(0).getContent());
     }
 
     @Test
-    public void testDocumentWithHeaderCotainingMultipleSentences() {
+    void testDocumentWithHeaderCotainingMultipleSentences() {
         String sampleText = "h1. About Gunma. About Saitama.\n"
             + "Gunma is located at west of Saitama.\n"
             + "The word also have posive meaning. Hower it is a bit wired.";
@@ -443,7 +443,7 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testDocumentWithHeaderWitoutPeriod() {
+    void testDocumentWithHeaderWitoutPeriod() {
         String sampleText = "h1. About Gunma\n"
             + "Gunma is located at west of Saitama.\n"
             + "The word also have posive meaning. Hower it is a bit wired.";
@@ -455,7 +455,7 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testDocumentWithList() {
+    void testDocumentWithList() {
         String sampleText = "h1. About Gunma. About Saitama.\n"
             + "- Gunma is located at west of Saitama.\n"
             + "- The word also have posive meaning. Hower it is a bit wired.";
@@ -474,7 +474,7 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testDocumentWithListWithoutPeriod() {
+    void testDocumentWithListWithoutPeriod() {
         String sampleText = "h1. About Gunma. About Saitama.\n"
             + "- Gunma is located at west of Saitama\n";
 
@@ -488,7 +488,7 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testDocumentWithMultipleSections() {
+    void testDocumentWithMultipleSections() {
         String sampleText = "h1. Prefectures in Japan.\n"
             + "There are 47 prefectures in Japan.\n"
             + "\n"
@@ -528,7 +528,7 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testDocumentWithoutLastPeriod() {
+    void testDocumentWithoutLastPeriod() {
         String sampleText = "h1. Prefectures in Japan.\n"
             + "There are 47 prefectures in Japan\n"; // no last period
 
@@ -554,14 +554,14 @@ public class WikiParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testGenerateJapaneseDocument() {
+    void testGenerateJapaneseDocument() {
         String sampleText = "埼玉は東京の北に存在する。大きなベッドタウンであり、多くの人が住んでいる。";
         Document doc = createFileContent(sampleText, Configuration.builder("ja").build());
         assertEquals(2, doc.getSection(0).getParagraph(0).getNumberOfSentences());
     }
 
     @Test
-    public void testErrorPositionOfWikiParser() throws RedPenException {
+    void testErrorPositionOfWikiParser() throws RedPenException {
         String sampleText = "This is a good //good// day。\n"; // invalid end of sentence symbol
         Configuration conf = Configuration.builder().build();
         Document doc = createFileContent(sampleText, conf);

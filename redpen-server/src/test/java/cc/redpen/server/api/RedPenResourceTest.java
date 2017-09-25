@@ -24,6 +24,9 @@ import org.apache.wink.common.internal.application.ApplicationFileLoader;
 import org.apache.wink.server.internal.servlet.MockServletInvocationTest;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -41,7 +44,12 @@ import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 import static javax.ws.rs.core.MediaType.WILDCARD;
 
-public class RedPenResourceTest extends MockServletInvocationTest {
+class RedPenResourceTest extends MockServletInvocationTest {
+    @BeforeEach
+    void beforeEach() throws Exception {
+        // MockServletInvocationTest#setUp is required to be called explicitly as it is JUnit 3.x based implementation
+        setUp();
+    }
 
     @Override
     protected Class<?>[] getClasses() {
@@ -54,7 +62,8 @@ public class RedPenResourceTest extends MockServletInvocationTest {
         }
     }
 
-    public void testRun() throws Exception {
+    @Test
+    void testRun() throws Exception {
         MockHttpServletRequest request = constructMockRequest("POST", "/document/validate", WILDCARD);
         request.setContent("document=Foobar".getBytes());
         MockHttpServletResponse response = invoke(request);
@@ -63,7 +72,8 @@ public class RedPenResourceTest extends MockServletInvocationTest {
         assertEquals(0, errors.length());
     }
 
-    public void testRunWithErrors() throws Exception {
+    @Test
+    void testRunWithErrors() throws Exception {
         MockHttpServletRequest request = constructMockRequest("POST", "/document/validate", WILDCARD);
         request.setContent(("document=foobar.foobar").getBytes()); //NOTE: need space between periods.
         MockHttpServletResponse response = invoke(request);
@@ -77,14 +87,16 @@ public class RedPenResourceTest extends MockServletInvocationTest {
         assertTrue(errors.get(0).toString().length() > 0);
     }
 
-    public void testRunWithoutContent() throws Exception {
+    @Test
+    void testRunWithoutContent() throws Exception {
         MockHttpServletRequest request = constructMockRequest("POST", "/document/validate", WILDCARD);
         request.setContent(("").getBytes()); //NOTE: need space between periods.
         MockHttpServletResponse response = invoke(request);
         assertEquals("HTTP status", HttpStatus.OK.getCode(), response.getStatus());
     }
 
-    public void testRunWithOnlyFormName() throws Exception {
+    @Test
+    void testRunWithOnlyFormName() throws Exception {
         MockHttpServletRequest request = constructMockRequest("POST", "/document/validate", WILDCARD);
         request.setContent(("document=").getBytes()); //NOTE: need space between periods.
         MockHttpServletResponse response = invoke(request);
@@ -92,7 +104,8 @@ public class RedPenResourceTest extends MockServletInvocationTest {
         assertEquals("HTTP status", HttpStatus.OK.getCode(), response.getStatus());
     }
 
-    public void testJSValidatorRuns() throws Exception {
+    @Test
+    void testJSValidatorRuns() throws Exception {
         if(new File("redpen-server").exists()) {
             System.setProperty("REDPEN_HOME", "redpen-server/src/test");
         }else{
@@ -112,7 +125,8 @@ public class RedPenResourceTest extends MockServletInvocationTest {
         }
     }
 
-    public void testJSValidatorDoesntRunFromNonHomeDir() throws Exception {
+    @Test
+    void testJSValidatorDoesntRunFromNonHomeDir() throws Exception {
         System.setProperty("REDPEN_HOME", ".");
         MockHttpServletRequest request = constructMockRequest("POST", "/document/validate/json", WILDCARD, APPLICATION_JSON);
         request.setContent(String.format("{\"document\":\"Test, this is a test.\",\"format\":\"json2\",\"documentParser\":\"PLAIN\",\"config\":{\"lang\":\"en\",\"validators\":{\"JavaScript\":{\"properties\":{\"script-path\":\"%s\"}}}}}", "resources/js").getBytes());
@@ -123,12 +137,14 @@ public class RedPenResourceTest extends MockServletInvocationTest {
         assertEquals(0, errors.length());
     }
 
-    public void testDetectLanguage() throws Exception {
+    @Test
+    void testDetectLanguage() throws Exception {
         assertEquals("en", new RedPenResource().detectLanguage("Hello World").getString("key"));
         assertEquals("ja", new RedPenResource().detectLanguage("こんにちは世界").getString("key"));
     }
 
-    public void testResponseTyped() throws Exception {
+    @Test
+    void testResponseTyped() throws Exception {
         assertEquals(RedPenResource.MIME_TYPE_XML, RedPenResource.responseTyped("test", "xml").getMetadata().getFirst(HttpHeaders.CONTENT_TYPE).toString());
         assertEquals(RedPenResource.MIME_TYPE_JSON, RedPenResource.responseTyped("test", "json").getMetadata().getFirst(HttpHeaders.CONTENT_TYPE).toString());
         assertEquals(RedPenResource.MIME_TYPE_JSON, RedPenResource.responseTyped("test", "json2").getMetadata().getFirst(HttpHeaders.CONTENT_TYPE).toString());

@@ -26,24 +26,25 @@ import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import cc.redpen.validator.ValidatorFactory;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class PlainFormatterTest extends Validator {
-    @Before
-    public void setUp() throws Exception {
+class PlainFormatterTest extends Validator {
+    @BeforeEach
+    void setUp() throws Exception {
         formatter = new PlainFormatter();
     }
 
     @Test
-    public void testConvertValidationError() {
+    void testConvertValidationError() {
         List<ValidationError> errors = new ArrayList<>();
         setErrorList(errors);
         addLocalizedError(new Sentence("This is a sentence", 0));
@@ -55,7 +56,7 @@ public class PlainFormatterTest extends Validator {
     }
 
     @Test
-    public void testConvertValidationErrorWithoutFileName() {
+    void testConvertValidationErrorWithoutFileName() {
         List<ValidationError> errors = new ArrayList<>();
         setErrorList(errors);
         addLocalizedError(new Sentence("This is a sentence", 0));
@@ -66,7 +67,7 @@ public class PlainFormatterTest extends Validator {
     }
 
     @Test
-    public void testConvertValidationErrorChangingErrorLevel() throws RedPenException {
+    void testConvertValidationErrorChangingErrorLevel() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SentenceLength").setLevel(ValidatorConfiguration.LEVEL.INFO)).build();
         Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);

@@ -25,18 +25,17 @@ import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
-import junit.framework.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class KatakanaSpellCheckValidatorTest {
+class KatakanaSpellCheckValidatorTest {
     @Test
-    public void testSingleSentence() {
+    void testSingleSentence() {
         KatakanaSpellCheckValidator validator
                 = new KatakanaSpellCheckValidator();
         Sentence st = new Sentence("ハロー、ハロ。"
@@ -47,11 +46,11 @@ public class KatakanaSpellCheckValidatorTest {
         validator.validate(st);
         // We do not detect "ハロー" and "ハロ" as a similar pair,
         // but "インデクス" and "インデックス".
-        assertEquals(st.toString(), 1, errors.size());
+        assertEquals(1, errors.size(), st.toString());
     }
 
     @Test
-    public void testMultiSentence() {
+    void testMultiSentence() {
         KatakanaSpellCheckValidator validator
                 = new KatakanaSpellCheckValidator();
         List<ValidationError> errors = new ArrayList<>();
@@ -59,16 +58,16 @@ public class KatakanaSpellCheckValidatorTest {
         st = new Sentence("フレーズ・アナライズにバグがある", 0);
         validator.setErrorList(errors);
         validator.validate(st);
-        assertEquals(st.toString(), 0, errors.size());
+        assertEquals(0, errors.size(), st.toString());
         st = new Sentence("バグのあるフェーズ・アナライシス", 1);
         validator.validate(st);
         // We detect a similar pair of "フレーズ・アナライズ"
         // and "フェーズ・アナライシス".
-        assertEquals(st.toString(), 1, errors.size());
+        assertEquals(1, errors.size(), st.toString());
     }
 
     @Test
-    public void testLoadDefaultDictionary() throws RedPenException {
+    void testLoadDefaultDictionary() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck"))
                 .build();
@@ -83,11 +82,11 @@ public class KatakanaSpellCheckValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.get(0)).size());
+        assertEquals(0, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testDefaultSetting() throws RedPenException {
+    void testDefaultSetting() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck"))
                 .build();
@@ -102,11 +101,11 @@ public class KatakanaSpellCheckValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(1, errors.get(documents.get(0)).size());
+        assertEquals(1, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testSetMinimumRatio() throws RedPenException {
+    void testSetMinimumRatio() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck").addProperty("min_ratio", "0.001"))
                 .build();
@@ -121,11 +120,11 @@ public class KatakanaSpellCheckValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.get(0)).size());
+        assertEquals(0, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testSetMinimumFrequency() throws RedPenException {
+    void testSetMinimumFrequency() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck").addProperty("min_freq", "0"))
                 .build();
@@ -140,11 +139,11 @@ public class KatakanaSpellCheckValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.get(0)).size());
+        assertEquals(0, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testLoadUserDictionary() throws RedPenException {
+    void testLoadUserDictionary() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck").addProperty("list", "ミニマムサポート,ミニマムサポータ"))
                 .build();
@@ -159,11 +158,11 @@ public class KatakanaSpellCheckValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.get(0)).size());
+        assertEquals(0, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testDisableDefaultDictionary() throws RedPenException {
+    void testDisableDefaultDictionary() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("KatakanaSpellCheck").addProperty("disable-default", "true"))
                 .build();
@@ -177,6 +176,6 @@ public class KatakanaSpellCheckValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(1, errors.get(documents.get(0)).size());
+        assertEquals(1, errors.get(documents.get(0)).size());
     }
 }

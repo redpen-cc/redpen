@@ -25,24 +25,25 @@ import cc.redpen.validator.BaseValidatorTest;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import cc.redpen.validator.ValidatorFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
-public class SuggestExpressionValidatorTest extends BaseValidatorTest {
+class SuggestExpressionValidatorTest extends BaseValidatorTest {
     private SuggestExpressionValidator validator;
 
-    public SuggestExpressionValidatorTest() {
+    SuggestExpressionValidatorTest() {
         super("SuggestExpression");
     }
 
     @Test
-    public void testSynonym() throws RedPenException {
+    void testSynonym() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SuggestExpression").addProperty("map", "{like,such " +
                         "as}, {info,information}"))
@@ -56,7 +57,7 @@ public class SuggestExpressionValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testSynonymSplitPlusWhiteSpace() throws RedPenException {
+    void testSynonymSplitPlusWhiteSpace() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SuggestExpression").addProperty("map", "{like, such " +
                         "as}"))
@@ -70,7 +71,7 @@ public class SuggestExpressionValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testWithoutSynonym() throws RedPenException {
+    void testWithoutSynonym() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SuggestExpression").addProperty("map", "{like,such " +
                         "as}, {info,information}"))
@@ -83,7 +84,7 @@ public class SuggestExpressionValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testWithMultipleSynonyms() throws RedPenException {
+    void testWithMultipleSynonyms() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SuggestExpression").addProperty("map", "{like,such " +
                         "as}, {info,information}"))
@@ -97,7 +98,7 @@ public class SuggestExpressionValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void japanese() throws RedPenException {
+    void japanese() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SuggestExpression").addProperty("map", "{like,such " +
                         "as}, {info,information},{おはよう,お早う}"))
@@ -111,7 +112,7 @@ public class SuggestExpressionValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testWithZeroLengthSentence() throws RedPenException {
+    void testWithZeroLengthSentence() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SuggestExpression").addProperty("map", "{like,such " +
                         "as}, {info,information},{おはよう,お早う}"))
@@ -125,7 +126,7 @@ public class SuggestExpressionValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testErrorMessageIsProperlyFormatted() throws RedPenException {
+    void testErrorMessageIsProperlyFormatted() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SuggestExpression").addProperty("map", "{like,such " +
                         "as}, {info,information}"))
@@ -140,12 +141,12 @@ public class SuggestExpressionValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void initDoesNotFailIfDictionaryIsNotSpecified() {
+    void initDoesNotFailIfDictionaryIsNotSpecified() {
         try {
             Configuration config = Configuration.builder()
                     .addValidatorConfig(new ValidatorConfiguration("SuggestExpression")).build();
         } catch(Exception e) {
-            fail();
+            fail("Exception not expected.");
         }
     }
 }

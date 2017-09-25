@@ -24,18 +24,18 @@ import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import cc.redpen.validator.ValidatorFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class CommaNumberValidatorTest {
+class CommaNumberValidatorTest {
 
     @Test
-    public void testWithSentenceContainingManyCommas() throws RedPenException {
+    void testWithSentenceContainingManyCommas() throws RedPenException {
         Validator commaNumberValidator = ValidatorFactory.getInstance("CommaNumber");
         String content = "is it true, not true, but it should be ture, right, or not right.";
         Sentence str = new Sentence(content, 0);
@@ -48,7 +48,7 @@ public class CommaNumberValidatorTest {
     }
 
     @Test
-    public void testWithtSentenceWithoutComma() throws RedPenException {
+    void testWithtSentenceWithoutComma() throws RedPenException {
         Validator commaNumberValidator = ValidatorFactory.getInstance("CommaNumber");
         String content = "is it true.";
         Sentence str = new Sentence(content, 0);
@@ -60,7 +60,7 @@ public class CommaNumberValidatorTest {
     }
 
     @Test
-    public void testWithtZeroLengthSentence() throws RedPenException {
+    void testWithtZeroLengthSentence() throws RedPenException {
         Validator commaNumberValidator = ValidatorFactory.getInstance("CommaNumber");
         String content = "";
         Sentence str = new Sentence(content, 0);
@@ -72,7 +72,7 @@ public class CommaNumberValidatorTest {
     }
 
     @Test
-    public void testJapaneseCornerCase() throws RedPenException {
+    void testJapaneseCornerCase() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("CommaNumber"))
                 .build();

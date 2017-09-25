@@ -20,19 +20,19 @@ package cc.redpen.parser.asciidoc;
 import cc.redpen.config.Configuration;
 import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.parser.common.Model;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class AsciiDocTest {
+class AsciiDocTest {
 
     /**
      * Test that ascidoc markup is erased properly
      */
     @Test
-    public void testModelErasure() {
+    void testModelErasure() {
         Configuration configuration = Configuration.builder().build();
 
         String asciidocText =
@@ -127,7 +127,7 @@ public class AsciiDocTest {
     }
 
     @Test
-    public void testEraseMismatchedEnclosure() {
+    void testEraseMismatchedEnclosure() {
         String testLine = "A line *with* an [enclosure] and one with a [enclosure,with a description] " +
                 "and then an URL like http://fred.fish/";
 
@@ -139,7 +139,7 @@ public class AsciiDocTest {
     }
 
     @Test
-    public void testEraseMatchedAll() {
+    void testEraseMatchedAll() {
         String testLine = "A line *with* an [enclosure] and one with a [enclosure,with a description] " +
                 "and then an URL like http://fred.fish/";
 
@@ -149,7 +149,7 @@ public class AsciiDocTest {
     }
 
     @Test
-    public void testEraseDelimitersAsEndingTag() {
+    void testEraseDelimitersAsEndingTag() {
         String testLine = "A line *with* an [enclosure] and one with a [enclosure,with a description] " +
                 "and then an URL like http://fred.fish/";
 
@@ -160,7 +160,7 @@ public class AsciiDocTest {
     }
 
     @Test
-    public void testEraseInlineMarkup() {
+    void testEraseInlineMarkup() {
         String testLine = "A line *with* an [enclosure] and one with a [enclosure,with a description] " +
                 "and then an URL like http://fred.fish/";
 
@@ -170,7 +170,7 @@ public class AsciiDocTest {
     }
 
     @Test
-    public void testEraseMarkers() {
+    void testEraseMarkers() {
         String testLine = "A line *with* an [enclosure] and one with a [enclosure,with a description] " +
                 "and then an URL like http://fred.fish/";
         // Test just removing the markers
@@ -180,7 +180,7 @@ public class AsciiDocTest {
     }
 
     @Test
-    public void testEraseDelimiterTags() {
+    void testEraseDelimiterTags() {
         String testLine = "A line *with* an [enclosure] and one with a [enclosure,with a description] " +
                 "and then an URL like http://fred.fish/";
 

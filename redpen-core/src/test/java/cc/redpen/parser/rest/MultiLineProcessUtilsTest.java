@@ -1,13 +1,13 @@
 package cc.redpen.parser.rest;
 
 import cc.redpen.parser.common.LineParser;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class MultiLineProcessUtilsTest {
+class MultiLineProcessUtilsTest {
     @Test
-    public void testDetectThreeLineHeader() {
+    void testDetectThreeLineHeader() {
         LineParser.TargetLine target = new LineParser.TargetLine(
                 new ReSTLine("This is a part", 1),
                 new ReSTLine("#############", 0),
@@ -16,7 +16,7 @@ public class MultiLineProcessUtilsTest {
     }
 
     @Test
-    public void testDetectTwoLineHeader() {
+    void testDetectTwoLineHeader() {
         LineParser.TargetLine target = new LineParser.TargetLine(
                 new ReSTLine("This is a part", 1),
                 new ReSTLine("", 0),

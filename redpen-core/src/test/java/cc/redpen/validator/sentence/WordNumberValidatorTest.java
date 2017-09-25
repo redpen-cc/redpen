@@ -23,24 +23,24 @@ import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.BaseValidatorTest;
 import cc.redpen.validator.ValidationError;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class WordNumberValidatorTest extends BaseValidatorTest {
+class WordNumberValidatorTest extends BaseValidatorTest {
 
-    public WordNumberValidatorTest() {
+    WordNumberValidatorTest() {
         super("WordNumber");
     }
 
     @Test
-    public void testWithShortSentence() {
+    void testWithShortSentence() {
         WordNumberValidator maxWordNumberValidator = new WordNumberValidator();
         Sentence str = new Sentence(
                 "this sentence is short.", 0);
@@ -52,7 +52,7 @@ public class WordNumberValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testWithLongSentence() {
+    void testWithLongSentence() {
         WordNumberValidator maxWordNumberValidator = new WordNumberValidator();
         Sentence str = new Sentence(
                 "this sentence is very very very very very very very very very very" +
@@ -65,7 +65,7 @@ public class WordNumberValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testWithZeroLengthSentence() {
+    void testWithZeroLengthSentence() {
         WordNumberValidator maxWordNumberValidator = new WordNumberValidator();
         Sentence str = new Sentence("", 0);
         List<ValidationError> errors = new ArrayList<>();
@@ -76,7 +76,7 @@ public class WordNumberValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testSentenceWithCommas() throws RedPenException {
+    void testSentenceWithCommas() throws RedPenException {
         // NOTE: the following sentence contains 29 words.
         Document document = prepareSimpleDocument("There is no real path, so first follow the line of the foot of the rocks past Kawa, then cut straight up to the next level of slabs.");
         RedPen redPen = new RedPen(config);

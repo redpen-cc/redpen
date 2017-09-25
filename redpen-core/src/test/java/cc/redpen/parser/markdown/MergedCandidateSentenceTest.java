@@ -18,17 +18,17 @@
 package cc.redpen.parser.markdown;
 
 import cc.redpen.parser.LineOffset;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class MergedCandidateSentenceTest {
+class MergedCandidateSentenceTest {
     @Test
-    public void testMerge() {
+    void testMerge() {
         List<CandidateSentence> candidateSentences = initializeCandidateSentences(
                 new CandidateSentence(1, "first ", "", 0),
                 new CandidateSentence(1, "second ", "", 6),

@@ -23,17 +23,17 @@ import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.ValidatorFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class FrequentSentenceStartValidatorTest {
+class FrequentSentenceStartValidatorTest {
 
     @Test
-    public void testDocument() throws RedPenException {
+    void testDocument() throws RedPenException {
         FrequentSentenceStartValidator validator = (FrequentSentenceStartValidator) ValidatorFactory.getInstance("FrequentSentenceStart");
 
         Document document =

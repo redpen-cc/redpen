@@ -23,27 +23,28 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ListLevelValidatorTest {
+class ListLevelValidatorTest {
 
     private ListLevelValidator validator;
 
-    @Before
-    public void setUp() throws RedPenException {
+    @BeforeEach
+    void setUp() throws RedPenException {
         validator = new ListLevelValidator();
         validator.preInit(new ValidatorConfiguration("ListLevel").addProperty("max_level", 3), Configuration.builder().build());
     }
 
     @Test
-    public void testValid() throws Exception {
+    void testValid() throws Exception {
         Section section = new Section(0, "header");
         section.appendListBlock();
         section.appendListElement(1, Arrays.asList(new Sentence("item1", 1)));
@@ -56,7 +57,7 @@ public class ListLevelValidatorTest {
     }
 
     @Test
-    public void testInvalid() throws Exception {
+    void testInvalid() throws Exception {
         Section section = new Section(0, "header");
         section.appendListBlock();
         section.appendListElement(1, Arrays.asList(new Sentence("item1", 1)));

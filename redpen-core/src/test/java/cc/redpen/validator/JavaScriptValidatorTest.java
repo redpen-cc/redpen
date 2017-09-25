@@ -27,7 +27,7 @@ import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.SentenceExtractor;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,13 +37,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+// leave this class public as testJSLiteralValidator's literal validators require public access to dataFromJavaScript
 public class JavaScriptValidatorTest extends JavaScriptValidator {
     @Test
-    public void doNotCrashIfJsDirectoryDoesNotExist() throws Exception {
+    void doNotCrashIfJsDirectoryDoesNotExist() throws Exception {
         JavaScriptValidator validator = new JavaScriptValidator();
         validator.preInit(new ValidatorConfiguration("JavaScript"), Configuration.builder().build());
         validator.init();
@@ -51,7 +51,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
     }
 
     @Test
-    public void testLoadFile() throws Exception {
+    void testLoadFile() throws Exception {
         File file = File.createTempFile("test", "txt");
         String content = "hello\nred\npen.";
         Files.write(Paths.get(file.getAbsolutePath()), content.getBytes(UTF_8));
@@ -68,7 +68,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
     }
 
     @Test
-    public void testFileJSValidator() throws RedPenException, IOException {
+    void testFileJSValidator() throws RedPenException, IOException {
         File javaScriptValidatorsDir = File.createTempFile("test", "js");
         // delete the temporary file, make a directory, and store JavaScript validator in it
         javaScriptValidatorsDir.delete();
@@ -97,10 +97,11 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         assertEquals("MyValidationScript.js", errors.get(0).getValidatorName());
     }
 
+    // leave this field public as testJSLiteralValidator's literal validators require public access to dataFromJavaScript
     public static List dataFromJavaScript;
 
     @Test
-    public void testJSLiteralValidator() throws RedPenException, IOException {
+    void testJSLiteralValidator() throws RedPenException, IOException {
         JavaScriptValidator validator = new JavaScriptValidator();
         validator.scripts.add(new JavaScriptLoader("testScript.js",
                 "function preValidateSentence(sentence) {" +
@@ -183,7 +184,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
     }
 
     @Test
-    public void testEmbeddedmessage() throws RedPenException, IOException {
+    void testEmbeddedmessage() throws RedPenException, IOException {
         JavaScriptValidator validator = new JavaScriptValidator();
         validator.scripts.add(new JavaScriptLoader("testScript.js",
                 "var message = 'embedded message {0}';" +
@@ -207,7 +208,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
     }
 
     @Test
-    public void testErrorSuppressionErrorFromJavaScriptValidator() throws RedPenException, IOException {
+    void testErrorSuppressionErrorFromJavaScriptValidator() throws RedPenException, IOException {
         File javaScriptValidatorsDir = File.createTempFile("test", "js");
         javaScriptValidatorsDir.delete();
         javaScriptValidatorsDir.mkdirs();
@@ -232,7 +233,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
     }
 
     @Test
-    public void testErrorSuppressionErrorFromSpecifiedJavaScriptValidator() throws RedPenException, IOException {
+    void testErrorSuppressionErrorFromSpecifiedJavaScriptValidator() throws RedPenException, IOException {
         File javaScriptValidatorsDir = File.createTempFile("test", "js");
         javaScriptValidatorsDir.delete();
         javaScriptValidatorsDir.mkdirs();
@@ -261,7 +262,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
     }
 
     @Test
-    public void testErrorCommentSuppressionErrorFromScriptValidator() throws RedPenException, IOException {
+    void testErrorCommentSuppressionErrorFromScriptValidator() throws RedPenException, IOException {
         File javaScriptValidatorsDir = File.createTempFile("test", "js");
         javaScriptValidatorsDir.delete();
         javaScriptValidatorsDir.mkdirs();
@@ -292,7 +293,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
     }
 
     @Test
-    public void testErrorCommentSuppressionErrorFromSpecifiedScriptValidator() throws RedPenException, IOException {
+    void testErrorCommentSuppressionErrorFromSpecifiedScriptValidator() throws RedPenException, IOException {
         File javaScriptValidatorsDir = File.createTempFile("test", "js");
         javaScriptValidatorsDir.delete();
         javaScriptValidatorsDir.mkdirs();
@@ -324,7 +325,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
     }
 
     @Test
-    public void testJSValidatorIsConfinedByDefault() throws RedPenException, IOException {
+    void testJSValidatorIsConfinedByDefault() throws RedPenException, IOException {
         JavaScriptValidator validator = new JavaScriptValidator();
         validator.scripts.add(new JavaScriptLoader("testScript.js",
                                          "function validateSentence(sentence) {"
@@ -350,7 +351,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
         assertEquals("testScript.js", errors.get(0).getValidatorName());
     }
 
-    ArrayList<ValidationError> errors = new ArrayList<>();
+    private ArrayList<ValidationError> errors = new ArrayList<>();
 
 
     private Document createFileContent(String inputDocumentString, DocumentParser parser) {
@@ -363,7 +364,7 @@ public class JavaScriptValidatorTest extends JavaScriptValidator {
                     configuration.getTokenizer());
         } catch (RedPenException e) {
             e.printStackTrace();
-            fail();
+            fail("Exception not expected.");
         }
         return doc;
     }

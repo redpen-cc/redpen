@@ -22,24 +22,25 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Section;
 import cc.redpen.validator.ValidationError;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SectionLevelValidatorTest {
+class SectionLevelValidatorTest {
     private SectionLevelValidator validator = new SectionLevelValidator();
 
-    @Before
-    public void setUp() throws RedPenException {
+    @BeforeEach
+    void setUp() throws RedPenException {
         validator.preInit(new ValidatorConfiguration("SectionLevel").addProperty("max_num", "6"), Configuration.builder().build());
     }
 
     @Test
-    public void testWithDeepSection() {
+    void testWithDeepSection() {
         Section section = new Section(7);
 
         List<ValidationError> errors = new ArrayList<>();
@@ -49,7 +50,7 @@ public class SectionLevelValidatorTest {
     }
 
     @Test
-    public void testWithShallowSection() {
+    void testWithShallowSection() {
         Section section = new Section(6);
 
         List<ValidationError> errors = new ArrayList<>();

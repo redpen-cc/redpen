@@ -25,16 +25,17 @@ import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.ValidatorFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class WordFrequencyValidatorTest {
+class WordFrequencyValidatorTest {
 
-    String text[] = {
+    private String[] text = {
       "Mesa Verde National Park is a U.S. National Park and UNESCO World Heritage Site located in Montezuma County, Colorado.",
       "It protects some of the best preserved Ancestral Puebloan archeological sites in the United States.",
       "The park was created by President Theodore Roosevelt in 1906.",
@@ -50,7 +51,7 @@ public class WordFrequencyValidatorTest {
     };
 
     @Test
-    public void testDocument() throws RedPenException {
+    void testDocument() throws RedPenException {
         WordFrequencyValidator validator = (WordFrequencyValidator) ValidatorFactory.getInstance("WordFrequency");
 
         Document document = buildDocument();
@@ -63,7 +64,7 @@ public class WordFrequencyValidatorTest {
     }
 
     @Test
-    public void testEmptySpellingDictionary() throws Exception {
+    void testEmptySpellingDictionary() throws Exception {
         WordFrequencyValidator validator = new WordFrequencyValidator();
         validator.preInit(new ValidatorConfiguration("WordFrequency"), Configuration.builder("za").build());
 

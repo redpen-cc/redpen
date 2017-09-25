@@ -22,7 +22,7 @@ import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,12 +31,12 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class FormatterTest extends Validator {
+class FormatterTest extends Validator {
     @Test
-    public void testDistributeWithPlainFormatter() throws RedPenException {
+    void testDistributeWithPlainFormatter() throws RedPenException {
         PlainFormatter formatter = new PlainFormatter();
         Map<Document, List<ValidationError>> docErrorsMap = new HashMap<>();
         String result = formatter.format(docErrorsMap);
@@ -44,7 +44,7 @@ public class FormatterTest extends Validator {
     }
 
     @Test
-    public void testFlushErrorWithPlainFormatter() throws RedPenException {
+    void testFlushErrorWithPlainFormatter() throws RedPenException {
         PlainFormatter formatter = new PlainFormatter();
         List<ValidationError> errors = new ArrayList<>();
         setErrorList(errors);

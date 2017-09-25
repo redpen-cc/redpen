@@ -27,16 +27,17 @@ import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
-import junit.framework.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class JapaneseStyleValidatorTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class JapaneseStyleValidatorTest {
     @Test
-    public void mixedtStyles() throws RedPenException {
+    void mixedtStyles() throws RedPenException {
         String sampleText =
                 "今日はいい天気です。\n" +
                 "昨日は雨だったが、持ち直しました。\n" +
@@ -53,15 +54,15 @@ public class JapaneseStyleValidatorTest {
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
 
-        Assert.assertEquals(1, errors.get(documents.get(0)).size());
-        Assert.assertEquals(2, errors.get(documents.get(0)).get(0).getLineNumber());
-        Assert.assertEquals(4, errors.get(documents.get(0)).get(0).getStartPosition().get().offset);
-        Assert.assertEquals(7, errors.get(documents.get(0)).get(0).getEndPosition().get().offset);
-        Assert.assertEquals("JapaneseStyle", errors.get(documents.get(0)).get(0).getValidatorName());
+        assertEquals(1, errors.get(documents.get(0)).size());
+        assertEquals(2, errors.get(documents.get(0)).get(0).getLineNumber());
+        assertEquals(4, errors.get(documents.get(0)).get(0).getStartPosition().get().offset);
+        assertEquals(7, errors.get(documents.get(0)).get(0).getEndPosition().get().offset);
+        assertEquals("JapaneseStyle", errors.get(documents.get(0)).get(0).getValidatorName());
     }
 
     @Test
-    public void desuMasuStyle() throws RedPenException {
+    void desuMasuStyle() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("JapaneseStyle"))
                 .build();
@@ -78,11 +79,11 @@ public class JapaneseStyleValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.get(0)).size());
+        assertEquals(0, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void dearuStyle() throws RedPenException {
+    void dearuStyle() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("JapaneseStyle"))
                 .build();
@@ -99,11 +100,11 @@ public class JapaneseStyleValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.get(0)).size());
+        assertEquals(0, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void mixedStyleWithDesuError() throws RedPenException {
+    void mixedStyleWithDesuError() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("JapaneseStyle"))
                 .build();
@@ -120,10 +121,10 @@ public class JapaneseStyleValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(1, errors.get(documents.get(0)).size());
-        Assert.assertEquals(1, errors.get(documents.get(0)).get(0).getLineNumber());
-        Assert.assertEquals(22, errors.get(documents.get(0)).get(0).getStartPosition().get().offset);
-        Assert.assertEquals(24, errors.get(documents.get(0)).get(0).getEndPosition().get().offset);
-        Assert.assertEquals("JapaneseStyle", errors.get(documents.get(0)).get(0).getValidatorName());
+        assertEquals(1, errors.get(documents.get(0)).size());
+        assertEquals(1, errors.get(documents.get(0)).get(0).getLineNumber());
+        assertEquals(22, errors.get(documents.get(0)).get(0).getStartPosition().get().offset);
+        assertEquals(24, errors.get(documents.get(0)).get(0).getEndPosition().get().offset);
+        assertEquals("JapaneseStyle", errors.get(documents.get(0)).get(0).getValidatorName());
     }
 }

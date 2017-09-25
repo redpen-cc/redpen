@@ -22,21 +22,22 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class ValidatorTest {
+class ValidatorTest {
     private final Configuration globalConfig = Configuration.builder().build();
 
     @Test
-    public void validationErrorCreation() throws RedPenException {
+    void validationErrorCreation() throws RedPenException {
         ValidationErrorMessageTest validationErrorMessageTest = new ValidationErrorMessageTest();
         validationErrorMessageTest.preInit(new ValidatorConfiguration("blah"), Configuration.builder().build());
         validationErrorMessageTest.setLocale(Locale.ENGLISH);
@@ -57,7 +58,7 @@ public class ValidatorTest {
     }
 
     @Test
-    public void configOverridesDefaultAttributes() throws Exception {
+    void configOverridesDefaultAttributes() throws Exception {
         Validator validator = new Validator("hello", 123) {};
         assertEquals(123, validator.getInt("hello"));
 
@@ -66,7 +67,7 @@ public class ValidatorTest {
     }
 
     @Test
-    public void equalsAndHashCode() throws Exception {
+    void equalsAndHashCode() throws Exception {
         Validator validator = new ValidationErrorMessageTest();
         Validator validator2 = new ValidationErrorMessageTest();
         assertEquals(validator, validator2);
@@ -82,7 +83,7 @@ public class ValidatorTest {
     }
 
     @Test
-    public void testToString() throws Exception {
+    void testToString() throws Exception {
         assertEquals("ValidationErrorMessageTest{}", new ValidationErrorMessageTest().toString());
         assertEquals("ValidationErrorMessageTest{hello=123}", new ValidationErrorMessageTest("hello", 123).toString());
     }

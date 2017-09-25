@@ -17,24 +17,15 @@
  */
 package cc.redpen.parser.latex;
 
-import org.junit.Test;
-import java.util.List;
-import java.util.ArrayList;
+import org.junit.jupiter.api.Test;
 import java.util.Arrays;
-import java.util.Deque;
-import java.util.ArrayDeque;
 
-import java.util.regex.Pattern;
-
-import static org.junit.Assert.*;
 import static cc.redpen.parser.latex.Tools.*;
-import static cc.redpen.parser.latex.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.pegdown.ast.*;
-
-public class TokenTest {
+class TokenTest {
     @Test
-    public void testAsVerbatim() {
+    void testAsVerbatim() {
         assertEquals(
             Arrays.asList(
                 "test1",
@@ -55,7 +46,7 @@ public class TokenTest {
     }
 
     @Test
-    public void testAsTextile() {
+    void testAsTextile() {
         assertEquals(
             Arrays.asList(
                 "test1",

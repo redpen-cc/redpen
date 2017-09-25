@@ -24,8 +24,8 @@ import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.validator.ValidationError;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,26 +35,29 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class AsciiDocParserTest {
+
+class AsciiDocParserTest {
     private static final Logger LOG = LoggerFactory.getLogger(AsciiDocParserTest.class);
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
     }
 
-    @Test(expected = NullPointerException.class)
-    public void testNullDocument() throws Exception {
-        Configuration configuration = Configuration.builder().build();
-        DocumentParser parser = DocumentParser.ASCIIDOC;
-        InputStream is = null;
-        parser.parse(is, new SentenceExtractor(configuration.getSymbolTable()), configuration.getTokenizer());
+    @Test
+    void testNullDocument() throws Exception {
+        assertThrows(NullPointerException.class, ()-> {
+            Configuration configuration = Configuration.builder().build();
+            DocumentParser parser = DocumentParser.ASCIIDOC;
+            InputStream is = null;
+            parser.parse(is, new SentenceExtractor(configuration.getSymbolTable()), configuration.getTokenizer());
+        });
     }
 
 
     @Test
-    public void testBasicDocument() throws UnsupportedEncodingException, RedPenException {
+    void testBasicDocument() throws UnsupportedEncodingException, RedPenException {
         String sampleText = "Instances Overview\n==================\n" + "Author's Name <person@email.address>\nv1.2, 2015-08\n" +
             "\nThis is the optional preamble (an untitled section body). Useful for " +
             "writing simple sectionless documents consisting only of a preamble.\n\n" +
@@ -121,7 +124,7 @@ public class AsciiDocParserTest {
             }
         }
 
-        assertNotNull("doc is null", doc);
+        assertNotNull(doc, "doc is null");
         assertEquals(4, doc.size());
 
         final Section firstSection = doc.getSection(0);
@@ -140,7 +143,7 @@ public class AsciiDocParserTest {
     }
 
     @Test
-    public void testBlocks() throws UnsupportedEncodingException, RedPenException {
+    void testBlocks() throws UnsupportedEncodingException, RedPenException {
         String sampleText = "= Test Blocks\n" +
             "\n" +
             "The following block should be ignored.\n" +
@@ -156,7 +159,7 @@ public class AsciiDocParserTest {
 
         Document doc = createFileContent(sampleText);
 
-        assertNotNull("doc is null", doc);
+        assertNotNull(doc, "doc is null");
         assertEquals(1, doc.size());
 
         final Section firstSection = doc.getSection(0);
@@ -171,7 +174,7 @@ public class AsciiDocParserTest {
     }
 
     @Test
-    public void testRemoveTextDecoration() throws UnsupportedEncodingException {
+    void testRemoveTextDecoration() throws UnsupportedEncodingException {
         String sampleText = "About _Gekioko_.\n";
         Document doc = createFileContent(sampleText);
         assertEquals(1, doc.size());
@@ -179,7 +182,7 @@ public class AsciiDocParserTest {
     }
 
     @Test
-    public void testSectionHeader() throws UnsupportedEncodingException {
+    void testSectionHeader() throws UnsupportedEncodingException {
         String sampleText = "= About _Gekioko_.\n\n" +
             "Gekioko means angry.";
 
@@ -190,7 +193,7 @@ public class AsciiDocParserTest {
     }
 
     @Test
-    public void testSectionHeaderOffsetPosition() throws UnsupportedEncodingException {
+    void testSectionHeaderOffsetPosition() throws UnsupportedEncodingException {
         String sampleText = "= About _Gekioko_.\n\n" +
             "Gekioko means angry.";
 
@@ -200,7 +203,7 @@ public class AsciiDocParserTest {
     }
 
     @Test
-    public void testWrappedSentence() throws UnsupportedEncodingException {
+    void testWrappedSentence() throws UnsupportedEncodingException {
         String sampleText = "Tokyu is a good railway company. The company is reliable. In addition it\n";
         sampleText += "is rich. I like the company. However someone does not like it.";
         Document doc = createFileContent(sampleText);
@@ -230,7 +233,7 @@ public class AsciiDocParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithTwoSentencesWithMultipleShortLine() {
+    void testGenerateDocumentWithTwoSentencesWithMultipleShortLine() {
         String sampleText = "Tokyu\n" +
             "is a good\n" +
             "railway company. But there\n" +
@@ -251,7 +254,7 @@ public class AsciiDocParserTest {
     }
 
     @Test
-    public void testMappingTableWithShortSentence() {
+    void testMappingTableWithShortSentence() {
         String sampleText = "Tsu is a city.";
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
@@ -267,7 +270,7 @@ public class AsciiDocParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithList() {
+    void testGenerateDocumentWithList() {
         String sampleText = "There are several railway companies in Japan as follows.\n";
         sampleText += "\n";
         sampleText += "* Tokyu\n";
@@ -306,7 +309,7 @@ public class AsciiDocParserTest {
     }
 
     @Test
-    public void testLabelledList() {
+    void testLabelledList() {
         String sampleText = "= SampleDoc\n" +
             "v0.0.2, 2015-11-17\n" +
             ":last-update-label!:\n" +
@@ -331,7 +334,7 @@ public class AsciiDocParserTest {
     }
 
     @Test
-    public void testEscapedMarkup() {
+    void testEscapedMarkup() {
         String sampleText = "It is a \\*good* day.";
         Document doc = createFileContent(sampleText);
         Paragraph firstParagraph = doc.getSection(0).getParagraph(0);
@@ -342,7 +345,7 @@ public class AsciiDocParserTest {
     }
 
     @Test
-    public void testCommentsAndTables() {
+    void testCommentsAndTables() {
         String sampleText = "// BLAH BLAH" +
                 "\n" +
                 "Potato" +
@@ -367,7 +370,7 @@ public class AsciiDocParserTest {
     }
 
     @Test
-    public void testTableSimple() {
+    void testTableSimple() {
         String sampleText = "Potato" +
                 "\n" +
                 "|===" +
@@ -392,7 +395,7 @@ public class AsciiDocParserTest {
     }
 
     @Test
-    public void testTableMultiLineElement() {
+    void testTableMultiLineElement() {
         String sampleText = "\n" +
                 "|===\n" +
                 "|Name\n" +
@@ -423,7 +426,7 @@ public class AsciiDocParserTest {
     }
 
     @Test
-    public void testTableWithTitle() {
+    void testTableWithTitle() {
         String sampleText = "\n" +
                 ".This is a title of Table.\n" +
                 "|===\n" +
@@ -453,7 +456,7 @@ public class AsciiDocParserTest {
 
 
     @Test
-    public void testTableWithList() {
+    void testTableWithList() {
         String sampleText = "\n" +
         "[cols=\"2,2,5a\"]\n" +
         "|===\n" +
@@ -479,7 +482,7 @@ public class AsciiDocParserTest {
     }
 
     @Test
-    public void testDocumentWithItalicWord() {
+    void testDocumentWithItalicWord() {
         String sampleText = "It is a *good* day.";
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
@@ -511,7 +514,7 @@ public class AsciiDocParserTest {
     }
 
     @Test
-    public void testSampleDocuments() {
+    void testSampleDocuments() {
         checkForStrippedItems(createResourceContent("test_document_1.adoc", "en"));
         checkForStrippedItems(createResourceContent("test_document_2.adoc", "en"));
         checkForStrippedItems(createResourceContent("test_document_3.adoc", "ja"));
@@ -523,21 +526,21 @@ public class AsciiDocParserTest {
             for (Paragraph paragraph : section.getParagraphs()) {
                 paragraph.getSentences().forEach(sentence -> {
                     // should be no URLS
-                    assertEquals("Possible URL: " + sentence.getContent(), -1, sentence.getContent().indexOf("http://"));
-                    assertEquals("Possible URL: " + sentence.getContent(), -1, sentence.getContent().indexOf("https://"));
+                    assertEquals(-1, sentence.getContent().indexOf("http://"), "Possible URL: " + sentence.getContent());
+                    assertEquals(-1, sentence.getContent().indexOf("https://"), "Possible URL: " + sentence.getContent());
                     // should be no table markers
-                    assertEquals("Possible table symbol: " + sentence.getContent(), -1, sentence.getContent().indexOf("|="));
+                    assertEquals(-1, sentence.getContent().indexOf("|="), "Possible table symbol: " + sentence.getContent());
                     // should be no heading symbols
-                    assertEquals("Possible header symbol: " + sentence.getContent(), -1, sentence.getContent().indexOf("----"));
-                    assertEquals("Possible header symbol: " + sentence.getContent(), -1, sentence.getContent().indexOf("****"));
-                    assertEquals("Possible header symbol: " + sentence.getContent(), -1, sentence.getContent().indexOf("==="));
+                    assertEquals(-1, sentence.getContent().indexOf("----"), "Possible header symbol: " + sentence.getContent());
+                    assertEquals(-1, sentence.getContent().indexOf("****"), "Possible header symbol: " + sentence.getContent());
+                    assertEquals(-1, sentence.getContent().indexOf("==="), "Possible header symbol: " + sentence.getContent());
                 });
             }
         }
     }
 
     @Test
-    public void testLabeledListBlock() {
+    void testLabeledListBlock() {
         String sampleText = "\n" +
                 "first term::\n" +
                 "definition of first term\n" +
@@ -551,7 +554,7 @@ public class AsciiDocParserTest {
     }
 
     @Test
-    public void testSingleLineLabeledListBlock() {
+    void testSingleLineLabeledListBlock() {
         String sampleText = "\n" +
                 "first term:: definition of first term\n" +
                 "second term:: definition of second term\n\n" +
@@ -571,7 +574,7 @@ public class AsciiDocParserTest {
     }
 
     @Test
-    public void testSimpleImage() {
+    void testSimpleImage() {
         String sampleText = "\n" +
                 "image:images/logo.png[Company Logo]\n\n" +
                 "Potato\n";
@@ -580,7 +583,7 @@ public class AsciiDocParserTest {
     }
 
     @Test
-    public void testImageWithAttributes() {
+    void testImageWithAttributes() {
         String sampleText = "\n" +
                 "image:images/logo.png[scaledwidth=\"75%\",alt=\"Company Logo\"]\n\n" +
                 "Potato\n";
@@ -605,7 +608,7 @@ public class AsciiDocParserTest {
                 configuration.getTokenizer());
         } catch (Exception e) {
             e.printStackTrace();
-            fail();
+            fail("exception is not expected.");
         }
 
         return doc;
@@ -634,7 +637,7 @@ public class AsciiDocParserTest {
                 configuration.getTokenizer());
         } catch (RedPenException e) {
             e.printStackTrace();
-            fail();
+            fail("Exception is not expected.");
         }
         return doc;
     }

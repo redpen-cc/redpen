@@ -17,24 +17,15 @@
  */
 package cc.redpen.parser.latex;
 
-import org.junit.Test;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.ArrayDeque;
-
-import java.util.regex.Pattern;
-
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
 import static cc.redpen.parser.latex.Tools.*;
-import static cc.redpen.parser.latex.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.pegdown.ast.*;
 
-public class ToolsTest {
+class ToolsTest {
     @Test
-    public void testSummary() {
+    void testSummary() {
         final Node node = new RootNode();
         node.getChildren().add(new HeaderNode(1, new TextNode("First section")));
 
@@ -45,7 +36,7 @@ public class ToolsTest {
 
     /* <1>part,<2>chapter,<3>section,<4>subsection,<5>subsubsection */
     @Test
-    public void testSummary2() {
+    void testSummary2() {
         final Node node = new RootNode();
         node.getChildren().add(new HeaderNode(5));
 
@@ -55,7 +46,7 @@ public class ToolsTest {
     }
 
     @Test
-    public void testSummary3() {
+    void testSummary3() {
         final Node node = new RootNode();
         node.getChildren().add(new SimpleNode(SimpleNode.Type.Linebreak));
 

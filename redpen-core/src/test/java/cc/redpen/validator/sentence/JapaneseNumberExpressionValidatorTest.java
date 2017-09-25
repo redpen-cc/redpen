@@ -25,17 +25,16 @@ import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
-import junit.framework.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class JapaneseNumberExpressionValidatorTest {
+class JapaneseNumberExpressionValidatorTest {
     @Test
-    public void testValid() throws RedPenException {
+    void testValid() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("JapaneseNumberExpression"))
                 .build();
@@ -49,11 +48,11 @@ public class JapaneseNumberExpressionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
-        Assert.assertEquals(0, errors.size());
+        assertEquals(0, errors.size());
     }
 
     @Test
-    public void testValidNumeric() throws RedPenException {
+    void testValidNumeric() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("JapaneseNumberExpression").addProperty("mode", "numeric"))
                 .build();
@@ -67,11 +66,11 @@ public class JapaneseNumberExpressionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
-        Assert.assertEquals(0, errors.size());
+        assertEquals(0, errors.size());
     }
 
     @Test
-    public void testValidNumericZenkaku() throws RedPenException {
+    void testValidNumericZenkaku() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("JapaneseNumberExpression").addProperty("mode", "numeric-zenkaku"))
                 .build();
@@ -85,11 +84,11 @@ public class JapaneseNumberExpressionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
-        Assert.assertEquals(0, errors.size());
+        assertEquals(0, errors.size());
     }
 
     @Test
-    public void testValidKansuji() throws RedPenException {
+    void testValidKansuji() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("JapaneseNumberExpression").addProperty("mode", "kansuji"))
                 .build();
@@ -103,11 +102,11 @@ public class JapaneseNumberExpressionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
-        Assert.assertEquals(0, errors.size());
+        assertEquals(0, errors.size());
     }
 
     @Test
-    public void testValidHiragana() throws RedPenException {
+    void testValidHiragana() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("JapaneseNumberExpression").addProperty("mode", "hiragana"))
                 .build();
@@ -121,11 +120,11 @@ public class JapaneseNumberExpressionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
-        Assert.assertEquals(0, errors.size());
+        assertEquals(0, errors.size());
     }
 
     @Test
-    public void testInvalid() throws RedPenException {
+    void testInvalid() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("JapaneseNumberExpression"))
                 .build();
@@ -139,13 +138,13 @@ public class JapaneseNumberExpressionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
-        Assert.assertEquals(2, errors.size());
+        assertEquals(2, errors.size());
         assertEquals("JapaneseNumberExpression", errors.get(0).getValidatorName());
         assertEquals("JapaneseNumberExpression", errors.get(1).getValidatorName());
     }
 
     @Test
-    public void testFailureCase() throws RedPenException {
+    void testFailureCase() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("JapaneseNumberExpression"))
                 .build();
@@ -159,11 +158,11 @@ public class JapaneseNumberExpressionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
-        Assert.assertEquals(0, errors.size());
+        assertEquals(0, errors.size());
     }
 
     @Test
-    public void testVoid() throws RedPenException {
+    void testVoid() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("JapaneseNumberExpression"))
                 .build();
@@ -177,6 +176,6 @@ public class JapaneseNumberExpressionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
-        Assert.assertEquals(0, errors.size());
+        assertEquals(0, errors.size());
     }
 }

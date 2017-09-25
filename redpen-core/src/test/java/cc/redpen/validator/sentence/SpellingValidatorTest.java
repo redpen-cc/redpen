@@ -26,22 +26,22 @@ import cc.redpen.validator.BaseValidatorTest;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import cc.redpen.validator.ValidatorFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.singletonList;
-import static junit.framework.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SpellingValidatorTest extends BaseValidatorTest {
-    public SpellingValidatorTest() {
+class SpellingValidatorTest extends BaseValidatorTest {
+    SpellingValidatorTest() {
         super("Spelling");
     }
 
     @Test
-    public void testValidate() throws Exception {
+    void testValidate() throws Exception {
         config = Configuration.builder()
           .addValidatorConfig(new ValidatorConfiguration(validatorName).addProperty("list", "this,a,pen"))
           .build();
@@ -57,7 +57,7 @@ public class SpellingValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testLoadDefaultDictionary() throws RedPenException {
+    void testLoadDefaultDictionary() throws RedPenException {
         Document document = prepareSimpleDocument("this iz goody");
 
         RedPen redPen = new RedPen(config);
@@ -66,7 +66,7 @@ public class SpellingValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testUpperCase() throws RedPenException {
+    void testUpperCase() throws RedPenException {
         Document document = prepareSimpleDocument("This iz goody");
 
         RedPen redPen = new RedPen(config);
@@ -76,7 +76,7 @@ public class SpellingValidatorTest extends BaseValidatorTest {
 
 
     @Test
-    public void testSkipCharacterCase() throws RedPenException {
+    void testSkipCharacterCase() throws RedPenException {
         Document document = prepareSimpleDocument("That is true, but there is a condition");
 
         RedPen redPen = new RedPen(config);
@@ -85,7 +85,7 @@ public class SpellingValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testUserSkipList() throws RedPenException {
+    void testUserSkipList() throws RedPenException {
         config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration(validatorName).addProperty("list", "abeshi,baz"))
                 .build();
@@ -98,7 +98,7 @@ public class SpellingValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void nonLatin() throws RedPenException {
+    void nonLatin() throws RedPenException {
         config = Configuration.builder("ru")
                 .addValidatorConfig(new ValidatorConfiguration(validatorName).addProperty("list", "привет"))
                 .build();
@@ -111,7 +111,7 @@ public class SpellingValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void punctuationInsideOfWord() throws RedPenException {
+    void punctuationInsideOfWord() throws RedPenException {
         config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration(validatorName).addProperty("list", "can-do"))
                 .build();
@@ -124,7 +124,7 @@ public class SpellingValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testPunctuation() throws RedPenException {
+    void testPunctuation() throws RedPenException {
         RedPen redPen = new RedPen(config);
 
         Document document = prepareSimpleDocument("That is true.");
@@ -159,7 +159,7 @@ public class SpellingValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void testVoid() throws RedPenException {
+    void testVoid() throws RedPenException {
         Document document = prepareSimpleDocument("");
 
         RedPen redPen = new RedPen(config);
@@ -168,7 +168,7 @@ public class SpellingValidatorTest extends BaseValidatorTest {
     }
 
     @Test
-    public void doNotShowErrorsInCaseOfMissingDictionary() throws Exception {
+    void doNotShowErrorsInCaseOfMissingDictionary() throws Exception {
         Document document = prepareSimpleDocument("test");
         config = Configuration.builder("foo")
           .addValidatorConfig(new ValidatorConfiguration(validatorName))

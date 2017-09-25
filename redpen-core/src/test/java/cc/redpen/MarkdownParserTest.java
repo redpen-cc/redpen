@@ -29,8 +29,9 @@ import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.validator.ValidationError;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -41,24 +42,26 @@ import static cc.redpen.config.SymbolType.COMMA;
 import static cc.redpen.config.SymbolType.FULL_STOP;
 import static java.util.stream.IntStream.of;
 import static java.util.stream.IntStream.range;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class MarkdownParserTest extends BaseParserTest {
+class MarkdownParserTest extends BaseParserTest {
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
     }
 
-    @Test(expected = NullPointerException.class)
-    public void testNullDocument() throws Exception {
-        Configuration configuration = Configuration.builder().build();
-        DocumentParser parser = DocumentParser.MARKDOWN;
-        InputStream is = null;
-        parser.parse(is, new SentenceExtractor(configuration.getSymbolTable()), configuration.getTokenizer());
+    @Test()
+    void testNullDocument() throws Exception {
+        assertThrows(NullPointerException.class, () -> {
+            Configuration configuration = Configuration.builder().build();
+            DocumentParser parser = DocumentParser.MARKDOWN;
+            InputStream is = null;
+            parser.parse(is, new SentenceExtractor(configuration.getSymbolTable()), configuration.getTokenizer());
+        });
     }
 
     @Test
-    public void testBasicDocument() throws UnsupportedEncodingException {
+    void testBasicDocument() throws UnsupportedEncodingException {
         String sampleText = "";
         sampleText += "# About Gekioko.\n";
         sampleText += "Gekioko pun pun maru means _very very_ angry.\n";
@@ -78,7 +81,7 @@ public class MarkdownParserTest extends BaseParserTest {
 
         Document doc = createFileContent(sampleText);
 
-        assertNotNull("doc is null", doc);
+        assertNotNull(doc, "doc is null");
         assertEquals(2, doc.size());
 
         // first section
@@ -127,7 +130,7 @@ public class MarkdownParserTest extends BaseParserTest {
 
 
     @Test
-    public void testGenerateDocumentWithHeaderedDocument() {
+    void testGenerateDocumentWithHeaderedDocument() {
         String sampleText = "# Validator\n"
                 + "Validator class is a abstract class in RedPen project.\n"
                 + "Functions provided by RedPen class are implemented with validator class.\n";
@@ -167,7 +170,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithList() {
+    void testGenerateDocumentWithList() {
         String sampleText =
                 "Threre are several railway companies in Japan as follows.\n";
         sampleText += "\n";
@@ -206,7 +209,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithMultipleSentenceInOneSentence() {
+    void testGenerateDocumentWithMultipleSentenceInOneSentence() {
         String sampleText =
                 "Tokyu is a good railway company. The company is reliable. In addition it is rich.";
 
@@ -229,7 +232,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithMultipleSentencesWithVaraiousStopCharacters() {
+    void testGenerateDocumentWithMultipleSentencesWithVaraiousStopCharacters() {
         String sampleText = "Is Tokyu a good railway company? The company is reliable. In addition it is rich!\n";
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
@@ -250,7 +253,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithMultipleSentenceInMultipleSentences() {
+    void testGenerateDocumentWithMultipleSentenceInMultipleSentences() {
         String sampleText = "Tokyu is a good railway company. The company is reliable. In addition it\n";
         sampleText += "is rich. I like the company. However someone does not like it.";
         Document doc = createFileContent(sampleText);
@@ -280,7 +283,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithTwoSentencesWithMultipleShortLine() {
+    void testGenerateDocumentWithTwoSentencesWithMultipleShortLine() {
         String sampleText = "Tokyu\n" +
                 "is a good\n" +
                 "railway company. But there\n" +
@@ -301,7 +304,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testMappingTableWithShortSentence() {
+    void testMappingTableWithShortSentence() {
         String sampleText = "Tsu is a city.";
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
@@ -317,14 +320,14 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWitVoidContent() {
+    void testGenerateDocumentWitVoidContent() {
         String sampleText = "";
         Document doc = createFileContent(sampleText);
         assertEquals(0, doc.size());
     }
 
     @Test
-    public void testGenerateDocumentWithPeriodInSuccession() {
+    void testGenerateDocumentWithPeriodInSuccession() {
         String sampleText = "...";
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
@@ -334,7 +337,7 @@ public class MarkdownParserTest extends BaseParserTest {
 
 
     @Test
-    public void testGenerateDocumentWitoutPeriodInLastSentence() {
+    void testGenerateDocumentWitoutPeriodInLastSentence() {
         String sampleText = "Hongo is located at the west of Tokyo. Saitama is located at the north";
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
@@ -343,7 +346,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testGenerateDocumentWithSentenceLongerThanOneLine() {
+    void testGenerateDocumentWithSentenceLongerThanOneLine() {
         String sampleText = "This is a good day.\n";
         sampleText += "Hongo is located at the west of Tokyo ";
         sampleText += "which is the capital of Japan ";
@@ -355,7 +358,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testPlainLink() {
+    void testPlainLink() {
         String sampleText = "It is not [Google](http://google.com).";
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
@@ -374,7 +377,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testPlainLinkWithSpaces() {
+    void testPlainLinkWithSpaces() {
         // PegDown Parser is related to visit(ExpLinkNode) method
         String sampleText = "the url is not [Google]( http://google.com ).";
         Document doc = createFileContent(sampleText);
@@ -388,7 +391,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testPlainTwoLinkWithinOneLine() {
+    void testPlainTwoLinkWithinOneLine() {
         // PegDown Parser is related tovisit(AutoLinkNode) method
         String sampleText = "url of google is http://google.com. http://yahoo.com is Yahoo url.";
         Document doc = createFileContent(sampleText);
@@ -405,7 +408,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testPlainTwoLinkWithinOneSentence() {
+    void testPlainTwoLinkWithinOneSentence() {
         String sampleText = "http://yahoo.com and http://google.com is Google and Yahoo urls.";
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
@@ -420,7 +423,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testLinkWithoutTag() {
+    void testLinkWithoutTag() {
         // PegDown Parser is related tovisit(AutoLinkNode) method
         String sampleText = "url of google is http://google.com.";
         Document doc = createFileContent(sampleText);
@@ -434,7 +437,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testDocumentWithSimpleSentence() {
+    void testDocumentWithSimpleSentence() {
         String sampleText = "It is a good day.";
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
@@ -450,7 +453,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testDocumentWithItalicWord() {
+    void testDocumentWithItalicWord() {
         String sampleText = "It is a *good* day.";
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
@@ -464,7 +467,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testDocumentWithMultipleItalicWords() {
+    void testDocumentWithMultipleItalicWords() {
         String sampleText = "*It* is a _good_ day.\n";
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
@@ -478,7 +481,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testDocumentWithMultipleNearStrongWords() {
+    void testDocumentWithMultipleNearStrongWords() {
         String sampleText = "It is **a** __good__ day.\n";
         Document doc = createFileContent(sampleText);
         Section firstSections = doc.getSection(0);
@@ -492,7 +495,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testDocumentWithHeaderContainingMultipleSentences()
+    void testDocumentWithHeaderContainingMultipleSentences()
             throws UnsupportedEncodingException {
         String sampleText = "";
         sampleText += "# About Gunma. About Saitama.\n";
@@ -529,7 +532,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testAccessTokensInHeader() {
+    void testAccessTokensInHeader() {
         String sampleText = "# This is level one section\n";
         sampleText += "## This is level two section\n";
 
@@ -543,7 +546,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testDocumentWithHeaderWithoutPeriods()
+    void testDocumentWithHeaderWithoutPeriods()
             throws UnsupportedEncodingException {
         String sampleText = "";
         sampleText += "# About Gunma\n";
@@ -565,7 +568,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testDocumentWithList()
+    void testDocumentWithList()
             throws UnsupportedEncodingException {
         String sampleText = "";
         sampleText += "# About Gunma. About Saitama.\n";
@@ -586,7 +589,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testAccessTokensInList()
+    void testAccessTokensInList()
             throws UnsupportedEncodingException {
         String sampleText = "";
         sampleText += "# About Gunma\n";
@@ -602,7 +605,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testDocumentWithListWithoutPeriod()
+    void testDocumentWithListWithoutPeriod()
             throws UnsupportedEncodingException {
         String sampleText = "";
         sampleText += "# About Gunma. About Saitama.\n";
@@ -619,7 +622,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testDocumentWithMultipleSections()
+    void testDocumentWithMultipleSections()
             throws UnsupportedEncodingException {
         String sampleText = "# Prefectures in Japan.\n";
         sampleText += "There are 47 prefectures in Japan.\n";
@@ -642,7 +645,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testDocumentWithUnderlineSections()
+    void testDocumentWithUnderlineSections()
             throws UnsupportedEncodingException {
         String sampleText = "Prefectures in Japan.\n";
         sampleText += "====\n";
@@ -672,7 +675,7 @@ public class MarkdownParserTest extends BaseParserTest {
      * In the future, we will add validators on table size or table contents.
      */
     @Test
-    public void testDocumentWithListWithTable()
+    void testDocumentWithListWithTable()
             throws UnsupportedEncodingException {
         String sampleText = "";
         sampleText += "# Table\n\n" +
@@ -686,7 +689,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testJapaneseDocumentSentences() throws UnsupportedEncodingException {
+    void testJapaneseDocumentSentences() throws UnsupportedEncodingException {
         String sampleText = "";
         sampleText += "# 僕の事。\n";
         sampleText += "わたしはカラオケが大好きです。\n";
@@ -695,7 +698,7 @@ public class MarkdownParserTest extends BaseParserTest {
 
         Document doc = createFileContent(sampleText, Configuration.builder("ja").build());
 
-        assertNotNull("doc is null", doc);
+        assertNotNull(doc, "doc is null");
         assertEquals(1, doc.size());
 
         final Section firstSection = doc.getSection(0);
@@ -710,7 +713,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testGenerateJapaneseDocument() {
+    void testGenerateJapaneseDocument() {
         String sampleText = "埼玉は東京の北に存在する。";
         sampleText += "大きなベッドタウンであり、多くの人が住んでいる。";
         Configuration conf = Configuration.builder("ja").build();
@@ -722,7 +725,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testGenerateJapaneseWithMultipleSentencesInOneLine() {
+    void testGenerateJapaneseWithMultipleSentencesInOneLine() {
         String sampleText = "それは異なる．たとえば，\\n" +
                 "以下のとおりである．";
         Configuration conf = Configuration.builder("ja")
@@ -742,7 +745,7 @@ public class MarkdownParserTest extends BaseParserTest {
 
 
     @Test
-    public void testErrorPositionOfMarkdownParser() throws RedPenException {
+    void testErrorPositionOfMarkdownParser() throws RedPenException {
         String sampleText = "This is a good day。\n"; // invalid end of sentence symbol
         Configuration conf = Configuration.builder().build();
         List<Document> documents = new ArrayList<>();
@@ -762,7 +765,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testSpaceAtTheEndOfLine() throws Exception {
+    void testSpaceAtTheEndOfLine() throws Exception {
         String sampleText= "Hello    \nworld \nand peace!";
 
         Document doc = createFileContent(sampleText);
@@ -773,7 +776,7 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testInvalidSentenceInBlockquote() throws UnsupportedEncodingException, RedPenException {
+    void testInvalidSentenceInBlockquote() throws UnsupportedEncodingException, RedPenException {
         String sampleText = "> This is a good day。\n"; // invalid end of sentence symbol
         Configuration conf = Configuration.builder().build();
         List<Document> documents = new ArrayList<>();
@@ -788,33 +791,33 @@ public class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
-    public void testImageNestedLink() throws Exception {
+    void testImageNestedLink() throws Exception {
         String sampleText= "[![label](https://example.com/path/to/img.png)](https://example.com/path/to/link)";
         Document doc = createFileContent(sampleText);
         assertEquals(0,  doc.getSection(0).getParagraph(0).getNumberOfSentences()); //NOTE: the above is not a sentence.
     }
 
     @Test
-    public void testImageAsSectionHeader() throws Exception {
+    void testImageAsSectionHeader() throws Exception {
         String sampleText = "#[![Neomake](https://cloud.githubusercontent.com/assets/111942/22717189/9e3e1760-ed67-11e6-94c5-e8955869d6d0.png)](#neomake)\n";
         Document doc = createFileContent(sampleText);
         assertEquals(0, doc.getSection(0).getNumberOfParagraphs());
     }
 
     @Test
-    public void testSuccuessiveImageNestedLink() throws Exception {
+    void testSuccuessiveImageNestedLink() throws Exception {
         String sampleText =
                 "[![label1](https://example.com/path/to/img1.png)](https://example.com/path/to/link)\n" +
                         "[![label2](https://example.com/path/to/img2.png)](https://example.com/path/to/link)\n";
         try {
             createFileContent(sampleText);
         } catch (Exception e) {
-            fail();
+            fail("Exception is not expected.");
         }
     }
 
     @Test
-    public void testSuccuessiveImageNestedLinkWithJaConf() throws Exception {
+    void testSuccuessiveImageNestedLinkWithJaConf() throws Exception {
         String sampleText =
                 "[![ラベル1](https://example.com/path/to/img1.png)](https://example.com/path/to/link)\n" +
                         "[![ラベル2](https://example.com/path/to/img2.png)](https://example.com/path/to/link)\n";
@@ -822,12 +825,12 @@ public class MarkdownParserTest extends BaseParserTest {
         try {
             createFileContent(sampleText, conf);
         } catch (Exception e) {
-            fail();
+            fail("Exception is not expected.");
         }
     }
 
     @Test
-    public void testSuccuessiveImageNestedLinkWithJaConf2() throws Exception {
+    void testSuccuessiveImageNestedLinkWithJaConf2() throws Exception {
         String sampleText =
                 "[![ラベル1](https://example.com/path/to/img1.png)](https://example.com/path/to/link)" +
                         "[![ラベル2](https://example.com/path/to/img2.png)](https://example.com/path/to/link)";
@@ -835,12 +838,12 @@ public class MarkdownParserTest extends BaseParserTest {
         try {
             createFileContent(sampleText, conf);
         } catch (Exception e) {
-            fail();
+            fail("Exception is not expected.");
         }
     }
 
     @Test
-    public void testThreeSuccuessiveImageNestedLinkWithJaConf() throws Exception {
+    void testThreeSuccuessiveImageNestedLinkWithJaConf() throws Exception {
         String sampleText =
                 "[![ラベル1](https://example.com/path/to/img1.png)](https://example.com/path/to/link)\n" +
                         "[![ラベル2](https://example.com/path/to/img2.png)](https://example.com/path/to/link)\n" +
@@ -849,12 +852,12 @@ public class MarkdownParserTest extends BaseParserTest {
         try {
             createFileContent(sampleText, conf);
         } catch (Exception e) {
-            fail();
+            fail("Exception is not expected.");
         }
     }
 
     @Test
-    public void testNotExtractNoLabelImage() throws Exception {
+    void testNotExtractNoLabelImage() throws Exception {
         String sampleText = "![](https://aimless.jp/blog/images/2016-09-07-001.png)\n";
         Document doc = createFileContent(sampleText);
         assertEquals(0, doc.getSection(0).getParagraph(0).getNumberOfSentences());
@@ -881,7 +884,7 @@ public class MarkdownParserTest extends BaseParserTest {
                     configuration.getTokenizer());
         } catch (RedPenException e) {
             e.printStackTrace();
-            fail();
+            fail("Exception is not expected.");
         }
         return doc;
     }

@@ -28,19 +28,18 @@ import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
 import cc.redpen.tokenizer.JapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
-import junit.framework.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Locale;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SpaceBetweenAlphabeticalWordValidatorTest {
+class SpaceBetweenAlphabeticalWordValidatorTest {
     @Test
-    public void testNeedBeforeSpace() throws RedPenException {
+    void testNeedBeforeSpace() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
                 .build();
@@ -54,11 +53,11 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(1, errors.get(documents.get(0)).size());
+        assertEquals(1, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testNeedAfterSpace() throws RedPenException {
+    void testNeedAfterSpace() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
                 .build();
@@ -72,11 +71,11 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(1, errors.get(documents.get(0)).size());
+        assertEquals(1, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testNeedBeforeAndAfterSpace() throws RedPenException {
+    void testNeedBeforeAndAfterSpace() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
                 .build();
@@ -89,11 +88,11 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
                         .build());
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(2, errors.get(documents.get(0)).size());
+        assertEquals(2, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testNotNeedSpaces() throws RedPenException {
+    void testNotNeedSpaces() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
                 .build();
@@ -106,11 +105,11 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
                         .build());
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.get(0)).size());
+        assertEquals(0, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testLatinSymbolWithoutSpace() throws RedPenException {
+    void testLatinSymbolWithoutSpace() throws RedPenException {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
                 .build();
@@ -123,11 +122,11 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
                         .build());
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.get(0)).size());
+        assertEquals(0, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testWithParenthesis() throws RedPenException {
+    void testWithParenthesis() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
                 .build();
@@ -141,11 +140,11 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.get(0)).size());
+        assertEquals(0, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testWithComma() throws RedPenException {
+    void testWithComma() throws RedPenException {
         Configuration config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
                 .build();
@@ -159,11 +158,11 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        Assert.assertEquals(0, errors.get(documents.get(0)).size());
+        assertEquals(0, errors.get(documents.get(0)).size());
     }
 
     @Test
-    public void testErrorBeforePosition() throws RedPenException {
+    void testErrorBeforePosition() throws RedPenException {
         String sampleText = "きょうはCoke を飲みたい。";
         Configuration configuration = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
@@ -183,7 +182,7 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
     }
 
     @Test
-    public void testErrorAfterPosition() throws RedPenException {
+    void testErrorAfterPosition() throws RedPenException {
         String sampleText = "きょうは Cokeを飲みたい。";
         Configuration configuration = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
@@ -204,7 +203,7 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
 
 
     @Test
-    public void testErrorAfterCommaJa() throws RedPenException {
+    void testErrorAfterCommaJa() throws RedPenException {
         String sampleText = "二種類の出力（json、json2）をサポートしてます。";
         Configuration configuration = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
@@ -221,7 +220,7 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
     }
 
     @Test
-    public void testNoErrorAfterParencesinJapaneseText() throws RedPenException {
+    void testNoErrorAfterParencesinJapaneseText() throws RedPenException {
         String sampleText  = "現状では平文、Markdown、Textile（Wiki 記法）、AsciiDoc、LaTeX、Re:VIEW に対応している。";
         Configuration configuration = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord"))
@@ -239,7 +238,7 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
     }
 
     @Test
-    public void testNeedNoBeforeAndAfterSpace() throws RedPenException {
+    void testNeedNoBeforeAndAfterSpace() throws RedPenException {
         SpaceBetweenAlphabeticalWordValidator validator = new SpaceBetweenAlphabeticalWordValidator();
         validator.preInit(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord").addProperty("forbidden", "true"), Configuration.builder().build());
         List<ValidationError> errors = new ArrayList<>();
@@ -249,7 +248,7 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
     }
 
     @Test
-    public void testSkipBefore() throws RedPenException {
+    void testSkipBefore() throws RedPenException {
         SpaceBetweenAlphabeticalWordValidator validator = new SpaceBetweenAlphabeticalWordValidator();
         validator.preInit(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord").addProperty("skip_before", "「"), Configuration.builder().build());
         List<ValidationError> errors = new ArrayList<>();
@@ -259,7 +258,7 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
     }
     
     @Test
-    public void testSkipAfter() throws RedPenException {
+    void testSkipAfter() throws RedPenException {
         SpaceBetweenAlphabeticalWordValidator validator = new SpaceBetweenAlphabeticalWordValidator();
         validator.preInit(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord").addProperty("skip_after", "」"), Configuration.builder().build());
         List<ValidationError> errors = new ArrayList<>();
@@ -269,7 +268,7 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
     }
     
     @Test
-    public void testSkipBeforeAndAfter() throws RedPenException {
+    void testSkipBeforeAndAfter() throws RedPenException {
         SpaceBetweenAlphabeticalWordValidator validator = new SpaceBetweenAlphabeticalWordValidator();
         validator.preInit(new ValidatorConfiguration("SpaceBetweenAlphabeticalWord").addProperty("skip_before", "・「").addProperty("skip_after", "・」"), Configuration.builder().build());
         List<ValidationError> errors = new ArrayList<>();
@@ -280,7 +279,7 @@ public class SpaceBetweenAlphabeticalWordValidatorTest {
 
 
     @Test
-    public void testSupportedLanguages() {
+    void testSupportedLanguages() {
         SpaceBetweenAlphabeticalWordValidator validator = new SpaceBetweenAlphabeticalWordValidator();
         final List<String> languages = validator.getSupportedLanguages();
         assertEquals(2, languages.size());

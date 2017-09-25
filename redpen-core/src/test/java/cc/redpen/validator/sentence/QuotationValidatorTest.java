@@ -26,17 +26,18 @@ import cc.redpen.model.Sentence;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import cc.redpen.validator.ValidatorFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class QuotationValidatorTest {
+class QuotationValidatorTest {
     @Test
-    public void testDoubleQuotationMakrs() throws RedPenException {
+    void testDoubleQuotationMakrs() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said “That is true”.", 0);
         List<ValidationError> errors = new ArrayList<>();
@@ -47,7 +48,7 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testSingleQuotationMakrs() throws RedPenException {
+    void testSingleQuotationMakrs() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said ‘that is true’.", 0);
         List<ValidationError> errors = new ArrayList<>();
@@ -58,7 +59,7 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testDoubleQuotationMakrWithoutRight() throws RedPenException {
+    void testDoubleQuotationMakrWithoutRight() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said “That is true.", 0);
         List<ValidationError> errors = new ArrayList<>();
@@ -69,7 +70,7 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testSingleQuotationMakrWithoutRight() throws RedPenException {
+    void testSingleQuotationMakrWithoutRight() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said ‘that is true.", 0);
         List<ValidationError> errors = new ArrayList<>();
@@ -80,7 +81,7 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testDoubleQuotationMakrWithoutLeft() throws RedPenException {
+    void testDoubleQuotationMakrWithoutLeft() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said That is true”.", 0);
         List<ValidationError> errors = new ArrayList<>();
@@ -91,7 +92,7 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testSingleQuotationMakrkWithoutLeft() throws RedPenException {
+    void testSingleQuotationMakrkWithoutLeft() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said that is true’.", 0);
         List<ValidationError> errors = new ArrayList<>();
@@ -102,7 +103,7 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testExceptionCase() throws RedPenException {
+    void testExceptionCase() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I’m a jedi knight.", 0);
         List<ValidationError> errors = new ArrayList<>();
@@ -113,7 +114,7 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testQuotedExceptionCase() throws RedPenException {
+    void testQuotedExceptionCase() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("he said ‘I’m a jedi knight’.", 0);
         List<ValidationError> errors = new ArrayList<>();
@@ -124,7 +125,7 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testDoubleLeftSingleQuotationMakrk() throws RedPenException {
+    void testDoubleLeftSingleQuotationMakrk() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said ‘that is true‘.", 0);
         List<ValidationError> errors = new ArrayList<>();
@@ -135,7 +136,7 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testDoubleLeftDoubleQuotationMakrk() throws RedPenException {
+    void testDoubleLeftDoubleQuotationMakrk() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said “that is true.“", 0);
         List<ValidationError> errors = new ArrayList<>();
@@ -146,7 +147,7 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testDoubleRightSingleQuotationMakrk() throws RedPenException {
+    void testDoubleRightSingleQuotationMakrk() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said ’that is true’.", 0);
         List<ValidationError> errors = new ArrayList<>();
@@ -157,7 +158,7 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testDoubleRightDoubleQuotationMakrk() throws RedPenException {
+    void testDoubleRightDoubleQuotationMakrk() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said ”that is true”.", 0);
         List<ValidationError> errors = new ArrayList<>();
@@ -168,7 +169,7 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testAsciiExceptionCase() throws RedPenException {
+    void testAsciiExceptionCase() throws RedPenException {
         Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Quotation").addProperty("use_ascii", false))
                 .build();
@@ -182,7 +183,7 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testAsciiDoubleQuotationMakrk() throws RedPenException {
+    void testAsciiDoubleQuotationMakrk() throws RedPenException {
         Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Quotation").addProperty("use_ascii", false))
                 .build();
@@ -196,7 +197,7 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testNoQuotationMakrk() throws RedPenException {
+    void testNoQuotationMakrk() throws RedPenException {
         Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Quotation").addProperty("use_ascii", true))
                 .build();
@@ -210,7 +211,7 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testNoInput() throws RedPenException {
+    void testNoInput() throws RedPenException {
         Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Quotation").addProperty("use_ascii", true))
                 .build();
@@ -224,7 +225,7 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testTwiceQuotations() throws RedPenException {
+    void testTwiceQuotations() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said ‘that is true’ and not said ‘that is false’", 0);
         List<ValidationError> errors = new ArrayList<>();
@@ -235,7 +236,7 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testOneOfFailureInTwiceQuotations() throws RedPenException {
+    void testOneOfFailureInTwiceQuotations() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said ‘that is true and not said ‘that is false’", 0);
         List<ValidationError> errors = new ArrayList<>();
@@ -246,7 +247,7 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testLeftDoubleQuotationsWihtoutSpace() throws RedPenException {
+    void testLeftDoubleQuotationsWihtoutSpace() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said“that is true”.", 0);
         List<ValidationError> errors = new ArrayList<>();
@@ -257,7 +258,7 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testLeftAsciiDoubleQuotationsWihtoutSpace() throws RedPenException {
+    void testLeftAsciiDoubleQuotationsWihtoutSpace() throws RedPenException {
         Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Quotation").addProperty("use_ascii", true))
                 .build();
@@ -271,7 +272,7 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testRightDoubleQuotationsWihtoutSpace() throws RedPenException {
+    void testRightDoubleQuotationsWihtoutSpace() throws RedPenException {
         Validator validator = ValidatorFactory.getInstance("Quotation");
         Sentence str = new Sentence("I said “that is true”is true.", 0);
         List<ValidationError> errors = new ArrayList<>();
@@ -282,7 +283,7 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testRightAsciiDoubleQuotationsWihtoutSpace() throws RedPenException {
+    void testRightAsciiDoubleQuotationsWihtoutSpace() throws RedPenException {
         Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Quotation").addProperty("use_ascii", true))
                 .build();
@@ -296,7 +297,7 @@ public class QuotationValidatorTest {
     }
 
     @Test
-    public void testDoubleQuotationsWithNonAsciiPeriod() throws RedPenException {
+    void testDoubleQuotationsWithNonAsciiPeriod() throws RedPenException {
         Configuration conf = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("Quotation").addProperty("use_ascii", true))
                 .addSymbol(new Symbol(SymbolType.FULL_STOP, '。'))
