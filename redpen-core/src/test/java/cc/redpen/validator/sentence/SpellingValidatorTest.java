@@ -107,20 +107,7 @@ class SpellingValidatorTest extends BaseValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
-        assertEquals(0, errors.get(document).size());
-    }
-
-    @Test
-    void japanese() throws RedPenException {
-        config = Configuration.builder("ja")
-                .addValidatorConfig(new ValidatorConfiguration(validatorName))
-                .build();
-
-        Document document = prepareSimpleDocument("之は山です。これは川です。");
-
-        RedPen redPen = new RedPen(config);
-        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
-        assertEquals(2, errors.get(document).size());
+        assertEquals(1, errors.get(document).size());
     }
 
     @Test
