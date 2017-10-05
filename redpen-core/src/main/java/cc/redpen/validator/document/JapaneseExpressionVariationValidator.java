@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cc.redpen.validator.sentence;
+package cc.redpen.validator.document;
 
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
