@@ -38,12 +38,13 @@ public class JapaneseExpressionVariationValidator extends Validator {
         for (Sentence sentence : sentenceMap.get(document)) {
             for (TokenElement token : sentence.getTokens()) {
                 String reading = token.getTags().get(7);
-                if (this.words.containsKey(reading)) {
-                    List<TokenElement> tokens = this.words.get(reading);
-                    for (TokenElement candidate : tokens) {
-                        if (candidate != token && !token.getSurface().equals(candidate.getSurface())) {
-                            addLocalizedErrorFromToken(sentence, token);
-                        }
+                if (!this.words.containsKey(reading)) {
+                    continue;
+                }
+                List<TokenElement> tokens = this.words.get(reading);
+                for (TokenElement candidate : tokens) {
+                    if (candidate != token && !token.getSurface().equals(candidate.getSurface())) {
+                        addLocalizedErrorFromToken(sentence, token);
                     }
                 }
             }
