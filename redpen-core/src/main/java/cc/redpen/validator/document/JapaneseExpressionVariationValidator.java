@@ -34,10 +34,9 @@ public class JapaneseExpressionVariationValidator extends Validator {
         if (!sentenceMap.containsKey(document)) {
             throw new IllegalStateException("Document " + document.getFileName() + " does not have any sentence");
         }
-
         for (Sentence sentence : sentenceMap.get(document)) {
             for (TokenElement token : sentence.getTokens()) {
-                String reading = token.getTags().get(7);
+                String reading = getReading(token);
                 if (!this.words.containsKey(reading)) {
                     continue;
                 }
@@ -51,20 +50,27 @@ public class JapaneseExpressionVariationValidator extends Validator {
         }
     }
 
-
     @Override
     public void preValidate(Document document) {
         sentenceMap.put(document, extractSentences(document));
         List<Sentence> sentences = sentenceMap.get(document);
         for (Sentence sentence : sentences) {
             for (TokenElement token : sentence.getTokens()) {
-                String reading = token.getTags().get(7);
+                if (token.getSurface().equals(" ")) {
+                    continue;
+                }
+                String reading = getReading(token);
                 if (!this.words.containsKey(reading)) {
                     this.words.put(reading, new LinkedList<TokenElement>());
                 }
                 this.words.get(reading).add(token);
             }
         }
+    }
+
+    private String getReading(TokenElement token) {
+        String reading = !token.getTags().get(7).equals("*") ? token.getTags().get(7) : token.getSurface();
+        return reading.toLowerCase();
     }
 
     private List<Sentence> extractSentences(Document document) {
