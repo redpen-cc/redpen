@@ -136,7 +136,7 @@ input[type="radio"], input[type="checkbox"] {
 
 .alert-warning, .alert-info, .alert-success {
     padding-left: 4px;
-    border-radius: 0;;
+    border-radius: 0;
 }
 
 .error strong {
@@ -163,7 +163,7 @@ input[type="radio"], input[type="checkbox"] {
     left: 0;
     top: 0;
     right: 0;
-    border-radius: 0;;
+    border-radius: 0;
     border: solid 1px rgba(0, 0, 0, 0.15);
     bottom: 46%;
 }
@@ -175,13 +175,13 @@ input[type="radio"], input[type="checkbox"] {
     right: 0;
     bottom: 0;
     overflow-y: auto;
-    border-radius: 0;;
+    border-radius: 0;
     border: solid 1px rgba(0, 0, 0, 0.15);
     background-color: rgb(255, 227, 227);
 }
 
 #redpen-superimposed-editor {
-    border-radius: 0;;
+    border-radius: 0;
     position: absolute;
     left: 0;
     top: 0;
@@ -192,7 +192,7 @@ input[type="radio"], input[type="checkbox"] {
 }
 
 .redpen-superimposed-editor-panel {
-    border-radius: 0;;
+    border-radius: 0;
     position: absolute;
     top: 0;
     right: 0;
@@ -358,7 +358,7 @@ input[type="radio"], input[type="checkbox"] {
 }
 
 .redpen-option-selected {
-    border-radius: 0;;
+    border-radius: 0;
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.37);
     background-color: #757575;
     color: white !important;
@@ -437,7 +437,7 @@ input[type="radio"], input[type="checkbox"] {
     padding: 12px;
     margin-right: 8px;
     margin-bottom: 8px;
-    border-radius: 0;;
+    border-radius: 0;
     background-color: rgba(0, 0, 0, 0.6);
     color: white;
     font-size: 12px;
@@ -542,7 +542,7 @@ input[type="radio"], input[type="checkbox"] {
     display: inline-block;
     text-align: left;
     min-width: 20px;
-    border-radius: 0;;
+    border-radius: 0;
 }
 
 .redpen-annotated-sentence {
@@ -578,17 +578,17 @@ input[type="radio"], input[type="checkbox"] {
 
 ::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-    border-radius: 0;;
+    border-radius: 0;
     background-color: rgba(255, 255, 255, 0.5);
 }
 
 ::-webkit-scrollbar {
     width: 8px;
-    border-radius: 0;;
+    border-radius: 0;
     background-color: rgba(255, 255, 255, 0.3);
 }
 
 ::-webkit-scrollbar-thumb {
-    border-radius: 0;;
+    border-radius: 0;
     background-color: rgba(0, 0, 0, 0.6);
 }
