@@ -169,8 +169,8 @@ public class JavaScriptLoader extends Validator {
     }
 
     @Override
-    public void addLocalizedErrorFromToken(Sentence sentenceWithError, TokenElement token) {
-        super.addLocalizedErrorFromToken(sentenceWithError, token);
+    public void addLocalizedErrorFromToken(Sentence sentenceWithError, TokenElement token, Object... args) {
+        super.addLocalizedErrorFromToken(sentenceWithError, token, args);
     }
 
     @Override

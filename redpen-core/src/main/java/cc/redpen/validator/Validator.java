@@ -404,13 +404,15 @@ public abstract class Validator {
      * @param sentenceWithError sentence
      * @param token             the TokenElement that has the error
      */
-    protected void addLocalizedErrorFromToken(Sentence sentenceWithError, TokenElement token) {
+    protected void addLocalizedErrorFromToken(Sentence sentenceWithError, TokenElement token, Object... args) {
+        List<Object> argList = new ArrayList<>();
+        for(Object o : args) argList.add(o);
+        argList.add(0, token.getSurface());
         addLocalizedErrorWithPosition(
                 sentenceWithError,
                 token.getOffset(),
                 token.getOffset() + token.getSurface().length(),
-                token.getSurface(),
-                getLevel()
+                argList.toArray()
         );
     }
 

@@ -38,7 +38,7 @@ public class JapaneseExpressionVariationValidatorTest extends BaseValidatorTest 
     }
 
     @Test
-    void japanese() throws RedPenException {
+    void detectSameReadings() throws RedPenException {
         config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration(validatorName))
                 .build();

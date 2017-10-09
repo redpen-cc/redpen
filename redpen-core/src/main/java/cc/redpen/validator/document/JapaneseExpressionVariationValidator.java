@@ -44,7 +44,7 @@ public class JapaneseExpressionVariationValidator extends Validator {
                 List<TokenElement> tokens = this.words.get(reading);
                 for (TokenElement candidate : tokens) {
                     if (candidate != token && !token.getSurface().equals(candidate.getSurface())) {
-                        addLocalizedErrorFromToken(sentence, token);
+                        addLocalizedErrorFromToken(sentence, token, candidate.getSurface());
                     }
                 }
             }
