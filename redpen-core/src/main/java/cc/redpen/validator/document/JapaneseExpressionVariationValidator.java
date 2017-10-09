@@ -17,7 +17,7 @@
  */
 package cc.redpen.validator.document;
 
-import cc.redpen.model.Sentence;
+import cc.redpen.model.*;
 import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.validator.Validator;
 
@@ -27,32 +27,59 @@ import static java.util.Collections.singletonList;
 
 public class JapaneseExpressionVariationValidator extends Validator {
     private Map<String, List<TokenElement>> words = new HashMap<>();
+    private Map<Document, List<Sentence>> sentenceMap = new HashMap<>();
 
     @Override
-    public void validate(Sentence sentence) {
-        for (TokenElement token : sentence.getTokens()) {
-            String reading = token.getTags().get(7);
-            if (this.words.containsKey(reading)) {
-                List<TokenElement> tokens = this.words.get(reading);
-                for (TokenElement candidate : tokens) {
-                    if (candidate != token && !token.getSurface().equals(candidate.getSurface())) {
-                        addLocalizedErrorFromToken(sentence, token);
+    public void validate(Document document) {
+        if (!sentenceMap.containsKey(document)) {
+            throw new IllegalStateException("Document " + document.getFileName() + " does not have any sentence");
+        }
+
+        for (Sentence sentence : sentenceMap.get(document)) {
+            for (TokenElement token : sentence.getTokens()) {
+                String reading = token.getTags().get(7);
+                if (this.words.containsKey(reading)) {
+                    List<TokenElement> tokens = this.words.get(reading);
+                    for (TokenElement candidate : tokens) {
+                        if (candidate != token && !token.getSurface().equals(candidate.getSurface())) {
+                            addLocalizedErrorFromToken(sentence, token);
+                        }
                     }
                 }
             }
         }
     }
 
-    @Override
-    public void preValidate(Sentence sentence) {
-        for (TokenElement token : sentence.getTokens()) {
-            String reading = token.getTags().get(7);
-            if (!this.words.containsKey(reading)) {
-                this.words.put(reading, new LinkedList<TokenElement>());
-            }
-            this.words.get(reading).add(token);
 
+    @Override
+    public void preValidate(Document document) {
+        sentenceMap.put(document, extractSentences(document));
+        List<Sentence> sentences = sentenceMap.get(document);
+        for (Sentence sentence : sentences) {
+            for (TokenElement token : sentence.getTokens()) {
+                String reading = token.getTags().get(7);
+                if (!this.words.containsKey(reading)) {
+                    this.words.put(reading, new LinkedList<TokenElement>());
+                }
+                this.words.get(reading).add(token);
+            }
         }
+    }
+
+    private List<Sentence> extractSentences(Document document) {
+        List<Sentence> sentences = new ArrayList<>();
+        for (Section section : document) {
+            for (Paragraph paragraph : section.getParagraphs()) {
+                sentences.addAll(paragraph.getSentences());
+            }
+            sentences.addAll(section.getHeaderContents());
+            for (ListBlock listBlock : section.getListBlocks()) {
+                for (ListElement listElement : listBlock.getListElements()) {
+                    sentences.addAll(listElement.getSentences());
+                }
+            }
+        }
+        return sentences;
     }
 
     @Override
