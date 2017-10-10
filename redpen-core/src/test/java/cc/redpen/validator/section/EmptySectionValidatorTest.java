@@ -46,7 +46,6 @@ class EmptySectionValidatorTest {
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(document.getSection(0));
-
         assertEquals(1, errors.size());
     }
 
