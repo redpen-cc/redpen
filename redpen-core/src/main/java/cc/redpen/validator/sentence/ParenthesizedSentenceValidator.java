@@ -32,7 +32,7 @@ public class ParenthesizedSentenceValidator extends Validator {
     public ParenthesizedSentenceValidator() {
         super("max_nesting_level", 1, // the limit on how many parenthesized expressions are permitted
               "max_count", 1,  // the number of parenthesized expressions allowed
-              "max_length", 3); // the maximum number of words in a parenthesized expression
+              "max_length", 10); // the maximum number of words in a parenthesized expression
     }
 
     /**

@@ -53,7 +53,7 @@ class ParenthesizedSentenceValidatorTest {
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
         validator.validate(st);
-        assertEquals(3, errors.size(), st.toString());
+        assertEquals(1, errors.size(), st.toString());
 
         st = documents.get(0).getLastSection().getParagraph(0).getSentence(1);
         errors = new ArrayList<>();
