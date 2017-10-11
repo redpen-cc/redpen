@@ -20,6 +20,7 @@ package cc.redpen.validator.section;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Paragraph;
 import cc.redpen.model.Section;
+import cc.redpen.model.Sentence;
 import cc.redpen.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,19 +37,17 @@ final public class VoidSectionValidator extends Validator {
 
     @Override
     public void validate(Section section) {
-        if (section.getLevel() >= sectionLevelLimit) {
+        if (0 == section.getLevel() || section.getLevel() >= sectionLevelLimit) {
             return;
         }
 
-        if (section.getLevel() == 0) {
-            return; // hot fix for auto generated level 0 sections.
-        }
+        Sentence header = section.getJoinedHeaderContents();
         if (section.getNumberOfParagraphs() == 0) {
-            addLocalizedError(section.getJoinedHeaderContents());
+            addLocalizedError(header, header.getContent());
         } else {
             for (Paragraph p : section.getParagraphs()) {
                 if (p.getNumberOfSentences() == 0) {
-                    addLocalizedError(section.getJoinedHeaderContents());
+                    addLocalizedError(header, header.getContent());
                     break;
                 }
             }
