@@ -262,7 +262,7 @@ public class SymbolTable implements Serializable, Cloneable {
                 , new Symbol(RIGHT_PARENTHESIS, '）', ")")
                 , new Symbol(ASTERISK, '＊', "") // not add "*" to invalidChars for markdown format
                 , new Symbol(COMMA, '、', ",，")
-                , new Symbol(FULL_STOP, '。', ".．")
+                , new Symbol(FULL_STOP, '。', "．")
                 , new Symbol(PLUS_SIGN, '＋', "")
                 , new Symbol(HYPHEN_SIGN, 'ー', "")
                 , new Symbol(SLASH, '／', "")
