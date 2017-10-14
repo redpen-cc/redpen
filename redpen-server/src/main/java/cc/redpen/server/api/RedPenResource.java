@@ -24,7 +24,7 @@ import cc.redpen.config.ConfigurationLoader;
 import cc.redpen.formatter.Formatter;
 import cc.redpen.model.Document;
 import cc.redpen.parser.DocumentParser;
-import cc.redpen.tokenizer.JapaneseTokenizer;
+import cc.redpen.tokenizer.NeologdJapaneseTokenizer;
 import cc.redpen.tokenizer.RedPenTokenizer;
 import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.util.FormatterUtils;
@@ -186,7 +186,7 @@ public class RedPenResource {
         RedPenTokenizer tokenizer;
         switch (lang == null ? "en" : lang) {
             case "ja":
-                tokenizer = new JapaneseTokenizer();
+                tokenizer = new NeologdJapaneseTokenizer();
                 break;
             default:
                 tokenizer = new WhiteSpaceTokenizer();

@@ -22,7 +22,7 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
-import cc.redpen.tokenizer.JapaneseTokenizer;
+import cc.redpen.tokenizer.NeologdJapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 import org.junit.jupiter.api.Test;
 
@@ -36,7 +36,7 @@ class DoubledJoshiValidatorTest {
     @Test
     void testDetectDoubledJoshi() throws Exception {
         List<Document> documents = new ArrayList<>();
-        documents.add(Document.builder(new JapaneseTokenizer())
+        documents.add(Document.builder(new NeologdJapaneseTokenizer())
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("私は彼は好き。", 1))
@@ -54,7 +54,7 @@ class DoubledJoshiValidatorTest {
     @Test
     void testNotDetectSingleJoshi() throws Exception {
         List<Document> documents = new ArrayList<>();
-        documents.add(Document.builder(new JapaneseTokenizer())
+        documents.add(Document.builder(new NeologdJapaneseTokenizer())
                               .addSection(1)
                               .addParagraph()
                               .addSentence(new Sentence("私は彼が好き。", 1))
@@ -72,7 +72,7 @@ class DoubledJoshiValidatorTest {
     @Test
     void testLoadSkipList() throws Exception {
         List<Document> documents = new ArrayList<>();
-        documents.add(Document.builder(new JapaneseTokenizer())
+        documents.add(Document.builder(new NeologdJapaneseTokenizer())
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("私は彼は好き。", 1))
@@ -91,7 +91,7 @@ class DoubledJoshiValidatorTest {
     @Test
     void testInterval2() throws Exception {
         List<Document> documents = new ArrayList<>();
-        documents.add(Document.builder(new JapaneseTokenizer())
+        documents.add(Document.builder(new NeologdJapaneseTokenizer())
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("彼の色鉛筆と私の筆箱。", 1))
@@ -109,7 +109,7 @@ class DoubledJoshiValidatorTest {
     @Test
     void testInterval2SettingMinInterval() throws Exception {
         List<Document> documents = new ArrayList<>();
-        documents.add(Document.builder(new JapaneseTokenizer())
+        documents.add(Document.builder(new NeologdJapaneseTokenizer())
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("彼の色鉛筆と私の筆箱。", 1))

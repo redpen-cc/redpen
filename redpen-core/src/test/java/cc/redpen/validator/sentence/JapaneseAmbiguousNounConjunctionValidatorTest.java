@@ -22,7 +22,7 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
-import cc.redpen.tokenizer.JapaneseTokenizer;
+import cc.redpen.tokenizer.NeologdJapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 import org.junit.jupiter.api.Test;
 
@@ -36,7 +36,7 @@ class JapaneseAmbiguousNounConjunctionValidatorTest {
     @Test
     void testDetectJapaneseAmbiguousNounConjunction() throws Exception {
         List<Document> documents = new ArrayList<>();
-        documents.add(Document.builder(new JapaneseTokenizer())
+        documents.add(Document.builder(new NeologdJapaneseTokenizer())
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("弊社の経営方針の説明を受けた。", 1))
@@ -54,7 +54,7 @@ class JapaneseAmbiguousNounConjunctionValidatorTest {
     @Test
     void testNotDetectSingleJoshi() throws Exception {
         List<Document> documents = new ArrayList<>();
-        documents.add(Document.builder(new JapaneseTokenizer())
+        documents.add(Document.builder(new NeologdJapaneseTokenizer())
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("弊社の経営方針についての説明を受けた。", 1))
@@ -72,7 +72,7 @@ class JapaneseAmbiguousNounConjunctionValidatorTest {
     @Test
     void testUserDictionary() throws Exception {
         List<Document> documents = new ArrayList<>();
-        documents.add(Document.builder(new JapaneseTokenizer())
+        documents.add(Document.builder(new NeologdJapaneseTokenizer())
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("不思議の国のアリスは面白い。", 1))

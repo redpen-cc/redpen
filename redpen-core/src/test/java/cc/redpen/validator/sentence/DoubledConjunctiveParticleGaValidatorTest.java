@@ -22,7 +22,7 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
-import cc.redpen.tokenizer.JapaneseTokenizer;
+import cc.redpen.tokenizer.NeologdJapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 import org.junit.jupiter.api.Test;
 
@@ -36,7 +36,7 @@ class DoubledConjunctiveParticleGaValidatorTest {
     @Test
     void testInvalid() throws Exception {
         List<Document> documents = new ArrayList<>();
-        documents.add(Document.builder(new JapaneseTokenizer())
+        documents.add(Document.builder(new NeologdJapaneseTokenizer())
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("今日は早朝から出発したが、定刻通りではなかったが、無事会場に到着した。", 1))
@@ -54,7 +54,7 @@ class DoubledConjunctiveParticleGaValidatorTest {
     @Test
     void testValid() throws Exception {
         List<Document> documents = new ArrayList<>();
-        documents.add(Document.builder(new JapaneseTokenizer())
+        documents.add(Document.builder(new NeologdJapaneseTokenizer())
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("今日は早朝から出発したことで、定刻通りではなかったが、無事会場に到着した。", 1))

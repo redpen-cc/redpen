@@ -23,7 +23,7 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
-import cc.redpen.tokenizer.JapaneseTokenizer;
+import cc.redpen.tokenizer.NeologdJapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import cc.redpen.validator.ValidatorFactory;
@@ -41,7 +41,7 @@ class LongKanjiChainValidatorTest {
     @Test
     void testSimpleRun() throws RedPenException {
         List<Document> documents = new ArrayList<>();documents.add(
-                Document.builder(new JapaneseTokenizer())
+                Document.builder(new NeologdJapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("圧倒的な当事者意識を一身に浴びている。", 1))
@@ -61,7 +61,7 @@ class LongKanjiChainValidatorTest {
     @Test
     void testVoid() throws RedPenException {
         List<Document> documents = new ArrayList<>();documents.add(
-                Document.builder(new JapaneseTokenizer())
+                Document.builder(new NeologdJapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("", 1))
@@ -84,7 +84,7 @@ class LongKanjiChainValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                Document.builder(new JapaneseTokenizer())
+                Document.builder(new NeologdJapaneseTokenizer())
                          .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("圧倒的当事者意識を一身に浴びることによって加速された物体は亜光速で運動し、その挙動は特殊相対性理論に従う。", 1))
@@ -126,7 +126,7 @@ class LongKanjiChainValidatorTest {
                 .build(); // NOTE: no dictionary for japanese or other languages whose words are not split by white space.
 
         List<Document> documents = new ArrayList<>();documents.add(
-                Document.builder(new JapaneseTokenizer())
+                Document.builder(new NeologdJapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("本日は晴天なり。", 1))

@@ -56,7 +56,7 @@ public class JapaneseExpressionVariationValidatorTest extends BaseValidatorTest 
                 .addValidatorConfig(new ValidatorConfiguration(validatorName))
                 .build();
 
-        Document document = prepareSimpleDocument("この TYPE はあの Type とは違います。");
+        Document document = prepareSimpleDocument("このExcelはあのエクセルとは違います。");
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));

@@ -17,7 +17,7 @@
  */
 package cc.redpen.model;
 
-import cc.redpen.tokenizer.JapaneseTokenizer;
+import cc.redpen.tokenizer.NeologdJapaneseTokenizer;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -84,7 +84,7 @@ class DocumentTest {
 
     @Test
     void testJapaneseSentenceIsTokenized() {
-        Document doc = Document.builder(new JapaneseTokenizer())
+        Document doc = Document.builder(new NeologdJapaneseTokenizer())
                 .setFileName("今日")
                 .addSection(0)
                 .addSectionHeader("天気")

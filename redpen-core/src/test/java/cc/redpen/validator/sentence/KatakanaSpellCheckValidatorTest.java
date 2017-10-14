@@ -23,7 +23,7 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
-import cc.redpen.tokenizer.JapaneseTokenizer;
+import cc.redpen.tokenizer.NeologdJapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 import org.junit.jupiter.api.Test;
 
@@ -74,7 +74,7 @@ class KatakanaSpellCheckValidatorTest {
 
         List<Document> documents = new ArrayList<>();
         documents.add(
-                Document.builder(new JapaneseTokenizer())
+                Document.builder(new NeologdJapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("あのインデクスとこのインデックス", 1))
@@ -93,7 +93,7 @@ class KatakanaSpellCheckValidatorTest {
 
         List<Document> documents = new ArrayList<>();
         documents.add(
-                Document.builder(new JapaneseTokenizer())
+                Document.builder(new NeologdJapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("あのミニマムサポートとこのミニマムサポータ", 1))
@@ -112,7 +112,7 @@ class KatakanaSpellCheckValidatorTest {
 
         List<Document> documents = new ArrayList<>();
         documents.add(
-                Document.builder(new JapaneseTokenizer())
+                Document.builder(new NeologdJapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("あのミニマムサポートとこのミニマムサポータ", 1))
@@ -131,7 +131,7 @@ class KatakanaSpellCheckValidatorTest {
 
         List<Document> documents = new ArrayList<>();
         documents.add(
-                Document.builder(new JapaneseTokenizer())
+                Document.builder(new NeologdJapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("あのミニマムサポートとこのミニマムサポータ", 1))

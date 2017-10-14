@@ -22,7 +22,7 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
-import cc.redpen.tokenizer.JapaneseTokenizer;
+import cc.redpen.tokenizer.NeologdJapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 import org.junit.jupiter.api.Test;
 
@@ -36,7 +36,7 @@ class JapaneseBrokenExpressionValidatorTest {
     @Test
     void testInvalid() throws Exception {
         List<Document> documents = new ArrayList<>();
-        documents.add(Document.builder(new JapaneseTokenizer())
+        documents.add(Document.builder(new NeologdJapaneseTokenizer())
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("PDF形式の文書を見れない環境がある。", 1))
@@ -54,7 +54,7 @@ class JapaneseBrokenExpressionValidatorTest {
     @Test
     void testValid() throws Exception {
         List<Document> documents = new ArrayList<>();
-        documents.add(Document.builder(new JapaneseTokenizer())
+        documents.add(Document.builder(new NeologdJapaneseTokenizer())
                 .addSection(1)
                 .addParagraph()
                 .addSentence(new Sentence("PDF形式の文書を見られない環境がある。", 1))

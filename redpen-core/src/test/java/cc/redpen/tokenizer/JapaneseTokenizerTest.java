@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class JapaneseTokenizerTest {
     @Test
     void testTokenize() {
-        JapaneseTokenizer tokenizer = new JapaneseTokenizer();
+        NeologdJapaneseTokenizer tokenizer = new NeologdJapaneseTokenizer();
         List<TokenElement> tokens = tokenizer.tokenize("今日も晴天だ。");
         assertEquals(5, tokens.size());
         assertEquals("今日", tokens.get(0).getSurface());
@@ -43,7 +43,7 @@ class JapaneseTokenizerTest {
 
     @Test
     void testTokenizeVoid() {
-        JapaneseTokenizer tokenizer = new JapaneseTokenizer();
+        NeologdJapaneseTokenizer tokenizer = new NeologdJapaneseTokenizer();
         List<TokenElement> tokens = tokenizer.tokenize("");
         assertEquals(0, tokens.size());
     }
