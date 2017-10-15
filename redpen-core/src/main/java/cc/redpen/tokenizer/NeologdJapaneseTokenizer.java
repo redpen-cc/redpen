@@ -17,10 +17,10 @@
  */
 package cc.redpen.tokenizer;
 
-import com.atilika.kuromoji.unidic.Token;
 import com.atilika.kuromoji.unidic.Tokenizer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.codelibs.neologd.ipadic.lucene.analysis.ja.JapaneseAnalyzer;
 import org.codelibs.neologd.ipadic.lucene.analysis.ja.JapaneseTokenizer;
 import org.codelibs.neologd.ipadic.lucene.analysis.ja.tokenattributes.BaseFormAttribute;
@@ -37,50 +37,48 @@ import java.util.List;
 public class NeologdJapaneseTokenizer implements RedPenTokenizer {
 
     private Tokenizer tokenizer;
+    private JapaneseAnalyzer analyzer;
 
     public NeologdJapaneseTokenizer() {
         this.tokenizer = new Tokenizer();
+        this.analyzer = new JapaneseAnalyzer(null, JapaneseTokenizer.DEFAULT_MODE, null, new HashSet<String>());
     }
 
     @Override
     public List<TokenElement> tokenize(String content) {
+        List<TokenElement> tokens = new ArrayList<>();
         try {
-            kuromojineologd(content);
+            for (TokenElement token : kuromojineologd(content)) {
+                System.out.println(token);
+                tokens.add(token);
+            }
         } catch (IOException e) {
             e.printStackTrace();
-        }
-
-        List<TokenElement> tokens = new ArrayList<>();
-        for (Token token : tokenizer.tokenize(content)) {
-            String[] features = token.getAllFeaturesArray();
-             for (String feature : features) {
-                System.out.println(feature);
-            }
-             tokens.add(new TokenElement(token.getSurface(), Arrays.asList(token.getAllFeaturesArray()), token.getPosition()));
         }
         return tokens;
     }
 
-    private List<String> kuromojineologd(String src) throws IOException {
-        List<String> ret = new ArrayList<>();
-        try(JapaneseAnalyzer japaneseAnalyzer =
-                new JapaneseAnalyzer(null,JapaneseTokenizer.DEFAULT_MODE, null, new HashSet<String>())){
+    private List<TokenElement> kuromojineologd(String src) throws IOException {
+        List<TokenElement> tokens = new ArrayList<>();
+        try (TokenStream tokenStream = analyzer.tokenStream("", new StringReader(src))) {
+            BaseFormAttribute baseAttr = tokenStream.addAttribute(BaseFormAttribute.class);
+            CharTermAttribute charAttr = tokenStream.addAttribute(CharTermAttribute.class);
+            PartOfSpeechAttribute posAttr = tokenStream.addAttribute(PartOfSpeechAttribute.class);
+            ReadingAttribute readAttr = tokenStream.addAttribute(ReadingAttribute.class);
+            OffsetAttribute offsetAttr  = tokenStream.addAttribute(OffsetAttribute.class);
 
-            try (TokenStream tokenStream = japaneseAnalyzer.tokenStream("", new StringReader(src))) {
-                BaseFormAttribute baseAttr = tokenStream.addAttribute(BaseFormAttribute.class);
-                CharTermAttribute charAttr = tokenStream.addAttribute(CharTermAttribute.class);
-                PartOfSpeechAttribute posAttr = tokenStream.addAttribute(PartOfSpeechAttribute.class);
-                ReadingAttribute readAttr = tokenStream.addAttribute(ReadingAttribute.class);
-
-                tokenStream.reset();
-                while (tokenStream.incrementToken()) {
-                    System.out.println(charAttr.toString());
-                    System.out.println("\t" + baseAttr.getBaseForm());
-                    System.out.println("\t" + readAttr.getReading());
-                    System.out.println("\t" + posAttr.getPartOfSpeech());
-                }
+            tokenStream.reset();
+            int offset = 0;
+            while (tokenStream.incrementToken()) {
+                String surface = charAttr.toString();
+                tokens.add(new TokenElement(surface,
+                        Arrays.asList(posAttr.getPartOfSpeech().split("-")),
+                        offsetAttr.startOffset(),
+                        readAttr.getReading()
+                        ));
+                offset += surface.length();
             }
         }
-        return ret;
+        return tokens;
     }
 }

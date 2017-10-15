@@ -69,7 +69,7 @@ public class JapaneseExpressionVariationValidator extends Validator {
     }
 
     private String getReading(TokenElement token) {
-        String reading = !token.getTags().get(7).equals("*") ? token.getTags().get(7) : token.getSurface();
+        String reading = token.getReading() != null ? token.getReading() : token.getSurface();
         return reading.toLowerCase();
     }
 
