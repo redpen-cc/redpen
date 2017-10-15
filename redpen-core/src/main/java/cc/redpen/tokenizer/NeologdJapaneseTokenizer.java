@@ -17,13 +17,11 @@
  */
 package cc.redpen.tokenizer;
 
-import com.atilika.kuromoji.unidic.Tokenizer;
-import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
-import org.codelibs.neologd.ipadic.lucene.analysis.ja.JapaneseAnalyzer;
 import org.codelibs.neologd.ipadic.lucene.analysis.ja.JapaneseTokenizer;
 import org.codelibs.neologd.ipadic.lucene.analysis.ja.tokenattributes.BaseFormAttribute;
+import org.codelibs.neologd.ipadic.lucene.analysis.ja.tokenattributes.InflectionAttribute;
 import org.codelibs.neologd.ipadic.lucene.analysis.ja.tokenattributes.PartOfSpeechAttribute;
 import org.codelibs.neologd.ipadic.lucene.analysis.ja.tokenattributes.ReadingAttribute;
 
@@ -31,17 +29,14 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
 public class NeologdJapaneseTokenizer implements RedPenTokenizer {
 
-    private Tokenizer tokenizer;
-    private JapaneseAnalyzer analyzer;
+    private JapaneseTokenizer tokenizer;
 
     public NeologdJapaneseTokenizer() {
-        this.tokenizer = new Tokenizer();
-        this.analyzer = new JapaneseAnalyzer(null, JapaneseTokenizer.DEFAULT_MODE, null, new HashSet<String>());
+        this.tokenizer = new JapaneseTokenizer(new StringReader(""), null, false, JapaneseTokenizer.Mode.NORMAL);
     }
 
     @Override
@@ -49,7 +44,6 @@ public class NeologdJapaneseTokenizer implements RedPenTokenizer {
         List<TokenElement> tokens = new ArrayList<>();
         try {
             for (TokenElement token : kuromojineologd(content)) {
-                System.out.println(token);
                 tokens.add(token);
             }
         } catch (IOException e) {
@@ -59,26 +53,34 @@ public class NeologdJapaneseTokenizer implements RedPenTokenizer {
     }
 
     private List<TokenElement> kuromojineologd(String src) throws IOException {
+        tokenizer.setReader(new StringReader(src));
         List<TokenElement> tokens = new ArrayList<>();
-        try (TokenStream tokenStream = analyzer.tokenStream("", new StringReader(src))) {
-            BaseFormAttribute baseAttr = tokenStream.addAttribute(BaseFormAttribute.class);
-            CharTermAttribute charAttr = tokenStream.addAttribute(CharTermAttribute.class);
-            PartOfSpeechAttribute posAttr = tokenStream.addAttribute(PartOfSpeechAttribute.class);
-            ReadingAttribute readAttr = tokenStream.addAttribute(ReadingAttribute.class);
-            OffsetAttribute offsetAttr  = tokenStream.addAttribute(OffsetAttribute.class);
-
-            tokenStream.reset();
-            int offset = 0;
-            while (tokenStream.incrementToken()) {
-                String surface = charAttr.toString();
-                tokens.add(new TokenElement(surface,
-                        Arrays.asList(posAttr.getPartOfSpeech().split("-")),
-                        offsetAttr.startOffset(),
-                        readAttr.getReading()
-                        ));
-                offset += surface.length();
-            }
+        BaseFormAttribute baseAttr = tokenizer.addAttribute(BaseFormAttribute.class);
+        CharTermAttribute charAttr = tokenizer.addAttribute(CharTermAttribute.class);
+        PartOfSpeechAttribute posAttr = tokenizer.addAttribute(PartOfSpeechAttribute.class);
+        ReadingAttribute readAttr = tokenizer.addAttribute(ReadingAttribute.class);
+        OffsetAttribute offsetAttr  = tokenizer.addAttribute(OffsetAttribute.class);
+        InflectionAttribute inflectionAttr = tokenizer.addAttribute(InflectionAttribute.class);
+        tokenizer.reset();
+        while (tokenizer.incrementToken()) {
+            String surface = charAttr.toString();
+            tokens.add(new TokenElement(surface,
+                    getTagList(posAttr, inflectionAttr),
+                    offsetAttr.startOffset(),
+                    readAttr.getReading()
+            ));
         }
+        tokenizer.close();
         return tokens;
+    }
+
+    private List<String> getTagList(PartOfSpeechAttribute posAttr, InflectionAttribute inflectionAttr) {
+        List<String> posList = new ArrayList<>();
+        posList.addAll(Arrays.asList(posAttr.getPartOfSpeech().split("-")));
+        String form = inflectionAttr.getInflectionForm() == null ? "*" : inflectionAttr.getInflectionForm();
+        String type = inflectionAttr.getInflectionType() == null ? "*" : inflectionAttr.getInflectionType();
+        posList.add(type);
+        posList.add(form);
+        return posList;
     }
 }

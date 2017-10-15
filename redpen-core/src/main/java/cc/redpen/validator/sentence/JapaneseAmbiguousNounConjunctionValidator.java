@@ -45,21 +45,21 @@ public class JapaneseAmbiguousNounConjunctionValidator extends DictionaryValidat
             switch (stackSize) {
             case 0:
                 if (tags.get(0).equals("名詞")) {
-                    surfaces.add(tags.get(6));
+                    surfaces.add(tokenElement.getSurface());
                     stackSize = 1;
                 }
                 case 1:
-                if (tags.get(0).equals("助詞") && tags.get(6).equals("の")) {
-                    surfaces.add(tags.get(6));
+                if (tags.get(0).equals("助詞") && tokenElement.getSurface().equals("の")) {
+                    surfaces.add(tokenElement.getSurface());
                     stackSize = 2;
                 }
                 break;
             case 2:
                 if (tags.get(0).equals("名詞")) {
-                    surfaces.add(tags.get(6));
+                    surfaces.add(tokenElement.getSurface());
                 } else {
-                    if (tags.get(0).equals("助詞") && tags.get(6).equals("の")) {
-                        surfaces.add(tags.get(6));
+                    if (tags.get(0).equals("助詞") && tokenElement.getSurface().equals("の")) {
+                        surfaces.add(tokenElement.getSurface());
                         stackSize = 3;
                     } else {
                         surfaces.clear();
@@ -69,7 +69,7 @@ public class JapaneseAmbiguousNounConjunctionValidator extends DictionaryValidat
                 break;
             case 3:
                 if (tags.get(0).equals("名詞")) {
-                    surfaces.add(tags.get(6));
+                    surfaces.add(tokenElement.getSurface());
                 } else {
                     String surface = String.join("", surfaces);
                     if (!inDictionary(surface)) {

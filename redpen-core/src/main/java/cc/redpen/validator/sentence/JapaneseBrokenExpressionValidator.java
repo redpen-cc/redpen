@@ -20,12 +20,10 @@ package cc.redpen.validator.sentence;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.validator.Validator;
-import cc.redpen.util.Pair;
 
-import java.util.*;
-import java.util.regex.Pattern;
+import java.util.List;
+import java.util.Locale;
 
-import static java.util.Collections.emptySet;
 import static java.util.Collections.singletonList;
 
 /**
@@ -41,10 +39,10 @@ public class JapaneseBrokenExpressionValidator extends Validator {
         for (int i = 0; i < (tokens.size() - 1); ++i) {
             final TokenElement p = tokens.get(i);
             final List<String> ptags = p.getTags();
-            if (ptags.get(0).equals("動詞") && ptags.get(1).equals("自立") && ptags.get(4).equals("一段") && ptags.get(5).equals("未然形")) {
+            if (ptags.get(0).equals("動詞") && ptags.get(1).equals("自立") && ptags.get(2).equals("一段") && ptags.get(3).equals("未然形")) {
                 final TokenElement q = tokens.get(i+1);
                 final List<String> qtags = q.getTags();
-                if (qtags.get(0).equals("動詞") && qtags.get(1).equals("接尾") && qtags.get(4).equals("一段") && qtags.get(5).equals("未然形") && qtags.get(6).equals("られる")) {
+                if (qtags.get(0).equals("動詞") && qtags.get(1).equals("接尾") && qtags.get(2).equals("一段") && qtags.get(3).equals("未然形") && q.getSurface().equals("られ")) {
                 } else {
                     addLocalizedError(sentence, p.getSurface());
                 }
