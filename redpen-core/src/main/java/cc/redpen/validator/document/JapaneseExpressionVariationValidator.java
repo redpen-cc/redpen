@@ -40,15 +40,34 @@ public class JapaneseExpressionVariationValidator extends Validator {
                 if (!this.words.containsKey(reading)) {
                     continue;
                 }
+
                 List<TokenElement> tokens = this.words.get(reading);
+                StringBuilder stringBuilder = new StringBuilder();
                 for (TokenElement candidate : tokens) {
                     if (candidate != token && !token.getSurface().equals(candidate.getSurface())) {
-                        addLocalizedErrorFromToken(sentence, token, candidate.getSurface());
+                        String candidateStr = getTokenString(candidate);
+                        if (stringBuilder.length() > 0) {
+                            stringBuilder.append(", ");
+                        }
+                        stringBuilder.append(candidateStr);
                     }
                 }
+
+                String candidates = stringBuilder.toString();
+                if (candidates.length() > 0) {
+                    addLocalizedErrorFromToken(sentence, token, candidates);
+                }
+                this.words.remove(reading);
             }
         }
     }
+
+    private String getTokenString(TokenElement token) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(token.getSurface());
+        return stringBuilder.toString();
+    }
+
 
     @Override
     public void preValidate(Document document) {

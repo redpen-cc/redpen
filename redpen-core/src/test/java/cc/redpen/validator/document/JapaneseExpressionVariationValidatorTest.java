@@ -47,7 +47,7 @@ public class JapaneseExpressionVariationValidatorTest extends BaseValidatorTest 
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
-        assertEquals(2, errors.get(document).size());
+        assertEquals(1, errors.get(document).size());
     }
 
     @Test
@@ -60,6 +60,19 @@ public class JapaneseExpressionVariationValidatorTest extends BaseValidatorTest 
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
-        assertEquals(2, errors.get(document).size());
+        assertEquals(1, errors.get(document).size());
+    }
+
+    @Test
+    void detectMultipleSameReadings() throws RedPenException {
+        config = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration(validatorName))
+                .build();
+
+        Document document = prepareSimpleDocument("このExcelはあのエクセルともこのエクセルとも違います。");
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        assertEquals(1, errors.get(document).size());
     }
 }
