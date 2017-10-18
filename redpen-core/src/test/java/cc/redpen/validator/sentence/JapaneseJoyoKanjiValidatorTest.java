@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -70,5 +71,23 @@ class JapaneseJoyoKanjiValidatorTest {
         assertEquals(2, errors.size());
         assertEquals("JapaneseJoyoKanji", errors.get(0).getValidatorName());
         assertEquals("JapaneseJoyoKanji", errors.get(1).getValidatorName());
+    }
+
+    @Test
+    void testSkipWordList() throws RedPenException {
+        Configuration config = Configuration.builder("ja")
+                .addValidatorConfig(new ValidatorConfiguration("JapaneseJoyoKanji").addProperty("list", "圭,昌"))
+                .build();
+
+        List<Document> documents = new ArrayList<>();documents.add(
+                Document.builder(new JapaneseTokenizer())
+                        .addSection(1)
+                        .addParagraph()
+                        .addSentence(new Sentence("圭や昌は常用漢字ではありませんが、人名漢字であるため許可します。", 1))
+                        .build());
+
+        RedPen redPen = new RedPen(config);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
+        assertEquals(0, errors.size());
     }
 }

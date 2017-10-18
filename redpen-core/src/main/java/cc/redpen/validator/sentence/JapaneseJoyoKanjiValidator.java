@@ -20,8 +20,10 @@ package cc.redpen.validator.sentence;
 import cc.redpen.model.Sentence;
 import cc.redpen.validator.Validator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,9 +45,13 @@ public class JapaneseJoyoKanjiValidator extends Validator {
 
     @Override
     public void validate(Sentence sentence) {
+        Set<String> customSkipList = getSet("list");
         final Matcher m = nonJoyoKanji.matcher(sentence.getContent());
         while (m.find()) {
-            addLocalizedError(sentence, m.group());
+            String kanji = m.group();
+            if (customSkipList == null || !customSkipList.contains(kanji)) {
+                addLocalizedError(sentence, kanji);
+            }
         }
     }
 }
