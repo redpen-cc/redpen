@@ -29,7 +29,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -80,7 +79,7 @@ class JapaneseJoyoKanjiValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                Document.builder(new JapaneseTokenizer())
+                Document.builder(new NeologdJapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("圭や昌は常用漢字ではありませんが、人名漢字であるため許可します。", 1))
