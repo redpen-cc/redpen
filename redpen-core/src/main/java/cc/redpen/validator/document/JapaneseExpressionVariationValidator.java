@@ -52,17 +52,17 @@ public class JapaneseExpressionVariationValidator extends Validator {
 
     private String generateCandidates(TokenElement token, String reading) {
         List<TokenElement> tokens = this.words.get(reading);
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder candidates = new StringBuilder();
         for (TokenElement candidate : tokens) {
             if (candidate != token && !token.getSurface().equals(candidate.getSurface())) {
                 String candidateStr = getTokenString(candidate);
-                if (stringBuilder.length() > 0) {
-                    stringBuilder.append(", ");
+                if (candidates.length() > 0) {
+                    candidates.append(", ");
                 }
-                stringBuilder.append(candidateStr);
+                candidates.append(candidateStr);
             }
         }
-        return stringBuilder.toString();
+        return candidates.toString();
     }
 
     private String getTokenString(TokenElement token) {
