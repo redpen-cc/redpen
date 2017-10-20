@@ -41,25 +41,28 @@ public class JapaneseExpressionVariationValidator extends Validator {
                     continue;
                 }
 
-                List<TokenElement> tokens = this.words.get(reading);
-                StringBuilder stringBuilder = new StringBuilder();
-                for (TokenElement candidate : tokens) {
-                    if (candidate != token && !token.getSurface().equals(candidate.getSurface())) {
-                        String candidateStr = getTokenString(candidate);
-                        if (stringBuilder.length() > 0) {
-                            stringBuilder.append(", ");
-                        }
-                        stringBuilder.append(candidateStr);
-                    }
-                }
-
-                String candidates = stringBuilder.toString();
+                String candidates = generateCandidates(token, reading);
                 if (candidates.length() > 0) {
                     addLocalizedErrorFromToken(sentence, token, candidates);
                 }
                 this.words.remove(reading);
             }
         }
+    }
+
+    private String generateCandidates(TokenElement token, String reading) {
+        List<TokenElement> tokens = this.words.get(reading);
+        StringBuilder stringBuilder = new StringBuilder();
+        for (TokenElement candidate : tokens) {
+            if (candidate != token && !token.getSurface().equals(candidate.getSurface())) {
+                String candidateStr = getTokenString(candidate);
+                if (stringBuilder.length() > 0) {
+                    stringBuilder.append(", ");
+                }
+                stringBuilder.append(candidateStr);
+            }
+        }
+        return stringBuilder.toString();
     }
 
     private String getTokenString(TokenElement token) {
