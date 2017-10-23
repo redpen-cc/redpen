@@ -300,7 +300,7 @@ public class SymbolTable implements Serializable, Cloneable {
                 , new Symbol(DIGIT_NINE, '9', ""));
 
         JAPANESE_ZENKAKU2_SYMBOLS = new LinkedHashMap<>(JAPANESE_SYMBOLS);
-        JAPANESE_ZENKAKU2_SYMBOLS.put(FULL_STOP, new Symbol(FULL_STOP, '．', "。."));
+        JAPANESE_ZENKAKU2_SYMBOLS.put(FULL_STOP, new Symbol(FULL_STOP, '．', "。"));
         JAPANESE_ZENKAKU2_SYMBOLS.put(COMMA, new Symbol(COMMA, '，', "、,"));
 
         JAPANESE_HANKAKU_SYMBOLS = initializeSymbols(
