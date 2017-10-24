@@ -56,28 +56,23 @@ public class JapaneseExpressionVariationValidator extends Validator {
     }
 
     private void generateErrors(Document document, Sentence sentence, TokenElement targetToken, String reading) {
-        // extract words which have same reading as targetToken
         Map<String, List<CandidateTokenInfo>> variationMap = generateVariationMap(document, targetToken, reading);
 
         for (String surface : variationMap.keySet()) {
-            generateError(document, sentence, targetToken, variationMap, surface);
+            List<CandidateTokenInfo> variationList = variationMap.get(surface);
+            String variation = generateErrorMessage(variationList, surface);
+            String positionList = addVariationPositions(variationList);
+            addLocalizedErrorFromToken(sentence, targetToken, variation, positionList);
         }
     }
 
-    private void generateError(Document document, Sentence sentence, TokenElement targetToken, Map<String, List<CandidateTokenInfo>> variationMap, String surface) {
-        StringBuilder candidates = new StringBuilder();
-        candidates.append(surface);
-        List<CandidateTokenInfo> candidateTokenList = variationMap.get(surface);
-        candidates.append("(");
-        candidates.append(candidateTokenList.get(0).element.getTags().get(0));
-        candidates.append(")");
-        if (document.getFileName().orElse("").length() > 0) {
-            candidates.append(" in ");
-            candidates.append(document.getFileName().orElse(""));
-        }
-        candidates.append(" at ");
-        candidates.append(addTokenInfo(candidateTokenList));
-        addLocalizedErrorFromToken(sentence, targetToken, candidates.toString());
+    private String generateErrorMessage(List<CandidateTokenInfo> variationList, String surface) {
+        StringBuilder variation = new StringBuilder();
+        variation.append(surface);
+        variation.append("(");
+        variation.append(variationList.get(0).element.getTags().get(0));
+        variation.append(")");
+        return variation.toString();
     }
 
     private Map<String, List<CandidateTokenInfo>> generateVariationMap(Document document, TokenElement targetToken, String reading) {
@@ -94,7 +89,7 @@ public class JapaneseExpressionVariationValidator extends Validator {
         return variationMap;
     }
 
-    private String addTokenInfo(List<CandidateTokenInfo> candidateTokenList) {
+    private String addVariationPositions(List<CandidateTokenInfo> candidateTokenList) {
         StringBuilder builder = new StringBuilder();
         for (CandidateTokenInfo candidateToken : candidateTokenList) {
             if (builder.length() > 0) {
