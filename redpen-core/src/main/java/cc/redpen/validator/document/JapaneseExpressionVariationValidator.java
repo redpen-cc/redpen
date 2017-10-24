@@ -17,6 +17,7 @@
  */
 package cc.redpen.validator.document;
 
+import cc.redpen.RedPenException;
 import cc.redpen.model.*;
 import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.validator.Validator;
@@ -26,8 +27,8 @@ import java.util.*;
 import static java.util.Collections.singletonList;
 
 public class JapaneseExpressionVariationValidator extends Validator {
-    private Map<Document, Map<String, List<CandidateTokenInfo>>> readingMap = new HashMap<>();
-    private Map<Document, List<Sentence>> sentenceMap = new HashMap<>();
+    private Map<Document, Map<String, List<CandidateTokenInfo>>> readingMap;
+    private Map<Document, List<Sentence>> sentenceMap;
 
     class CandidateTokenInfo {
         public CandidateTokenInfo(TokenElement element, Sentence sentence) {
@@ -160,6 +161,12 @@ public class JapaneseExpressionVariationValidator extends Validator {
             }
         }
         return sentencesInSection;
+    }
+
+    @Override
+    protected void init() throws RedPenException {
+        this.readingMap = new HashMap<>();
+        this.sentenceMap = new HashMap<>();
     }
 
     @Override
