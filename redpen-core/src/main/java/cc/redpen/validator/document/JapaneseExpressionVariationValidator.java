@@ -26,8 +26,17 @@ import java.util.*;
 import static java.util.Collections.singletonList;
 
 public class JapaneseExpressionVariationValidator extends Validator {
-    private Map<String, List<TokenElement>> words = new HashMap<>();
+    private Map<String, List<CandidateTokenInfo>> words = new HashMap<>();
     private Map<Document, List<Sentence>> sentenceMap = new HashMap<>();
+
+    class CandidateTokenInfo {
+        public CandidateTokenInfo(TokenElement element, Sentence sentence) {
+            this.element = element;
+            this.sentence = sentence;
+        }
+        public TokenElement element;
+        public Sentence sentence;
+    }
 
     @Override
     public void validate(Document document) {
@@ -40,34 +49,45 @@ public class JapaneseExpressionVariationValidator extends Validator {
                 if (!this.words.containsKey(reading)) {
                     continue;
                 }
-
-                String candidates = generateCandidates(token, reading);
-                if (candidates.length() > 0) {
-                    addLocalizedErrorFromToken(sentence, token, candidates);
-                }
+                generateErrors(sentence, token, reading);
                 this.words.remove(reading);
             }
         }
     }
 
-    private String generateCandidates(TokenElement token, String reading) {
-        List<TokenElement> tokens = this.words.get(reading);
-        StringBuilder candidates = new StringBuilder();
-        for (TokenElement candidate : tokens) {
-            if (candidate != token && !token.getSurface().equals(candidate.getSurface())) {
-                String candidateStr = getTokenString(candidate);
+    private void generateErrors(Sentence sentence, TokenElement token, String reading) {
+        List<CandidateTokenInfo> tokens = this.words.get(reading);
+        Map<String, List<CandidateTokenInfo>> candidateMap = new HashMap<>();
+        for (CandidateTokenInfo candidate : tokens) {
+            if (candidate.element != token && !token.getSurface().equals(candidate.element.getSurface())) {
+                if (!candidateMap.containsKey(candidate.element.getSurface())) {
+                    candidateMap.put(candidate.element.getSurface(), new LinkedList<>());
+                }
+                candidateMap.get(candidate.element.getSurface()).add(candidate);
+            }
+        }
+
+        for (String surface : candidateMap.keySet()) {
+            StringBuilder candidates = new StringBuilder();
+            List<CandidateTokenInfo> candidateTokenList = candidateMap.get(surface);
+            for (CandidateTokenInfo candidateToken : candidateTokenList) {
                 if (candidates.length() > 0) {
                     candidates.append(", ");
                 }
-                candidates.append(candidateStr);
+                candidates.append(getTokenString(candidateToken));
+            }
+            if (candidates.length() > 0) {
+                addLocalizedErrorFromToken(sentence, token, candidates.toString());
             }
         }
-        return candidates.toString();
     }
 
-    private String getTokenString(TokenElement token) {
+    private String getTokenString(CandidateTokenInfo token) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(token.getSurface());
+        stringBuilder.append(token.element.getSurface());
+        stringBuilder.append("(");
+        stringBuilder.append(token.sentence.getLineNumber());
+        stringBuilder.append(")");
         return stringBuilder.toString();
     }
 
@@ -83,9 +103,9 @@ public class JapaneseExpressionVariationValidator extends Validator {
                 }
                 String reading = getReading(token);
                 if (!this.words.containsKey(reading)) {
-                    this.words.put(reading, new LinkedList<TokenElement>());
+                    this.words.put(reading, new LinkedList<>());
                 }
-                this.words.get(reading).add(token);
+                this.words.get(reading).add(new CandidateTokenInfo(token, sentence));
             }
         }
     }
