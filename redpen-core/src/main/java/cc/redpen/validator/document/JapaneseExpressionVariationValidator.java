@@ -69,28 +69,41 @@ public class JapaneseExpressionVariationValidator extends Validator {
 
         for (String surface : candidateMap.keySet()) {
             StringBuilder candidates = new StringBuilder();
+            candidates.append(surface);
             List<CandidateTokenInfo> candidateTokenList = candidateMap.get(surface);
-            for (CandidateTokenInfo candidateToken : candidateTokenList) {
-                if (candidates.length() > 0) {
-                    candidates.append(", ");
-                }
-                candidates.append(getTokenString(candidateToken));
+            candidates.append("(");
+            candidates.append(candidateTokenList.get(0).element.getTags().get(0));
+            candidates.append(")");
+            if (document.getFileName().orElse("").length() > 0) {
+                candidates.append(" in ");
+                candidates.append(document.getFileName().orElse(""));
             }
-            if (candidates.length() > 0) {
-                addLocalizedErrorFromToken(sentence, token, candidates.toString());
-            }
+            candidates.append(" at ");
+            candidates.append(addTokenInfo(candidateTokenList));
+            addLocalizedErrorFromToken(sentence, token, candidates.toString());
         }
+    }
+
+    private String addTokenInfo(List<CandidateTokenInfo> candidateTokenList) {
+        StringBuilder builder = new StringBuilder();
+        for (CandidateTokenInfo candidateToken : candidateTokenList) {
+            if (builder.length() > 0) {
+                builder.append(", ");
+            }
+            builder.append(getTokenString(candidateToken));
+        }
+        return builder.toString();
     }
 
     private String getTokenString(CandidateTokenInfo token) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(token.element.getSurface());
         stringBuilder.append("(");
         stringBuilder.append(token.sentence.getLineNumber());
+        stringBuilder.append(",");
+        stringBuilder.append(token.element.getOffset());
         stringBuilder.append(")");
         return stringBuilder.toString();
     }
-
 
     @Override
     public void preValidate(Document document) {
