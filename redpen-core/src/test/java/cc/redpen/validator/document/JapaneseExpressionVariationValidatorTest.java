@@ -73,7 +73,6 @@ public class JapaneseExpressionVariationValidatorTest extends BaseValidatorTest 
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
-        System.out.println(errors.get(document).get(0));
         assertEquals(1, errors.get(document).size());
     }
 }
