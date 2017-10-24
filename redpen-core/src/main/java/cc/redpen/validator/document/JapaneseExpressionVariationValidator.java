@@ -26,7 +26,7 @@ import java.util.*;
 import static java.util.Collections.singletonList;
 
 public class JapaneseExpressionVariationValidator extends Validator {
-    private Map<Document, Map<String, List<CandidateTokenInfo>>> words = new HashMap<>();
+    private Map<Document, Map<String, List<CandidateTokenInfo>>> readingMap = new HashMap<>();
     private Map<Document, List<Sentence>> sentenceMap = new HashMap<>();
 
     class CandidateTokenInfo {
@@ -46,17 +46,17 @@ public class JapaneseExpressionVariationValidator extends Validator {
         for (Sentence sentence : sentenceMap.get(document)) {
             for (TokenElement token : sentence.getTokens()) {
                 String reading = getReading(token);
-                if (!this.words.get(document).containsKey(reading)) {
+                if (!this.readingMap.get(document).containsKey(reading)) {
                     continue;
                 }
                 generateErrors(document, sentence, token, reading);
-                this.words.get(document).remove(reading);
+                this.readingMap.get(document).remove(reading);
             }
         }
     }
 
     private void generateErrors(Document document, Sentence sentence, TokenElement token, String reading) {
-        List<CandidateTokenInfo> tokens = this.words.get(document).get(reading);
+        List<CandidateTokenInfo> tokens = this.readingMap.get(document).get(reading);
         Map<String, List<CandidateTokenInfo>> candidateMap = new HashMap<>();
         for (CandidateTokenInfo candidate : tokens) {
             if (candidate.element != token && !token.getSurface().equals(candidate.element.getSurface())) {
@@ -120,13 +120,13 @@ public class JapaneseExpressionVariationValidator extends Validator {
                 continue;
             }
             String reading = getReading(token);
-            if (!this.words.containsKey(document)) {
-                this.words.put(document, new HashMap<>());
+            if (!this.readingMap.containsKey(document)) {
+                this.readingMap.put(document, new HashMap<>());
             }
-            if (!this.words.get(document).containsKey(reading)) {
-                this.words.get(document).put(reading, new LinkedList<>());
+            if (!this.readingMap.get(document).containsKey(reading)) {
+                this.readingMap.get(document).put(reading, new LinkedList<>());
             }
-            this.words.get(document).get(reading).add(new CandidateTokenInfo(token, sentence));
+            this.readingMap.get(document).get(reading).add(new CandidateTokenInfo(token, sentence));
         }
     }
 
