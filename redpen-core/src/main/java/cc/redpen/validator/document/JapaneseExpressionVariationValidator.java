@@ -138,17 +138,23 @@ public class JapaneseExpressionVariationValidator extends Validator {
     private List<Sentence> extractSentences(Document document) {
         List<Sentence> sentences = new ArrayList<>();
         for (Section section : document) {
-            for (Paragraph paragraph : section.getParagraphs()) {
-                sentences.addAll(paragraph.getSentences());
-            }
-            sentences.addAll(section.getHeaderContents());
-            for (ListBlock listBlock : section.getListBlocks()) {
-                for (ListElement listElement : listBlock.getListElements()) {
-                    sentences.addAll(listElement.getSentences());
-                }
-            }
+            sentences.addAll(extractSentencesFromSection(section));
         }
         return sentences;
+    }
+
+    private List<Sentence> extractSentencesFromSection(Section section) {
+        List<Sentence> sentencesInSection = new ArrayList<>();
+        for (Paragraph paragraph : section.getParagraphs()) {
+            sentencesInSection.addAll(paragraph.getSentences());
+        }
+        sentencesInSection.addAll(section.getHeaderContents());
+        for (ListBlock listBlock : section.getListBlocks()) {
+            for (ListElement listElement : listBlock.getListElements()) {
+                sentencesInSection.addAll(listElement.getSentences());
+            }
+        }
+        return sentencesInSection;
     }
 
     @Override
