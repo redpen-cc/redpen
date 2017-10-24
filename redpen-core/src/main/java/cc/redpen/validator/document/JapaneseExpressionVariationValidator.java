@@ -110,19 +110,23 @@ public class JapaneseExpressionVariationValidator extends Validator {
         sentenceMap.put(document, extractSentences(document));
         List<Sentence> sentences = sentenceMap.get(document);
         for (Sentence sentence : sentences) {
-            for (TokenElement token : sentence.getTokens()) {
-                if (token.getSurface().equals(" ")) {
-                    continue;
-                }
-                String reading = getReading(token);
-                if (!this.words.containsKey(document)) {
-                    this.words.put(document, new HashMap<>());
-                }
-                if (!this.words.get(document).containsKey(reading)) {
-                    this.words.get(document).put(reading, new LinkedList<>());
-                }
-                this.words.get(document).get(reading).add(new CandidateTokenInfo(token, sentence));
+            extractTokensFromSentence(document, sentence);
+        }
+    }
+
+    private void extractTokensFromSentence(Document document, Sentence sentence) {
+        for (TokenElement token : sentence.getTokens()) {
+            if (token.getSurface().equals(" ")) {
+                continue;
             }
+            String reading = getReading(token);
+            if (!this.words.containsKey(document)) {
+                this.words.put(document, new HashMap<>());
+            }
+            if (!this.words.get(document).containsKey(reading)) {
+                this.words.get(document).put(reading, new LinkedList<>());
+            }
+            this.words.get(document).get(reading).add(new CandidateTokenInfo(token, sentence));
         }
     }
 
