@@ -11,6 +11,7 @@
         <validator name="SuccessiveWord" />
         <validator name="JapaneseStyle" />
         <validator name="InvalidExpression" />
+        <validator name="JapaneseExpressionVariation" level="Info"/>
         <validator name="DoubleNegative" />
         <validator name="Okurigana"/>
         <validator name="JapaneseNumberExpression"/>
