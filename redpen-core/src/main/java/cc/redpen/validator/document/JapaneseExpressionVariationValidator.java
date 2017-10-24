@@ -55,33 +55,43 @@ public class JapaneseExpressionVariationValidator extends Validator {
         }
     }
 
-    private void generateErrors(Document document, Sentence sentence, TokenElement token, String reading) {
-        List<CandidateTokenInfo> tokens = this.readingMap.get(document).get(reading);
-        Map<String, List<CandidateTokenInfo>> candidateMap = new HashMap<>();
-        for (CandidateTokenInfo candidate : tokens) {
-            if (candidate.element != token && !token.getSurface().equals(candidate.element.getSurface())) {
-                if (!candidateMap.containsKey(candidate.element.getSurface())) {
-                    candidateMap.put(candidate.element.getSurface(), new LinkedList<>());
-                }
-                candidateMap.get(candidate.element.getSurface()).add(candidate);
-            }
-        }
+    private void generateErrors(Document document, Sentence sentence, TokenElement targetToken, String reading) {
+        // extract words which have same reading as targetToken
+        Map<String, List<CandidateTokenInfo>> variationMap = generateVariationMap(document, targetToken, reading);
 
-        for (String surface : candidateMap.keySet()) {
-            StringBuilder candidates = new StringBuilder();
-            candidates.append(surface);
-            List<CandidateTokenInfo> candidateTokenList = candidateMap.get(surface);
-            candidates.append("(");
-            candidates.append(candidateTokenList.get(0).element.getTags().get(0));
-            candidates.append(")");
-            if (document.getFileName().orElse("").length() > 0) {
-                candidates.append(" in ");
-                candidates.append(document.getFileName().orElse(""));
-            }
-            candidates.append(" at ");
-            candidates.append(addTokenInfo(candidateTokenList));
-            addLocalizedErrorFromToken(sentence, token, candidates.toString());
+        for (String surface : variationMap.keySet()) {
+            generateError(document, sentence, targetToken, variationMap, surface);
         }
+    }
+
+    private void generateError(Document document, Sentence sentence, TokenElement targetToken, Map<String, List<CandidateTokenInfo>> variationMap, String surface) {
+        StringBuilder candidates = new StringBuilder();
+        candidates.append(surface);
+        List<CandidateTokenInfo> candidateTokenList = variationMap.get(surface);
+        candidates.append("(");
+        candidates.append(candidateTokenList.get(0).element.getTags().get(0));
+        candidates.append(")");
+        if (document.getFileName().orElse("").length() > 0) {
+            candidates.append(" in ");
+            candidates.append(document.getFileName().orElse(""));
+        }
+        candidates.append(" at ");
+        candidates.append(addTokenInfo(candidateTokenList));
+        addLocalizedErrorFromToken(sentence, targetToken, candidates.toString());
+    }
+
+    private Map<String, List<CandidateTokenInfo>> generateVariationMap(Document document, TokenElement targetToken, String reading) {
+        List<CandidateTokenInfo> tokens = this.readingMap.get(document).get(reading);
+        Map<String, List<CandidateTokenInfo>> variationMap = new HashMap<>();
+        for (CandidateTokenInfo candidate : tokens) {
+            if (candidate.element != targetToken && !targetToken.getSurface().equals(candidate.element.getSurface())) {
+                if (!variationMap.containsKey(candidate.element.getSurface())) {
+                    variationMap.put(candidate.element.getSurface(), new LinkedList<>());
+                }
+                variationMap.get(candidate.element.getSurface()).add(candidate);
+            }
+        }
+        return variationMap;
     }
 
     private String addTokenInfo(List<CandidateTokenInfo> candidateTokenList) {
