@@ -27,11 +27,11 @@ import java.util.*;
 import static java.util.Collections.singletonList;
 
 public class JapaneseExpressionVariationValidator extends Validator {
-    private Map<Document, Map<String, List<CandidateTokenInfo>>> readingMap;
+    private Map<Document, Map<String, List<TokenInfo>>> readingMap;
     private Map<Document, List<Sentence>> sentenceMap;
 
-    class CandidateTokenInfo {
-        public CandidateTokenInfo(TokenElement element, Sentence sentence) {
+    class TokenInfo {
+        public TokenInfo(TokenElement element, Sentence sentence) {
             this.element = element;
             this.sentence = sentence;
         }
@@ -57,17 +57,17 @@ public class JapaneseExpressionVariationValidator extends Validator {
     }
 
     private void generateErrors(Document document, Sentence sentence, TokenElement targetToken, String reading) {
-        Map<String, List<CandidateTokenInfo>> variationMap = generateVariationMap(document, targetToken, reading);
+        Map<String, List<TokenInfo>> variationMap = generateVariationMap(document, targetToken, reading);
 
         for (String surface : variationMap.keySet()) {
-            List<CandidateTokenInfo> variationList = variationMap.get(surface);
+            List<TokenInfo> variationList = variationMap.get(surface);
             String variation = generateErrorMessage(variationList, surface);
             String positionList = addVariationPositions(variationList);
             addLocalizedErrorFromToken(sentence, targetToken, variation, positionList);
         }
     }
 
-    private String generateErrorMessage(List<CandidateTokenInfo> variationList, String surface) {
+    private String generateErrorMessage(List<TokenInfo> variationList, String surface) {
         StringBuilder variation = new StringBuilder();
         variation.append(surface);
         variation.append("(");
@@ -76,32 +76,32 @@ public class JapaneseExpressionVariationValidator extends Validator {
         return variation.toString();
     }
 
-    private Map<String, List<CandidateTokenInfo>> generateVariationMap(Document document, TokenElement targetToken, String reading) {
-        List<CandidateTokenInfo> tokens = this.readingMap.get(document).get(reading);
-        Map<String, List<CandidateTokenInfo>> variationMap = new HashMap<>();
-        for (CandidateTokenInfo candidate : tokens) {
-            if (candidate.element != targetToken && !targetToken.getSurface().equals(candidate.element.getSurface())) {
-                if (!variationMap.containsKey(candidate.element.getSurface())) {
-                    variationMap.put(candidate.element.getSurface(), new LinkedList<>());
+    private Map<String, List<TokenInfo>> generateVariationMap(Document document, TokenElement targetToken, String reading) {
+        List<TokenInfo> tokens = this.readingMap.get(document).get(reading);
+        Map<String, List<TokenInfo>> variationMap = new HashMap<>();
+        for (TokenInfo variation : tokens) {
+            if (variation.element != targetToken && !targetToken.getSurface().equals(variation.element.getSurface())) {
+                if (!variationMap.containsKey(variation.element.getSurface())) {
+                    variationMap.put(variation.element.getSurface(), new LinkedList<>());
                 }
-                variationMap.get(candidate.element.getSurface()).add(candidate);
+                variationMap.get(variation.element.getSurface()).add(variation);
             }
         }
         return variationMap;
     }
 
-    private String addVariationPositions(List<CandidateTokenInfo> candidateTokenList) {
+    private String addVariationPositions(List<TokenInfo> tokenList) {
         StringBuilder builder = new StringBuilder();
-        for (CandidateTokenInfo candidateToken : candidateTokenList) {
+        for (TokenInfo variation : tokenList) {
             if (builder.length() > 0) {
                 builder.append(", ");
             }
-            builder.append(getTokenString(candidateToken));
+            builder.append(getTokenString(variation));
         }
         return builder.toString();
     }
 
-    private String getTokenString(CandidateTokenInfo token) {
+    private String getTokenString(TokenInfo token) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("(");
         stringBuilder.append(token.sentence.getLineNumber());
@@ -132,7 +132,7 @@ public class JapaneseExpressionVariationValidator extends Validator {
             if (!this.readingMap.get(document).containsKey(reading)) {
                 this.readingMap.get(document).put(reading, new LinkedList<>());
             }
-            this.readingMap.get(document).get(reading).add(new CandidateTokenInfo(token, sentence));
+            this.readingMap.get(document).get(reading).add(new TokenInfo(token, sentence));
         }
     }
 
