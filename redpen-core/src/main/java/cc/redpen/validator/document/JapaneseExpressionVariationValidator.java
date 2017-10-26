@@ -106,7 +106,7 @@ public class JapaneseExpressionVariationValidator extends KeyValueDictionaryVali
 
     private String getTokenString(TokenInfo token) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("(");
+        stringBuilder.append("(L");
         stringBuilder.append(token.sentence.getLineNumber());
         stringBuilder.append(",");
         stringBuilder.append(token.element.getOffset());
