@@ -25,7 +25,7 @@ import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.SentenceExtractor;
-import cc.redpen.tokenizer.JapaneseTokenizer;
+import cc.redpen.tokenizer.NeologdJapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 import org.junit.jupiter.api.Test;
 
@@ -69,7 +69,7 @@ class JapaneseStyleValidatorTest {
 
         List<Document> documents = new ArrayList<>();
         documents.add(
-                Document.builder(new JapaneseTokenizer())
+                Document.builder(new NeologdJapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("今日はいい天気ですね。", 1))
@@ -90,7 +90,7 @@ class JapaneseStyleValidatorTest {
 
         List<Document> documents = new ArrayList<>();
         documents.add(
-                Document.builder(new JapaneseTokenizer())
+                Document.builder(new NeologdJapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("今日はいい天気である。", 1))
@@ -111,7 +111,7 @@ class JapaneseStyleValidatorTest {
 
         List<Document> documents = new ArrayList<>();
         documents.add(
-                Document.builder(new JapaneseTokenizer())
+                Document.builder(new NeologdJapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("彼の今日のお昼の弁当はのり弁とのり弁とのり弁です。", 1))

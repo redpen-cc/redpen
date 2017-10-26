@@ -25,7 +25,7 @@ import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.parser.LineOffset;
-import cc.redpen.tokenizer.JapaneseTokenizer;
+import cc.redpen.tokenizer.NeologdJapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 import org.junit.jupiter.api.Test;
 
@@ -44,7 +44,7 @@ class InvalidSymbolValidatorTest {
     void testWithInvalidSymbol() throws RedPenException {
         List<Document> documents = new ArrayList<>();
         documents.add(
-                Document.builder(new JapaneseTokenizer())
+                Document.builder(new NeologdJapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("わたしはカラオケが大好き！", 1))
@@ -149,7 +149,7 @@ class InvalidSymbolValidatorTest {
     @Test
     void testDefaultJapaneseSetting() throws Exception {
         List<Document> documents = new ArrayList<>();
-        documents.add(Document.builder(new JapaneseTokenizer())
+        documents.add(Document.builder(new NeologdJapaneseTokenizer())
                               .addSection(1)
                               .addParagraph()
                               .addSentence(new Sentence("Re:VIEW フォーマットが好きだ。", 1)).build());

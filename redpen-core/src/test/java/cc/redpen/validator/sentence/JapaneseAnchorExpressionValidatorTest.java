@@ -23,7 +23,7 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
-import cc.redpen.tokenizer.JapaneseTokenizer;
+import cc.redpen.tokenizer.NeologdJapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 import org.junit.jupiter.api.Test;
 
@@ -40,7 +40,7 @@ class JapaneseAnchorExpressionValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                Document.builder(new JapaneseTokenizer())
+                Document.builder(new NeologdJapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("1章を参照されたい。", 1))
@@ -58,7 +58,7 @@ class JapaneseAnchorExpressionValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                Document.builder(new JapaneseTokenizer())
+                Document.builder(new NeologdJapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("上の例は氷山の一角である。", 1))
@@ -76,7 +76,7 @@ class JapaneseAnchorExpressionValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                Document.builder(new JapaneseTokenizer())
+                Document.builder(new NeologdJapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("1章を参照されたい。", 1))
@@ -94,7 +94,7 @@ class JapaneseAnchorExpressionValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                Document.builder(new JapaneseTokenizer())
+                Document.builder(new NeologdJapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("１章を参照されたい。", 1))
@@ -112,7 +112,7 @@ class JapaneseAnchorExpressionValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                Document.builder(new JapaneseTokenizer())
+                Document.builder(new NeologdJapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("一章を参照されたい。", 1))
@@ -130,7 +130,7 @@ class JapaneseAnchorExpressionValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                Document.builder(new JapaneseTokenizer())
+                Document.builder(new NeologdJapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("一章３節を参照されたい。", 1))
@@ -150,7 +150,7 @@ class JapaneseAnchorExpressionValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                Document.builder(new JapaneseTokenizer())
+                Document.builder(new NeologdJapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("", 1))

@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class TokenElement implements Serializable {
-    private static final long serialVersionUID = -7779529873101010570L;
+    private static final long serialVersionUID = -9055285891555999514L;
 
     // the surface form of the token
     final private String surface;
@@ -33,10 +33,18 @@ public class TokenElement implements Serializable {
     // the character position of the token in the sentence
     final private int offset;
 
-    public TokenElement(String word, List<String> tagList, int offset) {
+    // token reading
+    final private String reading;
+
+    public TokenElement(String word, List<String> tagList, int offset, String reading) {
         surface = word;
         tags = Collections.unmodifiableList(tagList);
         this.offset = offset;
+        this.reading = reading;
+    }
+
+    public TokenElement(String word, List<String> tagList, int offset) {
+        this(word, tagList, offset, word);
     }
 
     public String getSurface() {
@@ -51,24 +59,27 @@ public class TokenElement implements Serializable {
         return offset;
     }
 
+    public String getReading() { return reading; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof TokenElement)) return false;
 
         TokenElement that = (TokenElement) o;
 
-        if (surface != null ? !surface.equals(that.surface) : that.surface != null) return false;
-        if (tags != null ? !tags.equals(that.tags) : that.tags != null) return false;
-
-        return true;
+        if (offset != that.offset) return false;
+        if (!surface.equals(that.surface)) return false;
+        if (!tags.equals(that.tags)) return false;
+        return reading.equals(that.reading);
     }
 
     @Override
     public int hashCode() {
-        int result = surface != null ? surface.hashCode() : 0;
-        result = 31 * result + (tags != null ? tags.hashCode() : 0);
-        result = 64 * result + offset;
+        int result = surface.hashCode();
+        result = 31 * result + tags.hashCode();
+        result = 31 * result + offset;
+        result = 31 * result + reading.hashCode();
         return result;
     }
 
@@ -76,8 +87,9 @@ public class TokenElement implements Serializable {
     public String toString() {
         return "TokenElement{" +
                 "surface='" + surface + '\'' +
-                ", offset=" + offset +
                 ", tags=" + tags +
+                ", offset=" + offset +
+                ", reading='" + reading + '\'' +
                 '}';
     }
 }

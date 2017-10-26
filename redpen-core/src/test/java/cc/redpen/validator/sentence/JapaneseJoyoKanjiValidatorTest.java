@@ -23,13 +23,12 @@ import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
 import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
-import cc.redpen.tokenizer.JapaneseTokenizer;
+import cc.redpen.tokenizer.NeologdJapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -42,7 +41,7 @@ class JapaneseJoyoKanjiValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                Document.builder(new JapaneseTokenizer())
+                Document.builder(new NeologdJapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("この文では常用漢字のみを使っています。", 1))
@@ -60,7 +59,7 @@ class JapaneseJoyoKanjiValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                Document.builder(new JapaneseTokenizer())
+                Document.builder(new NeologdJapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("惡や學などは常用漢字ではありません。", 1))
@@ -80,7 +79,7 @@ class JapaneseJoyoKanjiValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                Document.builder(new JapaneseTokenizer())
+                Document.builder(new NeologdJapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("圭や昌は常用漢字ではありませんが、人名漢字であるため許可します。", 1))

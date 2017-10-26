@@ -19,7 +19,7 @@ package cc.redpen.server.api;
 
 import cc.redpen.RedPen;
 import cc.redpen.parser.DocumentParser;
-import cc.redpen.tokenizer.JapaneseTokenizer;
+import cc.redpen.tokenizer.NeologdJapaneseTokenizer;
 import com.google.common.collect.ImmutableMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -70,7 +70,7 @@ class RedPenConfigurationResourceTest {
         JSONObject ja = redpens.getJSONObject("ja");
         assertEquals("ja", ja.getString("lang"));
         assertEquals("zenkaku", ja.getString("variant"));
-        assertEquals(JapaneseTokenizer.class.getName(), ja.getString("tokenizer"));
+        assertEquals(NeologdJapaneseTokenizer.class.getName(), ja.getString("tokenizer"));
         assertTrue(!ja.getString("validators").isEmpty());
         assertTrue(!ja.getString("symbols").isEmpty());
     }

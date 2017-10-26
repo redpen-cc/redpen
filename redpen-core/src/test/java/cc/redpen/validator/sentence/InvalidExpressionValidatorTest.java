@@ -26,7 +26,7 @@ import cc.redpen.model.Sentence;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
-import cc.redpen.tokenizer.JapaneseTokenizer;
+import cc.redpen.tokenizer.NeologdJapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 import cc.redpen.validator.Validator;
 import cc.redpen.validator.ValidatorFactory;
@@ -89,7 +89,7 @@ class InvalidExpressionValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                Document.builder(new JapaneseTokenizer())
+                Document.builder(new NeologdJapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("明日地球が滅亡するってマジですか。", 1))
@@ -108,7 +108,7 @@ class InvalidExpressionValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                Document.builder(new JapaneseTokenizer())
+                Document.builder(new NeologdJapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("うふぉっ本当ですか？", 1))

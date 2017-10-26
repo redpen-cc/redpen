@@ -26,7 +26,7 @@ import cc.redpen.model.Sentence;
 import cc.redpen.parser.DocumentParser;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
-import cc.redpen.tokenizer.JapaneseTokenizer;
+import cc.redpen.tokenizer.NeologdJapaneseTokenizer;
 import cc.redpen.validator.ValidationError;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -85,7 +85,7 @@ class EndOfSentenceValidatorTest {
                 .build();
 
         List<Document> documents = new ArrayList<>();documents.add(
-                Document.builder(new JapaneseTokenizer())
+                Document.builder(new NeologdJapaneseTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("彼は言った，“今日は誕生日”。", 1))

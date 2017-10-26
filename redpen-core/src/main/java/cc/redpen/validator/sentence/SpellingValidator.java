@@ -20,7 +20,14 @@ package cc.redpen.validator.sentence;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public final class SpellingValidator extends SpellingDictionaryValidator {
+
+    private Map<String, List<TokenElement>> words = new HashMap<>();
+
     @Override
     public void validate(Sentence sentence) {
         for (TokenElement token : sentence.getTokens()) {
