@@ -23,13 +23,11 @@ import cc.redpen.util.DictionaryLoader;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.util.Collections.emptyMap;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 public class KeyValueDictionaryValidator extends Validator {
     protected DictionaryLoader<Map<String, String>> loader = KEY_VALUE;
     private String dictionaryPrefix;
-    private Map<String, String> dictionary = emptyMap();
 
     public KeyValueDictionaryValidator() {
         super("map", new HashMap<>(), "dict", "");
@@ -49,7 +47,8 @@ public class KeyValueDictionaryValidator extends Validator {
     protected void init() throws RedPenException {
         if (dictionaryPrefix != null) {
             String defaultDictionaryFile = "default-resources/" + dictionaryPrefix + "-" + getSymbolTable().getLang() + ".dat";
-            dictionary = loader.loadCachedFromResource(defaultDictionaryFile, getClass().getSimpleName() + " default dictionary");
+            Map<String, String> dictionary = loader.loadCachedFromResource(defaultDictionaryFile, getClass().getSimpleName() + " default dictionary");
+            getMap("map").putAll(dictionary);
         }
         String confFile = getString("dict");
         if (isNotEmpty(confFile)) {
@@ -58,15 +57,12 @@ public class KeyValueDictionaryValidator extends Validator {
     }
 
     protected boolean inDictionary(String word) {
-        Map<String, String> customDictionary = getMap("map");
-        return dictionary.containsKey(word) || customDictionary != null && customDictionary.containsKey(word);
+        return getMap("map").containsKey(word);
     }
 
     protected String getValue(String word) {
-        Map<String, String> customDictionary = getMap("map");
-        if (customDictionary != null && customDictionary.containsKey(word)) {
-            return customDictionary.get(word);
-        } else if (this.dictionary.containsKey(word)) {
+        Map<String, String> dictionary = getMap("map");
+        if (dictionary != null && dictionary.containsKey(word)) {
             return dictionary.get(word);
         }
         return null;
