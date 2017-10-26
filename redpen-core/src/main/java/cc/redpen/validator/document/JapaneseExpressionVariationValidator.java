@@ -20,13 +20,13 @@ package cc.redpen.validator.document;
 import cc.redpen.RedPenException;
 import cc.redpen.model.*;
 import cc.redpen.tokenizer.TokenElement;
-import cc.redpen.validator.Validator;
+import cc.redpen.validator.KeyValueDictionaryValidator;
 
 import java.util.*;
 
 import static java.util.Collections.singletonList;
 
-public class JapaneseExpressionVariationValidator extends Validator {
+public class JapaneseExpressionVariationValidator extends KeyValueDictionaryValidator {
     private Map<Document, Map<String, List<TokenInfo>>> readingMap;
     private Map<Document, List<Sentence>> sentenceMap;
 
@@ -37,6 +37,10 @@ public class JapaneseExpressionVariationValidator extends Validator {
         }
         public TokenElement element;
         public Sentence sentence;
+    }
+
+    public JapaneseExpressionVariationValidator() {
+        super("japanese-spelling-variation/spelling-variation");
     }
 
     @Override
@@ -58,7 +62,6 @@ public class JapaneseExpressionVariationValidator extends Validator {
 
     private void generateErrors(Document document, Sentence sentence, TokenElement targetToken, String reading) {
         Map<String, List<TokenInfo>> variationMap = generateVariationMap(document, targetToken, reading);
-
         for (String surface : variationMap.keySet()) {
             List<TokenInfo> variationList = variationMap.get(surface);
             String variation = generateErrorMessage(variationList, surface);
@@ -137,8 +140,12 @@ public class JapaneseExpressionVariationValidator extends Validator {
     }
 
     private String getReading(TokenElement token) {
-        String reading = token.getReading() != null ? token.getReading() : token.getSurface();
-        return reading.toLowerCase();
+        String surface = token.getSurface().toLowerCase();
+        if (inDictionary(surface)) {
+            return getValue(surface);
+        }
+        String reading = token.getReading() != null ? token.getReading() : surface;
+        return reading;
     }
 
     private List<Sentence> extractSentences(Document document) {
@@ -165,6 +172,7 @@ public class JapaneseExpressionVariationValidator extends Validator {
 
     @Override
     protected void init() throws RedPenException {
+        super.init();
         this.readingMap = new HashMap<>();
         this.sentenceMap = new HashMap<>();
     }
