@@ -32,8 +32,8 @@ import java.util.Map;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class JapaneseExpressionVariationValidatorTest extends BaseValidatorTest {
-    protected JapaneseExpressionVariationValidatorTest() {
+final class JapaneseExpressionVariationValidatorTest extends BaseValidatorTest {
+    JapaneseExpressionVariationValidatorTest() {
         super("JapaneseExpressionVariation");
     }
 
@@ -83,6 +83,32 @@ public class JapaneseExpressionVariationValidatorTest extends BaseValidatorTest 
                 .build();
 
         Document document = prepareSimpleDocument("このExcelはあのエクセルとは違います。");
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        assertEquals(1, errors.get(document).size());
+    }
+
+    @Test
+    void detectNormalizedReadings() throws RedPenException {
+        config = Configuration.builder("ja")
+                         .addValidatorConfig(new ValidatorConfiguration(validatorName))
+                         .build();
+
+        Document document = prepareSimpleDocument("このインデックスはあのインデクスとは違います。");
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        assertEquals(1, errors.get(document).size());
+    }
+
+    @Test
+    void detectNormalizedReadings2() throws RedPenException {
+        config = Configuration.builder("ja")
+                         .addValidatorConfig(new ValidatorConfiguration(validatorName))
+                         .build();
+
+        Document document = prepareSimpleDocument("このヴェトナムはあのベトナムとは違います。");
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
