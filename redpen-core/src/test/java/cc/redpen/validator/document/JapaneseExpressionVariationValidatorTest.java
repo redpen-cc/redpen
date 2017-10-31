@@ -116,6 +116,19 @@ final class JapaneseExpressionVariationValidatorTest extends BaseValidatorTest {
     }
 
     @Test
+    void detectSameReadingsInConcatinatedJapaneseWord() throws RedPenException {
+        config = Configuration.builder("ja")
+                         .addValidatorConfig(new ValidatorConfiguration(validatorName))
+                         .build();
+
+        Document document = prepareSimpleDocument("身分証明書は紙です。身分証明所は間違い。");
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        assertEquals(1, errors.get(document).size());
+    }
+
+    @Test
     void detectMultipleSameReadings() throws RedPenException {
         config = Configuration.builder("ja")
                 .addValidatorConfig(new ValidatorConfiguration(validatorName))

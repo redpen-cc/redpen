@@ -124,6 +124,7 @@ public class JapaneseExpressionVariationValidator extends KeyValueDictionaryVali
     }
 
     private void extractTokensFromSentence(Document document, Sentence sentence) {
+        List<TokenElement> nouns = new ArrayList<>();
         for (TokenElement token : sentence.getTokens()) {
             if (token.getSurface().equals(" ")) {
                 continue;
@@ -136,7 +137,32 @@ public class JapaneseExpressionVariationValidator extends KeyValueDictionaryVali
                 this.readingMap.get(document).put(reading, new LinkedList<>());
             }
             this.readingMap.get(document).get(reading).add(new TokenInfo(token, sentence));
+
+            // handling compound nouns
+            if (token.getTags().get(0).equals("名詞")) {
+                nouns.add(token);
+            } else {
+                if (nouns.size() > 1) {
+                    TokenInfo compoundNoun = generateTokenFromNounsList(nouns, sentence);
+                    if (!this.readingMap.get(document).containsKey(compoundNoun.element.getReading())) {
+                        this.readingMap.get(document).put(compoundNoun.element.getReading(), new LinkedList<>());
+                    }
+                    this.readingMap.get(document).get(compoundNoun.element.getReading()).add(compoundNoun);
+                }
+                nouns.clear();
+            }
         }
+    }
+
+    private TokenInfo generateTokenFromNounsList(List<TokenElement> nouns, Sentence sentence) {
+        StringBuilder surface = new StringBuilder();
+        StringBuilder reading = new StringBuilder();
+        for (TokenElement noun : nouns) {
+            surface.append(noun.getSurface());
+            reading.append(noun.getReading());
+        }
+       TokenElement element = new TokenElement(surface.toString(), nouns.get(0).getTags(), nouns.get(0).getOffset(), reading.toString());
+       return new TokenInfo(element, sentence);
     }
 
     private String getReading(TokenElement token) {
@@ -152,7 +178,7 @@ public class JapaneseExpressionVariationValidator extends KeyValueDictionaryVali
         return reading;
     }
 
-    private String normalize(String input ) {
+    private String normalize(String input) {
         String normazlied;
         normazlied = input.replaceAll("ー", "")
                              .replaceAll("ッ", "")
