@@ -140,12 +140,28 @@ public class JapaneseExpressionVariationValidator extends KeyValueDictionaryVali
     }
 
     private String getReading(TokenElement token) {
+        return normalize(getPlainReading(token));
+    }
+
+    private String getPlainReading(TokenElement token) {
         String surface = token.getSurface().toLowerCase();
         if (inDictionary(surface)) {
             return getValue(surface);
         }
         String reading = token.getReading() != null ? token.getReading() : surface;
         return reading;
+    }
+
+    private String normalize(String input ) {
+        String normazlied;
+        normazlied = input.replaceAll("ー", "")
+                             .replaceAll("ッ", "")
+                             .replaceAll("ヴァ", "バ")
+                             .replaceAll("ヴィ", "ビ")
+                             .replaceAll("ヴェ", "ベ")
+                             .replaceAll("ヴォ", "ボ")
+                             .replaceAll("ヴ", "ブ");
+        return normazlied;
     }
 
     private List<Sentence> extractSentences(Document document) {
