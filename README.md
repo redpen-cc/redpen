@@ -24,6 +24,7 @@ Features
 - [Plugin system: users can write their extensions with JavaScript](http://blog.redpen.cc/2015/09/08/writing-extension-with-javascript/)
 - [Annotation based error suppression](https://blog.redpen.cc/2016/06/14/introduction-of-annotation-for-suppressing-errors-from-document-checking-tool-redpen/)
 - [Practical REST API and UI](http://redpen.herokuapp.com/)
+
 <p align="center">
    <a href="http://redpen.herokuapp.com/"><img src="logo/redpen-ui.png"/></a>
 </p>
@@ -44,7 +45,9 @@ Tools
 Editor packages
 ---------------
 
-![Image of IntelliJ IDEA plugin](logo/intellij-redpen-image.png "Image of IntelliJ IDEA plugin")
+<p align="center">
+   <a href="http://redpen.herokuapp.com/"><img src="logo/intellij-redpen-image.png"/></a>
+</p>
 
   * Atom
     * [redpen package by griffin-stewie](https://atom.io/packages/redpen)
