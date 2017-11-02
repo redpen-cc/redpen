@@ -46,7 +46,7 @@ Editor packages
 ---------------
 
 <p align="center">
-   <a href="http://redpen.herokuapp.com/"><img src="logo/intellij-redpen-image.png"/></a>
+   <a href="https://plugins.jetbrains.com/plugin/8210-redpen-plugin"><img src="logo/intellij-redpen-image.png"/></a>
 </p>
 
   * Atom
