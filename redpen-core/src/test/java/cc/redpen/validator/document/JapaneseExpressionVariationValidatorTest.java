@@ -79,8 +79,8 @@ final class JapaneseExpressionVariationValidatorTest extends BaseValidatorTest {
     @Test
     void detectSameAlphabecicalReadings() throws RedPenException {
         config = Configuration.builder("ja")
-                .addValidatorConfig(new ValidatorConfiguration(validatorName))
-                .build();
+                         .addValidatorConfig(new ValidatorConfiguration(validatorName))
+                         .build();
 
         Document document = prepareSimpleDocument("このExcelはあのエクセルとは違います。");
 
@@ -88,6 +88,21 @@ final class JapaneseExpressionVariationValidatorTest extends BaseValidatorTest {
         Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
         assertEquals(1, errors.get(document).size());
     }
+
+
+    @Test
+    void detectSameAlphabecicalReadingsInUserDictionary() throws RedPenException {
+        config = Configuration.builder("ja")
+                         .addValidatorConfig(new ValidatorConfiguration(validatorName).addProperty("map", "{svm,サポートベクタマシン}"))
+                         .build();
+
+        Document document = prepareSimpleDocument("このSVMはあのサポートベクタマシンとは違います。");
+
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(singletonList(document));
+        assertEquals(1, errors.get(document).size());
+    }
+
 
     @Test
     void detectNormalizedReadings() throws RedPenException {
