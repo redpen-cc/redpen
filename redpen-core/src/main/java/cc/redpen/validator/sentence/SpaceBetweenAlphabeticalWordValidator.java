@@ -57,8 +57,7 @@ public class SpaceBetweenAlphabeticalWordValidator extends Validator {
             for (char character : sentence.getContent().toCharArray()) {
                 if (notHasWhiteSpaceBeforeLeftParenthesis(prevCharacter, character)) {
                     addLocalizedErrorWithPosition("Before", sentence, idx, idx + 1);
-                } else if (
-                        notHasWhiteSpaceAfterRightParenthesis(prevCharacter, character)) {
+                } else if (notHasWhiteSpaceAfterRightParenthesis(prevCharacter, character)) {
                     addLocalizedErrorWithPosition("After", sentence, idx, idx + 1);
                 }
                 prevCharacter = character;
@@ -80,8 +79,8 @@ public class SpaceBetweenAlphabeticalWordValidator extends Validator {
         return !StringUtils.isBasicLatin(prevCharacter)
                 && getString("skip_before").indexOf(prevCharacter) == -1
                 && prevCharacter != leftParenthesis
+                && prevCharacter != rightParenthesis
                 && prevCharacter != comma
-                && (prevCharacter != rightParenthesis && rightParenthesis != '）') // For handling multi-byte Parenthesis
                 && StringUtils.isBasicLatin(character)
                 && Character.isLetter(character);
     }
@@ -90,7 +89,7 @@ public class SpaceBetweenAlphabeticalWordValidator extends Validator {
         return !StringUtils.isBasicLatin(character)
                 && getString("skip_after").indexOf(character) == -1
                 && character != rightParenthesis
-                && (character != leftParenthesis && leftParenthesis != '（')  // For handling multi-byte Parenthesis
+                && character != leftParenthesis
                 && character != comma
                 && StringUtils.isBasicLatin(prevCharacter)
                 && Character.isLetter(prevCharacter);
