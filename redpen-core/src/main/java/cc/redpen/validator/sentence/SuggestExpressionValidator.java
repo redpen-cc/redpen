@@ -19,7 +19,7 @@ package cc.redpen.validator.sentence;
 
 import cc.redpen.RedPenException;
 import cc.redpen.model.Sentence;
-import cc.redpen.validator.Validator;
+import cc.redpen.validator.KeyValueDictionaryValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,13 +27,12 @@ import java.util.HashMap;
 
 import static cc.redpen.util.StringUtils.isProbablyJapanese;
 import static java.lang.Character.isLetter;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
  * If input sentences contain invalid expressions, this validator
  * returns the errors with corrected expressions.
  */
-public final class SuggestExpressionValidator extends Validator {
+public final class SuggestExpressionValidator extends KeyValueDictionaryValidator {
     private static final Logger LOG = LoggerFactory.getLogger(SuggestExpressionValidator.class);
 
     public SuggestExpressionValidator() {
@@ -56,16 +55,7 @@ public final class SuggestExpressionValidator extends Validator {
 
     @Override
     protected void init() throws RedPenException {
-        //TODO: support default dictionary.
-        String confFile = getString("dict");
-        if (isNotEmpty(confFile)) {
-            LOG.info("Dictionary file is " + confFile);
-            getMap("map").putAll(KEY_VALUE.loadCachedFromFile(findFile(confFile), "SuggestExpressionValidator " +
-                    "dictionary"));
-        }
-        else {
-            LOG.warn("Dictionary file is not specified");
-        }
+        super.init();
     }
 
 }
