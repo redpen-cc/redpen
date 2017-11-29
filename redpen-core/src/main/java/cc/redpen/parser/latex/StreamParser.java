@@ -17,15 +17,11 @@
  */
 package cc.redpen.parser.latex;
 
-import java.util.List;
-import java.util.Deque;
-import java.util.ArrayList;
-import java.util.ArrayDeque;
-import java.util.NoSuchElementException;
-
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Experimental stream mode LaTeX parser prototype.
@@ -320,7 +316,7 @@ public class StreamParser {
                         o.remove(last);
                     }
                     return o;
-                } catch (final ArrayIndexOutOfBoundsException ignore) {
+                } catch (final IndexOutOfBoundsException ignore) {
                     return o;
                 }
             }
