@@ -17,22 +17,8 @@
  */
 package cc.redpen.parser.latex;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.LinkedList;
-
-import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.Deque;
-import java.util.ArrayDeque;
-
-import cc.redpen.RedPenException;
-import cc.redpen.model.Document;
-import static cc.redpen.model.Document.DocumentBuilder;
-import cc.redpen.model.Section;
 import cc.redpen.model.Paragraph;
+import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
 import cc.redpen.parser.LineOffset;
 import cc.redpen.parser.SentenceExtractor;
@@ -43,6 +29,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+
+import static cc.redpen.model.Document.DocumentBuilder;
 
 public class LaTeXProcessor {
     private static final Logger LOG =
@@ -186,7 +174,7 @@ public class LaTeXProcessor {
                     s.getParagraphs().remove(p);
                 }
                 return s;
-            } catch (final ArrayIndexOutOfBoundsException e) {
+            } catch (final IndexOutOfBoundsException e) {
                 return s;
             }
         }
