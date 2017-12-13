@@ -408,6 +408,7 @@ public class ToFileContentSerializer implements Visitor {
         String url = getRefLinkUrl(refLinkNode.referenceKey, linkName);
         // FIXME how to handle url, if linkName include period character?
         // TODO temporary implementation
+        if (candidateSentences.size() == 0) { return; }
         CandidateSentence lastCandidateSentence =
                 candidateSentences.get(candidateSentences.size() - 1);
         if (StringUtils.isNotEmpty(url)) {
