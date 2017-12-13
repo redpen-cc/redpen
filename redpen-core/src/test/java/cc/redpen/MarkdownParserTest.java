@@ -857,6 +857,20 @@ class MarkdownParserTest extends BaseParserTest {
     }
 
     @Test
+    void testReferenceLink() throws Exception {
+        String sampleText =
+                "[![foo](foo)][bar]\n\n" +
+                        "[bar]: bar\n";
+        Configuration conf = Configuration.builder("ja").build();
+        try {
+            createFileContent(sampleText, conf);
+        } catch (Exception e) {
+            fail("Exception is not expected.");
+        }
+    }
+
+
+    @Test
     void testNotExtractNoLabelImage() throws Exception {
         String sampleText = "![](https://aimless.jp/blog/images/2016-09-07-001.png)\n";
         Document doc = createFileContent(sampleText);
