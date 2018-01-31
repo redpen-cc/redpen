@@ -63,4 +63,28 @@ class LineTest {
         line.eraseEnclosure("**", "**", Line.EraseStyle.All);
         assertEquals("  0-0-001: A line ·*·*·w·i·t·h·*·* is good", line.toString());
     }
+
+    @Test
+    void testEraseEnclosureWithPreserveLabel() {
+        String testLine = "A line [[with]] is good";
+        Line line = new TestLine(testLine, 1);
+        line.eraseEnclosure("[[", "]]", Line.EraseStyle.PreserveLabel);
+        assertEquals("  0-0-001: A line ·[·[with·]·] is good", line.toString());
+    }
+
+    @Test
+    void testEraseEnclosureWithPreserveAfterLabel() {
+        String testLine = "A line @<kw>{with} is good";
+        Line line = new TestLine(testLine, 1);
+        line.eraseEnclosure("@<kw>{", "}", Line.EraseStyle.PreserveAfterLabel);
+        assertEquals("  0-0-001: A line ·@·<·k·w·>·{with·} is good", line.toString());
+    }
+
+    @Test
+    void testEraseSegment() {
+        String testLine = "(TM) means trade mark";
+        Line line = new TestLine(testLine, 1);
+        line.erase("(TM)");
+        assertEquals("  0-0-001: ·(·T·M·) means trade mark", line.toString());
+    }
 }
