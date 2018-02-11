@@ -71,6 +71,7 @@ public class RedPenService {
                     RedPen defaultRedPen = new RedPen(configuration);
                     defaultRedPen.validate(emptyDocuments);
                     redPens.put(DEFAULT_LANGUAGE, defaultRedPen);
+                    redPens.put(configuration.getLang(), defaultRedPen);
                 } else {
                     // if config path is not set, fallback to default config path
                     LOG.info("No Config Path set, using default configurations");
