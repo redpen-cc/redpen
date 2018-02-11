@@ -51,7 +51,7 @@ public class RedPenConfigurationResource {
     @Context
     private ServletContext context;
 
-    RedPenService getRedPenService() {
+    RedPenService getRedPenService() throws RedPenException {
         return new RedPenService(context);
     }
 
@@ -127,21 +127,16 @@ public class RedPenConfigurationResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_XML)
     @WinkAPIDescriber.Description("Returns the configuration XML corresponds to the UI")
-    public Response exportConfiguration(JSONObject requestJSON) {
-
+    public Response exportConfiguration(JSONObject requestJSON) throws RedPenException {
         LOG.info("Exporting configuration using JSON request");
-
         RedPen redPen = new RedPenService(context).getRedPenFromJSON(requestJSON);
-
         String result = null;
-
         try(ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             new ConfigurationExporter().export(redPen.getConfiguration(), baos);
             result = new String(baos.toByteArray());
         } catch (IOException e) {
             LOG.error("Exception when exporting configuration", e);
         }
-
         return Response.ok(result, RedPenResource.MIME_TYPE_XML).build();
     }
 }
