@@ -22,6 +22,7 @@ import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
 import cc.redpen.config.*;
 import cc.redpen.model.Document;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,20 +107,9 @@ public class RedPenService {
                 if (config.has("validators")) {
                     JSONObject validators = config.getJSONObject("validators");
                     Iterator keyIter = validators.keys();
-                    while (keyIter.hasNext()) {
-                        String validator = String.valueOf(keyIter.next());
-                        Map<String, String> props = new HashMap<>();
-                        properties.put(validator, props);
-                        JSONObject validatorConfig = validators.getJSONObject(validator);
-                        if ((validatorConfig != null) && validatorConfig.has("properties")) {
-                            JSONObject validatorProps = validatorConfig.getJSONObject("properties");
-                            Iterator propsIter = validatorProps.keys();
-                            while (propsIter.hasNext()) {
-                                String propname = String.valueOf(propsIter.next());
-                                props.put(propname, validatorProps.getString(propname));
-                            }
-                        }
-                    }
+                    appendValidators(properties, validators, keyIter);
+                } else {
+                    LOG.warn("No validators are found in config...");
                 }
             } catch (Exception e) {
                 LOG.error("Exception when processing JSON properties", e);
@@ -134,31 +124,50 @@ public class RedPenService {
                 JSONObject symbols = config.getJSONObject("symbols");
                 Iterator keyIter = symbols.keys();
                 while (keyIter.hasNext()) {
-                    String symbolName = String.valueOf(keyIter.next());
-                    try {
-                        SymbolType symbolType = SymbolType.valueOf(symbolName);
-                        JSONObject symbolConfig = symbols.getJSONObject(symbolName);
-                        Symbol originalSymbol = redPen.getConfiguration().getSymbolTable().getSymbol(symbolType);
-                        if ((originalSymbol != null) && (symbolConfig != null) && symbolConfig.has("value")) {
-                            String value = symbolConfig.has("value") ? symbolConfig.getString("value") : String.valueOf(originalSymbol.getValue());
-                            boolean spaceBefore = symbolConfig.has("before_space") ? symbolConfig.getBoolean("before_space") : originalSymbol.isNeedBeforeSpace();
-                            boolean spaceAfter = symbolConfig.has("after_space") ? symbolConfig.getBoolean("after_space") : originalSymbol.isNeedAfterSpace();
-                            String invalidChars = symbolConfig.has("invalid_chars") ? symbolConfig.getString("invalid_chars") : String.valueOf(originalSymbol.getInvalidChars());
-                            if ((value != null) && !value.isEmpty()) {
-                                redPen.getConfiguration().getSymbolTable().overrideSymbol(new Symbol(symbolType, value.charAt(0), invalidChars, spaceBefore, spaceAfter));
-                            }
-                        }
-
-                    } catch (IllegalArgumentException iae) {
-                        LOG.error("Ignoring unknown SymbolType " + symbolName);
-                    }
+                    registerSymbolSettings(redPen, symbols, keyIter);
                 }
             } catch (Exception e) {
                 LOG.error("Exception when processing JSON symbol overrides", e);
             }
         }
-
         return redPen;
+    }
+
+    public void registerSymbolSettings(RedPen redPen, JSONObject symbols, Iterator keyIter) throws JSONException {
+        String symbolName = String.valueOf(keyIter.next());
+        try {
+            SymbolType symbolType = SymbolType.valueOf(symbolName);
+            JSONObject symbolConfig = symbols.getJSONObject(symbolName);
+            Symbol originalSymbol = redPen.getConfiguration().getSymbolTable().getSymbol(symbolType);
+            if ((originalSymbol != null) && (symbolConfig != null) && symbolConfig.has("value")) {
+                String value = symbolConfig.has("value") ? symbolConfig.getString("value") : String.valueOf(originalSymbol.getValue());
+                boolean spaceBefore = symbolConfig.has("before_space") ? symbolConfig.getBoolean("before_space") : originalSymbol.isNeedBeforeSpace();
+                boolean spaceAfter = symbolConfig.has("after_space") ? symbolConfig.getBoolean("after_space") : originalSymbol.isNeedAfterSpace();
+                String invalidChars = symbolConfig.has("invalid_chars") ? symbolConfig.getString("invalid_chars") : String.valueOf(originalSymbol.getInvalidChars());
+                if ((value != null) && !value.isEmpty()) {
+                    redPen.getConfiguration().getSymbolTable().overrideSymbol(new Symbol(symbolType, value.charAt(0), invalidChars, spaceBefore, spaceAfter));
+                }
+            }
+        } catch (IllegalArgumentException iae) {
+            LOG.error("Ignoring unknown SymbolType " + symbolName);
+        }
+    }
+
+    public void appendValidators(Map<String, Map<String, String>> properties, JSONObject validators, Iterator keyIter) throws JSONException {
+        while (keyIter.hasNext()) {
+            String validator = String.valueOf(keyIter.next());
+            Map<String, String> props = new HashMap<>();
+            properties.put(validator, props);
+            JSONObject validatorConfig = validators.getJSONObject(validator);
+            if ((validatorConfig != null) && validatorConfig.has("properties")) {
+                JSONObject validatorProps = validatorConfig.getJSONObject("properties");
+                Iterator propsIter = validatorProps.keys();
+                while (propsIter.hasNext()) {
+                    String propname = String.valueOf(propsIter.next());
+                    props.put(propname, validatorProps.getString(propname));
+                }
+            }
+        }
     }
 
     /**
