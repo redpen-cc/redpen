@@ -67,6 +67,7 @@ public class RedPenService {
                             configuration = new ConfigurationLoader().secure().load(new File(configPath));
                         }
                         RedPen defaultRedPen = new RedPen(configuration);
+                        defaultRedPen.validate(emptyDocuments);
                         redPens.put(DEFAULT_LANGUAGE, defaultRedPen);
                     } else {
                         // if config path is not set, fallback to default config path
