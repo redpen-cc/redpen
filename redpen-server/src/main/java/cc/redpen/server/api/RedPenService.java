@@ -45,44 +45,41 @@ public class RedPenService {
      *
      * @param context the servlet context
      */
-    public RedPenService(ServletContext context) {
+    public RedPenService(ServletContext context) throws RedPenException {
+        if (!redPens.isEmpty()) {
+            LOG.debug("Default RedPen objects are found...");
+            return;
+        }
         synchronized (redPens) {
-            if (!redPens.isEmpty()) {
-                return;
-            }
             LOG.info("Creating RedPen instances");
-            try {
-                List<Document> emptyDocuments = new ArrayList<>();
-                emptyDocuments.add(Document.builder().build());
-                for (String key : Configuration.getDefaultConfigKeys()) {
-                    RedPen redpen = new RedPen(Configuration.builder(key).secure().addAvailableValidatorConfigs().build());
-                    redpen.validate(emptyDocuments);
-                    redPens.put(key, redpen);
-                }
-
-                String configPath = context != null ? context.getInitParameter("redpen.conf.path") : null;
-                if (configPath != null) {
-                    LOG.info("Config Path is set to \"{}\"", configPath);
-                    Configuration configuration;
-                    try {
-                        configuration = new ConfigurationLoader().secure().loadFromResource(configPath);
-                    } catch (RedPenException rpe) {
-                        configuration = new ConfigurationLoader().secure().load(new File(configPath));
-                    }
-                    RedPen defaultRedPen = new RedPen(configuration);
-                    defaultRedPen.validate(emptyDocuments);
-                    redPens.put(DEFAULT_LANGUAGE, defaultRedPen);
-                    redPens.put(configuration.getLang(), defaultRedPen);
-                } else {
-                    // if config path is not set, fallback to default config path
-                    LOG.info("No Config Path set, using default configurations");
-                    redPens.put(DEFAULT_LANGUAGE, redPens.get("en"));
-                }
-                LOG.info("Document Validator Server is running.");
-            } catch (RedPenException e) {
-                LOG.error("Unable to initialize RedPen", e);
-                throw new ExceptionInInitializerError(e);
+            List<Document> emptyDocuments = new ArrayList<>();
+            emptyDocuments.add(Document.builder().build());
+            for (String key : Configuration.getDefaultConfigKeys()) {
+                RedPen redpen = new RedPen(Configuration.builder(key).secure().addAvailableValidatorConfigs().build());
+                redpen.validate(emptyDocuments);
+                redPens.put(key, redpen);
             }
+
+
+            String configPath = context != null ? context.getInitParameter("redpen.conf.path") : null;
+            if (configPath != null) {
+                LOG.info("Config Path is set to \"{}\"", configPath);
+                Configuration configuration;
+                try {
+                    configuration = new ConfigurationLoader().secure().loadFromResource(configPath);
+                } catch (RedPenException rpe) {
+                    configuration = new ConfigurationLoader().secure().load(new File(configPath));
+                }
+                RedPen defaultRedPen = new RedPen(configuration);
+                defaultRedPen.validate(emptyDocuments);
+                redPens.put(DEFAULT_LANGUAGE, defaultRedPen);
+                redPens.put(configuration.getLang(), defaultRedPen);
+            } else {
+                // if config path is not set, fallback to default config path
+                LOG.info("No Config Path set, using default configurations");
+                redPens.put(DEFAULT_LANGUAGE, redPens.get("en"));
+            }
+            LOG.info("Document Validator Server is running.");
         }
     }
 
@@ -133,7 +130,7 @@ public class RedPenService {
         return redPen;
     }
 
-    public void registerSymbolSettings(RedPen redPen, JSONObject symbols, Iterator keyIter) throws JSONException {
+    private void registerSymbolSettings(RedPen redPen, JSONObject symbols, Iterator keyIter) throws JSONException {
         String symbolName = String.valueOf(keyIter.next());
         try {
             SymbolType symbolType = SymbolType.valueOf(symbolName);
@@ -153,7 +150,7 @@ public class RedPenService {
         }
     }
 
-    public void appendValidators(Map<String, Map<String, String>> properties, JSONObject validators, Iterator keyIter) throws JSONException {
+    private void appendValidators(Map<String, Map<String, String>> properties, JSONObject validators, Iterator keyIter) throws JSONException {
         while (keyIter.hasNext()) {
             String validator = String.valueOf(keyIter.next());
             Map<String, String> props = new HashMap<>();
