@@ -46,39 +46,40 @@ public class RedPenService {
      */
     public RedPenService(ServletContext context) {
         synchronized (redPens) {
-            if (redPens.isEmpty()) {
-                LOG.info("Creating RedPen instances");
-                try {
-                    List<Document> emptyDocuments = new ArrayList<>();
-                    emptyDocuments.add(Document.builder().build());
-                    for (String key : Configuration.getDefaultConfigKeys()) {
-                        RedPen redpen = new RedPen(Configuration.builder(key).secure().addAvailableValidatorConfigs().build());
-                        redpen.validate(emptyDocuments);
-                        redPens.put(key, redpen);
-                    }
-
-                    String configPath = context != null ? context.getInitParameter("redpen.conf.path") : null;
-                    if (configPath != null) {
-                        LOG.info("Config Path is set to \"{}\"", configPath);
-                        Configuration configuration;
-                        try {
-                            configuration = new ConfigurationLoader().secure().loadFromResource(configPath);
-                        } catch (RedPenException rpe) {
-                            configuration = new ConfigurationLoader().secure().load(new File(configPath));
-                        }
-                        RedPen defaultRedPen = new RedPen(configuration);
-                        defaultRedPen.validate(emptyDocuments);
-                        redPens.put(DEFAULT_LANGUAGE, defaultRedPen);
-                    } else {
-                        // if config path is not set, fallback to default config path
-                        LOG.info("No Config Path set, using default configurations");
-                        redPens.put(DEFAULT_LANGUAGE, redPens.get("en"));
-                    }
-                    LOG.info("Document Validator Server is running.");
-                } catch (RedPenException e) {
-                    LOG.error("Unable to initialize RedPen", e);
-                    throw new ExceptionInInitializerError(e);
+            if (!redPens.isEmpty()) {
+                return;
+            }
+            LOG.info("Creating RedPen instances");
+            try {
+                List<Document> emptyDocuments = new ArrayList<>();
+                emptyDocuments.add(Document.builder().build());
+                for (String key : Configuration.getDefaultConfigKeys()) {
+                    RedPen redpen = new RedPen(Configuration.builder(key).secure().addAvailableValidatorConfigs().build());
+                    redpen.validate(emptyDocuments);
+                    redPens.put(key, redpen);
                 }
+
+                String configPath = context != null ? context.getInitParameter("redpen.conf.path") : null;
+                if (configPath != null) {
+                    LOG.info("Config Path is set to \"{}\"", configPath);
+                    Configuration configuration;
+                    try {
+                        configuration = new ConfigurationLoader().secure().loadFromResource(configPath);
+                    } catch (RedPenException rpe) {
+                        configuration = new ConfigurationLoader().secure().load(new File(configPath));
+                    }
+                    RedPen defaultRedPen = new RedPen(configuration);
+                    defaultRedPen.validate(emptyDocuments);
+                    redPens.put(DEFAULT_LANGUAGE, defaultRedPen);
+                } else {
+                    // if config path is not set, fallback to default config path
+                    LOG.info("No Config Path set, using default configurations");
+                    redPens.put(DEFAULT_LANGUAGE, redPens.get("en"));
+                }
+                LOG.info("Document Validator Server is running.");
+            } catch (RedPenException e) {
+                LOG.error("Unable to initialize RedPen", e);
+                throw new ExceptionInInitializerError(e);
             }
         }
     }
