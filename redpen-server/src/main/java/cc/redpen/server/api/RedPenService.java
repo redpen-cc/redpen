@@ -60,7 +60,6 @@ public class RedPenService {
                 redPens.put(key, redpen);
             }
 
-
             String configPath = context != null ? context.getInitParameter("redpen.conf.path") : null;
             if (configPath != null) {
                 LOG.info("Config Path is set to \"{}\"", configPath);
@@ -92,31 +91,33 @@ public class RedPenService {
      * @param requestJSON the JSON contains configurations
      * @return a configured redpen instance
      */
-    public RedPen getRedPenFromJSON(JSONObject requestJSON) {
-        String lang = "en";
-
+    public RedPen getRedPenFromJSON(JSONObject requestJSON) throws RedPenException {
+        String lang;
         Map<String, Map<String, String>> properties = new HashMap<>();
         JSONObject config = null;
-        if (requestJSON.has("config")) {
-            try {
-                config = requestJSON.getJSONObject("config");
-                lang = getOrDefault(config, "lang", "en");
-                if (config.has("validators")) {
-                    JSONObject validators = config.getJSONObject("validators");
-                    Iterator keyIter = validators.keys();
-                    appendValidators(properties, validators, keyIter);
-                } else {
-                    LOG.warn("No validators are found in config...");
-                }
-            } catch (Exception e) {
-                LOG.error("Exception when processing JSON properties", e);
+        if (!requestJSON.has("config")) {
+            throw new RedPenException("No config block found");
+        }
+
+        try {
+            config = requestJSON.getJSONObject("config");
+            lang = getOrDefault(config, "lang", "en");
+            if (config.has("validators")) {
+                JSONObject validators = config.getJSONObject("validators");
+                Iterator keyIter = validators.keys();
+                appendValidators(properties, validators, keyIter);
+            } else {
+                LOG.warn("No validators are found in config...");
             }
+        } catch (Exception e) {
+            LOG.error("Exception when processing JSON properties...");
+            throw new RedPenException(e);
         }
 
         RedPen redPen = this.getRedPen(lang, properties);
 
         // override any symbols
-        if ((config != null) && config.has("symbols")) {
+        if (config.has("symbols")) {
             try {
                 JSONObject symbols = config.getJSONObject("symbols");
                 Iterator keyIter = symbols.keys();
@@ -124,7 +125,8 @@ public class RedPenService {
                     registerSymbolSettings(redPen, symbols, keyIter);
                 }
             } catch (Exception e) {
-                LOG.error("Exception when processing JSON symbol overrides", e);
+                LOG.error("Exception when processing JSON symbol overrides");
+                throw new RedPenException(e);
             }
         }
         return redPen;
