@@ -46,6 +46,13 @@ public final class Main {
 
     private static final int DEFAULT_LIMIT = 1;
 
+    private static final String HELP_HEADER = "\nValidate input documents with specified configuration settings.\n\nOptions:\n";
+
+    private static final String HELP_FOOTER = "\n\nExample:\n\n" +
+                                              "$redpen -c redpen-config.xml input.md\n\n" +
+                                              "Note:\n" +
+                                              "Setting files can be generated in http://redpen.herokuapp.com/\n";
+
     private Main() {
         super();
     }
@@ -279,7 +286,7 @@ public final class Main {
         HelpFormatter formatter = new HelpFormatter();
         formatter.setWidth(100);
         PrintWriter pw = new PrintWriter(System.err);
-        formatter.printHelp(pw, 80, PROGRAM + " [Options] [<INPUT FILE>]", null, opt, 1, 3, "");
+        formatter.printHelp(pw, 80, PROGRAM + " [Options] [<INPUT FILE>]", HELP_HEADER, opt, 1, 3, HELP_FOOTER);
         pw.flush();
     }
 
