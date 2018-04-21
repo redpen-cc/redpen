@@ -65,28 +65,29 @@ public class UnexpandedAcronymValidator extends SpellingDictionaryValidator {
         List<String> sequence = new ArrayList<>();
         for (TokenElement token : sentence.getTokens()) {
             String word = token.getSurface();
-            if (!word.trim().isEmpty()) {
-                int minAcronymLength = getInt("min_acronym_length");
-                if (isAllCapitals(word)) {
-                    if ((word.length() >= minAcronymLength)
+            if (word.trim().isEmpty()) {
+                continue;
+            }
+            int minAcronymLength = getInt("min_acronym_length");
+            if (isAllCapitals(word)) {
+                if ((word.length() >= minAcronymLength)
                             && !inDictionary(word) && !inDictionary(word.toLowerCase())) {
-                        contractedAcronyms.add(word);
-                    }
-                } else if (isCapitalized(word)) {
-                    sequence.add(word);
-                } else if (!acronymJoiningWords.contains(word) && !sequence.isEmpty()) {
-                    String acronym = "";
-                    for (String s : sequence) {
-                        acronym += s.charAt(0);
-                    }
-                    if (acronym.length() >= minAcronymLength) {
-                        expandedAcronyms.add(acronym);
-                        if (acronym.length() >= minAcronymLength + 1) {
-                            expandedAcronyms.add(acronym.substring(1));
-                        }
-                    }
-                    sequence.clear();
+                    contractedAcronyms.add(word);
                 }
+            } else if (isCapitalized(word)) {
+                sequence.add(word);
+            } else if (!acronymJoiningWords.contains(word) && !sequence.isEmpty()) {
+                String acronym = "";
+                for (String s : sequence) {
+                    acronym += s.charAt(0);
+                }
+                if (acronym.length() >= minAcronymLength) {
+                    expandedAcronyms.add(acronym);
+                    if (acronym.length() >= minAcronymLength + 1) {
+                        expandedAcronyms.add(acronym.substring(1));
+                    }
+                }
+                sequence.clear();
             }
         }
     }
