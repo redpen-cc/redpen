@@ -34,12 +34,13 @@ import static java.util.Collections.singletonList;
  */
 public class UnexpandedAcronymValidator extends SpellingDictionaryValidator {
 
+    private int minAcronymLength;
     // a set of small words used to join acronyms, such as 'of', 'the' and 'for'
     private Set<String> acronymJoiningWords = new HashSet<>();
     // the set of acronyms we've deduced from sequences of capitalized words
     private Set<String> expandedAcronyms = new HashSet<>();
     // the set of acronyms we found literally within the document
-    private Set<String> contractedAcronyms = new HashSet<>();
+    private Map<String, Sentence> contractedAcronyms = new HashMap<>();
 
     public UnexpandedAcronymValidator() {
         super();
@@ -59,34 +60,35 @@ public class UnexpandedAcronymValidator extends SpellingDictionaryValidator {
         acronymJoiningWords.add("in");
         acronymJoiningWords.add("and");
         acronymJoiningWords.add("&");
+        this.minAcronymLength = getInt("min_acronym_length");
     }
 
     private void processSentence(Sentence sentence) {
         List<String> sequence = new ArrayList<>();
         for (TokenElement token : sentence.getTokens()) {
             String word = token.getSurface();
-            if (!word.trim().isEmpty()) {
-                int minAcronymLength = getInt("min_acronym_length");
-                if (isAllCapitals(word)) {
-                    if ((word.length() >= minAcronymLength)
+            if (word.trim().isEmpty()) {
+                continue;
+            }
+            if (isAllCapitals(word)) {
+                if ((word.length() >= minAcronymLength)
                             && !inDictionary(word) && !inDictionary(word.toLowerCase())) {
-                        contractedAcronyms.add(word);
-                    }
-                } else if (isCapitalized(word)) {
-                    sequence.add(word);
-                } else if (!acronymJoiningWords.contains(word) && !sequence.isEmpty()) {
-                    String acronym = "";
-                    for (String s : sequence) {
-                        acronym += s.charAt(0);
-                    }
-                    if (acronym.length() >= minAcronymLength) {
-                        expandedAcronyms.add(acronym);
-                        if (acronym.length() >= minAcronymLength + 1) {
-                            expandedAcronyms.add(acronym.substring(1));
-                        }
-                    }
-                    sequence.clear();
+                    contractedAcronyms.put(word, sentence);
                 }
+            } else if (isCapitalized(word)) {
+                sequence.add(word);
+            } else if (!acronymJoiningWords.contains(word) && !sequence.isEmpty()) {
+                String acronym = "";
+                for (String s : sequence) {
+                    acronym += s.charAt(0);
+                }
+                if (acronym.length() >= minAcronymLength) {
+                    expandedAcronyms.add(acronym);
+                    if (acronym.length() >= minAcronymLength + 1) {
+                        expandedAcronyms.add(acronym.substring(1));
+                    }
+                }
+                sequence.clear();
             }
         }
     }
@@ -130,21 +132,21 @@ public class UnexpandedAcronymValidator extends SpellingDictionaryValidator {
 
     @Override
     public void validate(Document document) {
-        // process all sentences and remember the last sentence
-        Sentence lastSentence = null;
+        // if the contracted acronyms aren't in the expanded acronyms, generate an error
+        for (String acronym : contractedAcronyms.keySet()) {
+            if (!expandedAcronyms.contains(acronym)) {
+                addLocalizedError("UnexpandedAcronym", contractedAcronyms.get(acronym), acronym);
+            }
+        }
+    }
+
+    @Override
+    public void preValidate(Document document) {
         for (int i = 0; i < document.size(); i++) {
             for (Paragraph para : document.getSection(i).getParagraphs()) {
                 for (Sentence sentence : para.getSentences()) {
                     processSentence(sentence);
-                    lastSentence = sentence;
                 }
-            }
-        }
-
-        // if the contracted acronyms aren't in the expanded acronyms, generate an error
-        for (String acronym : contractedAcronyms) {
-            if (!expandedAcronyms.contains(acronym)) {
-                addLocalizedError("UnexpandedAcronym", lastSentence, acronym);
             }
         }
     }

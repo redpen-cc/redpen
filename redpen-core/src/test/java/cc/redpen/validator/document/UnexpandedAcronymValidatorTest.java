@@ -17,6 +17,7 @@
  */
 package cc.redpen.validator.document;
 
+import cc.redpen.RedPen;
 import cc.redpen.RedPenException;
 import cc.redpen.config.Configuration;
 import cc.redpen.config.ValidatorConfiguration;
@@ -24,12 +25,11 @@ import cc.redpen.model.Document;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.WhiteSpaceTokenizer;
 import cc.redpen.validator.ValidationError;
-import cc.redpen.validator.Validator;
-import cc.redpen.validator.ValidatorFactory;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -37,10 +37,8 @@ class UnexpandedAcronymValidatorTest {
 
     @Test
     void testDocument() throws RedPenException {
-        UnexpandedAcronymValidator validator = (UnexpandedAcronymValidator) ValidatorFactory.getInstance("UnexpandedAcronym");
-
-        Document document =
-                Document.builder(new WhiteSpaceTokenizer())
+        List<Document> documents = new ArrayList<>();
+        documents.add(Document.builder(new WhiteSpaceTokenizer())
                         .addSection(1)
                         .addParagraph()
                         .addSentence(new Sentence("When it comes to the Subject Of Cake (the sweet and delicious baked delicacy), one should" +
@@ -50,17 +48,22 @@ class UnexpandedAcronymValidatorTest {
                         .addSentence(new Sentence("The acronym CPU stands for Central Processing Unit (CPU).", 3))
                         .addSentence(new Sentence("The acronym AAAS is the American Association for the Advancement of Science.", 4))
                         .addSentence(new Sentence("ABC can stand form the Australian Broadcasting Commission, but HELLO is just a capitalized word.", 5))
-                        .build();
+                        .build());
 
-        List<ValidationError> errors = new ArrayList<>();
-        validator.setErrorList(errors);
-        validator.validate(document);
+        Configuration config = Configuration.builder()
+                                       .addValidatorConfig(new ValidatorConfiguration("UnexpandedAcronym"))
+                                       .build();
+
+        RedPen redPen = new RedPen(config);
+        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
         assertEquals(1, errors.size());
+        assertEquals(2, errors.get(0).getLineNumber());
     }
 
     @Test
     void testSimpleSentence() throws Exception {
-        List<Document> documents = new ArrayList<>();documents.add(
+        List<Document> documents = new ArrayList<>();
+        documents.add(
                 Document.builder()
                         .addSection(1)
                         .addParagraph()
@@ -69,14 +72,12 @@ class UnexpandedAcronymValidatorTest {
 
         Configuration config;
         config = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration("UnexpandedAcronym"))
-                .build();
-        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
+                         .addValidatorConfig(new ValidatorConfiguration("UnexpandedAcronym"))
+                         .build();
 
-        List<ValidationError> errors = new ArrayList<>();
-        validator.setErrorList(errors);
-        validator.validate(documents.get(0));
-        assertEquals(1, errors.size());
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        assertEquals(1, errors.get(documents.get(0)).size());
     }
 
     @Test
@@ -91,11 +92,9 @@ class UnexpandedAcronymValidatorTest {
         Configuration config = Configuration.builder()
                 .addValidatorConfig(new ValidatorConfiguration("UnexpandedAcronym").addProperty("list", "JSON"))
                 .build();
-        Validator validator = ValidatorFactory.getInstance(config.getValidatorConfigs().get(0), config);
 
-        List<ValidationError> errors = new ArrayList<>();
-        validator.setErrorList(errors);
-        validator.validate(documents.get(0).getLastSection().getParagraph(0).getSentence(0));
-        assertEquals(0, errors.size());
+        RedPen redPen = new RedPen(config);
+        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
+        assertEquals(0, errors.get(documents.get(0)).size());
     }
 }
