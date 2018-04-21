@@ -54,6 +54,7 @@ class UnexpandedAcronymValidatorTest {
 
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
+        validator.preValidate(document);
         validator.validate(document);
         assertEquals(1, errors.size());
     }
@@ -75,6 +76,7 @@ class UnexpandedAcronymValidatorTest {
 
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
+        validator.preValidate(documents.get(0));
         validator.validate(documents.get(0));
         assertEquals(1, errors.size());
     }
@@ -95,6 +97,7 @@ class UnexpandedAcronymValidatorTest {
 
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
+        validator.preValidate(documents.get(0));
         validator.validate(documents.get(0).getLastSection().getParagraph(0).getSentence(0));
         assertEquals(0, errors.size());
     }

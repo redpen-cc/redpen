@@ -132,21 +132,25 @@ public class UnexpandedAcronymValidator extends SpellingDictionaryValidator {
 
     @Override
     public void validate(Document document) {
-        // process all sentences and remember the last sentence
-        Sentence lastSentence = null;
-        for (int i = 0; i < document.size(); i++) {
-            for (Paragraph para : document.getSection(i).getParagraphs()) {
-                for (Sentence sentence : para.getSentences()) {
-                    processSentence(sentence);
-                    lastSentence = sentence;
-                }
-            }
-        }
-
+        List<Paragraph> paragraphs = document.getLastSection().getParagraphs();
+        if (paragraphs.size() == 0) { return; }
+        Paragraph lastParagraph = paragraphs.get(paragraphs.size()-1);
+        Sentence lastSentence = lastParagraph.getSentence(lastParagraph.getNumberOfSentences()-1);
         // if the contracted acronyms aren't in the expanded acronyms, generate an error
         for (String acronym : contractedAcronyms) {
             if (!expandedAcronyms.contains(acronym)) {
                 addLocalizedError("UnexpandedAcronym", lastSentence, acronym);
+            }
+        }
+    }
+
+    @Override
+    public void preValidate(Document document) {
+        for (int i = 0; i < document.size(); i++) {
+            for (Paragraph para : document.getSection(i).getParagraphs()) {
+                for (Sentence sentence : para.getSentences()) {
+                    processSentence(sentence);
+                }
             }
         }
     }
