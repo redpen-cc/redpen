@@ -20,6 +20,7 @@ package cc.redpen.validator.document;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
 import cc.redpen.model.Paragraph;
+import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.validator.sentence.SpellingDictionaryValidator;
@@ -132,8 +133,10 @@ public class UnexpandedAcronymValidator extends SpellingDictionaryValidator {
 
     @Override
     public void validate(Document document) {
-        List<Paragraph> paragraphs = document.getLastSection().getParagraphs();
-        if (paragraphs.size() == 0) { return; }
+        Section lastSection = document.getLastSection();
+        if (lastSection == null) { return; }
+        List<Paragraph> paragraphs =  lastSection.getParagraphs();
+        if (paragraphs == null && paragraphs.size() == 0) { return; }
         Paragraph lastParagraph = paragraphs.get(paragraphs.size()-1);
         Sentence lastSentence = lastParagraph.getSentence(lastParagraph.getNumberOfSentences()-1);
         // if the contracted acronyms aren't in the expanded acronyms, generate an error
