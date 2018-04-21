@@ -55,13 +55,15 @@ class UnexpandedAcronymValidatorTest {
                                        .build();
 
         RedPen redPen = new RedPen(config);
-        Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        assertEquals(1, errors.get(documents.get(0)).size());
+        List<ValidationError> errors = redPen.validate(documents).get(documents.get(0));
+        assertEquals(1, errors.size());
+        assertEquals(2, errors.get(0).getLineNumber());
     }
 
     @Test
     void testSimpleSentence() throws Exception {
-        List<Document> documents = new ArrayList<>();documents.add(
+        List<Document> documents = new ArrayList<>();
+        documents.add(
                 Document.builder()
                         .addSection(1)
                         .addParagraph()
@@ -70,8 +72,8 @@ class UnexpandedAcronymValidatorTest {
 
         Configuration config;
         config = Configuration.builder()
-                .addValidatorConfig(new ValidatorConfiguration("UnexpandedAcronym"))
-                .build();
+                         .addValidatorConfig(new ValidatorConfiguration("UnexpandedAcronym"))
+                         .build();
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
