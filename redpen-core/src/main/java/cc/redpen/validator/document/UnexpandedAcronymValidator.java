@@ -34,6 +34,7 @@ import static java.util.Collections.singletonList;
  */
 public class UnexpandedAcronymValidator extends SpellingDictionaryValidator {
 
+    private int minAcronymLength;
     // a set of small words used to join acronyms, such as 'of', 'the' and 'for'
     private Set<String> acronymJoiningWords = new HashSet<>();
     // the set of acronyms we've deduced from sequences of capitalized words
@@ -59,6 +60,7 @@ public class UnexpandedAcronymValidator extends SpellingDictionaryValidator {
         acronymJoiningWords.add("in");
         acronymJoiningWords.add("and");
         acronymJoiningWords.add("&");
+        this.minAcronymLength = getInt("min_acronym_length");
     }
 
     private void processSentence(Sentence sentence) {
@@ -68,7 +70,6 @@ public class UnexpandedAcronymValidator extends SpellingDictionaryValidator {
             if (word.trim().isEmpty()) {
                 continue;
             }
-            int minAcronymLength = getInt("min_acronym_length");
             if (isAllCapitals(word)) {
                 if ((word.length() >= minAcronymLength)
                             && !inDictionary(word) && !inDictionary(word.toLowerCase())) {
