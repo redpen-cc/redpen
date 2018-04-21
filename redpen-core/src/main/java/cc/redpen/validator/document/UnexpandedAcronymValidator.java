@@ -20,7 +20,6 @@ package cc.redpen.validator.document;
 import cc.redpen.RedPenException;
 import cc.redpen.model.Document;
 import cc.redpen.model.Paragraph;
-import cc.redpen.model.Section;
 import cc.redpen.model.Sentence;
 import cc.redpen.tokenizer.TokenElement;
 import cc.redpen.validator.sentence.SpellingDictionaryValidator;
@@ -41,7 +40,7 @@ public class UnexpandedAcronymValidator extends SpellingDictionaryValidator {
     // the set of acronyms we've deduced from sequences of capitalized words
     private Set<String> expandedAcronyms = new HashSet<>();
     // the set of acronyms we found literally within the document
-    private Set<String> contractedAcronyms = new HashSet<>();
+    private Map<String, Sentence> contractedAcronyms = new HashMap<>();
 
     public UnexpandedAcronymValidator() {
         super();
@@ -74,7 +73,7 @@ public class UnexpandedAcronymValidator extends SpellingDictionaryValidator {
             if (isAllCapitals(word)) {
                 if ((word.length() >= minAcronymLength)
                             && !inDictionary(word) && !inDictionary(word.toLowerCase())) {
-                    contractedAcronyms.add(word);
+                    contractedAcronyms.put(word, sentence);
                 }
             } else if (isCapitalized(word)) {
                 sequence.add(word);
@@ -133,16 +132,10 @@ public class UnexpandedAcronymValidator extends SpellingDictionaryValidator {
 
     @Override
     public void validate(Document document) {
-        Section lastSection = document.getLastSection();
-        if (lastSection == null) { return; }
-        List<Paragraph> paragraphs =  lastSection.getParagraphs();
-        if (paragraphs == null && paragraphs.size() == 0) { return; }
-        Paragraph lastParagraph = paragraphs.get(paragraphs.size()-1);
-        Sentence lastSentence = lastParagraph.getSentence(lastParagraph.getNumberOfSentences()-1);
         // if the contracted acronyms aren't in the expanded acronyms, generate an error
-        for (String acronym : contractedAcronyms) {
+        for (String acronym : contractedAcronyms.keySet()) {
             if (!expandedAcronyms.contains(acronym)) {
-                addLocalizedError("UnexpandedAcronym", lastSentence, acronym);
+                addLocalizedError("UnexpandedAcronym", contractedAcronyms.get(acronym), acronym);
             }
         }
     }
