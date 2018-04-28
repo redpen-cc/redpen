@@ -100,7 +100,7 @@ class KatakanaEndHyphenValidatorTest {
     }
 
     @Test
-    void testSentenceBeginningWithKatakanaWithHypen() {
+    void testSentenceBeginningWithKatakanaWithHyphen() {
         Sentence str = new Sentence("コンピューターが壊れた。", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
@@ -109,7 +109,7 @@ class KatakanaEndHyphenValidatorTest {
     }
 
     @Test
-    void testSentenceBeginningWithKatakanaWithoutHypen() {
+    void testSentenceBeginningWithKatakanaWithoutHyphen() {
         Sentence str = new Sentence("コンピュータが壊れた。", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
@@ -118,7 +118,7 @@ class KatakanaEndHyphenValidatorTest {
     }
 
     @Test
-    void testSentenceContainKatakanaWithHypen() {
+    void testSentenceContainKatakanaWithHyphen() {
         Sentence str = new Sentence("僕のコンピューターが壊れた。", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
@@ -127,7 +127,7 @@ class KatakanaEndHyphenValidatorTest {
     }
 
     @Test
-    void testSentenceContainKatakanaWitouthHypen() {
+    void testSentenceContainKatakanaWitouthHyphen() {
         Sentence str = new Sentence("僕のコンピュータが壊れた。", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
@@ -136,7 +136,7 @@ class KatakanaEndHyphenValidatorTest {
     }
 
     @Test
-    void testSentenceEndingWithKatakanaWithHypen() {
+    void testSentenceEndingWithKatakanaWithHyphen() {
         Sentence str = new Sentence("僕のコンピューター", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);
@@ -145,7 +145,7 @@ class KatakanaEndHyphenValidatorTest {
     }
 
     @Test
-    void testSentenceEndingWithKatakanaWithoutHypen() {
+    void testSentenceEndingWithKatakanaWithoutHyphen() {
         Sentence str = new Sentence("僕のコンピュータ", 0);
         List<ValidationError> errors = new ArrayList<>();
         validator.setErrorList(errors);

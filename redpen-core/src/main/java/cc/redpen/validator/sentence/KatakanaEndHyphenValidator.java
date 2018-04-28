@@ -31,7 +31,7 @@ import static java.util.Collections.singletonList;
  * Validate the end hyphens of Katakana words in Japanese documents.
  * Japanese Katakana words have variations in end hyphen.
  * For example, "computer" is written in Katakana by
- * "コンピュータ (without hyphen) ", and "コンピューター (with hypen) ".
+ * "コンピュータ (without hyphen) ", and "コンピューター (with hyphen) ".
  * This validator validate if Katakana words ending format is match
  * the predefined standard. See JIS Z8301, G.6.2.2 b) G.3.
  * <p>
@@ -48,7 +48,7 @@ import static java.util.Collections.singletonList;
  */
 public final class KatakanaEndHyphenValidator extends DictionaryValidator {
     /**
-     * Default Katakana limit length without hypen.
+     * Default Katakana limit length without hyphen.
      */
     private static final int DEFAULT_KATAKANA_LIMIT_LENGTH = 3;
     /**
