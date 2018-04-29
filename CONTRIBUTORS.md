@@ -21,3 +21,4 @@
 * nmurakami
 * taisa831
 * Tomoko Uchida
+* sankichi92
