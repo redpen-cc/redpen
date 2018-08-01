@@ -264,7 +264,7 @@ public final class Main {
             case "review":
                 return "review";
             case "properties":
-                return "propery";
+                return "properties";
             case "rst":
             case "rest":
                 return "rest";
