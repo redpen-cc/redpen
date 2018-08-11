@@ -262,6 +262,25 @@ class ReSTParserTest {
     }
 
     @Test
+    void testNewLineStyle() {
+        String sampleText = "Before directive.\n";
+        sampleText += "| This is is a sentence.";
+        sampleText += "| this is is another sentence.";
+        Document doc = createFileContent(sampleText);
+        assertNotNull(doc, "doc is null");
+        assertEquals(1, doc.size());
+
+        Section section = doc.getSection(0);
+        assertEquals(1, section.getParagraphs().size());
+        assertEquals(1, section.getParagraph(3).getNumberOfSentences());
+        assertEquals("Before directive.", section.getParagraph(0).getSentence(0).getContent());
+        assertEquals(1, section.getParagraph(1).getNumberOfSentences());
+        assertEquals("This is is a sentence", section.getParagraph(1).getSentence(0).getContent());
+        assertEquals(1, section.getParagraph(1).getNumberOfSentences());
+        assertEquals("This is is another sentence", section.getParagraph(2).getSentence(0).getContent());
+    }
+
+    @Test
     void testComments() {
         String sampleText = "Before comments.\n";
         sampleText += "\n";
