@@ -97,6 +97,11 @@ public class ReSTParser extends LineParser {
             reset(state);
         }
 
+        // handle new line style line (see https://stackoverflow.com/questions/7033239/how-to-preserve-line-breaks-when-generating-python-docs-using-sphinx)
+        if ((target.firstChar == '|') && (target.secondChar == ' ')) {
+            line.erase(0, 2);
+        }
+
         // handle inline markups
         this.eraseInlineMarkup(line);
 
@@ -125,7 +130,7 @@ public class ReSTParser extends LineParser {
         if (isEndBlock(target)) { reset(state); }
 
         // lines in block is not checked
-        if (state.inBlock) { line.erase();  }
+        if (state.inBlock) { line.erase(); }
     }
 
     private void handleFootnote(Line line) {
