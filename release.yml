@@ -7,7 +7,7 @@ pipeline:
     - name: Commit Version Changes
       command: git commit -m "Set version in pom.xml to $REDPEN_VERSION"
     - name: Delopy to Sonatype
-      command: mvn clean deploy -DperformRelease --settings ~/.m2/settings.xml > /dev/null
+      command: mvn clean deploy -DperformRelease --settings ~/.m2/settings.xml
     - name: Create Release Tag
       command: git tag -a redpen-$REDPEN_VERSION -m "RedPen release $REDPEN_VERSION"
     - name: Flush Next Release Version Number
