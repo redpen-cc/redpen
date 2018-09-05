@@ -168,16 +168,23 @@ public class ReVIEWParser extends LineParser {
         while (line.charAt(headerIndent) == '=') {
             headerIndent++;
         }
-        if (line.charAt(headerIndent) == '[') { // column?
-            while (line.charAt(headerIndent) != ']'
-                    && line.charAt(headerIndent) != 0) {
-                headerIndent++;
+        int cursor = headerIndent;
+        if (line.charAt(cursor) == '[') { // column?
+            while (line.charAt(cursor) != ']'
+                    && line.charAt(cursor) != 0) {
+                cursor++;
             }
-            headerIndent++;
+            cursor++;
+        } else if (line.charAt(cursor) == '{') { // label?
+            while (line.charAt(cursor) != '}'
+                    && line.charAt(cursor) != 0) {
+                cursor++;
+            }
+            cursor++;
         }
-        if ((headerIndent > 0) && (line.charAt(headerIndent) == ' ')) {
-            line.erase(0, headerIndent + 1);
-            line.setSectionLevel(headerIndent);
+        if ((cursor > 0) && (line.charAt(cursor) == ' ')) {
+            line.erase(0, cursor + 1);
+            line.setSectionLevel(cursor);
         }
         if (target.line.startsWith("===[/column]")) { // closing..
             line.erase();

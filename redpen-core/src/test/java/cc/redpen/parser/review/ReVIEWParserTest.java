@@ -206,6 +206,24 @@ class ReVIEWParserTest {
     }
 
     @Test
+    void testLabelledSectionHeader() throws UnsupportedEncodingException {
+        String sampleText = "={About} About @<i>{Gekioko}.\n\n" +
+                "Gekioko means angry.";
+
+        Document doc = createFileContent(sampleText);
+        assertEquals(1, doc.size());
+        assertEquals("About Gekioko.", doc.getSection(0).getHeaderContent(0).getContent());
+    }
+
+    @Test
+    void testInvalidLabelledSectionHeader() throws UnsupportedEncodingException {
+        String sampleText = "={About"; // NOTE: no "}"
+        Document doc = createFileContent(sampleText);
+        assertEquals(1, doc.size());
+        assertEquals("={About", doc.getSection(0).getParagraph(0).getSentence(0).getContent());
+    }
+
+    @Test
     void testColumnSectionHeader() throws UnsupportedEncodingException {
         String sampleText = "==[column] About Gekioko. \n\n";
         Document doc = createFileContent(sampleText);
@@ -219,6 +237,18 @@ class ReVIEWParserTest {
         Document doc = createFileContent(sampleText);
         assertEquals(1, doc.size());
         assertEquals("==[column About Gekioko.", doc.getSection(0).getParagraph(0).getSentence(0).getContent());
+    }
+
+    @Test
+    void testDocSize() throws UnsupportedEncodingException {
+        String sampleText = "= Without Label\n" +
+                "=={WithLabel} With Label\n" +
+                "==={WithLabel} With Label\n\n" +
+                "={WithLabel} With Label\n" +
+                "==[column] Column";
+
+        Document doc = createFileContent(sampleText);
+        assertEquals(5, doc.size());
     }
 
     @Test
