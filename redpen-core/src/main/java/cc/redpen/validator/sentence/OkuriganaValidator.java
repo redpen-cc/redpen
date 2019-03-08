@@ -42,95 +42,201 @@ public class OkuriganaValidator extends Validator {
         invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("合し", asList("動詞", "自立"), 0)));
         invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("合す", asList("動詞", "自立"), 0)));
         invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("合せ", asList("動詞", "自立"), 0)));
+
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("押え", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("押える", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("押えれ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("押えろ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("押えよ", asList("動詞", "自立"), 0)));
+
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("起ら", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("起り", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("起る", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("起れ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("起ろ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("起よ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("起", asList("動詞", "自立"), 0)));
+
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("著かろ", asList("形容詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("著く", asList("形容詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("著かっ", asList("形容詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("著い", asList("形容詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("著けれ", asList("形容詞", "自立"), 0)));
+
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("試", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("試る", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("試れ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("試ろ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("試よ", asList("動詞", "自立"), 0)));
+
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("恥しかろ", asList("形容詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("恥しく", asList("形容詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("恥しかっ", asList("形容詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("恥しい", asList("形容詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("恥しけれ", asList("形容詞", "自立"), 0)));
+
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("生れ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("生れる", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("生れれ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("生れろ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("生れよ", asList("動詞", "自立"), 0)));
+
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("妨", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("妨る", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("妨れ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("妨ろ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("妨よ", asList("動詞", "自立"), 0)));
+
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("進", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("進る", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("進れ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("進ろ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("進よ", asList("動詞", "自立"), 0)));
+
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("勧", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("勧る", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("勧れ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("勧ろ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("勧よ", asList("動詞", "自立"), 0)));
+
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("考", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("考る", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("考れ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("考ろ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("考よ", asList("動詞", "自立"), 0)));
+
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("行なわ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("行ない", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("行なう", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("行なえ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("行なお", asList("動詞", "自立"), 0)));
+
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("表わさ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("表わし", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("表わす", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("表わせ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("表わそ", asList("動詞", "自立"), 0)));
+
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("現われ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("現われる", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("現われれ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("現われろ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("現われよ", asList("動詞", "自立"), 0)));
+
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("断わら", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("断わり", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("断わる", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("断われ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("断わろ", asList("動詞", "自立"), 0)));
+
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("聞え", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("聞える", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("聞えれ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("聞えろ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("聞えよ", asList("動詞", "自立"), 0)));
+
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("当ら", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("当り", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("当る", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("当れ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("当ろ", asList("動詞", "自立"), 0)));
+
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("落さ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("落し", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("落す", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("落せ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("落そ", asList("動詞", "自立"), 0)));
+
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("終ら", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("終り", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("終る", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("終れ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("終ろ", asList("動詞", "自立"), 0)));
+
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("果さ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("果し", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("果す", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("果せ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("果そ", asList("動詞", "自立"), 0)));
+
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("変ら", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("変り", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("変る", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("変れ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("変ろ", asList("動詞", "自立"), 0)));
+
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("買", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("買る", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("買れ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("買よ", asList("動詞", "自立"), 0)));
+
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("上ら", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("上り", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("上る", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("上れ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("上ろ", asList("動詞", "自立"), 0)));
+
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("費さ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("費し", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("費す", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("費せ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("費そ", asList("動詞", "自立"), 0)));
+
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("危かろ", asList("形容詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("危く", asList("形容詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("危かっ", asList("形容詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("危い", asList("形容詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("危けれ", asList("形容詞", "自立"), 0)));
+
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("逸さ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("逸し", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("逸す", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("逸せ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("逸そ", asList("動詞", "自立"), 0)));
+
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("反さ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("反し", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("反す", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("反せ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("反そ", asList("動詞", "自立"), 0)));
+
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("過さ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("過し", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("過す", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("過せ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("過そ", asList("動詞", "自立"), 0)));
     }
 
     static {
         invalidOkurigana = new HashSet<>();
-        invalidOkurigana.add("押え");
         invalidOkurigana.add("恐し");
         invalidOkurigana.add("短か");
-        invalidOkurigana.add("起ら");
-        invalidOkurigana.add("起り");
-        invalidOkurigana.add("起る");
-        invalidOkurigana.add("起れ");
-        invalidOkurigana.add("起ろ");
-        invalidOkurigana.add("著い");
         invalidOkurigana.add("著るしい");
-        invalidOkurigana.add("試る");
         invalidOkurigana.add("被ぶ");
         invalidOkurigana.add("紛わしい");
         invalidOkurigana.add("逆う");
         invalidOkurigana.add("悔ま");
         invalidOkurigana.add("陥いる");
         invalidOkurigana.add("恥かし");
-        invalidOkurigana.add("恥し");
-        invalidOkurigana.add("費さ");
-        invalidOkurigana.add("費し");
-        invalidOkurigana.add("費す");
-        invalidOkurigana.add("費せ");
-        invalidOkurigana.add("費そ");
         invalidOkurigana.add("憐ま");
         invalidOkurigana.add("憐み");
         invalidOkurigana.add("憐む");
-        invalidOkurigana.add("生れ");
-        invalidOkurigana.add("商なう");
         invalidOkurigana.add("憐め");
-        invalidOkurigana.add("妨ない");
-        invalidOkurigana.add("妨る");
-        invalidOkurigana.add("悔む");
-        invalidOkurigana.add("悔め");
-        invalidOkurigana.add("進る");
-        invalidOkurigana.add("進ない");
-        invalidOkurigana.add("進る");
-        invalidOkurigana.add("勧ない");
+        invalidOkurigana.add("商なう");
         invalidOkurigana.add("美い");
-        invalidOkurigana.add("著い");
         invalidOkurigana.add("荒ら");
-        invalidOkurigana.add("考る");
         invalidOkurigana.add("輝し");
         invalidOkurigana.add("静ず");
         invalidOkurigana.add("明か");
         invalidOkurigana.add("必ら");
         invalidOkurigana.add("再たび");
-        invalidOkurigana.add("行なう");
-        invalidOkurigana.add("表わ");
-        invalidOkurigana.add("現わ");
         invalidOkurigana.add("著わ");
-        invalidOkurigana.add("断わ");
         invalidOkurigana.add("積る");
-        invalidOkurigana.add("聞え");
-        invalidOkurigana.add("当る");
-        invalidOkurigana.add("落さ");
-        invalidOkurigana.add("落し");
-        invalidOkurigana.add("落す");
-        invalidOkurigana.add("落せ");
-        invalidOkurigana.add("終る");
-        invalidOkurigana.add("果さ");
-        invalidOkurigana.add("果し");
-        invalidOkurigana.add("果す");
-        invalidOkurigana.add("果せ");
-        invalidOkurigana.add("果そ");
-        invalidOkurigana.add("帰る");
-        invalidOkurigana.add("変る");
         invalidOkurigana.add("替る");
-        invalidOkurigana.add("買る");
         invalidOkurigana.add("換る");
-        invalidOkurigana.add("上る");
-        invalidOkurigana.add("費す");
         invalidOkurigana.add("開らく");
-        invalidOkurigana.add("危い");
-        invalidOkurigana.add("危く");
         invalidOkurigana.add("甚し");
-        invalidOkurigana.add("逸す");
-        invalidOkurigana.add("逸さ");
-        invalidOkurigana.add("逸せ");
-        invalidOkurigana.add("反さ");
-        invalidOkurigana.add("反し");
-        invalidOkurigana.add("反す");
-        invalidOkurigana.add("反そ");
         invalidOkurigana.add("懐ろ");
-        invalidOkurigana.add("恥かし");
-        invalidOkurigana.add("過す");
     }
 
     @Override
