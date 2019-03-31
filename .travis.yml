@@ -3,8 +3,8 @@ language: java
 sudo: required
 
 jdk:
-  - oraclejdk8
-  - oraclejdk9
+  - openjdk10
+  - openjdk11
 
 env:
   global:
