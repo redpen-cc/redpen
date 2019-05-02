@@ -70,7 +70,7 @@
                     <contextPath>/redpen</contextPath>
                     <reload>manual</reload>
                 </configuration>
-                <version>9.2.1.v20140609</version>
+                <version>9.4.17.v20190418</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -138,7 +138,7 @@
                                 <artifactItem>
                                     <groupId>org.eclipse.jetty</groupId>
                                     <artifactId>jetty-runner</artifactId>
-                                    <version>9.4.12.v20180830</version>
+                                    <version>9.4.17.v20190418</version>
                                     <destFileName>jetty-runner.jar</destFileName>
                                 </artifactItem>
                             </artifactItems>
@@ -216,12 +216,12 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
-            <version>9.4.12.v20180830</version>
+            <version>9.4.17.v20190418</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
-            <version>9.4.12.v20180830</version>
+            <version>9.4.17.v20190418</version>
         </dependency>
         <dependency>
             <groupId>commons-cli</groupId>
