@@ -170,7 +170,7 @@
         <dependency>
             <groupId>org.codelibs</groupId>
             <artifactId>elasticsearch-analysis-kuromoji-neologd</artifactId>
-            <version>1.6.0</version>
+            <version>6.5.1</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

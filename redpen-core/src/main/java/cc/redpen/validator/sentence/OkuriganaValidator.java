@@ -92,6 +92,7 @@ public class OkuriganaValidator extends Validator {
         invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("進れ", asList("動詞", "自立"), 0)));
         invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("進ろ", asList("動詞", "自立"), 0)));
         invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("進よ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("進てい", asList("名詞", "左辺接続"), 0)));
 
         invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("勧", asList("動詞", "自立"), 0)));
         invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("勧る", asList("動詞", "自立"), 0)));
@@ -169,6 +170,7 @@ public class OkuriganaValidator extends Validator {
         invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("買る", asList("動詞", "自立"), 0)));
         invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("買れ", asList("動詞", "自立"), 0)));
         invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("買よ", asList("動詞", "自立"), 0)));
+        invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("買て", asList("名詞", "一般"), 0)));
 
         invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("上ら", asList("動詞", "自立"), 0)));
         invalidOkuriganaTokens.add(new ExpressionRule().addElement(new TokenElement("上り", asList("動詞", "自立"), 0)));
