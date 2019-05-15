@@ -19,6 +19,7 @@ package cc.redpen.tokenizer;
 
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
+import org.apache.lucene.util.AttributeFactory;
 import org.codelibs.neologd.ipadic.lucene.analysis.ja.JapaneseTokenizer;
 import org.codelibs.neologd.ipadic.lucene.analysis.ja.tokenattributes.BaseFormAttribute;
 import org.codelibs.neologd.ipadic.lucene.analysis.ja.tokenattributes.InflectionAttribute;
@@ -36,7 +37,10 @@ public class NeologdJapaneseTokenizer implements RedPenTokenizer {
     private JapaneseTokenizer tokenizer;
 
     public NeologdJapaneseTokenizer() {
-        this.tokenizer = new JapaneseTokenizer(new StringReader(""), null, false, JapaneseTokenizer.Mode.NORMAL);
+        this.tokenizer = new JapaneseTokenizer(AttributeFactory.DEFAULT_ATTRIBUTE_FACTORY,
+                null,
+                false,
+                JapaneseTokenizer.Mode.NORMAL);
     }
 
     @Override
