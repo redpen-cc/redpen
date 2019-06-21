@@ -32,10 +32,14 @@ import static java.util.Collections.singletonList;
  */
 public class JapaneseStyleValidator extends Validator {
     private static final Pattern DEARU_PATTERN = Pattern.compile("である|のだが|であった|あるが|あった|だった");
-    private static final Pattern DESUMASU_PATTERN = Pattern.compile("ですね|でした|ました|でしたが|でしたので|ですので|ですが|です");
+    private static final Pattern DESUMASU_PATTERN = Pattern.compile("ですね|でした|ました|でしたが|でしたので|ですので|ですが|です|ます");
 
     private int dearuCount = 0;
     private int desumasuCount = 0;
+
+    public JapaneseStyleValidator() {
+        super("ForceDearu", false);		// Use autodetection of DEARU/DESUMASU
+    }
 
     @Override
     public void preValidate(Sentence sentence) {
@@ -70,7 +74,9 @@ public class JapaneseStyleValidator extends Validator {
 
     @Override
     public void validate(Sentence sentence) {
-        if (dearuCount > desumasuCount) {
+        boolean forceDearu = getBoolean("ForceDearu");
+
+        if (dearuCount > desumasuCount || forceDearu ) {
             detectPattern(sentence, DESUMASU_PATTERN);
         } else {
             detectPattern(sentence, DEARU_PATTERN);
