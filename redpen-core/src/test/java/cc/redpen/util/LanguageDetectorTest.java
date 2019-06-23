@@ -18,6 +18,11 @@ class LanguageDetectorTest {
   }
 
   @Test
+  void KoreanUsesHangul() throws Exception {
+    assertEquals("ko", detector.detectLanguage("안녕하세요!"));
+  }
+
+  @Test
   void japaneseIsDetectedForKatakana() throws Exception {
     assertEquals("ja", detector.detectLanguage("コンピューター"));
   }
