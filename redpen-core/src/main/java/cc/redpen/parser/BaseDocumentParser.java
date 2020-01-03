@@ -55,7 +55,7 @@ public abstract class BaseDocumentParser implements DocumentParser {
     @Override
     public Document parse(File file, SentenceExtractor sentenceExtractor, RedPenTokenizer tokenizer) throws RedPenException {
         try (InputStream inputStream = new FileInputStream(file)) {
-            return parse(inputStream, Optional.of(file.getName()), sentenceExtractor, tokenizer);
+            return parse(inputStream, Optional.of(file.getPath()), sentenceExtractor, tokenizer);
         } catch (IOException e) {
             throw new RedPenException(e);
         }
