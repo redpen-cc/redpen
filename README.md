@@ -73,7 +73,7 @@ How to contribute
 ==================
 
 We welcome any contributions through Github pull requests. When you make changes such as adding new features and the tests,
-please run test before throw the pull reqest. You can run test with the mvn test command. For details, please refer to the [RedPen manual](http://redpen.cc/docs/latest/#_for_developers).
+please run test before throw the pull reqest. You can run test with the mvn test command. For details, please refer to the [RedPen manual](http://redpen.cc/docs/latest/#_for_developers). Release flow is describe in [this article](https://gist.github.com/takahi-i/32bbdb5814e076febed4)
 
 Deploy
 ======
