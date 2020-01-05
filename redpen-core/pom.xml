@@ -210,11 +210,6 @@
             <artifactId>reflections</artifactId>
             <version>0.9.10</version>
         </dependency>
-        <dependency>
-            <groupId>kr.bydelta</groupId>
-            <artifactId>koalanlp-komoran_2.12</artifactId>
-            <version>1.9.5</version>
-        </dependency>
     </dependencies>
 
     <profiles>
