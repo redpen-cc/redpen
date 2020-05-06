@@ -9,10 +9,10 @@ RedPen is a proofreading tool to help writers or programmers who write technical
 
 
 <p align="center">
-   <a href="http://redpen.cc"><img src="logo/redpen-logo.png"/></a>
+   <a href="https://redpen.cc"><img src="logo/redpen-logo.png"/></a>
 </p>
 
-See the detail usage in the RedPen [home page](http://redpen.cc/).
+See the detail usage in the RedPen [home page](https://redpen.cc/).
 
 Features
 =========
@@ -82,8 +82,8 @@ Supports
 =========
 
 * [Mailing List](https://groups.google.com/forum/#!forum/redpen-validator)
-* [Docs](http://redpen.cc/docs.html)
-* [JavaDoc](http://redpen.cc/javadoc/latest/index.html)
+* [Docs](https://redpen.cc/docs.html)
+* [JavaDoc](https://redpen.cc/javadoc/latest/index.html)
 * [Blog](http://blog.redpen.cc)
 * Chat
   * [English](https://gitter.im/redpen-cc/redpen)
