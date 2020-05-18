@@ -5,7 +5,7 @@
 Overview
 =========
 
-RedPen is a proofreading tool to help writers or programmers who write technical documents or manuals that need to adhere to a writing standard. RedPen automates the verifications of input documents written in natural languages
+RedPen is a proofreading tool to help writers or programmers who write technical documents or manuals that need to adhere to a writing standard. RedPen automates the verification of input documents written in natural languages
 
 
 <p align="center">
@@ -72,7 +72,7 @@ How to contribute
 ==================
 
 We welcome any contributions through Github pull requests. When you make changes such as adding new features and the tests,
-please run test before throw the pull reqest. You can run test with the mvn test command. For details, please refer to the [RedPen manual](http://redpen.cc/docs/latest/#_for_developers). Release flow is describe in [this article](https://gist.github.com/takahi-i/32bbdb5814e076febed4)
+please run test before throw the pull request. You can run test with the mvn test command. For details, please refer to the [RedPen manual](http://redpen.cc/docs/latest/#_for_developers). Release flow is describe in [this article](https://gist.github.com/takahi-i/32bbdb5814e076febed4)
 
 Deploy
 ======
