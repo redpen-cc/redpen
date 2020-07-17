@@ -35,10 +35,10 @@ public class ExpressionRule {
     }
 
     public String toSurface() {
-	String result = "";
+        String result = "";
         for (int i = 0; i < elements.size(); i++)
             result += elements.get(i).getSurface();
-	return result;
+        return result;
     }
 
     @Override
