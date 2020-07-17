@@ -45,7 +45,6 @@ public class DoubleNegativeValidator extends Validator {
         // validate with expressions (phrase)
         for (ExpressionRule rule : invalidExpressions) {
             if (rule.match(sentence.getTokens())) {
-                String ruleSurface = "";
                 addLocalizedError(sentence, rule.toSurface() );
                 return;
             }
