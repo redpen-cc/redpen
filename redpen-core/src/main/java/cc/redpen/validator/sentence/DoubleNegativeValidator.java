@@ -58,13 +58,13 @@ public class DoubleNegativeValidator extends Validator {
             for (String negativeWord : negativeWords) {
                 if (token.getSurface().toLowerCase().equals(negativeWord)) {
                     count++;
-	            errorPart += " " + token.getSurface().toLowerCase();
+                    errorPart += " " + token.getSurface().toLowerCase();
+                }
+                if (count >= 2) {
+                    addLocalizedError(sentence, errorPart); 
+                    return;
                 }
             }
-        }
-        if (count >= 2) {
-            addLocalizedError(sentence, errorPart); 
-            return;
         }
     }
 
