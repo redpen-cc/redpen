@@ -34,6 +34,13 @@ public class ExpressionRule {
         return this;
     }
 
+    public String toSurface() {
+	String result = "";
+        for (int i = 0; i < elements.size(); i++)
+            result += elements.get(i).getSurface();
+	return result;
+    }
+
     @Override
     public String toString() {
         return "ExpressionRule{" +
