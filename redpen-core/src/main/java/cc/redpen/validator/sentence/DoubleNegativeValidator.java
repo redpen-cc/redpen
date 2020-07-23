@@ -45,23 +45,23 @@ public class DoubleNegativeValidator extends Validator {
         // validate with expressions (phrase)
         for (ExpressionRule rule : invalidExpressions) {
             if (rule.match(sentence.getTokens())) {
-                addLocalizedError(sentence, rule.toString());
+                addLocalizedError(sentence, rule.toSurface() );
                 return;
             }
         }
 
         // validate with set of negative words
         int count = 0;
-        for (String negativeWord : negativeWords) {
-            List<TokenElement> tokens = sentence.getTokens();
-            for (TokenElement token : tokens) {
-                if (token.getSurface().toLowerCase().equals(negativeWord)) {
-                    count++;
-                }
-                if (count >= 2) {
-                    addLocalizedErrorFromToken(sentence, token);
-                    return;
-                }
+        String errorPart = "";
+        List<TokenElement> tokens = sentence.getTokens();
+        for (TokenElement token : tokens) {
+            if (negativeWords.contains(token.getSurface().toLowerCase())) {
+                count++;
+                errorPart += " " + token.getSurface().toLowerCase();
+            }
+            if (count >= 2) {
+                addLocalizedError(sentence, errorPart); 
+                return;
             }
         }
     }
