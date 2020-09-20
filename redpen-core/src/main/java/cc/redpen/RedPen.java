@@ -46,6 +46,9 @@ public class RedPen {
     private final SentenceExtractor sentenceExtractor;
     private final List<Validator> validators;
 
+    private String errorLevel = "info";
+    public void setErrorLevel( String level ) { errorLevel = level; };
+
     /**
      * constructs RedPen with specified config file.
      *
@@ -140,7 +143,7 @@ public class RedPen {
      * @return list of validation errors
      */
     public Map<Document, List<ValidationError>> validate(List<Document> documents) {
-        return validate(documents, "error");
+        return validate(documents, errorLevel);
     }
 
     /**
