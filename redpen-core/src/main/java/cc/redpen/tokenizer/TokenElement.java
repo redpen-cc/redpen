@@ -36,11 +36,19 @@ public class TokenElement implements Serializable {
     // token reading
     final private String reading;
 
-    public TokenElement(String word, List<String> tagList, int offset, String reading) {
+    // the base form of the token
+    final private String baseForm;
+
+    public TokenElement(String word, List<String> tagList, int offset, String reading, String baseForm) {
         surface = word;
         tags = Collections.unmodifiableList(tagList);
         this.offset = offset;
         this.reading = reading;
+        this.baseForm = baseForm;
+    }
+
+    public TokenElement(String word, List<String> tagList, int offset, String reading) {
+        this(word, tagList, offset, reading, null);
     }
 
     public TokenElement(String word, List<String> tagList, int offset) {
@@ -60,6 +68,8 @@ public class TokenElement implements Serializable {
     }
 
     public String getReading() { return reading; }
+
+    public String getBaseForm() { return (baseForm!=null) ? baseForm : surface; }
 
     @Override
     public boolean equals(Object o) {

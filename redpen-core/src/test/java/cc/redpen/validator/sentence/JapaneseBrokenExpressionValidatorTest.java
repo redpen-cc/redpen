@@ -43,7 +43,8 @@ class JapaneseBrokenExpressionValidatorTest {
                 .addSentence(new Sentence("PDF形式の文書を見れる環境だ。", 2))
                 .addSentence(new Sentence("熱くて寝れない", 3))
                 .addSentence(new Sentence("今日はぐっすり寝れる", 4))
-
+                .addSentence(new Sentence("明日来れますか。", 5))
+                .addSentence(new Sentence("これはもう着れない。", 6))
                 .build());
 
         Configuration config = Configuration.builder("ja")
@@ -52,7 +53,7 @@ class JapaneseBrokenExpressionValidatorTest {
 
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
-        assertEquals(4, errors.get(documents.get(0)).size());
+        assertEquals(6, errors.get(documents.get(0)).size());
     }
 
     @Test
@@ -65,6 +66,9 @@ class JapaneseBrokenExpressionValidatorTest {
                 .addSentence(new Sentence("PDF形式の文章を見られる環境だ。", 2))
                 .addSentence(new Sentence("熱くて寝られない", 3))
                 .addSentence(new Sentence("今日はぐっすり寝られる", 4))
+                .addSentence(new Sentence("明日来られますか。", 5))
+                .addSentence(new Sentence("これはもう着られない。", 6))
+                .addSentence(new Sentence("これはもう切れない。", 7))
                 .build());
 
         Configuration config = Configuration.builder("ja")

@@ -71,7 +71,8 @@ public class NeologdJapaneseTokenizer implements RedPenTokenizer {
             tokens.add(new TokenElement(surface,
                     getTagList(posAttr, inflectionAttr),
                     offsetAttr.startOffset(),
-                    readAttr.getReading()
+                    readAttr.getReading(),
+                    baseAttr.getBaseForm()
             ));
         }
         tokenizer.close();
