@@ -40,21 +40,16 @@ public class JapaneseBrokenExpressionValidator extends Validator {
         for (int i = 0; i < (tokens.size() - 1); ++i) {
             final TokenElement p = tokens.get(i);
             final List<String> ptags = p.getTags();
-            System.out.println( p.getSurface() );
-            System.out.println( ptags );
             if (ptags.get(0).equals("動詞") && ptags.get(1).equals("自立") && ptags.get(2).equals("一段") ) {
                 if( ptags.get(3).equals("未然形") )
                 {
                     final TokenElement q = tokens.get(i+1);
                     final List<String> qtags = q.getTags();
-                    System.out.println(qtags);
-                    System.out.println(q.getBaseForm());
                     if (qtags.get(0).equals("動詞") && qtags.get(1).equals("接尾") && q.getBaseForm().equals("れる")) {
                         addLocalizedError(sentence, p.getSurface());
                         continue;
                     }
                 }
-                System.out.println( p.getBaseForm() );
                 if( p.getBaseForm().endsWith("れる") )
                 {
                     if( p.getBaseForm().endsWith("られる") )
@@ -65,7 +60,6 @@ public class JapaneseBrokenExpressionValidator extends Validator {
                     else
                     {
                         String nverb = p.getBaseForm().replaceFirst("れる$","る");
-                        System.out.println(nverb);
                         NeologdJapaneseTokenizer tokenizer = new NeologdJapaneseTokenizer();
                         List<TokenElement> t = tokenizer.tokenize(nverb);
                         String inflectionType = t.get(0).getTags().get(2);
