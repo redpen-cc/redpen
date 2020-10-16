@@ -39,7 +39,9 @@ public class JapaneseBrokenExpressionValidator extends Validator {
         for (int i = 0; i < (tokens.size() - 1); ++i) {
             final TokenElement p = tokens.get(i);
             final List<String> ptags = p.getTags();
-            if (ptags.get(0).equals("動詞") && ptags.get(1).equals("自立") && ptags.get(2).equals("一段") && ptags.get(3).equals("未然形")) {
+            if (ptags.get(0).equals("動詞") && p.getSurface().equals("見れる")) {
+                addLocalizedError(sentence, p.getSurface());
+            } else if (ptags.get(0).equals("動詞") && ptags.get(1).equals("自立") && ptags.get(2).equals("一段") && ptags.get(3).equals("未然形")) {
                 final TokenElement q = tokens.get(i+1);
                 final List<String> qtags = q.getTags();
                 if (qtags.get(0).equals("動詞") && qtags.get(1).equals("接尾") && q.getSurface().startsWith("られ")) {
