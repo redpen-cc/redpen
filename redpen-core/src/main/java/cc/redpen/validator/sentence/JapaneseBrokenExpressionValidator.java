@@ -42,7 +42,7 @@ public class JapaneseBrokenExpressionValidator extends Validator {
             if (ptags.get(0).equals("動詞") && ptags.get(1).equals("自立") && ptags.get(2).equals("一段") && ptags.get(3).equals("未然形")) {
                 final TokenElement q = tokens.get(i+1);
                 final List<String> qtags = q.getTags();
-                if (qtags.get(0).equals("動詞") && qtags.get(1).equals("接尾") && qtags.get(2).equals("一段") && qtags.get(3).equals("未然形") && q.getSurface().equals("られ")) {
+                if (qtags.get(0).equals("動詞") && qtags.get(1).equals("接尾") && q.getSurface().startsWith("られ")) {
                 } else {
                     addLocalizedError(sentence, p.getSurface());
                 }
