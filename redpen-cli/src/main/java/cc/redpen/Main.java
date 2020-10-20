@@ -133,7 +133,7 @@ public final class Main {
         String resultFormat = "plain";
         String inputSentence = null;
         String language = "en";
-        String threshold = "info";
+        String threshold = "error";
 
         int limit = DEFAULT_LIMIT;
 

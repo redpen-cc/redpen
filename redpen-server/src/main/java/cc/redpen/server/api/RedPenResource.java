@@ -110,9 +110,8 @@ public class RedPenResource {
         } else {
             redPen = new RedPen(new ConfigurationLoader().secure().loadFromString(config));
         }
-        redPen.setErrorLevel( errorLevel );
         Document parsedDocument = redPen.parse(DocumentParser.of(documentParser), document);
-        List<ValidationError> errors = redPen.validate(parsedDocument);
+        List<ValidationError> errors = redPen.validate(parsedDocument, errorLevel);
 
         Formatter formatter = FormatterUtils.getFormatterByName(format);
 
