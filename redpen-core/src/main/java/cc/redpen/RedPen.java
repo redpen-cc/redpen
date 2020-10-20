@@ -181,7 +181,7 @@ public class RedPen {
     public List<ValidationError> validate(Document document, String threshold) {
         List<Document> documents = new ArrayList<>();
         documents.add(document);
-        Map<Document, List<ValidationError>> documentListMap = validate(documents);
+        Map<Document, List<ValidationError>> documentListMap = validate(documents, threshold);
         return documentListMap.get(document);
     }
 
