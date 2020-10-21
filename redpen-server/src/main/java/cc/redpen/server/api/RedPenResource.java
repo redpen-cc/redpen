@@ -58,6 +58,7 @@ public class RedPenResource {
     private static final String DEFAULT_LANG = "en";
     private static final String DEFAULT_CONFIGURATION = "en";
     private static final String DEFAULT_FORMAT = "json";
+    private static final String DEFAULT_ERROR_LEVEL = "error";
 
     /*package*/ static final String MIME_TYPE_XML = "application/xml; charset=utf-8";
     /*package*/ static final String MIME_TYPE_JSON = "application/json; charset=utf-8";
@@ -99,6 +100,7 @@ public class RedPenResource {
                                      @FormParam("documentParser") @DefaultValue(DEFAULT_DOCUMENT_PARSER) String documentParser,
                                      @FormParam("lang") @DefaultValue(DEFAULT_CONFIGURATION) String lang,
                                      @FormParam("format") @DefaultValue(DEFAULT_FORMAT) String format,
+                                     @FormParam("errorLevel") @DefaultValue(DEFAULT_ERROR_LEVEL) String errorLevel,
                                      @FormParam("config") String config) throws RedPenException {
 
         LOG.info("Validating document");
@@ -109,7 +111,7 @@ public class RedPenResource {
             redPen = new RedPen(new ConfigurationLoader().secure().loadFromString(config));
         }
         Document parsedDocument = redPen.parse(DocumentParser.of(documentParser), document);
-        List<ValidationError> errors = redPen.validate(parsedDocument);
+        List<ValidationError> errors = redPen.validate(parsedDocument, errorLevel);
 
         Formatter formatter = FormatterUtils.getFormatterByName(format);
 

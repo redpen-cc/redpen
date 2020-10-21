@@ -162,15 +162,26 @@ public class RedPen {
     }
 
     /**
-     * validate the input document collection. Note that this method call is NOT thread safe. RedPen instances need to be crated for each thread.
+     * validate the input document. Note that this method call is NOT thread safe. RedPen instances need to be crated for each thread.
      *
      * @param document document to be validated
      * @return list of validation errors
      */
     public List<ValidationError> validate(Document document) {
+        return validate(document, "error");
+    }
+
+    /**
+     * validate the input document. Note that this method call is NOT thread safe. RedPen instances need to be crated for each thread.
+     *
+     * @param document document to be validated
+     * @param threshold threshold of error level
+     * @return list of validation errors
+     */
+    public List<ValidationError> validate(Document document, String threshold) {
         List<Document> documents = new ArrayList<>();
         documents.add(document);
-        Map<Document, List<ValidationError>> documentListMap = validate(documents);
+        Map<Document, List<ValidationError>> documentListMap = validate(documents, threshold);
         return documentListMap.get(document);
     }
 
