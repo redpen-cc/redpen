@@ -22,6 +22,15 @@ import java.util.Collections;
 import java.util.List;
 
 public class TokenElement implements Serializable {
+    /**
+     * Token type.
+     */
+    public enum TYPE {
+        NORMAL,
+        EMPHASIS,
+        CODE
+    }
+
     private static final long serialVersionUID = -9055285891555999514L;
 
     // the surface form of the token
