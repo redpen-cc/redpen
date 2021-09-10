@@ -49,6 +49,10 @@ class JapaneseAmbiguousNounConjunctionValidatorTest {
         RedPen redPen = new RedPen(config);
         Map<Document, List<ValidationError>> errors = redPen.validate(documents);
         assertEquals(1, errors.get(documents.get(0)).size());
+        assertEquals(0, (int) errors.get(documents.get(0)).get(0)
+                .getStartPosition().map(it -> it.offset).orElse(-1));
+        assertEquals(9, (int) errors.get(documents.get(0)).get(0)
+                .getEndPosition().map(it -> it.offset).orElse(-1));
     }
 
     @Test

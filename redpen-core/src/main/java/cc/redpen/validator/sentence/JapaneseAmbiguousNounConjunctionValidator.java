@@ -73,7 +73,8 @@ public class JapaneseAmbiguousNounConjunctionValidator extends DictionaryValidat
                 } else {
                     String surface = String.join("", surfaces);
                     if (!inDictionary(surface)) {
-                        addLocalizedError(sentence, surface);
+                        int offset = tokenElement.getOffset();
+                        addLocalizedErrorWithPosition(sentence, offset - surface.length(), offset - 1, surface);
                     }
                     stackSize = 0;
                 }
